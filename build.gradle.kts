@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.21"
 }
 
-group = "org.pitt.ece1140"
+group = "org.james.ece1140"
 version = "1.0-SNAPSHOT"
 
 repositories {
