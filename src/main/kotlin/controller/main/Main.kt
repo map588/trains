@@ -1,4 +1,4 @@
-package org.example.controller.standard
+package controller.main
 
 fun main() {
     println("Hello World!")
