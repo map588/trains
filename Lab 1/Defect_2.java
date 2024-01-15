@@ -13,7 +13,7 @@ public class Defect_2 {
 
         String answer = input.nextLine();
 
-        boolean isYes = !answer.contains("Y"); // Note the cause of the error is the ! in front of the answer.contains
+        boolean isYes = answer.contains("Y"); // Note the cause of the error is the ! in front of the answer.contains
 
         // Intended: Yes = buys bottle, No = don't buy
         // Logic Error: Yes = Don't buy, No = Buys Bottle
