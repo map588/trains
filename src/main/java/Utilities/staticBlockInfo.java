@@ -12,4 +12,12 @@ public class staticBlockInfo {
     public boolean isStation;
     public staticBlockInfo switchBlock1;
     public staticBlockInfo switchBlock2;
+
+    public boolean isSwitch() {
+        return isSwitch;
+    }
+
+    public int getBlockNumber() {
+        return blockNumber;
+    }
 }

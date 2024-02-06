@@ -136,13 +136,23 @@ public class stubTrainModelmpl implements trainModel{
     }
 
     public int readAuthority() {
-        int auth = track.getAuthority();
+        int auth = track.getTrainAuthority(0);
         System.out.println("Read Authority: " + auth);
         return auth;
     }
 
     public double readCommandSpeed() {
-        double comSpeed = track.getCommandedSpeed();
+        return 0;
+    }
+
+    public int readAuthority(int trainID) {
+        int auth = track.getTrainAuthority(trainID);
+        System.out.println("Read Authority: " + auth);
+        return auth;
+    }
+
+    public double readCommandSpeed(int trainID) {
+        double comSpeed = track.getCommandedSpeed(trainID);
         System.out.println("Read Command Speed: " + comSpeed);
         return comSpeed;
     }

@@ -5,30 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/matthewprock.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/CTC_Controller/stubCtcImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Track_Controller/stubTrackControllerImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Track_Model/stubTrackModelImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/james/javafx/example.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/CTC_Controller/ctcControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CTC_Controller/ctcControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common_Interfaces/ctcController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/ctcController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common_Interfaces/trackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common_Interfaces/trackModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trackModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common_Interfaces/trainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common_Interfaces/trainModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Controller/trackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Track_Controller/trackControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Model/trackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Track_Model/trackModelImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Common/ctcController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/ctcController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/trainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Controller/trainControllerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/trainModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Model/trainModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_MP.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,6 +127,21 @@
               </option>
               <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
             </RecentBranchesForRepo>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="graphics_testing" />
+                    <option name="lastUsedInstant" value="1707227119" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1707227118" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
           </list>
         </option>
       </RecentBranches>
@@ -205,7 +207,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ToolWindowTerminal.ShowToolbar": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "graphics__testing",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
@@ -236,7 +238,21 @@
       <recent name="$PROJECT_DIR$/src/main/antlr/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.mainMenu">
+  <component name="RunManager" selected="Application.Framework.GUI.mainMenu">
+    <configuration name="Framework.GUI.mainMenu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Framework.GUI.mainMenu" />
+      <module name="Trains.main" />
+      <option name="VM_PARAMETERS" value="--module-path /opt/homebrew/Cellar/openjdk@17/javafx-sdk-17.0.10/lib  --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Framework.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="mainMenu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -318,6 +334,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.Framework.GUI.mainMenu" />
       <item itemvalue="Application.mainMenu" />
       <item itemvalue="Gradle.Trains" />
       <item itemvalue="Gradle.Trains [dependencies]" />
@@ -325,6 +342,7 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Framework.GUI.mainMenu" />
         <item itemvalue="Application.mainMenu" />
         <item itemvalue="Gradle.Trains" />
         <item itemvalue="Gradle.trains [generateGrammarSource]" />
@@ -371,7 +389,7 @@
       <workItem from="1707206136870" duration="583000" />
       <workItem from="1707206796780" duration="399000" />
       <workItem from="1707207214446" duration="2719000" />
-      <workItem from="1707212887665" duration="13156000" />
+      <workItem from="1707212887665" duration="15458000" />
     </task>
     <servers />
   </component>

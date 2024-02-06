@@ -1,7 +1,9 @@
 package Train_Model;
 
-import Common.trainModel;
 import Common.trackModel;
+import Common.trainController;
+import Common.trainModel;
+import Train_Controller.trainControllerImpl;
 
 public class trainModelImpl implements trainModel{
     private int authority;
@@ -19,6 +21,7 @@ public class trainModelImpl implements trainModel{
     private boolean rightDoors;
 
     private trackModel track;
+    private trainController controller;
 
     public trainModelImpl(){
         this.authority = 0;
@@ -33,6 +36,8 @@ public class trainModelImpl implements trainModel{
         this.lights = false;
         this.leftDoors = false;
         this.rightDoors = false;
+        controller = new trainControllerImpl();
+        controller.assignTrainModel(this);
     }
 
 
@@ -117,15 +122,15 @@ public class trainModelImpl implements trainModel{
     }
 
     public int readAuthority() {
-        return track.getAuthority();
+        return track.getTrainAuthority(controller.getTrainID());
     }
 
     public double readCommandSpeed() {
-        return track.getCommandedSpeed();
+        return track.getCommandedSpeed(controller.getTrainID());
     }
 
     public void readBeacon() {
-
+        return;
     }
 
 }

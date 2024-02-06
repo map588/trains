@@ -16,4 +16,7 @@ public interface trainController {
     void setRightDoors(boolean doors);
     void setServiceBrake(boolean brake);
     void setEmergencyBrake(boolean brake);
+
+    int getTrainID();
+
 }

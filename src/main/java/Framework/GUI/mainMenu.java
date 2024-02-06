@@ -76,14 +76,10 @@ public class mainMenu extends Application {
     }
 
     private Node createModuleContent(String moduleName) {
-        // Example of creating a more complex UI for a module
         VBox content = new VBox();
         content.setSpacing(10); // Set spacing between children
         Label label = new Label("Content for " + moduleName);
-        // Add more UI components to 'content' as needed for each module
         content.getChildren().add(label);
-        // If different modules have significantly different content, consider using a switch or if-else chain
-        // based on moduleName to customize the content Node for each module
         return content; // Return the VBox as the content for the module
     }
 
