@@ -1,4 +1,4 @@
-package Common_Interfaces;
+package Common;
 
 public interface ctcController {
 }

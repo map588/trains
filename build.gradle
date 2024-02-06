@@ -1,12 +1,21 @@
 plugins {
     id 'java'
-}
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.12' // Make sure this is the latest or a compatible version
 
+}
 group = 'org.james'
-version = '1.0-SNAPSHOT'
+version = '1.0'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
 
 repositories {
     mavenCentral()
+}
+
+javafx {
+    version = "17" // Or the version that matches your requirements
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 dependencies {
@@ -20,9 +29,21 @@ dependencies {
     // Mockito for mocking in tests
     testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
 
-    // Apache Commons Lang, which provides extra functionality for classes in java.lang
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // JavaFX for GUI
+    implementation 'org.openjfx:javafx-controls:17'
+    implementation 'org.openjfx:javafx-fxml:17'
+    implementation 'org.openjfx:javafx-base:17'
+    implementation 'org.openjfx:javafx-media:17'
+    implementation 'org.openjfx:javafx-web:17'
+    implementation 'org.openjfx:javafx-swing:17'
+    implementation 'org.openjfx:javafx-graphics:17'
 }
+
+application {
+    mainClass.set('Common_Interfaces.GUI.mainMenu')
+}
+
+
 
 test {
     useJUnitPlatform()

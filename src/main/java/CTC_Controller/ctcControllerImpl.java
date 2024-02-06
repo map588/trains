@@ -1,6 +1,6 @@
 package CTC_Controller;
 
-import Common_Interfaces.ctcController;
+import Common.ctcController;
 
 public class ctcControllerImpl implements ctcController{
 

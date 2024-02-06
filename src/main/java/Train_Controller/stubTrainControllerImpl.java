@@ -1,9 +1,9 @@
 package Train_Controller;
 
-import  Common.trainController;
+import Common.trainController;
 import Common.trainModel;
 
-public class trainControllerImpl implements trainController{
+public class stubTrainControllerImpl implements trainController{
     public void setCommandSpeed(double power) {
 
     }
