@@ -1,34 +1,32 @@
-package Track_Model;
+package UXTests.trackModel;
 
 import Common.trackModel;
 
-import java.util.HashMap;
+import java.util.Map;
 
-public class trackModelImpl implements  trackModel{
-    private HashMap<Integer,Integer> trainAuthorities;
-    private HashMap<Integer,Integer> trainCommandSpeeds;
+public class stubTrackModelImpl implements trackModel{
+    private Map<Integer,Integer> trainAuthorities;
+    private Map<Integer,Integer> trainCommandSpeeds;
+
     private int line;
     private boolean blockOccupied;
 
-    public trackModelImpl() {
-        this.trainAuthorities = new HashMap<>();
-        this.trainCommandSpeeds = new HashMap<>();
-        this.line = 0;
-        this.blockOccupied = false;
-    }
-    public int getAuthority(int trainID) {
-        return this.trainAuthorities.get(trainID);
-    }
+
 
     public int getTrainAuthority(int trainID) {
-        return this.trainAuthorities.get(trainID);
+        int auth = trainAuthorities.get(trainID);
+        System.out.print("Get Train Authority: "+ auth);
+        return auth;
     }
 
     public int getCommandedSpeed(int trainID) {
-        return this.trainCommandSpeeds.get(trainID);
+        int speed = trainCommandSpeeds.get(trainID);
+        System.out.print("Get Commanded Speed: "+ speed);
+        return speed;
     }
 
     public boolean blockOccupied(int block) {
+        System.out.print("Get Block Occupied: "+ blockOccupied);
         return this.blockOccupied;
     }
 
@@ -38,6 +36,7 @@ public class trackModelImpl implements  trackModel{
         } else {
             this.trainAuthorities.put(trainID, authority);
         }
+        System.out.print("Set Train Authority: "+ authority);
     }
 
     public void setCommandedSpeed(int trainID, int commandedSpeed) {
@@ -46,5 +45,6 @@ public class trackModelImpl implements  trackModel{
         } else {
             this.trainCommandSpeeds.put(trainID, commandedSpeed);
         }
+        System.out.print("Set Commanded Speed: "+ commandedSpeed);
     }
 }

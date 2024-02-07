@@ -60,7 +60,7 @@ public class mainMenu extends Application {
     private void openInNewWindow(String moduleName) {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // Get the complex UI for the module
-        Scene newScene = new Scene(new VBox(content), 1920, 1080); // Adjust size as needed
+        Scene newScene = new Scene(new VBox(content), 1280, 720); // Adjust size as needed
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();

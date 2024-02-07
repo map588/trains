@@ -5,17 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/controlsfx-11.2.0-sources.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/controlsfx-11.2.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/ctcOfficeControl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/description.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackControllerControl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainModelControl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/Simulation/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/description.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/trainController/trainControllerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackController/trackControllerUXtests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/UXTests/trainController/trainControllerUXTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CTC_Controller/ctcControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CTC_Controller/ctcControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/ctcController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/ctcController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CTC_Controller/ctcControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ctcOffice/ctcOfficeImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CTC_Controller/stubCtcImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/ctcOffice/stubCtcOfficeImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/trainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Controller/trainControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/trainModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Train_Model/trainModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Controller/stubTrackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackController/stubTrackControllerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Controller/trackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trackController/trackControllerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Model/stubTrackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackModel/stubTrackModelImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Model/trackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trackModel/trackModelImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackController/stubTrainControllerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/trainControllerImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trainModel/stubTrainModelmpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/trainModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trainModel/trainModelImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/james/javafx/example.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/james/javafx/example.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +42,9 @@
   </component>
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/exportToHTML" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -175,7 +196,7 @@
       <option value="200" />
       <option value="300" />
     </hideBySeverity>
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -194,6 +215,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Downloaded.Files.Path.Enabled": "true",
     "Gradle.Trains [:TabbedApplication.main()].executor": "Run",
     "Gradle.Trains [:mainMenu.main()].executor": "Run",
     "Gradle.Trains [dependencies].executor": "Run",
@@ -203,6 +225,9 @@
     "Gradle.trains [generateGrammarSource].executor": "Run",
     "Gradle.trains.executor": "Run",
     "Gradle.trains:plc [:plc:PLC_Parse.main()].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -218,9 +243,9 @@
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.07668712",
+    "project.structure.side.proportion": "0.41532567",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -238,30 +263,14 @@
       <recent name="$PROJECT_DIR$/src/main/antlr/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Framework.GUI.mainMenu">
-    <configuration name="Framework.GUI.mainMenu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Gradle.Trains [dependencies]">
+    <configuration name="mainMenu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Framework.GUI.mainMenu" />
       <module name="Trains.main" />
       <option name="VM_PARAMETERS" value="--module-path /opt/homebrew/Cellar/openjdk@17/javafx-sdk-17.0.10/lib  --add-modules javafx.controls,javafx.fxml" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Framework.GUI.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="mainMenu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="Common.GUI.mainMenu" />
-      <module name="Trains.main" />
-      <option name="VM_PARAMETERS" value="--module-path /opt/homebrew/Cellar/openjdk@17/javafx-sdk-17.0.10/lib  --add-modules javafx.controls,javafx.fxml" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Common.GUI.*" />
+          <option name="PATTERN" value="Framework.GUI.Controllers.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -334,7 +343,6 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.Framework.GUI.mainMenu" />
       <item itemvalue="Application.mainMenu" />
       <item itemvalue="Gradle.Trains" />
       <item itemvalue="Gradle.Trains [dependencies]" />
@@ -342,11 +350,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Framework.GUI.mainMenu" />
-        <item itemvalue="Application.mainMenu" />
+        <item itemvalue="Gradle.Trains [dependencies]" />
         <item itemvalue="Gradle.Trains" />
         <item itemvalue="Gradle.trains [generateGrammarSource]" />
-        <item itemvalue="Gradle.Trains [dependencies]" />
       </list>
     </recent_temporary>
   </component>
@@ -389,7 +395,9 @@
       <workItem from="1707206136870" duration="583000" />
       <workItem from="1707206796780" duration="399000" />
       <workItem from="1707207214446" duration="2719000" />
-      <workItem from="1707212887665" duration="15458000" />
+      <workItem from="1707212887665" duration="16672000" />
+      <workItem from="1707230597354" duration="8401000" />
+      <workItem from="1707256409532" duration="9871000" />
     </task>
     <servers />
   </component>

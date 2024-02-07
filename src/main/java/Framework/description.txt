@@ -1,0 +1,5 @@
+This package will serve as the "Main" package for the project.
+It will contain the main method and will be the entry point for the application.
+
+In this package, we will run the global real-time simulation of the system.
+We should aim to implement the MVC design pattern to separate the simulation logic from the GUI.

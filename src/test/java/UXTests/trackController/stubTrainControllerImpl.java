@@ -1,9 +1,10 @@
-package Train_Controller;
+package UXTests.trackController;
 
-import  Common.trainController;
+import Common.trainController;
 import Common.trainModel;
 
-public class trainControllerImpl implements trainController{
+public class stubTrainControllerImpl implements trainController{
+
     private int authority;
     private double commandSpeed;
     private double speed;
@@ -15,7 +16,8 @@ public class trainControllerImpl implements trainController{
     private trainModel train;
     private int trainID;
 
-    public void setCommandSpeed(double power) {
+
+    public void setCommandSpeed(double speed) {
 
     }
 
@@ -56,6 +58,7 @@ public class trainControllerImpl implements trainController{
     }
 
     public int getTrainID() {
+        System.out.println("Train ID:" + this.trainID);
         return this.trainID;
     }
 }

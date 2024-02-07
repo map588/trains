@@ -1,4 +1,4 @@
-package Track_Controller;
+package UXTests.trackController;
 
 import Common.trackController;
 public class stubTrackControllerImpl implements trackController{

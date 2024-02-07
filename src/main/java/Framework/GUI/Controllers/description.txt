@@ -1,0 +1,8 @@
+Control objects are used to control the behavior of the application through the user interface.
+These objects will be calling the methods of the subject objects to perform the actual changes.
+The subject objects in turn will call the view objects to update the user interface.
+Rinse and repeat.
+
+Ordinarily, these would be called "Model", "View" and "Controller" objects,
+but I'm using different names to avoid confusion because our objects share the
+terms "model" and "controller" with the MVC pattern.
