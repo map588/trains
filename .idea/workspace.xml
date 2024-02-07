@@ -5,35 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/controlsfx-11.2.0-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/controlsfx-11.2.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/ctcOfficeControl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/description.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackControllerControl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainModelControl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/Simulation/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Framework/description.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/trainController/trainControllerImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackController/trackControllerUXtests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/UXTests/trainController/trainControllerUXTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CTC_Controller/ctcControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ctcOffice/ctcOfficeImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CTC_Controller/stubCtcImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/ctcOffice/stubCtcOfficeImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Controller/stubTrackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackController/stubTrackControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Controller/trackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trackController/trackControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Model/stubTrackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackModel/stubTrackModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Track_Model/trackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trackModel/trackModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/stubTrainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackController/stubTrainControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Controller/trainControllerImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/stubTrainModelmpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trainModel/stubTrainModelmpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Train_Model/trainModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trainModel/trainModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/james/javafx/example.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/james/javafx/example.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +22,9 @@
     <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/exportToHTML" />
   </component>
   <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
@@ -212,43 +190,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Downloaded.Files.Path.Enabled": "true",
-    "Gradle.Trains [:TabbedApplication.main()].executor": "Run",
-    "Gradle.Trains [:mainMenu.main()].executor": "Run",
-    "Gradle.Trains [dependencies].executor": "Run",
-    "Gradle.Trains [mainMenu.main()].executor": "Run",
-    "Gradle.Trains.executor": "Run",
-    "Gradle.trains [dependencies].executor": "Run",
-    "Gradle.trains [generateGrammarSource].executor": "Run",
-    "Gradle.trains.executor": "Run",
-    "Gradle.trains:plc [:plc:PLC_Parse.main()].executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ToolWindowTerminal.ShowToolbar": "false",
-    "git-widget-placeholder": "graphics__testing",
-    "jdk.selected.JAVA_MODULE": "17",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.41532567",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Gradle.Trains [:TabbedApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains [:mainMenu.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains [mainMenu.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains [generateGrammarSource].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains:plc [:plc:PLC_Parse.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ToolWindowTerminal.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;graphics__testing&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/matthewprock/School_Projects/trains/src/main/antlr&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.41532567&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/antlr" />
@@ -397,7 +375,8 @@
       <workItem from="1707207214446" duration="2719000" />
       <workItem from="1707212887665" duration="16672000" />
       <workItem from="1707230597354" duration="8401000" />
-      <workItem from="1707256409532" duration="9871000" />
+      <workItem from="1707256409532" duration="10678000" />
+      <workItem from="1707292413619" duration="365000" />
     </task>
     <servers />
   </component>
