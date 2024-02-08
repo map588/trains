@@ -6,6 +6,8 @@ public interface trainModel {
     void setEmergencyBrake(boolean brake);
     void setServiceBrake(boolean brake);
     void setPower(double power);
+    void setNumCars(int numCars);
+    void setNumPassengers(int numPassengers);
 
     //Non-Vital Signals
     void setLeftDoors(boolean doors);
@@ -22,6 +24,7 @@ public interface trainModel {
     double  getPower();
     boolean getServiceBrake();
     boolean getEmergencyBrake();
+    double  getWeightKG();
 
 
     //Non-Vital Getter Signals

@@ -1,6 +1,7 @@
 package Framework.GUI;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -9,9 +10,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class mainMenu extends Application {
 
-    String[] tabNames = {"CTC", "Track", "Track Controller", "Train", "Train Controller"};
+    String[] tabNames = {"ctcOffice", "trackModel", "trackController", "trainModel", "trainController"};
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,8 +62,8 @@ public class mainMenu extends Application {
 
     private void openInNewWindow(String moduleName) {
         Stage newStage = new Stage();
-        Node content = createModuleContent(moduleName); // Get the complex UI for the module
-        Scene newScene = new Scene(new VBox(content), 1280, 720); // Adjust size as needed
+        Node content = createModuleContent(moduleName); // This now loads from FXML
+        Scene newScene = new Scene(new VBox(content), 1280, 720); // Ensure the layout fits the loaded content
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();
@@ -76,11 +79,18 @@ public class mainMenu extends Application {
     }
 
     private Node createModuleContent(String moduleName) {
-        VBox content = new VBox();
-        content.setSpacing(10); // Set spacing between children
-        Label label = new Label("Content for " + moduleName);
-        content.getChildren().add(label);
-        return content; // Return the VBox as the content for the module
+        try {
+            System.out.println(System.getProperty("java.class.path"));
+            // Assuming the FXML files are in the same package as this class
+            String fxmlFile = "/Framework/GUI/FXML/" + moduleName + ".fxml"; // Construct the path to the FXML
+            URL url = getClass().getResource(fxmlFile);
+            System.out.println(url);
+            FXMLLoader loader = new FXMLLoader(url);
+            return loader.load(); // Load the FXML and return the root node
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Label("Failed to load: " + moduleName);
+        }
     }
 
 

@@ -20,6 +20,8 @@ public class trainModelImpl implements trainModel{
     private BooleanProperty leftDoors;
     private BooleanProperty rightDoors;
 
+    private IntegerProperty numCars;
+    private IntegerProperty numPassengers;
 
     private trackModel track;
     private trainController controller;
@@ -36,6 +38,8 @@ public class trainModelImpl implements trainModel{
         this.lights = new SimpleBooleanProperty(false);
         this.leftDoors = new SimpleBooleanProperty(false);
         this.rightDoors = new SimpleBooleanProperty(false);
+        this.numCars = new SimpleIntegerProperty(0);
+        this.numPassengers = new SimpleIntegerProperty(0);
 
         this.track = track;
         this.controller = new trainControllerImpl(trainID);
@@ -52,6 +56,13 @@ public class trainModelImpl implements trainModel{
     public void setPower(double power) {
         this.power.set(power);
     }
+    public void setNumCars(int numCars) {
+        this.numCars.set(numCars);
+    }
+    public void setNumPassengers(int numPassengers) {
+        this.numPassengers.set(numPassengers);
+    }
+
     public void setLeftDoors(boolean doors) {
         this.leftDoors.set(doors);
     }
@@ -87,6 +98,11 @@ public class trainModelImpl implements trainModel{
     public boolean getEmergencyBrake() {
         return this.emergencyBrake.get();
     }
+
+    public double getWeightKG() {
+        return 0;
+    }
+
     public double getTemperature() {
         return this.temperature.get();
     }

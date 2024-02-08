@@ -1,15 +1,14 @@
-package trainController;
+package UXTests.trainController;
 
 import  Common.trainController;
 import Common.trainModel;
 import Utilities.Constants;
 import javafx.beans.property.*;
 
-public class trainControllerImpl implements trainController{
+public class stubTrainControllerImpl implements trainController{
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
     private DoubleProperty overrideSpeed;
-    private DoubleProperty maxSpeed;
 
     private DoubleProperty Ki;
     private DoubleProperty Kp;
@@ -25,8 +24,10 @@ public class trainControllerImpl implements trainController{
 
     private double integralError;
     private double lastErrorTime;
+    private double maxSpeed;
+    private double brakePercentage;
 
-    public trainControllerImpl(int trainID) {
+    public stubTrainControllerImpl(int trainID) {
         this.trainID= new SimpleIntegerProperty(trainID);
         this.commandSpeed = new SimpleDoubleProperty(0.0);
         this.overrideSpeed = new SimpleDoubleProperty(0.0);
@@ -39,102 +40,65 @@ public class trainControllerImpl implements trainController{
         this.authority = new SimpleIntegerProperty(0);
         this.integralError = 0.0;
     }
-    
+
     public void setCommandSpeed(double speed) {
         this.commandSpeed.set(speed);
     }
 
     public void setAutomaticMode() {
+        System.out.println("Setting automatic mode");
         setAutomaticMode(true);
     }
 
     public void setAutomaticMode(boolean mode) {
+        System.out.println("Setting automatic mode to " + mode);
         this.automaticMode.set(mode);
         this.overrideSpeed.set(0.0);
     }
     public void setOverrideSpeed(double speed) {
+        System.out.println("Setting override speed to " + speed);
         this.overrideSpeed.set(speed);
     }
 
     public void setAuthority(int authority) {
+        System.out.println("Setting authority to " + authority);
         this.authority.set(authority);
     }
 
     public void assignTrainModel(trainModel train) {
+        System.out.println("Assigning train model");
         this.train = train;
     }
 
-   public void setKi(double Ki) {
+    public void setKi(double Ki) {
+        System.out.println("Setting Ki to " + Ki);
         this.Ki.set(Ki);
     }
 
     public void setKp(double Kp) {
+        System.out.println("Setting Kp to " + Kp);
         this.Kp.set(Kp);
     }
 
     public void setServiceBrake(boolean brake) {
+        System.out.println("Setting service brake to " + brake);
         this.serviceBrake.set(brake);
     }
 
     public void setEmergencyBrake(boolean brake) {
+        System.out.println("Setting emergency brake to " + brake);
         this.setAutomaticMode(false);
         this.emergencyBrake.set(brake);
     }
 
     public int getTrainID() {
+        System.out.println("Getting train ID");
         return this.trainID.get();
     }
 
     public double getSpeed() {
+        System.out.println("Getting speed" + this.train.getSpeed());
         return this.train.getSpeed();
-    }
-
-    public double getMaxSpeed() {
-        return this.maxSpeed.get();
-    }
-
-    public boolean getEmergencyBrake() {
-        return this.emergencyBrake.get();
-    }
-
-    public boolean getServiceBrake() {
-        return this.serviceBrake.get();
-    }
-
-    public DoubleProperty overrideSpeedProperty() {
-        return this.overrideSpeed;
-    }
-
-    public DoubleProperty powerProperty() {
-        return this.power;
-    }
-
-    public DoubleProperty KiProperty() {
-        return this.Ki;
-    }
-
-    public DoubleProperty KpProperty() {
-        return this.Kp;
-    }
-
-    public BooleanProperty serviceBrakeProperty() {
-        return this.serviceBrake;
-    }
-
-    public BooleanProperty emergencyBrakeProperty() {
-        return this.emergencyBrake;
-    }
-
-    public BooleanProperty automaticModeProperty() {
-        return this.automaticMode;
-    }
-
-    public IntegerProperty authorityProperty() {
-        return this.authority;
-    }
-
-    public void run() {
-        mainController();
     }
 
     /*
@@ -142,8 +106,8 @@ public class trainControllerImpl implements trainController{
     There will be a main loop that will run the train controller in a separate thread.
      */
     private void speedController(double setSpeed, double currentSpeed){
-        if(setSpeed > this.maxSpeed.get()) {
-            setSpeed = this.maxSpeed.get();
+        if(setSpeed > this.maxSpeed) {
+            setSpeed = this.maxSpeed;
         }
         double error = setSpeed - currentSpeed;
         double time = System.currentTimeMillis();
@@ -173,8 +137,8 @@ public class trainControllerImpl implements trainController{
     //but there will be some signal to trigger a stop at the authority likely
     private void calculateMaxSpeed(){
         double authority = this.authority.get();
-        this.maxSpeed.set(Math.sqrt(2 * Constants.EMERGENCY_BRAKE_DECELERATION * authority));
-        if(this.train.getSpeed() > this.maxSpeed.get()) {
+        this.maxSpeed = Math.sqrt(2 * Constants.EMERGENCY_BRAKE_DECELERATION * authority);
+        if(this.train.getSpeed() > this.maxSpeed) {
             this.train.setEmergencyBrake(true);
             this.train.setPower(0.0);
             this.setAutomaticMode(false);
@@ -185,9 +149,9 @@ public class trainControllerImpl implements trainController{
         double setSpeed = 0.0;
 
         while(true) {
-        this.authority.set(this.train.readAuthority());
-        this.commandSpeed.set(this.train.readCommandSpeed());
-        this.calculateMaxSpeed();
+            this.authority.set(this.train.readAuthority());
+            this.commandSpeed.set(this.train.readCommandSpeed());
+            this.calculateMaxSpeed();
 
             if (this.automaticMode.get()) {
                 setSpeed = this.commandSpeed.get();
