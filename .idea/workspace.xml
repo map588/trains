@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/filestructure.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Utilities/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/trainController/testTrainControllerImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trainModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/trainController/trainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trainController/trainControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/trainModel/trainModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trainModel/trainModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/james/javafx/example.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/example.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/UXTests/trackController/stubTrainControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trainController/stubTrainControllerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -356,7 +348,7 @@
       <workItem from="1707212887665" duration="16672000" />
       <workItem from="1707230597354" duration="8401000" />
       <workItem from="1707256409532" duration="10678000" />
-      <workItem from="1707292413619" duration="23052000" />
+      <workItem from="1707292413619" duration="31737000" />
     </task>
     <servers />
   </component>

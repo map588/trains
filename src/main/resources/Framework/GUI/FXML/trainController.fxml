@@ -8,12 +8,16 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.trainControllerControl">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.trainControllerControl">
    <top>
       <AnchorPane prefHeight="168.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
          <children>
-            <Clock fx:id="trainControllerClock" layoutX="1046.0" layoutY="34.0" lcdFont="LCD" prefHeight="107.0" skinType="LCD" />
+            <Clock fx:id="trainControllerClock" layoutX="800.0" layoutY="54.0" lcdFont="LCD" prefHeight="107.0" skinType="LCD" />
+            <Text layoutX="840.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Time" wrappingWidth="140.21630859375">
+               <font>
+                  <Font name="MesloLGS NF Bold" size="18.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </top>
@@ -23,14 +27,25 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Slider fx:id="trainControllerSpeedSlider" layoutX="250.0" layoutY="233.0" prefHeight="27.0" prefWidth="321.0" />
-            <Gauge layoutX="322.0" layoutY="119.0" prefHeight="96.0" prefWidth="176.0" skinType="LCD" />
-            <Text layoutX="334.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed" wrappingWidth="153.21630859375">
+            <Slider fx:id="trainControllerSpeedSlider" layoutX="251.0" layoutY="237.0" majorTickUnit="10.0" max="70.0" minorTickCount="2" prefHeight="39.0" prefWidth="321.0" showTickLabels="true" showTickMarks="true" value="20.0" />
+            <Gauge fx:id="currentSpeedDisplay" layoutX="316.0" layoutY="80.0" prefHeight="106.0" prefWidth="216.0" skinType="LCD" />
+            <Text layoutX="328.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed" wrappingWidth="191.21630859375">
                <font>
-                  <Font size="24.0" />
+                  <Font name="MesloLGS NF Bold" size="24.0" />
                </font>
             </Text>
-            <TextFlow fx:id="trainControllerSpeedView" layoutX="308.0" layoutY="260.0" prefHeight="53.0" prefWidth="205.0" />
+            <Gauge fx:id="maxSpeedDisplay" layoutX="602.0" layoutY="68.0" prefHeight="105.0" prefWidth="163.0" skinType="LCD" />
+            <Text layoutX="612.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max Speed" wrappingWidth="143.21630859375">
+               <font>
+                  <Font name="MesloLGS NF Bold" size="24.0" />
+               </font>
+            </Text>
+            <Gauge fx:id="setSpeedDisplay" layoutX="602.0" layoutY="231.0" prefHeight="105.0" prefWidth="163.0" skinType="LCD" />
+            <Text layoutX="612.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Speed" wrappingWidth="143.21630859375">
+               <font>
+                  <Font name="MesloLGS NF Bold" size="24.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </center>
@@ -55,15 +70,15 @@
                </effect>
             </Gauge>
             <Circle fx:id="sBrakeIndicatorCircle" fill="DODGERBLUE" layoutX="42.0" layoutY="212.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="eBrakeIndicatorCircle" fill="#ff631f" layoutX="42.0" layoutY="278.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
-            <Text layoutX="73.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Service Brake" wrappingWidth="126.21630859375">
+            <Circle fx:id="eBrakeIndicatorCircle" fill="#ff422b" layoutX="42.0" layoutY="278.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
+            <Text layoutX="71.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Service Brake" wrappingWidth="144.21630859375">
                <font>
-                  <Font size="18.0" />
+                  <Font name="MesloLGS NF Bold" size="18.0" />
                </font>
             </Text>
-            <Text layoutX="73.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Emergency Brake" wrappingWidth="140.21630859375">
+            <Text layoutX="71.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Emergency Brake" wrappingWidth="173.21630859375">
                <font>
-                  <Font size="18.0" />
+                  <Font name="MesloLGS NF Bold" size="18.0" />
                </font>
             </Text>
          </children>
@@ -72,9 +87,14 @@
    <bottom>
       <AnchorPane prefHeight="200.0" prefWidth="1142.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="trainControllerEBrakeButton" layoutX="1024.0" layoutY="27.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="232.0" text="Emergency Brake">
+            <Button fx:id="eBrakeButton" layoutX="1024.0" layoutY="27.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="232.0" style="-fx-background-color: FF0808;" text="Emergency Brake">
                <font>
-                  <Font size="24.0" />
+                  <Font name="MesloLGS NF Bold" size="22.0" />
+               </font>
+            </Button>
+            <Button fx:id="sBrakeButton" layoutX="503.0" layoutY="25.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="232.0" text="Service Brake">
+               <font>
+                  <Font name="MesloLGS NF Bold" size="22.0" />
                </font>
             </Button>
          </children>
