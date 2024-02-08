@@ -1,5 +1,7 @@
-.gradle
-build/
+.gradle/workspace-id.txt
+.gradle/workspace-id.txt.lock
+.gradle/
+build/*
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
