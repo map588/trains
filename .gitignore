@@ -8,6 +8,7 @@ build/*
 
 ### IntelliJ IDEA ###
 .idea/libraries/
+.idea/workspace.xml
 *.iws
 *.iml
 *.ipr
