@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import trainController.testTrainControllerImpl;
 
 public class trainControllerControl {
@@ -19,6 +21,9 @@ public class trainControllerControl {
 
     @FXML
     private Gauge trainControllerPower;
+
+    @FXML
+    private TextFlow powerTextOut;
 
     @FXML
     private Gauge maxSpeedDisplay;
@@ -68,6 +73,10 @@ public class trainControllerControl {
             trainControllerPower.setValue(newValue.doubleValue());
         });
 
+        trainController.powerProperty().addListener((observable, oldValue, newValue) -> {
+            updatePowerText(newValue.doubleValue());
+        });
+
         trainController.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
             setSpeedDisplay.setValue(newValue.doubleValue());
         });
@@ -90,6 +99,11 @@ public class trainControllerControl {
 
     // Assuming continuation from previous code snippet
 
+    private void updatePowerText(double power) {
+        Text powerText = new Text("Power: %.2f HP".formatted(power));
+        powerTextOut.getChildren().clear();
+        powerTextOut.getChildren().add(powerText);
+    }
 
     private void updateEBrakeIndicator(boolean isEmergencyBrakeActive) {
         if (isEmergencyBrakeActive) {

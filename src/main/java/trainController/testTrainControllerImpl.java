@@ -4,6 +4,7 @@ import Common.trainController;
 import Common.trainModel;
 import Utilities.Constants;
 import javafx.beans.property.*;
+import java.lang.System;
 
 public class testTrainControllerImpl implements trainController {
     private IntegerProperty authority;
@@ -237,10 +238,12 @@ class controlSystem implements Runnable {
 
     private double integralError;
     private double lastErrorTime;
+    private double lastPower;
 
     public controlSystem(testTrainControllerImpl trainController) {
         this.trainController = trainController;
         this.integralError = 0.0;
+        this.lastPower = 0.0;
         this.lastErrorTime = System.currentTimeMillis();
     }
 
@@ -261,32 +264,31 @@ class controlSystem implements Runnable {
         //Rough sketch of our control system, subject to change
         if (powerPercentage > 100.0) {
             powerPercentage = 100.0;
-            this.trainController.setPower(powerPercentage * Constants.MAX_POWER_KW);
         } else if (powerPercentage < 0) {
             //brakePercentage =  Math.abs(powerPercentage) * Constants.MAX_POWER_KW / Constants.SERVICE_BRAKE_POWER;
             if (!this.trainController.getServiceBrake()) {
                 this.trainController.setServiceBrake(true);
             }
-
-            this.trainController.setPower(0);
-        } else {
-            if (this.trainController.getServiceBrake()) {
-                this.trainController.setServiceBrake(false);
-            }
-            this.trainController.setPower(Constants.MAX_POWER_KW * powerPercentage / 100.0);
+            powerPercentage = 0.0;
+        }
+        if(powerPercentage * Constants.MAX_POWER_KW != this.lastPower) {
+            this.trainController.setPower(powerPercentage * Constants.MAX_POWER_KW);
+            this.lastPower = powerPercentage * Constants.MAX_POWER_KW;
         }
     }
 
     public void run() {
-        double setSpeed = 0.0;
+        double setSpeed;
 
         //temporarily set the current speed to the override speed
         //TrainModel is not implemented yet
-        this.trainController.currentSpeed.add(this.trainController.getPower());
+        double currentSpeed = this.trainController.currentSpeed.get();
+        double newSpeed = currentSpeed + this.trainController.getPower() * 0.1;
+        this.trainController.currentSpeed.set(newSpeed);
         if(this.trainController.getEmergencyBrake())
-            this.trainController.currentSpeed.add(-Constants.EMERGENCY_BRAKE_DECELERATION);
+            this.trainController.currentSpeed.set(currentSpeed - Constants.EMERGENCY_BRAKE_DECELERATION);
         else if(this.trainController.getServiceBrake())
-            this.trainController.currentSpeed.add(-Constants.SERVICE_BRAKE_DECELERATION);
+            this.trainController.currentSpeed.set(currentSpeed - Constants.SERVICE_BRAKE_DECELERATION);
 
         while (true) {
 //            this.authority.set(this.train.readAuthority());
