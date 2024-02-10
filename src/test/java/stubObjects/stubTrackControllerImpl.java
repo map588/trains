@@ -1,5 +1,5 @@
 package stubObjects;
 
-import Common.trackController;
-public class stubTrackControllerImpl implements trackController{
+import waysideController.waysideController;
+public class stubTrackControllerImpl implements waysideController {
 }
