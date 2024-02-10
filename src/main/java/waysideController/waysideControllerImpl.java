@@ -1,7 +1,7 @@
 package waysideController;
 
-import Common.trackController;
+import Common.waysideController;
 
-class waysideControllerImpl implements trackController{
+class waysideControllerImpl implements waysideController {
 
 }
