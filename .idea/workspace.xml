@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/waysideController/waysideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/waysideController/waysideControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/waysideController/waysideControllerImpl.java" afterDir="false" />
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Began adding some code to wayside interface and implementation">
       <change beforePath="$PROJECT_DIR$/src/test/java/stubObjects/stubTrackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/stubObjects/stubTrackControllerImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -341,7 +338,7 @@
       <workItem from="1707230597354" duration="8401000" />
       <workItem from="1707256409532" duration="10678000" />
       <workItem from="1707292413619" duration="31737000" />
-      <workItem from="1707607004743" duration="976000" />
+      <workItem from="1707607004743" duration="1262000" />
     </task>
     <task id="LOCAL-00001" summary="a commit that I don't know why I need to do it">
       <option name="closed" value="true" />
@@ -351,7 +348,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707514103462</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Began adding some code to wayside interface and implementation">
+      <option name="closed" value="true" />
+      <created>1707608233204</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1707608233204</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -374,7 +379,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="a commit that I don't know why I need to do it" />
-    <option name="LAST_COMMIT_MESSAGE" value="a commit that I don't know why I need to do it" />
+    <MESSAGE value="Began adding some code to wayside interface and implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Began adding some code to wayside interface and implementation" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
