@@ -1,4 +1,4 @@
-package UXTests.trainController;
+package stubObjects;
 
 import  Common.trainController;
 import Common.trainModel;

@@ -1,4 +1,4 @@
-package UXTests.ctcOffice;
+package stubObjects;
 
 public class stubCtcOfficeImpl {
 }
