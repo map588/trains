@@ -16,5 +16,8 @@ public interface waysideController {
 
     // Adds a new track block under the wayside controller's control
     public void addBlock(trackModel block);
+
+    // Returns the ID of the controller
+    public int getID();
 }
 

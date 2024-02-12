@@ -76,5 +76,6 @@
             <Font name="Papyrus" size="23.0" />
          </font>
       </Label>
+      <Button fx:id="createNewControllerButton" layoutX="585.0" layoutY="9.0" mnemonicParsing="false" text="+" />
    </children>
 </AnchorPane>

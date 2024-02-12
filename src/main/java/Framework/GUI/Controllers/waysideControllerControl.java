@@ -1,8 +1,5 @@
 package Framework.GUI.Controllers;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,8 +7,12 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import waysideController.waysideControllerImpl;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class waysideControllerControl {
 
@@ -30,6 +31,8 @@ public class waysideControllerControl {
     @FXML
     private Button plcUploadButton;
     @FXML
+    private Button createNewControllerButton;
+    @FXML
     private ProgressBar uploadProgressBar;
     @FXML
     private Circle plcActiveIndicator;
@@ -40,15 +43,22 @@ public class waysideControllerControl {
     @FXML
     private Label changeControllerLabel;
 
-    private int controllerNum = -1;
+    private int controllerNum = 1;
     private String folderPath;
-    private waysideControllerImpl waysideController = new waysideControllerImpl();
+    private waysideControllerImpl currentController = new waysideControllerImpl(1);
+    private List<waysideControllerImpl> controllerList = new ArrayList<waysideControllerImpl>();
 
     @FXML
     public void initialize() {
         plcFolderButton.setOnAction(event -> pickFolder());
         plcUploadButton.setOnAction(event ->  uploadPLC());
+        createNewControllerButton.setOnAction(event -> createNewController());
+        changeControllerComboBox.getItems().add("Wayside Controller #1");
+        changeControllerComboBox.setValue("Wayside Controller #1");
+        changeControllerLabel.setText("Wayside Controller #1");
+        changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue().toString()));
         plcActiveIndicator.setFill(Color.GRAY);
+        controllerList.add(currentController);
     }
 
     /**
@@ -86,8 +96,8 @@ public class waysideControllerControl {
         File selectedFile = (File) plcFileList.getSelectionModel().getSelectedItem();
 
         if(selectedFile != null) {
-            waysideController.loadPLC(selectedFile);
-            plcCurrentFileLabel.setText("Current PLC File: " + waysideController.getPLC().getName());
+            currentController.loadPLC(selectedFile);
+            plcCurrentFileLabel.setText("Current PLC File: " + currentController.getPLC().getName());
             plcActiveIndicator.setFill(Color.BLUE);
             System.out.println(selectedFile.getName());
 
@@ -96,5 +106,26 @@ public class waysideControllerControl {
         else {
             System.out.println("No file selected!");
         }
+    }
+
+    /**
+     * Creates a new wayside controller and adds it to the list of controllers
+     */
+    private void createNewController() {
+        waysideControllerImpl newController = new waysideControllerImpl(++controllerNum);
+        controllerList.add(newController);
+        changeControllerComboBox.getItems().add("Wayside Controller #" + controllerNum);
+        changeControllerComboBox.setValue("Wayside Controller #" + controllerNum);
+        changeActiveController("Wayside Controller #" + controllerNum);
+    }
+
+    /**
+     * Changes the active controller to the one selected in the combo box
+     */
+    private void changeActiveController(String controllerName) {
+        changeControllerLabel.setText(controllerName);
+        int id = Integer.parseInt(controllerName.substring(controllerName.lastIndexOf("#") + 1));
+        currentController = controllerList.get(id - 1);
+        // TODO: Change the active controller
     }
 }
