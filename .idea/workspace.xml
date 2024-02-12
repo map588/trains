@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Began adding some code to wayside interface and implementation">
-      <change beforePath="$PROJECT_DIR$/src/test/java/stubObjects/stubTrackControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/stubObjects/stubTrackControllerImpl.java" afterDir="false" />
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="a commit that I don't know why I need to do it">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackControllerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/waysideControllerControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/mainMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/james/javafx/Wayside.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/waysideController.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,45 +174,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
-    &quot;Gradle.Trains [:TabbedApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Trains [:mainMenu.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Trains [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Trains [mainMenu.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Trains.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.trains [:mainMenu.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.trains [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.trains [generateGrammarSource].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.trains [run].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.trains.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.trains:plc [:plc:PLC_Parse.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ToolWindowTerminal.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;graphics__testing__Wayside&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/matthewprock/School_Projects/trains/src/main/antlr&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.41532567&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Downloaded.Files.Path.Enabled": "true",
+    "Gradle.Trains [:TabbedApplication.main()].executor": "Run",
+    "Gradle.Trains [:mainMenu.main()].executor": "Run",
+    "Gradle.Trains [dependencies].executor": "Run",
+    "Gradle.Trains [mainMenu.main()].executor": "Run",
+    "Gradle.Trains.executor": "Run",
+    "Gradle.trains [:mainMenu.main()].executor": "Run",
+    "Gradle.trains [dependencies].executor": "Run",
+    "Gradle.trains [generateGrammarSource].executor": "Run",
+    "Gradle.trains [run].executor": "Run",
+    "Gradle.trains.executor": "Run",
+    "Gradle.trains:plc [:plc:PLC_Parse.main()].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowTerminal.ShowToolbar": "false",
+    "git-widget-placeholder": "graphics__testing__Wayside",
+    "jdk.selected.JAVA_MODULE": "17",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.41532567",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.JavaFX",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/antlr" />
@@ -217,11 +220,11 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Michael\IdeaProjects\trains\src\main\resources\Framework\GUI\FXML" />
       <recent name="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML" />
       <recent name="$PROJECT_DIR$/src/main/resources/com/james/javafx" />
       <recent name="$PROJECT_DIR$/src/main/java/Framework/GUI/FXML" />
       <recent name="$PROJECT_DIR$/plc/src/main/java/com/james/antlr" />
-      <recent name="$PROJECT_DIR$/plc/src/main" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.trains [run]">
@@ -338,7 +341,6 @@
       <workItem from="1707230597354" duration="8401000" />
       <workItem from="1707256409532" duration="10678000" />
       <workItem from="1707292413619" duration="31737000" />
-      <workItem from="1707607004743" duration="1262000" />
     </task>
     <task id="LOCAL-00001" summary="a commit that I don't know why I need to do it">
       <option name="closed" value="true" />
@@ -348,15 +350,7 @@
       <option name="project" value="LOCAL" />
       <updated>1707514103462</updated>
     </task>
-    <task id="LOCAL-00002" summary="Began adding some code to wayside interface and implementation">
-      <option name="closed" value="true" />
-      <created>1707608233204</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1707608233204</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -379,8 +373,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="a commit that I don't know why I need to do it" />
-    <MESSAGE value="Began adding some code to wayside interface and implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Began adding some code to wayside interface and implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="a commit that I don't know why I need to do it" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

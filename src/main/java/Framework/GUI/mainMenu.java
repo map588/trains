@@ -54,7 +54,7 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
 
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
