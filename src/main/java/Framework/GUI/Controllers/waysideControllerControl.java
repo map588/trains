@@ -3,8 +3,11 @@ package Framework.GUI.Controllers;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -44,6 +47,8 @@ public class waysideControllerControl {
     @FXML
     public void initialize() {
         plcFolderButton.setOnAction(event -> pickFolder());
+        plcUploadButton.setOnAction(event ->  uploadPLC());
+        plcActiveIndicator.setFill(Color.GRAY);
     }
 
     /**
@@ -72,9 +77,24 @@ public class waysideControllerControl {
         });
 
         if (files != null) {
-            for (File file : files) {
-                System.out.println(file.getName());
-            }
+            ObservableList<File> items = FXCollections.observableArrayList(files);
+            plcFileList.setItems(items);
+        }
+    }
+
+    private void uploadPLC() {
+        File selectedFile = (File) plcFileList.getSelectionModel().getSelectedItem();
+
+        if(selectedFile != null) {
+            waysideController.loadPLC(selectedFile);
+            plcCurrentFileLabel.setText("Current PLC File: " + waysideController.getPLC().getName());
+            plcActiveIndicator.setFill(Color.BLUE);
+            System.out.println(selectedFile.getName());
+
+            uploadProgressBar.setProgress(1.0);
+        }
+        else {
+            System.out.println("No file selected!");
         }
     }
 }
