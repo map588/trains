@@ -5,7 +5,7 @@ import Common.trackModel;
 import java.util.ArrayList;
 import java.util.List;
 
-class waysideControllerImpl implements waysideController {
+public class waysideControllerImpl implements waysideController {
 
     // List containing all the track blocks controlled by this instance of the wayside controller
     List<trackModel> trackList = new ArrayList<trackModel>();

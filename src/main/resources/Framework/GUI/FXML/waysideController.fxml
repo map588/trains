@@ -22,9 +22,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="305.0" prefWidth="526.0">
                      <children>
-                        <ListView fixedCellSize="50.0" layoutX="23.0" layoutY="64.0" prefHeight="290.0" prefWidth="260.0" />
-                        <ListView fixedCellSize="50.0" layoutX="345.0" layoutY="64.0" prefHeight="253.0" prefWidth="255.0" scaleZ="-3.0" />
-                        <CheckBox layoutX="511.0" layoutY="337.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="106.0" text="Manual Mode" />
+                        <ListView fx:id="blockList" fixedCellSize="50.0" layoutX="23.0" layoutY="64.0" prefHeight="290.0" prefWidth="260.0" />
+                        <ListView fx:id="switchList" fixedCellSize="50.0" layoutX="345.0" layoutY="64.0" prefHeight="253.0" prefWidth="255.0" scaleZ="-3.0" />
+                        <CheckBox fx:id="manualModeCheckbox" layoutX="511.0" layoutY="337.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="106.0" text="Manual Mode" />
                         <Label layoutX="118.0" layoutY="32.0" prefHeight="26.0" prefWidth="70.0" text="Blocks">
                            <font>
                               <Font size="21.0" />
@@ -43,11 +43,11 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField layoutX="27.0" layoutY="21.0" prefHeight="26.0" prefWidth="255.0" />
-                        <ListView layoutX="23.0" layoutY="60.0" prefHeight="250.0" prefWidth="360.0" />
-                        <Button layoutX="291.0" layoutY="21.0" mnemonicParsing="false" text="Browse Folder" />
-                        <Button layoutX="27.0" layoutY="321.0" mnemonicParsing="false" text="Upload PLC" />
-                        <ProgressBar layoutX="116.0" layoutY="324.0" prefHeight="18.0" prefWidth="266.0" progress="0.0" />
+                        <TextField fx:id="plcFolderTextField" layoutX="27.0" layoutY="21.0" prefHeight="26.0" prefWidth="255.0" />
+                        <ListView fx:id="plcFileList" layoutX="23.0" layoutY="60.0" prefHeight="250.0" prefWidth="360.0" />
+                        <Button fx:id="plcFolderButton" layoutX="291.0" layoutY="21.0" mnemonicParsing="false" text="Browse Folder" />
+                        <Button fx:id="plcUploadButton" layoutX="27.0" layoutY="321.0" mnemonicParsing="false" text="Upload PLC" />
+                        <ProgressBar fx:id="uploadProgressBar" layoutX="116.0" layoutY="324.0" prefHeight="18.0" prefWidth="266.0" progress="0.0" />
                         <AnchorPane layoutX="407.0" layoutY="113.0" prefHeight="86.0" prefWidth="193.0">
                            <children>
                               <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="86.0" stroke="#aeaeae" strokeType="INSIDE" width="193.0" />
@@ -56,8 +56,8 @@
                                     <Font name="System Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <Circle fill="DODGERBLUE" layoutX="151.0" layoutY="30.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label layoutX="14.0" layoutY="54.0" text="Current PLC File:" />
+                              <Circle fx:id="plcActiveIndicator" fill="DODGERBLUE" layoutX="151.0" layoutY="30.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Label fx:id="plcCurrentFileLabel" layoutX="14.0" layoutY="54.0" text="Current PLC File:" />
                            </children>
                         </AnchorPane>
                      </children></AnchorPane>
@@ -65,8 +65,8 @@
           </Tab>
         </tabs>
       </TabPane>
-      <ComboBox editable="true" layoutX="419.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
-      <Label layoutX="419.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
+      <ComboBox fx:id="changeControllerComboBox" editable="true" layoutX="419.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
+      <Label fx:id="changeControllerLabel" layoutX="419.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
          <font>
             <Font size="16.0" />
          </font>
