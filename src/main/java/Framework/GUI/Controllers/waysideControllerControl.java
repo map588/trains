@@ -93,6 +93,9 @@ public class waysideControllerControl {
         }
     }
 
+    /**
+     * Uploads the selected PLC file to the wayside controller
+     */
     private void uploadPLC() {
         File selectedFile = (File) plcFileList.getSelectionModel().getSelectedItem();
 
@@ -107,6 +110,9 @@ public class waysideControllerControl {
         }
     }
 
+    /**
+     * Updates the wayside controller information on the GUI
+     */
     private void updateWaysideInfo() {
         if(currentController.getPLC() != null) {
             plcCurrentFileLabel.setText("Current PLC File: " + currentController.getPLC().getName());
