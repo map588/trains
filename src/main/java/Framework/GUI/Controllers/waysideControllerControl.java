@@ -97,14 +97,23 @@ public class waysideControllerControl {
 
         if(selectedFile != null) {
             currentController.loadPLC(selectedFile);
-            plcCurrentFileLabel.setText("Current PLC File: " + currentController.getPLC().getName());
-            plcActiveIndicator.setFill(Color.BLUE);
+            updatePLCInfo();
             System.out.println(selectedFile.getName());
-
             uploadProgressBar.setProgress(1.0);
         }
         else {
             System.out.println("No file selected!");
+        }
+    }
+
+    private void updatePLCInfo() {
+        if(currentController.getPLC() != null) {
+            plcCurrentFileLabel.setText("Current PLC File: " + currentController.getPLC().getName());
+            plcActiveIndicator.setFill(Color.BLUE);
+        }
+        else {
+            plcCurrentFileLabel.setText("Current PLC File: ");
+            plcActiveIndicator.setFill(Color.GRAY);
         }
     }
 
@@ -127,5 +136,6 @@ public class waysideControllerControl {
         int id = Integer.parseInt(controllerName.substring(controllerName.lastIndexOf("#") + 1));
         currentController = controllerList.get(id - 1);
         // TODO: Change the active controller
+        updatePLCInfo();
     }
 }
