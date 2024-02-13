@@ -52,6 +52,7 @@ public class waysideControllerControl {
     public void initialize() {
         plcFolderButton.setOnAction(event -> pickFolder());
         plcUploadButton.setOnAction(event ->  uploadPLC());
+        manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.getItems().add("Wayside Controller #1");
         changeControllerComboBox.setValue("Wayside Controller #1");
@@ -97,7 +98,7 @@ public class waysideControllerControl {
 
         if(selectedFile != null) {
             currentController.loadPLC(selectedFile);
-            updatePLCInfo();
+            updateWaysideInfo();
             System.out.println(selectedFile.getName());
             uploadProgressBar.setProgress(1.0);
         }
@@ -106,7 +107,7 @@ public class waysideControllerControl {
         }
     }
 
-    private void updatePLCInfo() {
+    private void updateWaysideInfo() {
         if(currentController.getPLC() != null) {
             plcCurrentFileLabel.setText("Current PLC File: " + currentController.getPLC().getName());
             plcActiveIndicator.setFill(Color.BLUE);
@@ -115,6 +116,8 @@ public class waysideControllerControl {
             plcCurrentFileLabel.setText("Current PLC File: ");
             plcActiveIndicator.setFill(Color.GRAY);
         }
+
+        manualModeCheckbox.setSelected(currentController.isManualMode());
     }
 
     /**
@@ -136,6 +139,6 @@ public class waysideControllerControl {
         int id = Integer.parseInt(controllerName.substring(controllerName.lastIndexOf("#") + 1));
         currentController = controllerList.get(id - 1);
         // TODO: Change the active controller
-        updatePLCInfo();
+        updateWaysideInfo();
     }
 }

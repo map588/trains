@@ -14,6 +14,12 @@ public interface waysideController {
     // Loads a new PLC program into the wayside controller from a given file
     public void loadPLC(File PLC);
 
+    // Returns whether the wayside controller is in manual mode
+    public boolean isManualMode();
+
+    // Sets whether the wayside controller is in manual mode
+    public void setManualMode(boolean manualMode);
+
     // Adds a new track block under the wayside controller's control
     public void addBlock(trackModel block);
 
