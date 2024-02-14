@@ -1,9 +1,13 @@
 package Framework.GUI.Controllers;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Callback;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
@@ -17,15 +21,23 @@ import java.util.List;
 public class waysideControllerControl {
 
     @FXML
-    private ListView blockList;
+    private ListView<Integer> blockList;
     @FXML
-    private ListView switchList;
+    private ListView<Integer> switchList;
     @FXML
     private CheckBox manualModeCheckbox;
     @FXML
     private TextField plcFolderTextField;
     @FXML
-    private ListView plcFileList;
+    private ListView<File> plcFileList;
+    @FXML
+    private TableView<File> plcFileTable;
+    @FXML
+    public TableColumn<File,String> plcFileNameColumn;
+    @FXML
+    public TableColumn<File,String> plcFileDateModifiedColumn;
+    @FXML
+    public TableColumn<File,String> plcFileDateCreatedColumn;
     @FXML
     private Button plcFolderButton;
     @FXML
@@ -39,31 +51,44 @@ public class waysideControllerControl {
     @FXML
     private Label plcCurrentFileLabel;
     @FXML
-    private ComboBox changeControllerComboBox;
+    private ComboBox<String> changeControllerComboBox;
     @FXML
     private Label changeControllerLabel;
 
     private int controllerNum = 0;
     private waysideControllerImpl currentController = null;
-    private List<waysideControllerImpl> controllerList = new ArrayList<waysideControllerImpl>();
+    private final List<waysideControllerImpl> controllerList = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        createNewController();
-
-        currentController.addBlock(1);
-        currentController.addBlock(2);
-        currentController.addBlock(3);
-
-        updateBlockList();
-        updateSwitchList();
-
         plcFolderButton.setOnAction(event -> pickFolder());
         plcUploadButton.setOnAction(event ->  uploadPLC());
         manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
-        changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue().toString()));
-        plcActiveIndicator.setFill(Color.GRAY);
+        changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
+
+        plcFileNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<File, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<File, String> file) {
+                return new ReadOnlyObjectWrapper<>(file.getValue().getName());
+            }
+        });
+        plcFileDateModifiedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<File, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<File, String> file) {
+                return new ReadOnlyObjectWrapper<>(file.getValue().lastModified()+"");
+            }
+        });
+        plcFileDateCreatedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<File, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<File, String> file) {
+                return new ReadOnlyObjectWrapper<>(file.getValue().getName());
+            }
+        });
+
+        createNewController();
+        currentController.addBlock(1);
+        currentController.addBlock(2);
+        currentController.addBlock(3);
+        updateBlockList();
+        updateSwitchList();
     }
 
     /**
@@ -92,8 +117,10 @@ public class waysideControllerControl {
         });
 
         if (files != null) {
+//            files[0].la;
             ObservableList<File> items = FXCollections.observableArrayList(files);
             plcFileList.setItems(items);
+            plcFileTable.setItems(items);
         }
     }
 
@@ -101,7 +128,7 @@ public class waysideControllerControl {
      * Uploads the selected PLC file to the wayside controller
      */
     private void uploadPLC() {
-        File selectedFile = (File) plcFileList.getSelectionModel().getSelectedItem();
+        File selectedFile = plcFileList.getSelectionModel().getSelectedItem();
 
         if(selectedFile != null) {
             currentController.loadPLC(selectedFile);
@@ -136,7 +163,7 @@ public class waysideControllerControl {
     private void updateBlockList() {
         ObservableList<Integer> blocks = FXCollections.observableList(currentController.getBlockList());
 
-        if(blocks != null) {
+        if(!blocks.isEmpty()) {
             blockList.setItems(blocks);
         }
     }
