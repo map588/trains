@@ -19,8 +19,15 @@ public class trackModelImpl implements  trackModel{
     public void setTrainAuthority(int trainID, int authority) {
 
     }
-
     public void setCommandedSpeed(int trainID, int commandedSpeed) {
 
     }
+    public int getLightState(int block) {return 0;}
+
+    public void setLightState(int state) {}
+
+    public boolean getSwitchState(int block) {return false;}
+
+    public void setSwitchState(boolean state) {}
+
 }

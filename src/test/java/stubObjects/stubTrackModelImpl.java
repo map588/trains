@@ -47,4 +47,9 @@ public class stubTrackModelImpl implements trackModel{
         }
         System.out.print("Set Commanded Speed: "+ commandedSpeed);
     }
+
+    public int getLightState(int block) { return 0; }
+    public void setLightState(int state) {}
+    public boolean getSwitchState(int block) {return false;}
+    public void setSwitchState(boolean state) {}
 }
