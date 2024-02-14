@@ -15,8 +15,11 @@ public class waysideControllerImpl implements waysideController {
     // Whether the wayside controller is in manual mode
     private boolean manualMode = false;
 
+    // Reference to the track model for pulling information on block states
+    private trackModel trackModelReference = null;
+
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private List<trackModel> trackList = new ArrayList<trackModel>();
+    private List<Integer> trackList = new ArrayList<Integer>();
 
     // The PLC program that the wayside controller is running
     private File PLC = null;
@@ -49,8 +52,12 @@ public class waysideControllerImpl implements waysideController {
         this.manualMode = manualMode;
     }
 
+    public List<Integer> getBlockList() {
+        return this.trackList;
+    }
+
     @Override
-    public void addBlock(trackModel block) {
+    public void addBlock(int block) {
         this.trackList.add(block);
     }
 

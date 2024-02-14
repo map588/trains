@@ -43,23 +43,27 @@ public class waysideControllerControl {
     @FXML
     private Label changeControllerLabel;
 
-    private int controllerNum = 1;
-    private String folderPath;
-    private waysideControllerImpl currentController = new waysideControllerImpl(1);
+    private int controllerNum = 0;
+    private waysideControllerImpl currentController = null;
     private List<waysideControllerImpl> controllerList = new ArrayList<waysideControllerImpl>();
 
     @FXML
     public void initialize() {
+        createNewController();
+
+        currentController.addBlock(1);
+        currentController.addBlock(2);
+        currentController.addBlock(3);
+
+        updateBlockList();
+        updateSwitchList();
+
         plcFolderButton.setOnAction(event -> pickFolder());
         plcUploadButton.setOnAction(event ->  uploadPLC());
         manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
-        changeControllerComboBox.getItems().add("Wayside Controller #1");
-        changeControllerComboBox.setValue("Wayside Controller #1");
-        changeControllerLabel.setText("Wayside Controller #1");
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue().toString()));
         plcActiveIndicator.setFill(Color.GRAY);
-        controllerList.add(currentController);
     }
 
     /**
@@ -127,6 +131,24 @@ public class waysideControllerControl {
     }
 
     /**
+     * Updates the block list in the GUI with the information from the current wayside controller
+     */
+    private void updateBlockList() {
+        ObservableList<Integer> blocks = FXCollections.observableList(currentController.getBlockList());
+
+        if(blocks != null) {
+            blockList.setItems(blocks);
+        }
+    }
+
+    /**
+     * Updates the switch list in the GUI with the information from the current wayside controller
+     */
+    private void updateSwitchList() {
+
+    }
+
+    /**
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
@@ -146,5 +168,7 @@ public class waysideControllerControl {
         currentController = controllerList.get(id - 1);
         // TODO: Change the active controller
         updateWaysideInfo();
+        updateBlockList();
+        updateSwitchList();
     }
 }
