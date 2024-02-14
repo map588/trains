@@ -16,7 +16,8 @@ public class trainModelImpl implements trainModel{
     private DoubleProperty temperature;
     private BooleanProperty serviceBrake;
     private BooleanProperty emergencyBrake;
-    private BooleanProperty lights;
+    private BooleanProperty extLights;
+    private BooleanProperty intLights;
     private BooleanProperty leftDoors;
     private BooleanProperty rightDoors;
 
@@ -35,7 +36,8 @@ public class trainModelImpl implements trainModel{
         this.temperature = new SimpleDoubleProperty(0);
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
-        this.lights = new SimpleBooleanProperty(false);
+        this.extLights = new SimpleBooleanProperty(false);
+        this.intLights = new SimpleBooleanProperty(false);
         this.leftDoors = new SimpleBooleanProperty(false);
         this.rightDoors = new SimpleBooleanProperty(false);
         this.numCars = new SimpleIntegerProperty(0);
@@ -69,9 +71,10 @@ public class trainModelImpl implements trainModel{
     public void setRightDoors(boolean doors) {
         this.rightDoors.set(doors);
     }
-    public void setLights(boolean lights) {
-        this.lights.set(lights);
+    public void setExtLights(boolean lights) {
+        this.extLights.set(lights);
     }
+    public void setIntLights(boolean lights) { this.intLights.set(lights); }
     public void setTemperature(double temp) {
         this.temperature.set(temp);
     }
@@ -106,9 +109,10 @@ public class trainModelImpl implements trainModel{
     public double getTemperature() {
         return this.temperature.get();
     }
-    public boolean getLights() {
-        return this.lights.get();
+    public boolean getExtLights() {
+        return this.extLights.get();
     }
+    public boolean getIntLights() { return this.intLights.get(); }
     public boolean getLeftDoors() {
         return this.leftDoors.get();
     }
@@ -141,9 +145,10 @@ public class trainModelImpl implements trainModel{
     public DoubleProperty temperatureProperty() {
         return temperature;
     }
-    public BooleanProperty lightsProperty() {
-        return lights;
+    public BooleanProperty extLightsProperty() {
+        return extLights;
     }
+    public BooleanProperty intLightsProperty() { return intLights; }
     public BooleanProperty leftDoorsProperty() {
         return leftDoors;
     }

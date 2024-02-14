@@ -12,7 +12,8 @@ public interface trainModel {
     //Non-Vital Signals
     void setLeftDoors(boolean doors);
     void setRightDoors(boolean doors);
-    void setLights(boolean lights);
+    void setExtLights(boolean lights);
+    void setIntLights(boolean lights);
     void setTemperature(double temp);
 
 
@@ -29,7 +30,8 @@ public interface trainModel {
 
     //Non-Vital Getter Signals
     double  getTemperature();
-    boolean getLights();
+    boolean getExtLights();
+    boolean getIntLights();
     boolean getLeftDoors();
     boolean getRightDoors();
 
