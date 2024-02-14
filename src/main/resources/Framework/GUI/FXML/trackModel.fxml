@@ -1,14 +1,302 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.cell.ImageGridCell?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Framework.GUI.FXML.TrackModel"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="954.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.FXML.TrackModel">
+   <children>
+      <TabPane layoutX="-4.0" layoutY="53.0" prefHeight="901.0" prefWidth="1373.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="LAYOUT">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="884.0" prefWidth="1373.0">
+                     <children>
+                        <TableView layoutX="811.0" layoutY="45.0" prefHeight="359.0" prefWidth="548.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="Section" />
+                            <TableColumn prefWidth="75.0" text="Block" />
+                              <TableColumn prefWidth="75.0" text="Size" />
+                              <TableColumn prefWidth="75.0" text="Grade" />
+                              <TableColumn prefWidth="75.0" text="St,Sw,Si" />
+                              <TableColumn prefWidth="75.0" text="Speed Limit" />
+                              <TableColumn prefWidth="75.0" text="Failure" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="1085.0" layoutY="14.0" prefHeight="32.0" prefWidth="37.0" text="RED" textFill="RED">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="1071.0" layoutY="428.0" prefHeight="17.0" prefWidth="66.0" text="GREEN" textFill="#009005">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TableView layoutX="811.0" layoutY="472.0" prefHeight="359.0" prefWidth="548.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="Section" />
+                              <TableColumn prefWidth="75.0" text="Block" />
+                              <TableColumn prefWidth="75.0" text="Size" />
+                              <TableColumn prefWidth="75.0" text="Grade" />
+                              <TableColumn prefWidth="75.0" text="StSwSi" />
+                              <TableColumn prefWidth="75.0" text="Speed Limit" />
+                              <TableColumn prefWidth="75.0" text="Failure" />
+                           </columns>
+                        </TableView>
+                        <Label layoutX="535.0" layoutY="31.0" text="SECTIONS">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <ListView layoutX="536.0" layoutY="80.0" prefHeight="752.0" prefWidth="225.0" />
+                        <ComboBox layoutX="682.0" layoutY="30.0" prefHeight="25.0" prefWidth="78.0" promptText="Line" />
+                        <TitledPane animated="false" layoutX="27.0" layoutY="171.0" prefHeight="206.0" prefWidth="473.0" text="MURPHY">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="192.0" prefWidth="471.0">
+                                 <children>
+                                    <Button layoutX="383.0" layoutY="28.0" mnemonicParsing="false" text="ENTER" />
+                                    <ComboBox layoutX="24.0" layoutY="29.0" prefHeight="33.0" prefWidth="115.0" promptText="Line" />
+                                    <ComboBox layoutX="186.0" layoutY="29.0" prefHeight="33.0" prefWidth="137.0" promptText="Block #" />
+                                    <CheckBox layoutX="30.0" layoutY="86.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="156.0" text="Fix Track Failure">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </CheckBox>
+                                    <CheckBox layoutX="30.0" layoutY="124.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="144.0" text="Break Rail">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </CheckBox>
+                                    <CheckBox layoutX="222.0" layoutY="123.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="153.0" text="Power Failure">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </CheckBox>
+                                    <CheckBox layoutX="222.0" layoutY="88.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Track Circuit Failure">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </CheckBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="27.0" layoutY="377.0" prefHeight="103.0" prefWidth="473.0" text="TRACK HEATER">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="92.0" prefWidth="246.0">
+                                 <children>
+                                    <ToggleButton layoutX="9.0" layoutY="19.0" mnemonicParsing="false" text="ON" textFill="#18b200" />
+                                    <TextField layoutX="279.0" layoutY="17.0" prefHeight="25.0" prefWidth="50.0" text="26">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <Label layoutX="143.0" layoutY="23.0" text="Outside Temp:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="336.0" layoutY="23.0" prefHeight="18.0" prefWidth="47.0" text="º F">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="27.0" layoutY="480.0" prefHeight="258.0" prefWidth="473.0" text="STATION, SIGNAL, SWITCH">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="186.0" prefWidth="471.0">
+                                 <children>
+                                    <TabPane layoutX="2.0" layoutY="-1.0" prefHeight="214.0" prefWidth="469.0" tabClosingPolicy="UNAVAILABLE">
+                                      <tabs>
+                                        <Tab text="STATION">
+                                          <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <TextField layoutX="226.0" layoutY="60.0" prefHeight="25.0" prefWidth="50.0" text="26">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Label layoutX="9.0" layoutY="66.0" text="Passengers Embarked">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField layoutX="226.0" layoutY="102.0" prefHeight="25.0" prefWidth="50.0" text="26">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Label layoutX="10.0" layoutY="107.0" text="Passengers Disembarked">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label layoutX="8.0" layoutY="18.0" text="Location - ">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField layoutX="139.0" layoutY="12.0" text="NAME OF STATION" />
+                                                      <Label layoutX="342.0" layoutY="48.0" text="Ticket Sales">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField layoutX="377.0" layoutY="101.0" prefHeight="25.0" prefWidth="50.0" text="26">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </AnchorPane>
+                                          </content>
+                                        </Tab>
+                                        <Tab text="SWITCH">
+                                          <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                          </content>
+                                        </Tab>
+                                          <Tab text="SIGNAL">
+                                             <content>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                             </content>
+                                          </Tab>
+                                      </tabs>
+                                    </TabPane>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="27.0" layoutY="739.0" prefHeight="112.0" prefWidth="473.0" text="BEACON INFORMATION">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="92.0" prefWidth="246.0">
+                                 <children>
+                                    <Label layoutX="26.0" layoutY="19.0" text="Upload Beacon Information">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Button layoutX="359.0" layoutY="15.0" mnemonicParsing="false" text="UPLOAD" />
+                                    <TextField layoutX="240.0" layoutY="15.0" prefHeight="33.0" prefWidth="97.0" text="Path or Text" />
+                                 </children></AnchorPane>
+                           </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="27.0" layoutY="20.0" prefHeight="151.0" prefWidth="473.0" text="SIMULATION INFORMATION">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="471.0">
+                                 <children>
+                                    <Label layoutX="22.0" layoutY="9.0" text="Simulation Speed">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox layoutX="18.0" layoutY="50.0" prefHeight="33.0" prefWidth="137.0" promptText="10x" />
+                                    <Label layoutX="228.0" layoutY="10.0" text="Upload Layout">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="174.0" layoutY="57.0" text="Path:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField layoutX="229.0" layoutY="52.0" prefHeight="33.0" prefWidth="127.0" text="/path/to/csv/layout" />
+                                    <Button layoutX="377.0" layoutY="11.0" mnemonicParsing="false" text="UPLOAD" />
+                                    <Button layoutX="369.0" layoutY="51.0" minHeight="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="90.0" text="Chose File" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="TEST BENCH">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="38.0" layoutY="8.0" text="BLOCK OCCUPANCIES, SWITCH &amp; SIGNAL STATES">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <ComboBox layoutX="163.0" layoutY="54.0" prefWidth="150.0" promptText="Line" />
+                        <TableView layoutX="34.0" layoutY="100.0" prefHeight="753.0" prefWidth="413.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="Section" />
+                            <TableColumn prefWidth="75.0" text="Block" />
+                              <TableColumn prefWidth="75.0" text="Switch" />
+                              <TableColumn prefWidth="75.0" text="Signal" />
+                              <TableColumn prefWidth="75.0" text="Occupied" />
+                          </columns>
+                        </TableView>
+                        <TitledPane animated="false" layoutX="448.0" layoutY="-1.0" text="SET OUTSIDE TEMPERATURE">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="447.0" layoutY="225.0" prefHeight="226.0" prefWidth="377.0" text="SET SWITCH STATES">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                           </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="447.0" layoutY="451.0" prefHeight="226.0" prefWidth="377.0" text="SET SIGNAL STATES">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                           </content>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TitledPane>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Label layoutX="5.0" prefHeight="20.0" prefWidth="169.0" text="J.A.M.E.S.">
+         <font>
+            <Font name="Papyrus" size="30.0" />
+         </font>
+      </Label>
+      <ImageGridCell layoutX="337.0" layoutY="-62.0" />
+   </children>
 </AnchorPane>
