@@ -3,9 +3,11 @@ package Framework.GUI.Controllers;
 import eu.hansolo.medusa.Gauge;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
+import trainModel.trainModelImpl;
 
 public class trainModelControl {
 
+    private trainModelImpl train;
     //Murphy Controls
     public ToggleButton brakeFailureBtn;
     public ToggleButton powerFailureBtn;
@@ -30,5 +32,17 @@ public class trainModelControl {
     public Circle eBrakeEn;
     public Gauge cmdSpeedDisp;
     public Gauge authorityDisp;
+
+    public void initialize() {
+        train = new trainModelImpl(0);
+
+        //set event listeners
+        eBrakeBtn.setOnAction(event -> train.setEmergencyBrake(false));
+        brakeFailureBtn.setOnAction(event -> train.setBrakeFailure(false));
+        powerFailureBtn.setOnAction(event -> train.setPowerFailure(false));
+        signalFailureBtn.setOnAction(event -> train.setSignalFailure(false));
+        //set cell factories for table values
+
+    }
 }
 
