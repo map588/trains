@@ -14,7 +14,9 @@ import javafx.stage.DirectoryChooser;
 import waysideController.waysideControllerImpl;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class waysideControllerControl {
@@ -50,8 +52,6 @@ public class waysideControllerControl {
     @FXML
     public TableColumn<File,String> plcFileDateModifiedColumn;
     @FXML
-    public TableColumn<File,String> plcFileDateCreatedColumn;
-    @FXML
     private Button plcFolderButton;
     @FXML
     private Button plcUploadButton;
@@ -71,6 +71,7 @@ public class waysideControllerControl {
     private int controllerNum = 0;
     private waysideControllerImpl currentController = null;
     private final List<waysideControllerImpl> controllerList = new ArrayList<>();
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
 
     @FXML
     public void initialize() {
@@ -89,8 +90,7 @@ public class waysideControllerControl {
         blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
-        plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().lastModified()+""));
-        plcFileDateCreatedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
+        plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
 
         // Create initial controller and update values
         createNewController();

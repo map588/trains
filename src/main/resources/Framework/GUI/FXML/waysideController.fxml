@@ -61,9 +61,8 @@
                         <TextField fx:id="plcFolderTextField" layoutX="27.0" layoutY="21.0" prefHeight="26.0" prefWidth="255.0" />
                         <TableView fx:id="plcFileTable" layoutX="23.0" layoutY="60.0" prefHeight="250.0" prefWidth="360.0">
                           <columns>
-                            <TableColumn fx:id="plcFileNameColumn" prefWidth="170.0" text="File Name" />
-                            <TableColumn fx:id="plcFileDateModifiedColumn" prefWidth="95.0" text="Date Modified" />
-                              <TableColumn fx:id="plcFileDateCreatedColumn" prefWidth="94.0" text="Date Created" />
+                            <TableColumn fx:id="plcFileNameColumn" prefWidth="258.0" text="File Name" />
+                            <TableColumn fx:id="plcFileDateModifiedColumn" prefWidth="101.0" text="Date Modified" />
                           </columns>
                         </TableView>
                         <Button fx:id="plcFolderButton" layoutX="291.0" layoutY="21.0" mnemonicParsing="false" text="Browse Folder" />
