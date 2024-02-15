@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import trainController.testTrainControllerImpl;
 
-public class trainControllerControl {
+public class trainControllerListener {
 
     @FXML
     public Clock trainControllerClock;

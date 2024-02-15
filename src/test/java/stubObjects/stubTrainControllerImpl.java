@@ -1,6 +1,6 @@
 package stubObjects;
 
-import  Common.trainController;
+import Common.trainController;
 import Common.trainModel;
 import Utilities.Constants;
 import javafx.beans.property.*;
@@ -26,7 +26,6 @@ public class stubTrainControllerImpl implements trainController{
     private double lastErrorTime;
     private double maxSpeed;
     private double brakePercentage;
-
     public stubTrainControllerImpl(int trainID) {
         this.trainID= new SimpleIntegerProperty(trainID);
         this.commandSpeed = new SimpleDoubleProperty(0.0);
@@ -80,6 +79,10 @@ public class stubTrainControllerImpl implements trainController{
         this.Kp.set(Kp);
     }
 
+    public int getTrainNumber() {
+        return 0;
+    }
+
     public void setServiceBrake(boolean brake) {
         System.out.println("Setting service brake to " + brake);
         this.serviceBrake.set(brake);
@@ -99,6 +102,46 @@ public class stubTrainControllerImpl implements trainController{
     public double getSpeed() {
         System.out.println("Getting speed" + this.train.getSpeed());
         return this.train.getSpeed();
+    }
+
+    public double getAcceleration() {
+        return 0;
+    }
+
+    public double getPower() {
+        return 0;
+    }
+
+    public boolean getServiceBrake() {
+        return false;
+    }
+
+    public boolean getEmergencyBrake() {
+        return false;
+    }
+
+    public double getCommandSpeed() {
+        return 0;
+    }
+
+    public int getAuthority() {
+        return 0;
+    }
+
+    public double getKi() {
+        return 0;
+    }
+
+    public double getKp() {
+        return 0;
+    }
+
+    public double getOverrideSpeed() {
+        return 0;
+    }
+
+    public boolean getAutomaticMode() {
+        return false;
     }
 
     /*
