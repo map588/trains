@@ -206,7 +206,7 @@
             <CheckBox id="Open_Door_Left_CheckBox" layoutX="180.0" layoutY="218.0" mnemonicParsing="false" />
             <ImageView fitHeight="38.4" fitWidth="36.0" layoutX="25.6" layoutY="208.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../Framework.GUI.Images/Service%20Brake.png" />
+                  <Image url="@../../../Framework.GUI.Images/Service_Brake.png" />
                </image>
             </ImageView>
             <Gauge id="Power_Gauge" backgroundPaint="#ffffff00" foregroundPaint="#b1b1b100" layoutX="13.0" layoutY="47.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="138.0" prefWidth="201.0" skinType="LCD" unit="HP">

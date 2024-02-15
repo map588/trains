@@ -4,21 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Door.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Lightbulb.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Lightbulb_Black.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Lightbulb_White.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/PowerFailure.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Service Brake.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/SignalFailure.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Thermometer.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Wrench.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Wrench_Black.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Wrench_White.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/brake.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/brakeFailure.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Added the fxml file for Train Controller Software">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Service_Brake.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Service Brake.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -366,6 +354,15 @@
       <workItem from="1707256409532" duration="10678000" />
       <workItem from="1707292413619" duration="31737000" />
     </task>
+    <task id="LOCAL-00001" summary="Added the fxml file for Train Controller Software">
+      <option name="closed" value="true" />
+      <created>1708040931202</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1708040931202</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -387,6 +384,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Added the fxml file for Train Controller Software" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added the fxml file for Train Controller Software" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
