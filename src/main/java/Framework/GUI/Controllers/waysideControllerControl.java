@@ -14,7 +14,6 @@ import javafx.stage.DirectoryChooser;
 import waysideController.waysideControllerImpl;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,11 +123,7 @@ public class waysideControllerControl {
      * @param dir File object with the directory of files
      */
     private void updatePLCTableView(File dir) {
-        File[] files = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".plc");
-            }
-        });
+        File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".plc"));
 
         if (files != null) {
 //            files[0].la;

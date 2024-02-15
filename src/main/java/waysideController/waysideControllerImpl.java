@@ -1,6 +1,5 @@
 package waysideController;
 
-import Common.trackModel;
 import Common.waysideController;
 import Utilities.BlockInfo;
 
@@ -11,16 +10,13 @@ import java.util.List;
 public class waysideControllerImpl implements waysideController {
 
     // The ID of the wayside controller
-    private int id;
+    private final int id;
 
     // Whether the wayside controller is in manual mode
     private boolean manualMode = false;
 
-    // Reference to the track model for pulling information on block states
-    private trackModel trackModelReference = null;
-
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private List<BlockInfo> trackList = new ArrayList<BlockInfo>();
+    private List<BlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
     private File PLC = null;
