@@ -1,2 +1,4 @@
-package trainModel;public class trainModelSubject {
+package trainModel;
+
+public class trainModelSubject {
 }

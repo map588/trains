@@ -1,2 +1,4 @@
-package trackModel;public class trackModelSubject {
+package trackModel;
+
+public class trackModelSubject {
 }

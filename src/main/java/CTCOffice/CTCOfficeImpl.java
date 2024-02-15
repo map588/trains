@@ -3,7 +3,7 @@ package CTCOffice;
 import Common.ctcController;
 import Common.trainModel;
 
-class ctcOfficeImpl implements ctcController{
+class CTCOfficeImpl implements ctcController{
 
 
     public trainModel dispatch(int trainID, int blockID) {

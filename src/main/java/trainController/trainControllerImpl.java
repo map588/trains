@@ -96,6 +96,14 @@ class trainControllerImpl implements trainController{
         return 0;
     }
 
+    public double getKi() {
+        return 0;
+    }
+
+    public double getKp() {
+        return 0;
+    }
+
     public double getOverrideSpeed() {
         return 0;
     }

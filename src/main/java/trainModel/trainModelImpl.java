@@ -1,109 +1,67 @@
-package trainModel;
+package trackModel;
 
-import Common.trainModel;
-public class trainModelImpl implements trainModel{
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 
-    public void setEmergencyBrake(boolean brake) {
+import java.util.HashMap;
 
+
+public class trainModelImpl {
+
+    private HashMap<Integer,Integer> trainAuthorities;
+    private HashMap<Integer,Integer> trainCommandSpeeds;
+    private int line;
+    private boolean blockOccupied;
+
+    private IntegerProperty lightState;
+    private BooleanProperty switchState;
+
+    public trainModelImpl() {
+        this.trainAuthorities = new HashMap<>();
+        this.trainCommandSpeeds = new HashMap<>();
+        this.line = 0;
+        this.blockOccupied = false;
+    }
+    public int getAuthority(int trainID) {
+        return this.trainAuthorities.get(trainID);
     }
 
-    public void setServiceBrake(boolean brake) {
-
+    public int getTrainAuthority(int trainID) {
+        return this.trainAuthorities.get(trainID);
     }
 
-    public void setPower(double power) {
-
+    public int getCommandedSpeed(int trainID) {
+        return this.trainCommandSpeeds.get(trainID);
     }
 
-    public void setNumCars(int numCars) {
+    public boolean blockOccupied(int block) { return this.blockOccupied;}
 
+    // Getters and Setters for Lights and Switches
+    public int getLightState(int block) {return this.lightState.get();}
+
+    public void setLightState(int state) {this.lightState.set(state);}
+
+    public boolean getSwitchState(int block) {return this.switchState.get();}
+
+    public void setSwitchState(boolean state) {this.switchState.set(state);}
+
+    //public int setPassengersDisembarked(int trainID) {return 0;}
+    //public int getPassengersDisembarked(int trainID) {return 0;}
+
+    public void setTrainAuthority(int trainID, int authority) {
+        if(this.trainAuthorities.containsKey(trainID)) {
+            this.trainAuthorities.replace(trainID, authority);
+        } else {
+            this.trainAuthorities.put(trainID, authority);
+        }
     }
 
-    public void setNumPassengers(int numPassengers) {
-
-    }
-
-    public void setLeftDoors(boolean doors) {
-
-    }
-
-    public void setRightDoors(boolean doors) {
-
-    }
-
-    public void setLights(boolean lights) {
-
-    }
-
-    public void setTemperature(double temp) {
-
-    }
-
-    public int getAuthority() {
-        return 0;
-    }
-
-    public double getCommandSpeed() {
-        return 0;
-    }
-
-    public double getSpeed() {
-        return 0;
-    }
-
-    public double getAcceleration() {
-        return 0;
-    }
-
-    public double getPower() {
-        return 0;
-    }
-
-    public boolean getServiceBrake() {
-        return false;
-    }
-
-    public boolean getEmergencyBrake() {
-        return false;
-    }
-
-    public double getWeightKG() {
-        return 0;
-    }
-
-    public double getTemperature() {
-        return 0;
-    }
-
-    public boolean getLights() {
-        return false;
-    }
-
-    public boolean getLeftDoors() {
-        return false;
-    }
-
-    public boolean getRightDoors() {
-        return false;
-    }
-
-    public int readAuthority() {
-        return 0;
-    }
-
-    public double readCommandSpeed() {
-        return 0;
-    }
-
-    public void readBeacon() {
-
-    }
-
-    public void calculateSpeed() {
-
-    }
-
-    public void calculateAcceleration() {
-
+    public void setCommandedSpeed(int trainID, int commandedSpeed) {
+        if(this.trainCommandSpeeds.containsKey(trainID)) {
+            this.trainCommandSpeeds.replace(trainID, commandedSpeed);
+        } else {
+            this.trainCommandSpeeds.put(trainID, commandedSpeed);
+        }
     }
 }
+
