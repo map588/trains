@@ -2,6 +2,7 @@ package waysideController;
 
 import Common.trackModel;
 import Common.waysideController;
+import Utilities.BlockInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class waysideControllerImpl implements waysideController {
     private trackModel trackModelReference = null;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private List<Integer> trackList = new ArrayList<Integer>();
+    private List<BlockInfo> trackList = new ArrayList<BlockInfo>();
 
     // The PLC program that the wayside controller is running
     private File PLC = null;
@@ -52,12 +53,12 @@ public class waysideControllerImpl implements waysideController {
         this.manualMode = manualMode;
     }
 
-    public List<Integer> getBlockList() {
+    public List<BlockInfo> getBlockList() {
         return this.trackList;
     }
 
     @Override
-    public void addBlock(int block) {
+    public void addBlock(BlockInfo block) {
         this.trackList.add(block);
     }
 

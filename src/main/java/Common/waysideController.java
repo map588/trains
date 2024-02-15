@@ -1,6 +1,7 @@
 package Common;
 
 import Common.trackModel;
+import Utilities.BlockInfo;
 
 import java.io.File;
 import java.util.List;
@@ -22,10 +23,10 @@ public interface waysideController {
     public void setManualMode(boolean manualMode);
 
     // Returns the list of block IDs under the wayside controller's control
-    public List<Integer> getBlockList();
+    public List<BlockInfo> getBlockList();
 
     // Adds a new track block under the wayside controller's control
-    public void addBlock(int block);
+    public void addBlock(BlockInfo block);
 
     // Returns the ID of the controller
     public int getID();

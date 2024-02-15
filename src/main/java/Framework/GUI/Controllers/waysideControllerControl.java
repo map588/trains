@@ -1,12 +1,12 @@
 package Framework.GUI.Controllers;
 
+import Utilities.BlockInfo;
+import Utilities.staticBlockInfo;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -21,9 +21,25 @@ import java.util.List;
 public class waysideControllerControl {
 
     @FXML
-    private ListView<Integer> blockList;
+    private TableView<BlockInfo> blockTable;
     @FXML
-    private ListView<Integer> switchList;
+    private TableColumn<BlockInfo,Integer> blockTableIDColumn;
+    @FXML
+    private TableColumn<BlockInfo,Boolean> blockTableCircuitColumn;
+    @FXML
+    private TableColumn<BlockInfo,Integer> blockTableLightsColumn;
+    @FXML
+    private TableColumn<BlockInfo,Boolean> blockTableCrossingColumn;
+    @FXML
+    private TableView switchTable;
+    @FXML
+    private TableColumn switchTableIDColumn;
+    @FXML
+    private TableColumn switchTableBlockInColumn;
+    @FXML
+    private TableColumn switchTableStateColumn;
+    @FXML
+    private TableColumn switchTableBlockOutColumn;
     @FXML
     private CheckBox manualModeCheckbox;
     @FXML
@@ -59,32 +75,32 @@ public class waysideControllerControl {
 
     @FXML
     public void initialize() {
+        // Set up event listeners
         plcFolderButton.setOnAction(event -> pickFolder());
         plcUploadButton.setOnAction(event ->  uploadPLC());
         manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
 
-        plcFileNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<File, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<File, String> file) {
-                return new ReadOnlyObjectWrapper<>(file.getValue().getName());
-            }
-        });
-        plcFileDateModifiedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<File, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<File, String> file) {
-                return new ReadOnlyObjectWrapper<>(file.getValue().lastModified()+"");
-            }
-        });
-        plcFileDateCreatedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<File, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<File, String> file) {
-                return new ReadOnlyObjectWrapper<>(file.getValue().getName());
-            }
-        });
+        // Set up cell factories for table views
+        blockTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber));
+        blockTableCircuitColumn.setCellValueFactory(new PropertyValueFactory<>("trackCircuitState"));
+        blockTableLightsColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
+        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
+        plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
+        plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().lastModified()+""));
+        plcFileDateCreatedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
+
+        // Create initial controller and update values
         createNewController();
-        currentController.addBlock(1);
-        currentController.addBlock(2);
-        currentController.addBlock(3);
+        staticBlockInfo staticInfo = new staticBlockInfo();
+        staticInfo.blockNumber = 10;
+        BlockInfo newBlock = new BlockInfo(staticInfo);
+        newBlock.setLightOutState(1);
+        newBlock.setCrossingClosed(true);
+        newBlock.setTrackCircuitState(true);
+        currentController.addBlock(newBlock);
         updateBlockList();
         updateSwitchList();
     }
@@ -99,7 +115,7 @@ public class waysideControllerControl {
 
         if (dir != null) {
             plcFolderTextField.setText(dir.getPath());
-            updatePLCListView(dir);
+            updatePLCTableView(dir);
         }
     }
 
@@ -107,7 +123,7 @@ public class waysideControllerControl {
      * Updates the PLC File list with all valid files in the selected directory
      * @param dir File object with the directory of files
      */
-    private void updatePLCListView(File dir) {
+    private void updatePLCTableView(File dir) {
         File[] files = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.toLowerCase().endsWith(".plc");
@@ -158,10 +174,10 @@ public class waysideControllerControl {
      * Updates the block list in the GUI with the information from the current wayside controller
      */
     private void updateBlockList() {
-        ObservableList<Integer> blocks = FXCollections.observableList(currentController.getBlockList());
+        ObservableList<BlockInfo> blocks = FXCollections.observableList(currentController.getBlockList());
 
         if(!blocks.isEmpty()) {
-            blockList.setItems(blocks);
+            blockTable.setItems(blocks);
         }
     }
 

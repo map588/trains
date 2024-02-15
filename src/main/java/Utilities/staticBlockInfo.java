@@ -8,6 +8,9 @@ public class staticBlockInfo {
     public int speedLimit;
 
 
+    public boolean isCrossing;
+    public boolean hasInputTrafficLight;
+    public boolean hasOutputTrafficLight;
     public boolean isSwitch;
     public boolean isStation;
     public staticBlockInfo switchBlock1;
