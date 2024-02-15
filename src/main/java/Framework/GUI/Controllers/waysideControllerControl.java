@@ -6,14 +6,20 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import waysideController.waysideControllerImpl;
 
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,9 +80,12 @@ public class waysideControllerControl {
     private waysideControllerImpl currentController = null;
     private final List<waysideControllerImpl> controllerList = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
+    private waysideControllerTB testBench;
 
     @FXML
     public void initialize() {
+        // Launch the test bench
+        launchTestBench();
         // Set up event listeners
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
@@ -107,6 +116,7 @@ public class waysideControllerControl {
         currentController.addBlock(newBlock);
         updateBlockList();
         updateSwitchList();
+        //
     }
 
     /**
@@ -200,11 +210,31 @@ public class waysideControllerControl {
      */
     private void changeActiveController(String controllerName) {
         changeControllerLabel.setText(controllerName);
+        //tbWaysideNumberLabel.setText(controllerName);
         int id = Integer.parseInt(controllerName.substring(controllerName.lastIndexOf("#") + 1));
         currentController = controllerList.get(id - 1);
         // TODO: Change the active controller
         updateWaysideInfo();
         updateBlockList();
         updateSwitchList();
+    }
+
+    private void launchTestBench() {
+        System.out.println(System.getProperty("Preparing to launch test bench"));
+        try {
+            String tbFile = "/Framework/GUI/FXML/waysideController_TB.fxml";
+            URL url = getClass().getResource(tbFile);
+            FXMLLoader loader = new FXMLLoader(url);
+            Node content = loader.load();
+            Stage newStage = new Stage();
+            Scene newScene = new Scene(new VBox(content), 1280, 720);
+            newStage.setScene(newScene);
+            newStage.setTitle("Wayside Controller Test Bench");
+            newStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to launch test bench");
+            throw new RuntimeException(e);
+        }
     }
 }
