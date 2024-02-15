@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/trainController/testTrainControllerImpl.java" afterDir="false" />
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Modified Light setters/getters to be exterior and interior">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,17 +44,9 @@
         <task path="$PROJECT_DIR$/plc">
           <activation />
         </task>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
         <projects_view>
           <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Trains" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </tree_state>
         </projects_view>
@@ -74,6 +63,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="graphics_testing" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -166,7 +160,7 @@
       <option value="200" />
       <option value="300" />
     </hideBySeverity>
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -204,7 +198,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ToolWindowTerminal.ShowToolbar": "false",
-    "git-widget-placeholder": "graphics__testing",
+    "git-widget-placeholder": "Train__Model__Branch",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
@@ -350,6 +344,15 @@
       <workItem from="1707256409532" duration="10678000" />
       <workItem from="1707292413619" duration="31737000" />
     </task>
+    <task id="LOCAL-00001" summary="Modified Light setters/getters to be exterior and interior">
+      <option name="closed" value="true" />
+      <created>1707948568785</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707948568785</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -371,6 +374,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Modified Light setters/getters to be exterior and interior" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified Light setters/getters to be exterior and interior" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
