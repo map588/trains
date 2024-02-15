@@ -5,9 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/trainController/testTrainControllerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Door.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Lightbulb.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Lightbulb_Black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Lightbulb_White.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/PowerFailure.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Service Brake.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/SignalFailure.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Thermometer.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Wrench.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Wrench_Black.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/Wrench_White.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/brake.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework.GUI.Images/brakeFailure.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainControllerControl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trainController.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,9 +58,6 @@
         <task path="$PROJECT_DIR$/plc">
           <activation />
         </task>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -74,6 +82,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="graphics_testing_Wayside" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -166,7 +179,7 @@
       <option value="200" />
       <option value="300" />
     </hideBySeverity>
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -204,10 +217,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ToolWindowTerminal.ShowToolbar": "false",
-    "git-widget-placeholder": "graphics__testing",
+    "git-widget-placeholder": "Raymond__JavaFX__Demo",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
+    "last_opened_file_path": "C:/Users/zheng/IdeaProjects/trains/src/main/resources/Framework.GUI.Images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -223,6 +236,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\zheng\IdeaProjects\trains\src\main\resources\Framework.GUI.Images" />
       <recent name="$PROJECT_DIR$/src/main/antlr" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src" />
@@ -303,6 +317,8 @@
         <item itemvalue="Gradle.trains [run]" />
         <item itemvalue="Gradle.trains [dependencies]" />
         <item itemvalue="Application.mainMenu" />
+        <item itemvalue="Gradle.trains [run]" />
+        <item itemvalue="Gradle.trains [dependencies]" />
       </list>
     </recent_temporary>
   </component>
