@@ -7,35 +7,50 @@ import javafx.beans.property.*;
 import trainController.trainControllerImpl;
 
 public class trainModelImpl implements trainModel{
+    //Passed Variables
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
+
+    //Vital Variables
     private DoubleProperty speed;
     private DoubleProperty acceleration;
     private DoubleProperty power;
-
-    private DoubleProperty temperature;
     private BooleanProperty serviceBrake;
     private BooleanProperty emergencyBrake;
+
+    //Murphy Variables
+    private BooleanProperty brakeFailure;
+    private BooleanProperty powerFailure;
+    private BooleanProperty signalFailure;
+
+    //NonVital Variables
     private BooleanProperty extLights;
     private BooleanProperty intLights;
     private BooleanProperty leftDoors;
     private BooleanProperty rightDoors;
+    private DoubleProperty temperature;
 
     private IntegerProperty numCars;
     private IntegerProperty numPassengers;
 
+    //Module Stubs
     private trackModel track;
     private trainController controller;
 
-    public trainModelImpl(int trainID, trackModel track){
+    public trainModelImpl(int trainID){
         this.authority = new SimpleIntegerProperty(0);
         this.commandSpeed = new SimpleDoubleProperty(0);
         this.speed = new SimpleDoubleProperty(0);
         this.acceleration = new SimpleDoubleProperty(0);
         this.power = new SimpleDoubleProperty(0);
-        this.temperature = new SimpleDoubleProperty(0);
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
+
+        this.brakeFailure = new SimpleBooleanProperty(false);
+        this.powerFailure = new SimpleBooleanProperty(false);
+        this.signalFailure = new SimpleBooleanProperty(false);
+
+        this.temperature = new SimpleDoubleProperty(0);
         this.extLights = new SimpleBooleanProperty(false);
         this.intLights = new SimpleBooleanProperty(false);
         this.leftDoors = new SimpleBooleanProperty(false);
@@ -43,12 +58,11 @@ public class trainModelImpl implements trainModel{
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
 
-        this.track = track;
         this.controller = new trainControllerImpl(trainID);
         this.controller.assignTrainModel(this);
     }
 
-
+    //Vital Setters
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake.set(brake);
     }
@@ -58,13 +72,19 @@ public class trainModelImpl implements trainModel{
     public void setPower(double power) {
         this.power.set(power);
     }
+
+    //Murphy Setters
+    public void setBrakeFailure(boolean failure) { this.brakeFailure.set(failure); }
+    public void setPowerFailure(boolean failure) { this.powerFailure.set(failure); }
+    public void setSignalFailure(boolean failure) { this.signalFailure.set(failure); }
+
+    //NonVital Setters
     public void setNumCars(int numCars) {
         this.numCars.set(numCars);
     }
     public void setNumPassengers(int numPassengers) {
         this.numPassengers.set(numPassengers);
     }
-
     public void setLeftDoors(boolean doors) {
         this.leftDoors.set(doors);
     }
@@ -79,7 +99,7 @@ public class trainModelImpl implements trainModel{
         this.temperature.set(temp);
     }
 
-    //----Getter Signals----
+    //Vital Getters
     public int getAuthority() {
         return this.authority.get();
     }
@@ -106,6 +126,12 @@ public class trainModelImpl implements trainModel{
         return 0;
     }
 
+    //Murphy Getters
+    public boolean getBrakeFailure() { return this.brakeFailure.get(); }
+    public boolean getPowerFailure() { return this.powerFailure.get(); }
+    public boolean getSignalFailure() { return this.signalFailure.get(); }
+
+    //NonVital Getters
     public double getTemperature() {
         return this.temperature.get();
     }
@@ -142,6 +168,9 @@ public class trainModelImpl implements trainModel{
     public DoubleProperty powerProperty() {
         return power;
     }
+    public BooleanProperty brakeFailureProperty() { return brakeFailure; }
+    public BooleanProperty powerFailureProperty() { return powerFailure; }
+    public BooleanProperty signalFailureProperty() { return signalFailure; }
     public DoubleProperty temperatureProperty() {
         return temperature;
     }

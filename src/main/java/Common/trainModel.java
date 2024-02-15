@@ -9,6 +9,11 @@ public interface trainModel {
     void setNumCars(int numCars);
     void setNumPassengers(int numPassengers);
 
+    //Murphy Signals
+    void setBrakeFailure(boolean failure);
+    void setPowerFailure(boolean failure);
+    void setSignalFailure(boolean failure);
+
     //Non-Vital Signals
     void setLeftDoors(boolean doors);
     void setRightDoors(boolean doors);
@@ -26,6 +31,11 @@ public interface trainModel {
     boolean getServiceBrake();
     boolean getEmergencyBrake();
     double  getWeightKG();
+
+    //Murphy Getter Signals
+    boolean getBrakeFailure();
+    boolean getPowerFailure();
+    boolean getSignalFailure();
 
 
     //Non-Vital Getter Signals
