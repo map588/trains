@@ -76,6 +76,7 @@ public class waysideControllerControl {
     public void initialize() {
         // Set up event listeners
         plcFolderButton.setOnAction(event -> pickFolder());
+        plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
         manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
