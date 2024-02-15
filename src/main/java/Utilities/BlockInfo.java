@@ -7,6 +7,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class BlockInfo {
 
+    public static final int TRAFFIC_LIGHT_RED = 1;
+    public static final int TRAFFIC_LIGHT_YELLOW = 2;
+    public static final int TRAFFIC_LIGHT_GREEN = 3;
+
     private final staticBlockInfo staticInfo;
     private BooleanProperty trackCircuitState;
     private BooleanProperty crossingClosed;
@@ -17,8 +21,8 @@ public class BlockInfo {
         this.staticInfo = staticInfo;
         trackCircuitState = new SimpleBooleanProperty(false);
         crossingClosed = new SimpleBooleanProperty(false);
-        lightInState = new SimpleIntegerProperty(0);
-        lightOutState = new SimpleIntegerProperty(0);
+        lightInState = new SimpleIntegerProperty(TRAFFIC_LIGHT_RED);
+        lightOutState = new SimpleIntegerProperty(TRAFFIC_LIGHT_RED);
     }
 
     public staticBlockInfo getStaticInfo() {

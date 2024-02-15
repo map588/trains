@@ -127,7 +127,6 @@ public class waysideControllerControl {
         File[] files = dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".plc"));
 
         if (files != null) {
-//            files[0].la;
             ObservableList<File> items = FXCollections.observableArrayList(files);
             plcFileTable.setItems(items);
         }
@@ -171,10 +170,7 @@ public class waysideControllerControl {
      */
     private void updateBlockList() {
         ObservableList<BlockInfo> blocks = FXCollections.observableList(currentController.getBlockList());
-
-        if(!blocks.isEmpty()) {
-            blockTable.setItems(blocks);
-        }
+        blockTable.setItems(blocks);
     }
 
     /**
