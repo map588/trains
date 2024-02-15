@@ -37,18 +37,24 @@
                         <TableView fx:id="blockTable" layoutX="23.0" layoutY="64.0" prefHeight="290.0" prefWidth="260.0">
                           <columns>
                             <TableColumn fx:id="blockTableIDColumn" prefWidth="28.0" text="ID" />
-                            <TableColumn fx:id="blockTableCircuitColumn" prefWidth="85.0" text="Track Circuit" />
-                              <TableColumn fx:id="blockTableLightsColumn" prefWidth="84.0" text="Lights" />
-                              <TableColumn fx:id="blockTableCrossingColumn" prefWidth="62.0" text="Crossing" />
+                            <TableColumn fx:id="blockTableCircuitColumn" prefWidth="83.0" text="Track Circuit" />
+                              <TableColumn fx:id="blockTableLightsColumn" prefWidth="63.0" text="Lights" />
+                              <TableColumn fx:id="blockTableCrossingColumn" prefWidth="71.0" text="Crossing" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                         <TableView fx:id="switchTable" layoutX="345.0" layoutY="64.0" prefHeight="253.0" prefWidth="255.0">
                           <columns>
                             <TableColumn fx:id="switchTableIDColumn" prefWidth="61.0" text="Switch ID" />
                             <TableColumn fx:id="switchTableBlockInColumn" prefWidth="60.0" text="Block IN" />
-                              <TableColumn fx:id="switchTableStateColumn" prefWidth="66.0" text="State" />
+                              <TableColumn fx:id="switchTableStateColumn" prefWidth="52.0" text="State" />
                               <TableColumn fx:id="switchTableBlockOutColumn" prefWidth="67.0" text="Block OUT" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </children>
                   </AnchorPane>
@@ -61,9 +67,12 @@
                         <TextField fx:id="plcFolderTextField" layoutX="27.0" layoutY="21.0" prefHeight="26.0" prefWidth="255.0" />
                         <TableView fx:id="plcFileTable" layoutX="23.0" layoutY="60.0" prefHeight="250.0" prefWidth="360.0">
                           <columns>
-                            <TableColumn fx:id="plcFileNameColumn" prefWidth="258.0" text="File Name" />
-                            <TableColumn fx:id="plcFileDateModifiedColumn" prefWidth="101.0" text="Date Modified" />
+                            <TableColumn fx:id="plcFileNameColumn" minWidth="-1.0" prefWidth="244.0" text="File Name" />
+                            <TableColumn fx:id="plcFileDateModifiedColumn" minWidth="-1.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Date Modified" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                         <Button fx:id="plcFolderButton" layoutX="291.0" layoutY="21.0" mnemonicParsing="false" text="Browse Folder" />
                         <Button fx:id="plcUploadButton" layoutX="27.0" layoutY="321.0" mnemonicParsing="false" text="Upload PLC" />
