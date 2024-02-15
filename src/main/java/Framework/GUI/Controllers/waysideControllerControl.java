@@ -28,7 +28,9 @@ public class waysideControllerControl {
     @FXML
     private TableColumn<BlockInfo,Boolean> blockTableCircuitColumn;
     @FXML
-    private TableColumn<BlockInfo,Integer> blockTableLightsColumn;
+    private TableColumn<BlockInfo,Integer> blockTableLightInColumn;
+    @FXML
+    private TableColumn<BlockInfo,Integer> blockTableLightOutColumn;
     @FXML
     private TableColumn<BlockInfo,Boolean> blockTableCrossingColumn;
     @FXML
@@ -86,7 +88,8 @@ public class waysideControllerControl {
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber));
         blockTableCircuitColumn.setCellValueFactory(new PropertyValueFactory<>("trackCircuitState"));
-        blockTableLightsColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
+        blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
+        blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
         blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
@@ -97,6 +100,7 @@ public class waysideControllerControl {
         staticBlockInfo staticInfo = new staticBlockInfo();
         staticInfo.blockNumber = 10;
         BlockInfo newBlock = new BlockInfo(staticInfo);
+        newBlock.setLightInState(2);
         newBlock.setLightOutState(1);
         newBlock.setCrossingClosed(true);
         newBlock.setTrackCircuitState(true);
