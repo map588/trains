@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class waysideControllerImpl implements waysideController {
+public class WaysideControllerImpl implements waysideController {
 
     // The ID of the wayside controller
     private final int id;
@@ -25,7 +25,7 @@ public class waysideControllerImpl implements waysideController {
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public waysideControllerImpl(int id) {
+    public WaysideControllerImpl(int id) {
         this.id = id;
     }
 

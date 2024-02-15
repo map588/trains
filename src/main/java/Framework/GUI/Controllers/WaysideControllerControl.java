@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import waysideController.waysideControllerImpl;
+import waysideController.WaysideControllerImpl;
 
 import java.io.File;
 import java.net.URL;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class waysideControllerControl {
+public class WaysideControllerControl {
 
     @FXML
     private TableView<BlockInfo> blockTable;
@@ -77,15 +77,16 @@ public class waysideControllerControl {
     private Label changeControllerLabel;
 
     private int controllerNum = 0;
-    private waysideControllerImpl currentController = null;
-    private final List<waysideControllerImpl> controllerList = new ArrayList<>();
+    private WaysideControllerImpl currentController = null;
+    private final List<WaysideControllerImpl> controllerList = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
-    private waysideControllerTB testBench;
+    private WaysideControllerTB testBench;
 
     @FXML
     public void initialize() {
         // Launch the test bench
-        launchTestBench();
+        testBench = launchTestBench();
+
         // Set up event listeners
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
@@ -116,7 +117,6 @@ public class waysideControllerControl {
         currentController.addBlock(newBlock);
         updateBlockList();
         updateSwitchList();
-        //
     }
 
     /**
@@ -198,7 +198,7 @@ public class waysideControllerControl {
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
-        waysideControllerImpl newController = new waysideControllerImpl(++controllerNum);
+        WaysideControllerImpl newController = new WaysideControllerImpl(++controllerNum);
         controllerList.add(newController);
         changeControllerComboBox.getItems().add("Wayside Controller #" + controllerNum);
         changeControllerComboBox.setValue("Wayside Controller #" + controllerNum);
@@ -210,7 +210,7 @@ public class waysideControllerControl {
      */
     private void changeActiveController(String controllerName) {
         changeControllerLabel.setText(controllerName);
-        //tbWaysideNumberLabel.setText(controllerName);
+        testBench.tbWaysideNumberLabel.setText(controllerName);
         int id = Integer.parseInt(controllerName.substring(controllerName.lastIndexOf("#") + 1));
         currentController = controllerList.get(id - 1);
         // TODO: Change the active controller
@@ -219,7 +219,7 @@ public class waysideControllerControl {
         updateSwitchList();
     }
 
-    private void launchTestBench() {
+    private WaysideControllerTB launchTestBench() {
         System.out.println(System.getProperty("Preparing to launch test bench"));
         try {
             String tbFile = "/Framework/GUI/FXML/waysideController_TB.fxml";
@@ -231,6 +231,7 @@ public class waysideControllerControl {
             newStage.setScene(newScene);
             newStage.setTitle("Wayside Controller Test Bench");
             newStage.show();
+            return loader.getController();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to launch test bench");
