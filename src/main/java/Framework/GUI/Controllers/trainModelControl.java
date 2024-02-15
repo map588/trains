@@ -1,7 +1,6 @@
 package Framework.GUI.Controllers;
 
 import eu.hansolo.medusa.Gauge;
-import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 
@@ -11,7 +10,7 @@ public class trainModelControl {
     public ToggleButton brakeFailureBtn;
     public ToggleButton powerFailureBtn;
     public ToggleButton signalFailureBtn;
-    
+
     public Button eBrakeBtn;
     public ChoiceBox trainDropDown;
     public TableView trainInfoTbl;
@@ -31,5 +30,5 @@ public class trainModelControl {
     public Circle eBrakeEn;
     public Gauge cmdSpeedDisp;
     public Gauge authorityDisp;
-
+}
 
