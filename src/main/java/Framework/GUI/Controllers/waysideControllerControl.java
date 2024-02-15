@@ -29,8 +29,6 @@ public class waysideControllerControl {
     @FXML
     private TextField plcFolderTextField;
     @FXML
-    private ListView<File> plcFileList;
-    @FXML
     private TableView<File> plcFileTable;
     @FXML
     public TableColumn<File,String> plcFileNameColumn;
@@ -119,7 +117,6 @@ public class waysideControllerControl {
         if (files != null) {
 //            files[0].la;
             ObservableList<File> items = FXCollections.observableArrayList(files);
-            plcFileList.setItems(items);
             plcFileTable.setItems(items);
         }
     }
@@ -128,7 +125,7 @@ public class waysideControllerControl {
      * Uploads the selected PLC file to the wayside controller
      */
     private void uploadPLC() {
-        File selectedFile = plcFileList.getSelectionModel().getSelectedItem();
+        File selectedFile = plcFileTable.getSelectionModel().getSelectedItem();
 
         if(selectedFile != null) {
             currentController.loadPLC(selectedFile);
