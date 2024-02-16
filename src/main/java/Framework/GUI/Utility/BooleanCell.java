@@ -1,6 +1,7 @@
 package Framework.GUI.Utility;
 
 import Utilities.BlockInfo;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
@@ -29,6 +30,12 @@ public class BooleanCell extends TableCell<BlockInfo, Boolean> {
         this.setGraphic(checkBox);
         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.setEditable(true);
+
+
+    }
+
+    public BooleanProperty getCheckBoxSelectedProperty() {
+        return checkBox.selectedProperty();
     }
     @Override
     public void startEdit() {

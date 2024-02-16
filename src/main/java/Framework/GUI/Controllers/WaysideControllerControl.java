@@ -97,10 +97,13 @@ public class WaysideControllerControl {
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber));
-        blockTableCircuitColumn.setCellValueFactory(new PropertyValueFactory<>("trackCircuitState"));
+        blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
+//        blockTableLightInColumn.setCellValueFactory(block -> block.getValue().lightInStateProperty().);
+//        blockTableLightOutColumn.setCellValueFactory(block -> block.getValue().lightOutStateProperty());
+        blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingClosedProperty());
         blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
         blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
-        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
+//        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));

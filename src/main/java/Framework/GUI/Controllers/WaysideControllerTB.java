@@ -3,12 +3,12 @@ package Framework.GUI.Controllers;
 import Framework.GUI.Utility.BooleanCell;
 import Utilities.BlockInfo;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 public class WaysideControllerTB {
@@ -35,21 +35,25 @@ public class WaysideControllerTB {
     public TableColumn tbLTRight;
 
 
-
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
         tbBTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber()));
 
-        // Create the Cell Factory for the Boolean columns
-        Callback<TableColumn<BlockInfo, Boolean>, TableCell<BlockInfo, Boolean>> booleanCellFactory = new Callback<TableColumn<BlockInfo, Boolean>, TableCell<BlockInfo, Boolean>>() {
-            @Override
-            public TableCell<BlockInfo, Boolean> call(TableColumn<BlockInfo, Boolean> param) {
-                return new BooleanCell();
-            }
-        };
-        tbBTRight.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().isOccupied()));
-        tbBTRight.setCellFactory(booleanCellFactory);
+         // Create the Cell Factory for the Boolean columns
+//        Callback<TableColumn<BlockInfo, Boolean>, TableCell<BlockInfo, Boolean>> booleanCellFactory = new Callback<TableColumn<BlockInfo, Boolean>, TableCell<BlockInfo, Boolean>>() {
+//            @Override
+//            public TableCell<BlockInfo, Boolean> call(TableColumn<BlockInfo, Boolean> param) {
+//                return new BooleanCell();
+//            }
+//        };
+//
+//        tbBTRight.setCellValueFactory(param -> param.getValue().getTrackCircuitStateProperty());
+//        tbBTRight.setCellFactory(booleanCellFactory);
+
+        // New version of the above code block, uses a standard checkbox cell and updates the properties correctly
+        tbBTRight.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
+        tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
     }
 
     /**
