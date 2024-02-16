@@ -1,7 +1,5 @@
 package Framework.GUI.Manangers;
 
-import trainController.trainControllerSubject;
-import Common.trainController;
 import eu.hansolo.medusa.Clock;
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
@@ -11,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import trainController.trainControllerSubject;
 
 public class trainControllerManager {
 
@@ -53,49 +52,49 @@ public class trainControllerManager {
     @FXML
     public void initialize() {
         trainControllerSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            trainController.setOverrideSpeed(newValue.doubleValue());
+            subject.setOverrideSpeed(newValue.doubleValue());
         });
 
-        eBrakeButton.setOnAction(event -> trainController.setEmergencyBrake(!trainController.getEmergencyBrake()));
-        sBrakeButton.setOnAction(event -> trainController.setServiceBrake(!trainController.getServiceBrake()));
+        eBrakeButton.setOnAction(event -> subject.setEmergencyBrake(!subject.emergencyBrakeProperty().get()));
+        sBrakeButton.setOnAction(event -> subject.setServiceBrake(!subject.serviceBrakeProperty().get()));
 
-        // Assuming trainControllerImpl provides a way to observe changes, e.g., JavaFX properties or custom listener mechanism
+        // Assuming subjectImpl provides a way to observe changes, e.g., JavaFX properties or custom listener mechanism
 
 
-        trainControllerSubject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
+        subject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
             updateEBrakeIndicator(isEmergencyBrakeActive);
         });
 
-        trainController.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
+        subject.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
             updateSBrakeIndicator(isServiceBrakeActive);
         });
 
-        trainController.powerProperty().addListener((observable, oldValue, newValue) -> {
-            trainControllerPower.setValue(newValue.doubleValue());
+        subject.powerProperty().addListener((observable, oldValue, newValue) -> {
+            subject.setPower(newValue.doubleValue());
         });
 
-        trainController.powerProperty().addListener((observable, oldValue, newValue) -> {
+        subject.powerProperty().addListener((observable, oldValue, newValue) -> {
             updatePowerText(newValue.doubleValue());
         });
 
-        trainController.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
+        subject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
             setSpeedDisplay.setValue(newValue.doubleValue());
         });
 
-        trainController.maxSpeedProperty().addListener((observable, oldValue, newValue) -> {
+        subject.maxSpeedProperty().addListener((observable, oldValue, newValue) -> {
             maxSpeedDisplay.setValue(newValue.doubleValue());
         });
 
-        trainController.currentSpeedProperty().addListener((observable, oldValue, newValue) -> {
+        subject.currentSpeedProperty().addListener((observable, oldValue, newValue) -> {
             currentSpeedDisplay.setValue(newValue.doubleValue());
         });
 
-        maxSpeedDisplay.valueProperty().bind(trainController.maxSpeedProperty());
-        currentSpeedDisplay.valueProperty().bind(trainController.currentSpeedProperty());
+        maxSpeedDisplay.valueProperty().bind(subject.maxSpeedProperty());
+        currentSpeedDisplay.valueProperty().bind(subject.currentSpeedProperty());
 
 
-        updateEBrakeIndicator(trainController.getEmergencyBrake());
-        updateSBrakeIndicator(trainController.getServiceBrake());
+        updateEBrakeIndicator(subject.emergencyBrakeProperty().get());
+        updateSBrakeIndicator(subject.serviceBrakeProperty().get());
     }
 
     // Assuming continuation from previous code snippet
