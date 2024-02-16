@@ -1,6 +1,6 @@
 package Framework.GUI.Controllers;
 
-import Utilities.BlockInfo;
+import Utilities.staticBlockInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
@@ -52,25 +52,25 @@ public class trackModelControl {
     @FXML
     private ComboBox<String> pickLine;
     @FXML
-    private TableView<BlockInfo> sectionTable;
+    private TableView<staticBlockInfo> sectionTable;
     @FXML
-    private TableColumn<BlockInfo, String> sectionsColumn;
+    private TableColumn<staticBlockInfo, String> sectionsColumn;
     @FXML
-    private TableColumn<BlockInfo, Integer> blockColumn;
+    private TableColumn<staticBlockInfo, Integer> blockColumn;
     @FXML
-    private TableColumn<BlockInfo, Integer> sizeColumn;
+    private TableColumn<staticBlockInfo, Integer> sizeColumn;
     @FXML
-    private TableColumn<BlockInfo, Float> gradeColumn;
+    private TableColumn<staticBlockInfo, Float> gradeColumn;
     @FXML
-    private TableColumn<BlockInfo, Boolean> stationColumn;
+    private TableColumn<staticBlockInfo, Boolean> stationColumn;
     @FXML
-    private TableColumn<BlockInfo, Boolean> signalColumn;
+    private TableColumn<staticBlockInfo, Boolean> signalColumn;
     @FXML
-    private TableColumn<BlockInfo, Boolean> switchColumn;
+    private TableColumn<staticBlockInfo, Boolean> switchColumn;
     @FXML
-    private TableColumn<BlockInfo, Integer> speedLimitColumn;
+    private TableColumn<staticBlockInfo, Integer> speedLimitColumn;
     @FXML
-    private TableColumn<BlockInfo, Boolean> failureColumn;
+    private TableColumn<staticBlockInfo, Boolean> failureColumn;
 
 
     // potential variables to assist with control
