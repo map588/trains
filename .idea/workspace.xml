@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Modified Light setters/getters to be exterior and interior">
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Added initialize function for UI interaction">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainModelControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trainModelControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/trainModel/trainModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trainModel/trainModelImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +67,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="graphics_testing" />
+        <entry key="$PROJECT_DIR$" value="graphics_testing_Wayside" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -142,7 +144,7 @@
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
-        <option name="accountId" value="ec889894-4bf1-4186-853a-ca2bf0e7122f" />
+        <option name="accountId" value="81df6f58-1d43-42aa-a47e-4795ab444c39" />
         <option name="url" value="https://github.com/map588/trains.git" />
       </UrlAndAccount>
     </option>
@@ -201,7 +203,7 @@
     "git-widget-placeholder": "Train__Model__Branch",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
+    "last_opened_file_path": "C:/Users/theta/IdeaProjects/trains/src/main/resources/Framework/GUI/FXML",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -217,6 +219,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\theta\IdeaProjects\trains\src\main\resources\Framework\GUI\FXML" />
       <recent name="$PROJECT_DIR$/src/main/antlr" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src" />
@@ -297,6 +300,8 @@
         <item itemvalue="Gradle.trains [run]" />
         <item itemvalue="Gradle.trains [dependencies]" />
         <item itemvalue="Application.mainMenu" />
+        <item itemvalue="Gradle.trains [run]" />
+        <item itemvalue="Gradle.trains [dependencies]" />
       </list>
     </recent_temporary>
   </component>
@@ -352,7 +357,39 @@
       <option name="project" value="LOCAL" />
       <updated>1707948568785</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Began Implementing UI Control Implementation for trainModelControl.  Modified trainModel.fxml to have proper ids and made member variables in trainModelControl.java">
+      <option name="closed" value="true" />
+      <created>1708026354856</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1708026354856</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Began Implementing UI Control Implementation for trainModelControl.  Modified trainModel.fxml to have proper ids and made member variables in trainModelControl.java">
+      <option name="closed" value="true" />
+      <created>1708026387710</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1708026387710</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Implemented Setter and Getter functions for Murphy inputs: Brake Failure, Power Failure, Signal Pickup Failure">
+      <option name="closed" value="true" />
+      <created>1708036515467</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1708036515467</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added initialize function for UI interaction">
+      <option name="closed" value="true" />
+      <created>1708037168509</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708037168509</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -375,7 +412,10 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Modified Light setters/getters to be exterior and interior" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified Light setters/getters to be exterior and interior" />
+    <MESSAGE value="Began Implementing UI Control Implementation for trainModelControl.  Modified trainModel.fxml to have proper ids and made member variables in trainModelControl.java" />
+    <MESSAGE value="Implemented Setter and Getter functions for Murphy inputs: Brake Failure, Power Failure, Signal Pickup Failure" />
+    <MESSAGE value="Added initialize function for UI interaction" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added initialize function for UI interaction" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -158,6 +158,7 @@ public class trainModelImpl implements trainModel{
     }
 
 
+
     //----Property Getters----
     public BooleanProperty serviceBrakeProperty() {
         return serviceBrake;
@@ -199,13 +200,12 @@ public class trainModelImpl implements trainModel{
 
 
 
-
     public void calculateSpeed() {
-
+        //Power = Force*velocity
     }
 
     public void calculateAcceleration() {
-
+        //Force = mass*acceleration
     }
 
 }

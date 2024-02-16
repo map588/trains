@@ -8,6 +8,7 @@ import trainModel.trainModelImpl;
 public class trainModelControl {
 
     private trainModelImpl train;
+
     //Murphy Controls
     public ToggleButton brakeFailureBtn;
     public ToggleButton powerFailureBtn;
@@ -33,6 +34,9 @@ public class trainModelControl {
     public Gauge cmdSpeedDisp;
     public Gauge authorityDisp;
 
+    private int trainID;
+    private trainModelImpl currentTrain = null;
+
     public void initialize() {
         train = new trainModelImpl(0);
 
@@ -41,8 +45,6 @@ public class trainModelControl {
         brakeFailureBtn.setOnAction(event -> train.setBrakeFailure(false));
         powerFailureBtn.setOnAction(event -> train.setPowerFailure(false));
         signalFailureBtn.setOnAction(event -> train.setSignalFailure(false));
-        //set cell factories for table values
-
     }
 }
 
