@@ -1,9 +1,9 @@
 package CTCOffice;
 
-import Common.ctcController;
+import Common.CTCOffice;
 import Common.trainModel;
 
-class CTCOfficeImpl implements ctcController{
+class CTCOfficeImpl implements CTCOffice {
 
 
     public trainModel dispatch(int trainID, int blockID) {
