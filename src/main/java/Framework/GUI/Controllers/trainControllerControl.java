@@ -3,6 +3,7 @@ package Framework.GUI.Controllers;
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
 import javafx.scene.shape.Circle;
 import trainController.testTrainControllerImpl;
 
@@ -10,16 +11,16 @@ public class trainControllerControl {
 
     // Cabin Settings
     @FXML
-    public javafx.scene.control.Checkbox trainController_intLight_CheckBox;
+    public CheckBox trainController_intLight_CheckBox;
 
     @FXML
-    public Checkbox trainController_extLight_CheckBox;
+    public CheckBox trainController_extLight_CheckBox;
 
     @FXML
-    public Checkbox trainController_openDoorLeft_CheckBox;
+    public CheckBox trainController_openDoorLeft_CheckBox;
 
     @FXML
-    public Checkbox trainController_openDoorRight_CheckBox;
+    public CheckBox trainController_openDoorRight_CheckBox;
 
     @FXML
     public TextField trainController_setTemperature_TextField;
@@ -64,7 +65,7 @@ public class trainControllerControl {
     public Circle trainController_eBrake_Status;
 
     @FXML
-    public Checkbox trainController_toggleServiceBrake_CheckBox;
+    public CheckBox trainController_toggleServiceBrake_CheckBox;
 
     @FXML
     public Gauge trainiController_powerOutput_Gauge;
@@ -82,7 +83,7 @@ public class trainControllerControl {
     public ChoiceBox trainController_trainNo_ChoiceBox;
 
     @FXML
-    public Checkbox trainController_autoMode_CheckBox;
+    public CheckBox trainController_autoMode_CheckBox;
 
 
     private testTrainControllerImpl trainController = new testTrainControllerImpl(1); // Assuming constructor takes an ID
