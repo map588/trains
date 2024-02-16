@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="more updates" />
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="deleted added file and changed to staticBlockInfo">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -135,13 +139,6 @@
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="4d752ab4-745c-48a8-9095-a6a1c7d9beeb" />
   </component>
-  <component name="GithubProjectSettings">
-    <option name="branchProtectionPatterns">
-      <list>
-        <option value="main" />
-      </list>
-    </option>
-  </component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -152,7 +149,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/Common/trainModel.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/trackModel/trackModelImpl.java" root0="SKIP_INSPECTION" />
   </component>
@@ -375,7 +372,7 @@
       <workItem from="1708028345530" duration="1774000" />
       <workItem from="1708036206960" duration="254000" />
       <workItem from="1708036773621" duration="364000" />
-      <workItem from="1708037728463" duration="17375000" />
+      <workItem from="1708037728463" duration="20416000" />
     </task>
     <task id="LOCAL-00001" summary="updates to UI and control file">
       <option name="closed" value="true" />
@@ -401,7 +398,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708110531535</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="deleted added file and changed to staticBlockInfo">
+      <option name="closed" value="true" />
+      <created>1708110811617</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1708110811617</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -426,7 +431,8 @@
     <MESSAGE value="updates to UI and control file" />
     <MESSAGE value="fixed FXML path" />
     <MESSAGE value="more updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="more updates" />
+    <MESSAGE value="deleted added file and changed to staticBlockInfo" />
+    <option name="LAST_COMMIT_MESSAGE" value="deleted added file and changed to staticBlockInfo" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

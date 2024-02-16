@@ -11,14 +11,17 @@ import java.util.ArrayList;
 
 public class trackModelControl {
 
+    //simulation information
     @FXML
     private Button trackUpload;
     @FXML
     private Button chooseFile;
     @FXML
-    private ComboBox<String> simSpeedInput;
-    @FXML
     private TextField trackFilePath;
+    @FXML
+    private ComboBox<String> simSpeedInput;
+
+    //murphy
     @FXML
     private ComboBox<String> murphyLine;
     @FXML
@@ -33,10 +36,14 @@ public class trackModelControl {
     private CheckBox powerFailure;
     @FXML
     private Button murphyEnter;
+
+    //track heater
     @FXML
     private ToggleButton trackHeaterIndicator;
     @FXML
     private TextField tempDisplay;
+
+    //station signal switch
     @FXML
     private TextField stationDisplay;
     @FXML
@@ -45,12 +52,16 @@ public class trackModelControl {
     private TextField passDisembarkDisplay;
     @FXML
     private TextField ticketSalesDisplay;
+
+    //beacon information
     @FXML
     private TextField beaconInput;
     @FXML
     private Button beaconUpload;
     @FXML
     private ComboBox<String> pickLine;
+
+    //table
     @FXML
     private TableView<staticBlockInfo> sectionTable;
     @FXML
@@ -81,16 +92,17 @@ public class trackModelControl {
         //initialize buttons and user inputs
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
-        simSpeedInput.setOnAction(event -> listSimSpeedOptions());
-        murphyLine.setOnAction(event -> listLineOptions());
-        murphyBlock.setOnAction(event -> listBlockOptions());
+        simSpeedInput.getItems().addAll("10x", "9x", "8x", "7x", "6x", "5x", "4x", "3x", "2x","1x");
+        murphyLine.getItems().add("Blue");
+        pickLine.getItems().add("Blue");
+
+
     }
 
     private void listBlockOptions() {
     }
 
     private void listSimSpeedOptions() {
-
     }
 
     private void listLineOptions() {
@@ -101,6 +113,7 @@ public class trackModelControl {
     }
 
     private void uploadTrack() {
+
     }
 
     //user input for track layout

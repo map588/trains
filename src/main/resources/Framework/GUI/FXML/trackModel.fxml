@@ -4,7 +4,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -16,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
 
-<AnchorPane prefHeight="954.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.trackModelControl">
+<AnchorPane prefHeight="954.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.FXML.TrackModel">
    <children>
       <TabPane layoutX="-4.0" layoutY="53.0" prefHeight="901.0" prefWidth="1373.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -24,46 +23,26 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="884.0" prefWidth="1373.0">
                      <children>
-                        <TableView fx:id="redLineTable" layoutX="811.0" layoutY="45.0" prefHeight="359.0" prefWidth="548.0">
+                        <TableView fx:id="sectionTable" layoutX="526.0" layoutY="72.0" prefHeight="781.0" prefWidth="833.0">
                           <columns>
-                            <TableColumn fx:id="redStationColumn" prefWidth="75.0" text="Section" />
-                            <TableColumn fx:id="redBlockColumn" prefWidth="75.0" text="Block" />
-                              <TableColumn fx:id="redSizeColumn" prefWidth="75.0" text="Size" />
-                              <TableColumn fx:id="redGradeColumn" prefWidth="75.0" text="Grade" />
-                              <TableColumn fx:id="redSSSColumn" prefWidth="75.0" text="St,Sw,Si" />
-                              <TableColumn fx:id="redSpeedLimitColumn" prefWidth="75.0" text="Speed Limit" />
-                              <TableColumn fx:id="redFailureColumn" prefWidth="75.0" text="Failure" />
+                            <TableColumn fx:id="stationColumn" prefWidth="92.0" text="Section" />
+                            <TableColumn fx:id="blockColumn" prefWidth="92.0" text="Block" />
+                              <TableColumn fx:id="sizeColumn" prefWidth="92.0" text="Size" />
+                              <TableColumn fx:id="gradeColumn" prefWidth="92.0" text="Grade" />
+                              <TableColumn fx:id="speedLimitColumn" prefWidth="92.0" text="Speed Limit" />
+                              <TableColumn fx:id="stationColumn" prefWidth="92.0" text="Station" />
+                              <TableColumn fx:id="signalColumn2" prefWidth="92.0" text="Signal" />
+                              <TableColumn fx:id="switchColumn1" prefWidth="92.0" text="Switch" />
+                              <TableColumn fx:id="failureColumn" prefWidth="92.0" text="Failure" />
                           </columns>
                         </TableView>
-                        <Label fx:id="redLabel" layoutX="1085.0" layoutY="14.0" prefHeight="32.0" prefWidth="37.0" text="RED" textFill="RED">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="greenLabel" layoutX="1071.0" layoutY="428.0" prefHeight="17.0" prefWidth="66.0" text="GREEN" textFill="#009005">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <TableView fx:id="greenLineTable" layoutX="811.0" layoutY="472.0" prefHeight="359.0" prefWidth="548.0">
-                           <columns>
-                              <TableColumn fx:id="greenSectionColumn" prefWidth="75.0" text="Section" />
-                              <TableColumn fx:id="greenBlockColumn" prefWidth="75.0" text="Block" />
-                              <TableColumn fx:id="greenSizeColumn" prefWidth="75.0" text="Size" />
-                              <TableColumn fx:id="greenGradeColumn" prefWidth="75.0" text="Grade" />
-                              <TableColumn fx:id="greenSSSColumn" prefWidth="75.0" text="StSwSi" />
-                              <TableColumn fx:id="greenSpeedLimitColumn" prefWidth="75.0" text="Speed Limit" />
-                              <TableColumn fx:id="greenFailureColumn" prefWidth="75.0" text="Failure" />
-                           </columns>
-                        </TableView>
-                        <Label fx:id="sectionsLabel" layoutX="535.0" layoutY="31.0" text="SECTIONS">
+                        <Label fx:id="sectionsLabel" layoutX="1008.0" layoutY="18.0" text="Select a Line">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="sectionsList" layoutX="536.0" layoutY="80.0" prefHeight="752.0" prefWidth="225.0" />
-                        <ComboBox fx:id="pickLine" layoutX="682.0" layoutY="30.0" prefHeight="25.0" prefWidth="78.0" promptText="Line" />
-                        <TitledPane fx:id="murphySec" animated="false" layoutX="27.0" layoutY="171.0" prefHeight="206.0" prefWidth="473.0" text="MURPHY">
+                        <ComboBox fx:id="pickLine" layoutX="1155.0" layoutY="19.0" prefHeight="25.0" prefWidth="78.0" promptText="Line" />
+                        <TitledPane fx:id="murphySec" animated="false" layoutX="27.0" layoutY="152.0" prefHeight="206.0" prefWidth="473.0" text="MURPHY">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="192.0" prefWidth="471.0">
                                  <children>
@@ -75,7 +54,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </CheckBox>
-                                    <CheckBox fx:id="brokenRail" layoutX="30.0" layoutY="124.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="144.0" text="Break Rail">
+                                    <CheckBox fx:id="breakRail" layoutX="30.0" layoutY="124.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="144.0" text="Break Rail">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
@@ -97,22 +76,22 @@
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane fx:id="trackHeaterSec" animated="false" layoutX="27.0" layoutY="377.0" prefHeight="103.0" prefWidth="473.0" text="TRACK HEATER">
+                        <TitledPane fx:id="trackHeaterSec" animated="false" layoutX="27.0" layoutY="358.0" prefHeight="103.0" prefWidth="473.0" text="TRACK HEATER">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="92.0" prefWidth="246.0">
                                  <children>
                                     <ToggleButton fx:id="trackHeaterIndicator" layoutX="9.0" layoutY="19.0" mnemonicParsing="false" text="ON" textFill="#18b200" />
-                                    <TextField fx:id="tempDisplay" layoutX="279.0" layoutY="17.0" prefHeight="25.0" prefWidth="50.0" text="26">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </TextField>
                                     <Label fx:id="tempLabel" layoutX="143.0" layoutY="23.0" text="Outside Temp:">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="degF" layoutX="336.0" layoutY="23.0" prefHeight="18.0" prefWidth="47.0" text="º F">
+                                    <Label fx:id="degF" layoutX="322.0" layoutY="23.0" prefHeight="18.0" prefWidth="47.0" text="º F">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="tempLabel" layoutX="277.0" layoutY="22.0" text="26">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
@@ -124,7 +103,7 @@
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane fx:id="sssSec" animated="false" layoutX="27.0" layoutY="480.0" prefHeight="258.0" prefWidth="473.0" text="STATION, SIGNAL, SWITCH">
+                        <TitledPane fx:id="sssSec" animated="false" layoutX="27.0" layoutY="461.0" prefHeight="258.0" prefWidth="473.0" text="STATION, SIGNAL, SWITCH">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="186.0" prefWidth="471.0">
                                  <children>
@@ -134,21 +113,11 @@
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TextField fx:id="passEmbarkDisplay" layoutX="226.0" layoutY="60.0" prefHeight="25.0" prefWidth="50.0" text="26">
-                                                         <font>
-                                                            <Font size="18.0" />
-                                                         </font>
-                                                      </TextField>
                                                       <Label fx:id="passEmarkedLabel" layoutX="9.0" layoutY="66.0" text="Passengers Embarked">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="passDisembarkDisplay" layoutX="226.0" layoutY="102.0" prefHeight="25.0" prefWidth="50.0" text="26">
-                                                         <font>
-                                                            <Font size="18.0" />
-                                                         </font>
-                                                      </TextField>
                                                       <Label fx:id="passDisembarkLabel" layoutX="10.0" layoutY="107.0" text="Passengers Disembarked">
                                                          <font>
                                                             <Font size="18.0" />
@@ -159,29 +128,71 @@
                                                             <Font size="18.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="stationDisplay" layoutX="139.0" layoutY="12.0" text="NAME OF STATION" />
-                                                      <Label fx:id="ticketSalesLabel" layoutX="342.0" layoutY="48.0" text="Ticket Sales">
+                                                      <Label fx:id="ticketSalesLabel" layoutX="342.0" layoutY="67.0" text="Ticket Sales">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="ticketSalesDisplay" layoutX="377.0" layoutY="101.0" prefHeight="25.0" prefWidth="50.0" text="26">
+                                                      <Label fx:id="passEmbarkLabel" layoutX="245.0" layoutY="69.0" text="26">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>
-                                                      </TextField>
+                                                      </Label>
+                                                      <Label fx:id="passDisembarkLabel" layoutX="245.0" layoutY="106.0" text="26">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="ticketSalesLabel" layoutX="406.0" layoutY="106.0" text="26">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="locationLabel2" layoutX="148.0" layoutY="18.0" text="Name of Station">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
                                                    </children>
                                                 </AnchorPane>
                                           </content>
                                         </Tab>
                                         <Tab fx:id="switchTab" text="SWITCH">
                                           <content>
-                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <Label fx:id="locationLabel1" layoutX="26.0" layoutY="29.0" text="Switch ID">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="switchDisplay" layoutX="221.0" layoutY="25.0" prefHeight="33.0" prefWidth="119.0" text="Block #s of Switch" />
+                                                      <Label fx:id="locationLabel11" layoutX="27.0" layoutY="80.0" prefHeight="23.0" prefWidth="126.0" text="Switch State">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="switchDisplay1" layoutX="221.0" layoutY="73.0" prefHeight="33.0" prefWidth="119.0" text="Main or Alternate" />
+                                                   </children></AnchorPane>
                                           </content>
                                         </Tab>
                                           <Tab fx:id="signalTab" text="SIGNAL">
                                              <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <Label fx:id="locationLabel12" layoutX="21.0" layoutY="26.0" text="Signal ID">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="switchDisplay2" layoutX="216.0" layoutY="22.0" prefHeight="33.0" prefWidth="119.0" text="Block #s of Switch" />
+                                                      <Label fx:id="locationLabel121" layoutX="20.0" layoutY="78.0" text="Signal State">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="switchDisplay21" layoutX="215.0" layoutY="74.0" prefHeight="33.0" prefWidth="119.0" text="Red, Yellow, Green" />
+                                                   </children></AnchorPane>
                                              </content>
                                           </Tab>
                                       </tabs>
@@ -193,9 +204,9 @@
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane fx:id="beaconInfoSec" animated="false" layoutX="27.0" layoutY="739.0" prefHeight="112.0" prefWidth="473.0" text="BEACON INFORMATION">
+                        <TitledPane fx:id="beaconInfoSec" animated="false" layoutX="27.0" layoutY="720.0" prefHeight="139.0" prefWidth="473.0" text="BEACON INFORMATION">
                            <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="92.0" prefWidth="246.0">
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="471.0">
                                  <children>
                                     <Label fx:id="beaconInfoLabel" layoutX="26.0" layoutY="19.0" text="Upload Beacon Information">
                                        <font>
@@ -203,14 +214,20 @@
                                        </font>
                                     </Label>
                                     <Button fx:id="beaconUpload" layoutX="359.0" layoutY="15.0" mnemonicParsing="false" text="UPLOAD" />
-                                    <TextField fx:id="beaconInput" layoutX="240.0" layoutY="15.0" prefHeight="33.0" prefWidth="97.0" text="Path or Text" />
+                                    <TextField fx:id="beaconInput" layoutX="103.0" layoutY="50.0" prefHeight="33.0" prefWidth="226.0" text="Path or Text (128 character MAX)" />
+                                    <Label fx:id="pathLabel1" layoutX="27.0" layoutY="54.0" text="Path:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="chooseFile1" layoutX="351.0" layoutY="51.0" minHeight="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="90.0" text="Chose File" />
                                  </children></AnchorPane>
                            </content>
                            <font>
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane fx:id="simulationInformationSec" animated="false" layoutX="27.0" layoutY="20.0" prefHeight="151.0" prefWidth="473.0" text="SIMULATION INFORMATION">
+                        <TitledPane fx:id="simulationInformationSec" animated="false" layoutX="27.0" layoutY="1.0" prefHeight="151.0" prefWidth="473.0" text="SIMULATION INFORMATION">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="471.0">
                                  <children>
@@ -219,7 +236,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="simSpeedButton" layoutX="18.0" layoutY="50.0" prefHeight="33.0" prefWidth="137.0" promptText="10x" />
+                                    <ComboBox fx:id="simSpeedInput" layoutX="18.0" layoutY="50.0" prefHeight="33.0" prefWidth="137.0" promptText="10x" />
                                     <Label fx:id="uploadLayoutLabel" layoutX="228.0" layoutY="10.0" text="Upload Layout">
                                        <font>
                                           <Font size="18.0" />
@@ -240,6 +257,11 @@
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
+                        <Label fx:id="sectionsLabel1" layoutX="601.0" layoutY="20.0" text="SECTION INFORMATION">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>
@@ -248,7 +270,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label fx:id="bsssTestBenchLabel" layoutX="38.0" layoutY="8.0" text="BLOCK OCCUPANCIES, SWITCH &amp; SIGNAL STATES">
+                        <Label fx:id="bsssTestBenchLabel" layoutX="29.0" layoutY="2.0" text="BLOCK OCCUPANCIES, SWITCH &amp; SIGNAL STATES">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -265,23 +287,68 @@
                         </TableView>
                         <TitledPane fx:id="testSetTempTab" animated="false" layoutX="448.0" layoutY="-1.0" text="SET OUTSIDE TEMPERATURE">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
+                                 <children>
+                                    <TextField fx:id="tempDisplay1" layoutX="172.0" layoutY="19.0" prefHeight="25.0" prefWidth="50.0" text="26">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <Label fx:id="tempLabel1" layoutX="36.0" layoutY="25.0" text="Outside Temp:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="degF1" layoutX="229.0" layoutY="25.0" prefHeight="18.0" prefWidth="47.0" text="º F">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children></AnchorPane>
                           </content>
                            <font>
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane fx:id="testSetSwitchStateTab" animated="false" layoutX="447.0" layoutY="225.0" prefHeight="226.0" prefWidth="377.0" text="SET SWITCH STATES">
+                        <TitledPane fx:id="testSetSwitchStateTab" animated="false" layoutX="447.0" layoutY="121.0" prefHeight="156.0" prefWidth="377.0" text="SET SWITCH STATES">
                            <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="102.0" prefWidth="375.0">
+                                 <children>
+                                    <Label fx:id="locationLabel13" layoutX="33.0" layoutY="11.0" text="Switch ID">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="switchDisplay3" layoutX="228.0" layoutY="7.0" prefHeight="33.0" prefWidth="119.0" text="Block #s of Switch" />
+                                    <Label fx:id="locationLabel131" layoutX="32.0" layoutY="50.0" text="Switch State">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="switchDisplay31" layoutX="227.0" layoutY="46.0" prefHeight="33.0" prefWidth="119.0" text="Main or Alt" />
+                                 </children></AnchorPane>
                            </content>
                            <font>
                               <Font size="24.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane animated="false" layoutX="447.0" layoutY="451.0" prefHeight="226.0" prefWidth="377.0" text="SET SIGNAL STATES">
+                        <TitledPane animated="false" layoutX="447.0" layoutY="277.0" prefHeight="156.0" prefWidth="377.0" text="SET SIGNAL STATES">
                            <content>
-                              <AnchorPane fx:id="testSetSignalStatesTab" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              <AnchorPane fx:id="testSetSignalStatesTab" minHeight="0.0" minWidth="0.0" prefHeight="99.0" prefWidth="375.0">
+                                 <children>
+                                    <Label fx:id="locationLabel132" layoutX="30.0" layoutY="17.0" text="Signal">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="switchDisplay32" layoutX="225.0" layoutY="13.0" prefHeight="33.0" prefWidth="119.0" text="Block #s of Switch" />
+                                    <Label fx:id="locationLabel1311" layoutX="29.0" layoutY="56.0" text="Signal">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="switchDisplay311" layoutX="224.0" layoutY="52.0" prefHeight="33.0" prefWidth="119.0" text="Red, Yellow, Green" />
+                                 </children></AnchorPane>
                            </content>
                            <font>
                               <Font size="24.0" />
