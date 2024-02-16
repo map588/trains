@@ -1,4 +1,4 @@
-package Framework.GUI.Controllers;
+package Framework.GUI.Manangers;
 
 import eu.hansolo.medusa.Clock;
 import eu.hansolo.medusa.Gauge;
@@ -10,7 +10,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class trainControllerListener {
+public class trainControllerManager {
 
     @FXML
     public Clock trainControllerClock;
