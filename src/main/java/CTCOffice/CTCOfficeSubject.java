@@ -1,14 +1,16 @@
 package CTCOffice;
-/*
+
 import Common.CTCOffice;
 import Common.trainModel;
-import Utilities.Constants;
-import javafx.beans.property.*;
-import java.lang.System;
 
-public class testCtcOfficeImpl implements ctcController {
+public class CTCOfficeSubject implements CTCOffice {
+    @Override
+    public trainModel dispatch(int trainID, int blockID) {
+        return null;
+    }
 
-    private IntegerProperty authority;
+
+    /*private IntegerProperty authority;
     private DoubleProperty commandSpeed;
     DoubleProperty currentSpeed;
     DoubleProperty overrideSpeed;
@@ -39,6 +41,6 @@ public class testCtcOfficeImpl implements ctcController {
 
     public void setCommandSpeed(double speed) {
         this.commandSpeed.set(speed);
-    }
+    }*/
 }
-*/
+
