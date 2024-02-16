@@ -25,10 +25,11 @@ public class stubTrackModelImpl implements trackModel{
         return speed;
     }
 
-    public boolean blockOccupied(int block) {
-        System.out.print("Get Block Occupied: "+ blockOccupied);
-        return this.blockOccupied;
-    }
+    public boolean getLightState(int block){ return false; }
+    public boolean getSwitchState(int block){ return false; }
+    public void setLightState(boolean state){}
+    public void setSwitchState(boolean state){}
+
 
     public void setTrainAuthority(int trainID, int authority) {
         if(this.trainAuthorities.containsKey(trainID)) {
@@ -47,4 +48,11 @@ public class stubTrackModelImpl implements trackModel{
         }
         System.out.print("Set Commanded Speed: "+ commandedSpeed);
     }
+
+    public boolean blockOccupied(int block) {
+        System.out.print("Get Block Occupied: "+ blockOccupied);
+        return this.blockOccupied;
+    }
+
+
 }
