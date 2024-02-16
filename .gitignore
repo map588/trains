@@ -1,10 +1,7 @@
 .gradle/workspace-id.txt
 .gradle/workspace-id.txt.lock
 .gradle/
-build/*
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### IntelliJ IDEA ###
 .idea/libraries/
@@ -31,9 +28,7 @@ build/*
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
+build/*
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
