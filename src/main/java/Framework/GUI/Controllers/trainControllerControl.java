@@ -88,67 +88,40 @@ public class trainControllerControl {
 
     private testTrainControllerImpl trainController = new testTrainControllerImpl(1); // Assuming constructor takes an ID
 
+    /*  What needs to be Initialize
+     *  - Cabin Settings
+     *      - Doors: Closed
+     *      - Lights: Closed
+     *      - Temperature: 75 C
+     *  - Speed Controller
+     *      - SPD LIMIT: 0 MPH
+     *      - Command Speed: 0 MPH
+     *      - Current Speed: 0 MPH
+     *      - Set Speed: 0 MPH
+     *  - Engineer's Input
+     *      - Ki = 1
+     *      - Kp = 1
+     *  - Brake/Power
+     *      - Power: 0 HP
+     *      - EBrake Status: OFF
+     *  - Failure State
+     *      - Power Failure: OFF
+     *      - Brake Failure: OFF
+     *      - Signal Failure: OFF
+     *  - Train Selector
+     *      -
+     */
     @FXML
     public void initialize() {
-//        trainController_setSpeed_Slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            trainController.setOverrideSpeed(newValue.doubleValue());
-//        });
-//
-//        eBrakeButton.setOnAction(event -> trainController.setEmergencyBrake(!trainController.getEmergencyBrake()));
-//        sBrakeButton.setOnAction(event -> trainController.setServiceBrake(!trainController.getServiceBrake()));
 
-        // Assuming trainControllerImpl provides a way to observe changes, e.g., JavaFX properties or custom listener mechanism
-
-
-//        trainController.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
-//            updateEBrakeIndicator(isEmergencyBrakeActive);
-//        });
-//
-//        trainController.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
-//            updateSBrakeIndicator(isServiceBrakeActive);
-//        });
-//
-//        trainController.powerProperty().addListener((observable, oldValue, newValue) -> {
-//            trainControllerPower.setValue(newValue.doubleValue());
-//        });
-//
-//        trainController.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
-//            setSpeedDisplay.setValue(newValue.doubleValue());
-//        });
-//
-//        trainController.maxSpeedProperty().addListener((observable, oldValue, newValue) -> {
-//            maxSpeedDisplay.setValue(newValue.doubleValue());
-//        });
-//
-//        trainController.currentSpeedProperty().addListener((observable, oldValue, newValue) -> {
-//            currentSpeedDisplay.setValue(newValue.doubleValue());
-//        });
-//
-//        maxSpeedDisplay.valueProperty().bind(trainController.maxSpeedProperty());
-//        currentSpeedDisplay.valueProperty().bind(trainController.currentSpeedProperty());
-//
-//
-//        updateEBrakeIndicator(trainController.getEmergencyBrake());
-//        updateSBrakeIndicator(trainController.getServiceBrake());
     }
 
-    // Assuming continuation from previous code snippet
+    private void setDefaultState(){
 
+    }
 
-//    private void updateEBrakeIndicator(boolean isEmergencyBrakeActive) {
-//        if (isEmergencyBrakeActive) {
-//            eBrakeIndicatorCircle.setFill(Color.RED);
-//        } else {
-//            eBrakeIndicatorCircle.setFill(Color.GRAY);
-//        }
-//    }
-//
-//    private void updateSBrakeIndicator(boolean isServiceBrakeActive) {
-//        if (isServiceBrakeActive) {
-//            sBrakeIndicatorCircle.setFill(Color.BLUE);
-//        } else {
-//            sBrakeIndicatorCircle.setFill(Color.GRAY);
-//        }
-//    }
+    private void setDefaultState(int trainNo){
+
+    }
 
 }
