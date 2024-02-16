@@ -44,5 +44,4 @@ public interface trainModel {
     void calculateSpeed();
     void calculateAcceleration();
 
-
 }

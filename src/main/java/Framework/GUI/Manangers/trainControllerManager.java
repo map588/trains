@@ -1,5 +1,6 @@
 package Framework.GUI.Manangers;
 
+import Common.trainController;
 import eu.hansolo.medusa.Clock;
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
@@ -46,7 +47,7 @@ public class trainControllerManager {
     private Button sBrakeButton;
 
 
-    private testTrainControllerImpl trainController = new testTrainControllerImpl(1); // Assuming constructor takes an ID
+    private trainController trainController = new trainControllerImpl(1); // Assuming constructor takes an ID
 
     @FXML
     public void initialize() {
