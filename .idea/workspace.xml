@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Utilities/BlockInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Common/trackModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Common/trackModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/staticBlockInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/trackModel/trackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/trackModel/trackModelImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/UXTests/trackModel/stubTrackModelImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UXTests/trackModel/stubTrackModelImpl.java" afterDir="false" />
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="updates to UI and control file">
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,6 +154,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/Common/trainModel.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/Utilities/Beacon.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/trackModel/trackModelImpl.java" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -172,7 +166,7 @@
       <option value="200" />
       <option value="300" />
     </hideBySeverity>
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -242,7 +236,7 @@
       <recent name="$PROJECT_DIR$/plc/src/main" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.trains [run]">
+  <component name="RunManager" selected="Gradle.trains">
     <configuration name="mainMenu" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Framework.GUI.mainMenu" />
       <module name="Trains.main" />
@@ -300,13 +294,35 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="trains" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.mainMenu" />
+      <item itemvalue="Gradle.trains" />
       <item itemvalue="Gradle.trains [run]" />
       <item itemvalue="Gradle.trains [dependencies]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.trains" />
         <item itemvalue="Gradle.trains [run]" />
         <item itemvalue="Gradle.trains [dependencies]" />
         <item itemvalue="Application.mainMenu" />
@@ -361,8 +377,17 @@
       <workItem from="1708028345530" duration="1774000" />
       <workItem from="1708036206960" duration="254000" />
       <workItem from="1708036773621" duration="364000" />
-      <workItem from="1708037728463" duration="14402000" />
+      <workItem from="1708037728463" duration="14761000" />
     </task>
+    <task id="LOCAL-00001" summary="updates to UI and control file">
+      <option name="closed" value="true" />
+      <created>1708105034733</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1708105034733</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -384,7 +409,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="updates to UI and control file" />
+    <option name="LAST_COMMIT_MESSAGE" value="updates to UI and control file" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
