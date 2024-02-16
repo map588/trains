@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="402.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.WaysideControllerTB">
    <children>
       <Label fx:id="tbWaysideNumberLabel" layoutX="14.0" layoutY="14.0" prefHeight="32.0" prefWidth="171.0" text="Wayside Controller #N" />
-      <ScrollPane layoutX="14.0" layoutY="78.0" prefHeight="201.0" prefWidth="124.0">
-        <content>
-          <AnchorPane fx:id="tbBlockMenu" minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="108.0" />
-        </content>
-      </ScrollPane>
       <Label layoutX="14.0" layoutY="60.0" prefHeight="18.0" prefWidth="124.0" text="Block Occupancies" />
-      <ScrollPane layoutX="164.0" layoutY="78.0" prefHeight="201.0" prefWidth="124.0">
-         <content>
-            <AnchorPane fx:id="tbLightMenu" minHeight="0.0" minWidth="0.0" prefHeight="283.0" prefWidth="108.0" />
-         </content>
-      </ScrollPane>
       <Label layoutX="164.0" layoutY="60.0" prefHeight="18.0" prefWidth="124.0" text="Signal Lights" />
-      <ScrollPane layoutX="312.0" layoutY="78.0" prefHeight="90.0" prefWidth="165.0">
-         <content>
-            <AnchorPane fx:id="tbSwitchMenu" minHeight="0.0" minWidth="0.0" prefHeight="231.0" prefWidth="149.0" />
-         </content>
-      </ScrollPane>
       <Label layoutX="312.0" layoutY="60.0" prefHeight="18.0" prefWidth="124.0" text="Switch States" />
+      <TableView fx:id="tbBlockTable" layoutX="14.0" layoutY="79.0" prefHeight="200.0" prefWidth="135.0">
+        <columns>
+          <TableColumn fx:id="tbBTLeft" prefWidth="44.80001926422119" text="ID" />
+          <TableColumn fx:id="tbBTRight" prefWidth="88.79998703002929" text="Occupied?" />
+        </columns>
+      </TableView>
+      <TableView fx:id="tbLightTable" layoutX="158.0" layoutY="79.0" prefHeight="200.0" prefWidth="135.0">
+         <columns>
+            <TableColumn fx:id="tbLTLeft" prefWidth="64.79995441436768" text="C1" />
+            <TableColumn fx:id="tbLTRight" prefWidth="86.4000244140625" text="C2" />
+         </columns>
+      </TableView>
+      <TableView fx:id="tbSwitchTable" layoutX="312.0" layoutY="79.0" prefHeight="91.0" prefWidth="150.0">
+        <columns>
+          <TableColumn fx:id="tbSTLeft" prefWidth="75.0" text="C1" />
+          <TableColumn fx:id="tbSTRight" prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

@@ -114,7 +114,16 @@ public class WaysideControllerControl {
         newBlock.setLightOutState(1);
         newBlock.setCrossingClosed(true);
         newBlock.setTrackCircuitState(true);
+
+        staticBlockInfo staticInfo2 = new staticBlockInfo();
+        staticInfo2.blockNumber = 11;
+        BlockInfo newBlock2 = new BlockInfo(staticInfo2);
+        newBlock2.setLightInState(1);
+        newBlock2.setLightOutState(0);
+        newBlock2.setCrossingClosed(false);
+        newBlock2.setTrackCircuitState(false);
         currentController.addBlock(newBlock);
+        currentController.addBlock(newBlock2);
         updateBlockList();
         updateSwitchList();
     }
@@ -185,6 +194,7 @@ public class WaysideControllerControl {
     private void updateBlockList() {
         ObservableList<BlockInfo> blocks = FXCollections.observableList(currentController.getBlockList());
         blockTable.setItems(blocks);
+        testBench.readBlockInfo(blocks);
     }
 
     /**

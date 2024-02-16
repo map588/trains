@@ -15,7 +15,7 @@ public class staticBlockInfo {
     public boolean isStation;
     public staticBlockInfo switchBlock1;
     public staticBlockInfo switchBlock2;
-
+    //public CheckBox select;
     public boolean isSwitch() {
         return isSwitch;
     }

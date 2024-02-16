@@ -45,6 +45,10 @@ public class BlockInfo {
         return crossingClosed.get();
     }
 
+    public boolean isOccupied() {
+        return trackCircuitState.get();
+    }
+
     public void setCrossingClosed(boolean crossingClosed) {
         this.crossingClosed.set(crossingClosed);
     }
