@@ -1,6 +1,6 @@
 package CTCOffice;
 /*
-import Common.ctcController;
+import Common.CTCOffice;
 import Common.trainModel;
 import Utilities.Constants;
 import javafx.beans.property.*;
@@ -14,13 +14,6 @@ public class testCtcOfficeImpl implements ctcController {
     DoubleProperty overrideSpeed;
     private DoubleProperty maxSpeed;
 
-    private DoubleProperty Ki;
-    private DoubleProperty Kp;
-
-    private DoubleProperty power;
-    private BooleanProperty serviceBrake;
-    private BooleanProperty emergencyBrake;
-    private BooleanProperty automaticMode;
 
     private IntegerProperty trainID;
 
