@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Framework.GUI.MainMenuController">
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="File">
+                    <MenuItem text="New" fx:id="menuItemNew"/>
+                    <MenuItem text="Open" fx:id="menuItemOpen"/>
+                    <MenuItem text="Save" fx:id="menuItemSave"/>
+                    <MenuItem text="Exit" onAction="#handleExit"/>
+                </Menu>
+                <Menu text="Help">
+                    <MenuItem text="About" fx:id="menuItemAbout" onAction="#handleAbout"/>
+                </Menu>
+            </MenuBar>
+            <ToolBar>
+                <Button text="CTC" fx:id="buttonCTC" onAction="#handleOpenCTC"/>
+                <Button text="Track" fx:id="buttonTrack" onAction="#handleOpenTrack"/>
+                <Button text="Track Controller" fx:id="buttonTrackController" onAction="#handleOpenTrackController"/>
+                <Button text="Train" fx:id="buttonTrain" onAction="#handleOpenTrain"/>
+                <Button text="Train Controller" fx:id="buttonTrainController" onAction="#handleOpenTrainController"/>
+            </ToolBar>
+        </VBox>
+    </top>
+    <center>
+        <AnchorPane fx:id="mainContent">
+            <!-- This is where dynamically loaded content will be shown -->
+        </AnchorPane>
+    </center>
+</BorderPane>

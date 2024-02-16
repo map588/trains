@@ -1,29 +1,73 @@
 plugins {
     id 'java'
-}
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0' // Make sure this is the latest or a compatible version
 
+}
 group = 'org.james'
-version = '1.0-SNAPSHOT'
+version = '1.0'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
 
 repositories {
     mavenCentral()
 }
 
+javafx {
+    version = "17.0.10" // Or the version that matches your requirements
+    modules = [ 'javafx.controls', 'javafx.fxml']
+}
+
 dependencies {
-    // JUnit Jupiter API and Engine
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-
-    // Hamcrest for more expressive assertions
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation('org.testfx:testfx-junit5:4.0.17')
     testImplementation 'org.hamcrest:hamcrest:2.2'
-
-    // Mockito for mocking in tests
     testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
 
-    // Apache Commons Lang, which provides extra functionality for classes in java.lang
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // Additional libraries
+    implementation group: 'eu.hansolo', name: 'medusa', version: '17.1.7'
+    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.2.0'
+}
+
+application {
+    mainClass.set('Framework.GUI.mainMenu')
+}
+
+def getJavaFXLibPath() {
+    def os = org.gradle.internal.os.OperatingSystem.current()
+    def arch = System.getProperty("os.arch")
+    def libPath = 'javafx-sdk/javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
+
+    if (os.isWindows()) {
+        libPath += '-windows'
+    } else if (os.isMacOsX()) {
+        if (arch.startsWith("aarch64") || arch.startsWith("arm")) {
+            libPath += '-osx-arm64'
+        } else {
+            libPath += '-osx-x64'
+        }
+    } else if (os.isLinux()) {
+        libPath += '-linux'
+    } else {
+        throw new GradleException("Unsupported OS")
+    }
+
+    // Append the standard lib directory of JavaFX SDK
+    return "${project.rootDir}/${libPath}/lib"
 }
 
 test {
     useJUnitPlatform()
+}
+
+run {
+    doFirst {
+        def javafxLibPath = getJavaFXLibPath()
+        jvmArgs = [
+                '--module-path', javafxLibPath,
+                '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
 }
