@@ -1,5 +1,6 @@
 package Framework.GUI.Manangers;
 
+import trainController.trainControllerSubject;
 import Common.trainController;
 import eu.hansolo.medusa.Clock;
 import eu.hansolo.medusa.Gauge;
@@ -47,7 +48,7 @@ public class trainControllerManager {
     private Button sBrakeButton;
 
 
-    private trainController trainController = new trainControllerImpl(1); // Assuming constructor takes an ID
+    private trainControllerSubject subject = new trainControllerSubject(); // Assuming constructor takes an ID
 
     @FXML
     public void initialize() {
@@ -61,7 +62,7 @@ public class trainControllerManager {
         // Assuming trainControllerImpl provides a way to observe changes, e.g., JavaFX properties or custom listener mechanism
 
 
-        trainController.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
+        trainControllerSubject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
             updateEBrakeIndicator(isEmergencyBrakeActive);
         });
 

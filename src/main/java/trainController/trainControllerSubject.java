@@ -19,7 +19,7 @@ public class trainControllerSubject {
     private IntegerProperty trainNumber;
     private trainController controller;
 
-    public trainControllerSubject(trainController controller) {
+    public trainControllerSubject() {
         this.trainNumber = new SimpleIntegerProperty(controller.getTrainNumber());
         this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());
         this.commandSpeed = new SimpleDoubleProperty(controller.getCommandSpeed());
@@ -33,6 +33,10 @@ public class trainControllerSubject {
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.authority = new SimpleIntegerProperty(2000);
         this.maxSpeed = new SimpleDoubleProperty(50.0);
+    }
+
+    public void assignTrainController(trainController controller) {
+        this.controller = controller;
     }
 
     public void setCommandSpeed(double speed) {
@@ -53,6 +57,27 @@ public class trainControllerSubject {
         System.out.println("Setting automatic mode to " + mode);
         this.automaticMode.set(mode);
         this.overrideSpeed.set(0.0);
+    }
+
+    public void setTrainNumber(int trainNumber) {
+        if(trainNumber == controller.getTrainNumber())
+            return;
+        System.out.println("Setting train number to " + trainNumber);
+        this.trainNumber.set(trainNumber);
+    }
+
+    public void setMaxSpeed(double speed) {
+        if(speed == controller.getMaxSpeed())
+            return;
+        System.out.println("Setting max speed to " + speed);
+        this.maxSpeed.set(speed);
+    }
+
+    public void setCurrentSpeed(double speed) {
+        if(speed == controller.getSpeed())
+            return;
+        System.out.println("Setting current speed to " + speed);
+        this.currentSpeed.set(speed);
     }
 
     public void setManualSpeed(double speed) {
@@ -152,6 +177,10 @@ public class trainControllerSubject {
 
     public IntegerProperty trainNumberProperty() {
         return this.trainNumber;
+    }
+
+    public void setOverrideSpeed(double speed) {
+        this.overrideSpeed.set(speed);
     }
 }
 

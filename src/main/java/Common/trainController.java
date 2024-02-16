@@ -46,4 +46,6 @@ public interface trainController {
     double getKp();
     double getOverrideSpeed();
     boolean getAutomaticMode();
+
+    double getMaxSpeed();
 }

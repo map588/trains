@@ -31,55 +31,55 @@ class trainControllerImpl implements trainController{
     //-----------------Setters-----------------
     public void assignTrainModel(trainModel train) {
         this.train = train;
-        this.subject.commandSpeedProperty().set(train.getSpeed());
-        this.subject.currentSpeedProperty().set(train.getSpeed());
-        this.subject.authorityProperty().set(train.getAuthority());
-        this.subject.trainNumberProperty().set(this.trainNumber);
+        this.subject.setCommandSpeed(train.getSpeed());
+        this.subject.setCurrentSpeed(train.getSpeed());
+        this.subject.setAutomaticMode(true);
+        this.subject.setTrainNumber(trainNumber);
     }
 
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        this.subject.automaticModeProperty().set(mode);
+        this.subject.setAutomaticMode(mode);
     }
 
     public void setAuthority(int authority) {
         this.authority = authority;
-        this.subject.authorityProperty().set(authority);
+        this.subject.setAuthority(authority);
     }
 
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        this.subject.overrideSpeedProperty().set(speed);
+        this.subject.setOverrideSpeed(speed);
     }
 
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        this.subject.commandSpeedProperty().set(speed);
+        this.subject.setCommandSpeed(speed);
     }
 
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        this.subject.serviceBrakeProperty().set(brake);
+        this.subject.setServiceBrake(brake);
     }
 
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        this.subject.emergencyBrakeProperty().set(brake);
+        this.subject.setEmergencyBrake(brake);
     }
 
     public void setKi(double Ki) {
         this.Ki = Ki;
-        this.subject.KiProperty().set(Ki);
+        this.subject.setKi(Ki);
     }
 
     public void setKp(double Kp) {
         this.Kp = Kp;
-        this.subject.KpProperty().set(Kp);
+        this.subject.setKp(Kp);
     }
 
     public void setPower(double power) {
         this.power = power;
-        this.subject.powerProperty().set(power);
+        this.subject.setPower(power);
     }
 
 
@@ -132,5 +132,9 @@ class trainControllerImpl implements trainController{
 
     public boolean getAutomaticMode() {
         return this.automaticMode;
+    }
+
+    public double getMaxSpeed() {
+        return 0;
     }
 }
