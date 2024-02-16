@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package Framework.GUI.Controllers;
 
 public class trackModelControl {
 }
