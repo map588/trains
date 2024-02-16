@@ -18,6 +18,7 @@ public interface trainModel {
 
     //Vital Getter Signals
     int     getAuthority();
+    int     getTrainNumber();
     double  getCommandSpeed();
     double  getSpeed();
     double  getAcceleration();
@@ -42,6 +43,5 @@ public interface trainModel {
     //Vital Functions for simulating the train physics
     void calculateSpeed();
     void calculateAcceleration();
-
 
 }
