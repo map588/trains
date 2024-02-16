@@ -1,13 +1,13 @@
 package waysideController;
 
-import Common.waysideController;
+import Common.WaysideController;
 import Utilities.BlockInfo;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaysideControllerImpl implements waysideController {
+public class WaysideControllerImpl implements WaysideController {
 
     // The ID of the wayside controller
     private final int id;

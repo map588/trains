@@ -1,6 +1,5 @@
 package Common;
 
-import Common.trackModel;
 import Utilities.BlockInfo;
 
 import java.io.File;
@@ -8,7 +7,7 @@ import java.util.List;
 
 
 // This is the interface for the wayside controller, which is used to control the various track blocks
-public interface waysideController {
+public interface WaysideController {
 
     // Accessor for PLC program file
     public File getPLC();
