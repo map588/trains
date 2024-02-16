@@ -1,4 +1,4 @@
-package Framework.GUI.Controllers;
+package Framework.GUI.Managers;
 
 import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class WaysideControllerControl {
+public class WaysideControllerManager {
 
     @FXML
     private TableView<BlockInfo> blockTable;
@@ -80,7 +80,7 @@ public class WaysideControllerControl {
     private WaysideControllerImpl currentController = null;
     private final List<WaysideControllerImpl> controllerList = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
-    private WaysideControllerTB testBench;
+    private WaysideControllerTBManager testBench;
 
     @FXML
     public void initialize() {
@@ -232,7 +232,7 @@ public class WaysideControllerControl {
         updateSwitchList();
     }
 
-    private WaysideControllerTB launchTestBench() {
+    private WaysideControllerTBManager launchTestBench() {
         System.out.println(System.getProperty("Preparing to launch test bench"));
         try {
             String tbFile = "/Framework/GUI/FXML/waysideController_TB.fxml";

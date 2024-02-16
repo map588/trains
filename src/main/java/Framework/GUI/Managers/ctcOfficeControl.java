@@ -1,4 +1,4 @@
-package Framework.GUI.Controllers;
+package Framework.GUI.Managers;
 
 public class ctcOfficeControl {
 }

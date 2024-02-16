@@ -1,17 +1,13 @@
-package Framework.GUI.Controllers;
+package Framework.GUI.Managers;
 
-import Framework.GUI.Utility.BooleanCell;
 import Utilities.BlockInfo;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
 
-public class WaysideControllerTB {
+public class WaysideControllerTBManager {
 
     @FXML
     public Label tbWaysideNumberLabel;
