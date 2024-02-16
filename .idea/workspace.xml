@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="deleted added file and changed to staticBlockInfo">
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="UI updates">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Framework/GUI/Controllers/trackModelControl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Framework/GUI/FXML/trackModel.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -178,45 +177,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Downloaded.Files.Path.Enabled": "true",
-    "Gradle.Trains [:TabbedApplication.main()].executor": "Run",
-    "Gradle.Trains [:mainMenu.main()].executor": "Run",
-    "Gradle.Trains [dependencies].executor": "Run",
-    "Gradle.Trains [mainMenu.main()].executor": "Run",
-    "Gradle.Trains.executor": "Run",
-    "Gradle.trains [:mainMenu.main()].executor": "Run",
-    "Gradle.trains [dependencies].executor": "Run",
-    "Gradle.trains [generateGrammarSource].executor": "Run",
-    "Gradle.trains [run].executor": "Run",
-    "Gradle.trains.executor": "Run",
-    "Gradle.trains:plc [:plc:PLC_Parse.main()].executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ToolWindowTerminal.ShowToolbar": "false",
-    "git-widget-placeholder": "graphics__testing__track__model",
-    "jdk.selected.JAVA_MODULE": "17",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/matthewprock/School_Projects/trains/src/main/antlr",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.41532567",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Gradle.Trains [:TabbedApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains [:mainMenu.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains [mainMenu.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Trains.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains [:mainMenu.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains [generateGrammarSource].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains [run].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trains:plc [:plc:PLC_Parse.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ToolWindowTerminal.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;graphics__testing__track__model&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/matthewprock/School_Projects/trains/src/main/antlr&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.41532567&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/antlr" />
@@ -372,7 +371,7 @@
       <workItem from="1708028345530" duration="1774000" />
       <workItem from="1708036206960" duration="254000" />
       <workItem from="1708036773621" duration="364000" />
-      <workItem from="1708037728463" duration="20416000" />
+      <workItem from="1708037728463" duration="21196000" />
     </task>
     <task id="LOCAL-00001" summary="updates to UI and control file">
       <option name="closed" value="true" />
@@ -406,7 +405,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708110811617</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="UI updates">
+      <option name="closed" value="true" />
+      <created>1708115321709</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708115321709</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,7 +439,8 @@
     <MESSAGE value="fixed FXML path" />
     <MESSAGE value="more updates" />
     <MESSAGE value="deleted added file and changed to staticBlockInfo" />
-    <option name="LAST_COMMIT_MESSAGE" value="deleted added file and changed to staticBlockInfo" />
+    <MESSAGE value="UI updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="UI updates" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
