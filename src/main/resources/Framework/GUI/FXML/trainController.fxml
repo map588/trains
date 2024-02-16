@@ -20,7 +20,7 @@
    <children>
       <AnchorPane id="Cabin_Settings_Pane" layoutX="36.0" layoutY="162.4" prefHeight="300.0" prefWidth="228.8">
 =======
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Manangers.trainControllerManager">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainControllerManager">
    <top>
       <AnchorPane prefHeight="168.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
 >>>>>>> Iteration_2

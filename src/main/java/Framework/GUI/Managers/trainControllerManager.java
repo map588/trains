@@ -1,4 +1,4 @@
-package Framework.GUI.Manangers;
+package Framework.GUI.Managers;
 
 import eu.hansolo.medusa.Clock;
 import eu.hansolo.medusa.Gauge;

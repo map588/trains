@@ -58,7 +58,7 @@ public class trainModelImpl implements trainModel{
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
 
-        this.controller = new trainControllerImpl(trainID);
+        this.controller = new trainControllerImpl();
         this.controller.assignTrainModel(this);
     }
 
@@ -103,6 +103,12 @@ public class trainModelImpl implements trainModel{
     public int getAuthority() {
         return this.authority.get();
     }
+
+    @Override
+    public int getTrainNumber() {
+        return 0;
+    }
+
     public double getCommandSpeed() {
         return this.commandSpeed.get();
     }
@@ -148,10 +154,10 @@ public class trainModelImpl implements trainModel{
 
     //----Vital Signals from Track Model----
     public int readAuthority() {
-        return track.getTrainAuthority(controller.getTrainID());
+        return track.getTrainAuthority(controller.getTrainNumber());
     }
     public double readCommandSpeed() {
-        return track.getCommandedSpeed(controller.getTrainID());
+        return track.getCommandedSpeed(controller.getTrainNumber());
     }
     public void readBeacon() {
         return;
