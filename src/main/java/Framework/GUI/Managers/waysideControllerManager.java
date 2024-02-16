@@ -1,4 +1,4 @@
-package Framework.GUI.Controllers;
+package Framework.GUI.Managers;
 
 import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class WaysideControllerControl {
+public class waysideControllerManager {
 
     @FXML
     private TableView<BlockInfo> blockTable;

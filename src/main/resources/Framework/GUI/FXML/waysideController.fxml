@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="407.0" prefWidth="632.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.WaysideControllerControl">
+<AnchorPane prefHeight="407.0" prefWidth="632.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.waysideControllerManager">
    <children>
       <TabPane layoutY="41.0" prefHeight="399.0" prefWidth="632.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
