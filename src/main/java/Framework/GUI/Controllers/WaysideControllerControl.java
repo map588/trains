@@ -240,7 +240,7 @@ public class WaysideControllerControl {
             FXMLLoader loader = new FXMLLoader(url);
             Node content = loader.load();
             Stage newStage = new Stage();
-            Scene newScene = new Scene(new VBox(content), 1280, 720);
+            Scene newScene = new Scene(new VBox(content));
             newStage.setScene(newScene);
             newStage.setTitle("Wayside Controller Test Bench");
             newStage.show();
