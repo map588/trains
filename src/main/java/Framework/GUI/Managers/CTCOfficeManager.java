@@ -1,4 +1,4 @@
-package Framework.GUI.Manangers;
+package Framework.GUI.Managers;
 
 public class CTCOfficeManager {
 

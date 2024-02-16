@@ -2,10 +2,10 @@ package trainController;
 
 import Common.trainController;
 import Common.trainModel;
-import Framework.GUI.Manangers.trainControllerManager;
+import Framework.GUI.Managers.trainControllerManager;
 
 
-class trainControllerImpl implements trainController{
+public class trainControllerImpl implements trainController{
     private int authority;
     private double commandSpeed;
     private double currentSpeed;

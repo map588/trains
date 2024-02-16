@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class mainMenu extends Application {
 
-    String[] tabNames = {"overview", "CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
+    String[] tabNames = {"CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
 
     @Override
     public void start(Stage primaryStage) {
@@ -38,9 +38,9 @@ public class mainMenu extends Application {
 
             // Consolidate event handling for right and left clicks
             tabButton.setOnMouseClicked(e -> {
-                if (e.getButton() == MouseButton.PRIMARY) {
+                if (e.getButton() == MouseButton.SECONDARY) {
                     contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
-                } else if (e.getButton() == MouseButton.SECONDARY) {
+                } else if (e.getButton() == MouseButton.PRIMARY) {
                     openModuleTab(tabPane, tabNames[moduleId]);
                 }
             });
@@ -63,7 +63,7 @@ public class mainMenu extends Application {
     private void openInNewWindow(String moduleName) {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // This now loads from FXML
-        Scene newScene = new Scene(new VBox(content), 1280, 720); // Ensure the layout fits the loaded content
+        Scene newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();

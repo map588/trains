@@ -1,57 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import eu.hansolo.medusa.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import eu.hansolo.medusa.Gauge?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Manangers.trainControllerManager">
+<<<<<<< HEAD
+<AnchorPane maxHeight="640" maxWidth="1024" prefHeight="640.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.trainControllerControl">
+   <children>
+      <AnchorPane id="Cabin_Settings_Pane" layoutX="36.0" layoutY="162.4" prefHeight="300.0" prefWidth="228.8">
+=======
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainControllerManager">
    <top>
       <AnchorPane prefHeight="168.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+>>>>>>> Iteration_2
          <children>
-            <Clock fx:id="trainControllerClock" layoutX="800.0" layoutY="54.0" lcdFont="LCD" prefHeight="107.0" skinType="LCD" />
-            <Text layoutX="840.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Time" wrappingWidth="140.21630859375">
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="300.8" layoutX="1.6" stroke="BLACK" strokeType="INSIDE" width="226.4" />
+            <Text layoutX="21.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cabin Settings">
                <font>
-                  <Font name="MesloLGS NF Bold" size="18.0" />
+                  <Font name="System Bold" size="19.2" />
                </font>
             </Text>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="38.4" layoutX="21.6" layoutY="45.6" stroke="BLACK" strokeType="INSIDE" width="188.0" />
+            <Text layoutX="186.4" layoutY="69.6" strokeType="OUTSIDE" strokeWidth="0.0" text="°F">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="88.0" layoutX="21.6" layoutY="96.0" stroke="BLACK" strokeType="INSIDE" width="188.0" />
+            <Text layoutX="70.4" layoutY="125.6" strokeType="OUTSIDE" strokeWidth="0.0" text="Interior Lights" wrappingWidth="116.0">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <Text layoutX="70.4" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exterior Lights" wrappingWidth="116.0">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <ImageView fitHeight="35.0" fitWidth="37.0" layoutX="31.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Thermometer.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="33.6" layoutY="137.6" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Lightbulb_Black.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="34.4" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Lightbulb_White.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="70.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temperature:" wrappingWidth="116.0">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <CheckBox fx:id="trainController_intLight_CheckBox" layoutX="178.0" layoutY="112.0" mnemonicParsing="false" />
+            <CheckBox fx:id="trainController_extLight_CheckBox" layoutX="178.0" layoutY="149.0" mnemonicParsing="false" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="51.2" layoutX="22.0" layoutY="191.0" stroke="BLACK" strokeType="INSIDE" width="188.0" />
+            <ImageView fitHeight="40.0" fitWidth="36.0" layoutX="31.2" layoutY="199.2" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Door.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="70.4" layoutY="222.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Doors" wrappingWidth="116.0">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <CheckBox fx:id="trainController_openDoorLeft_CheckBox" layoutX="154.0" layoutY="209.0" mnemonicParsing="false" />
+            <CheckBox fx:id="trainController_openDoorRight_CheckBox" layoutX="178.0" layoutY="209.0" mnemonicParsing="false" />
+            <Text layoutX="160.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="L">
+               <font>
+                  <Font name="System Bold" size="9.6" />
+               </font>
+            </Text>
+            <Text layoutX="183.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R">
+               <font>
+                  <Font name="System Bold" size="9.6" />
+               </font>
+            </Text>
+            <Button fx:id="trainController_makeAnnouncements_Button" layoutX="21.6" layoutY="253.6" mnemonicParsing="false" prefHeight="28.0" prefWidth="188.0" text="Announce">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+            <TextField fx:id="trainController_setTemperature_TextField" layoutX="156.0" layoutY="51.0" prefHeight="19.2" prefWidth="30.4" />
          </children>
       </AnchorPane>
-   </top>
-   <left>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </left>
-   <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane id="Engineer_Input_Pane" layoutX="36.0" layoutY="476.8" prefHeight="136.0" prefWidth="228.8">
          <children>
-            <Slider fx:id="trainControllerSpeedSlider" layoutX="251.0" layoutY="237.0" majorTickUnit="10.0" max="70.0" minorTickCount="2" prefHeight="39.0" prefWidth="321.0" showTickLabels="true" showTickMarks="true" value="20.0" />
-            <Gauge fx:id="currentSpeedDisplay" layoutX="316.0" layoutY="80.0" prefHeight="106.0" prefWidth="216.0" skinType="LCD" />
-            <Text layoutX="328.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed" wrappingWidth="191.21630859375">
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutX="1.6" stroke="BLACK" strokeType="INSIDE" width="226.4" />
+            <Text layoutX="20.8" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Engineer's Input">
                <font>
-                  <Font name="MesloLGS NF Bold" size="24.0" />
+                  <Font name="System Bold" size="19.2" />
                </font>
             </Text>
-            <Gauge fx:id="maxSpeedDisplay" layoutX="602.0" layoutY="68.0" prefHeight="105.0" prefWidth="163.0" skinType="LCD" />
-            <Text layoutX="612.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max Speed" wrappingWidth="143.21630859375">
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="20.8" layoutY="45.6" stroke="BLACK" strokeType="INSIDE" width="188.0" />
+            <Text layoutX="56.8" layoutY="71.2" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Ki" textAlignment="CENTER" wrappingWidth="116.0">
                <font>
-                  <Font name="MesloLGS NF Bold" size="24.0" />
+                  <Font size="14.4" />
                </font>
             </Text>
-            <Gauge fx:id="setSpeedDisplay" layoutX="602.0" layoutY="231.0" prefHeight="105.0" prefWidth="163.0" skinType="LCD" />
-            <Text layoutX="612.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Speed" wrappingWidth="143.21630859375">
+            <Text layoutX="56.8" layoutY="104.8" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Kp" textAlignment="CENTER" wrappingWidth="116.0">
                <font>
-                  <Font name="MesloLGS NF Bold" size="24.0" />
+                  <Font size="14.4" />
                </font>
             </Text>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="36.8" layoutY="80.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Wrench_Black.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="36.8" layoutY="46.4" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Wrench_White.png" />
+               </image>
+            </ImageView>
+            <TextField fx:id="trainController_setKi_TextField" layoutX="147.2" layoutY="55.2" prefHeight="20.8" prefWidth="41.6" />
+            <TextField fx:id="trainController_setKp_TextField" layoutX="147.2" layoutY="88.0" prefHeight="20.8" prefWidth="41.6" />
          </children>
       </AnchorPane>
-   </center>
-   <right>
-      <AnchorPane prefHeight="352.0" prefWidth="257.0" BorderPane.alignment="CENTER">
+      <AnchorPane id="Speed_Controller_Pane" layoutX="281.6" layoutY="161.6" prefHeight="300.0" prefWidth="396.8">
          <children>
+<<<<<<< HEAD
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#dddddd" height="300.8" layoutY="0.8" stroke="BLACK" strokeType="INSIDE" width="396.8" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="62.4" layoutX="16.8" layoutY="182.4" stroke="BLACK" strokeType="INSIDE" width="363.2" />
+            <Slider fx:id="trainController_setSpeed_Slider" layoutX="40.8" layoutY="194.4" minorTickCount="5" prefHeight="39.2" prefWidth="314.4" showTickLabels="true" showTickMarks="true" />
+            <Text layoutX="133.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed">
+               <font>
+                  <Font name="System Bold" size="19.2" />
+               </font>
+            </Text>
+            <Text layoutX="293.6" layoutY="80.8" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed Limit" textAlignment="CENTER" wrappingWidth="93.0">
+               <font>
+                  <Font name="System Bold" size="14.4" />
+               </font>
+            </Text>
+            <Text layoutX="4.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Commanded Speed" textAlignment="CENTER" wrappingWidth="104.0">
+               <font>
+                  <Font name="System Bold" size="14.4" />
+               </font>
+            </Text>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="36.0" layoutX="67.2" layoutY="253.6" stroke="BLACK" strokeType="INSIDE" width="262.4" />
+            <Text layoutX="96.8" layoutY="278.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Speed to: ">
+               <font>
+                  <Font size="19.2" />
+               </font>
+            </Text>
+            <TextField fx:id="trainController_setSpeed_TextField" alignment="CENTER" layoutX="214.4" layoutY="260.0" prefHeight="2.4" prefWidth="40.0" text="44" />
+            <Text layoutX="256.8" layoutY="278.4" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH">
+               <font>
+                  <Font size="19.2" />
+               </font>
+            </Text>
+            <Gauge fx:id="trainController_currentSpeed_Gauge" customFontEnabled="true" layoutX="107.2" layoutY="44.0" lcdDesign="YOCTOPUCE" lcdFont="STANDARD" prefHeight="126.4" prefWidth="182.4" skinType="LCD" unit="MPH" valueVisible="false">
+               <customFont>
+                  <Font name="Rockwell Bold" size="9.6" />
+               </customFont>
+            </Gauge>
+            <Gauge fx:id="trainController_speedLimit_Gauge" customFontEnabled="true" layoutX="293.6" layoutY="103.2" lcdDesign="RED" lcdFont="STANDARD" prefHeight="44.8" prefWidth="92.8" skinType="LCD" unit="MPH" value="56.0" valueVisible="false">
+               <customFont>
+                  <Font name="Rockwell Bold" size="9.6" />
+               </customFont>
+            </Gauge>
+            <Gauge fx:id="trainController_commandedSpeed_Gauge" customFontEnabled="true" layoutX="10.4" layoutY="103.2" lcdDesign="ORANGE" lcdFont="STANDARD" prefHeight="44.8" prefWidth="92.8" skinType="LCD" unit="MPH" value="56.0" valueVisible="false">
+               <customFont>
+                  <Font name="Rockwell Bold" size="9.6" />
+               </customFont>
+            </Gauge>
+=======
             <Gauge fx:id="trainControllerPower" knobVisible="false" layoutX="26.0" needleBehavior="OPTIMIZED" prefHeight="180.0" prefWidth="209.0" skinType="INDICATOR" smoothing="true" startFromZero="true" threshold="600.0" thresholdVisible="true" tickLabelLocation="OUTSIDE" tickMarkRingVisible="true" unit="HP" value="60.0">
                <subTitleColor>
                   <Color />
@@ -82,23 +213,146 @@
                </font>
             </Text>
             <TextFlow fx:id="powerTextOut" layoutX="42.0" layoutY="141.0" prefHeight="38.0" prefWidth="179.0" textAlignment="CENTER" />
+>>>>>>> Iteration_2
          </children>
       </AnchorPane>
-   </right>
-   <bottom>
-      <AnchorPane prefHeight="200.0" prefWidth="1142.0" BorderPane.alignment="CENTER">
+      <AnchorPane id="Brake_Pane" layoutX="699.2" layoutY="161.6" prefHeight="449.6" prefWidth="227.2">
          <children>
-            <Button fx:id="eBrakeButton" layoutX="1024.0" layoutY="27.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="232.0" style="-fx-background-color: FF0808;" text="Emergency Brake">
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="452.0" layoutX="0.8" stroke="BLACK" strokeType="INSIDE" width="227.2" />
+            <Button fx:id="trainController_emergencyBrake_Button" contentDisplay="TOP" layoutX="17.0" layoutY="332.0" mnemonicParsing="false" prefHeight="105.6" prefWidth="188.0" text="Emergency Brake" textAlignment="CENTER">
                <font>
-                  <Font name="MesloLGS NF Bold" size="22.0" />
+                  <Font name="System Bold" size="14.4" />
                </font>
             </Button>
-            <Button fx:id="sBrakeButton" layoutX="503.0" layoutY="25.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="232.0" text="Service Brake">
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="38.4" layoutX="17.6" layoutY="272.8" stroke="BLACK" strokeType="INSIDE" width="188.0" />
+            <Text layoutX="53.6" layoutY="298.4" strokeType="OUTSIDE" strokeWidth="0.0" text="E-Brake Status" textAlignment="CENTER" wrappingWidth="116.0">
                <font>
-                  <Font name="MesloLGS NF Bold" size="22.0" />
+                  <Font size="14.4" />
                </font>
-            </Button>
+            </Text>
+            <Circle fx:id="trainController_eBrake_Status" fill="WHITE" layoutX="188.0" layoutY="292.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="56.0" layoutX="20.0" layoutY="199.2" stroke="BLACK" strokeType="INSIDE" width="188.0" />
+            <Text layoutX="71.2" layoutY="241.6" strokeType="OUTSIDE" strokeWidth="0.0" text="Service Break" wrappingWidth="124.0">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <Text layoutX="71.2" layoutY="223.2" strokeType="OUTSIDE" strokeWidth="0.0" text="Toggle" wrappingWidth="80.0">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <CheckBox fx:id="trainController_toggleServiceBrake_CheckBox" layoutX="180.0" layoutY="218.0" mnemonicParsing="false" />
+            <ImageView fitHeight="38.4" fitWidth="36.0" layoutX="25.6" layoutY="208.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/Service_Brake.png" />
+               </image>
+            </ImageView>
+            <Gauge fx:id="trainController_powerOutput_Gauge" backgroundPaint="#ffffff00" foregroundPaint="#b1b1b100" layoutX="13.0" layoutY="47.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="138.0" prefWidth="201.0" skinType="LCD" unit="HP">
+               <customFont>
+                  <Font name="Roboto Condensed Regular" size="9.6" />
+               </customFont>
+            </Gauge>
+            <Text layoutX="51.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Output">
+               <font>
+                  <Font name="System Bold" size="19.2" />
+               </font>
+            </Text>
+            <ImageView fitHeight="26.0" fitWidth="30.0" layoutX="31.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/brake.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane><AnchorPane id="Failure States Pane" layoutX="281.6" layoutY="476.8" prefHeight="136.0" prefWidth="396.8">
+         <children>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutY="1.6" stroke="BLACK" strokeType="INSIDE" width="396.8" />
+            <Text layoutX="137.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Failure States" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="19.2" />
+               </font>
+            </Text>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="140.0" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="11.2" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="269.6" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
+            <Text layoutX="17.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
+               <font>
+                  <Font name="System Bold" size="14.4" />
+               </font>
+            </Text>
+            <Text layoutX="146.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brake Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
+               <font>
+                  <Font name="System Bold" size="14.4" />
+               </font>
+            </Text>
+            <Text layoutX="275.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signal Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
+               <font>
+                  <Font name="System Bold" size="14.4" />
+               </font>
+            </Text>
+            <Circle fx:id="trainController_powerFailure_Status" fill="WHITE" layoutX="91.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="trainController_brakeFailure_Status" fill="WHITE" layoutX="220.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="trainController_signalFailure_Status" fill="WHITE" layoutX="352.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+            <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="38.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/PowerFailure.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="167.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/brakeFailure.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="296.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../Framework.GUI.Images/SignalFailure.jpg" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
-   </bottom>
-</BorderPane>
+      <AnchorPane id="Authority" layoutX="212.8" layoutY="34.4" prefHeight="103.2" prefWidth="536.8">
+         <children>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" width="536.8" />
+            <Text layoutX="19.2" layoutY="42.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Blocks to Next Station">
+               <font>
+                  <Font name="System Bold" size="19.2" />
+               </font>
+            </Text>
+            <Text layoutX="291.2" layoutY="41.6" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority">
+               <font>
+                  <Font name="System Bold" size="19.2" />
+               </font>
+            </Text>
+            <Line endX="-3.2" endY="59.2" layoutX="271.2" layoutY="40.0" startX="-3.2" startY="15.2" />
+            <Gauge fx:id="trainController_blocksToNextStation_Gauge" customFontEnabled="true" layoutX="18.0" layoutY="52.0" lcdDesign="WHITE" prefHeight="44.8" prefWidth="228.8" skinType="LCD" unit="Blocks Away" value="3.0" valueVisible="false">
+               <customFont>
+                  <Font name="Rockwell Bold" size="9.6" />
+               </customFont>
+            </Gauge>
+            <Gauge fx:id="trainController_Authority_Gauge" customFontEnabled="true" layoutX="290.0" layoutY="52.0" lcdDesign="WHITE" prefHeight="44.8" prefWidth="228.8" skinType="LCD" unit="ft. away" value="70.0" valueVisible="false">
+               <customFont>
+                  <Font name="Rockwell Bold" size="9.6" />
+               </customFont>
+            </Gauge>
+         </children>
+      </AnchorPane>
+      <AnchorPane id="Train_Selector_Pane" layoutX="766.4" layoutY="50.4" prefHeight="100.0" prefWidth="160.0">
+         <children>
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutX="-1.6" stroke="BLACK" strokeType="INSIDE" width="160.0" />
+            <Text layoutX="11.2" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Train No.">
+               <font>
+                  <Font name="System Bold" size="19.2" />
+               </font>
+            </Text>
+            <Text layoutX="22.4" layoutY="81.6" strokeType="OUTSIDE" strokeWidth="0.0" text="Auto Mode">
+               <font>
+                  <Font size="14.4" />
+               </font>
+            </Text>
+            <CheckBox fx:id="trainController_autoMode_CheckBox" layoutX="118.0" layoutY="67.0" mnemonicParsing="false" />
+            <ChoiceBox fx:id="trainController_trainNo_ChoiceBox" layoutX="17.0" layoutY="37.0" prefHeight="26.0" prefWidth="72.0" />
+         </children>
+      </AnchorPane>
+
+   </children>
+</AnchorPane>
