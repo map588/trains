@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class mainMenu extends Application {
 
-    String[] tabNames = {"ctcOffice", "trackModel", "trackController", "trainModel", "trainController"};
+    String[] tabNames = {"overview", "CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
 
     @Override
     public void start(Stage primaryStage) {
@@ -38,9 +38,9 @@ public class mainMenu extends Application {
 
             // Consolidate event handling for right and left clicks
             tabButton.setOnMouseClicked(e -> {
-                if (e.getButton() == MouseButton.SECONDARY) {
+                if (e.getButton() == MouseButton.PRIMARY) {
                     contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
-                } else if (e.getButton() == MouseButton.PRIMARY) {
+                } else if (e.getButton() == MouseButton.SECONDARY) {
                     openModuleTab(tabPane, tabNames[moduleId]);
                 }
             });
@@ -54,7 +54,7 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
 
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();

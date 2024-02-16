@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'antlr'
     id 'org.openjfx.javafxplugin' version '0.1.0' // Make sure this is the latest or a compatible version
 
 }
@@ -29,7 +30,17 @@ dependencies {
     // Additional libraries
     implementation group: 'eu.hansolo', name: 'medusa', version: '17.1.7'
     implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.2.0'
+
+    // PLC Lanaguage in ANTLR
+    implementation 'org.antlr:antlr4-runtime:4.9.2'
+    antlr 'org.antlr:antlr4:4.9.2'
 }
+
+generateGrammarSource {
+    arguments += ['-visitor', '-no-listener', '-package', 'waysideController.plc.parser']
+    outputDirectory = file("src/main/java/waysideController/plc.parser")
+}
+
 
 application {
     mainClass.set('Framework.GUI.mainMenu')

@@ -33,8 +33,19 @@ public interface trainController {
 
 
     //The train cannot store its own ID, so the train controller must store it
-    int getTrainID();
+    int getTrainNumber();
 
     double getSpeed();
+    double getAcceleration();
+    double getPower();
+    boolean getServiceBrake();
+    boolean getEmergencyBrake();
+    double getCommandSpeed();
+    int getAuthority();
+    double getKi();
+    double getKp();
+    double getOverrideSpeed();
+    boolean getAutomaticMode();
 
+    double getMaxSpeed();
 }
