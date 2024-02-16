@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class mainMenu extends Application {
 
-    String[] tabNames = {"ctcOffice", "trackModel", "waysideController", "trainModel", "trainController"};
+    String[] tabNames = {"CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
 
     @Override
     public void start(Stage primaryStage) {
