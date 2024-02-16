@@ -7,6 +7,8 @@
     <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Modified Light setters/getters to be exterior and interior">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
+    <list default="true" id="4bc6b474-0f52-43c1-b543-4d0150c1aecf" name="Changes" comment="Renamed track controller to wayside controller for consistency" />
+
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,6 +44,9 @@
           <activation />
         </task>
         <task path="$PROJECT_DIR$/plc">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$">
           <activation />
         </task>
         <projects_view>
@@ -132,17 +137,10 @@
       </RecentBranches>
     </option>
   </component>
-  <component name="GithubProjectSettings">
-    <option name="branchProtectionPatterns">
-      <list>
-        <option value="main" />
-      </list>
-    </option>
-  </component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
-        <option name="accountId" value="ec889894-4bf1-4186-853a-ca2bf0e7122f" />
+        <option name="accountId" value="bbd48c0a-06f5-4086-b67c-b395bd7e7c68" />
         <option name="url" value="https://github.com/map588/trains.git" />
       </UrlAndAccount>
     </option>
@@ -352,6 +350,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707948568785</updated>
     </task>
+    <task id="LOCAL-00001" summary="Renamed track controller to wayside controller for consistency">
+      <option name="closed" value="true" />
+      <created>1707432090926</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707432090926</updated>
+    </task>
+
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
@@ -376,6 +383,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Modified Light setters/getters to be exterior and interior" />
     <option name="LAST_COMMIT_MESSAGE" value="Modified Light setters/getters to be exterior and interior" />
+    <MESSAGE value="Renamed track controller to wayside controller for consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="Renamed track controller to wayside controller for consistency" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
