@@ -7,8 +7,9 @@ public class staticBlockInfo {
     public int blockGrade;
     public int speedLimit;
 
-
+//    public String switchInfo;
     public boolean isSwitch;
+//    public String stationInfo;
     public boolean isStation;
     public staticBlockInfo switchBlock1;
     public staticBlockInfo switchBlock2;
@@ -18,6 +19,7 @@ public class staticBlockInfo {
     }
     public boolean isStation() {return isStation; }
     public int getStation() { return this.section; }
+    public int getSection() { return this.section; }
     public int getBlockLength() { return this.blockLength; }
     public int getBlockGrade() { return this.blockGrade; }
     public int getSpeedLimit(){ return this.speedLimit; }

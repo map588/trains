@@ -82,7 +82,6 @@ public class trackModelControl {
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
         simSpeedInput.setOnAction(event -> listSimSpeedOptions());
-        trackFilePath.setOnAction(event -> updateTrackTables(new File(trackFilePath.getText())));
         murphyLine.setOnAction(event -> listLineOptions());
         murphyBlock.setOnAction(event -> listBlockOptions());
     }
@@ -97,10 +96,6 @@ public class trackModelControl {
     private void listLineOptions() {
     }
 
-    private void updateTrackTables(File file) {
-        csvParser(file);
-    }
-
     private ArrayList<String> csvParser(File file) {
         return null;
     }
@@ -113,10 +108,7 @@ public class trackModelControl {
         DirectoryChooser dirChooser = new DirectoryChooser();
         File dir = dirChooser.showDialog(chooseFile.getScene().getWindow());
 
-        if(dir != null){
-            trackFilePath.setText(dir.getPath());
-            updateTrackTables(dir);
-        }
+        if(dir != null){ trackFilePath.setText(dir.getPath()); }
     }
 
 

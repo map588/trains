@@ -1,12 +1,10 @@
 package trackModel;
 
 import Common.trackModel;
-import Utilities.staticBlockInfo;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class trackModelImpl implements  trackModel{
     private HashMap<Integer,Integer> trainAuthorities;
@@ -15,7 +13,12 @@ public class trackModelImpl implements  trackModel{
     private boolean blockOccupied;
     private BooleanProperty lightState;
     private BooleanProperty switchState;
-    private List<staticBlockInfo> blockInfo = new ArrayList<>();
+    // probably wont need these
+//    private BooleanProperty isSwitch;
+//    private BooleanProperty isStation;
+//    private IntegerProperty blockNumber;
+//    private IntegerProperty blockSize;
+//    private IntegerProperty
 
     public trackModelImpl() {
         this.trainAuthorities = new HashMap<>();
