@@ -3,8 +3,7 @@ package Framework.GUI.Managers;
 import eu.hansolo.medusa.Clock;
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -14,55 +13,98 @@ import trainController.trainControllerSubject;
 public class trainControllerManager {
 
     @FXML
-    public Clock trainControllerClock;
+    public CheckBox trainController_intLight_CheckBox;
 
     @FXML
-    private Slider trainControllerSpeedSlider;
+    public CheckBox trainController_extLight_CheckBox;
 
     @FXML
-    private Gauge trainControllerPower;
+    public CheckBox trainController_openDoorLeft_CheckBox;
 
     @FXML
-    private TextFlow powerTextOut;
+    public CheckBox trainController_openDoorRight_CheckBox;
 
     @FXML
-    private Gauge maxSpeedDisplay;
+    public TextField trainController_setTemperature_TextField;
 
     @FXML
-    private Gauge setSpeedDisplay;
+    public Button trainController_makeAnnouncements_Button;
+
+    // Engineer's Input
+    @FXML
+    public TextField trainController_setKi_TextField;
 
     @FXML
-    private Gauge currentSpeedDisplay;
+    public TextField trainController_setKp_TextField;
+
+    // Speed Controller
+    @FXML
+    public Slider trainController_setSpeed_Slider;
+    @FXML
+    public TextField trainController_setSpeed_TextField;
 
     @FXML
-    private Circle eBrakeIndicatorCircle;
+    public Gauge trainController_currentSpeed_Gauge;
 
     @FXML
-    private Circle sBrakeIndicatorCircle;
+    public Gauge trainController_speedLimit_Gauge;
 
     @FXML
-    private Button eBrakeButton;
+    public Gauge trainController_commandSpeed_Gauge;
+
+    // Authority
+    @FXML
+     public Gauge trainController_blocksToNextStation_Gauge;
 
     @FXML
-    private Button sBrakeButton;
+    public Gauge trainController_Authority_Gauge;
 
+    // Power/Brake
+    @FXML
+    public Button trainController_emergencyBrake_Button;
+
+    @FXML
+    public Circle trainController_eBrake_Status;
+
+    @FXML
+    public CheckBox trainController_toggleServiceBrake_CheckBox;
+
+    @FXML
+    public Gauge trainiController_powerOutput_Gauge;
+
+    // Failure States
+    @FXML
+    public Circle trainController_powerFailure_Status;
+    @FXML
+    public Circle trainController_brakeFailure_Status;
+    @FXML
+    public Circle trainController_signalFailure_Status;
+
+    // Train Selector
+    @FXML
+    public ChoiceBox trainController_trainNo_ChoiceBox;
+
+    @FXML
+    public CheckBox trainController_autoMode_CheckBox;
 
     private trainControllerSubject subject = new trainControllerSubject(); // Assuming constructor takes an ID
 
     @FXML
     public void initialize() {
-        trainControllerSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+        trainController_setSpeed_Slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             subject.setOverrideSpeed(newValue.doubleValue());
         });
 
-        eBrakeButton.setOnAction(event -> subject.setEmergencyBrake(!subject.emergencyBrakeProperty().get()));
-        sBrakeButton.setOnAction(event -> subject.setServiceBrake(!subject.serviceBrakeProperty().get()));
+        trainController_toggleServiceBrake_CheckBox = new CheckBox();
+
+        trainController_emergencyBrake_Button.setOnAction(event -> subject.setEmergencyBrake(!subject.emergencyBrakeProperty().get()));
+        trainController_emergencyBrake_Button.setOnAction(event -> subject.setServiceBrake(!subject.serviceBrakeProperty().get()));
 
         // Assuming subjectImpl provides a way to observe changes, e.g., JavaFX properties or custom listener mechanism
 
 
         subject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
-            updateEBrakeIndicator(isEmergencyBrakeActive);
+            updateSBrakeIndicator(isEmergencyBrakeActive);
         });
 
         subject.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
@@ -78,46 +120,47 @@ public class trainControllerManager {
         });
 
         subject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
-            setSpeedDisplay.setValue(newValue.doubleValue());
+            setTextField(trainController_setSpeed_TextField, newValue.doubleValue());
         });
 
         subject.maxSpeedProperty().addListener((observable, oldValue, newValue) -> {
-            maxSpeedDisplay.setValue(newValue.doubleValue());
+            trainController_speedLimit_Gauge.setValue(newValue.doubleValue());
         });
 
         subject.currentSpeedProperty().addListener((observable, oldValue, newValue) -> {
-            currentSpeedDisplay.setValue(newValue.doubleValue());
+            trainController_currentSpeed_Gauge.setValue(newValue.doubleValue());
         });
 
-        maxSpeedDisplay.valueProperty().bind(subject.maxSpeedProperty());
-        currentSpeedDisplay.valueProperty().bind(subject.currentSpeedProperty());
+        trainController_speedLimit_Gauge.valueProperty().bind(subject.maxSpeedProperty());
+        trainController_currentSpeed_Gauge.valueProperty().bind(subject.currentSpeedProperty());
+        trainController_commandSpeed_Gauge.valueProperty().bind(subject.commandSpeedProperty());
+        trainController_Authority_Gauge.valueProperty().bind(subject.authorityProperty());
 
+        subject.serviceBrakeProperty().addListener((observable, oldValue, newValue) -> {
+            subject.setServiceBrake(newValue.booleanValue());
+        });
 
-        updateEBrakeIndicator(subject.emergencyBrakeProperty().get());
+        subject.emergencyBrakeProperty().addListener((observable, oldValue, newValue) -> {
+            subject.setEmergencyBrake(newValue);
+        });
         updateSBrakeIndicator(subject.serviceBrakeProperty().get());
     }
 
     // Assuming continuation from previous code snippet
 
     private void updatePowerText(double power) {
-        Text powerText = new Text("Power: %.2f HP".formatted(power));
-        powerTextOut.getChildren().clear();
-        powerTextOut.getChildren().add(powerText);
+        trainiController_powerOutput_Gauge.setValue(power);
+    }
+    private void setTextField(TextField textField, double value) {
+        textField.setText(String.valueOf(value));
     }
 
-    private void updateEBrakeIndicator(boolean isEmergencyBrakeActive) {
+
+    private void updateSBrakeIndicator(boolean isEmergencyBrakeActive) {
         if (isEmergencyBrakeActive) {
-            eBrakeIndicatorCircle.setFill(Color.RED);
+            trainController_eBrake_Status.setFill(Color.RED);
         } else {
-            eBrakeIndicatorCircle.setFill(Color.GRAY);
-        }
-    }
-
-    private void updateSBrakeIndicator(boolean isServiceBrakeActive) {
-        if (isServiceBrakeActive) {
-            sBrakeIndicatorCircle.setFill(Color.BLUE);
-        } else {
-            sBrakeIndicatorCircle.setFill(Color.GRAY);
+            trainController_eBrake_Status.setFill(Color.GRAY);
         }
     }
 
