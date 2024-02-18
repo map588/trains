@@ -37,6 +37,23 @@ public class trainControllerSubject {
         this.maxSpeed = new SimpleDoubleProperty(50.0);
     }
 
+    public trainControllerSubject(int ID){
+        //Null subject
+        this.trainNumber = new SimpleIntegerProperty(ID);
+        this.currentSpeed = new SimpleDoubleProperty(0.0);
+        this.commandSpeed = new SimpleDoubleProperty(0.0);
+        this.overrideSpeed = new SimpleDoubleProperty(0.0);
+        this.automaticMode = new SimpleBooleanProperty(false);
+        this.trainNumber = new SimpleIntegerProperty(ID);
+        this.Ki = new SimpleDoubleProperty(1.0);
+        this.Kp = new SimpleDoubleProperty(22.0);
+        this.power = new SimpleDoubleProperty(0.0);
+        this.serviceBrake = new SimpleBooleanProperty(false);
+        this.emergencyBrake = new SimpleBooleanProperty(false);
+        this.authority = new SimpleIntegerProperty(2000);
+        this.maxSpeed = new SimpleDoubleProperty(50.0);
+    }
+
 
     public void setCommandSpeed(double speed) {
         if(speed == controller.getCommandSpeed())

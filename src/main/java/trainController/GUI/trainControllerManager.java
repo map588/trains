@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import Common.trainController;
 
 public class trainControllerManager {
 
@@ -87,7 +88,7 @@ public class trainControllerManager {
 
     public controllerSubjectFactory factory;
     public trainControllerSubject subject;
-
+    
     @FXML
     public void initialize() {
         trainController_setSpeed_Slider.valueProperty().addListener((observable, oldValue, newValue) -> {

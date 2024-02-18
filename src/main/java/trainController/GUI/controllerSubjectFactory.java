@@ -14,7 +14,7 @@ public class controllerSubjectFactory implements subjectFactory<trainControllerS
 
     //This is really making a subject
     public trainControllerSubject getSubject(int ID) {
-        return subjectMap.getOrDefault(ID, null);
+        return subjectMap.getOrDefault(ID, new trainControllerSubject(ID));
     }
 
     public void deleteSubject(int ID) {

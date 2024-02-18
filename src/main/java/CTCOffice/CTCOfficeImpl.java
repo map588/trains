@@ -3,11 +3,30 @@ package CTCOffice;
 import Common.CTCOffice;
 import Common.trainModel;
 
-class CTCOfficeImpl implements CTCOffice {
+import trainModel.GUI.trainSubjectFactory;
+import trainModel.trainModelImpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
+class CTCOfficeImpl implements CTCOffice {
+    public Map<Integer,trainModel> trains = new HashMap<Integer,trainModel>();
+    private trainSubjectFactory trainSubjectMaker;
+
+    public CTCOfficeImpl() {
+        // initialize the CTC
+    }
 
     public trainModel dispatch(int trainID, int blockID) {
-        return null;
+        if(trains.containsKey(trainID)) {
+            return trains.get(trainID);
+        }
+        else {
+            trainModel newTrain = new trainModelImpl(trainID);
+            trains.put(trainID, newTrain);
+            return newTrain;
+        }
     }
 
     void resetDay() {

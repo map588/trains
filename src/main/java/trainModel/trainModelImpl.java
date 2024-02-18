@@ -5,37 +5,40 @@ import Common.trainController;
 import Common.trainModel;
 import javafx.beans.property.*;
 import trainController.trainControllerImpl;
+import trainModel.GUI.trainModelSubject;
 
 public class trainModelImpl implements trainModel{
     //Passed Variables
-    private IntegerProperty authority;
-    private DoubleProperty commandSpeed;
+    private int authority;
+    private double commandSpeed;
 
     //Vital Variables
-    private DoubleProperty speed;
-    private DoubleProperty acceleration;
-    private DoubleProperty power;
-    private BooleanProperty serviceBrake;
-    private BooleanProperty emergencyBrake;
+    private double speed;
+    private double acceleration;
+    private double power;
+    private boolean serviceBrake;
+    private boolean emergencyBrake;
 
     //Murphy Variables
-    private BooleanProperty brakeFailure;
-    private BooleanProperty powerFailure;
-    private BooleanProperty signalFailure;
+    private boolean brakeFailure;
+    private boolean powerFailure;
+    private boolean signalFailure;
 
     //NonVital Variables
-    private BooleanProperty extLights;
-    private BooleanProperty intLights;
-    private BooleanProperty leftDoors;
-    private BooleanProperty rightDoors;
-    private DoubleProperty temperature;
+    private boolean extLights;
+    private boolean intLights;
+    private boolean leftDoors;
+    private boolean rightDoors;
+    private double temperature;
 
-    private IntegerProperty numCars;
-    private IntegerProperty numPassengers;
+    private int numCars;
+    private int numPassengers;
 
     //Module Stubs
     private trackModel track;
     private trainController controller;
+
+    private trainModelSubject subject;
 
     public trainModelImpl(int trainID){
         this.authority = new SimpleIntegerProperty(0);
@@ -58,7 +61,7 @@ public class trainModelImpl implements trainModel{
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
 
-        this.controller = new trainControllerImpl(0);
+        this.controller = new trainControllerImpl(trainID);
         this.controller.assignTrainModel(this);
     }
 
