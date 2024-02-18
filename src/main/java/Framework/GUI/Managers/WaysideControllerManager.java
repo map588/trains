@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import waysideController.WaysideControllerImpl;
 
 import java.io.File;
@@ -109,6 +111,29 @@ public class WaysideControllerManager {
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
 
         changeControllerComboBox.itemsProperty().bindBidirectional(controllerList);
+        changeControllerComboBox.setCellFactory(listViews -> new ListCell<>() {
+            @Override
+            protected void updateItem(WaysideControllerImpl item, boolean b) {
+                super.updateItem(item, b);
+                if (item != null) {
+                    setText("Wayside Controller #" + (item.getID() + 1));
+                }
+            }
+        });
+        changeControllerComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(WaysideControllerImpl waysideController) {
+                if (waysideController != null)
+                    return "Wayside Controller #" + (waysideController.getID() + 1);
+                else
+                    return null;
+            }
+
+            @Override
+            public WaysideControllerImpl fromString(String s) {
+                return null;
+            }
+        });
 
         // Create initial controller and update values
         createNewController();
@@ -215,8 +240,6 @@ public class WaysideControllerManager {
     private void createNewController() {
         WaysideControllerImpl newController = new WaysideControllerImpl(controllerList.get().size());
         controllerList.get().add(newController);
-//        changeControllerComboBox.getItems().add("Wayside Controller #" + controllerNum);
-//        changeControllerComboBox.setValue("Wayside Controller #" + controllerNum);
         changeActiveController(newController);
     }
 
@@ -227,7 +250,6 @@ public class WaysideControllerManager {
         currentController = controller;
         changeControllerLabel.setText("Wayside Controller #" + (controller.getID()+1));
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
-        // TODO: Change the active controller
         updateWaysideInfo();
         updateBlockList();
         updateSwitchList();

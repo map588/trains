@@ -98,7 +98,7 @@
           </Tab>
         </tabs>
       </TabPane>
-      <ComboBox fx:id="changeControllerComboBox" editable="true" layoutX="419.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
+      <ComboBox fx:id="changeControllerComboBox" layoutX="419.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
       <Label fx:id="changeControllerLabel" layoutX="419.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
          <font>
             <Font size="16.0" />
