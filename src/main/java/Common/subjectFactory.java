@@ -10,6 +10,8 @@ package Common;
 public interface subjectFactory<T> {
 
     public T    getSubject(int ID);
+
+    public void addSubject(T subject);
     public void deleteSubject(int ID);
 
     public int getNumSubjects();

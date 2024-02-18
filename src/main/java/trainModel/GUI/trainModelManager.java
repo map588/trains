@@ -3,7 +3,6 @@ package trainModel.GUI;
 import eu.hansolo.medusa.Gauge;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
-import trainController.GUI.trainControllerManager;
 import trainModel.trainModelImpl;
 
 public class trainModelManager {

@@ -2,7 +2,6 @@ package trainController;
 
 import Common.trainController;
 import Common.trainModel;
-import trainController.GUI.trainControllerManager;
 import trainController.GUI.trainControllerSubject;
 
 

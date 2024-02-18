@@ -1,4 +1,4 @@
-package trainController.GUI;
+package Framework.GUI.Managers;
 
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
@@ -6,6 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import Common.trainController;
+import trainController.GUI.controllerSubjectFactory;
+import trainController.GUI.trainControllerSubject;
 
 public class trainControllerManager {
 
@@ -91,6 +93,9 @@ public class trainControllerManager {
     
     @FXML
     public void initialize() {
+
+        factory = new controllerSubjectFactory();
+
         trainController_setSpeed_Slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             currentSubject.setOverrideSpeed(newValue.doubleValue());
         });
@@ -143,9 +148,9 @@ public class trainControllerManager {
 
     // Assuming continuation from previous code snippet
 
-    public trainControllerManager() {
-        factory = new controllerSubjectFactory();
-        this.currentSubject = factory.getSubject(0);
+    public void addTrain(trainController train) {
+        factory.addSubject(new trainControllerSubject(train));
+        trainController_trainNo_ChoiceBox.getItems().add(train.getTrainNumber());
     }
 
     private void updatePowerText(double power) {

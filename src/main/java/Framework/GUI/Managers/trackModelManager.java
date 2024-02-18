@@ -1,4 +1,4 @@
-package Framework.GUI.Manangers;
+package Framework.GUI.Managers;
 
 import Utilities.staticBlockInfo;
 import javafx.fxml.FXML;

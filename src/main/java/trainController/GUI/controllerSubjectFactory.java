@@ -22,6 +22,10 @@ public class controllerSubjectFactory implements subjectFactory<trainControllerS
         }
     }
 
+    public void addSubject(trainControllerSubject subject) {
+        subjectMap.put(subject.getTrainNumber(),subject);
+    }
+
     public void deleteSubject(int ID) {
         subjectMap.remove(ID);
     }

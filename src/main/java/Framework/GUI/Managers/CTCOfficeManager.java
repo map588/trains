@@ -23,4 +23,10 @@ public class CTCOfficeManager {
             collapsingHBox.setManaged(true);
         }
     }
+
+    initialize() {
+        collapsingHBox.setVisible(false);
+        collapsingHBox.setManaged(false);
+    }
+
 }
