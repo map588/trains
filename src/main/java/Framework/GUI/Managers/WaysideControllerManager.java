@@ -1,5 +1,6 @@
 package Framework.GUI.Managers;
 
+import Common.WaysideController;
 import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
 import javafx.beans.property.ObjectProperty;
@@ -75,12 +76,12 @@ public class WaysideControllerManager {
     @FXML
     private Label plcCurrentFileLabel;
     @FXML
-    private ComboBox<WaysideControllerImpl> changeControllerComboBox;
+    private ComboBox<WaysideController> changeControllerComboBox;
     @FXML
     private Label changeControllerLabel;
 
-    private WaysideControllerImpl currentController = null;
-    private static final ObjectProperty<ObservableList<WaysideControllerImpl>> controllerList = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
+    private WaysideController currentController = null;
+    private static final ObjectProperty<ObservableList<WaysideController>> controllerList = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
     private WaysideControllerTB testBench;
 
@@ -113,7 +114,7 @@ public class WaysideControllerManager {
         changeControllerComboBox.itemsProperty().bindBidirectional(controllerList);
         changeControllerComboBox.setCellFactory(listViews -> new ListCell<>() {
             @Override
-            protected void updateItem(WaysideControllerImpl item, boolean b) {
+            protected void updateItem(WaysideController item, boolean b) {
                 super.updateItem(item, b);
                 if (item != null) {
                     setText("Wayside Controller #" + (item.getID() + 1));
@@ -122,7 +123,7 @@ public class WaysideControllerManager {
         });
         changeControllerComboBox.setConverter(new StringConverter<>() {
             @Override
-            public String toString(WaysideControllerImpl waysideController) {
+            public String toString(WaysideController waysideController) {
                 if (waysideController != null)
                     return "Wayside Controller #" + (waysideController.getID() + 1);
                 else
@@ -130,7 +131,7 @@ public class WaysideControllerManager {
             }
 
             @Override
-            public WaysideControllerImpl fromString(String s) {
+            public WaysideController fromString(String s) {
                 return null;
             }
         });
@@ -221,7 +222,7 @@ public class WaysideControllerManager {
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
-        WaysideControllerImpl newController = new WaysideControllerImpl(controllerList.get().size());
+        WaysideController newController = new WaysideControllerImpl(controllerList.get().size());
         controllerList.get().add(newController);
         changeActiveController(newController);
     }
@@ -229,7 +230,7 @@ public class WaysideControllerManager {
     /**
      * Changes the active controller to the one selected in the combo box
      */
-    private void changeActiveController(WaysideControllerImpl controller) {
+    private void changeActiveController(WaysideController controller) {
         // Unbind previous subject
         if(currentController != null) {
             manualModeCheckbox.selectedProperty().unbindBidirectional(currentController.manualModeProperty());

@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaysideControllerImpl implements WaysideController, ChangeListener<Boolean> {
+public class WaysideControllerImpl implements WaysideController, ChangeListener<Object> {
 
     // The ID of the wayside controller
     private final int id;
@@ -21,14 +21,14 @@ public class WaysideControllerImpl implements WaysideController, ChangeListener<
     private boolean manualMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private List<BlockInfo> trackList = new ArrayList<>();
+    private final List<BlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
     private File PLC = null;
 
-    private BooleanProperty manualModeProp;
-    private StringProperty PLCNameProp;
-    private ObjectProperty<Paint> activePLCProp;
+    private final BooleanProperty manualModeProp;
+    private final StringProperty PLCNameProp;
+    private final ObjectProperty<Paint> activePLCProp;
 
 
     /**
@@ -68,6 +68,7 @@ public class WaysideControllerImpl implements WaysideController, ChangeListener<
         updateActivePLCProp();
     }
 
+    @Override
     public List<BlockInfo> getBlockList() {
         return this.trackList;
     }
@@ -89,20 +90,23 @@ public class WaysideControllerImpl implements WaysideController, ChangeListener<
             activePLCProp.set(Color.GRAY);
     }
 
+    @Override
     public BooleanProperty manualModeProperty() {
         return manualModeProp;
     }
+    @Override
     public StringProperty PLCNameProperty() {
         return PLCNameProp;
     }
+    @Override
     public ObjectProperty<Paint> activePLCProperty() {
         return activePLCProp;
     }
 
     @Override
-    public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldVal, Boolean newVal) {
+    public void changed(ObservableValue<?> observableValue, Object oldVal, Object newVal) {
         if(observableValue == manualModeProp) {
-            manualMode = newVal;
+            manualMode = (Boolean)newVal;
             updateActivePLCProp();
             System.out.println("Setting manual mode to " + newVal);
         }

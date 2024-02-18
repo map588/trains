@@ -1,6 +1,10 @@
 package Common;
 
 import Utilities.BlockInfo;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.paint.Paint;
 
 import java.io.File;
 import java.util.List;
@@ -29,5 +33,14 @@ public interface WaysideController {
 
     // Returns the ID of the controller
     public int getID();
+
+    // Property for manual mode GUI interactions
+    public BooleanProperty manualModeProperty();
+
+    // Property for displaying PLC filename in GUI
+    public StringProperty PLCNameProperty();
+
+    // Paint property for displaying active PLC indicator in GUI
+    public ObjectProperty<Paint> activePLCProperty();
 }
 
