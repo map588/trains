@@ -93,7 +93,7 @@ public class WaysideControllerManager {
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
-        manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
+//        manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
 
@@ -193,29 +193,12 @@ public class WaysideControllerManager {
 
         if(selectedFile != null) {
             currentController.loadPLC(selectedFile);
-            updateWaysideInfo();
             System.out.println(selectedFile.getName());
             uploadProgressBar.setProgress(1.0);
         }
         else {
             System.out.println("No file selected!");
         }
-    }
-
-    /**
-     * Updates the wayside controller information on the GUI
-     */
-    private void updateWaysideInfo() {
-        if(currentController.getPLC() != null) {
-            plcCurrentFileLabel.setText("Current PLC File: " + currentController.getPLC().getName());
-            plcActiveIndicator.setFill(Color.BLUE);
-        }
-        else {
-            plcCurrentFileLabel.setText("Current PLC File: ");
-            plcActiveIndicator.setFill(Color.GRAY);
-        }
-
-        manualModeCheckbox.setSelected(currentController.isManualMode());
     }
 
     /**
@@ -247,10 +230,23 @@ public class WaysideControllerManager {
      * Changes the active controller to the one selected in the combo box
      */
     private void changeActiveController(WaysideControllerImpl controller) {
+        // Unbind previous subject
+        if(currentController != null) {
+            manualModeCheckbox.selectedProperty().unbindBidirectional(currentController.manualModeProperty());
+            plcCurrentFileLabel.textProperty().unbindBidirectional(currentController.PLCNameProperty());
+            plcActiveIndicator.fillProperty().unbindBidirectional(currentController.activePLCProperty());
+        }
+
+        // Update controller
         currentController = controller;
         changeControllerLabel.setText("Wayside Controller #" + (controller.getID()+1));
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
-        updateWaysideInfo();
+
+        // Bind new subject
+        manualModeCheckbox.selectedProperty().bindBidirectional(currentController.manualModeProperty());
+        plcCurrentFileLabel.textProperty().bindBidirectional(currentController.PLCNameProperty());
+        plcActiveIndicator.fillProperty().bindBidirectional(currentController.activePLCProperty());
+
         updateBlockList();
         updateSwitchList();
     }
