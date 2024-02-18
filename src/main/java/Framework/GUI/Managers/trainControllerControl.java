@@ -87,7 +87,7 @@ public class trainControllerControl {
     public CheckBox trainController_autoMode_CheckBox;
 
 
-    private trainControllerImpl trainController = new trainControllerImpl(); // Assuming constructor takes an ID
+    private trainControllerImpl trainController = new trainControllerImpl(0); // Assuming constructor takes an ID
 
     /*  What needs to be Initialize
      *  - Cabin Settings

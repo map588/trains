@@ -58,7 +58,7 @@ public class trainModelImpl implements trainModel{
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
 
-        this.controller = new trainControllerImpl();
+        this.controller = new trainControllerImpl(0);
         this.controller.assignTrainModel(this);
     }
 
