@@ -2,7 +2,8 @@ package trainController;
 
 import Common.trainController;
 import Common.trainModel;
-import Framework.GUI.Managers.trainControllerManager;
+import trainController.GUI.trainControllerManager;
+import trainController.GUI.trainControllerSubject;
 
 
 public class trainControllerImpl implements trainController{
@@ -25,8 +26,10 @@ public class trainControllerImpl implements trainController{
 
 
     private trainControllerSubject subject;
-    private trainControllerManager manager;
 
+    public trainControllerImpl(int trainNumber) {
+        this.trainNumber = trainNumber;
+    }
 
     //-----------------Setters-----------------
     public void assignTrainModel(trainModel train) {

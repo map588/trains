@@ -1,7 +1,8 @@
-package trainController;
+package trainController.GUI;
 
 import Common.trainController;
 import javafx.beans.property.*;
+import trainController.trainControllerImpl;
 
 
 public class trainControllerSubject {
@@ -19,6 +20,7 @@ public class trainControllerSubject {
     private IntegerProperty trainNumber;
     private trainController controller;
 
+
     public trainControllerSubject() {
         this.trainNumber = new SimpleIntegerProperty(controller.getTrainNumber());
         this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());
@@ -35,9 +37,6 @@ public class trainControllerSubject {
         this.maxSpeed = new SimpleDoubleProperty(50.0);
     }
 
-    public void assignTrainController(trainController controller) {
-        this.controller = controller;
-    }
 
     public void setCommandSpeed(double speed) {
         if(speed == controller.getCommandSpeed())
