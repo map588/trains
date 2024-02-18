@@ -2,7 +2,9 @@ package Framework.GUI.Managers;
 
 import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,9 +25,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class waysideControllerManager {
+public class WaysideControllerManager {
 
     @FXML
     private TableView<BlockInfo> blockTable;
@@ -72,13 +73,12 @@ public class waysideControllerManager {
     @FXML
     private Label plcCurrentFileLabel;
     @FXML
-    private ComboBox<String> changeControllerComboBox;
+    private ComboBox<WaysideControllerImpl> changeControllerComboBox;
     @FXML
     private Label changeControllerLabel;
 
-    private int controllerNum = 0;
     private WaysideControllerImpl currentController = null;
-    private final List<WaysideControllerImpl> controllerList = new ArrayList<>();
+    private static final ObjectProperty<ObservableList<WaysideControllerImpl>> controllerList = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
     private WaysideControllerTB testBench;
 
@@ -107,6 +107,8 @@ public class waysideControllerManager {
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
+
+        changeControllerComboBox.itemsProperty().bindBidirectional(controllerList);
 
         // Create initial controller and update values
         createNewController();
@@ -211,21 +213,20 @@ public class waysideControllerManager {
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
-        WaysideControllerImpl newController = new WaysideControllerImpl(++controllerNum);
-        controllerList.add(newController);
-        changeControllerComboBox.getItems().add("Wayside Controller #" + controllerNum);
-        changeControllerComboBox.setValue("Wayside Controller #" + controllerNum);
-        changeActiveController("Wayside Controller #" + controllerNum);
+        WaysideControllerImpl newController = new WaysideControllerImpl(controllerList.get().size());
+        controllerList.get().add(newController);
+//        changeControllerComboBox.getItems().add("Wayside Controller #" + controllerNum);
+//        changeControllerComboBox.setValue("Wayside Controller #" + controllerNum);
+        changeActiveController(newController);
     }
 
     /**
      * Changes the active controller to the one selected in the combo box
      */
-    private void changeActiveController(String controllerName) {
-        changeControllerLabel.setText(controllerName);
-        testBench.tbWaysideNumberLabel.setText(controllerName);
-        int id = Integer.parseInt(controllerName.substring(controllerName.lastIndexOf("#") + 1));
-        currentController = controllerList.get(id - 1);
+    private void changeActiveController(WaysideControllerImpl controller) {
+        currentController = controller;
+        changeControllerLabel.setText("Wayside Controller #" + (controller.getID()+1));
+        testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
         // TODO: Change the active controller
         updateWaysideInfo();
         updateBlockList();
