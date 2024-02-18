@@ -87,18 +87,18 @@ public class trainControllerManager {
     public CheckBox trainController_autoMode_CheckBox;
 
     public controllerSubjectFactory factory;
-    public trainControllerSubject subject;
+    public trainControllerSubject currentSubject;
     
     @FXML
     public void initialize() {
         trainController_setSpeed_Slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setOverrideSpeed(newValue.doubleValue());
+            currentSubject.setOverrideSpeed(newValue.doubleValue());
         });
 
         trainController_toggleServiceBrake_CheckBox = new CheckBox();
 
-        trainController_emergencyBrake_Button.setOnAction(event -> subject.setEmergencyBrake(!subject.emergencyBrakeProperty().get()));
-        trainController_toggleServiceBrake_CheckBox.setOnAction(event -> subject.setServiceBrake(!subject.serviceBrakeProperty().get()));
+        trainController_emergencyBrake_Button.setOnAction(event -> currentSubject.setEmergencyBrake(!currentSubject.emergencyBrakeProperty().get()));
+        trainController_toggleServiceBrake_CheckBox.setOnAction(event -> currentSubject.setServiceBrake(!currentSubject.serviceBrakeProperty().get()));
 
         // Assuming subjectImpl provides a way to observe changes, e.g., JavaFX properties or custom listener mechanism
 
@@ -106,42 +106,47 @@ public class trainControllerManager {
             changeTrainView((Integer) newValue);
         });
 
-        subject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
+        currentSubject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
             updateSBrakeIndicator(isEmergencyBrakeActive);
         });
 
-        subject.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
+        currentSubject.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
             updateSBrakeIndicator(isServiceBrakeActive);
         });
 
-        subject.powerProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setPower(newValue.doubleValue());
+        currentSubject.powerProperty().addListener((observable, oldValue, newValue) -> {
+            currentSubject.setPower(newValue.doubleValue());
         });
 
-        subject.powerProperty().addListener((observable, oldValue, newValue) -> {
+        currentSubject.powerProperty().addListener((observable, oldValue, newValue) -> {
             updatePowerText(newValue.doubleValue());
         });
 
-        subject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
+        currentSubject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
             setTextField(trainController_setSpeed_TextField, newValue.doubleValue());
         });
 
-        trainController_speedLimit_Gauge.valueProperty().bind(subject.maxSpeedProperty());
-        trainController_currentSpeed_Gauge.valueProperty().bind(subject.currentSpeedProperty());
-        trainController_commandSpeed_Gauge.valueProperty().bind(subject.commandSpeedProperty());
-        trainController_Authority_Gauge.valueProperty().bind(subject.authorityProperty());
+        trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.maxSpeedProperty());
+        trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.currentSpeedProperty());
+        trainController_commandSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
+        trainController_Authority_Gauge.valueProperty().bind(currentSubject.authorityProperty());
 
-        subject.serviceBrakeProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setServiceBrake(newValue);
+        currentSubject.serviceBrakeProperty().addListener((observable, oldValue, newValue) -> {
+            currentSubject.setServiceBrake(newValue);
         });
 
-        subject.emergencyBrakeProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setEmergencyBrake(newValue);
+        currentSubject.emergencyBrakeProperty().addListener((observable, oldValue, newValue) -> {
+            currentSubject.setEmergencyBrake(newValue);
         });
-        updateSBrakeIndicator(subject.serviceBrakeProperty().get());
+        updateSBrakeIndicator(currentSubject.serviceBrakeProperty().get());
     }
 
     // Assuming continuation from previous code snippet
+
+    public trainControllerManager() {
+        factory = new controllerSubjectFactory();
+        this.currentSubject = factory.getSubject(0);
+    }
 
     private void updatePowerText(double power) {
         trainiController_powerOutput_Gauge.setValue(power);
@@ -160,40 +165,40 @@ public class trainControllerManager {
     }
 
     private void changeTrainView(int trainID) {
-        subject = factory.getSubject(trainID);
-        subject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
+        currentSubject = factory.getSubject(trainID);
+        currentSubject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
             updateSBrakeIndicator(isEmergencyBrakeActive);
         });
 
-        subject.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
+        currentSubject.serviceBrakeProperty().addListener((obs, wasServiceBrakeActive, isServiceBrakeActive) -> {
             updateSBrakeIndicator(isServiceBrakeActive);
         });
 
-        subject.powerProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setPower(newValue.doubleValue());
+        currentSubject.powerProperty().addListener((observable, oldValue, newValue) -> {
+            currentSubject.setPower(newValue.doubleValue());
         });
 
-        subject.powerProperty().addListener((observable, oldValue, newValue) -> {
+        currentSubject.powerProperty().addListener((observable, oldValue, newValue) -> {
             updatePowerText(newValue.doubleValue());
         });
 
-        subject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
+        currentSubject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
             setTextField(trainController_setSpeed_TextField, newValue.doubleValue());
         });
 
-        trainController_speedLimit_Gauge.valueProperty().bind(subject.maxSpeedProperty());
-        trainController_currentSpeed_Gauge.valueProperty().bind(subject.currentSpeedProperty());
-        trainController_commandSpeed_Gauge.valueProperty().bind(subject.commandSpeedProperty());
-        trainController_Authority_Gauge.valueProperty().bind(subject.authorityProperty());
+        trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.maxSpeedProperty());
+        trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.currentSpeedProperty());
+        trainController_commandSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
+        trainController_Authority_Gauge.valueProperty().bind(currentSubject.authorityProperty());
 
-        subject.serviceBrakeProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setServiceBrake(newValue);
+        currentSubject.serviceBrakeProperty().addListener((observable, oldValue, newValue) -> {
+            currentSubject.setServiceBrake(newValue);
         });
 
-        subject.emergencyBrakeProperty().addListener((observable, oldValue, newValue) -> {
-            subject.setEmergencyBrake(newValue);
+        currentSubject.emergencyBrakeProperty().addListener((observable, oldValue, newValue) -> {
+            currentSubject.setEmergencyBrake(newValue);
         });
-        updateSBrakeIndicator(subject.serviceBrakeProperty().get());
+        updateSBrakeIndicator(currentSubject.serviceBrakeProperty().get());
     }
 }
 

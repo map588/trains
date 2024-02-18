@@ -8,19 +8,22 @@ import java.util.Map;
 public class controllerSubjectFactory implements subjectFactory<trainControllerSubject>{
 
     private static final Map<Integer, trainControllerSubject> subjectMap = new HashMap<Integer, trainControllerSubject>();
-    private static int currentID = 0;
 
     public controllerSubjectFactory() {}
 
     //This is really making a subject
     public trainControllerSubject getSubject(int ID) {
-        return subjectMap.getOrDefault(ID, new trainControllerSubject(ID));
+        if(subjectMap.containsKey(ID)) {
+            return subjectMap.get(ID);
+        }
+        else {
+            //Null trainControllerSubject
+            return new trainControllerSubject();
+        }
     }
 
     public void deleteSubject(int ID) {
-        if (subjectMap.containsKey(ID)) {
-            subjectMap.remove(ID);
-        }
+        subjectMap.remove(ID);
     }
 
     public int getNumSubjects() {

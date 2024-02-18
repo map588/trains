@@ -20,8 +20,24 @@ public class trainControllerSubject {
     private IntegerProperty trainNumber;
     private trainController controller;
 
+    //Null Constructor
+    public trainControllerSubject(){
+        this.authority = new SimpleIntegerProperty(0);
+        this.commandSpeed = new SimpleDoubleProperty(0);
+        this.currentSpeed = new SimpleDoubleProperty(0);
+        this.overrideSpeed = new SimpleDoubleProperty(0);
+        this.maxSpeed = new SimpleDoubleProperty(0);
+        this.Ki = new SimpleDoubleProperty(0);
+        this.Kp = new SimpleDoubleProperty(0);
+        this.power = new SimpleDoubleProperty(0);
+        this.serviceBrake = new SimpleBooleanProperty(false);
+        this.emergencyBrake = new SimpleBooleanProperty(false);
+        this.automaticMode = new SimpleBooleanProperty(false);
+        this.trainNumber = new SimpleIntegerProperty(0);
+    }
 
-    public trainControllerSubject() {
+    public trainControllerSubject(trainController controller) {
+        this.controller = controller;
         this.trainNumber = new SimpleIntegerProperty(controller.getTrainNumber());
         this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());
         this.commandSpeed = new SimpleDoubleProperty(controller.getCommandSpeed());
@@ -37,22 +53,6 @@ public class trainControllerSubject {
         this.maxSpeed = new SimpleDoubleProperty(50.0);
     }
 
-    public trainControllerSubject(int ID){
-        //Null subject
-        this.trainNumber = new SimpleIntegerProperty(ID);
-        this.currentSpeed = new SimpleDoubleProperty(0.0);
-        this.commandSpeed = new SimpleDoubleProperty(0.0);
-        this.overrideSpeed = new SimpleDoubleProperty(0.0);
-        this.automaticMode = new SimpleBooleanProperty(false);
-        this.trainNumber = new SimpleIntegerProperty(ID);
-        this.Ki = new SimpleDoubleProperty(1.0);
-        this.Kp = new SimpleDoubleProperty(22.0);
-        this.power = new SimpleDoubleProperty(0.0);
-        this.serviceBrake = new SimpleBooleanProperty(false);
-        this.emergencyBrake = new SimpleBooleanProperty(false);
-        this.authority = new SimpleIntegerProperty(2000);
-        this.maxSpeed = new SimpleDoubleProperty(50.0);
-    }
 
 
     public void setCommandSpeed(double speed) {

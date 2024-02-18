@@ -1,8 +1,9 @@
-package Framework.GUI.Managers;
+package trainModel.GUI;
 
 import eu.hansolo.medusa.Gauge;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
+import trainController.GUI.trainControllerManager;
 import trainModel.trainModelImpl;
 
 public class trainModelManager {
@@ -35,7 +36,8 @@ public class trainModelManager {
     public Gauge authorityDisp;
 
     private int trainID;
-    private trainModelImpl currentTrain = null;
+    private trainModelSubject currentTrainSubject;
+    private trainSubjectFactory controllerManager;
 
     public void initialize() {
         train = new trainModelImpl(0);
