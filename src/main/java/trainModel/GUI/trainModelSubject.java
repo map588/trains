@@ -41,7 +41,7 @@ public class trainModelSubject {
     private trainModelSubject subject;
 
     trainModelSubject(int ID) {
-        this.ID = ID;
+        this.controller.trainID = ID;
         train = new trainModelImpl(ID);
     }
 }

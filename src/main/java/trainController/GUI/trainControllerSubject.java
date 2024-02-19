@@ -4,7 +4,6 @@ import Common.trainController;
 import javafx.beans.property.*;
 import trainController.trainControllerImpl;
 
-
 public class trainControllerSubject {
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
@@ -19,6 +18,7 @@ public class trainControllerSubject {
     private BooleanProperty automaticMode;
     private IntegerProperty trainNumber;
     private trainController controller;
+
 
     //Null Constructor
     public trainControllerSubject(){
@@ -51,6 +51,7 @@ public class trainControllerSubject {
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.authority = new SimpleIntegerProperty(2000);
         this.maxSpeed = new SimpleDoubleProperty(50.0);
+        controllerSubjectFactory.subjectMap.put(controller.getTrainNumber(), this);
     }
 
 

@@ -16,6 +16,10 @@ public class trainSubjectFactory implements subjectFactory<trainModelSubject> {
         return subjects.get(ID);
     }
 
+    public void addSubject(trainModelSubject subject) {
+        subjects.put(subject.getID(), subject);
+    }
+
     public void deleteSubject(int ID) {
 
     }

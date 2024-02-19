@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class controllerSubjectFactory implements subjectFactory<trainControllerSubject>{
 
-    private static final Map<Integer, trainControllerSubject> subjectMap = new HashMap<Integer, trainControllerSubject>();
+    protected static final Map<Integer, trainControllerSubject> subjectMap = new HashMap<Integer, trainControllerSubject>();
 
     public controllerSubjectFactory() {}
 
@@ -20,10 +20,6 @@ public class controllerSubjectFactory implements subjectFactory<trainControllerS
             //Null trainControllerSubject
             return new trainControllerSubject();
         }
-    }
-
-    public void addSubject(trainControllerSubject subject) {
-        subjectMap.put(subject.getTrainNumber(),subject);
     }
 
     public void deleteSubject(int ID) {

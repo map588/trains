@@ -148,9 +148,8 @@ public class trainControllerManager {
 
     // Assuming continuation from previous code snippet
 
-    public void addTrain(trainController train) {
-        factory.addSubject(new trainControllerSubject(train));
-        trainController_trainNo_ChoiceBox.getItems().add(train.getTrainNumber());
+    public void addTrain(trainController controller) {
+        trainController_trainNo_ChoiceBox.getItems().add(controller.getTrainNumber());
     }
 
     private void updatePowerText(double power) {

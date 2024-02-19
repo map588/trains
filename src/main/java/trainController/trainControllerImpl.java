@@ -20,14 +20,18 @@ public class trainControllerImpl implements trainController{
     private boolean emergencyBrake;
     private boolean automaticMode;
 
-    private int trainNumber;
+    private int trainID;
     private trainModel train;
 
+    private final trainControllerSubject subject;
 
-    private trainControllerSubject subject;
+    public trainControllerImpl(int trainID) {
+        this.trainID = trainID;
 
-    public trainControllerImpl(int trainNumber) {
-        this.trainNumber = trainNumber;
+        this.subject = new trainControllerSubject(this);
+        this.subject.setTrainNumber(trainID);
+
+        assignTrainModel(train);
     }
 
     //-----------------Setters-----------------
@@ -36,7 +40,7 @@ public class trainControllerImpl implements trainController{
         this.subject.setCommandSpeed(train.getSpeed());
         this.subject.setCurrentSpeed(train.getSpeed());
         this.subject.setAutomaticMode(true);
-        this.subject.setTrainNumber(trainNumber);
+        this.subject.setTrainNumber(trainID);
     }
 
     public void setAutomaticMode(boolean mode) {
@@ -88,7 +92,7 @@ public class trainControllerImpl implements trainController{
 
     //-----------------Getters-----------------
     public int getTrainNumber() {
-        return this.trainNumber;
+        return this.trainID;
     }
 
 
