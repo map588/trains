@@ -1,7 +1,7 @@
 package CTCOffice;
 
 
-class BlockInfo {
+class CTCBlockInfo {
     private int blockID;
     private int line;
     private boolean occupied;
