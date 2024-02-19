@@ -2,6 +2,9 @@ package Framework.GUI.Managers;
 
 import Common.TrainController;
 import eu.hansolo.medusa.Gauge;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -38,6 +41,7 @@ public class trainControllerManager {
 
         bindGauges();
         bindControls();
+        bindIndicators();
 
         trainController_trainNo_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -51,40 +55,41 @@ public class trainControllerManager {
     }
 
     private void bindGauges() {
-        trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.currentSpeedProperty());
-        trainController_commandedSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
-        trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.maxSpeedProperty());
-        trainController_Authority_Gauge.valueProperty().bind(currentSubject.authorityProperty());
-        trainController_powerOutput_Gauge.valueProperty().bind(currentSubject.powerProperty());
-        trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.blocksToNextStationProperty());
+        trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("currentSpeed"));
+        trainController_commandedSpeed_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("commandSpeed"));
+        trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("maxSpeed"));
+        trainController_Authority_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
+        trainController_powerOutput_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
+        trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
     }
 
     private void bindIndicators() {
-        currentSubject.emergencyBrakeProperty().addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
-        currentSubject.signalFailureProperty().addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
-        currentSubject.brakeFailureProperty().addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
-        currentSubject.powerFailureProperty().addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("emergencyBrake").addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
+        currentSubject.getBooleanProperty("signalFailure").addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("brakeFailure").addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("powerFailure").addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
     }
 
     private void bindControls() {
-        bindSliderAndTextField(trainController_setSpeed_Slider, trainController_setSpeed_TextField, currentSubject::updateSetSpeed);
-        bindCheckBox(trainController_intLight_CheckBox, currentSubject::updateExtLights);
-        bindCheckBox(trainController_extLight_CheckBox, currentSubject::updateIntLights);
-        bindCheckBox(trainController_openDoorLeft_CheckBox, currentSubject::updateLeftDoors);
-        bindCheckBox(trainController_openDoorRight_CheckBox, currentSubject::updateRightDoors);
-        bindCheckBox(trainController_toggleServiceBrake_CheckBox, currentSubject::updateServiceBrake);
-        bindCheckBox(trainController_autoMode_CheckBox, currentSubject::updateAutomaticMode);
-        bindTextField(trainController_setTemperature_TextField, currentSubject::updateTemperature);
-        bindTextField(trainController_setKi_TextField, currentSubject::updateKi);
-        bindTextField(trainController_setKp_TextField, currentSubject::updateKp);
+        bindSliderAndTextField(trainController_setSpeed_Slider, trainController_setSpeed_TextField, ((DoubleProperty)currentSubject.getDoubleProperty("overrideSpeed"))::set);
+        bindCheckBox(trainController_intLight_CheckBox, currentSubject.getBooleanProperty("intLights")::set);
+        bindCheckBox(trainController_extLight_CheckBox, currentSubject.getBooleanProperty("extLights")::set);
+        bindCheckBox(trainController_openDoorLeft_CheckBox, currentSubject.getBooleanProperty("leftDoors")::set);
+        bindCheckBox(trainController_openDoorRight_CheckBox, currentSubject.getBooleanProperty("rightDoors")::set);
+        bindCheckBox(trainController_toggleServiceBrake_CheckBox, currentSubject.getBooleanProperty("serviceBrake")::set);
+        bindCheckBox(trainController_autoMode_CheckBox, currentSubject.getBooleanProperty("automaticMode")::set);
+        bindTextField(trainController_setTemperature_TextField, currentSubject.getDoubleProperty("temperature")::set);
+        bindTextField(trainController_setKi_TextField, currentSubject.getDoubleProperty("Ki")::set);
+        bindTextField(trainController_setKp_TextField, currentSubject.getDoubleProperty("Kp")::set);
         trainController_emergencyBrake_Button.setOnAction(event -> {
-            boolean newEBrake = !currentSubject.emergencyBrakeProperty().get();
-            currentSubject.updateEmergencyBrake(newEBrake);
+            boolean newEBrake = !currentSubject.getBooleanProperty("emergencyBrake").get();
+            currentSubject.updateProperty(currentSubject.getBooleanProperty("emergencyBrake"), newEBrake);
             updateEBrakeIndicator(newEBrake);
         });
         trainController_makeAnnouncements_Button.setOnAction(event -> {
-            boolean enable = !currentSubject.makeAnnouncementsProperty().get();
-            currentSubject.updateAnnouncements(enable);});
+            boolean enable = !currentSubject.getBooleanProperty("announcements").get();
+            currentSubject.updateProperty(currentSubject.getBooleanProperty("announcements"), enable);
+        });
     }
 
     private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
