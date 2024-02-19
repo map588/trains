@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaysideControllerImpl implements WaysideController, ChangeListener<Object> {
+public class WaysideControllerImpl implements WaysideController {
 
     // The ID of the wayside controller
     private final int id;
@@ -41,7 +41,9 @@ public class WaysideControllerImpl implements WaysideController, ChangeListener<
         PLCNameProp = new SimpleStringProperty();
         activePLCProp = new SimpleObjectProperty<>(Color.GRAY);
 
-        manualModeProp.addListener(this);
+        manualModeProp.addListener((observableValue, aBoolean, t1) -> {
+            manualMode = t1;
+        });
     }
 
     @Override
@@ -103,12 +105,4 @@ public class WaysideControllerImpl implements WaysideController, ChangeListener<
         return activePLCProp;
     }
 
-    @Override
-    public void changed(ObservableValue<?> observableValue, Object oldVal, Object newVal) {
-        if(observableValue == manualModeProp) {
-            manualMode = (Boolean)newVal;
-            updateActivePLCProp();
-            System.out.println("Setting manual mode to " + newVal);
-        }
-    }
 }
