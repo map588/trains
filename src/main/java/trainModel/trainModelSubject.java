@@ -9,7 +9,7 @@ import java.util.List;
 
 public class trainModelSubject {
 
-    private IntegerProperty authority, trainNumber, numCars, numPassengers;
+    private IntegerProperty authority, numCars, numPassengers;
     private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
 
     //Vital Variables
@@ -111,11 +111,63 @@ public class trainModelSubject {
                 case "numPassengers":
                     numPassengers.set((int) newValue);
                     break;
-                case "trainNumber":
-                    trainNumber.set((int) newValue);
-                    break;
             }
         }));
+    }
+
+    public BooleanProperty getBooleanProperty (String propertyName) {
+        switch(propertyName) {
+            case "serviceBrake":
+                return serviceBrake;
+            case "emergencyBrake":
+                return emergencyBrake;
+            case "brakeFailure":
+                return brakeFailure;
+            case "powerFailure":
+                return powerFailure;
+            case "signalFailure":
+                return signalFailure;
+            case "extLights":
+                return extLights;
+            case "intLights":
+                return intLights;
+            case "leftDoors":
+                return leftDoors;
+            case "rightDoors":
+                return rightDoors;
+            default:
+                return null;
+        }
+    }
+
+    public DoubleProperty getDoubleProperty (String propertyName) {
+        switch (propertyName) {
+            case "commandSpeed":
+                return commandSpeed;
+            case "actualSpeed":
+                return actualSpeed;
+            case "acceleration":
+                return acceleration;
+            case "power":
+                return power;
+            case "temperature":
+                return temperature;
+            default:
+                return null;
+        }
+    }
+
+    public IntegerProperty getIntegerProperty (String propertyName) {
+        switch (propertyName) {
+            case "authority":
+                return authority;
+            case "numCars":
+                return numCars;
+            case "numPassengers":
+                return numPassengers;
+            default:
+                return null;
+        }
     }
 }
 

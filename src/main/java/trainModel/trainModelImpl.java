@@ -75,47 +75,66 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.listeners.add(listener);
     }
 
-    protected void notifyChange(String property, Object oldValue, Object newValue) {
-        listeners.forEach(listener -> listener.onPropertyChange(property, newValue);
+    protected void notifyChange(String property, Object newValue) {
+        listeners.forEach(listener -> listener.onPropertyChange(property, newValue));
     }
 
     //Vital Setters
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
+        notifyChange("emergencyBrake", brake);
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
+        notifyChange("serviceBrake", brake);
     }
     public void setPower(double power) {
         this.power=power;
+        notifyChange("power", power);
     }
 
     //Murphy Setters
-    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; }
-    public void setPowerFailure(boolean failure) { this.powerFailure = failure; }
-    public void setSignalFailure(boolean failure) { this.signalFailure = failure; }
-
-
+    public void setBrakeFailure(boolean failure) {
+        this.brakeFailure = failure;
+        notifyChange("brakeFailure", failure);
+    }
+    public void setPowerFailure(boolean failure) {
+        this.powerFailure = failure;
+        notifyChange("powerFailure", failure);
+    }
+    public void setSignalFailure(boolean failure) {
+        this.signalFailure = failure;
+        notifyChange("signalFailure", failure);
+    }
 
     //NonVital Setters
     public void setNumCars(int numCars) {
         this.numCars = numCars;
+        notifyChange("numCars", numCars);
     }
     public void setNumPassengers(int numPassengers) {
         this.numPassengers = numPassengers;
+        notifyChange("numPassengers", numPassengers);
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
+        notifyChange("leftDoors", doors);
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
+        notifyChange("rightDoors", doors);
     }
     public void setExtLights(boolean lights) {
         this.extLights = lights;
+        notifyChange("extLights", lights);
     }
-    public void setIntLights(boolean lights) { this.intLights = lights; }
+    public void setIntLights(boolean lights) {
+        this.intLights = lights;
+        notifyChange("intLights", lights);
+    }
     public void setTemperature(double temp) {
         this.temperature = temp;
+        notifyChange("temperature", temp);
     }
 
     //Vital Getters
