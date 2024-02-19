@@ -1,16 +1,21 @@
 package Framework.GUI.Managers;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class BlockInfo {
     private final SimpleIntegerProperty blockNumber;
-    //private final SimpleBooleanProperty occupationLight;
+    private final SimpleStringProperty occupationLight;
 //    private SimpleBooleanProperty switchLightColor;
 //    private SimpleBooleanProperty switchState;
 
-    public BlockInfo(int blockNumber/*, Boolean occupationLight, boolean switchLightColor, boolean switchState*/) {
+    public BlockInfo(int blockNumber, Boolean occupied/*, boolean switchLightColor, boolean switchState*/) {
         this.blockNumber = new SimpleIntegerProperty(blockNumber);
-      //  this.occupationLight = new SimpleBooleanProperty(occupationLight);
+        if (occupied) {
+            this.occupationLight = new SimpleStringProperty("X");
+        } else {
+            this.occupationLight = new SimpleStringProperty(" ");
+        }
 //        this.switchLightColor = new SimpleBooleanProperty(switchLightColor);
 //        this.switchState = new SimpleBooleanProperty(switchState);
     }
@@ -21,12 +26,17 @@ public class BlockInfo {
     public void setBlockNumber(int blockNumber) {
         this.blockNumber.set(blockNumber);
     }
-//    public Boolean getOccupationLight() {
-//        return occupationLight.get();
-//    }
-//    public void setOccupationLight(Boolean occupationLight) {
-//        this.occupationLight.set(occupationLight);
-//    }
+    public String getOccupationLight() {
+        return occupationLight.get();
+    }
+    public void setOccupationLight(Boolean occupied) {
+        if (occupied) {
+            this.occupationLight.set("X");
+        } else {
+            this.occupationLight.set("");
+        }
+    }
+
 //    public boolean getSwitchLightColor() {
 //        return switchLightColor.get();
 //    }

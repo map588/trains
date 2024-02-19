@@ -41,9 +41,9 @@ public class WaysideControllerTB {
         tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
 
         tbLightTable.setEditable(true);
-        tbLTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().lightInStateProperty().getValue()));
-        tbLTRight.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().lightOutStateProperty().getValue()));
+        tbLTLeft.setCellValueFactory(block -> block.getValue().lightInStateProperty().asObject());
         tbLTLeft.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
+        tbLTRight.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
         tbLTRight.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
     }
 
