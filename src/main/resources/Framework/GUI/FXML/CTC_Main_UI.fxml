@@ -67,6 +67,8 @@
                                                   <columns>
                                                     <TableColumn fx:id="blockNumberColumn" prefWidth="43" text="Block #" />
                                                       <TableColumn fx:id="occupationLightColumn" prefWidth="43" text="Occ." />
+                                                        <TableColumn fx:id="switchLightColumn" prefWidth="43" text="Light" />
+                                                      <TableColumn fx:id="switchStateColumn" prefWidth="100" text="Switch State" />
                                                   </columns>
                                                 </TableView>
                                              </children>
