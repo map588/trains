@@ -2,6 +2,10 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Framework.PropertyChangeListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class trainControllerImpl implements TrainController {
@@ -23,71 +27,78 @@ public class trainControllerImpl implements TrainController {
     private TrainModel train;
 
     private final trainControllerSubject subject;
+    private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
     public trainControllerImpl(int trainID) {
         this.trainID = trainID;
         this.subject = new trainControllerSubject(this);
-        this.subject.setTrainNumber(trainID);
+        this.subject.setID(trainID);
 
     }
 
     public trainControllerImpl() {
         this.subject = new trainControllerSubject(this);
+    }
 
+    public void addChangeListener(PropertyChangeListener listener) {
+        listeners.add(listener);
+    }
 
+     protected void notifyChange(String propertyName, Object newValue) {
+        listeners.forEach(listener -> listener.onPropertyChange(propertyName, newValue));
     }
 
     //-----------------Setters-----------------
     public void assignTrainModel(TrainModel train) {
         this.train = train;
-        this.subject.setCommandSpeed(train.getSpeed());
-        this.subject.setCurrentSpeed(train.getSpeed());
-        this.subject.setAutomaticMode(true);
+        notifyChange("CommandSpeed", this.commandSpeed);
+        notifyChange("CurrentSpeed", this.currentSpeed);
+        notifyChange("AutomaticMode", this.automaticMode);
     }
 
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        this.subject.setAutomaticMode(mode);
+        notifyChange("AutomaticMode", mode);
     }
 
     public void setAuthority(int authority) {
         this.authority = authority;
-        this.subject.setAuthority(authority);
+        notifyChange("Authority", authority);
     }
 
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        this.subject.setOverrideSpeed(speed);
+        notifyChange("OverrideSpeed", speed);
     }
 
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        this.subject.setCommandSpeed(speed);
+        notifyChange("CommandSpeed", speed);
     }
 
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        this.subject.setServiceBrake(brake);
+        notifyChange("ServiceBrake", brake);
     }
 
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        this.subject.setEmergencyBrake(brake);
+        notifyChange("EmergencyBrake", brake);
     }
 
     public void setKi(double Ki) {
         this.Ki = Ki;
-        this.subject.setKi(Ki);
+        notifyChange("Ki", Ki);
     }
 
     public void setKp(double Kp) {
         this.Kp = Kp;
-        this.subject.setKp(Kp);
+        notifyChange("Kp", Kp);
     }
 
     public void setPower(double power) {
         this.power = power;
-        this.subject.setPower(power);
+        notifyChange("Power", power);
     }
 
 

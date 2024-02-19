@@ -1,11 +1,15 @@
 package trainController;
 
 import Common.TrainController;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class trainControllerSubject implements ChangeListener<trainControllerImpl> {
+import java.util.HashMap;
+import java.util.Map;
+
+public class trainControllerSubject {
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
     private DoubleProperty currentSpeed;
@@ -17,8 +21,21 @@ public class trainControllerSubject implements ChangeListener<trainControllerImp
     private BooleanProperty serviceBrake;
     private BooleanProperty emergencyBrake;
     private BooleanProperty automaticMode;
-    private IntegerProperty trainNumber;
+    private IntegerProperty trainID;
+
+    private BooleanProperty intLights;
+    private BooleanProperty extLights;
+    private BooleanProperty leftDoors;
+    private BooleanProperty rightDoors;
+    private DoubleProperty temperature;
+
+    private BooleanProperty brakeFailure;
+    private BooleanProperty powerFailure;
+    private BooleanProperty signalFailure;
+
     private TrainController controller;
+
+    private boolean isGuiUpdate = false;
 
 
     //Null Constructor
@@ -34,17 +51,17 @@ public class trainControllerSubject implements ChangeListener<trainControllerImp
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.automaticMode = new SimpleBooleanProperty(false);
-        this.trainNumber = new SimpleIntegerProperty(0);
+        this.trainID = new SimpleIntegerProperty(0);
     }
 
     public trainControllerSubject(TrainController controller) {
         this.controller = controller;
-        this.trainNumber = new SimpleIntegerProperty(controller.getID());
+        this.trainID = new SimpleIntegerProperty(controller.getID());
         this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());
         this.commandSpeed = new SimpleDoubleProperty(controller.getCommandSpeed());
         this.overrideSpeed = new SimpleDoubleProperty(controller.getOverrideSpeed());
         this.automaticMode = new SimpleBooleanProperty(controller.getAutomaticMode());
-        this.trainNumber = new SimpleIntegerProperty(controller.getID());
+        this.trainID = new SimpleIntegerProperty(controller.getID());
         this.Ki = new SimpleDoubleProperty(1.0);
         this.Kp = new SimpleDoubleProperty(22.0);
         this.power = new SimpleDoubleProperty(0.0);
@@ -53,101 +70,167 @@ public class trainControllerSubject implements ChangeListener<trainControllerImp
         this.authority = new SimpleIntegerProperty(2000);
         this.maxSpeed = new SimpleDoubleProperty(50.0);
         controllerSubjectFactory.subjectMap.put(controller.getID(), this);
+
+        controller.addChangeListener(((propertyName, newValue) -> {
+            Platform.runLater(() -> {
+
+            switch (propertyName) {
+                case "Speed":
+                    currentSpeed.set((Double) newValue);
+                    break;
+                case "CommandSpeed":
+                    commandSpeed.set((Double) newValue);
+                    break;
+                case "OverrideSpeed":
+                    overrideSpeed.set((Double) newValue);
+                    break;
+                case "AutomaticMode":
+                    automaticMode.set((Boolean) newValue);
+                    break;
+                case "Ki":
+                    Ki.set((Double) newValue);
+                    break;
+                case "Kp":
+                    Kp.set((Double) newValue);
+                    break;
+                case "Power":
+                    power.set((Double) newValue);
+                    break;
+                case "ServiceBrake":
+                    serviceBrake.set((Boolean) newValue);
+                    break;
+                case "EmergencyBrake":
+                    emergencyBrake.set((Boolean) newValue);
+                    break;
+                case "Authority":
+                    authority.set((Integer) newValue);
+                    break;
+                case "MaxSpeed":
+                    maxSpeed.set((Double) newValue);
+                    break;
+            }
+        });
+        }));
     }
 
+    //Update methods are modified by the GUI from Manager listeners
 
-
-    public void setCommandSpeed(double speed) {
-        if(speed == controller.getCommandSpeed())
-            return;
-        System.out.println("Setting command speed to " + speed);
-        this.controller.setCommandSpeed(speed);
+    public void updateSetSpeed(double newSetSpeed) {
+        if (controller.getOverrideSpeed() != newSetSpeed) {
+            controller.setOverrideSpeed(newSetSpeed); // Update the model only if there's an actual change
+        }
+    }
+    public void updateAuthority(int newAuthority) {
+        if (controller.getAuthority() != newAuthority) {
+            controller.setAuthority(newAuthority); // Update the model only if there's an actual change
+        }
     }
 
-    public void setAutomaticMode() {
-        System.out.println("Setting automatic mode");
-        setAutomaticMode(true);
+    public void updateAutomaticMode(boolean newMode) {
+        if (controller.getAutomaticMode() != newMode) {
+            controller.setAutomaticMode(newMode); // Update the model only if there's an actual change
+        }
     }
 
-    public void setAutomaticMode(boolean mode) {
-        if(mode == controller.getAutomaticMode())
-            return;
-        System.out.println("Setting automatic mode to " + mode);
-        this.automaticMode.set(mode);
-        this.overrideSpeed.set(0.0);
+    public void updateServiceBrake(boolean newServiceBrake) {
+        if (controller.getServiceBrake() != newServiceBrake) {
+            controller.setServiceBrake(newServiceBrake); // Update the model only if there's an actual change
+        }
     }
 
-    public void setTrainNumber(int trainNumber) {
-        if(trainNumber == controller.getID())
-            return;
-        System.out.println("Setting train number to " + trainNumber);
-        this.trainNumber.set(trainNumber);
+    public void updateEmergencyBrake(boolean newEmergencyBrake) {
+        if (controller.getEmergencyBrake() != newEmergencyBrake) {
+            controller.setEmergencyBrake(newEmergencyBrake); // Update the model only if there's an actual change
+        }
     }
 
-    public void setMaxSpeed(double speed) {
-        if(speed == controller.getMaxSpeed())
-            return;
-        System.out.println("Setting max speed to " + speed);
-        this.maxSpeed.set(speed);
+    public void updateKi(double newKi) {
+        if (controller.getKi() != newKi) {
+            controller.setKi(newKi); // Update the model only if there's an actual change
+        }
     }
 
-    public void setCurrentSpeed(double speed) {
-        if(speed == controller.getSpeed())
-            return;
-        System.out.println("Setting current speed to " + speed);
-        this.currentSpeed.set(speed);
+    public void updateKp(double newKp) {
+        if (controller.getKp() != newKp) {
+            controller.setKp(newKp); // Update the model only if there's an actual change
+        }
     }
 
-    public void setManualSpeed(double speed) {
-        if(speed == controller.getOverrideSpeed())
-            return;
-        System.out.println("Setting override speed to " + speed);
-        this.overrideSpeed.set(speed);
-    }
+//    public void updateTemperature(double newTemperature) {
+//        if (controller.getTemperature() != newTemperature) {
+//            controller.setTemperature(newTemperature); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateExtLights(boolean newExtLights) {
+//        if (controller.getExtLights() != newExtLights) {
+//            controller.setExtLights(newExtLights); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateIntLights(boolean newIntLights) {
+//        if (controller.getIntLights() != newIntLights) {
+//            controller.setIntLights(newIntLights); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateLeftDoors(boolean newLeftDoors) {
+//        if (controller.getLeftDoors() != newLeftDoors) {
+//            controller.setLeftDoors(newLeftDoors); // Update the model only if there's an actual change
+//        }
+//    }
 
-    public void setAuthority(int authority) {
-        if(authority == controller.getAuthority())
-            return;
-        System.out.println("Setting authority to " + authority);
-        this.authority.set(authority);
-    }
-
-    public void setKi(double Ki) {
-        System.out.println("Setting Ki to " + Ki);
-        this.Ki.set(Ki);
-    }
-
-    public void setKp(double Kp) {
-        System.out.println("Setting Kp to " + Kp);
-        this.Kp.set(Kp);
-    }
-
-    public void setServiceBrake(boolean brake) {
-        if(brake == controller.getServiceBrake())
-            return;
-        System.out.println("Setting service brake to " + brake);
-        this.serviceBrake.set(brake);
-    }
-
-    public void setEmergencyBrake(boolean brake) {
-        this.setAutomaticMode(false);
-        if(brake == controller.getEmergencyBrake())
-            return;
-        System.out.println("Setting emergency brake to " + brake);
-        this.emergencyBrake.set(brake);
-    }
+//    public void updateRightDoors(boolean newRightDoors) {
+//        if (controller.getRightDoors() != newRightDoors) {
+//            controller.setRightDoors(newRightDoors); // Update the model only if there's an actual change
+//        }
+//    }
 
 
-    public void setPower(double power) {
-        System.out.println("Setting power to " + power);
-        this.power.set(power);
-    }
+//    public void updateBrakeFailure(boolean newBrakeFailure) {
+//        if (controller.getBrakeFailure() != newBrakeFailure) {
+//            controller.setBrakeFailure(newBrakeFailure); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updatePowerFailure(boolean newPowerFailure) {
+//        if (controller.getPowerFailure() != newPowerFailure) {
+//            controller.setPowerFailure(newPowerFailure); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateSignalFailure(boolean newSignalFailure) {
+//        if (controller.getSignalFailure() != newSignalFailure) {
+//            controller.setSignalFailure(newSignalFailure); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateNumPassengers(int newNumPassengers) {
+//        if (controller.getNumPassengers() != newNumPassengers) {
+//            controller.setNumPassengers(newNumPassengers); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateTrainNumber(int newTrainNumber) {
+//        if (controller.getTrainNumber() != newTrainNumber) {
+//            controller.setTrainNumber(newTrainNumber); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateSpeed(double newSpeed) {
+//        if (controller.getSpeed() != newSpeed) {
+//            controller.setSpeed(newSpeed); // Update the model only if there's an actual change
+//        }
+//    }
+//
+//    public void updateAcceleration(double newAcceleration) {
+//        if (controller.getAcceleration() != newAcceleration) {
+//            controller.setAcceleration(newAcceleration); // Update the model only if there's an actual change
+//        }
+//    }
 
 
-    public int getTrainNumber() {
-        System.out.println("Getting train ID");
-        return this.trainNumber.get();
-    }
+
 
     public DoubleProperty overrideSpeedProperty() {
         return this.overrideSpeed;
@@ -193,48 +276,42 @@ public class trainControllerSubject implements ChangeListener<trainControllerImp
         return this.authority;
     }
 
-    public IntegerProperty trainNumberProperty() {
-        return this.trainNumber;
+    public IntegerProperty trainIDProperty() {
+        return this.trainID;
     }
 
-    public void setOverrideSpeed(double speed) {
-        this.overrideSpeed.set(speed);
+    public BooleanProperty intLightsProperty() {
+        return this.intLights;
     }
 
-    public void setCommandSpeed(Double speed) {
-        this.commandSpeed.set(speed);
+    public BooleanProperty extLightsProperty() {
+        return this.extLights;
     }
 
-    private boolean isGuiUpdate = false;
-    /**
-     * Called when the value of an {@link ObservableValue} changes.
-     * <p>
-     * In general, it is considered bad practice to modify the observed value in
-     * this method.
-     *
-     * @param observable The {@code ObservableValue} which value changed
-     * @param oldValue   The old value
-     * @param newValue   The new value
-     */
-    public void changed(ObservableValue<? extends trainControllerImpl> observable, trainControllerImpl oldValue, trainControllerImpl newValue) {
-        if (isGuiUpdate) {
-            return;
-        }
-        if(newValue == null)
-            return;
-        this.trainNumber.set(newValue.getID());
-        this.currentSpeed.set(newValue.getSpeed());
-        this.commandSpeed.set(newValue.getCommandSpeed());
-        this.overrideSpeed.set(newValue.getOverrideSpeed());
-        this.automaticMode.set(newValue.getAutomaticMode());
-        this.Ki.set(newValue.getKi());
-        this.Kp.set(newValue.getKp());
-        this.power.set(newValue.getPower());
-        this.serviceBrake.set(newValue.getServiceBrake());
-        this.emergencyBrake.set(newValue.getEmergencyBrake());
-        this.authority.set(newValue.getAuthority());
-        this.maxSpeed.set(newValue.getMaxSpeed());
+    public BooleanProperty leftDoorsProperty() {
+        return this.leftDoors;
     }
+
+    public BooleanProperty rightDoorsProperty() {
+        return this.rightDoors;
+    }
+
+    public DoubleProperty temperatureProperty() {
+        return this.temperature;
+    }
+
+    public BooleanProperty brakeFailureProperty() {
+        return this.brakeFailure;
+    }
+
+    public BooleanProperty powerFailureProperty() {
+        return this.powerFailure;
+    }
+
+    public BooleanProperty signalFailureProperty() {
+        return this.signalFailure;
+    }
+
 
     public void updateFromGui(Runnable updateLogic) {
         isGuiUpdate = true;
@@ -243,6 +320,9 @@ public class trainControllerSubject implements ChangeListener<trainControllerImp
         } finally {
             isGuiUpdate = false;
         }
+    }
+
+    public void updateIntLights(Boolean newSelection) {
     }
 }
 

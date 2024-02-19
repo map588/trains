@@ -1,7 +1,8 @@
 package trainController;
 
-import Common.SubjectFactory;
+import Framework.SubjectFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,9 @@ public class controllerSubjectFactory implements SubjectFactory<trainControllerS
     }
 
     public int getNumSubjects() {
+        ArrayList<Integer> keys = new ArrayList<Integer>(subjectMap.keySet());
+
+
         return subjectMap.size();
     }
 
