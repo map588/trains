@@ -23,19 +23,19 @@ public class CTCOfficeManager {
 
 
     @FXML
-    private TableView<BlockInfo> blockTable;
+    private TableView<BlockInfoManager> blockTable;
 
     @FXML
-    private TableColumn<BlockInfo, Number> blockNumberColumn;
+    private TableColumn<BlockInfoManager, Number> blockNumberColumn;
 
     @FXML
-    private TableColumn<BlockInfo, String> occupationLightColumn;
+    private TableColumn<BlockInfoManager, String> occupationLightColumn;
 
     @FXML
-    private TableColumn<BlockInfo, Boolean> switchLightColumn;
+    private TableColumn<BlockInfoManager, Boolean> switchLightColumn;
 
     @FXML
-    private TableColumn<BlockInfo, Boolean> switchStateColumn;
+    private TableColumn<BlockInfoManager, Boolean> switchStateColumn;
 
 
     @FXML
@@ -45,12 +45,12 @@ public class CTCOfficeManager {
         switchLightColumn.setCellValueFactory(new PropertyValueFactory<>("switchLightColor"));
         switchStateColumn.setCellValueFactory(new PropertyValueFactory<>("switchState"));
         blockTable.getItems().addAll(
-                new BlockInfo(1, true, red, straight),
-                new BlockInfo(2, false, green, diverging),
-                new BlockInfo(3, true, red, straight),
-                new BlockInfo(4, false, green, diverging),
-                new BlockInfo(5, true, red, straight),
-                new BlockInfo(6, false, green, diverging)
+                new BlockInfoManager(1, true, red, straight),
+                new BlockInfoManager(2, false, green, diverging),
+                new BlockInfoManager(3, true, red, straight),
+                new BlockInfoManager(4, false, green, diverging),
+                new BlockInfoManager(5, true, red, straight),
+                new BlockInfoManager(6, false, green, diverging)
         );
     }
 

@@ -1,46 +1,14 @@
 package CTCOffice;
 
-import Common.CTCOffice;
-import Common.TrainModel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 
-public class CTCOfficeSubject implements CTCOffice {
-    @Override
-    public TrainModel dispatch(int trainID, int blockID) {
-        return null;
-    }
+public class CTCOfficeSubject {
+    private IntegerProperty time;
+    private IntegerProperty ticketSales;
+    private BooleanProperty manualMode;
+    private BooleanProperty maintenanceMode;
 
-
-    /*private IntegerProperty authority;
-    private DoubleProperty commandSpeed;
-    DoubleProperty currentSpeed;
-    DoubleProperty overrideSpeed;
-    private DoubleProperty maxSpeed;
-
-
-    private IntegerProperty trainID;
-
-    private trainModel train;
-    private controlSystem controlSystem;
-
-    public testCtcOfficeImpl(int trainID) {
-        this.commandSpeed = new SimpleDoubleProperty(35.0);
-        this.automaticMode = new SimpleBooleanProperty(false);
-        this.authority = new SimpleIntegerProperty(2000);
-        controlSystem = new controlSystem(this);
-        Thread controlThread = new Thread(controlSystem);
-        controlThread.start();
-    }
-
-    public void setAutomaticMode(boolean mode) {
-        this.automaticMode.set(mode);
-    }
-
-    public void setAuthority(int authority) {
-        this.authority.set(authority);
-    }
-
-    public void setCommandSpeed(double speed) {
-        this.commandSpeed.set(speed);
-    }*/
 }
+
 

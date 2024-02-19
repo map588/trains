@@ -2,13 +2,13 @@ package Framework.GUI.Managers;
 
 import javafx.beans.property.*;
 
-public class BlockInfo {
+public class BlockInfoManager {
     private final SimpleIntegerProperty blockNumber;
     private final SimpleStringProperty occupationLight;
     private final SimpleStringProperty switchLightColor;
     private final SimpleStringProperty switchState;
 
-    public BlockInfo(int blockNumber, Boolean occupied, Boolean switchLightColor, Boolean switchState) {
+    public BlockInfoManager(int blockNumber, Boolean occupied, Boolean switchLightColor, Boolean switchState) {
         this.blockNumber = new SimpleIntegerProperty(blockNumber);
         if (occupied) {
             this.occupationLight = new SimpleStringProperty("X");
@@ -49,7 +49,7 @@ public class BlockInfo {
     public String getSwitchLightColor() {
         return switchLightColor.get();
     }
-    public void setSwitchLightColor(boolean lightOn) {
+    public void setSwitchLightColor(Boolean lightOn) {
         if (lightOn) {
             this.switchLightColor.set("Green");
         } else {
@@ -60,7 +60,7 @@ public class BlockInfo {
     public String getSwitchState() {
         return switchState.get();
     }
-    public void setSwitchState(boolean straight) {
+    public void setSwitchState(Boolean straight) {
         if (straight) {
             this.switchState.set("Straight");
         } else {

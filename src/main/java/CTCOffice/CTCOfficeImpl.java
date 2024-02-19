@@ -15,6 +15,9 @@ class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     private trainSubjectFactory trainSubjectMaker;
 
+
+
+
     public CTCOfficeImpl() {
         // initialize the CTC
     }
@@ -73,3 +76,4 @@ class CTCOfficeImpl implements CTCOffice {
 
 
 }
+
