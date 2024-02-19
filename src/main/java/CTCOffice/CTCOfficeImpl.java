@@ -3,6 +3,7 @@ package CTCOffice;
 import Common.CTCOffice;
 import Common.trainModel;
 
+
 class CTCOfficeImpl implements CTCOffice {
 
 
@@ -49,5 +50,7 @@ class CTCOfficeImpl implements CTCOffice {
     public void setTicketSales(int ticketSales) {}
 
     public void setTime(int time) {}
+
+
 
 }
