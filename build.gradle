@@ -34,6 +34,9 @@ dependencies {
     // PLC Lanaguage in ANTLR
     implementation 'org.antlr:antlr4-runtime:4.9.2'
     antlr 'org.antlr:antlr4:4.9.2'
+
+    // Serial Library PureJavaComm
+    implementation group: 'org.openmuc', name: 'jrxtx', version: '1.0.1'
 }
 
 generateGrammarSource {
