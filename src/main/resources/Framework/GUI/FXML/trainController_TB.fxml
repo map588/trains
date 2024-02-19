@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Text layoutX="59.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Number:" />
@@ -37,5 +36,11 @@
         <TextField layoutX="379.0" layoutY="202.0" prefHeight="26.0" prefWidth="54.0" />
         <Text layoutX="434.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ft." />
         <Text layoutX="434.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="blocks" />
+      <Text layoutX="314.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Cabin Temperature" />
+      <TextField layoutX="472.0" layoutY="246.0" prefHeight="26.0" prefWidth="54.0" />
+      <Text layoutX="526.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°F" wrappingWidth="48.166664123535156" />
+      <Text layoutX="49.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Station Name:" />
+      <TextField layoutX="164.0" layoutY="245.0" prefHeight="26.0" prefWidth="117.0" />
+      <CheckBox layoutX="45.0" layoutY="289.0" mnemonicParsing="false" text="Inside Tunnel" />
     </children>
 </AnchorPane>
