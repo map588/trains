@@ -1,5 +1,6 @@
 package trainModel;
 
+import Framework.AbstractSubject;
 import javafx.beans.property.*;
 import Common.TrainModel;
 import javafx.beans.value.ObservableValue;
@@ -7,7 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javax.swing.*;
 import java.util.List;
 
-public class trainModelSubject {
+public class trainModelSubject implements AbstractSubject {
 
     private IntegerProperty authority, numCars, numPassengers;
     private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
@@ -113,6 +114,21 @@ public class trainModelSubject {
                     break;
             }
         }));
+    }
+
+    public void updateProperty(BooleanProperty property, boolean newValue) {
+        if (property.get() != newValue)
+            property.set(newValue);
+    }
+
+    public void updateProperty(DoubleProperty property, double newValue) {
+        if (property.get() != newValue)
+            property.set(newValue);
+    }
+
+    public void updateProperty(IntegerProperty property, int newValue) {
+        if (property.get() != newValue)
+            property.set(newValue);
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {

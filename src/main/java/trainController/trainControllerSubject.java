@@ -1,13 +1,14 @@
 package trainController;
 
 import Common.TrainController;
+import Framework.AbstractSubject;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 
 import javax.swing.*;
 import java.util.List;
 
-public class trainControllerSubject {
+public class trainControllerSubject implements AbstractSubject {
     private IntegerProperty authority, trainID, blocksToNextStation;
     private DoubleProperty commandSpeed, currentSpeed, overrideSpeed, maxSpeed, Ki, Kp, power, temperature;
     private BooleanProperty serviceBrake, emergencyBrake, automaticMode, intLights, extLights, leftDoors, rightDoors;
