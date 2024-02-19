@@ -9,7 +9,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 
-
 public class CTCOfficeManager {
     public static final Boolean green = true;
     public static final Boolean red = false;

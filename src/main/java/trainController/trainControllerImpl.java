@@ -2,6 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Framework.Notifications;
 import Framework.PropertyChangeListener;
 import trainModel.stubTrainModel;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class trainControllerImpl implements TrainController {
+public class trainControllerImpl implements TrainController, Notifications {
     private int authority;
     private int blocksToNextStation;
     private double commandSpeed;

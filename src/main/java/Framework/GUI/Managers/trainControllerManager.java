@@ -48,6 +48,7 @@ public class trainControllerManager {
                 changeTrainView(newSelection);
             }
         });
+
     }
 
     private void createTrainController(int trainID) {

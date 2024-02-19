@@ -3,76 +3,83 @@ package trainModel;
 import Common.TrackModel;
 import Common.TrainController;
 import Common.TrainModel;
+import Framework.Notifications;
+import Framework.PropertyChangeListener;
 import javafx.beans.property.*;
 
-public class trainModelImpl implements TrainModel{
+import java.util.ArrayList;
+import java.util.List;
+
+public class trainModelImpl implements TrainModel, Notifications {
     //Passed Variables
-    private IntegerProperty authority;
-    private DoubleProperty commandSpeed;
+    private int authority;
+    private double commandSpeed;
 
     //Vital Variables
-    private DoubleProperty speed;
-    private DoubleProperty acceleration;
-    private DoubleProperty power;
-    private BooleanProperty serviceBrake;
-    private BooleanProperty emergencyBrake;
+    private double speed;
+    private double acceleration;
+    private double power;
+    private boolean serviceBrake;
+    private boolean emergencyBrake;
 
     //Murphy Variables
-    private BooleanProperty brakeFailure;
-    private BooleanProperty powerFailure;
-    private BooleanProperty signalFailure;
+    private boolean brakeFailure;
+    private boolean powerFailure;
+    private boolean signalFailure;
 
     //NonVital Variables
-    private BooleanProperty extLights;
-    private BooleanProperty intLights;
-    private BooleanProperty leftDoors;
-    private BooleanProperty rightDoors;
-    private DoubleProperty temperature;
+    private boolean extLights;
+    private boolean intLights;
+    private boolean leftDoors;
+    private boolean rightDoors;
+    private double temperature;
 
-    private IntegerProperty numCars;
-    private IntegerProperty numPassengers;
+    private int numCars;
+    private boolean numPassengers;
+
+    private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
     //Module Stubs
     private TrackModel track;
     private TrainController controller;
 
     public trainModelImpl(int trainID){
-        this.authority = new SimpleIntegerProperty(0);
-        this.commandSpeed = new SimpleDoubleProperty(0);
-        this.speed = new SimpleDoubleProperty(0);
-        this.acceleration = new SimpleDoubleProperty(0);
-        this.power = new SimpleDoubleProperty(0);
-        this.serviceBrake = new SimpleBooleanProperty(false);
-        this.emergencyBrake = new SimpleBooleanProperty(false);
+        this.authority = 0;
+        this.commandSpeed = 0;
+        this.speed = 0;
+        this.acceleration = 0;
+        this.power = 0;
+        this.serviceBrake = false;
+        this.emergencyBrake = false;
 
-        this.brakeFailure = new SimpleBooleanProperty(false);
-        this.powerFailure = new SimpleBooleanProperty(false);
-        this.signalFailure = new SimpleBooleanProperty(false);
+        this.brakeFailure = false;
+        this.powerFailure = false;
+        this.signalFailure = false;
 
-        this.temperature = new SimpleDoubleProperty(0);
-        this.extLights = new SimpleBooleanProperty(false);
-        this.intLights = new SimpleBooleanProperty(false);
-        this.leftDoors = new SimpleBooleanProperty(false);
-        this.rightDoors = new SimpleBooleanProperty(false);
-        this.numCars = new SimpleIntegerProperty(0);
-        this.numPassengers = new SimpleIntegerProperty(0);
+        this.temperature = 0;
+        this.extLights = false;
+        this.intLights = false;
+        this.leftDoors = false;
+        this.rightDoors = false;
+        this.numCars = false;
+        this.numPassengers = false;
     }
 
     //Vital Setters
     public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake.set(brake);
+        this.emergencyBrake =brake;
     }
     public void setServiceBrake(boolean brake) {
-        this.serviceBrake.set(brake);
+        this.serviceBrake = brake;
     }
     public void setPower(double power) {
-        this.power.set(power);
+        this.power=power;
     }
 
     //Murphy Setters
-    public void setBrakeFailure(boolean failure) { this.brakeFailure.set(failure); }
-    public void setPowerFailure(boolean failure) { this.powerFailure.set(failure); }
-    public void setSignalFailure(boolean failure) { this.signalFailure.set(failure); }
+    public void setBrakeFailure(boolean failure) { this.brakeFailure=failure; }
+    public void setPowerFailure(boolean failure) { this.powerFailure=failure; }
+    public void setSignalFailure(boolean failure) { this.signalFailure=failure; }
 
     public void setTrainNumber(int number) {
 
@@ -80,13 +87,13 @@ public class trainModelImpl implements TrainModel{
 
     //NonVital Setters
     public void setNumCars(int numCars) {
-        this.numCars.set(numCars);
+        this.numCars = numCars;
     }
     public void setNumPassengers(int numPassengers) {
-        this.numPassengers.set(numPassengers);
+        this.numPassengers = numPassengers;
     }
     public void setLeftDoors(boolean doors) {
-        this.leftDoors.set(doors);
+        this.leftDoors = doors;
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors.set(doors);
@@ -159,4 +166,7 @@ public class trainModelImpl implements TrainModel{
         //Force = mass*acceleration
     }
 
+    public void addChangeListener(PropertyChangeListener listener) {
+        this.listeners.add(listener);
+    }
 }
