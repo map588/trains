@@ -41,8 +41,10 @@ public class WaysideControllerImpl implements WaysideController {
         PLCNameProp = new SimpleStringProperty();
         activePLCProp = new SimpleObjectProperty<>(Color.GRAY);
 
-        manualModeProp.addListener((observableValue, aBoolean, t1) -> {
-            manualMode = t1;
+        manualModeProp.addListener((observableValue, oldValue, newVal) -> {
+            manualMode = newVal;
+            updateActivePLCProp();
+            System.out.println("Setting manual mode to " + newVal);
         });
     }
 
@@ -105,4 +107,12 @@ public class WaysideControllerImpl implements WaysideController {
         return activePLCProp;
     }
 
+    @Override
+    public void changed(ObservableValue<?> observableValue, Object oldVal, Object newVal) {
+        if(observableValue == manualModeProp) {
+            manualMode = (Boolean)newVal;
+            updateActivePLCProp();
+            System.out.println("Setting manual mode to " + newVal);
+        }
+    }
 }
