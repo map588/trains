@@ -98,7 +98,7 @@ public class WaysideControllerManager {
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
 
         // Set up cell factories for table views
-        blockTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber));
+        blockTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber.getValue()));
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
         blockTableLightInColumn.setCellValueFactory(block -> block.getValue().lightInStateProperty().asObject());
         blockTableLightOutColumn.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
@@ -138,7 +138,7 @@ public class WaysideControllerManager {
         // Create initial controller and update values
         createNewController();
         staticBlockInfo staticInfo = new staticBlockInfo();
-        staticInfo.blockNumber = 10;
+        staticInfo.blockNumber.set(10);
         BlockInfo newBlock = new BlockInfo(staticInfo);
         newBlock.setLightInState(2);
         newBlock.setLightOutState(1);
@@ -146,14 +146,26 @@ public class WaysideControllerManager {
         newBlock.setTrackCircuitState(true);
 
         staticBlockInfo staticInfo2 = new staticBlockInfo();
-        staticInfo2.blockNumber = 11;
+        staticInfo2.blockNumber.set(11);
         BlockInfo newBlock2 = new BlockInfo(staticInfo2);
         newBlock2.setLightInState(1);
         newBlock2.setLightOutState(0);
         newBlock2.setCrossingClosed(false);
         newBlock2.setTrackCircuitState(false);
+
+
+        staticBlockInfo staticInfo3 = new staticBlockInfo();
+        staticInfo3.blockNumber.set(11);
+
+        BlockInfo newBlock3 = new BlockInfo(staticInfo3);
+        newBlock3.setLightInState(1);
+        newBlock3.setLightOutState(0);
+        newBlock3.setCrossingClosed(false);
+        newBlock3.setTrackCircuitState(false);
         currentController.addBlock(newBlock);
         currentController.addBlock(newBlock2);
+        currentController.addBlock(newBlock3);
+
         updateBlockList();
         updateSwitchList();
     }

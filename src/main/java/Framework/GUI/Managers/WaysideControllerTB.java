@@ -16,7 +16,7 @@ public class WaysideControllerTB {
     @FXML
     public TableView<BlockInfo> tbBlockTable;
     @FXML
-    public TableView tbSwitchTable;
+    public TableView<BlockInfo> tbSwitchTable;
     @FXML
     public TableView<BlockInfo> tbLightTable;
     @FXML
@@ -24,9 +24,9 @@ public class WaysideControllerTB {
     @FXML
     public TableColumn<BlockInfo, Boolean> tbBTRight;
     @FXML
-    public TableColumn tbSTLeft;
+    public TableColumn<BlockInfo, Integer> tbSTLeft;
     @FXML
-    public TableColumn tbSTRight;
+    public TableColumn<BlockInfo, Integer> tbSTRight;
     @FXML
     public TableColumn<BlockInfo, Integer> tbLTLeft;
     @FXML
@@ -36,15 +36,21 @@ public class WaysideControllerTB {
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
-        tbBTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber()));
+        tbBTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber().getValue()));
         tbBTRight.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
         tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
 
+        tbSwitchTable.setEditable(true);
+        tbSTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber().getValue()));
+        tbSTRight.setCellValueFactory(block -> block.getValue().getStaticInfo().selectedSwitch.getStaticInfo().getBlockNumber().asObject());
+
+        /**
         tbLightTable.setEditable(true);
         tbLTLeft.setCellValueFactory(block -> block.getValue().lightInStateProperty().asObject());
         tbLTLeft.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
         tbLTRight.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
         tbLTRight.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
+         */
     }
 
     /**
@@ -54,5 +60,10 @@ public class WaysideControllerTB {
     public void readBlockInfo(ObservableList<BlockInfo> blocks) {
         tbBlockTable.setItems(blocks);
         tbLightTable.setItems(blocks);
+        for(BlockInfo item : blocks) {
+            if(item.getStaticInfo().isSwitch()) {
+                tbSwitchTable.getItems().add(item);
+            }
+        }
     }
 }
