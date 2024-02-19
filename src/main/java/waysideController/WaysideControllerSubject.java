@@ -18,13 +18,6 @@ public class WaysideControllerSubject {
         activePLCColor = new SimpleObjectProperty<>(Color.GRAY);
     }
 
-    private void updateActivePLCProp() {
-        if(!controller.isManualMode() && controller.getPLC() != null)
-            activePLCColor.set(Color.BLUE);
-        else
-            activePLCColor.set(Color.GRAY);
-    }
-
     public BooleanProperty manualModeProperty() {
         return manualMode;
     }
