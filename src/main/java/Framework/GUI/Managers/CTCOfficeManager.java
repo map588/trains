@@ -31,28 +31,28 @@ public class CTCOfficeManager {
 
     @FXML
     private TableColumn<BlockInfo, String> occupationLightColumn;
-    /*
-        @FXML
-        private TableColumn<BlockInfo, Boolean> switchLightColumn;
 
-        @FXML
-        private TableColumn<BlockInfo, Boolean> switchStateColumn;
-*/
+    @FXML
+    private TableColumn<BlockInfo, Boolean> switchLightColumn;
+
+    @FXML
+    private TableColumn<BlockInfo, Boolean> switchStateColumn;
+
 
     @FXML
     public void initialize() {
         blockNumberColumn.setCellValueFactory(new PropertyValueFactory<>("blockNumber"));
         occupationLightColumn.setCellValueFactory(new PropertyValueFactory<>("occupationLight"));
+        switchLightColumn.setCellValueFactory(new PropertyValueFactory<>("switchLightColor"));
+        switchStateColumn.setCellValueFactory(new PropertyValueFactory<>("switchState"));
         blockTable.getItems().addAll(
-                new BlockInfo(1, true),
-                new BlockInfo(2, false),
-                new BlockInfo(3, true),
-                new BlockInfo(4, false),
-                new BlockInfo(5, true),
-                new BlockInfo(6, false)
+                new BlockInfo(1, true, red, straight),
+                new BlockInfo(2, false, green, diverging),
+                new BlockInfo(3, true, red, straight),
+                new BlockInfo(4, false, green, diverging),
+                new BlockInfo(5, true, red, straight),
+                new BlockInfo(6, false, green, diverging)
         );
-
-
     }
 
 
