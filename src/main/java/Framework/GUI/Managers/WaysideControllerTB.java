@@ -1,11 +1,13 @@
 package Framework.GUI.Managers;
 
 import Utilities.BlockInfo;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
 
 public class WaysideControllerTB {
 
@@ -16,7 +18,7 @@ public class WaysideControllerTB {
     @FXML
     public TableView tbSwitchTable;
     @FXML
-    public TableView tbLightTable;
+    public TableView<BlockInfo> tbLightTable;
     @FXML
     public TableColumn<BlockInfo, Integer> tbBTLeft;
     @FXML
@@ -26,30 +28,23 @@ public class WaysideControllerTB {
     @FXML
     public TableColumn tbSTRight;
     @FXML
-    public TableColumn tbLTLeft;
+    public TableColumn<BlockInfo, Integer> tbLTLeft;
     @FXML
-    public TableColumn tbLTRight;
+    public TableColumn<BlockInfo, Integer> tbLTRight;
 
 
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
         tbBTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber()));
-
-         // Create the Cell Factory for the Boolean columns
-//        Callback<TableColumn<BlockInfo, Boolean>, TableCell<BlockInfo, Boolean>> booleanCellFactory = new Callback<TableColumn<BlockInfo, Boolean>, TableCell<BlockInfo, Boolean>>() {
-//            @Override
-//            public TableCell<BlockInfo, Boolean> call(TableColumn<BlockInfo, Boolean> param) {
-//                return new BooleanCell();
-//            }
-//        };
-//
-//        tbBTRight.setCellValueFactory(param -> param.getValue().getTrackCircuitStateProperty());
-//        tbBTRight.setCellFactory(booleanCellFactory);
-
-        // New version of the above code block, uses a standard checkbox cell and updates the properties correctly
         tbBTRight.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
         tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
+
+        tbLightTable.setEditable(true);
+        tbLTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().lightInStateProperty().getValue()));
+        tbLTRight.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().lightOutStateProperty().getValue()));
+        tbLTLeft.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
+        tbLTRight.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
     }
 
     /**
@@ -58,5 +53,6 @@ public class WaysideControllerTB {
      */
     public void readBlockInfo(ObservableList<BlockInfo> blocks) {
         tbBlockTable.setItems(blocks);
+        tbLightTable.setItems(blocks);
     }
 }
