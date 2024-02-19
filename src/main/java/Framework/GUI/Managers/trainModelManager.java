@@ -28,7 +28,7 @@ public class trainModelManager {
     public Circle extLightsEn, intLightEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
 
-    private trainModelSubject subject = new trainModelSubject(null, 0);
+    private trainModelSubject subject = new trainModelSubject(new trainModelImpl(0));
 
     public void initialize() {
 
