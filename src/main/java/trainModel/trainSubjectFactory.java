@@ -1,6 +1,7 @@
-package trainModel.GUI;
+package trainModel;
 
 import Common.subjectFactory;
+import trainModel.trainModelSubject;
 
 import java.util.HashMap;
 import java.util.Map;

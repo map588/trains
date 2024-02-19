@@ -3,7 +3,7 @@ package CTCOffice;
 import Common.CTCOffice;
 import Common.trainModel;
 
-import trainModel.GUI.trainSubjectFactory;
+import trainModel.trainSubjectFactory;
 import trainModel.trainModelImpl;
 
 import java.util.HashMap;

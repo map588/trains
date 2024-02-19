@@ -1,4 +1,4 @@
-package trainController.GUI;
+package trainController;
 
 import Common.subjectFactory;
 
@@ -22,6 +22,7 @@ public class controllerSubjectFactory implements subjectFactory<trainControllerS
         }
     }
 
+    //subject may or may not be deallocated
     public void deleteSubject(int ID) {
         subjectMap.remove(ID);
     }

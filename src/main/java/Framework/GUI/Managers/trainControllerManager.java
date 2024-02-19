@@ -6,8 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import Common.trainController;
-import trainController.GUI.controllerSubjectFactory;
-import trainController.GUI.trainControllerSubject;
+import trainController.controllerSubjectFactory;
+import trainController.trainControllerSubject;
 
 public class trainControllerManager {
 
@@ -90,7 +90,31 @@ public class trainControllerManager {
 
     public controllerSubjectFactory factory;
     public trainControllerSubject currentSubject;
-    
+
+    /*  What needs to be Initialize
+     *  - Cabin Settings
+     *      - Doors: Closed
+     *      - Lights: Closed
+     *      - Temperature: 75 C
+     *  - Speed Controller
+     *      - SPD LIMIT: 0 MPH
+     *      - Command Speed: 0 MPH
+     *      - Current Speed: 0 MPH
+     *      - Set Speed: 0 MPH
+     *  - Engineer's Input
+     *      - Ki = 1
+     *      - Kp = 1
+     *  - Brake/Power
+     *      - Power: 0 HP
+     *      - EBrake Status: OFF
+     *  - Failure State
+     *      - Power Failure: OFF
+     *      - Brake Failure: OFF
+     *      - Signal Failure: OFF
+     *  - Train Selector
+     *      -
+     */
+
     @FXML
     public void initialize() {
 

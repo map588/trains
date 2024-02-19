@@ -3,9 +3,7 @@ package trainModel;
 import Common.trackModel;
 import Common.trainController;
 import Common.trainModel;
-import javafx.beans.property.*;
 import trainController.trainControllerImpl;
-import trainModel.GUI.trainModelSubject;
 
 public class trainModelImpl implements trainModel{
     //Passed Variables
@@ -36,75 +34,100 @@ public class trainModelImpl implements trainModel{
 
     //Module Stubs
     private trackModel track;
-    private trainController controller;
+    private final trainController controller;
 
     private trainModelSubject subject;
 
     public trainModelImpl(int trainID){
-        this.authority = new SimpleIntegerProperty(0);
-        this.commandSpeed = new SimpleDoubleProperty(0);
-        this.speed = new SimpleDoubleProperty(0);
-        this.acceleration = new SimpleDoubleProperty(0);
-        this.power = new SimpleDoubleProperty(0);
-        this.serviceBrake = new SimpleBooleanProperty(false);
-        this.emergencyBrake = new SimpleBooleanProperty(false);
+        this.authority =  0;
+        this.commandSpeed =  0;
+        this.speed =  0;
+        this.acceleration =  0;
+        this.power =  0;
+        this.serviceBrake =  false;
+        this.emergencyBrake =  false;
 
-        this.brakeFailure = new SimpleBooleanProperty(false);
-        this.powerFailure = new SimpleBooleanProperty(false);
-        this.signalFailure = new SimpleBooleanProperty(false);
+        this.brakeFailure =  false;
+        this.powerFailure =  false;
+        this.signalFailure =  false;
 
-        this.temperature = new SimpleDoubleProperty(0);
-        this.extLights = new SimpleBooleanProperty(false);
-        this.intLights = new SimpleBooleanProperty(false);
-        this.leftDoors = new SimpleBooleanProperty(false);
-        this.rightDoors = new SimpleBooleanProperty(false);
-        this.numCars = new SimpleIntegerProperty(0);
-        this.numPassengers = new SimpleIntegerProperty(0);
+        this.temperature =  0;
+        this.extLights =  false;
+        this.intLights =  false;
+        this.leftDoors =  false;
+        this.rightDoors =  false;
+        this.numCars =  0;
+        this.numPassengers =  0;
 
         this.controller = new trainControllerImpl(trainID);
         this.controller.assignTrainModel(this);
     }
+    public trainModelImpl(){
+        this.authority = 0;
+        this.commandSpeed =  0;
+        this.speed =  0;
+        this.acceleration =  0;
+        this.power =  0;
+        this.serviceBrake =  false;
+        this.emergencyBrake =  false;
+
+        this.brakeFailure =  false;
+        this.powerFailure =  false;
+        this.signalFailure =  false;
+
+        this.temperature =  0;
+        this.extLights =  false;
+        this.intLights =  false;
+        this.leftDoors =  false;
+        this.rightDoors =  false;
+        this.numCars = 0;
+        this.numPassengers =  0;
+
+        this.controller = new trainControllerImpl();
+        this.controller.assignTrainModel(this);
+    }
+    
 
     //Vital Setters
     public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake.set(brake);
+        this.emergencyBrake = brake;
     }
     public void setServiceBrake(boolean brake) {
-        this.serviceBrake.set(brake);
+        this.serviceBrake = brake;
     }
     public void setPower(double power) {
-        this.power.set(power);
+        this.power = power;
     }
 
     //Murphy Setters
-    public void setBrakeFailure(boolean failure) { this.brakeFailure.set(failure); }
-    public void setPowerFailure(boolean failure) { this.powerFailure.set(failure); }
-    public void setSignalFailure(boolean failure) { this.signalFailure.set(failure); }
+    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; }
+    public void setPowerFailure(boolean failure) { this.powerFailure = failure; }
+    public void setSignalFailure(boolean failure) { this.signalFailure = failure; }
 
     //NonVital Setters
     public void setNumCars(int numCars) {
-        this.numCars.set(numCars);
+        this.numCars = numCars;
     }
     public void setNumPassengers(int numPassengers) {
-        this.numPassengers.set(numPassengers);
+        this.numPassengers = numPassengers;
     }
     public void setLeftDoors(boolean doors) {
-        this.leftDoors.set(doors);
+        this.leftDoors = doors;
     }
     public void setRightDoors(boolean doors) {
-        this.rightDoors.set(doors);
+        this.rightDoors = doors;
     }
     public void setExtLights(boolean lights) {
-        this.extLights.set(lights);
+        this.extLights = lights;
     }
-    public void setIntLights(boolean lights) { this.intLights.set(lights); }
+    public void setIntLights(boolean lights) { this.intLights = lights; }
     public void setTemperature(double temp) {
-        this.temperature.set(temp);
+        this.temperature = temp;
     }
 
     //Vital Getters
     public int getAuthority() {
-        return this.authority.get();
+        return this.authority;
     }
 
     @Override
@@ -113,22 +136,22 @@ public class trainModelImpl implements trainModel{
     }
 
     public double getCommandSpeed() {
-        return this.commandSpeed.get();
+        return this.commandSpeed;
     }
     public double getSpeed() {
-        return this.speed.get();
+        return this.speed;
     }
     public double getAcceleration() {
-        return this.acceleration.get();
+        return this.acceleration;
     }
     public double getPower() {
-        return this.power.get();
+        return this.power;
     }
     public boolean getServiceBrake() {
-        return this.serviceBrake.get();
+        return this.serviceBrake;
     }
     public boolean getEmergencyBrake() {
-        return this.emergencyBrake.get();
+        return this.emergencyBrake;
     }
 
     public double getWeightKG() {
@@ -136,23 +159,23 @@ public class trainModelImpl implements trainModel{
     }
 
     //Murphy Getters
-    public boolean getBrakeFailure() { return this.brakeFailure.get(); }
-    public boolean getPowerFailure() { return this.powerFailure.get(); }
-    public boolean getSignalFailure() { return this.signalFailure.get(); }
+    public boolean getBrakeFailure() { return this.brakeFailure; }
+    public boolean getPowerFailure() { return this.powerFailure; }
+    public boolean getSignalFailure() { return this.signalFailure; }
 
     //NonVital Getters
     public double getTemperature() {
-        return this.temperature.get();
+        return this.temperature;
     }
     public boolean getExtLights() {
-        return this.extLights.get();
+        return this.extLights;
     }
-    public boolean getIntLights() { return this.intLights.get(); }
+    public boolean getIntLights() { return this.intLights; }
     public boolean getLeftDoors() {
-        return this.leftDoors.get();
+        return this.leftDoors;
     }
     public boolean getRightDoors() {
-        return this.rightDoors.get();
+        return this.rightDoors;
     }
 
     //----Vital Signals from Track Model----
@@ -166,47 +189,7 @@ public class trainModelImpl implements trainModel{
         return;
     }
 
-
-
-    //----Property Getters----
-    public BooleanProperty serviceBrakeProperty() {
-        return serviceBrake;
-    }
-    public BooleanProperty emergencyBrakeProperty() {
-        return emergencyBrake;
-    }
-    public DoubleProperty powerProperty() {
-        return power;
-    }
-    public BooleanProperty brakeFailureProperty() { return brakeFailure; }
-    public BooleanProperty powerFailureProperty() { return powerFailure; }
-    public BooleanProperty signalFailureProperty() { return signalFailure; }
-    public DoubleProperty temperatureProperty() {
-        return temperature;
-    }
-    public BooleanProperty extLightsProperty() {
-        return extLights;
-    }
-    public BooleanProperty intLightsProperty() { return intLights; }
-    public BooleanProperty leftDoorsProperty() {
-        return leftDoors;
-    }
-    public BooleanProperty rightDoorsProperty() {
-        return rightDoors;
-    }
-    public IntegerProperty authorityProperty() {
-        return authority;
-    }
-    public DoubleProperty commandSpeedProperty() {
-        return commandSpeed;
-    }
-    public DoubleProperty speedProperty() {
-        return speed;
-    }
-    public DoubleProperty accelerationProperty() {
-        return acceleration;
-    }
-
+    
 
 
     public void calculateSpeed() {

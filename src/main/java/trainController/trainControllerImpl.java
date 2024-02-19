@@ -2,7 +2,6 @@ package trainController;
 
 import Common.trainController;
 import Common.trainModel;
-import trainController.GUI.trainControllerSubject;
 
 
 public class trainControllerImpl implements trainController{
@@ -20,7 +19,7 @@ public class trainControllerImpl implements trainController{
     private boolean emergencyBrake;
     private boolean automaticMode;
 
-    private int trainID;
+    private final int trainID;
     private trainModel train;
 
     private final trainControllerSubject subject;
@@ -34,13 +33,17 @@ public class trainControllerImpl implements trainController{
         assignTrainModel(train);
     }
 
+    public trainControllerImpl() {
+        this.subject = new trainControllerSubject(this);
+        assignTrainModel(train);
+    }
+
     //-----------------Setters-----------------
     public void assignTrainModel(trainModel train) {
         this.train = train;
         this.subject.setCommandSpeed(train.getSpeed());
         this.subject.setCurrentSpeed(train.getSpeed());
         this.subject.setAutomaticMode(true);
-        this.subject.setTrainNumber(trainID);
     }
 
     public void setAutomaticMode(boolean mode) {

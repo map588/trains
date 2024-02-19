@@ -1,8 +1,7 @@
-package trainController.GUI;
+package trainController;
 
 import Common.trainController;
 import javafx.beans.property.*;
-import trainController.trainControllerImpl;
 
 public class trainControllerSubject {
     private IntegerProperty authority;
