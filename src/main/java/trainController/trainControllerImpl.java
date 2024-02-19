@@ -1,12 +1,10 @@
 package trainController;
 
-import Common.trainController;
-import Common.trainModel;
-import trainController.GUI.trainControllerManager;
-import trainController.GUI.trainControllerSubject;
+import Common.TrainController;
+import Common.TrainModel;
 
 
-public class trainControllerImpl implements trainController{
+public class trainControllerImpl implements TrainController {
     private int authority;
     private double commandSpeed;
     private double currentSpeed;
@@ -21,23 +19,30 @@ public class trainControllerImpl implements trainController{
     private boolean emergencyBrake;
     private boolean automaticMode;
 
-    private int trainNumber;
-    private trainModel train;
+    private int trainID;
+    private TrainModel train;
+
+    private final trainControllerSubject subject;
+
+    public trainControllerImpl(int trainID) {
+        this.trainID = trainID;
+        this.subject = new trainControllerSubject(this);
+        this.subject.setTrainNumber(trainID);
+
+    }
+
+    public trainControllerImpl() {
+        this.subject = new trainControllerSubject(this);
 
 
-    private trainControllerSubject subject;
-
-    public trainControllerImpl(int trainNumber) {
-        this.trainNumber = trainNumber;
     }
 
     //-----------------Setters-----------------
-    public void assignTrainModel(trainModel train) {
+    public void assignTrainModel(TrainModel train) {
         this.train = train;
         this.subject.setCommandSpeed(train.getSpeed());
         this.subject.setCurrentSpeed(train.getSpeed());
         this.subject.setAutomaticMode(true);
-        this.subject.setTrainNumber(trainNumber);
     }
 
     public void setAutomaticMode(boolean mode) {
@@ -88,8 +93,8 @@ public class trainControllerImpl implements trainController{
 
 
     //-----------------Getters-----------------
-    public int getTrainNumber() {
-        return this.trainNumber;
+    public int getID() {
+        return this.trainID;
     }
 
 
