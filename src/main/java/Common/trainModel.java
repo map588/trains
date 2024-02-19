@@ -15,6 +15,7 @@ public interface trainModel {
     void setSignalFailure(boolean failure);
 
     //Non-Vital Signals
+    void setTrainNumber(int number);
     void setLeftDoors(boolean doors);
     void setRightDoors(boolean doors);
     void setExtLights(boolean lights);
@@ -46,14 +47,7 @@ public interface trainModel {
     boolean getLeftDoors();
     boolean getRightDoors();
 
-
-    //Vital Signals from Track Model
-    int readAuthority();
-    double readCommandSpeed();
-    void readBeacon();
-
     //Vital Functions for simulating the train physics
     void calculateSpeed();
     void calculateAcceleration();
-
 }
