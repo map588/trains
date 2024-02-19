@@ -67,7 +67,7 @@ public class trainModelSubject implements AbstractSubject {
                 case "commandSpeed":
                     commandSpeed.set((double) newValue);
                     break;
-                case "speed":
+                case "actualSpeed":
                     actualSpeed.set((double) newValue);
                     break;
                 case "acceleration":
