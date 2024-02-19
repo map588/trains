@@ -150,177 +150,83 @@ public class trainControllerSubject {
     }
 
     public void updateProperty(BooleanProperty property, boolean newValue) {
-        if (property.get() != newValue) {
+        if (property.get() != newValue)
             property.set(newValue);
-        }
     }
 
     public void updateProperty(DoubleProperty property, double newValue) {
-        if (property.get() != newValue) {
+        if (property.get() != newValue)
             property.set(newValue);
-        }
     }
 
     public void updateProperty(IntegerProperty property, int newValue) {
-        if (property.get() != newValue) {
+        if (property.get() != newValue)
             property.set(newValue);
+    }
+
+    public BooleanProperty getBooleanProperty (String propertyName) {
+        switch (propertyName) {
+            case "serviceBrake":
+                return serviceBrake;
+            case "emergencyBrake":
+                return emergencyBrake;
+            case "automaticMode":
+                return automaticMode;
+            case "intLights":
+                return intLights;
+            case "extLights":
+                return extLights;
+            case "leftDoors":
+                return leftDoors;
+            case "rightDoors":
+                return rightDoors;
+            case "announcements":
+                return announcements;
+            case "signalFailure":
+                return signalFailure;
+            case "brakeFailure":
+                return brakeFailure;
+            case "powerFailure":
+                return powerFailure;
+            default:
+                return null;
         }
     }
 
-    public void updateSetSpeed(double newSetSpeed) {
-        updateProperty(overrideSpeed, newSetSpeed);
+    public DoubleProperty getDoubleProperty(String propertyName) {
+        switch (propertyName) {
+            case "commandSpeed":
+                return commandSpeed;
+            case "currentSpeed":
+                return currentSpeed;
+            case "overrideSpeed":
+                return overrideSpeed;
+            case "maxSpeed":
+                return maxSpeed;
+            case "Ki":
+                return Ki;
+            case "Kp":
+                return Kp;
+            case "power":
+                return power;
+            case "temperature":
+                return temperature;
+            default:
+                return null;
+        }
     }
 
-    public void updateAuthority(int newAuthority) {
-        updateProperty(authority, newAuthority);
-    }
-
-    public void updateAutomaticMode(boolean newMode) {
-        updateProperty(automaticMode, newMode);
-    }
-
-    public void updateServiceBrake(boolean newServiceBrake) {
-        updateProperty(serviceBrake, newServiceBrake);
-    }
-
-    public void updateEmergencyBrake(boolean newEmergencyBrake) {
-        updateProperty(emergencyBrake, newEmergencyBrake);
-    }
-
-    public void updateKi(double newKi) {
-        updateProperty(Ki, newKi);
-    }
-
-    public void updateKp(double newKp) {
-        updateProperty(Kp, newKp);
-    }
-
-    public void updateTemperature(double newTemperature) {
-        updateProperty(temperature, newTemperature);
-    }
-
-    public void updateExtLights(boolean newExtLights) {
-        updateProperty(extLights, newExtLights);
-    }
-
-    public void updateIntLights(boolean newIntLights) {
-        updateProperty(intLights, newIntLights);
-    }
-
-    public void updateLeftDoors(boolean newLeftDoors) {
-        updateProperty(leftDoors, newLeftDoors);
-    }
-
-    public void updateRightDoors(boolean newRightDoors) {
-        updateProperty(rightDoors, newRightDoors);
-    }
-
-    public void updateAnnouncements(boolean enabled) {
-        updateProperty(announcements, enabled);
-    }
-
-    public void updateSignalFailure(boolean failure) {
-        updateProperty(signalFailure, failure);
-    }
-
-    public void updateBrakeFailure(boolean failure) {
-        updateProperty(brakeFailure, failure);
-    }
-
-    public void updatePowerFailure(boolean failure) {
-        updateProperty(powerFailure, failure);
-    }
-
-    public TrainController getTrainController() {
-        return controller;
-    }
-
-    public IntegerProperty authorityProperty() {
-        return authority;
-    }
-
-    public IntegerProperty trainIDProperty() {
-        return trainID;
-    }
-
-    public DoubleProperty commandSpeedProperty() {
-        return commandSpeed;
-    }
-
-    public DoubleProperty currentSpeedProperty() {
-        return currentSpeed;
-    }
-
-    public DoubleProperty overrideSpeedProperty() {
-        return overrideSpeed;
-    }
-
-    public DoubleProperty maxSpeedProperty() {
-        return maxSpeed;
-    }
-
-    public DoubleProperty KiProperty() {
-        return Ki;
-    }
-
-    public DoubleProperty KpProperty() {
-        return Kp;
-    }
-
-    public DoubleProperty powerProperty() {
-        return power;
-    }
-
-    public BooleanProperty serviceBrakeProperty() {
-        return serviceBrake;
-    }
-
-    public BooleanProperty emergencyBrakeProperty() {
-        return emergencyBrake;
-    }
-
-    public BooleanProperty automaticModeProperty() {
-        return automaticMode;
-    }
-
-    public BooleanProperty intLightsProperty() {
-        return intLights;
-    }
-
-    public BooleanProperty extLightsProperty() {
-        return extLights;
-    }
-
-    public BooleanProperty leftDoorsProperty() {
-        return leftDoors;
-    }
-
-    public BooleanProperty rightDoorsProperty() {
-        return rightDoors;
-    }
-
-    public DoubleProperty temperatureProperty() {
-        return temperature;
-    }
-
-    public IntegerProperty blocksToNextStationProperty() {
-        return blocksToNextStation;
-    }
-
-    public BooleanProperty makeAnnouncementsProperty() {
-        return announcements;
-    }
-
-    public BooleanProperty signalFailureProperty() {
-        return signalFailure;
-    }
-
-    public BooleanProperty brakeFailureProperty() {
-        return brakeFailure;
-    }
-
-    public BooleanProperty powerFailureProperty() {
-        return powerFailure;
+    public IntegerProperty getIntegerProperty(String propertyName) {
+        switch (propertyName) {
+            case "authority":
+                return authority;
+            case "trainID":
+                return trainID;
+            case "blocksToNextStation":
+                return blocksToNextStation;
+            default:
+                return null;
+        }
     }
 
 }

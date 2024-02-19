@@ -1,8 +1,6 @@
 package Framework.GUI.Managers;
 
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -13,12 +11,10 @@ import javafx.scene.layout.VBox;
 
 
 public class CTCOfficeManager {
-    public static final boolean green = true;
-    public static final boolean red = false;
+    public static final Boolean green = true;
+    public static final Boolean red = false;
     public static final boolean straight = true;
     public static final boolean diverging = false;
-    public static final boolean occupied = true;
-    public static final boolean unoccupied = false;
 
     @FXML
     private VBox collapsingVBox;
@@ -32,30 +28,33 @@ public class CTCOfficeManager {
 
     @FXML
     private TableColumn<BlockInfo, Number> blockNumberColumn;
-    /*
-        @FXML
-        private TableColumn<BlockInfo, Boolean> occupationLightlumn;
-    /*
-        @FXML
-        private TableColumn<BlockInfo, Boolean> switchLightColumn;
 
-        @FXML
-        private TableColumn<BlockInfo, Boolean> switchStateColumn;
-    */
+    @FXML
+    private TableColumn<BlockInfo, String> occupationLightColumn;
+
+    @FXML
+    private TableColumn<BlockInfo, Boolean> switchLightColumn;
+
+    @FXML
+    private TableColumn<BlockInfo, Boolean> switchStateColumn;
+
+
     @FXML
     public void initialize() {
         blockNumberColumn.setCellValueFactory(new PropertyValueFactory<>("blockNumber"));
-       // occupationLightColumn.setCellValueFactory(cellData -> cellData.getValue().getOccupationLight());
-
-        ObservableList<BlockInfo> lineOne = FXCollections.observableArrayList(
-                new BlockInfo(1),
-                new BlockInfo(2),
-                new BlockInfo(3),
-                new BlockInfo(4)
+        occupationLightColumn.setCellValueFactory(new PropertyValueFactory<>("occupationLight"));
+        switchLightColumn.setCellValueFactory(new PropertyValueFactory<>("switchLightColor"));
+        switchStateColumn.setCellValueFactory(new PropertyValueFactory<>("switchState"));
+        blockTable.getItems().addAll(
+                new BlockInfo(1, true, red, straight),
+                new BlockInfo(2, false, green, diverging),
+                new BlockInfo(3, true, red, straight),
+                new BlockInfo(4, false, green, diverging),
+                new BlockInfo(5, true, red, straight),
+                new BlockInfo(6, false, green, diverging)
         );
-
-        blockTable.setItems(lineOne);
     }
+
 
     @FXML
     private void toggle_VBox() {
