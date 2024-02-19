@@ -3,6 +3,8 @@ import Common.TrainModel;
 
 import javafx.beans.property.*;
 
+import static trainModel.trainSubjectFactory.subjectMap;
+
 public class trainModelSubject {
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
@@ -54,7 +56,7 @@ public class trainModelSubject {
         this.temperature = new SimpleDoubleProperty(train.getTemperature());
         this.numCars = new SimpleIntegerProperty(train.getNumCars());
         this.numPassengers = new SimpleIntegerProperty(train.getNumPassengers());
-
+        subjectMap.put(ID, this);
 
     }
 

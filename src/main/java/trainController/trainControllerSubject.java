@@ -37,12 +37,12 @@ public class trainControllerSubject {
 
     public trainControllerSubject(TrainController controller) {
         this.controller = controller;
-        this.trainNumber = new SimpleIntegerProperty(controller.getTrainNumber());
+        this.trainNumber = new SimpleIntegerProperty(controller.getID());
         this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());
         this.commandSpeed = new SimpleDoubleProperty(controller.getCommandSpeed());
         this.overrideSpeed = new SimpleDoubleProperty(controller.getOverrideSpeed());
         this.automaticMode = new SimpleBooleanProperty(controller.getAutomaticMode());
-        this.trainNumber = new SimpleIntegerProperty(controller.getTrainNumber());
+        this.trainNumber = new SimpleIntegerProperty(controller.getID());
         this.Ki = new SimpleDoubleProperty(1.0);
         this.Kp = new SimpleDoubleProperty(22.0);
         this.power = new SimpleDoubleProperty(0.0);
@@ -50,7 +50,7 @@ public class trainControllerSubject {
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.authority = new SimpleIntegerProperty(2000);
         this.maxSpeed = new SimpleDoubleProperty(50.0);
-        controllerSubjectFactory.subjectMap.put(controller.getTrainNumber(), this);
+        controllerSubjectFactory.subjectMap.put(controller.getID(), this);
     }
 
 
@@ -76,7 +76,7 @@ public class trainControllerSubject {
     }
 
     public void setTrainNumber(int trainNumber) {
-        if(trainNumber == controller.getTrainNumber())
+        if(trainNumber == controller.getID())
             return;
         System.out.println("Setting train number to " + trainNumber);
         this.trainNumber.set(trainNumber);
