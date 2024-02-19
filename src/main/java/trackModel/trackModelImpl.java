@@ -1,11 +1,11 @@
 package trackModel;
 
-import Common.trackModel;
+import Common.TrackModel;
 import javafx.beans.property.BooleanProperty;
 
 import java.util.HashMap;
 
-public class trackModelImpl implements  trackModel{
+public class trackModelImpl implements TrackModel {
     private HashMap<Integer,Integer> trainAuthorities;
     private HashMap<Integer,Integer> trainCommandSpeeds;
     private int line;

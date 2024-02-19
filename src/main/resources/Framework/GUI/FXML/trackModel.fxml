@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
 
-<AnchorPane prefHeight="954.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Manangers.trackModelManager">
+<AnchorPane prefHeight="954.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trackModelManager">
     <children>
         <TabPane layoutX="-4.0" layoutY="53.0" prefHeight="901.0" prefWidth="1373.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>

@@ -1,4 +1,4 @@
-package Framework.GUI.Manangers;
+package Framework.GUI.Managers;
 
 import Utilities.staticBlockInfo;
 import javafx.fxml.FXML;
@@ -95,7 +95,6 @@ public class trackModelManager {
         simSpeedInput.getItems().addAll("10x", "9x", "8x", "7x", "6x", "5x", "4x", "3x", "2x","1x");
         murphyLine.getItems().add("Blue");
         pickLine.getItems().add("Blue");
-
 
     }
 

@@ -7,9 +7,10 @@ package Common;
  * @method assignSubject Adds to a list of previously created subjects
  * @method removeSubject Removes a subject from the list
  */
-public interface subjectFactory<T> {
+public interface SubjectFactory<T> {
 
     public T    getSubject(int ID);
+
     public void deleteSubject(int ID);
 
     public int getNumSubjects();

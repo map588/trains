@@ -1,11 +1,11 @@
 package CTCOffice;
 
 import Common.CTCOffice;
-import Common.trainModel;
+import Common.TrainModel;
 
 public class CTCOfficeSubject implements CTCOffice {
     @Override
-    public trainModel dispatch(int trainID, int blockID) {
+    public TrainModel dispatch(int trainID, int blockID) {
         return null;
     }
 

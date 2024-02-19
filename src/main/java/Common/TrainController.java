@@ -2,10 +2,10 @@ package Common;
 
 
 
-public interface trainController {
+public interface TrainController {
 
     //Called at train initialization
-    void assignTrainModel(trainModel train);
+    void assignTrainModel(TrainModel train);
 
     //Called by the GUI
     void setAutomaticMode(boolean mode);
@@ -33,7 +33,7 @@ public interface trainController {
 
 
     //The train cannot store its own ID, so the train controller must store it
-    int getTrainNumber();
+    int getID();
 
     double getSpeed();
     double getAcceleration();
