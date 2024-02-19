@@ -1,2 +1,4 @@
-package Framework;public interface Notifications {
-}
+package Framework;
+
+public interface Notifications {
+    public void addChangeListener(PropertyChangeListener listener);}

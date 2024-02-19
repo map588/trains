@@ -1,7 +1,6 @@
 package trainModel;
 
-import Common.SubjectFactory;
-import Common.TrainModel;
+import Framework.SubjectFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +21,6 @@ public class trainSubjectFactory implements SubjectFactory<trainModelSubject> {
     }
 
     public int getNumSubjects() {
-        return 0;
+        return subjectMap.size();
     }
 }

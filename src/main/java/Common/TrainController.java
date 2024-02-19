@@ -1,8 +1,10 @@
 package Common;
 
 
+import Framework.Notifications;
+import Framework.PropertyChangeListener;
 
-public interface TrainController {
+public interface TrainController extends Notifications {
 
     //Called at train initialization
     void assignTrainModel(TrainModel train);
@@ -48,4 +50,12 @@ public interface TrainController {
     boolean getAutomaticMode();
 
     double getMaxSpeed();
+
+    @Override
+    protected default void notifyChange(String propertyName, Object oldValue, Object newValue) {
+            for (PropertyChangeListener listener : listeners) {
+                listener.onPropertyChange(propertyName, oldValue, newValue);
+            }
+        }
+    }
 }
