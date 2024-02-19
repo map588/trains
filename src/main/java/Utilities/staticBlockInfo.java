@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class staticBlockInfo {
     public IntegerProperty blockNumber;
-    public int section;
+    public String section;
     public int blockLength;
     public int blockGrade;
     public int speedLimit;
