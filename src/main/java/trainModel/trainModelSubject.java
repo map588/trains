@@ -15,7 +15,7 @@ public class trainModelSubject {
     //Vital Variables
     private BooleanProperty serviceBrake, emergencyBrake, brakeFailure, powerFailure;
     private BooleanProperty signalFailure, extLights, intLights, rightDoors, leftDoors;
-    private TrainModel model;
+    private trainModelImpl model;
 
     public trainModelSubject() {
         this.authority = new SimpleIntegerProperty(0);
@@ -37,42 +37,85 @@ public class trainModelSubject {
         this.numPassengers = new SimpleIntegerProperty(0);
     }
 
-    public trainModelSubject(TrainModel model) {
-        this();
-        this.model = model;
-        this.authority.set(model.getAuthority());
-        this.commandSpeed.set(model.getCommandSpeed());
-        this.actualSpeed.set(model.getSpeed());
-        this.acceleration.set(model.getAcceleration());
-        this.power.set(model.getPower());
-        this.serviceBrake.set(model.getServiceBrake());
-        this.emergencyBrake.set(model.getEmergencyBrake());
-        this.brakeFailure.set(model.getBrakeFailure());
-        this.powerFailure.set(model.getPowerFailure());
-        this.signalFailure.set(model.getSignalFailure());
-        this.temperature.set(model.getTemperature());
-        this.extLights.set(model.getExtLights());
-        this.intLights.set(model.getIntLights());
-        this.leftDoors.set(model.getLeftDoors());
-        this.rightDoors.set(model.getRightDoors());
-        this.numCars.set(model.getNumCars());
-        this.numPassengers.set(model.getNumPassengers());
-        trainSubjectFactory.subjectMap.put()
+    public trainModelSubject(trainModelImpl trainModel) {
+        this.model = trainModel;
+
+        this.authority = new SimpleIntegerProperty(0);
+        this.commandSpeed = new SimpleDoubleProperty(0);
+        this.actualSpeed = new SimpleDoubleProperty(0);
+        this.acceleration = new SimpleDoubleProperty(0);
+        this.power = new SimpleDoubleProperty(0);
+        this.serviceBrake = new SimpleBooleanProperty(false);
+        this.emergencyBrake = new SimpleBooleanProperty(false);
+        this.brakeFailure = new SimpleBooleanProperty(false);
+        this.powerFailure = new SimpleBooleanProperty(false);
+        this.signalFailure = new SimpleBooleanProperty(false);
+        this.temperature = new SimpleDoubleProperty(0);
+        this.extLights = new SimpleBooleanProperty(false);
+        this.intLights = new SimpleBooleanProperty(false);
+        this.leftDoors = new SimpleBooleanProperty(false);
+        this.rightDoors = new SimpleBooleanProperty(false);
+        this.numCars = new SimpleIntegerProperty(0);
+        this.numPassengers = new SimpleIntegerProperty(0);
+
         model.addChangeListener(((propertyName, newValue) -> {
             switch (propertyName) {
-                case "Authority":
-                    authority.set((Integer) newValue);
+                case "authority":
+                    authority.set((int) newValue);
                     break;
                 case "commandSpeed":
-                    commandSpeed.set((Double) newValue);
+                    commandSpeed.set((double) newValue);
                     break;
-                case "ActualSpeed":
-                    actualSpeed.set((Double) newValue);
+                case "speed":
+                    actualSpeed.set((double) newValue);
                     break;
-                case "Acceleration":
-                    acceleration.set((Double) newValue);
+                case "acceleration":
+                    acceleration.set((double) newValue);
+                    break;
+                case "power":
+                    power.set((double) newValue);
+                    break;
+                case "serviceBrake":
+                    serviceBrake.set((boolean) newValue);
+                    break;
+                case "emergencyBrake":
+                    emergencyBrake.set((boolean) newValue);
+                    break;
+                case "brakeFailure":
+                    brakeFailure.set((boolean) newValue);
+                    break;
+                case "powerFailure":
+                    powerFailure.set((boolean) newValue);
+                    break;
+                case "signalFailure":
+                    signalFailure.set((boolean) newValue);
+                    break;
+                case "extLights":
+                    extLights.set((boolean) newValue);
+                    break;
+                case "intLights":
+                    intLights.set((boolean) newValue);
+                    break;
+                case "leftDoors":
+                    leftDoors.set((boolean) newValue);
+                    break;
+                case "rightDoors":
+                    rightDoors.set((boolean) newValue);
+                    break;
+                case "temperature":
+                    temperature.set((double) newValue);
+                    break;
+                case "numCars":
+                    numCars.set((int) newValue);
+                    break;
+                case "numPassengers":
+                    numPassengers.set((int) newValue);
+                    break;
+                case "trainNumber":
+                    trainNumber.set((int) newValue);
                     break;
             }
         }));
     }
 }
+

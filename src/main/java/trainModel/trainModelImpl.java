@@ -6,6 +6,7 @@ import Common.TrainModel;
 import Framework.Notifications;
 import Framework.PropertyChangeListener;
 import javafx.beans.property.*;
+import trainController.stubTrainController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,11 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.rightDoors = false;
         this.numCars = 1;
         this.numPassengers = 1;
+
+        this.controller = new stubTrainController(trainID);
+        controller.assignTrainModel(this);
+
+
     }
 
     public void addChangeListener(PropertyChangeListener listener) {
@@ -75,7 +81,7 @@ public class trainModelImpl implements TrainModel, Notifications {
 
     //Vital Setters
     public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake =brake;
+        this.emergencyBrake = brake;
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
@@ -85,9 +91,9 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
 
     //Murphy Setters
-    public void setBrakeFailure(boolean failure) { this.brakeFailure=failure; }
-    public void setPowerFailure(boolean failure) { this.powerFailure=failure; }
-    public void setSignalFailure(boolean failure) { this.signalFailure=failure; }
+    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; }
+    public void setPowerFailure(boolean failure) { this.powerFailure = failure; }
+    public void setSignalFailure(boolean failure) { this.signalFailure = failure; }
 
 
 
