@@ -57,7 +57,7 @@ public class trainModelManager {
     @FXML
     public Gauge authorityDisp;
 
-    private trainModelSubject subject = new trainModelSubject();
+    private trainModelSubject subject = new trainModelSubject(null, 0);
 
     public void initialize() {
 

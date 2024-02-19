@@ -1,11 +1,11 @@
 package trainModel;
 
-import Common.trackModel;
-import Common.trainController;
-import Common.trainModel;
+import Common.TrackModel;
+import Common.TrainController;
+import Common.TrainModel;
 import javafx.beans.property.*;
 
-public class trainModelImpl implements trainModel{
+public class trainModelImpl implements TrainModel{
     //Passed Variables
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
@@ -33,8 +33,8 @@ public class trainModelImpl implements trainModel{
     private IntegerProperty numPassengers;
 
     //Module Stubs
-    private trackModel track;
-    private trainController controller;
+    private TrackModel track;
+    private TrainController controller;
 
     public trainModelImpl(int trainID){
         this.authority = new SimpleIntegerProperty(0);

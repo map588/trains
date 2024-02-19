@@ -1,6 +1,6 @@
 package Common;
 
-public interface trainModel {
+public interface TrainModel {
 
     //----Vital Setter Signals----
     void setEmergencyBrake(boolean brake);

@@ -1,7 +1,7 @@
 package trainModel;
 
 import javafx.beans.property.*;
-import Common.trainModel;
+import Common.TrainModel;
 
 public class trainModelSubject {
 
@@ -30,9 +30,10 @@ public class trainModelSubject {
 
     private IntegerProperty numCars;
     private IntegerProperty numPassengers;
-    private trainModel model;
+    private TrainModel model;
 
-    public trainModelSubject() {
+    public trainModelSubject(TrainModel trainModel, int ID) {
+        this.model = trainModel;
         this.authority = new SimpleIntegerProperty(0);
         this.commandSpeed = new SimpleDoubleProperty(0);
         this.speed = new SimpleDoubleProperty(0);
@@ -55,7 +56,7 @@ public class trainModelSubject {
         this.numPassengers = new SimpleIntegerProperty(0);
     }
 
-    public void assignTrainModel(trainModel model) { this.model = model; }
+    public void assignTrainModel(TrainModel model) { this.model = model; }
 
     //Vital Setters
     public void setEmergencyBrake(boolean brake) {
