@@ -18,13 +18,13 @@ public class WaysideControllerImpl implements WaysideController {
     private final int id;
 
     // Whether the wayside controller is in manual mode
-    protected boolean manualMode = false;
+    private boolean manualMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
     private final List<BlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
-    protected File PLC = null;
+    private File PLC = null;
 
     private final WaysideControllerSubject subject;
 

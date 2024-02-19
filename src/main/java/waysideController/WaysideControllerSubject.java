@@ -16,16 +16,10 @@ public class WaysideControllerSubject {
         manualMode = new SimpleBooleanProperty(controller.isManualMode());
         PLCName = new SimpleStringProperty();
         activePLCColor = new SimpleObjectProperty<>(Color.GRAY);
-
-        manualMode.addListener((observableValue, oldValue, newVal) -> {
-            controller.manualMode = newVal;
-            updateActivePLCProp();
-            System.out.println("Setting manual mode to " + newVal);
-        });
     }
 
     private void updateActivePLCProp() {
-        if(!controller.manualMode && controller.PLC != null)
+        if(!controller.isManualMode() && controller.getPLC() != null)
             activePLCColor.set(Color.BLUE);
         else
             activePLCColor.set(Color.GRAY);
