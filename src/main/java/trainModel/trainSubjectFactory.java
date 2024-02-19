@@ -1,6 +1,7 @@
 package trainModel;
 
 import Common.SubjectFactory;
+import Common.TrainModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,12 +13,12 @@ public class trainSubjectFactory implements SubjectFactory<trainModelSubject> {
     public trainSubjectFactory() {}
 
     public trainModelSubject getSubject(int ID) {
-        subjects.getOrDefault(ID, new trainModelSubject(ID));
+        subjects.getOrDefault(ID, new trainModelSubject(new trainModelImpl(ID), ID));
         return subjects.get(ID);
     }
 
     public void addSubject(trainModelSubject subject) {
-        subjects.put(subject.getID(), subject);
+        subjects.put(subject.getTrain().getID(), subject);
     }
 
     public void deleteSubject(int ID) {

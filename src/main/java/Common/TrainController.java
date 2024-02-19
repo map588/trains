@@ -33,7 +33,7 @@ public interface TrainController {
 
 
     //The train cannot store its own ID, so the train controller must store it
-    int getTrainNumber();
+    int getID();
 
     double getSpeed();
     double getAcceleration();

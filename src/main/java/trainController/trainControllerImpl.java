@@ -19,7 +19,7 @@ public class trainControllerImpl implements TrainController {
     private boolean emergencyBrake;
     private boolean automaticMode;
 
-    private final int trainID;
+    private int trainID;
     private TrainModel train;
 
     private final trainControllerSubject subject;
@@ -94,7 +94,7 @@ public class trainControllerImpl implements TrainController {
 
 
     //-----------------Getters-----------------
-    public int getTrainNumber() {
+    public int getID() {
         return this.trainID;
     }
 

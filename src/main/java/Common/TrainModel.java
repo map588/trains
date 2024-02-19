@@ -24,7 +24,7 @@ public interface TrainModel {
 
     //Vital Getter Signals
     int     getAuthority();
-    int     getTrainNumber();
+    int     getID();
     double  getCommandSpeed();
     double  getSpeed();
     double  getAcceleration();
@@ -56,4 +56,7 @@ public interface TrainModel {
     void calculateSpeed();
     void calculateAcceleration();
 
+    int getNumCars();
+
+    int getNumPassengers();
 }

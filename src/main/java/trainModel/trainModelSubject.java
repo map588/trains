@@ -1,10 +1,7 @@
 package trainModel;
-import Common.TrackModel;
-import Common.TrainController;
+import Common.TrainModel;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.*;
 
 public class trainModelSubject {
     private IntegerProperty authority;
@@ -33,14 +30,32 @@ public class trainModelSubject {
     private IntegerProperty numPassengers;
 
     //Module Stubs
-    private TrackModel track;
-    private TrainController controller;
+    private TrainModel train;
+    private int trainID;
 
-    private trainModelSubject subject;
+    trainModelSubject(TrainModel train, int ID) {
+        this.trainID = ID;
+        this.train = train;
+        this.extLights = new SimpleBooleanProperty(train.getExtLights());
+        this.intLights = new SimpleBooleanProperty(train.getIntLights());
+        this.leftDoors = new SimpleBooleanProperty(train.getLeftDoors());
+        this.rightDoors = new SimpleBooleanProperty(train.getRightDoors());
 
-    trainModelSubject(int ID) {
-        this.controller.trainID = ID;
-        train = new trainModelImpl(ID);
+        this.authority = new SimpleIntegerProperty(train.getAuthority());
+        this.commandSpeed = new SimpleDoubleProperty(train.getCommandSpeed());
+        this.speed = new SimpleDoubleProperty(train.getSpeed());
+        this.acceleration = new SimpleDoubleProperty(train.getAcceleration());
+        this.power = new SimpleDoubleProperty(train.getPower());
+        this.serviceBrake = new SimpleBooleanProperty(train.getServiceBrake());
+        this.emergencyBrake = new SimpleBooleanProperty(train.getEmergencyBrake());
+        this.brakeFailure = new SimpleBooleanProperty(train.getBrakeFailure());
+        this.powerFailure = new SimpleBooleanProperty(train.getPowerFailure());
+        this.signalFailure = new SimpleBooleanProperty(train.getSignalFailure());
+        this.temperature = new SimpleDoubleProperty(train.getTemperature());
+        this.numCars = new SimpleIntegerProperty(train.getNumCars());
+        this.numPassengers = new SimpleIntegerProperty(train.getNumPassengers());
+
+
     }
 
     //----Property Getters----
@@ -82,4 +97,7 @@ public class trainModelSubject {
         return acceleration;
     }
 
+    public TrainModel getTrain() {
+        return train;
+    }
 }

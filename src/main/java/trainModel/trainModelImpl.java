@@ -61,6 +61,8 @@ public class trainModelImpl implements TrainModel {
 
         this.controller = new trainControllerImpl(trainID);
         this.controller.assignTrainModel(this);
+
+        this.subject = new trainModelSubject(this, trainID);
     }
     public trainModelImpl(){
         this.authority = 0;
@@ -130,8 +132,7 @@ public class trainModelImpl implements TrainModel {
         return this.authority;
     }
 
-    @Override
-    public int getTrainNumber() {
+    public int getID() {
         return 0;
     }
 
@@ -180,16 +181,15 @@ public class trainModelImpl implements TrainModel {
 
     //----Vital Signals from Track Model----
     public int readAuthority() {
-        return track.getTrainAuthority(controller.getTrainNumber());
+        return track.getTrainAuthority(controller.getID());
     }
     public double readCommandSpeed() {
-        return track.getCommandedSpeed(controller.getTrainNumber());
+        return track.getCommandedSpeed(controller.getID());
     }
     public void readBeacon() {
         return;
     }
 
-    
 
 
     public void calculateSpeed() {
@@ -198,6 +198,14 @@ public class trainModelImpl implements TrainModel {
 
     public void calculateAcceleration() {
         //Force = mass*acceleration
+    }
+
+    public int getNumCars() {
+        return 0;
+    }
+
+    public int getNumPassengers() {
+        return 0;
     }
 
 }
