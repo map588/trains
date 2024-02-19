@@ -2,10 +2,11 @@ package trainController;
 
 import Common.trainController;
 import Common.trainModel;
-import Framework.GUI.Manangers.trainControllerManager;
+import trainController.GUI.trainControllerManager;
+import trainController.GUI.trainControllerSubject;
 
 
-class trainControllerImpl implements trainController{
+public class trainControllerImpl implements trainController{
     private int authority;
     private double commandSpeed;
     private double currentSpeed;
@@ -25,8 +26,10 @@ class trainControllerImpl implements trainController{
 
 
     private trainControllerSubject subject;
-    private trainControllerManager manager;
 
+    public trainControllerImpl(int trainNumber) {
+        this.trainNumber = trainNumber;
+    }
 
     //-----------------Setters-----------------
     public void assignTrainModel(trainModel train) {

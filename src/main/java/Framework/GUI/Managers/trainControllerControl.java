@@ -1,11 +1,12 @@
-package Framework.GUI.Controllers;
+package Framework.GUI.Managers;
 
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.CheckBox;
 import javafx.scene.shape.Circle;
-import trainController.testTrainControllerImpl;
+import trainController.trainControllerImpl;
+
 
 public class trainControllerControl {
 
@@ -86,7 +87,7 @@ public class trainControllerControl {
     public CheckBox trainController_autoMode_CheckBox;
 
 
-    private testTrainControllerImpl trainController = new testTrainControllerImpl(1); // Assuming constructor takes an ID
+    private trainControllerImpl trainController = new trainControllerImpl(0); // Assuming constructor takes an ID
 
     /*  What needs to be Initialize
      *  - Cabin Settings

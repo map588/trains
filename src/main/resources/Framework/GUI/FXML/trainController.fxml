@@ -15,15 +15,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<<<<<<< HEAD
-<AnchorPane maxHeight="640" maxWidth="1024" prefHeight="640.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Controllers.trainControllerControl">
+<AnchorPane maxHeight="640" maxWidth="1024" prefHeight="640.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainController.GUI.trainControllerManager">
    <children>
       <AnchorPane id="Cabin_Settings_Pane" layoutX="36.0" layoutY="162.4" prefHeight="300.0" prefWidth="228.8">
-=======
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Manangers.trainControllerManager">
-   <top>
-      <AnchorPane prefHeight="168.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
->>>>>>> Iteration_2
          <children>
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="300.8" layoutX="1.6" stroke="BLACK" strokeType="INSIDE" width="226.4" />
             <Text layoutX="21.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cabin Settings">
@@ -136,7 +130,6 @@
       </AnchorPane>
       <AnchorPane id="Speed_Controller_Pane" layoutX="281.6" layoutY="161.6" prefHeight="300.0" prefWidth="396.8">
          <children>
-<<<<<<< HEAD
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#dddddd" height="300.8" layoutY="0.8" stroke="BLACK" strokeType="INSIDE" width="396.8" />
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="62.4" layoutX="16.8" layoutY="182.4" stroke="BLACK" strokeType="INSIDE" width="363.2" />
             <Slider fx:id="trainController_setSpeed_Slider" layoutX="40.8" layoutY="194.4" minorTickCount="5" prefHeight="39.2" prefWidth="314.4" showTickLabels="true" showTickMarks="true" />
@@ -182,38 +175,6 @@
                   <Font name="Rockwell Bold" size="9.6" />
                </customFont>
             </Gauge>
-=======
-            <Gauge fx:id="trainControllerPower" knobVisible="false" layoutX="26.0" needleBehavior="OPTIMIZED" prefHeight="180.0" prefWidth="209.0" skinType="INDICATOR" smoothing="true" startFromZero="true" threshold="600.0" thresholdVisible="true" tickLabelLocation="OUTSIDE" tickMarkRingVisible="true" unit="HP" value="60.0">
-               <subTitleColor>
-                  <Color />
-               </subTitleColor>
-               <averageColor>
-                  <Color red="0.20900341868400574" green="0.6184210777282715" blue="0.40688860416412354" />
-               </averageColor>
-               <barBorderColor>
-                  <Color />
-               </barBorderColor>
-               <barBackgroundColor>
-                  <Color red="0.14000000059604645" green="0.14000000059604645" blue="0.14000000059604645" opacity="0.3218390941619873" />
-               </barBackgroundColor>
-               <effect>
-                  <Blend />
-               </effect>
-            </Gauge>
-            <Circle fx:id="sBrakeIndicatorCircle" fill="DODGERBLUE" layoutX="42.0" layoutY="212.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="eBrakeIndicatorCircle" fill="#ff422b" layoutX="42.0" layoutY="278.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
-            <Text layoutX="71.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Service Brake" wrappingWidth="144.21630859375">
-               <font>
-                  <Font name="MesloLGS NF Bold" size="18.0" />
-               </font>
-            </Text>
-            <Text layoutX="71.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Emergency Brake" wrappingWidth="173.21630859375">
-               <font>
-                  <Font name="MesloLGS NF Bold" size="18.0" />
-               </font>
-            </Text>
-            <TextFlow fx:id="powerTextOut" layoutX="42.0" layoutY="141.0" prefHeight="38.0" prefWidth="179.0" textAlignment="CENTER" />
->>>>>>> Iteration_2
          </children>
       </AnchorPane>
       <AnchorPane id="Brake_Pane" layoutX="699.2" layoutY="161.6" prefHeight="449.6" prefWidth="227.2">
@@ -265,51 +226,51 @@
             </ImageView>
          </children>
       </AnchorPane><AnchorPane id="Failure States Pane" layoutX="281.6" layoutY="476.8" prefHeight="136.0" prefWidth="396.8">
-         <children>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutY="1.6" stroke="BLACK" strokeType="INSIDE" width="396.8" />
-            <Text layoutX="137.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Failure States" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="19.2" />
-               </font>
-            </Text>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="140.0" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="11.2" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="269.6" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
-            <Text layoutX="17.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
-               <font>
-                  <Font name="System Bold" size="14.4" />
-               </font>
-            </Text>
-            <Text layoutX="146.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brake Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
-               <font>
-                  <Font name="System Bold" size="14.4" />
-               </font>
-            </Text>
-            <Text layoutX="275.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signal Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
-               <font>
-                  <Font name="System Bold" size="14.4" />
-               </font>
-            </Text>
-            <Circle fx:id="trainController_powerFailure_Status" fill="WHITE" layoutX="91.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="trainController_brakeFailure_Status" fill="WHITE" layoutX="220.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="trainController_signalFailure_Status" fill="WHITE" layoutX="352.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
-            <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="38.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../Framework.GUI.Images/PowerFailure.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="167.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../Framework.GUI.Images/brakeFailure.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="296.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../Framework.GUI.Images/SignalFailure.jpg" />
-               </image>
-            </ImageView>
-         </children>
-      </AnchorPane>
+      <children>
+         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutY="1.6" stroke="BLACK" strokeType="INSIDE" width="396.8" />
+         <Text layoutX="137.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Failure States" textAlignment="CENTER">
+            <font>
+               <Font name="System Bold" size="19.2" />
+            </font>
+         </Text>
+         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="140.0" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
+         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="11.2" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
+         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="77.6" layoutX="269.6" layoutY="47.2" stroke="BLACK" strokeType="INSIDE" width="116.0" />
+         <Text layoutX="17.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
+            <font>
+               <Font name="System Bold" size="14.4" />
+            </font>
+         </Text>
+         <Text layoutX="146.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brake Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
+            <font>
+               <Font name="System Bold" size="14.4" />
+            </font>
+         </Text>
+         <Text layoutX="275.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signal Failure" textAlignment="CENTER" wrappingWidth="104.98046875">
+            <font>
+               <Font name="System Bold" size="14.4" />
+            </font>
+         </Text>
+         <Circle fx:id="trainController_powerFailure_Status" fill="WHITE" layoutX="91.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+         <Circle fx:id="trainController_brakeFailure_Status" fill="WHITE" layoutX="220.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+         <Circle fx:id="trainController_signalFailure_Status" fill="WHITE" layoutX="352.0" layoutY="100.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+         <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="38.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../Framework.GUI.Images/PowerFailure.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="167.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../Framework.GUI.Images/brakeFailure.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="30.4" fitWidth="30.4" layoutX="296.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../Framework.GUI.Images/SignalFailure.jpg" />
+            </image>
+         </ImageView>
+      </children>
+   </AnchorPane>
       <AnchorPane id="Authority" layoutX="212.8" layoutY="34.4" prefHeight="103.2" prefWidth="536.8">
          <children>
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" width="536.8" />
