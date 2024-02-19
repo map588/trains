@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 
 public class WaysideControllerTB {
@@ -18,8 +19,6 @@ public class WaysideControllerTB {
     @FXML
     public TableView<BlockInfo> tbSwitchTable;
     @FXML
-    public TableView<BlockInfo> tbLightTable;
-    @FXML
     public TableColumn<BlockInfo, Integer> tbBTLeft;
     @FXML
     public TableColumn<BlockInfo, Boolean> tbBTRight;
@@ -28,9 +27,8 @@ public class WaysideControllerTB {
     @FXML
     public TableColumn<BlockInfo, Integer> tbSTRight;
     @FXML
-    public TableColumn<BlockInfo, Integer> tbLTLeft;
-    @FXML
-    public TableColumn<BlockInfo, Integer> tbLTRight;
+    public TableColumn<BlockInfo, Boolean> tbSTEnable;
+    private Object block;
 
 
     @FXML
@@ -43,6 +41,8 @@ public class WaysideControllerTB {
         tbSwitchTable.setEditable(true);
         tbSTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber().getValue()));
         tbSTRight.setCellValueFactory(block -> block.getValue().getStaticInfo().selectedSwitch.getStaticInfo().getBlockNumber().asObject());
+        tbSTEnable.setCellValueFactory(block -> block.getValue().getStaticInfo().isSwitched);
+        tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
 
         /**
         tbLightTable.setEditable(true);
@@ -59,7 +59,7 @@ public class WaysideControllerTB {
      */
     public void readBlockInfo(ObservableList<BlockInfo> blocks) {
         tbBlockTable.setItems(blocks);
-        tbLightTable.setItems(blocks);
+        //tbLightTable.setItems(blocks);
         for(BlockInfo item : blocks) {
             if(item.getStaticInfo().isSwitch()) {
                 tbSwitchTable.getItems().add(item);

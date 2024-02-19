@@ -5,6 +5,7 @@ import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -137,26 +138,21 @@ public class WaysideControllerManager {
 
         // Create initial controller and update values
         createNewController();
-        staticBlockInfo staticInfo = new staticBlockInfo();
-        staticInfo.blockNumber.set(10);
+        staticBlockInfo staticInfo = new staticBlockInfo(new SimpleIntegerProperty(10));
         BlockInfo newBlock = new BlockInfo(staticInfo);
         newBlock.setLightInState(2);
         newBlock.setLightOutState(1);
         newBlock.setCrossingClosed(true);
         newBlock.setTrackCircuitState(true);
 
-        staticBlockInfo staticInfo2 = new staticBlockInfo();
-        staticInfo2.blockNumber.set(11);
+        staticBlockInfo staticInfo2 = new staticBlockInfo(new SimpleIntegerProperty(11));
         BlockInfo newBlock2 = new BlockInfo(staticInfo2);
         newBlock2.setLightInState(1);
         newBlock2.setLightOutState(0);
         newBlock2.setCrossingClosed(false);
         newBlock2.setTrackCircuitState(false);
 
-
-        staticBlockInfo staticInfo3 = new staticBlockInfo();
-        staticInfo3.blockNumber.set(11);
-
+        staticBlockInfo staticInfo3 = new staticBlockInfo(new SimpleIntegerProperty(12), newBlock, newBlock2);
         BlockInfo newBlock3 = new BlockInfo(staticInfo3);
         newBlock3.setLightInState(1);
         newBlock3.setLightOutState(0);
