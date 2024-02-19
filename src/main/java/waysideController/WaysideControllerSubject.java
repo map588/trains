@@ -6,12 +6,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class WaysideControllerSubject {
-    private WaysideControllerImpl controller;
+    private WaysideController controller;
     private BooleanProperty manualMode;
     private StringProperty PLCName;
     private ObjectProperty<Paint> activePLCColor;
 
-    public WaysideControllerSubject(WaysideControllerImpl controller) {
+    public WaysideControllerSubject(WaysideController controller) {
         this.controller = controller;
         manualMode = new SimpleBooleanProperty(controller.isManualMode());
         PLCName = new SimpleStringProperty();
