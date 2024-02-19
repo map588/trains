@@ -156,35 +156,35 @@ public class trainControllerSubject {
         }
     }
 
-//    public void updateTemperature(double newTemperature) {
-//        if (controller.getTemperature() != newTemperature) {
-//            controller.setTemperature(newTemperature); // Update the model only if there's an actual change
-//        }
-//    }
-//
-//    public void updateExtLights(boolean newExtLights) {
-//        if (controller.getExtLights() != newExtLights) {
-//            controller.setExtLights(newExtLights); // Update the model only if there's an actual change
-//        }
-//    }
-//
-//    public void updateIntLights(boolean newIntLights) {
-//        if (controller.getIntLights() != newIntLights) {
-//            controller.setIntLights(newIntLights); // Update the model only if there's an actual change
-//        }
-//    }
-//
-//    public void updateLeftDoors(boolean newLeftDoors) {
-//        if (controller.getLeftDoors() != newLeftDoors) {
-//            controller.setLeftDoors(newLeftDoors); // Update the model only if there's an actual change
-//        }
-//    }
+    public void updateTemperature(double newTemperature) {
+        if (controller.getTemperature() != newTemperature) {
+            controller.setTemperature(newTemperature); // Update the model only if there's an actual change
+        }
+    }
 
-//    public void updateRightDoors(boolean newRightDoors) {
-//        if (controller.getRightDoors() != newRightDoors) {
-//            controller.setRightDoors(newRightDoors); // Update the model only if there's an actual change
-//        }
-//    }
+    public void updateExtLights(boolean newExtLights) {
+        if (controller.getExtLights() != newExtLights) {
+            controller.setExtLights(newExtLights); // Update the model only if there's an actual change
+        }
+    }
+
+    public void updateIntLights(boolean newIntLights) {
+        if (controller.getIntLights() != newIntLights) {
+            controller.setIntLights(newIntLights); // Update the model only if there's an actual change
+        }
+    }
+
+    public void updateLeftDoors(boolean newLeftDoors) {
+        if (controller.getLeftDoors() != newLeftDoors) {
+            controller.setLeftDoors(newLeftDoors); // Update the model only if there's an actual change
+        }
+    }
+
+    public void updateRightDoors(boolean newRightDoors) {
+        if (controller.getRightDoors() != newRightDoors) {
+            controller.setRightDoors(newRightDoors); // Update the model only if there's an actual change
+        }
+    }
 
 
 //    public void updateBrakeFailure(boolean newBrakeFailure) {

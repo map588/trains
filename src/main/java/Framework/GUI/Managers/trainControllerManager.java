@@ -1,275 +1,130 @@
 package Framework.GUI.Managers;
 
+import Common.TrainController;
 import eu.hansolo.medusa.Gauge;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import Common.TrainController;
-import javafx.util.converter.NumberStringConverter;
-
-
 import trainController.controllerSubjectFactory;
 import trainController.trainControllerSubject;
 
+import java.util.function.Consumer;
 
 public class trainControllerManager {
 
     @FXML
-    public CheckBox trainController_intLight_CheckBox;
-
+    private CheckBox trainController_intLight_CheckBox, trainController_extLight_CheckBox, trainController_openDoorLeft_CheckBox, trainController_openDoorRight_CheckBox, trainController_toggleServiceBrake_CheckBox, trainController_autoMode_CheckBox;
     @FXML
-    public CheckBox trainController_extLight_CheckBox;
-
+    private TextField trainController_setTemperature_TextField, trainController_setKi_TextField, trainController_setKp_TextField, trainController_setSpeed_TextField;
     @FXML
-    public CheckBox trainController_openDoorLeft_CheckBox;
-
+    private Button trainController_emergencyBrake_Button;
     @FXML
-    public CheckBox trainController_openDoorRight_CheckBox;
-
+    private Slider trainController_setSpeed_Slider;
     @FXML
-    public TextField trainController_setTemperature_TextField;
-
+    private Gauge trainController_currentSpeed_Gauge, trainController_speedLimit_Gauge, trainController_commandSpeed_Gauge, trainController_Authority_Gauge, trainiController_powerOutput_Gauge;
     @FXML
-    public Button trainController_makeAnnouncements_Button;
-
-    // Engineer's Input
+    private Circle trainController_eBrake_Status;
     @FXML
-    public TextField trainController_setKi_TextField;
+    private ChoiceBox<Integer> trainController_trainNo_ChoiceBox;
 
-    @FXML
-    public TextField trainController_setKp_TextField;
-
-    // Speed Controller
-    @FXML
-    public Slider trainController_setSpeed_Slider;
-
-
-    @FXML
-    public TextField trainController_setSpeed_TextField;
-
-    @FXML
-    public Gauge trainController_currentSpeed_Gauge;
-
-    @FXML
-    public Gauge trainController_speedLimit_Gauge;
-
-    @FXML
-    public Gauge trainController_commandSpeed_Gauge;
-
-    // Authority
-    @FXML
-    public Gauge trainController_blocksToNextStation_Gauge;
-
-    @FXML
-    public Gauge trainController_Authority_Gauge;
-
-    // Power/Brake
-    @FXML
-    public Button trainController_emergencyBrake_Button;
-
-    @FXML
-    public Circle trainController_eBrake_Status;
-
-    @FXML
-    public CheckBox trainController_toggleServiceBrake_CheckBox;
-
-    @FXML
-    public Gauge trainiController_powerOutput_Gauge;
-
-    // Failure States
-    @FXML
-    public Circle trainController_powerFailure_Status;
-    @FXML
-    public Circle trainController_brakeFailure_Status;
-    @FXML
-    public Circle trainController_signalFailure_Status;
-
-    // Train Selector
-    @FXML
-    public ChoiceBox trainController_trainNo_ChoiceBox;
-
-    @FXML
-    public CheckBox trainController_autoMode_CheckBox;
-
-
-    public controllerSubjectFactory factory;
-    public trainControllerSubject currentSubject;
-
-    /*  What needs to be Initialize
-     *  - Cabin Settings
-     *      - Doors: Closed
-     *      - Lights: Closed
-     *      - Temperature: 75 C
-     *  - Speed Controller
-     *      - SPD LIMIT: 0 MPH
-     *      - Command Speed: 0 MPH
-     *      - Current Speed: 0 MPH
-     *      - Set Speed: 0 MPH
-     *  - Engineer's Input
-     *      - Ki = 1
-     *      - Kp = 1
-     *  - Brake/Power
-     *      - Power: 0 HP
-     *      - EBrake Status: OFF
-     *  - Failure State
-     *      - Power Failure: OFF
-     *      - Brake Failure: OFF
-     *      - Signal Failure: OFF
-     *  - Train Selector
-     *      -
-     */
+    private controllerSubjectFactory factory;
+    private trainControllerSubject currentSubject;
 
     @FXML
     public void initialize() {
-
         factory = new controllerSubjectFactory();
+        bindGauges();
+        bindControls();
 
-        //Read onlys
+        trainController_trainNo_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                changeTrainView(newSelection);
+            }
+        });
+    }
+
+    private void bindGauges() {
         trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.currentSpeedProperty());
         trainController_commandSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
         trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.maxSpeedProperty());
         trainController_Authority_Gauge.valueProperty().bind(currentSubject.authorityProperty());
         trainiController_powerOutput_Gauge.valueProperty().bind(currentSubject.powerProperty());
-
-
-        trainController_setSpeed_Slider.valueProperty().addListener((obs, oldSelection, newSelection) -> {
-            currentSubject.updateSetSpeed(newSelection.doubleValue());
-            this.trainController_setSpeed_TextField.setText(String.valueOf(newSelection.doubleValue()));
-        });
-        trainController_setSpeed_TextField.textProperty().addListener((obs, oldSelection, newSelection) -> {
-            currentSubject.updateSetSpeed(Double.parseDouble(newSelection));
-            this.trainController_setSpeed_Slider.setValue(Double.parseDouble(newSelection));
-        });
-
-        trainController_trainNo_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                currentSubject = factory.getSubject((int) newSelection);
-            }
-        });
-
-        trainController_intLight_CheckBox.selectedProperty().addListener((obs, oldSelection, newSelection) -> {
-            currentSubject.setIntLights(newSelection);
-        });
-
-        trainController_extLight_CheckBox.selectedProperty().bindBidirectional(currentSubject.extLightsProperty());
-
-        trainController_openDoorLeft_CheckBox.selectedProperty().bindBidirectional(currentSubject.leftDoorsProperty());
-
-        trainController_openDoorRight_CheckBox.selectedProperty().bindBidirectional(currentSubject.rightDoorsProperty());
-
-        trainController_setTemperature_TextField.textProperty().bindBidirectional(currentSubject.temperatureProperty(), new NumberStringConverter());
-
-        trainController_setKi_TextField.textProperty().bindBidirectional(currentSubject.KiProperty(), new NumberStringConverter());
-
-        trainController_setKp_TextField.textProperty().bindBidirectional(currentSubject.KpProperty(), new NumberStringConverter());
-
-        trainController_toggleServiceBrake_CheckBox.selectedProperty().bindBidirectional(currentSubject.serviceBrakeProperty());
-
-        trainController_autoMode_CheckBox.selectedProperty().bindBidirectional(currentSubject.automaticModeProperty());
-
-        trainController_emergencyBrake_Button.setOnAction(event -> {
-            currentSubject.setEmergencyBrake(true);
-        });
-
-
-
-
     }
 
+    private void bindControls() {
+        bindSliderAndTextField(trainController_setSpeed_Slider, trainController_setSpeed_TextField, currentSubject::updateSetSpeed);
+        bindCheckBox(trainController_intLight_CheckBox, currentSubject::updateExtLights);
+        bindCheckBox(trainController_extLight_CheckBox, currentSubject::updateIntLights);
+        bindCheckBox(trainController_openDoorLeft_CheckBox, currentSubject::updateLeftDoors);
+        bindCheckBox(trainController_openDoorRight_CheckBox, currentSubject::updateRightDoors);
+        bindCheckBox(trainController_toggleServiceBrake_CheckBox, currentSubject::updateServiceBrake);
+        bindCheckBox(trainController_autoMode_CheckBox, currentSubject::updateAutomaticMode);
+        bindTextField(trainController_setTemperature_TextField, currentSubject::updateTemperature);
+        bindTextField(trainController_setKi_TextField, currentSubject::updateKi);
+        bindTextField(trainController_setKp_TextField, currentSubject::updateKp);
+        trainController_emergencyBrake_Button.setOnAction(event -> {
+            boolean newEBrake = !currentSubject.emergencyBrakeProperty().get();
+            currentSubject.updateEmergencyBrake(newEBrake);
+            updateEBrakeIndicator(newEBrake);
+        });
+    }
+
+    private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
+        slider.valueProperty().addListener((obs, oldSelection, newSelection) -> {
+            consumer.accept(newSelection.doubleValue());
+            textField.setText(String.valueOf(newSelection.doubleValue()));
+        });
+        textField.textProperty().addListener((obs, oldSelection, newSelection) -> {
+            double value = Double.parseDouble(newSelection);
+            consumer.accept(value);
+            slider.setValue(value);
+        });
+    }
+
+    private void bindCheckBox(CheckBox checkBox, Consumer<Boolean> consumer) {
+        checkBox.selectedProperty().addListener((obs, oldSelection, newSelection) -> consumer.accept(newSelection));
+    }
+
+    private void bindTextField(TextField textField, Consumer<Double> consumer) {
+        textField.textProperty().addListener((obs, oldSelection, newSelection) -> consumer.accept(Double.parseDouble(newSelection)));
+    }
 
     public void addTrain(TrainController controller) {
         trainController_trainNo_ChoiceBox.getItems().add(controller.getID());
     }
 
-    private void updatePowerText(double power) {
-        trainiController_powerOutput_Gauge.setValue(power);
-    }
-
-    private void setTextField(TextField textField, double value) {
-        textField.setText(String.valueOf(value));
-    }
-
     private void updateEBrakeIndicator(boolean isEmergencyBrakeActive) {
-        Color color = isEmergencyBrakeActive ? Color.RED : Color.GRAY;
-        trainController_eBrake_Status.setFill(color);
+        trainController_eBrake_Status.setFill(isEmergencyBrakeActive ? Color.RED : Color.GRAY);
     }
 
     private void changeTrainView(int trainID) {
         currentSubject = factory.getSubject(trainID);
-
         if(currentSubject != null) {
-            trainController_setSpeed_Slider.valueProperty().unbindBidirectional(currentSubject.overrideSpeedProperty());
-            trainController_currentSpeed_Gauge.valueProperty().unbind();
-            trainController_commandSpeed_Gauge.valueProperty().unbind();
-            trainController_Authority_Gauge.valueProperty().unbind();
-            trainiController_powerOutput_Gauge.valueProperty().unbind();
-
-
-
-            currentSubject.emergencyBrakeProperty().removeListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
-                updateEBrakeIndicator(isEmergencyBrakeActive);
-            });
-
-            currentSubject.powerProperty().removeListener((observable, oldValue, newValue) -> {
-                currentSubject.setPower(newValue.doubleValue());
-            });
-
-            currentSubject.powerProperty().removeListener((observable, oldValue, newValue) -> {
-                updatePowerText(newValue.doubleValue());
-            });
-
-            currentSubject.overrideSpeedProperty().removeListener((observable, oldValue, newValue) -> {
-                setTextField(trainController_setSpeed_TextField, newValue.doubleValue());
-            });
-
-            trainController_speedLimit_Gauge.valueProperty().unbind();
-
-            trainController_currentSpeed_Gauge.valueProperty().unbind();
-
-            trainController_commandSpeed_Gauge.valueProperty().unbind();
-
-            trainController_Authority_Gauge.valueProperty().unbind();
-
-            currentSubject = factory.getSubject(trainID);
-
+            unbindControls();
+            bindControls();
         }
-
-
-        currentSubject.emergencyBrakeProperty().addListener((obs, wasEmergencyBrakeActive, isEmergencyBrakeActive) -> {
-            updateEBrakeIndicator(isEmergencyBrakeActive);
-        });
-
-
-        currentSubject.powerProperty().addListener((observable, oldValue, newValue) -> {
-            currentSubject.setPower(newValue.doubleValue());
-        });
-
-        currentSubject.powerProperty().addListener((observable, oldValue, newValue) -> {
-            updatePowerText(newValue.doubleValue());
-        });
-
-        currentSubject.overrideSpeedProperty().addListener((observable, oldValue, newValue) -> {
-            setTextField(trainController_setSpeed_TextField, newValue.doubleValue());
-        });
-
-        trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.maxSpeedProperty());
-        trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.currentSpeedProperty());
-        trainController_commandSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
-        trainController_Authority_Gauge.valueProperty().bind(currentSubject.authorityProperty());
-
-        currentSubject.serviceBrakeProperty().addListener((observable, oldValue, newValue) -> {
-            currentSubject.setServiceBrake(newValue);
-        });
-
-        currentSubject.emergencyBrakeProperty().addListener((observable, oldValue, newValue) -> {
-            currentSubject.setEmergencyBrake(newValue);
-        });
     }
 
+    private void unbindControls() {
+        trainController_currentSpeed_Gauge.valueProperty().unbind();
+        trainController_commandSpeed_Gauge.valueProperty().unbind();
+        trainController_speedLimit_Gauge.valueProperty().unbind();
+        trainController_Authority_Gauge.valueProperty().unbind();
+        trainiController_powerOutput_Gauge.valueProperty().unbind();
 
+        trainController_setSpeed_Slider.valueProperty().unbind();
+        trainController_setSpeed_TextField.textProperty().unbind();
 
+        trainController_intLight_CheckBox.selectedProperty().unbind();
+        trainController_extLight_CheckBox.selectedProperty().unbind();
+        trainController_openDoorLeft_CheckBox.selectedProperty().unbind();
+        trainController_openDoorRight_CheckBox.selectedProperty().unbind();
+        trainController_toggleServiceBrake_CheckBox.selectedProperty().unbind();
+        trainController_autoMode_CheckBox.selectedProperty().unbind();
+
+        trainController_setTemperature_TextField.textProperty().unbind();
+        trainController_setKi_TextField.textProperty().unbind();
+        trainController_setKp_TextField.textProperty().unbind();
+    }
 }
-

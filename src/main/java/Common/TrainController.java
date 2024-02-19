@@ -32,6 +32,11 @@ public interface TrainController extends Notifications {
     void setKi(double Ki);
     void setKp(double Kp);
 
+    //----Non-vital setters called by GUI----
+    void setIntLights(boolean intLights);
+    void setExtLights(boolean extLights);
+    void setLeftDoors(boolean leftDoors);
+    void setRightDoors(boolean rightDoors);
 
 
     //The train cannot store its own ID, so the train controller must store it
@@ -40,22 +45,24 @@ public interface TrainController extends Notifications {
     double getSpeed();
     double getAcceleration();
     double getPower();
-    boolean getServiceBrake();
-    boolean getEmergencyBrake();
-    double getCommandSpeed();
-    int getAuthority();
     double getKi();
     double getKp();
     double getOverrideSpeed();
-    boolean getAutomaticMode();
-
     double getMaxSpeed();
 
-    @Override
-    protected default void notifyChange(String propertyName, Object oldValue, Object newValue) {
-            for (PropertyChangeListener listener : listeners) {
-                listener.onPropertyChange(propertyName, oldValue, newValue);
-            }
-        }
-    }
+    boolean getServiceBrake();
+    boolean getEmergencyBrake();
+    boolean getAutomaticMode();
+
+    boolean getExtLights();
+    boolean getIntLights();
+    boolean getLeftDoors();
+    boolean getRightDoors();
+
+    double getTemperature();
+
+    double getCommandSpeed();
+    int getAuthority();
+
+    void setTemperature(double newTemperature);
 }

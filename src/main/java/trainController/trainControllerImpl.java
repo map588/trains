@@ -23,6 +23,13 @@ public class trainControllerImpl implements TrainController {
     private boolean emergencyBrake;
     private boolean automaticMode;
 
+    private boolean internalLights;
+    private boolean externalLights;
+    private boolean leftDoors;
+    private boolean rightDoors;
+
+    private double temperature;
+
     private int trainID;
     private TrainModel train;
 
@@ -32,8 +39,6 @@ public class trainControllerImpl implements TrainController {
     public trainControllerImpl(int trainID) {
         this.trainID = trainID;
         this.subject = new trainControllerSubject(this);
-        this.subject.setID(trainID);
-
     }
 
     public trainControllerImpl() {
@@ -101,6 +106,30 @@ public class trainControllerImpl implements TrainController {
         notifyChange("Power", power);
     }
 
+    public void setIntLights(boolean lights) {
+        this.internalLights = lights;
+        notifyChange("InternalLights", lights);
+    }
+
+    public void setExtLights(boolean lights) {
+        this.externalLights = lights;
+        notifyChange("ExternalLights", lights);
+    }
+
+    public void setLeftDoors(boolean doors) {
+        this.leftDoors = doors;
+        notifyChange("LeftDoors", doors);
+    }
+
+    public void setRightDoors(boolean doors) {
+        this.rightDoors = doors;
+        notifyChange("RightDoors", doors);
+    }
+
+    public void setTemperature(double temp) {
+        this.temperature = temp;
+        notifyChange("Temperature", temp);
+    }
 
 
     //-----------------Getters-----------------
@@ -112,48 +141,56 @@ public class trainControllerImpl implements TrainController {
     public double getSpeed() {
         return this.currentSpeed;
     }
-
     public double getAcceleration() {
         return this.train.getAcceleration();
     }
-
     public double getPower() {
         return this.power;
     }
-
     public boolean getServiceBrake() {
         return this.serviceBrake;
     }
-
     public boolean getEmergencyBrake() {
         return this.emergencyBrake;
     }
-
     public double getCommandSpeed() {
         return this.commandSpeed;
     }
-
     public int getAuthority() {
         return this.authority;
     }
-
     public double getKi() {
         return this.Ki;
     }
-
     public double getKp() {
         return this.Kp;
     }
-
     public double getOverrideSpeed() {
         return this.overrideSpeed;
     }
-
     public boolean getAutomaticMode() {
         return this.automaticMode;
     }
 
-    public double getMaxSpeed() {
-        return 0;
+    public boolean getExtLights() {
+        return this.externalLights;
     }
+
+    public boolean getIntLights() {
+        return this.internalLights;
+    }
+
+    public double getMaxSpeed() {
+        return this.maxSpeed;
+    }
+    public boolean getLeftDoors() {
+        return this.leftDoors;
+    }
+    public boolean getRightDoors() {
+        return this.rightDoors;
+    }
+    public double getTemperature() {
+        return this.temperature;
+    }
+
 }
