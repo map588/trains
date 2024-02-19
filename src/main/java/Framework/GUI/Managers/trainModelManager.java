@@ -13,49 +13,20 @@ public class trainModelManager {
 
     //Murphy Controls
     @FXML
-    public ToggleButton brakeFailureBtn;
-    @FXML
-    public ToggleButton powerFailureBtn;
-    @FXML
-    public ToggleButton signalFailureBtn;
-    @FXML
     public Button eBrakeBtn;
     @FXML
     public ChoiceBox trainDropDown;
     @FXML
-    public TableView trainInfoTbl;
+    public ToggleButton brakeFailureBtn, powerFailureBtn, signalFailureBtn;
     @FXML
-    public TableColumn trainInfoClm;
+    public TableView passengerInfoTbl, getTrainInfoTbl;
     @FXML
-    public TableColumn trainInfoNum;
+    public TableColumn passengerInfoClm, passengerInfoNum, trainInfoNum, trainInfoClm;
     @FXML
-    public TableView passengerInfoTbl;
+    public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp;
     @FXML
-    public TableColumn passengerInfoClm;
-    @FXML
-    public TableColumn passengerInfoNum;
-    @FXML
-    public Gauge actualPowerDisp;
-    @FXML
-    public Gauge actualVelocityDisp;
-    @FXML
-    public Gauge actualAccelerationDisp;
-    @FXML
-    public Circle extLightsEn;
-    @FXML
-    public Circle intLightsEn;
-    @FXML
-    public Circle leftDoorsEn;
-    @FXML
-    public Circle rightDoorsEn;
-    @FXML
-    public Circle sBrakeEn;
-    @FXML
-    public Circle eBrakeEn;
-    @FXML
-    public Gauge cmdSpeedDisp;
-    @FXML
-    public Gauge authorityDisp;
+    public Circle extLightsEn, intLightEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
+
 
     private trainModelSubject subject = new trainModelSubject(null, 0);
 
