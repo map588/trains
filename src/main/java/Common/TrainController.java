@@ -1,8 +1,11 @@
 package Common;
 
 
+import Framework.Notifications;
+import Framework.PropertyChangeListener;
+import trainController.trainControllerSubject;
 
-public interface TrainController {
+public interface TrainController extends Notifications {
 
     //Called at train initialization
     void assignTrainModel(TrainModel train);
@@ -30,6 +33,11 @@ public interface TrainController {
     void setKi(double Ki);
     void setKp(double Kp);
 
+    //----Non-vital setters called by GUI----
+    void setIntLights(boolean intLights);
+    void setExtLights(boolean extLights);
+    void setLeftDoors(boolean leftDoors);
+    void setRightDoors(boolean rightDoors);
 
 
     //The train cannot store its own ID, so the train controller must store it
@@ -38,14 +46,36 @@ public interface TrainController {
     double getSpeed();
     double getAcceleration();
     double getPower();
-    boolean getServiceBrake();
-    boolean getEmergencyBrake();
-    double getCommandSpeed();
-    int getAuthority();
     double getKi();
     double getKp();
     double getOverrideSpeed();
+    double getMaxSpeed();
+
+    boolean getServiceBrake();
+    boolean getEmergencyBrake();
     boolean getAutomaticMode();
 
-    double getMaxSpeed();
+    boolean getExtLights();
+    boolean getIntLights();
+    boolean getLeftDoors();
+    boolean getRightDoors();
+
+    double getTemperature();
+
+    double getCommandSpeed();
+    int getAuthority();
+
+    void setTemperature(double newTemperature);
+
+    trainControllerSubject getSubject();
+
+    int getBlocksToNextStation();
+
+    boolean getAnnouncements();
+
+    boolean getSignalFailure();
+
+    boolean getBrakeFailure();
+
+    boolean getPowerFailure();
 }

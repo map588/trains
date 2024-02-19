@@ -2,27 +2,19 @@ package trainController;
 
 import Common.TrainController;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class trainControllerSubject implements ChangeListener<trainControllerImpl> {
-    private IntegerProperty authority;
-    private DoubleProperty commandSpeed;
-    private DoubleProperty currentSpeed;
-    private DoubleProperty overrideSpeed;
-    private DoubleProperty maxSpeed;
-    private DoubleProperty Ki;
-    private DoubleProperty Kp;
-    private DoubleProperty power;
-    private BooleanProperty serviceBrake;
-    private BooleanProperty emergencyBrake;
-    private BooleanProperty automaticMode;
-    private IntegerProperty trainNumber;
+import javax.swing.*;
+import java.util.List;
+
+public class trainControllerSubject {
+    private IntegerProperty authority, trainID, blocksToNextStation;
+    private DoubleProperty commandSpeed, currentSpeed, overrideSpeed, maxSpeed, Ki, Kp, power, temperature;
+    private BooleanProperty serviceBrake, emergencyBrake, automaticMode, intLights, extLights, leftDoors, rightDoors;
+    private BooleanProperty announcements, signalFailure, brakeFailure, powerFailure;
     private TrainController controller;
 
-
-    //Null Constructor
-    public trainControllerSubject(){
+    public trainControllerSubject() {
         this.authority = new SimpleIntegerProperty(0);
         this.commandSpeed = new SimpleDoubleProperty(0);
         this.currentSpeed = new SimpleDoubleProperty(0);
@@ -34,223 +26,301 @@ public class trainControllerSubject implements ChangeListener<trainControllerImp
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.automaticMode = new SimpleBooleanProperty(false);
-        this.trainNumber = new SimpleIntegerProperty(0);
+        this.trainID = new SimpleIntegerProperty(0);
+        this.intLights = new SimpleBooleanProperty(false);
+        this.extLights = new SimpleBooleanProperty(false);
+        this.leftDoors = new SimpleBooleanProperty(false);
+        this.rightDoors = new SimpleBooleanProperty(false);
+        this.temperature = new SimpleDoubleProperty(0);
+        this.blocksToNextStation = new SimpleIntegerProperty(0);
+        this.announcements = new SimpleBooleanProperty(false);
+        this.signalFailure = new SimpleBooleanProperty(false);
+        this.brakeFailure = new SimpleBooleanProperty(false);
+        this.powerFailure = new SimpleBooleanProperty(false);
+    }
+
+    //Botched way to avoid null pointer exception/ stack overflow
+    //when trying to construct a trainControllerSubject without an existing controller
+    public trainControllerSubject(int injection) {
+        this();
+        if (injection == -1) {
+            controller = new trainControllerImpl(this);
+        }
     }
 
     public trainControllerSubject(TrainController controller) {
+        this();
         this.controller = controller;
-        this.trainNumber = new SimpleIntegerProperty(controller.getID());
-        this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());
-        this.commandSpeed = new SimpleDoubleProperty(controller.getCommandSpeed());
-        this.overrideSpeed = new SimpleDoubleProperty(controller.getOverrideSpeed());
-        this.automaticMode = new SimpleBooleanProperty(controller.getAutomaticMode());
-        this.trainNumber = new SimpleIntegerProperty(controller.getID());
-        this.Ki = new SimpleDoubleProperty(1.0);
-        this.Kp = new SimpleDoubleProperty(22.0);
-        this.power = new SimpleDoubleProperty(0.0);
-        this.serviceBrake = new SimpleBooleanProperty(false);
-        this.emergencyBrake = new SimpleBooleanProperty(false);
-        this.authority = new SimpleIntegerProperty(2000);
-        this.maxSpeed = new SimpleDoubleProperty(50.0);
-        controllerSubjectFactory.subjectMap.put(controller.getID(), this);
+        this.trainID.set(controller.getID());
+        this.currentSpeed.set(controller.getSpeed());
+        this.commandSpeed.set(controller.getCommandSpeed());
+        this.overrideSpeed.set(controller.getOverrideSpeed());
+        this.automaticMode.set(controller.getAutomaticMode());
+        this.Ki.set(controller.getKi());
+        this.Kp.set(controller.getKp());
+        this.power.set(controller.getPower());
+        this.serviceBrake.set(controller.getServiceBrake());
+        this.emergencyBrake.set(controller.getEmergencyBrake());
+        this.authority.set(controller.getAuthority());
+        this.maxSpeed.set(controller.getMaxSpeed());
+        this.intLights.set(controller.getIntLights());
+        this.extLights.set(controller.getExtLights());
+        this.leftDoors.set(controller.getLeftDoors());
+        this.rightDoors.set(controller.getRightDoors());
+        this.temperature.set(controller.getTemperature());
+        this.blocksToNextStation.set(controller.getBlocksToNextStation());
+        this.announcements.set(controller.getAnnouncements());
+        this.signalFailure.set(controller.getSignalFailure());
+        this.brakeFailure.set(controller.getBrakeFailure());
+        this.powerFailure.set(controller.getPowerFailure());
+        trainControllerSubjectFactory.subjectMap.put(controller.getID(), this);
+
+        controller.addChangeListener(((propertyName, newValue) -> {
+            switch (propertyName) {
+                case "Speed":
+                    currentSpeed.set((Double) newValue);
+                    break;
+                case "CommandSpeed":
+                    commandSpeed.set((Double) newValue);
+                    break;
+                case "OverrideSpeed":
+                    overrideSpeed.set((Double) newValue);
+                    break;
+                case "AutomaticMode":
+                    automaticMode.set((Boolean) newValue);
+                    break;
+                case "Ki":
+                    Ki.set((Double) newValue);
+                    break;
+                case "Kp":
+                    Kp.set((Double) newValue);
+                    break;
+                case "Power":
+                    power.set((Double) newValue);
+                    break;
+                case "ServiceBrake":
+                    serviceBrake.set((Boolean) newValue);
+                    break;
+                case "EmergencyBrake":
+                    emergencyBrake.set((Boolean) newValue);
+                    break;
+                case "Authority":
+                    authority.set((Integer) newValue);
+                    break;
+                case "MaxSpeed":
+                    maxSpeed.set((Double) newValue);
+                    break;
+                case "IntLights":
+                    intLights.set((Boolean) newValue);
+                    break;
+                case "ExtLights":
+                    extLights.set((Boolean) newValue);
+                    break;
+                case "LeftDoors":
+                    leftDoors.set((Boolean) newValue);
+                    break;
+                case "RightDoors":
+                    rightDoors.set((Boolean) newValue);
+                    break;
+                case "Temperature":
+                    temperature.set((Double) newValue);
+                    break;
+                case "BlocksToNextStation":
+                    blocksToNextStation.set((Integer) newValue);
+                    break;
+                case "Announcements":
+                    announcements.set((Boolean) newValue);
+                    break;
+                case "SignalFailure":
+                    signalFailure.set((Boolean) newValue);
+                    break;
+                case "BrakeFailure":
+                    brakeFailure.set((Boolean) newValue);
+                    break;
+                case "PowerFailure":
+                    powerFailure.set((Boolean) newValue);
+                    break;
+            }
+        }));
+
     }
 
-
-
-    public void setCommandSpeed(double speed) {
-        if(speed == controller.getCommandSpeed())
-            return;
-        System.out.println("Setting command speed to " + speed);
-        this.controller.setCommandSpeed(speed);
+    public void setTrainController(TrainController controller) {
+        this.controller = controller;
     }
 
-    public void setAutomaticMode() {
-        System.out.println("Setting automatic mode");
-        setAutomaticMode(true);
+    public void updateProperty(BooleanProperty property, boolean newValue) {
+        if (property.get() != newValue) {
+            property.set(newValue);
+        }
     }
 
-    public void setAutomaticMode(boolean mode) {
-        if(mode == controller.getAutomaticMode())
-            return;
-        System.out.println("Setting automatic mode to " + mode);
-        this.automaticMode.set(mode);
-        this.overrideSpeed.set(0.0);
+    public void updateProperty(DoubleProperty property, double newValue) {
+        if (property.get() != newValue) {
+            property.set(newValue);
+        }
     }
 
-    public void setTrainNumber(int trainNumber) {
-        if(trainNumber == controller.getID())
-            return;
-        System.out.println("Setting train number to " + trainNumber);
-        this.trainNumber.set(trainNumber);
+    public void updateProperty(IntegerProperty property, int newValue) {
+        if (property.get() != newValue) {
+            property.set(newValue);
+        }
     }
 
-    public void setMaxSpeed(double speed) {
-        if(speed == controller.getMaxSpeed())
-            return;
-        System.out.println("Setting max speed to " + speed);
-        this.maxSpeed.set(speed);
+    public void updateSetSpeed(double newSetSpeed) {
+        updateProperty(overrideSpeed, newSetSpeed);
     }
 
-    public void setCurrentSpeed(double speed) {
-        if(speed == controller.getSpeed())
-            return;
-        System.out.println("Setting current speed to " + speed);
-        this.currentSpeed.set(speed);
+    public void updateAuthority(int newAuthority) {
+        updateProperty(authority, newAuthority);
     }
 
-    public void setManualSpeed(double speed) {
-        if(speed == controller.getOverrideSpeed())
-            return;
-        System.out.println("Setting override speed to " + speed);
-        this.overrideSpeed.set(speed);
+    public void updateAutomaticMode(boolean newMode) {
+        updateProperty(automaticMode, newMode);
     }
 
-    public void setAuthority(int authority) {
-        if(authority == controller.getAuthority())
-            return;
-        System.out.println("Setting authority to " + authority);
-        this.authority.set(authority);
+    public void updateServiceBrake(boolean newServiceBrake) {
+        updateProperty(serviceBrake, newServiceBrake);
     }
 
-    public void setKi(double Ki) {
-        System.out.println("Setting Ki to " + Ki);
-        this.Ki.set(Ki);
+    public void updateEmergencyBrake(boolean newEmergencyBrake) {
+        updateProperty(emergencyBrake, newEmergencyBrake);
     }
 
-    public void setKp(double Kp) {
-        System.out.println("Setting Kp to " + Kp);
-        this.Kp.set(Kp);
+    public void updateKi(double newKi) {
+        updateProperty(Ki, newKi);
     }
 
-    public void setServiceBrake(boolean brake) {
-        if(brake == controller.getServiceBrake())
-            return;
-        System.out.println("Setting service brake to " + brake);
-        this.serviceBrake.set(brake);
+    public void updateKp(double newKp) {
+        updateProperty(Kp, newKp);
     }
 
-    public void setEmergencyBrake(boolean brake) {
-        this.setAutomaticMode(false);
-        if(brake == controller.getEmergencyBrake())
-            return;
-        System.out.println("Setting emergency brake to " + brake);
-        this.emergencyBrake.set(brake);
+    public void updateTemperature(double newTemperature) {
+        updateProperty(temperature, newTemperature);
     }
 
-
-    public void setPower(double power) {
-        System.out.println("Setting power to " + power);
-        this.power.set(power);
+    public void updateExtLights(boolean newExtLights) {
+        updateProperty(extLights, newExtLights);
     }
 
-
-    public int getTrainNumber() {
-        System.out.println("Getting train ID");
-        return this.trainNumber.get();
+    public void updateIntLights(boolean newIntLights) {
+        updateProperty(intLights, newIntLights);
     }
 
-    public DoubleProperty overrideSpeedProperty() {
-        return this.overrideSpeed;
+    public void updateLeftDoors(boolean newLeftDoors) {
+        updateProperty(leftDoors, newLeftDoors);
     }
 
-    public DoubleProperty currentSpeedProperty() {
-        return this.currentSpeed;
+    public void updateRightDoors(boolean newRightDoors) {
+        updateProperty(rightDoors, newRightDoors);
     }
 
-    public DoubleProperty powerProperty() {
-        return this.power;
+    public void updateAnnouncements(boolean enabled) {
+        updateProperty(announcements, enabled);
     }
 
-    public DoubleProperty maxSpeedProperty() {
-        return this.maxSpeed;
+    public void updateSignalFailure(boolean failure) {
+        updateProperty(signalFailure, failure);
     }
 
-    public DoubleProperty commandSpeedProperty() {
-        return this.commandSpeed;
+    public void updateBrakeFailure(boolean failure) {
+        updateProperty(brakeFailure, failure);
     }
 
-    public DoubleProperty KiProperty() {
-        return this.Ki;
+    public void updatePowerFailure(boolean failure) {
+        updateProperty(powerFailure, failure);
     }
 
-    public DoubleProperty KpProperty() {
-        return this.Kp;
-    }
-
-    public BooleanProperty serviceBrakeProperty() {
-        return this.serviceBrake;
-    }
-
-    public BooleanProperty emergencyBrakeProperty() {
-        return this.emergencyBrake;
-    }
-
-    public BooleanProperty automaticModeProperty() {
-        return this.automaticMode;
+    public TrainController getTrainController() {
+        return controller;
     }
 
     public IntegerProperty authorityProperty() {
-        return this.authority;
+        return authority;
     }
 
-    public IntegerProperty trainNumberProperty() {
-        return this.trainNumber;
+    public IntegerProperty trainIDProperty() {
+        return trainID;
     }
 
-    public void setOverrideSpeed(double speed) {
-        this.overrideSpeed.set(speed);
+    public DoubleProperty commandSpeedProperty() {
+        return commandSpeed;
     }
 
-    public void setCommandSpeed(Double speed) {
-        this.commandSpeed.set(speed);
+    public DoubleProperty currentSpeedProperty() {
+        return currentSpeed;
     }
 
-    private boolean isGuiUpdate = false;
-    /**
-     * Called when the value of an {@link ObservableValue} changes.
-     * <p>
-     * In general, it is considered bad practice to modify the observed value in
-     * this method.
-     *
-     * @param observable The {@code ObservableValue} which value changed
-     * @param oldValue   The old value
-     * @param newValue   The new value
-     */
-    public void changed(ObservableValue<? extends trainControllerImpl> observable, trainControllerImpl oldValue, trainControllerImpl newValue) {
-        if (isGuiUpdate) {
-            return;
-        }
-        if(newValue == null)
-            return;
-        this.trainNumber.set(newValue.getID());
-        this.currentSpeed.set(newValue.getSpeed());
-        this.commandSpeed.set(newValue.getCommandSpeed());
-        this.overrideSpeed.set(newValue.getOverrideSpeed());
-        this.automaticMode.set(newValue.getAutomaticMode());
-        this.Ki.set(newValue.getKi());
-        this.Kp.set(newValue.getKp());
-        this.power.set(newValue.getPower());
-        this.serviceBrake.set(newValue.getServiceBrake());
-        this.emergencyBrake.set(newValue.getEmergencyBrake());
-        this.authority.set(newValue.getAuthority());
-        this.maxSpeed.set(newValue.getMaxSpeed());
+    public DoubleProperty overrideSpeedProperty() {
+        return overrideSpeed;
     }
 
-    public void updateFromGui(Runnable updateLogic) {
-        isGuiUpdate = true;
-        try {
-            updateLogic.run();
-        } finally {
-            isGuiUpdate = false;
-        }
+    public DoubleProperty maxSpeedProperty() {
+        return maxSpeed;
     }
+
+    public DoubleProperty KiProperty() {
+        return Ki;
+    }
+
+    public DoubleProperty KpProperty() {
+        return Kp;
+    }
+
+    public DoubleProperty powerProperty() {
+        return power;
+    }
+
+    public BooleanProperty serviceBrakeProperty() {
+        return serviceBrake;
+    }
+
+    public BooleanProperty emergencyBrakeProperty() {
+        return emergencyBrake;
+    }
+
+    public BooleanProperty automaticModeProperty() {
+        return automaticMode;
+    }
+
+    public BooleanProperty intLightsProperty() {
+        return intLights;
+    }
+
+    public BooleanProperty extLightsProperty() {
+        return extLights;
+    }
+
+    public BooleanProperty leftDoorsProperty() {
+        return leftDoors;
+    }
+
+    public BooleanProperty rightDoorsProperty() {
+        return rightDoors;
+    }
+
+    public DoubleProperty temperatureProperty() {
+        return temperature;
+    }
+
+    public IntegerProperty blocksToNextStationProperty() {
+        return blocksToNextStation;
+    }
+
+    public BooleanProperty makeAnnouncementsProperty() {
+        return announcements;
+    }
+
+    public BooleanProperty signalFailureProperty() {
+        return signalFailure;
+    }
+
+    public BooleanProperty brakeFailureProperty() {
+        return brakeFailure;
+    }
+
+    public BooleanProperty powerFailureProperty() {
+        return powerFailure;
+    }
+
 }
-
-
-
-
-
-
-
-
-

@@ -94,18 +94,17 @@ public class WaysideControllerManager {
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
-//        manualModeCheckbox.setOnAction(event -> currentController.setManualMode(!currentController.isManualMode()));
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber));
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
-//        blockTableLightInColumn.setCellValueFactory(block -> block.getValue().lightInStateProperty().);
-//        blockTableLightOutColumn.setCellValueFactory(block -> block.getValue().lightOutStateProperty());
+        blockTableLightInColumn.setCellValueFactory(block -> block.getValue().lightInStateProperty().asObject());
+        blockTableLightOutColumn.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingClosedProperty());
-        blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
-        blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
+//        blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
+//        blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
 //        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
