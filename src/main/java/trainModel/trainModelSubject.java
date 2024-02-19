@@ -115,6 +115,21 @@ public class trainModelSubject {
         }));
     }
 
+    public void updateProperty(BooleanProperty property, boolean newValue) {
+        if (property.get() != newValue)
+            property.set(newValue);
+    }
+
+    public void updateProperty(DoubleProperty property, double newValue) {
+        if (property.get() != newValue)
+            property.set(newValue);
+    }
+
+    public void updateProperty(IntegerProperty property, int newValue) {
+        if (property.get() != newValue)
+            property.set(newValue);
+    }
+
     public BooleanProperty getBooleanProperty (String propertyName) {
         switch(propertyName) {
             case "serviceBrake":
