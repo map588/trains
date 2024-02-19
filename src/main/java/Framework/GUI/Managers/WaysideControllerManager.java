@@ -229,7 +229,7 @@ public class WaysideControllerManager {
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
-        WaysideController newController = new WaysideControllerImpl(controllerList.get().size());
+        WaysideController newController = new WaysideControllerImpl(controllerList.get().size(), 0);
         controllerList.get().add(newController);
         changeActiveController(newController);
     }

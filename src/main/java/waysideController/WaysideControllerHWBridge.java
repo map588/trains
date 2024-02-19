@@ -9,13 +9,14 @@ import org.openmuc.jrxtx.SerialPortBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     private final SerialPort serialPort;
 
-    public WaysideControllerHWBridge(int id, String COMPort) {
-        super(id);
+    public WaysideControllerHWBridge(int id, int trackLine, String COMPort) {
+        super(id, trackLine);
         SerialPortBuilder builder = SerialPortBuilder.newBuilder(COMPort);
         builder.setBaudRate(19200);
         builder.setParity(Parity.EVEN);
@@ -37,6 +38,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     public void setManualMode(boolean manualMode) {
         super.setManualMode(manualMode);
         try {
+            System.out.println("Send: manualMode="+manualMode);
             serialPort.getOutputStream().write(("manualMode="+manualMode).getBytes());
         } catch (IOException e) {
             System.out.println("Failed to write manualMode");
@@ -47,6 +49,15 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     @Override
     public void addBlock(BlockInfo block) {
         super.addBlock(block);
+    }
+
+    private void parseCOMMessage(String message) {
+        String[] values = message.split("=", 2);
+
+        switch(values[0]) {
+            case "manualMode":
+                super.setManualMode(Boolean.parseBoolean(values[1]));
+        }
     }
 
     @Override

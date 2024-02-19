@@ -17,6 +17,8 @@ public class WaysideControllerImpl implements WaysideController {
     // The ID of the wayside controller
     private final int id;
 
+    private final int trackLine;
+
     // Whether the wayside controller is in manual mode
     private boolean manualMode = false;
 
@@ -33,8 +35,9 @@ public class WaysideControllerImpl implements WaysideController {
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id) {
+    public WaysideControllerImpl(int id, int trackLine) {
         this.id = id;
+        this.trackLine = trackLine;
         subject = new WaysideControllerSubject(this);
 
         subject.manualModeProperty().addListener((observableValue, oldValue, newVal) -> {
