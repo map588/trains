@@ -4,7 +4,6 @@ import Common.trackModel;
 import Common.trainController;
 import Common.trainModel;
 import javafx.beans.property.*;
-import trainController.trainControllerImpl;
 
 public class trainModelImpl implements trainModel{
     //Passed Variables
@@ -57,9 +56,6 @@ public class trainModelImpl implements trainModel{
         this.rightDoors = new SimpleBooleanProperty(false);
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
-
-        this.controller = new trainControllerImpl(0);
-        this.controller.assignTrainModel(this);
     }
 
     //Vital Setters
@@ -77,6 +73,10 @@ public class trainModelImpl implements trainModel{
     public void setBrakeFailure(boolean failure) { this.brakeFailure.set(failure); }
     public void setPowerFailure(boolean failure) { this.powerFailure.set(failure); }
     public void setSignalFailure(boolean failure) { this.signalFailure.set(failure); }
+
+    public void setTrainNumber(int number) {
+
+    }
 
     //NonVital Setters
     public void setNumCars(int numCars) {
@@ -104,7 +104,6 @@ public class trainModelImpl implements trainModel{
         return this.authority.get();
     }
 
-    @Override
     public int getTrainNumber() {
         return 0;
     }
@@ -151,60 +150,6 @@ public class trainModelImpl implements trainModel{
     public boolean getRightDoors() {
         return this.rightDoors.get();
     }
-
-    //----Vital Signals from Track Model----
-    public int readAuthority() {
-        return track.getTrainAuthority(controller.getTrainNumber());
-    }
-    public double readCommandSpeed() {
-        return track.getCommandedSpeed(controller.getTrainNumber());
-    }
-    public void readBeacon() {
-        return;
-    }
-
-
-
-    //----Property Getters----
-    public BooleanProperty serviceBrakeProperty() {
-        return serviceBrake;
-    }
-    public BooleanProperty emergencyBrakeProperty() {
-        return emergencyBrake;
-    }
-    public DoubleProperty powerProperty() {
-        return power;
-    }
-    public BooleanProperty brakeFailureProperty() { return brakeFailure; }
-    public BooleanProperty powerFailureProperty() { return powerFailure; }
-    public BooleanProperty signalFailureProperty() { return signalFailure; }
-    public DoubleProperty temperatureProperty() {
-        return temperature;
-    }
-    public BooleanProperty extLightsProperty() {
-        return extLights;
-    }
-    public BooleanProperty intLightsProperty() { return intLights; }
-    public BooleanProperty leftDoorsProperty() {
-        return leftDoors;
-    }
-    public BooleanProperty rightDoorsProperty() {
-        return rightDoors;
-    }
-    public IntegerProperty authorityProperty() {
-        return authority;
-    }
-    public DoubleProperty commandSpeedProperty() {
-        return commandSpeed;
-    }
-    public DoubleProperty speedProperty() {
-        return speed;
-    }
-    public DoubleProperty accelerationProperty() {
-        return acceleration;
-    }
-
-
 
     public void calculateSpeed() {
         //Power = Force*velocity
