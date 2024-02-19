@@ -33,10 +33,22 @@ public class trainModelManager {
     public void initialize() {
 
         //set event listeners
-        eBrakeBtn.setOnAction(event -> subject.setEmergencyBrake(true));
-        brakeFailureBtn.setOnAction(event -> subject.setBrakeFailure(false));
-        powerFailureBtn.setOnAction(event -> subject.setPowerFailure(false));
-        signalFailureBtn.setOnAction(event -> subject.setSignalFailure(false));
+        eBrakeBtn.setOnAction(event -> subject.updateProperty(subject.getBooleanProperty("emergencyBrake"), true));
+
+        brakeFailureBtn.setOnAction(event -> {
+            boolean newBrakeFailure = !subject.getBooleanProperty("brakeFailure").get();
+            subject.updateProperty(subject.getBooleanProperty("brakeFailure"), newBrakeFailure);
+        });
+
+        powerFailureBtn.setOnAction(event -> {
+            boolean newPowerFailure = !subject.getBooleanProperty("powerFailure").get();
+            subject.updateProperty(subject.getBooleanProperty("powerFailure"), newPowerFailure);
+        });
+
+        signalFailureBtn.setOnAction(event -> {
+            boolean newSignalFailure = !subject.getBooleanProperty("signalFailure").get();
+            subject.updateProperty(subject.getBooleanProperty("signalFailure"), newSignalFailure);
+        });
     }
 }
 

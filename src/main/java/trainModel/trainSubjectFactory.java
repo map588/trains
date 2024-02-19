@@ -12,7 +12,7 @@ public class trainSubjectFactory implements SubjectFactory<trainModelSubject> {
     public trainSubjectFactory() {}
 
     public trainModelSubject getSubject(int ID) {
-        subjectMap.getOrDefault(ID, new trainModelSubject(new trainModelImpl(ID), ID));
+        subjectMap.getOrDefault(ID, new trainModelSubject(new trainModelImpl(ID)));
         return subjectMap.get(ID);
     }
 
