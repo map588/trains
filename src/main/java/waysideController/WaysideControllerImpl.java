@@ -107,12 +107,4 @@ public class WaysideControllerImpl implements WaysideController {
         return activePLCProp;
     }
 
-    @Override
-    public void changed(ObservableValue<?> observableValue, Object oldVal, Object newVal) {
-        if(observableValue == manualModeProp) {
-            manualMode = (Boolean)newVal;
-            updateActivePLCProp();
-            System.out.println("Setting manual mode to " + newVal);
-        }
-    }
 }
