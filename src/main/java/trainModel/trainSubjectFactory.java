@@ -1,12 +1,11 @@
 package trainModel;
 
-import Common.subjectFactory;
-import trainModel.trainModelSubject;
+import Common.SubjectFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class trainSubjectFactory implements subjectFactory<trainModelSubject> {
+public class trainSubjectFactory implements SubjectFactory<trainModelSubject> {
 
     Map<Integer, trainModelSubject> subjects = new HashMap<Integer, trainModelSubject>();
 

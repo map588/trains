@@ -1,7 +1,7 @@
 package CTCOffice;
 
 import Common.CTCOffice;
-import Common.trainModel;
+import Common.TrainModel;
 
 import trainModel.trainSubjectFactory;
 import trainModel.trainModelImpl;
@@ -11,19 +11,19 @@ import java.util.Map;
 
 
 class CTCOfficeImpl implements CTCOffice {
-    public Map<Integer,trainModel> trains = new HashMap<Integer,trainModel>();
+    public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     private trainSubjectFactory trainSubjectMaker;
 
     public CTCOfficeImpl() {
         // initialize the CTC
     }
 
-    public trainModel dispatch(int trainID, int blockID) {
+    public TrainModel dispatch(int trainID, int blockID) {
         if(trains.containsKey(trainID)) {
             return trains.get(trainID);
         }
         else {
-            trainModel newTrain = new trainModelImpl(trainID);
+            TrainModel newTrain = new trainModelImpl(trainID);
             trains.put(trainID, newTrain);
             return newTrain;
         }

@@ -1,6 +1,6 @@
 package trainModel;
-import Common.trackModel;
-import Common.trainController;
+import Common.TrackModel;
+import Common.TrainController;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -33,8 +33,8 @@ public class trainModelSubject {
     private IntegerProperty numPassengers;
 
     //Module Stubs
-    private trackModel track;
-    private trainController controller;
+    private TrackModel track;
+    private TrainController controller;
 
     private trainModelSubject subject;
 

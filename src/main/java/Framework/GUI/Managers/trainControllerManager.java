@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import Common.trainController;
+import Common.TrainController;
 import trainController.controllerSubjectFactory;
 import trainController.trainControllerSubject;
 
@@ -172,7 +172,7 @@ public class trainControllerManager {
 
     // Assuming continuation from previous code snippet
 
-    public void addTrain(trainController controller) {
+    public void addTrain(TrainController controller) {
         trainController_trainNo_ChoiceBox.getItems().add(controller.getTrainNumber());
     }
 

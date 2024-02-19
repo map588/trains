@@ -1,6 +1,6 @@
 package Common;
 
-public interface trackModel {
+public interface TrackModel {
     int getTrainAuthority(int trainID);
     int getCommandedSpeed(int trainID);
     boolean getLightState(int block);

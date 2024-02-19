@@ -1,5 +1,5 @@
 package Common;
 
 public interface CTCOffice{
-    trainModel dispatch(int trainID, int blockID);
+    TrainModel dispatch(int trainID, int blockID);
 }

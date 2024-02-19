@@ -1,4 +1,4 @@
-package trackModel.GUI;
+package trackModel;
 
 public class trackModelSubject {
 }

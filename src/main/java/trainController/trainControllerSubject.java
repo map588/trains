@@ -1,6 +1,6 @@
 package trainController;
 
-import Common.trainController;
+import Common.TrainController;
 import javafx.beans.property.*;
 
 public class trainControllerSubject {
@@ -16,7 +16,7 @@ public class trainControllerSubject {
     private BooleanProperty emergencyBrake;
     private BooleanProperty automaticMode;
     private IntegerProperty trainNumber;
-    private trainController controller;
+    private TrainController controller;
 
 
     //Null Constructor
@@ -35,7 +35,7 @@ public class trainControllerSubject {
         this.trainNumber = new SimpleIntegerProperty(0);
     }
 
-    public trainControllerSubject(trainController controller) {
+    public trainControllerSubject(TrainController controller) {
         this.controller = controller;
         this.trainNumber = new SimpleIntegerProperty(controller.getTrainNumber());
         this.currentSpeed = new SimpleDoubleProperty(controller.getSpeed());

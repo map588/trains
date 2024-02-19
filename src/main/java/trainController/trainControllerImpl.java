@@ -1,10 +1,10 @@
 package trainController;
 
-import Common.trainController;
-import Common.trainModel;
+import Common.TrainController;
+import Common.TrainModel;
 
 
-public class trainControllerImpl implements trainController{
+public class trainControllerImpl implements TrainController {
     private int authority;
     private double commandSpeed;
     private double currentSpeed;
@@ -20,7 +20,7 @@ public class trainControllerImpl implements trainController{
     private boolean automaticMode;
 
     private final int trainID;
-    private trainModel train;
+    private TrainModel train;
 
     private final trainControllerSubject subject;
 
@@ -39,7 +39,7 @@ public class trainControllerImpl implements trainController{
     }
 
     //-----------------Setters-----------------
-    public void assignTrainModel(trainModel train) {
+    public void assignTrainModel(TrainModel train) {
         this.train = train;
         this.subject.setCommandSpeed(train.getSpeed());
         this.subject.setCurrentSpeed(train.getSpeed());

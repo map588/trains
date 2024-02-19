@@ -1,11 +1,11 @@
 package trainModel;
 
-import Common.trackModel;
-import Common.trainController;
-import Common.trainModel;
+import Common.TrackModel;
+import Common.TrainController;
+import Common.TrainModel;
 import trainController.trainControllerImpl;
 
-public class trainModelImpl implements trainModel{
+public class trainModelImpl implements TrainModel {
     //Passed Variables
     private int authority;
     private double commandSpeed;
@@ -33,8 +33,8 @@ public class trainModelImpl implements trainModel{
     private int numPassengers;
 
     //Module Stubs
-    private trackModel track;
-    private final trainController controller;
+    private TrackModel track;
+    private final TrainController controller;
 
     private trainModelSubject subject;
 

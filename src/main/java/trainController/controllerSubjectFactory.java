@@ -1,11 +1,11 @@
 package trainController;
 
-import Common.subjectFactory;
+import Common.SubjectFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class controllerSubjectFactory implements subjectFactory<trainControllerSubject>{
+public class controllerSubjectFactory implements SubjectFactory<trainControllerSubject> {
 
     protected static final Map<Integer, trainControllerSubject> subjectMap = new HashMap<Integer, trainControllerSubject>();
 

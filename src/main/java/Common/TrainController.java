@@ -2,10 +2,10 @@ package Common;
 
 
 
-public interface trainController {
+public interface TrainController {
 
     //Called at train initialization
-    void assignTrainModel(trainModel train);
+    void assignTrainModel(TrainModel train);
 
     //Called by the GUI
     void setAutomaticMode(boolean mode);
