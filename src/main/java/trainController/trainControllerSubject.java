@@ -2,8 +2,10 @@ package trainController;
 
 import Common.TrainController;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
-public class trainControllerSubject {
+public class trainControllerSubject implements ChangeListener<trainControllerImpl> {
     private IntegerProperty authority;
     private DoubleProperty commandSpeed;
     private DoubleProperty currentSpeed;
@@ -197,6 +199,50 @@ public class trainControllerSubject {
 
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed.set(speed);
+    }
+
+    public void setCommandSpeed(Double speed) {
+        this.commandSpeed.set(speed);
+    }
+
+    private boolean isGuiUpdate = false;
+    /**
+     * Called when the value of an {@link ObservableValue} changes.
+     * <p>
+     * In general, it is considered bad practice to modify the observed value in
+     * this method.
+     *
+     * @param observable The {@code ObservableValue} which value changed
+     * @param oldValue   The old value
+     * @param newValue   The new value
+     */
+    public void changed(ObservableValue<? extends trainControllerImpl> observable, trainControllerImpl oldValue, trainControllerImpl newValue) {
+        if (isGuiUpdate) {
+            return;
+        }
+        if(newValue == null)
+            return;
+        this.trainNumber.set(newValue.getID());
+        this.currentSpeed.set(newValue.getSpeed());
+        this.commandSpeed.set(newValue.getCommandSpeed());
+        this.overrideSpeed.set(newValue.getOverrideSpeed());
+        this.automaticMode.set(newValue.getAutomaticMode());
+        this.Ki.set(newValue.getKi());
+        this.Kp.set(newValue.getKp());
+        this.power.set(newValue.getPower());
+        this.serviceBrake.set(newValue.getServiceBrake());
+        this.emergencyBrake.set(newValue.getEmergencyBrake());
+        this.authority.set(newValue.getAuthority());
+        this.maxSpeed.set(newValue.getMaxSpeed());
+    }
+
+    public void updateFromGui(Runnable updateLogic) {
+        isGuiUpdate = true;
+        try {
+            updateLogic.run();
+        } finally {
+            isGuiUpdate = false;
+        }
     }
 }
 

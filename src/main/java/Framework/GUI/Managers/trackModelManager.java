@@ -96,7 +96,6 @@ public class trackModelManager {
         murphyLine.getItems().add("Blue");
         pickLine.getItems().add("Blue");
 
-
     }
 
     private void listBlockOptions() {

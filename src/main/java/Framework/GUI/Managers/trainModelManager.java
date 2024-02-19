@@ -1,6 +1,7 @@
 package Framework.GUI.Managers;
 
 import eu.hansolo.medusa.Gauge;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 import trainModel.trainModelSubject;

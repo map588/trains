@@ -26,16 +26,15 @@ public class trainControllerImpl implements TrainController {
 
     public trainControllerImpl(int trainID) {
         this.trainID = trainID;
-
         this.subject = new trainControllerSubject(this);
         this.subject.setTrainNumber(trainID);
 
-        assignTrainModel(train);
     }
 
     public trainControllerImpl() {
         this.subject = new trainControllerSubject(this);
-        assignTrainModel(train);
+
+
     }
 
     //-----------------Setters-----------------

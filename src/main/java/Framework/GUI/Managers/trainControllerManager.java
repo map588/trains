@@ -173,16 +173,16 @@ public class trainControllerManager {
     // Assuming continuation from previous code snippet
 
     public void addTrain(TrainController controller) {
-        trainController_trainNo_ChoiceBox.getItems().add(controller.getTrainNumber());
+        trainController_trainNo_ChoiceBox.getItems().add(controller.getID());
     }
 
     private void updatePowerText(double power) {
         trainiController_powerOutput_Gauge.setValue(power);
     }
+
     private void setTextField(TextField textField, double value) {
         textField.setText(String.valueOf(value));
     }
-
 
     private void updateSBrakeIndicator(boolean isEmergencyBrakeActive) {
         if (isEmergencyBrakeActive) {
