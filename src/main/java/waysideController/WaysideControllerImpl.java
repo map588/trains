@@ -26,9 +26,7 @@ public class WaysideControllerImpl implements WaysideController {
     // The PLC program that the wayside controller is running
     private File PLC = null;
 
-    private final BooleanProperty manualModeProp;
-    private final StringProperty PLCNameProp;
-    private final ObjectProperty<Paint> activePLCProp;
+    private final WaysideControllerSubject subject;
 
 
     /**
@@ -37,11 +35,9 @@ public class WaysideControllerImpl implements WaysideController {
      */
     public WaysideControllerImpl(int id) {
         this.id = id;
-        manualModeProp = new SimpleBooleanProperty(manualMode);
-        PLCNameProp = new SimpleStringProperty();
-        activePLCProp = new SimpleObjectProperty<>(Color.GRAY);
+        subject = new WaysideControllerSubject(this);
 
-        manualModeProp.addListener((observableValue, oldValue, newVal) -> {
+        subject.manualModeProperty().addListener((observableValue, oldValue, newVal) -> {
             manualMode = newVal;
             updateActivePLCProp();
             System.out.println("Setting manual mode to " + newVal);
@@ -56,7 +52,7 @@ public class WaysideControllerImpl implements WaysideController {
     @Override
     public void loadPLC(File PLC) {
         this.PLC = PLC;
-        PLCNameProp.set(PLC.getName());
+        subject.PLCNameProperty().set(PLC.getName());
         updateActivePLCProp();
     }
 
@@ -68,7 +64,7 @@ public class WaysideControllerImpl implements WaysideController {
     @Override
     public void setManualMode(boolean manualMode) {
         this.manualMode = manualMode;
-        manualModeProp.set(manualMode);
+        subject.manualModeProperty().set(manualMode);
         updateActivePLCProp();
     }
 
@@ -89,22 +85,13 @@ public class WaysideControllerImpl implements WaysideController {
 
     private void updateActivePLCProp() {
         if(!manualMode && PLC != null)
-            activePLCProp.set(Color.BLUE);
+            subject.activePLCColorProperty().set(Color.BLUE);
         else
-            activePLCProp.set(Color.GRAY);
+            subject.activePLCColorProperty().set(Color.GRAY);
     }
 
-    @Override
-    public BooleanProperty manualModeProperty() {
-        return manualModeProp;
-    }
-    @Override
-    public StringProperty PLCNameProperty() {
-        return PLCNameProp;
-    }
-    @Override
-    public ObjectProperty<Paint> activePLCProperty() {
-        return activePLCProp;
+    public WaysideControllerSubject getSubject() {
+        return subject;
     }
 
 }

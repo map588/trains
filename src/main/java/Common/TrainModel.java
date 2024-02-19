@@ -1,6 +1,6 @@
 package Common;
 
-public interface TrainModel {
+public interface trainModel {
 
     //----Vital Setter Signals----
     void setEmergencyBrake(boolean brake);
@@ -15,6 +15,7 @@ public interface TrainModel {
     void setSignalFailure(boolean failure);
 
     //Non-Vital Signals
+    void setTrainNumber(int number);
     void setLeftDoors(boolean doors);
     void setRightDoors(boolean doors);
     void setExtLights(boolean lights);
@@ -24,7 +25,7 @@ public interface TrainModel {
 
     //Vital Getter Signals
     int     getAuthority();
-    int     getID();
+    int     getTrainNumber();
     double  getCommandSpeed();
     double  getSpeed();
     double  getAcceleration();
@@ -46,17 +47,7 @@ public interface TrainModel {
     boolean getLeftDoors();
     boolean getRightDoors();
 
-
-    //Vital Signals from Track Model
-    int readAuthority();
-    double readCommandSpeed();
-    void readBeacon();
-
     //Vital Functions for simulating the train physics
     void calculateSpeed();
     void calculateAcceleration();
-
-    int getNumCars();
-
-    int getNumPassengers();
 }

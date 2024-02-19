@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     private trainSubjectFactory trainSubjectMaker;
@@ -68,5 +69,7 @@ class CTCOfficeImpl implements CTCOffice {
     public void setTicketSales(int ticketSales) {}
 
     public void setTime(int time) {}
+
+
 
 }
