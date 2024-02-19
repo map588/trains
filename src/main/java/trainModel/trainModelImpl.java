@@ -35,7 +35,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     private double temperature;
 
     private int numCars;
-    private boolean numPassengers;
+    private int numPassengers;
 
     private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
@@ -61,8 +61,8 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.intLights = false;
         this.leftDoors = false;
         this.rightDoors = false;
-        this.numCars = false;
-        this.numPassengers = false;
+        this.numCars = 1;
+        this.numPassengers = 1;
     }
 
     //Vital Setters
@@ -96,42 +96,42 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.leftDoors = doors;
     }
     public void setRightDoors(boolean doors) {
-        this.rightDoors.set(doors);
+        this.rightDoors = doors;
     }
     public void setExtLights(boolean lights) {
-        this.extLights.set(lights);
+        this.extLights = lights;
     }
-    public void setIntLights(boolean lights) { this.intLights.set(lights); }
+    public void setIntLights(boolean lights) { this.intLights = lights; }
     public void setTemperature(double temp) {
-        this.temperature.set(temp);
+        this.temperature = temp;
     }
 
     //Vital Getters
     public int getAuthority() {
-        return this.authority.get();
+        return this.authority;
     }
 
     public int getTrainNumber() {
-        return 0;
+        return controller.getID();
     }
 
     public double getCommandSpeed() {
-        return this.commandSpeed.get();
+        return this.commandSpeed;
     }
     public double getSpeed() {
-        return this.speed.get();
+        return this.speed;
     }
     public double getAcceleration() {
-        return this.acceleration.get();
+        return this.acceleration;
     }
     public double getPower() {
-        return this.power.get();
+        return this.power;
     }
     public boolean getServiceBrake() {
-        return this.serviceBrake.get();
+        return this.serviceBrake;
     }
     public boolean getEmergencyBrake() {
-        return this.emergencyBrake.get();
+        return this.emergencyBrake;
     }
 
     public double getWeightKG() {
@@ -139,23 +139,23 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
 
     //Murphy Getters
-    public boolean getBrakeFailure() { return this.brakeFailure.get(); }
-    public boolean getPowerFailure() { return this.powerFailure.get(); }
-    public boolean getSignalFailure() { return this.signalFailure.get(); }
+    public boolean getBrakeFailure() { return this.brakeFailure; }
+    public boolean getPowerFailure() { return this.powerFailure; }
+    public boolean getSignalFailure() { return this.signalFailure; }
 
     //NonVital Getters
     public double getTemperature() {
-        return this.temperature.get();
+        return this.temperature;
     }
     public boolean getExtLights() {
-        return this.extLights.get();
+        return this.extLights;
     }
-    public boolean getIntLights() { return this.intLights.get(); }
+    public boolean getIntLights() { return this.intLights; }
     public boolean getLeftDoors() {
-        return this.leftDoors.get();
+        return this.leftDoors;
     }
     public boolean getRightDoors() {
-        return this.rightDoors.get();
+        return this.rightDoors;
     }
 
     public void calculateSpeed() {
