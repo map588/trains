@@ -15,7 +15,6 @@ public interface TrainModel {
     void setSignalFailure(boolean failure);
 
     //Non-Vital Signals
-    void setTrainNumber(int number);
     void setLeftDoors(boolean doors);
     void setRightDoors(boolean doors);
     void setExtLights(boolean lights);

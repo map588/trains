@@ -65,6 +65,14 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.numPassengers = 1;
     }
 
+    public void addChangeListener(PropertyChangeListener listener) {
+        this.listeners.add(listener);
+    }
+
+    protected void notifyChange(String property, Object oldValue, Object newValue) {
+        listeners.forEach(listener -> listener.onPropertyChange(property, newValue);
+    }
+
     //Vital Setters
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake =brake;
@@ -81,9 +89,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     public void setPowerFailure(boolean failure) { this.powerFailure=failure; }
     public void setSignalFailure(boolean failure) { this.signalFailure=failure; }
 
-    public void setTrainNumber(int number) {
 
-    }
 
     //NonVital Setters
     public void setNumCars(int numCars) {
@@ -166,7 +172,4 @@ public class trainModelImpl implements TrainModel, Notifications {
         //Force = mass*acceleration
     }
 
-    public void addChangeListener(PropertyChangeListener listener) {
-        this.listeners.add(listener);
-    }
 }
