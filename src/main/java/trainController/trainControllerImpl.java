@@ -3,6 +3,7 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.PropertyChangeListener;
+import trainModel.stubTrainModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class trainControllerImpl implements TrainController {
     private int authority;
+    private int blocksToNextStation;
     private double commandSpeed;
     private double currentSpeed;
     private double overrideSpeed;
@@ -27,6 +29,10 @@ public class trainControllerImpl implements TrainController {
     private boolean externalLights;
     private boolean leftDoors;
     private boolean rightDoors;
+    private boolean announcements;
+    private boolean signalFailure;
+    private boolean brakeFailure;
+    private boolean powerFailure;
 
     private double temperature;
 
@@ -36,13 +42,57 @@ public class trainControllerImpl implements TrainController {
     private final trainControllerSubject subject;
     private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
+    //Passing with trainID actually adds the train to the subject list
     public trainControllerImpl(int trainID) {
         this.trainID = trainID;
+        this.authority = 0;
+        this.commandSpeed = 0.0;
+        this.currentSpeed = 0.0;
+        this.overrideSpeed = 0.0;
+        this.maxSpeed = 0.0;
+        this.Ki = 0.0;
+        this.Kp = 0.0;
+        this.power = 0.0;
+        this.serviceBrake = false;
+        this.emergencyBrake = false;
+        this.automaticMode = false;
+        this.internalLights = false;
+        this.externalLights = false;
+        this.leftDoors = false;
+        this.rightDoors = false;
+        this.temperature = 0.0;
         this.subject = new trainControllerSubject(this);
+        this.train = new stubTrainModel();
     }
 
-    public trainControllerImpl() {
-        this.subject = new trainControllerSubject(this);
+    public trainControllerImpl(trainControllerSubject subject) {
+        this.trainID = -1;
+        this.authority = 0;
+        this.commandSpeed = 0.0;
+        this.currentSpeed = 0.0;
+        this.overrideSpeed = 0.0;
+        this.maxSpeed = 0.0;
+        this.Ki = 0.0;
+        this.Kp = 0.0;
+        this.power = 0.0;
+        this.serviceBrake = false;
+        this.emergencyBrake = false;
+        this.automaticMode = false;
+        this.internalLights = false;
+        this.externalLights = false;
+        this.leftDoors = false;
+        this.rightDoors = false;
+        this.temperature = 0.0;
+        this.subject = subject != null ? subject : new trainControllerSubject(this);
+        this.train = new stubTrainModel();
+    }
+
+    public trainControllerSubject getSubject() {
+        return this.subject;
+    }
+
+    public int getBlocksToNextStation() {
+        return this.blocksToNextStation;
     }
 
     public void addChangeListener(PropertyChangeListener listener) {
@@ -130,6 +180,22 @@ public class trainControllerImpl implements TrainController {
         this.temperature = temp;
         notifyChange("Temperature", temp);
     }
+    public void setAnnouncements(boolean announcements) {
+        this.announcements = announcements;
+        notifyChange("Announcements", announcements);
+    }
+    public void setSignalFailure(boolean signalFailure) {
+        this.signalFailure = signalFailure;
+        notifyChange("SignalFailure", signalFailure);
+    }
+    public void setBrakeFailure(boolean brakeFailure) {
+        this.brakeFailure = brakeFailure;
+        notifyChange("BrakeFailure", brakeFailure);
+    }
+    public void setPowerFailure(boolean powerFailure) {
+        this.powerFailure = powerFailure;
+        notifyChange("PowerFailure", powerFailure);
+    }
 
 
     //-----------------Getters-----------------
@@ -175,9 +241,20 @@ public class trainControllerImpl implements TrainController {
     public boolean getExtLights() {
         return this.externalLights;
     }
-
     public boolean getIntLights() {
         return this.internalLights;
+    }
+    public boolean getAnnouncements() {
+        return this.announcements;
+    }
+    public boolean getSignalFailure() {
+        return this.signalFailure;
+    }
+    public boolean getBrakeFailure() {
+        return this.brakeFailure;
+    }
+    public boolean getPowerFailure() {
+        return this.powerFailure;
     }
 
     public double getMaxSpeed() {

@@ -3,6 +3,7 @@ package Common;
 
 import Framework.Notifications;
 import Framework.PropertyChangeListener;
+import trainController.trainControllerSubject;
 
 public interface TrainController extends Notifications {
 
@@ -65,4 +66,16 @@ public interface TrainController extends Notifications {
     int getAuthority();
 
     void setTemperature(double newTemperature);
+
+    trainControllerSubject getSubject();
+
+    int getBlocksToNextStation();
+
+    boolean getAnnouncements();
+
+    boolean getSignalFailure();
+
+    boolean getBrakeFailure();
+
+    boolean getPowerFailure();
 }

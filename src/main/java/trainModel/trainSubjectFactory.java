@@ -17,7 +17,7 @@ public class trainSubjectFactory implements SubjectFactory<trainModelSubject> {
     }
 
     public void deleteSubject(int ID) {
-
+        subjectMap.remove(ID);
     }
 
     public int getNumSubjects() {

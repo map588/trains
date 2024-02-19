@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import trainController.controllerSubjectFactory;
+import trainController.trainControllerSubjectFactory;
 import trainController.trainControllerSubject;
 
 import java.util.function.Consumer;
@@ -18,22 +18,24 @@ public class trainControllerManager {
     @FXML
     private TextField trainController_setTemperature_TextField, trainController_setKi_TextField, trainController_setKp_TextField, trainController_setSpeed_TextField;
     @FXML
-    private Button trainController_emergencyBrake_Button;
+    private Button trainController_emergencyBrake_Button, trainController_makeAnnouncements_Button;
     @FXML
     private Slider trainController_setSpeed_Slider;
     @FXML
-    private Gauge trainController_currentSpeed_Gauge, trainController_speedLimit_Gauge, trainController_commandSpeed_Gauge, trainController_Authority_Gauge, trainiController_powerOutput_Gauge;
+    private Gauge trainController_currentSpeed_Gauge, trainController_speedLimit_Gauge, trainController_commandedSpeed_Gauge, trainController_Authority_Gauge, trainController_powerOutput_Gauge, trainController_blocksToNextStation_Gauge;
     @FXML
-    private Circle trainController_eBrake_Status;
+    private Circle trainController_eBrake_Status, trainController_signalFailure_Status, trainController_brakeFailure_Status, trainController_powerFailure_Status;
     @FXML
     private ChoiceBox<Integer> trainController_trainNo_ChoiceBox;
 
-    private controllerSubjectFactory factory;
+    private trainControllerSubjectFactory factory;
     private trainControllerSubject currentSubject;
 
     @FXML
     public void initialize() {
-        factory = new controllerSubjectFactory();
+        factory = new trainControllerSubjectFactory();
+        createTrainController(0);
+
         bindGauges();
         bindControls();
 
@@ -44,12 +46,24 @@ public class trainControllerManager {
         });
     }
 
+    private void createTrainController(int trainID) {
+        currentSubject = factory.getSubject(trainID);
+    }
+
     private void bindGauges() {
         trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.currentSpeedProperty());
-        trainController_commandSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
+        trainController_commandedSpeed_Gauge.valueProperty().bind(currentSubject.commandSpeedProperty());
         trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.maxSpeedProperty());
         trainController_Authority_Gauge.valueProperty().bind(currentSubject.authorityProperty());
-        trainiController_powerOutput_Gauge.valueProperty().bind(currentSubject.powerProperty());
+        trainController_powerOutput_Gauge.valueProperty().bind(currentSubject.powerProperty());
+        trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.blocksToNextStationProperty());
+    }
+
+    private void bindIndicators() {
+        currentSubject.emergencyBrakeProperty().addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
+        currentSubject.signalFailureProperty().addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
+        currentSubject.brakeFailureProperty().addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
+        currentSubject.powerFailureProperty().addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
     }
 
     private void bindControls() {
@@ -68,6 +82,9 @@ public class trainControllerManager {
             currentSubject.updateEmergencyBrake(newEBrake);
             updateEBrakeIndicator(newEBrake);
         });
+        trainController_makeAnnouncements_Button.setOnAction(event -> {
+            boolean enable = !currentSubject.makeAnnouncementsProperty().get();
+            currentSubject.updateAnnouncements(enable);});
     }
 
     private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
@@ -90,12 +107,23 @@ public class trainControllerManager {
         textField.textProperty().addListener((obs, oldSelection, newSelection) -> consumer.accept(Double.parseDouble(newSelection)));
     }
 
-    public void addTrain(TrainController controller) {
+    public synchronized void addTrain(TrainController controller) {
+        factory.addSubject(controller.getID(), controller.getSubject());
+
         trainController_trainNo_ChoiceBox.getItems().add(controller.getID());
     }
 
     private void updateEBrakeIndicator(boolean isEmergencyBrakeActive) {
         trainController_eBrake_Status.setFill(isEmergencyBrakeActive ? Color.RED : Color.GRAY);
+    }
+    private void updateSignalFailureIndicator(boolean isSignalFailureActive) {
+        trainController_signalFailure_Status.setFill(isSignalFailureActive ? Color.RED : Color.GRAY);
+    }
+    private void updateBrakeFailureIndicator(boolean isBrakeFailureActive) {
+        trainController_brakeFailure_Status.setFill(isBrakeFailureActive ? Color.RED : Color.GRAY);
+    }
+    private void updatePowerFailureIndicator(boolean isPowerFailureActive) {
+        trainController_powerFailure_Status.setFill(isPowerFailureActive ? Color.RED : Color.GRAY);
     }
 
     private void changeTrainView(int trainID) {
@@ -108,10 +136,10 @@ public class trainControllerManager {
 
     private void unbindControls() {
         trainController_currentSpeed_Gauge.valueProperty().unbind();
-        trainController_commandSpeed_Gauge.valueProperty().unbind();
+        trainController_commandedSpeed_Gauge.valueProperty().unbind();
         trainController_speedLimit_Gauge.valueProperty().unbind();
         trainController_Authority_Gauge.valueProperty().unbind();
-        trainiController_powerOutput_Gauge.valueProperty().unbind();
+        trainController_powerOutput_Gauge.valueProperty().unbind();
 
         trainController_setSpeed_Slider.valueProperty().unbind();
         trainController_setSpeed_TextField.textProperty().unbind();
