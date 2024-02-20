@@ -2,11 +2,7 @@ package waysideController;
 
 import Common.WaysideController;
 import Utilities.BlockInfo;
-import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +22,8 @@ public class WaysideControllerImpl implements WaysideController {
     private final List<BlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
-    private File PLC = null;
+    private File PLCFile = null;
+    private PLCProgram program;
 
     private final WaysideControllerSubject subject;
 
@@ -38,17 +35,18 @@ public class WaysideControllerImpl implements WaysideController {
     public WaysideControllerImpl(int id, int trackLine) {
         this.id = id;
         this.trackLine = trackLine;
+        program = new PLCProgram();
         subject = new WaysideControllerSubject(this);
     }
 
     @Override
-    public File getPLC() {
-        return this.PLC;
+    public File getPLCFile() {
+        return this.PLCFile;
     }
 
     @Override
     public void loadPLC(File PLC) {
-        this.PLC = PLC;
+        this.PLCFile = PLC;
         subject.PLCNameProperty().set(PLC.getName());
         updateActivePLCProp();
     }
@@ -83,7 +81,9 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
-
+        trackList.get(blockID).setTrackCircuitState(isOccupied);
+        program.setOccupancy(blockID, isOccupied);
+        program.runBlueLine();
     }
 
     @Override
@@ -127,7 +127,7 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     private void updateActivePLCProp() {
-        if(!maintenanceMode && PLC != null)
+        if(!maintenanceMode && PLCFile != null)
             subject.activePLCColorProperty().set(Color.BLUE);
         else
             subject.activePLCColorProperty().set(Color.GRAY);

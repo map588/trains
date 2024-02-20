@@ -15,7 +15,7 @@ import java.util.List;
 public interface WaysideController {
 
     // Accessor for PLC program file
-    public File getPLC();
+    public File getPLCFile();
 
     // Loads a new PLC program into the wayside controller from a given file
     public void loadPLC(File PLC);
