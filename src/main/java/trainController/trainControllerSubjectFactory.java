@@ -1,29 +1,30 @@
 package trainController;
 
-import Common.WaysideController;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import Framework.SubjectFactory;
 
-import java.util.ArrayList;
+class trainControllerSubjectFactory extends SubjectFactory<trainControllerSubject> {
 
-public class trainControllerSubjectFactory {
-
+    // Singleton
     private static final trainControllerSubjectFactory INSTANCE = new trainControllerSubjectFactory();
+
+    // ObservableHashMap to store subjects
     private ObservableHashMap<Integer, trainControllerSubject> subjects = new ObservableHashMap<>();
+
+    // Private constructor
     private trainControllerSubjectFactory() {}
 
+    // Singleton getter
     public static trainControllerSubjectFactory getInstance() {
         return INSTANCE;
     }
 
+    // Getter for subjects
     public ObservableHashMap<Integer, trainControllerSubject> getSubjects() {
         return subjects;
     }
 
+    // Register a subject
     public void registerSubject(int ID, trainControllerSubject subject) {
         subjects.put(ID, subject);
     }
-
 }

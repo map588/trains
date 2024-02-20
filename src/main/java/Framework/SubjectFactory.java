@@ -1,17 +1,25 @@
 package Framework;
 
-/**
- * THe Type will be the type of subject that is being created
- * @param <T>
- *
- * @method assignSubject Adds to a list of previously created subjects
- * @method removeSubject Removes a subject from the list
- */
-public interface SubjectFactory<T> {
+import trainController.ObservableHashMap;
 
-    public T    getSubject(int ID);
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-    public void deleteSubject(int ID);
+public class SubjectFactory<T> {
+    private static final Map<Class<?>, SubjectFactory<?>> INSTANCES = new ConcurrentHashMap<>();
+    private final ObservableHashMap<Integer, T> subjects = new ObservableHashMap<>();
 
-    public int getNumSubjects();
+    public SubjectFactory() {}
+
+    public static <T> SubjectFactory<T> getInstance(Class<T> type) {
+        return (SubjectFactory<T>) INSTANCES.computeIfAbsent(type, k -> new SubjectFactory<>());
+    }
+
+    public ObservableHashMap<Integer, T> getSubjects() {
+        return subjects;
+    }
+
+    public void registerSubject(int ID, T subject) {
+        subjects.put(ID, subject);
+    }
 }
