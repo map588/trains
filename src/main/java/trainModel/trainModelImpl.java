@@ -1,11 +1,12 @@
 package trainModel;
 
-import Common.TrackModel;
+//import Common.TrackModel;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Notifications;
 import Framework.PropertyChangeListener;
 import javafx.beans.property.*;
+//import trackModel.stubTrackModel;
 import trainController.stubTrainController;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
     //Module Stubs
-    private TrackModel track;
+  //  private final TrackModel track = new stubTrackModel();
     private TrainController controller;
 
     public trainModelImpl(int trainID){

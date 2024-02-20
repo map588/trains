@@ -27,4 +27,6 @@ public interface AbstractSubject {
 
             System.out.println("Property " + property.getName() + " updated to " + newValue + " in Subject");
      }
+
+
 }

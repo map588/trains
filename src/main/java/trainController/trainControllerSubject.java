@@ -18,37 +18,12 @@ public class trainControllerSubject implements AbstractSubject {
     private TrainController controller;
     private boolean isGuiUpdate = false;
 
-    public trainControllerSubject() {
-        this.authority = new SimpleIntegerProperty(this, "authority",0);
-        this.trainID = new SimpleIntegerProperty(this, "trainID",0);
-        this.blocksToNextStation = new SimpleIntegerProperty(this, "blocksToNextStation",0);
-        this.commandSpeed = new SimpleDoubleProperty(this, "commandSpeed",0);
-        this.currentSpeed = new SimpleDoubleProperty(this, "currentSpeed",0);
-        this.overrideSpeed = new SimpleDoubleProperty(this, "overrideSpeed",0);
-        this.maxSpeed = new SimpleDoubleProperty(this, "maxSpeed",0);
-        this.Ki = new SimpleDoubleProperty(this, "Ki",0);
-        this.Kp = new SimpleDoubleProperty(this, "Kp",0);
-        this.power = new SimpleDoubleProperty(this, "power",0);
-        this.serviceBrake = new SimpleBooleanProperty(this, "serviceBrake",false);
-        this.emergencyBrake = new SimpleBooleanProperty(this, "emergencyBrake",false);
-        this.automaticMode = new SimpleBooleanProperty(this, "automaticMode",false);
-        this.intLights = new SimpleBooleanProperty(this, "intLights",false);
-        this.extLights = new SimpleBooleanProperty(this, "extLights",false);
-        this.leftDoors = new SimpleBooleanProperty(this, "leftDoors",false);
-        this.rightDoors = new SimpleBooleanProperty(this, "rightDoors",false);
-        this.announcements = new SimpleBooleanProperty(this, "announcements",false);
-        this.signalFailure = new SimpleBooleanProperty(this, "signalFailure",false);
-        this.brakeFailure = new SimpleBooleanProperty(this, "brakeFailure",false);
-        this.powerFailure = new SimpleBooleanProperty(this, "powerFailure",false);
-        this.temperature = new SimpleDoubleProperty(this, "temperature",0);
-        trainControllerSubjectFactory.getInstance().registerSubject(0, this);
-    }
+
 
     public trainControllerSubject(TrainController controller) {
         this();
         this.controller = controller;
         initializePropertiesFromController();
-
         controller.addChangeListener(this::handleControllerChange);
     }
 
@@ -91,23 +66,6 @@ public class trainControllerSubject implements AbstractSubject {
             case "temperature" -> updateProperty(temperature, newValue);
             default -> System.err.println("Unknown property " + propertyName);
         }
-    }
-
-    // Method to safely cast and update the property value
-    // This can be extended to handle different property types more gracefully
-    @SuppressWarnings("unchecked")
-    public <T> void updateProperty(Property<T> property, Object newValue) {
-        if (property instanceof DoubleProperty && newValue instanceof Number) {
-            ((DoubleProperty) property).set(((Number) newValue).doubleValue());
-        } else if (property instanceof IntegerProperty && newValue instanceof Number) {
-            ((IntegerProperty) property).set(((Number) newValue).intValue());
-        } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
-            ((BooleanProperty) property).set((Boolean) newValue);
-        } else {
-            System.err.println("Mismatch in property type and value type for " + property.getName());
-        }
-
-        System.out.println("Property " + property.getName() + " updated to " + newValue + " in Subject");
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {
@@ -157,6 +115,32 @@ public class trainControllerSubject implements AbstractSubject {
         } finally {
             isGuiUpdate = false;
         }
+    }
+
+    private trainControllerSubject() {
+        this.authority = new SimpleIntegerProperty(this, "authority",0);
+        this.trainID = new SimpleIntegerProperty(this, "trainID",0);
+        this.blocksToNextStation = new SimpleIntegerProperty(this, "blocksToNextStation",0);
+        this.commandSpeed = new SimpleDoubleProperty(this, "commandSpeed",0);
+        this.currentSpeed = new SimpleDoubleProperty(this, "currentSpeed",0);
+        this.overrideSpeed = new SimpleDoubleProperty(this, "overrideSpeed",0);
+        this.maxSpeed = new SimpleDoubleProperty(this, "maxSpeed",0);
+        this.Ki = new SimpleDoubleProperty(this, "Ki",0);
+        this.Kp = new SimpleDoubleProperty(this, "Kp",0);
+        this.power = new SimpleDoubleProperty(this, "power",0);
+        this.serviceBrake = new SimpleBooleanProperty(this, "serviceBrake",false);
+        this.emergencyBrake = new SimpleBooleanProperty(this, "emergencyBrake",false);
+        this.automaticMode = new SimpleBooleanProperty(this, "automaticMode",false);
+        this.intLights = new SimpleBooleanProperty(this, "intLights",false);
+        this.extLights = new SimpleBooleanProperty(this, "extLights",false);
+        this.leftDoors = new SimpleBooleanProperty(this, "leftDoors",false);
+        this.rightDoors = new SimpleBooleanProperty(this, "rightDoors",false);
+        this.announcements = new SimpleBooleanProperty(this, "announcements",false);
+        this.signalFailure = new SimpleBooleanProperty(this, "signalFailure",false);
+        this.brakeFailure = new SimpleBooleanProperty(this, "brakeFailure",false);
+        this.powerFailure = new SimpleBooleanProperty(this, "powerFailure",false);
+        this.temperature = new SimpleDoubleProperty(this, "temperature",0);
+        trainControllerSubjectFactory.getInstance().registerSubject(0, this);
     }
 
     private void initializePropertiesFromController() {
