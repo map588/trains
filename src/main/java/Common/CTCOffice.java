@@ -19,4 +19,6 @@ public interface CTCOffice{
     void getMode();
 //    void setTicketSales(int ticketSales);
 //    void setTime(int time);
+
+
 }
