@@ -241,7 +241,7 @@ public class WaysideControllerManager {
     private void changeActiveController(WaysideController controller) {
         // Unbind previous subject
         if(currentSubject != null) {
-            manualModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.manualModeProperty());
+            manualModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.maintenanceModeProperty());
             plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.PLCNameProperty());
             plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.activePLCColorProperty());
         }
@@ -252,7 +252,7 @@ public class WaysideControllerManager {
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
 
         // Bind new subject
-        manualModeCheckbox.selectedProperty().bindBidirectional(currentSubject.manualModeProperty());
+        manualModeCheckbox.selectedProperty().bindBidirectional(currentSubject.maintenanceModeProperty());
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.PLCNameProperty());
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.activePLCColorProperty());
 
