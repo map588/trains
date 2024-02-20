@@ -75,7 +75,11 @@ public class trainControllerManager {
             }
         };
 
+<<<<<<< Updated upstream
         //subjects.addChangeListener(listener); *****************************************************************************************************************Commented out by Ty for compilation
+=======
+        //subjects.addChangeListener(listener);
+>>>>>>> Stashed changes
         updateChoiceBoxItems();
     }
 
