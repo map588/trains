@@ -1,12 +1,7 @@
 package trainModel;
 
-import Framework.AbstractSubject;
+import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
-import Common.TrainModel;
-import javafx.beans.value.ObservableValue;
-
-import javax.swing.*;
-import java.util.List;
 
 public class trainModelSubject implements AbstractSubject {
 

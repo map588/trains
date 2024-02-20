@@ -2,7 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.PropertyChangeListener;
+import Framework.Support.PropertyChangeListener;
 
 public class stubTrainController implements TrainController{
 

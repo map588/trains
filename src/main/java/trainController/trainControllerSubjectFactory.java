@@ -1,6 +1,6 @@
 package trainController;
 
-import Framework.SubjectFactory;
+import Framework.Support.SubjectFactory;
 
 public class trainControllerSubjectFactory extends SubjectFactory<trainControllerSubject> {
 

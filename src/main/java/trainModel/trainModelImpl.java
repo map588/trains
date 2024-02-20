@@ -3,9 +3,8 @@ package trainModel;
 //import Common.TrackModel;
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Notifications;
-import Framework.PropertyChangeListener;
-import javafx.beans.property.*;
+import Framework.Support.Notifications;
+import Framework.Support.PropertyChangeListener;
 //import trackModel.stubTrackModel;
 import trainController.stubTrainController;
 

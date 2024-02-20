@@ -1,4 +1,4 @@
-package Framework;
+package Framework.Support;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;

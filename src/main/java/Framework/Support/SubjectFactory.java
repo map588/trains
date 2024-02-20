@@ -1,4 +1,4 @@
-package Framework;
+package Framework.Support;
 
 import trainController.ObservableHashMap;
 

@@ -1,6 +1,6 @@
 package Framework.GUI.Managers;
 
-import Framework.SubjectFactory;
+import Framework.Support.SubjectFactory;
 import eu.hansolo.medusa.Gauge;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

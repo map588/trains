@@ -1,13 +1,9 @@
 package trainController;
 
 import Common.TrainController;
-import Framework.AbstractSubject;
+import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.application.Platform;
-
-import javax.swing.*;
-import java.util.List;
 
 public class trainControllerSubject implements AbstractSubject {
     private IntegerProperty authority, trainID, blocksToNextStation;

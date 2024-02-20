@@ -2,8 +2,8 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Notifications;
-import Framework.PropertyChangeListener;
+import Framework.Support.Notifications;
+import Framework.Support.PropertyChangeListener;
 import trainModel.stubTrainModel;
 
 import java.util.ArrayList;
