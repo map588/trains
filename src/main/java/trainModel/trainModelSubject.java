@@ -3,7 +3,7 @@ package trainModel;
 import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
 
-public class trainModelSubject implements AbstractSubject {
+public class trainModelSubject implements AbstractSubject{
 
     private IntegerProperty authority, numCars, numPassengers, crewCount;
     private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
@@ -150,6 +150,34 @@ public class trainModelSubject implements AbstractSubject {
             case "crewCount" -> crewCount;
             default -> null;
         };
+    }
+
+    public void setProperty(String propertyName, Object newValue) {
+        if (newValue == null) {
+            System.err.println("Null value for property " + propertyName);
+            return;
+        }
+        switch (propertyName) {
+            case "authority" -> updateProperty(authority, newValue);
+            case "commandSpeed" -> updateProperty(commandSpeed, newValue);
+            case "actualSpeed" -> updateProperty(actualSpeed, newValue);
+            case "acceleration" -> updateProperty(acceleration, newValue);
+            case "power" -> updateProperty(power, newValue);
+            case "serviceBrake" -> updateProperty(serviceBrake, newValue);
+            case "emergencyBrake" -> updateProperty(emergencyBrake, newValue);
+            case "brakeFailure" -> updateProperty(brakeFailure, newValue);
+            case "powerFailure" -> updateProperty(powerFailure, newValue);
+            case "signalFailure" -> updateProperty(signalFailure, newValue);
+            case "extLights" -> updateProperty(extLights, newValue);
+            case "intLights" -> updateProperty(intLights, newValue);
+            case "leftDoors" -> updateProperty(leftDoors, newValue);
+            case "rightDoors" -> updateProperty(rightDoors, newValue);
+            case "temperature" -> updateProperty(temperature, newValue);
+            case "numCars" -> updateProperty(numCars, newValue);
+            case "numPassengers" -> updateProperty(numPassengers, newValue);
+            case "crewCount" -> updateProperty(crewCount, newValue);
+            default -> System.err.println("Unknown property " + propertyName);
+        }
     }
 }
 

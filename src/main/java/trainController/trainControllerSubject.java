@@ -28,7 +28,7 @@ public class trainControllerSubject implements AbstractSubject {
         Platform.runLater(() -> setProperty(propertyName, newValue));
     }
 
-    private void setProperty(String propertyName, Object newValue) {
+    public void setProperty(String propertyName, Object newValue) {
         if (isGuiUpdate) {
             return;
         }

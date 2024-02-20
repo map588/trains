@@ -3,18 +3,14 @@ package Framework.GUI.Managers;
 import javafx.beans.property.*;
 
 public class CTCBlockInfoManager {
-    private final SimpleIntegerProperty blockNumber;
-    private final SimpleStringProperty occupationLight;
+    private IntegerProperty blockNumber;
+    private final BooleanProperty occupationLight;
     private final SimpleStringProperty switchLightColor;
     private final SimpleStringProperty switchState;
 
     public CTCBlockInfoManager(int blockNumber, Boolean occupied, Boolean switchLightColor, Boolean switchState) {
         this.blockNumber = new SimpleIntegerProperty(blockNumber);
-        if (occupied) {
-            this.occupationLight = new SimpleStringProperty("X");
-        } else {
-            this.occupationLight = new SimpleStringProperty(" ");
-        }
+        occupationLight = new SimpleBooleanProperty(occupied);
         if (switchLightColor) {
             this.switchLightColor = new SimpleStringProperty("Green");
         } else {
@@ -26,24 +22,23 @@ public class CTCBlockInfoManager {
             this.switchState = new SimpleStringProperty("Diverging");
         }
     }
-
-    public int getBlockNumber() {
-        return blockNumber.get();
-    }
-    public void setBlockNumber(int blockNumber) {
-        this.blockNumber.set(blockNumber);
-    }
-
-    public String getOccupationLight() {
-        return occupationLight.get();
+    public CTCBlockInfoManager(int blockNumber) {
+        this.blockNumber = new SimpleIntegerProperty(blockNumber);
+        occupationLight = new SimpleBooleanProperty(false);
+        this.switchLightColor = new SimpleStringProperty("Red");
+        this.switchState = new SimpleStringProperty("Diverging");
     }
 
-    public void setOccupationLight(Boolean occupied) {
-        if (occupied) {
-            this.occupationLight.set("X");
-        } else {
-            this.occupationLight.set("");
-        }
+    public IntegerProperty getBlockNumber() {
+        return blockNumber;
+    }
+
+    public BooleanProperty getOccupationLightProperty() {
+        return occupationLight;
+    }
+
+    public void setOccupationLight(boolean occupied) {
+        this.occupationLight.set(occupied);
     }
 
     public String getSwitchLightColor() {

@@ -26,6 +26,7 @@ class CTCBlockInfo {
         this.crossingState = crossingState;
         this.speedLimit = speedLimit;
         this.blockLength = blockLength;
+        CTCBlockSubjectFactory.getInstance().registerSubject(blockID, new CTCBlockSubject(this));
     }
     void setBlockID (int number){
         this.blockID = number;

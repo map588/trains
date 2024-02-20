@@ -3,7 +3,6 @@ package CTCOffice;
 import Common.CTCOffice;
 import Common.TrainModel;
 import trainModel.trainModelImpl;
-import trainModel.trainSubjectFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +13,8 @@ import static Utilities.Constants.*;
 
 class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
-    private trainSubjectFactory trainSubjectMaker;
+    //private trainSubjectFactory trainSubjectMaker;
+
     private Map<Boolean, ArrayList<CTCBlockInfo>> track = new HashMap<Boolean, ArrayList<CTCBlockInfo>>();
 
 
