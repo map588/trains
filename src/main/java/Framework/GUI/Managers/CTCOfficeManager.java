@@ -45,13 +45,17 @@ public class CTCOfficeManager {
         CTCOffice one = new CTCOfficeImpl();
 
         blockTable.setEditable(true);
+        Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
+        blockTable.getItems().addAll(blockList);
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
+        switchLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("lightState"));
+        //switchLightColumn.setCellFactory(
 
-        Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
 
-        blockTable.getItems().addAll(blockList);
+
+
 
 
     }
