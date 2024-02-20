@@ -1,6 +1,7 @@
 package Framework.GUI.Managers;
 
 import Common.TrainController;
+import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -57,12 +58,29 @@ public class trainControllerManager {
     }
 
     private void setupMapChangeListener() {
-        factory.getSubjects().addChangeListener((Integer key) -> {
+        ObservableHashMap<Integer, ?> subjects = factory.getSubjects();
 
-            updateChoiceBoxItems();
-        });
+        ObservableHashMap.MapListener<Integer, ?> listener = new ObservableHashMap.MapListener<Integer, Object>() {
+            @Override
+            public void onAdded(Integer key, Object value) {
+                updateChoiceBoxItems();
+            }
+
+            @Override
+            public void onRemoved(Integer key, Object value) {
+                updateChoiceBoxItems();
+            }
+
+            @Override
+            public void onUpdated(Integer key, Object oldValue, Object newValue) {
+                updateChoiceBoxItems();
+            }
+        };
+
+        subjects.addChangeListener(listener);
         updateChoiceBoxItems();
     }
+
 
     private void updateChoiceBoxItems() {
         Platform.runLater(() -> {
