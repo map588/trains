@@ -32,6 +32,10 @@ public interface WaysideController {
     // Adds a new track block under the wayside controller's control
     public void addBlock(BlockInfo block);
 
+    public void disableBlock(int blockID);
+    public void enableBlock(int blockID);
+    public void enableAllBlocks();
+
     // Returns the ID of the controller
     public int getID();
 
