@@ -5,8 +5,8 @@ import Common.TrainModel;
 import trainModel.trainModelImpl;
 import trainModel.trainSubjectFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -14,12 +14,16 @@ import java.util.Map;
 class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     private trainSubjectFactory trainSubjectMaker;
-    private Map<Boolean, List<CTCBlockInfo>> track = new HashMap<Boolean, List<CTCBlockInfo>>();
+    private Map<Boolean, ArrayList<CTCBlockInfo>> track = new HashMap<Boolean, ArrayList<CTCBlockInfo>>();
 
 
 
     public CTCOfficeImpl() {
-        // initialize the CTC
+        CTCBlockInfo block1 = new CTCBlockInfo(1, true, true, true, true, true, true, true, true,55, 100);
+        ArrayList<CTCBlockInfo> line1 = new ArrayList<>() {{
+            add(block1);
+        }};
+        track.put(true, line1);
     }
 
     public TrainModel dispatch(int trainID, int blockID) {

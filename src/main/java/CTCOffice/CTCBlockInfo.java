@@ -3,7 +3,7 @@ package CTCOffice;
 
 class CTCBlockInfo {
     private int blockID;
-    private int line;
+    private boolean line;
     private boolean occupied;
     private boolean lightData;
     private boolean switchData;
@@ -14,11 +14,24 @@ class CTCBlockInfo {
     private int speedLimit;
     private int blockLength;
 
+    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean lightData, boolean switchData, boolean crossingData, boolean lightState, boolean switchState, boolean crossingState, int speedLimit, int blockLength) {
+        this.blockID = blockID;
+        this.line = line;
+        this.occupied = occupied;
+        this.lightData = lightData;
+        this.switchData = switchData;
+        this.crossingData = crossingData;
+        this.lightState = lightState;
+        this.switchState = switchState;
+        this.crossingState = crossingState;
+        this.speedLimit = speedLimit;
+        this.blockLength = blockLength;
+    }
     void setBlockID (int number){
         this.blockID = number;
     }
 
-    void setLine(int line) {
+    void setLine(boolean line) {
         this.line = line;
     }
 
@@ -62,7 +75,7 @@ class CTCBlockInfo {
         return blockID;
     }
 
-    int getLine() {
+    boolean getLine() {
         return line;
     }
 
