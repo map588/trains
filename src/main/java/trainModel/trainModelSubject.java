@@ -6,7 +6,7 @@ import javafx.beans.property.*;
 public class trainModelSubject implements AbstractSubject{
 
     private IntegerProperty authority, numCars, numPassengers, crewCount;
-    private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
+    private DoubleProperty commandSpeed, actualSpeed, acceleration, power, grade, temperature;
 
     //Vital Variables
     private BooleanProperty serviceBrake, emergencyBrake, brakeFailure, powerFailure;
@@ -19,6 +19,7 @@ public class trainModelSubject implements AbstractSubject{
         this.actualSpeed = new SimpleDoubleProperty(0);
         this.acceleration = new SimpleDoubleProperty(0);
         this.power = new SimpleDoubleProperty(0);
+        this.grade = new SimpleDoubleProperty(0);
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.brakeFailure = new SimpleBooleanProperty(false);
@@ -42,6 +43,7 @@ public class trainModelSubject implements AbstractSubject{
         this.actualSpeed = new SimpleDoubleProperty(0);
         this.acceleration = new SimpleDoubleProperty(0);
         this.power = new SimpleDoubleProperty(0);
+        this.grade = new SimpleDoubleProperty(0);
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.brakeFailure = new SimpleBooleanProperty(false);
@@ -72,6 +74,9 @@ public class trainModelSubject implements AbstractSubject{
                     break;
                 case "power":
                     power.set((double) newValue);
+                    break;
+                case "grade":
+                    grade.set((double) newValue);
                     break;
                 case "serviceBrake":
                     serviceBrake.set((boolean) newValue);
@@ -137,6 +142,7 @@ public class trainModelSubject implements AbstractSubject{
             case "actualSpeed" -> actualSpeed;
             case "acceleration" -> acceleration;
             case "power" -> power;
+            case "grade" -> grade;
             case "temperature" -> temperature;
             default -> null;
         };

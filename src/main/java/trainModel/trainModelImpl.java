@@ -7,6 +7,7 @@ import Framework.Support.Notifications;
 import Framework.Support.PropertyChangeListener;
 //import trackModel.stubTrackModel;
 import trainController.stubTrainController;
+import java.lang.Math;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,15 @@ public class trainModelImpl implements TrainModel, Notifications {
     private boolean serviceBrake;
     private boolean emergencyBrake;
     private double mass;
+    private double grade;
 
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce;
+    private double engineForce;
+    private double slopeForce;
+    private double netForce;
+    private double currentAngle;
+    private double previousAcceleration;
 
     //Murphy Variables
     private boolean brakeFailure;
@@ -76,8 +83,6 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
-
-
     }
 
     public void addChangeListener(PropertyChangeListener listener) {
@@ -98,8 +103,12 @@ public class trainModelImpl implements TrainModel, Notifications {
         notifyChange("serviceBrake", brake);
     }
     public void setPower(double power) {
-        this.power=power;
+        this.power = power;
         notifyChange("power", power);
+    }
+    public void setGrade(double grade) {
+        this.grade = grade;
+        notifyChange("grade", grade);
     }
     //Murphy Setters
     public void setBrakeFailure(boolean failure) {
@@ -175,10 +184,10 @@ public class trainModelImpl implements TrainModel, Notifications {
     public boolean getEmergencyBrake() {
         return this.emergencyBrake;
     }
-
     public double getWeightKG() {
         return 0;
     }
+    public double getGrade() { return grade; }
 
     //Murphy Getters
     public boolean getBrakeFailure() { return this.brakeFailure; }
@@ -213,13 +222,49 @@ public class trainModelImpl implements TrainModel, Notifications {
         if (brakeFailure) {
             this.serviceBrake = false;
         }
+        //ACCELERATION PROGRESSION
+        this.previousAcceleration = this.acceleration;
         //BRAKE FORCES
         if (this.serviceBrake && !this.emergencyBrake) {
             this.brakeForce = Constants.SERVICE_BRAKE_FORCE;
         }
         if (this.emergencyBrake) {
             this.brakeForce = Constants.EMERGENCY_BRAKE_FORCE;
+            this.power = 0;
         }
+        if (!this.serviceBrake && !this.emergencyBrake) {
+            this.brakeForce = 0;
+        }
+        //ENGINE FORCE
+        try {
+            this.engineForce = this.power / this.speed;
+        } catch (ArithmeticException e) {
+            if (this.power > 0) {
+                this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+            }
+        }
+        //SLOPE FORCE
+        this.currentAngle = Math.atan(this.grade / 100);
+        this.slopeForce = this.mass * Constants.GRAVITY * Math.sin(this.currentAngle);
+        //NET FORCE
+        this.netForce = this.engineForce - this.slopeForce - this.brakeForce;
+        if (this.netForce > Constants.MAX_ENGINE_FORCE){
+            this.netForce = Constants.MAX_ENGINE_FORCE;
+        }
+        //ACCELERATION CALCULATION
+        this.acceleration = this.netForce / this.mass;
+
+        //SPEED CALCULATION
+        if (this.power <= Constants.MAX_POWER) {
+            //this.speed = this.speed + (TIME_DELTA * 0.001 / 2) * (this.acceleration + this.previousAcceleration);
+        }
+
+        if (this.speed < 0) { this.speed = 0; }
+        if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
+
     }
+
+
+
 
 }
