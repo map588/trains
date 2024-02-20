@@ -5,7 +5,7 @@ class CTCBlockInfo {
     private int blockID;
     private boolean line;
     private boolean occupied;
-    private boolean lightData;
+    private boolean hasLight;
     private boolean switchData;
     private boolean crossingData;
     private boolean lightState;
@@ -14,11 +14,11 @@ class CTCBlockInfo {
     private int speedLimit;
     private int blockLength;
 
-    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean lightData, boolean switchData, boolean crossingData, boolean lightState, boolean switchState, boolean crossingState, int speedLimit, int blockLength) {
+    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean switchData, boolean crossingData, boolean lightState, boolean switchState, boolean crossingState, int speedLimit, int blockLength) {
         this.blockID = blockID;
         this.line = line;
         this.occupied = occupied;
-        this.lightData = lightData;
+        this.hasLight = hasLight;
         this.switchData = switchData;
         this.crossingData = crossingData;
         this.lightState = lightState;
@@ -40,8 +40,8 @@ class CTCBlockInfo {
         this.occupied = occupied;
     }
 
-    void setLightData(boolean lightData) {
-        this.lightData = lightData;
+    void setLightData(boolean hasLight) {
+        this.hasLight = hasLight;
     }
 
     void setSwitchData(boolean switchData) {
@@ -85,7 +85,7 @@ class CTCBlockInfo {
     }
 
     boolean getLightData() {
-        return lightData;
+        return hasLight;
     }
 
     boolean getSwitchData() {
