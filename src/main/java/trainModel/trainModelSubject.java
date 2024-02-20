@@ -117,60 +117,39 @@ public class trainModelSubject implements AbstractSubject {
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {
-        switch(propertyName) {
-            case "serviceBrake":
-                return serviceBrake;
-            case "emergencyBrake":
-                return emergencyBrake;
-            case "brakeFailure":
-                return brakeFailure;
-            case "powerFailure":
-                return powerFailure;
-            case "signalFailure":
-                return signalFailure;
-            case "extLights":
-                return extLights;
-            case "intLights":
-                return intLights;
-            case "leftDoors":
-                return leftDoors;
-            case "rightDoors":
-                return rightDoors;
-            default:
-                return null;
-        }
+        return switch (propertyName) {
+            case "serviceBrake" -> serviceBrake;
+            case "emergencyBrake" -> emergencyBrake;
+            case "brakeFailure" -> brakeFailure;
+            case "powerFailure" -> powerFailure;
+            case "signalFailure" -> signalFailure;
+            case "extLights" -> extLights;
+            case "intLights" -> intLights;
+            case "leftDoors" -> leftDoors;
+            case "rightDoors" -> rightDoors;
+            default -> null;
+        };
     }
 
     public DoubleProperty getDoubleProperty (String propertyName) {
-        switch (propertyName) {
-            case "commandSpeed":
-                return commandSpeed;
-            case "actualSpeed":
-                return actualSpeed;
-            case "acceleration":
-                return acceleration;
-            case "power":
-                return power;
-            case "temperature":
-                return temperature;
-            default:
-                return null;
-        }
+        return switch (propertyName) {
+            case "commandSpeed" -> commandSpeed;
+            case "actualSpeed" -> actualSpeed;
+            case "acceleration" -> acceleration;
+            case "power" -> power;
+            case "temperature" -> temperature;
+            default -> null;
+        };
     }
 
     public IntegerProperty getIntegerProperty (String propertyName) {
-        switch (propertyName) {
-            case "authority":
-                return authority;
-            case "numCars":
-                return numCars;
-            case "numPassengers":
-                return numPassengers;
-            case "crewCount":
-                return crewCount;
-            default:
-                return null;
-        }
+        return switch (propertyName) {
+            case "authority" -> authority;
+            case "numCars" -> numCars;
+            case "numPassengers" -> numPassengers;
+            case "crewCount" -> crewCount;
+            default -> null;
+        };
     }
 }
 

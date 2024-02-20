@@ -14,6 +14,8 @@ public interface AbstractSubject {
      DoubleProperty getDoubleProperty (String propertyName);
      IntegerProperty getIntegerProperty (String propertyName);
 
+    void setProperty(String propertyName, Object newValue);
+
       default <T> void updateProperty(Property<T> property, Object newValue){
             if (property instanceof DoubleProperty && newValue instanceof Number) {
                 ((DoubleProperty) property).set(((Number) newValue).doubleValue());
