@@ -46,9 +46,11 @@ public class trackModelManager {
 
     //track heater
     @FXML
-    private ToggleButton trackHeaterIndicator;
+    private Label statusLabel;
     @FXML
     private TextField tempDisplay;
+    @FXML
+    private Label tempValueLabel;
 
     //station signal switch
     @FXML
@@ -64,9 +66,20 @@ public class trackModelManager {
     @FXML
     private TextField beaconInput;
     @FXML
+    private TextField beaconTextInput;
+    @FXML
     private Button beaconUpload;
     @FXML
     private ComboBox<String> pickLine;
+    @FXML
+    private Button beaconChooseFile;
+
+    //switch information
+    @FXML
+    private Label switchStateDisplay;
+    @FXML
+    private Label switchBlockNumberDisplay;
+
 
     //table
     @FXML
@@ -111,8 +124,47 @@ public class trackModelManager {
                 "Fix Track Failure"
         );
         murphyEnter.setOnAction(event -> murphyEnter());
+        beaconUpload.setOnAction(event -> uploadBeacon());
+        pickLine.setOnAction(event -> updateTable());
+        passEmbarkDisplay.setText("0");
+        passDisembarkDisplay.setText("0");
+        ticketSalesDisplay.setText("0");
+        tempValueLabel.setText("26");
+        statusLabel.setText("ON");
+        switchStateDisplay.setText("No Switch Present");
+        switchBlockNumberDisplay.setText("NONE");
+        beaconChooseFile.setOnAction(event -> chooseFolder());
+
+
+
+
+
+
+
         // failureColumn.setCellValueFactory(block -> block.getValue().);
 
+    }
+
+
+    private void uploadBeacon() {
+        //get the line and block
+        String lineSelect = pickLine.getValue();
+        String beacon = beaconInput.getText();
+        TrackLayoutInfo trackProperties = new TrackLayoutInfo();
+
+        //send the beacon to the track model
+        //currTrackModel.setBeacon(line, block, beacon);
+    }
+
+    private void updateTable() {
+        //get the line
+        String lineSelect = pickLine.getValue();
+        TrackLayoutInfo trackProperties = new TrackLayoutInfo();
+
+
+
+        //send the line to the track model
+        //currTrackModel.getLine(line);
     }
 
     private void murphyEnter() {

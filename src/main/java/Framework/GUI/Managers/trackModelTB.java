@@ -2,6 +2,7 @@ package Framework.GUI.Managers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 
 public class trackModelTB {
@@ -30,6 +31,14 @@ public class trackModelTB {
     private TableColumn tbSignalColumn;
     @FXML
     private TableColumn tbOccupiedColumn;
+
+    public void initialize() {
+        tbSectionsColumn.setCellValueFactory(new PropertyValueFactory<>("section"));
+        tbBlockColumn.setCellValueFactory(new PropertyValueFactory<>("block"));
+        tbSwitchColumn.setCellValueFactory(new PropertyValueFactory<>("switch"));
+        tbSignalColumn.setCellValueFactory(new PropertyValueFactory<>("signal"));
+        tbOccupiedColumn.setCellValueFactory(new PropertyValueFactory<>("occupied"));
+    }
 
 
 
