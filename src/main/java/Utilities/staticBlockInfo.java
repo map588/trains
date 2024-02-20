@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 
 public class staticBlockInfo {
     public IntegerProperty blockNumber;
+    public IntegerProperty switchedBlockNumber;
     public String section;
     public int blockLength;
     public int blockGrade;
@@ -28,6 +29,7 @@ public class staticBlockInfo {
         switchBlock2 = null;
         selectedSwitch = null;
         isSwitched = new SimpleBooleanProperty(false);
+        switchedBlockNumber = null;
     }
 
     // Constructor with parameters to set switch
@@ -38,15 +40,16 @@ public class staticBlockInfo {
         this.switchBlock2 = switchBlock2;
         selectedSwitch = new SimpleObjectProperty<>(switchBlock1);
         isSwitched = new SimpleBooleanProperty(false);
+        switchedBlockNumber = new SimpleIntegerProperty(switchBlock1.getStaticInfo().blockNumber.getValue());
         isSwitched.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-                System.out.println("SWITCHING");
                 if(newValue) {
                     selectedSwitch.set(switchBlock2);
                 } else {
                     selectedSwitch.set(switchBlock1);
                 }
+                switchedBlockNumber.set(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
             }
         });
     }
@@ -59,15 +62,16 @@ public class staticBlockInfo {
         this.switchBlock2 = switchBlock2;
         this.selectedSwitch = new SimpleObjectProperty<>(sselectedSwitch);
         isSwitched = new SimpleBooleanProperty(selectedSwitch.equals(switchBlock2));
+        switchedBlockNumber = new SimpleIntegerProperty(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
         isSwitched.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-                System.out.println("SWITCHING");
                 if(newValue) {
                     selectedSwitch.set(switchBlock2);
                 } else {
                     selectedSwitch.set(switchBlock1);
                 }
+                switchedBlockNumber.set(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
             }
         });
     }

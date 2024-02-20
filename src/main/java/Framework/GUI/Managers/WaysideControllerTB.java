@@ -40,7 +40,7 @@ public class WaysideControllerTB {
 
         tbSwitchTable.setEditable(true);
         tbSTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber().getValue()));
-        tbSTRight.setCellValueFactory(block -> block.getValue().getStaticInfo().selectedSwitch.getValue().getStaticInfo().getBlockNumber().asObject());
+        tbSTRight.setCellValueFactory(block -> block.getValue().getStaticInfo().switchedBlockNumber.asObject());
         tbSTEnable.setCellValueFactory(block -> block.getValue().getStaticInfo().isSwitched);
         tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
 

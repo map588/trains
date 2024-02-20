@@ -103,7 +103,7 @@ public class WaysideControllerManager {
 //        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
         switchTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber.getValue()));
-        switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().selectedSwitch.getValue().getStaticInfo().getBlockNumber().asObject());
+        switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().switchedBlockNumber.asObject());
         switchTableStateColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().isSwitched);
         switchTableStateColumn.setCellFactory(CheckBoxTableCell.forTableColumn(switchTableStateColumn));
         switchTableStateColumn.setEditable(false);
