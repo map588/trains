@@ -82,6 +82,11 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
+    public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
+
+    }
+
+    @Override
     public void CTCDisableBlock(int blockID) {
 
     }

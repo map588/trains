@@ -35,6 +35,9 @@ public interface WaysideController {
     // Adds a new track block under the wayside controller's control
     public void addBlock(BlockInfo block);
 
+    // Allows Track Model to set train occupancy for a specific block
+    public void trackModelSetOccupancy(int blockID, boolean isOccupied);
+
     // Allows CTC to disable a specific block, which does not allow a train to occupy the block
     public void CTCDisableBlock(int blockID);
 
