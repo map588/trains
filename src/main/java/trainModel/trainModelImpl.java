@@ -13,13 +13,6 @@ import java.util.List;
 import Utilities.Constants;
 
 public class trainModelImpl implements TrainModel, Notifications {
-    //Constant Variables
-    private final double maxSpeed = 19.44; // m/s
-    private final double maxPower = 120000; // W
-    private final double sBrakeAcceleration = 1.2; // m/s^2
-    private final double eBrakeAcceleration = 2.73; // m/s^2
-    private final double carWeightLoaded = 51437.37; // kg
-    private final double carWeightEmpty = 37103.86; // kg
 
     //Passed Variables
     private int authority;
