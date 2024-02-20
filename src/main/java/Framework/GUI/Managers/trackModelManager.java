@@ -1,7 +1,6 @@
 package Framework.GUI.Managers;
 
 import Utilities.TrackLayoutInfo;
-import Utilities.staticBlockInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,7 +14,6 @@ import trackModel.trackModelImpl;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.lang.String;
 
 
 public class trackModelManager {
@@ -45,8 +43,8 @@ public class trackModelManager {
     private Button murphyEnter;
 
     //track heater
-    @FXML
-    private Label statusLabel;
+//    @FXML
+//    private Label statusLabel;
     @FXML
     private TextField tempDisplay;
     @FXML
@@ -55,12 +53,12 @@ public class trackModelManager {
     //station signal switch
     @FXML
     private TextField stationDisplay;
-    @FXML
-    private TextField passEmbarkDisplay;
-    @FXML
-    private TextField passDisembarkDisplay;
-    @FXML
-    private TextField ticketSalesDisplay;
+//    @FXML
+//    private TextField passEmbarkDisplay;
+//    @FXML
+//    private TextField passDisembarkDisplay;
+//    @FXML
+//    private TextField ticketSalesDisplay;
 
     //beacon information
     @FXML
@@ -77,8 +75,8 @@ public class trackModelManager {
     //switch information
     @FXML
     private Label switchStateDisplay;
-    @FXML
-    private Label switchBlockNumberDisplay;
+//    @FXML
+//    private Label switchBlockNumberDisplay;
 
 
     //table
@@ -126,13 +124,13 @@ public class trackModelManager {
         murphyEnter.setOnAction(event -> murphyEnter());
         beaconUpload.setOnAction(event -> uploadBeacon());
         pickLine.setOnAction(event -> updateTable());
-        passEmbarkDisplay.setText("0");
-        passDisembarkDisplay.setText("0");
-        ticketSalesDisplay.setText("0");
+//        passEmbarkDisplay.setText("0");
+//        passDisembarkDisplay.setText("0");
+//        ticketSalesDisplay.setText("0");
         tempValueLabel.setText("26");
-        statusLabel.setText("ON");
+//        statusLabel.setText("ON");
         switchStateDisplay.setText("No Switch Present");
-        switchBlockNumberDisplay.setText("NONE");
+//        switchBlockNumberDisplay.setText("NONE");
         beaconChooseFile.setOnAction(event -> chooseFolder());
 
 
