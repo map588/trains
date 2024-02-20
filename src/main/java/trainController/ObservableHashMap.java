@@ -1,49 +1,39 @@
 package trainController;
 
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ObservableHashMap<K, V> extends HashMap<K, V> {
-    // Use a list to support multiple listeners
-    private List<ChangeListener<K>> changeListeners = new ArrayList<>();
+    private Set<ChangeListener<K>> listeners = new HashSet<>();
 
-    public ObservableHashMap() {
-        super();
+    public interface ChangeListener<K> {
+        void onChange(K key);
     }
 
-    // Method to add a change listener
     public void addChangeListener(ChangeListener<K> listener) {
-        changeListeners.add(listener);
+        listeners.add(listener);
     }
 
-    // Optionally, a method to remove a change listener
     public void removeChangeListener(ChangeListener<K> listener) {
-        changeListeners.remove(listener);
+        listeners.remove(listener);
     }
 
     @Override
     public V put(K key, V value) {
         V oldValue = super.put(key, value);
-        notifyChangeListeners(key);
+        notifyListeners(key);
         return oldValue;
     }
 
     @Override
     public V remove(Object key) {
         V oldValue = super.remove(key);
-        notifyChangeListeners((K) key);
+        notifyListeners((K) key);
         return oldValue;
     }
 
-    // Helper method to notify all registered listeners of a change
-    private void notifyChangeListeners(K key) {
-        for (ChangeListener<K> listener : changeListeners) {
-            listener.onChange(key);
-        }
-    }
-
-    public interface ChangeListener<K> {
-        void onChange(K key);
+    private void notifyListeners(K key) {
+        listeners.forEach(listener -> listener.onChange(key));
     }
 }
