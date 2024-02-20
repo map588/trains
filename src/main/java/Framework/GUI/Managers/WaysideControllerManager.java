@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
@@ -41,15 +42,13 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<BlockInfo,Boolean> blockTableCrossingColumn;
     @FXML
-    private TableView switchTable;
+    private TableView<BlockInfo> switchTable;
     @FXML
-    private TableColumn switchTableIDColumn;
+    private TableColumn<BlockInfo, Integer> switchTableIDColumn;
     @FXML
-    private TableColumn switchTableBlockInColumn;
+    private TableColumn<BlockInfo, Boolean> switchTableStateColumn;
     @FXML
-    private TableColumn switchTableStateColumn;
-    @FXML
-    private TableColumn switchTableBlockOutColumn;
+    private TableColumn<BlockInfo, Integer> switchTableBlockOutColumn;
     @FXML
     private CheckBox maintenanceModeCheckbox;
     @FXML
@@ -102,6 +101,12 @@ public class WaysideControllerManager {
 //        blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
 //        blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
 //        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
+
+        switchTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber.getValue()));
+        switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().selectedSwitch.getValue().getStaticInfo().getBlockNumber().asObject());
+        switchTableStateColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().isSwitched);
+        switchTableStateColumn.setCellFactory(CheckBoxTableCell.forTableColumn(switchTableStateColumn));
+        switchTableStateColumn.setEditable(false);
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
@@ -158,7 +163,6 @@ public class WaysideControllerManager {
         currentSubject.getController().addBlock(newBlock3);
 
         updateBlockList();
-        updateSwitchList();
     }
 
     /**
@@ -211,13 +215,19 @@ public class WaysideControllerManager {
         ObservableList<BlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
         blockTable.setItems(blocks);
         testBench.readBlockInfo(blocks);
+        updateSwitchList();
     }
 
     /**
      * Updates the switch list in the GUI with the information from the current wayside controller
      */
     private void updateSwitchList() {
-
+        ObservableList<BlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
+        for(BlockInfo item : blocks) {
+            if(item.getStaticInfo().isSwitch()) {
+                switchTable.getItems().add(item);
+            }
+        }
     }
 
     /**

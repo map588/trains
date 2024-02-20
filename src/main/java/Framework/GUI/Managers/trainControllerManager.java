@@ -77,7 +77,7 @@ public class trainControllerManager {
             }
         };
 
-        subjects.addChangeListener(listener);
+        //subjects.addChangeListener(listener);
         updateChoiceBoxItems();
     }
 
