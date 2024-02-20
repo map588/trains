@@ -2,11 +2,11 @@ package Common;
 
 public interface CTCOffice{
     TrainModel dispatch(int trainID, int blockID);
-    void resetDay();
-    void getTime();
+//    void resetDay();
+//    void getTime();
     void setManualMode();
     void setMaintenanceMode();
-    void setAuthority(int trainID, int authority);
+//    void setAuthority(int trainID, int authority);
     void setSuggestedSpeed(int trainID, int speed);
     void setSelectedTrain(int trainID);
     void setSchedule(int trainID, String schedule);

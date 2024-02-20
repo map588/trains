@@ -31,24 +31,31 @@ class CTCOfficeImpl implements CTCOffice {
         }
     }
 
-    void resetDay() {
-        // re-initializes the CTC such as a new day
+
+    public void setManualMode() {}
+
+    public void setMaintenanceMode() {}
+
+    public void setAuthority(int trainID, boolean line, int authority) {
     }
 
-    void getTime() {}
+    public void setSuggestedSpeed(int trainID, int speed) {}
 
-    void setManualMode() {}
+    public void setSelectedTrain(int trainID) {}
 
-    void setMaintenanceMode() {}
+    public void setSchedule(int trainID, String schedule) {}
 
-    void setAuthority(int trainID, boolean line, int authority) {
+    public void setOccupancy(int blockID, boolean occupied) {
+
     }
 
-    void setSuggestedSpeed(int trainID, int speed) {}
+    public void setLightState(int blockID, boolean lightState) {
 
-    void setSelectedTrain(int trainID) {}
+    }
 
-    void setSchedule(int trainID, String schedule) {}
+    public void setSwitchState(int switchID, boolean switchState) {
+
+    }
 
     public void setOccupancy(int blockID,boolean line, boolean occupied) {
         track.get(line).get(blockID).setOccupied(occupied);
