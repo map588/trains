@@ -2,13 +2,13 @@ package Framework.GUI.Managers;
 
 import javafx.beans.property.*;
 
-public class BlockInfoManager {
+public class CTCBlockInfoManager {
     private final SimpleIntegerProperty blockNumber;
     private final SimpleStringProperty occupationLight;
     private final SimpleStringProperty switchLightColor;
     private final SimpleStringProperty switchState;
 
-    public BlockInfoManager(int blockNumber, Boolean occupied, Boolean switchLightColor, Boolean switchState) {
+    public CTCBlockInfoManager(int blockNumber, Boolean occupied, Boolean switchLightColor, Boolean switchState) {
         this.blockNumber = new SimpleIntegerProperty(blockNumber);
         if (occupied) {
             this.occupationLight = new SimpleStringProperty("X");

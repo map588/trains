@@ -23,19 +23,19 @@ public class CTCOfficeManager {
 
 
     @FXML
-    private TableView<BlockInfoManager> blockTable;
+    private TableView<CTCBlockInfoManager> blockTable;
 
     @FXML
-    private TableColumn<BlockInfoManager, Number> blockNumberColumn;
+    private TableColumn<CTCBlockInfoManager, Number> blockNumberColumn;
 
     @FXML
-    private TableColumn<BlockInfoManager, String> occupationLightColumn;
+    private TableColumn<CTCBlockInfoManager, String> occupationLightColumn;
 
     @FXML
-    private TableColumn<BlockInfoManager, Boolean> switchLightColumn;
+    private TableColumn<CTCBlockInfoManager, Boolean> switchLightColumn;
 
     @FXML
-    private TableColumn<BlockInfoManager, Boolean> switchStateColumn;
+    private TableColumn<CTCBlockInfoManager, Boolean> switchStateColumn;
 
 
     @FXML
@@ -45,12 +45,12 @@ public class CTCOfficeManager {
         switchLightColumn.setCellValueFactory(new PropertyValueFactory<>("switchLightColor"));
         switchStateColumn.setCellValueFactory(new PropertyValueFactory<>("switchState"));
         blockTable.getItems().addAll(
-                new BlockInfoManager(1, true, red, straight),
-                new BlockInfoManager(2, false, green, diverging),
-                new BlockInfoManager(3, true, red, straight),
-                new BlockInfoManager(4, false, green, diverging),
-                new BlockInfoManager(5, true, red, straight),
-                new BlockInfoManager(6, false, green, diverging)
+                new CTCBlockInfoManager(1, true, red, straight),
+                new CTCBlockInfoManager(2, false, green, diverging),
+                new CTCBlockInfoManager(3, true, red, straight),
+                new CTCBlockInfoManager(4, false, green, diverging),
+                new CTCBlockInfoManager(5, true, red, straight),
+                new CTCBlockInfoManager(6, false, green, diverging)
         );
     }
 
