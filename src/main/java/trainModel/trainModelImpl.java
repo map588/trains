@@ -24,6 +24,10 @@ public class trainModelImpl implements TrainModel, Notifications {
     private double power;
     private boolean serviceBrake;
     private boolean emergencyBrake;
+    private double mass;
+
+    //physics variables (no setters or getters, only to be used within train model
+    private double brakeForce;
 
     //Murphy Variables
     private boolean brakeFailure;
@@ -39,6 +43,7 @@ public class trainModelImpl implements TrainModel, Notifications {
 
     private int numCars;
     private int numPassengers;
+    private int crewCount;
 
     private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
@@ -54,6 +59,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.power = 0;
         this.serviceBrake = false;
         this.emergencyBrake = false;
+        this.mass = Constants.EMPTY_TRAIN_MASS + (this.crewCount * Constants.PASSENGER_MASS);
 
         this.brakeFailure = false;
         this.powerFailure = false;
@@ -66,6 +72,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.rightDoors = false;
         this.numCars = 1;
         this.numPassengers = 1;
+        this.crewCount = 2;
 
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
@@ -94,7 +101,6 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.power=power;
         notifyChange("power", power);
     }
-
     //Murphy Setters
     public void setBrakeFailure(boolean failure) {
         this.brakeFailure = failure;
@@ -108,7 +114,6 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.signalFailure = failure;
         notifyChange("signalFailure", failure);
     }
-
     //NonVital Setters
     public void setNumCars(int numCars) {
         this.numCars = numCars;
@@ -117,6 +122,10 @@ public class trainModelImpl implements TrainModel, Notifications {
     public void setNumPassengers(int numPassengers) {
         this.numPassengers = numPassengers;
         notifyChange("numPassengers", numPassengers);
+    }
+    public void setCrewCount(int crewCount) {
+        this.crewCount = crewCount;
+        notifyChange("crewCount", crewCount);
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
@@ -191,12 +200,26 @@ public class trainModelImpl implements TrainModel, Notifications {
         return this.rightDoors;
     }
 
-    public void calculateSpeed() {
-        //Power = Force*velocity
-    }
-
-    public void calculateAcceleration() {
-        //Force = mass*acceleration
+    public void trainModelPhysics() {
+        //CALCULATE MASS
+        this.mass = Constants.EMPTY_TRAIN_MASS + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers));
+        if (this.mass >= Constants.LOADED_TRAIN_MASS) {
+            this.mass = Constants.LOADED_TRAIN_MASS;
+        }
+        //FAILURE STATES
+        if (powerFailure) {
+            this.power = 0;
+        }
+        if (brakeFailure) {
+            this.serviceBrake = false;
+        }
+        //BRAKE FORCES
+        if (this.serviceBrake && !this.emergencyBrake) {
+            this.brakeForce = Constants.SERVICE_BRAKE_FORCE;
+        }
+        if (this.emergencyBrake) {
+            this.brakeForce = Constants.EMERGENCY_BRAKE_FORCE;
+        }
     }
 
 }
