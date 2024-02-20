@@ -39,8 +39,7 @@ public class trainControllerManager {
 
     @FXML
     public void initialize() {
-        factory = new trainControllerSubjectFactory();
-
+        factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
         bindGauges();
         bindControls();
@@ -55,7 +54,7 @@ public class trainControllerManager {
     }
 
     private void setupMapChangeListener() {
-        factory.subjectMap.addChangeListener((Integer key) -> {
+        factory.getSubjects().addChangeListener((Integer key) -> {
 
             updateChoiceBoxItems();
         });
@@ -65,7 +64,7 @@ public class trainControllerManager {
     private void updateChoiceBoxItems() {
         Platform.runLater(() -> {
             trainController_trainNo_ChoiceBox.setItems(FXCollections.observableArrayList(
-                    new ArrayList<>(factory.subjectMap.keySet())));
+                    new ArrayList<>(factory.getSubjects().keySet())));
         });
     }
 
@@ -152,7 +151,7 @@ public class trainControllerManager {
     }
 
     private void changeTrainView(int trainID) {
-        currentSubject = factory.getSubject(trainID);
+        currentSubject = factory.getSubjects().get(trainID);
         if(currentSubject != null) {
             unbindControls();
             bindControls();
