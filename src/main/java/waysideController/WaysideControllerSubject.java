@@ -18,7 +18,7 @@ public class WaysideControllerSubject {
         activePLCColor = new SimpleObjectProperty<>(Color.GRAY);
 
         manualMode.addListener((observableValue, oldValue, newVal) -> {
-            controller.setManualModeNoUpdate(newVal);
+            this.controller.setManualModeNoUpdate(newVal);
             System.out.println("Setting manual mode to " + newVal);
         });
     }
@@ -31,5 +31,8 @@ public class WaysideControllerSubject {
     }
     public ObjectProperty<Paint> activePLCColorProperty() {
         return activePLCColor;
+    }
+    public WaysideController getController() {
+        return this.controller;
     }
 }

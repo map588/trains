@@ -23,6 +23,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import waysideController.WaysideControllerImpl;
+import waysideController.WaysideControllerSubject;
+import waysideController.WaysideControllerSubjectFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -81,8 +83,7 @@ public class WaysideControllerManager {
     @FXML
     private Label changeControllerLabel;
 
-    private WaysideController currentController = null;
-    private static final ObjectProperty<ObservableList<WaysideController>> controllerList = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
+    private WaysideControllerSubject currentSubject = null;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
     private WaysideControllerTB testBench;
 
@@ -111,7 +112,7 @@ public class WaysideControllerManager {
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
 
-        changeControllerComboBox.itemsProperty().bindBidirectional(controllerList);
+        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideControllerSubjectFactory.getControllerList());
         changeControllerComboBox.setCellFactory(listViews -> new ListCell<>() {
             @Override
             protected void updateItem(WaysideController item, boolean b) {
@@ -158,9 +159,9 @@ public class WaysideControllerManager {
         newBlock3.setLightOutState(0);
         newBlock3.setCrossingClosed(false);
         newBlock3.setTrackCircuitState(false);
-        currentController.addBlock(newBlock);
-        currentController.addBlock(newBlock2);
-        currentController.addBlock(newBlock3);
+        currentSubject.getController().addBlock(newBlock);
+        currentSubject.getController().addBlock(newBlock2);
+        currentSubject.getController().addBlock(newBlock3);
 
         updateBlockList();
         updateSwitchList();
@@ -200,7 +201,7 @@ public class WaysideControllerManager {
         File selectedFile = plcFileTable.getSelectionModel().getSelectedItem();
 
         if(selectedFile != null) {
-            currentController.loadPLC(selectedFile);
+            currentSubject.getController().loadPLC(selectedFile);
             System.out.println(selectedFile.getName());
             uploadProgressBar.setProgress(1.0);
         }
@@ -213,7 +214,7 @@ public class WaysideControllerManager {
      * Updates the block list in the GUI with the information from the current wayside controller
      */
     private void updateBlockList() {
-        ObservableList<BlockInfo> blocks = FXCollections.observableList(currentController.getBlockList());
+        ObservableList<BlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
         blockTable.setItems(blocks);
         testBench.readBlockInfo(blocks);
     }
@@ -229,8 +230,8 @@ public class WaysideControllerManager {
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
-        WaysideController newController = new WaysideControllerImpl(controllerList.get().size(), 0);
-        controllerList.get().add(newController);
+        WaysideController newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), 0);
+        WaysideControllerSubjectFactory.addController(newController);
         changeActiveController(newController);
     }
 
@@ -239,21 +240,21 @@ public class WaysideControllerManager {
      */
     private void changeActiveController(WaysideController controller) {
         // Unbind previous subject
-        if(currentController != null) {
-            manualModeCheckbox.selectedProperty().unbindBidirectional(currentController.getSubject().manualModeProperty());
-            plcCurrentFileLabel.textProperty().unbindBidirectional(currentController.getSubject().PLCNameProperty());
-            plcActiveIndicator.fillProperty().unbindBidirectional(currentController.getSubject().activePLCColorProperty());
+        if(currentSubject != null) {
+            manualModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.manualModeProperty());
+            plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.PLCNameProperty());
+            plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.activePLCColorProperty());
         }
 
         // Update controller
-        currentController = controller;
+        currentSubject = controller.getSubject();
         changeControllerLabel.setText("Wayside Controller #" + (controller.getID()+1));
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
 
         // Bind new subject
-        manualModeCheckbox.selectedProperty().bindBidirectional(currentController.getSubject().manualModeProperty());
-        plcCurrentFileLabel.textProperty().bindBidirectional(currentController.getSubject().PLCNameProperty());
-        plcActiveIndicator.fillProperty().bindBidirectional(currentController.getSubject().activePLCColorProperty());
+        manualModeCheckbox.selectedProperty().bindBidirectional(currentSubject.manualModeProperty());
+        plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.PLCNameProperty());
+        plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.activePLCColorProperty());
 
         updateBlockList();
         updateSwitchList();
