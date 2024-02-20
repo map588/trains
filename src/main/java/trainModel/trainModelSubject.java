@@ -10,7 +10,7 @@ import java.util.List;
 
 public class trainModelSubject implements AbstractSubject {
 
-    private IntegerProperty authority, numCars, numPassengers;
+    private IntegerProperty authority, numCars, numPassengers, crewCount;
     private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
 
     //Vital Variables
@@ -36,6 +36,7 @@ public class trainModelSubject implements AbstractSubject {
         this.rightDoors = new SimpleBooleanProperty(false);
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
+        this.crewCount = new SimpleIntegerProperty(0);
     }
 
     public trainModelSubject(trainModelImpl trainModel) {
@@ -58,6 +59,7 @@ public class trainModelSubject implements AbstractSubject {
         this.rightDoors = new SimpleBooleanProperty(false);
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
+        this.crewCount = new SimpleIntegerProperty(0);
 
         model.addChangeListener(((propertyName, newValue) -> {
             switch (propertyName) {
@@ -112,23 +114,11 @@ public class trainModelSubject implements AbstractSubject {
                 case "numPassengers":
                     numPassengers.set((int) newValue);
                     break;
+                case "crewCount":
+                    crewCount.set((int) newValue);
+                    break;
             }
         }));
-    }
-
-    public void updateProperty(BooleanProperty property, boolean newValue) {
-        if (property.get() != newValue)
-            property.set(newValue);
-    }
-
-    public void updateProperty(DoubleProperty property, double newValue) {
-        if (property.get() != newValue)
-            property.set(newValue);
-    }
-
-    public void updateProperty(IntegerProperty property, int newValue) {
-        if (property.get() != newValue)
-            property.set(newValue);
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {
@@ -181,6 +171,8 @@ public class trainModelSubject implements AbstractSubject {
                 return numCars;
             case "numPassengers":
                 return numPassengers;
+            case "crewCount":
+                return crewCount;
             default:
                 return null;
         }
