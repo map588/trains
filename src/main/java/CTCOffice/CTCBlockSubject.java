@@ -8,9 +8,9 @@ public class CTCBlockSubject implements AbstractSubject {
     private IntegerProperty blockID;
     private BooleanProperty line;
     private BooleanProperty occupied;
-    private BooleanProperty lightData;
-    private BooleanProperty switchData;
-    private BooleanProperty crossingData;
+    private BooleanProperty hasLight;
+    private BooleanProperty hasSwitch;
+    private BooleanProperty hasCrossing;
     private BooleanProperty lightState;
     private BooleanProperty switchState;
     private BooleanProperty crossingState;
@@ -21,9 +21,9 @@ public class CTCBlockSubject implements AbstractSubject {
         this.blockID = new SimpleIntegerProperty(this, "blockID", block.getBlockID());
         this.line = new SimpleBooleanProperty(this, "line", block.getLine());
         this.occupied = new SimpleBooleanProperty(this, "occupied", block.getOccupied());
-        this.lightData = new SimpleBooleanProperty(this, "lightData", block.getLightData());
-        this.switchData = new SimpleBooleanProperty(this, "switchData", block.getSwitchData());
-        this.crossingData = new SimpleBooleanProperty(this, "crossingData", block.getCrossingData());
+        this.hasLight = new SimpleBooleanProperty(this, "hasLight", block.getHasLight());
+        this.hasSwitch = new SimpleBooleanProperty(this, "hasSwitch", block.getHasSwitch());
+        this.hasCrossing = new SimpleBooleanProperty(this, "hasCrossing", block.getHasCrossing());
         this.lightState = new SimpleBooleanProperty(this, "lightState", block.getLightState());
         this.switchState = new SimpleBooleanProperty(this, "switchState", block.getSwitchState());
         this.crossingState = new SimpleBooleanProperty(this, "crossingState", block.getCrossingState());
@@ -35,9 +35,9 @@ public class CTCBlockSubject implements AbstractSubject {
         return switch (propertyName) {
             case "line" -> line;
             case "occupied" -> occupied;
-            case "lightData" -> lightData;
-            case "switchData" -> switchData;
-            case "crossingData" -> crossingData;
+            case "hasLight" -> hasLight;
+            case "hasSwitch" -> hasSwitch;
+            case "hasCrossing" -> hasCrossing;
             case "lightState" -> lightState;
             case "switchState" -> switchState;
             case "crossingState" -> crossingState;
@@ -68,9 +68,9 @@ public class CTCBlockSubject implements AbstractSubject {
         switch (propertyName) {
             case "line" -> updateProperty(line, newValue);
             case "occupied" -> updateProperty(occupied, newValue);
-            case "lightData" -> updateProperty(lightData, newValue);
-            case "switchData" -> updateProperty(switchData, newValue);
-            case "crossingData" -> updateProperty(crossingData, newValue);
+            case "hasLight" -> updateProperty(hasLight, newValue);
+            case "hasSwitch" -> updateProperty(hasSwitch, newValue);
+            case "hasCrossing" -> updateProperty(hasCrossing, newValue);
             case "lightState" -> updateProperty(lightState, newValue);
             case "switchState" -> updateProperty(switchState, newValue);
             case "crossingState" -> updateProperty(crossingState, newValue);

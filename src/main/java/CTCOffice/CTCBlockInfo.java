@@ -6,21 +6,21 @@ class CTCBlockInfo {
     private boolean line;
     private boolean occupied;
     private boolean hasLight;
-    private boolean switchData;
-    private boolean crossingData;
+    private boolean hasSwitch;
+    private boolean hasCrossing;
     private boolean lightState;
     private boolean switchState;
     private boolean crossingState;
     private int speedLimit;
     private int blockLength;
 
-    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean switchData, boolean crossingData, boolean lightState, boolean switchState, boolean crossingState, int speedLimit, int blockLength) {
+    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitch, boolean hasCrossing, boolean lightState, boolean switchState, boolean crossingState, int speedLimit, int blockLength) {
         this.blockID = blockID;
         this.line = line;
         this.occupied = occupied;
         this.hasLight = hasLight;
-        this.switchData = switchData;
-        this.crossingData = crossingData;
+        this.hasSwitch = hasSwitch;
+        this.hasCrossing = hasCrossing;
         this.lightState = lightState;
         this.switchState = switchState;
         this.crossingState = crossingState;
@@ -40,16 +40,16 @@ class CTCBlockInfo {
         this.occupied = occupied;
     }
 
-    void setLightData(boolean hasLight) {
+    void setHasLight(boolean hasLight) {
         this.hasLight = hasLight;
     }
 
-    void setSwitchData(boolean switchData) {
-        this.switchData = switchData;
+    void setHasSwitch(boolean hasSwitch) {
+        this.hasSwitch = hasSwitch;
     }
 
-    void setCrossingData(boolean crossingData) {
-        this.crossingData = crossingData;
+    void setHasCrossing(boolean hasCrossing) {
+        this.hasCrossing = hasCrossing;
     }
 
     void setLightState(boolean lightState) {
@@ -84,16 +84,16 @@ class CTCBlockInfo {
         return occupied;
     }
 
-    boolean getLightData() {
+    boolean getHasLight() {
         return hasLight;
     }
 
-    boolean getSwitchData() {
-        return switchData;
+    boolean getHasSwitch() {
+        return hasSwitch;
     }
 
-    boolean getCrossingData() {
-        return crossingData;
+    boolean getHasCrossing() {
+        return hasCrossing;
     }
 
     boolean getLightState() {
