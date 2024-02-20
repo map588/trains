@@ -2,19 +2,17 @@ package CTCOffice;
 
 import Common.CTCOffice;
 import Common.TrainModel;
-
-import trainModel.trainSubjectFactory;
 import trainModel.trainModelImpl;
+import trainModel.trainSubjectFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 
 class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     private trainSubjectFactory trainSubjectMaker;
-
+    private Map<Boolean, List<CTCBlockInfo>> track = new HashMap<Boolean, List<CTCBlockInfo>>();
 
 
 
@@ -43,7 +41,8 @@ class CTCOfficeImpl implements CTCOffice {
 
     void setMaintenanceMode() {}
 
-    void setAuthority(int trainID, int authority) {}
+    void setAuthority(int trainID, boolean line, int authority) {
+    }
 
     void setSuggestedSpeed(int trainID, int speed) {}
 
@@ -51,29 +50,33 @@ class CTCOfficeImpl implements CTCOffice {
 
     void setSchedule(int trainID, String schedule) {}
 
-    public void setOccupancy(int blockID, boolean occupied) {}
-
-    public void setLightState(int blockID, boolean lightState) {
-        // for setLightState, true is green, false is red
+    public void setOccupancy(int blockID,boolean line, boolean occupied) {
+        track.get(line).get(blockID).setOccupied(occupied);
     }
 
-    public void setSwitchState(int switchID, boolean switchState) {
-        // for setSwitchState, true is straight, false is diverging
+    public void setLightState(boolean line, int blockID, boolean lightState) {
+        track.get(line).get(blockID).setLightState(lightState);
+    }
+
+    public void setSwitchState(boolean line, int switchID, boolean switchState) {
+        track.get(line).get(switchID).setSwitchState(switchState);
     }
 
     public void getMode() {}
 
-    public void getOccupancy(int blockID) {}
+    public boolean getOccupancy(boolean line, int blockID) {
+        return track.get(line).get(blockID).getOccupied();
+    }
 
-    public void getSwitchState(int switchID) {}
+    public boolean getSwitchState(boolean line, int switchID) {
+        return track.get(line).get(switchID).getSwitchState();
+    }
 
-    public void getLightState(int blockID) {}
+    public boolean getLightState(boolean line, int blockID) {
+        return track.get(line).get(blockID).getLightState();
+    }
 
-    public void setTicketSales(int ticketSales) {}
-
-    public void setTime(int time) {}
-
-
+    public void setTicketSales(boolean ticketSales) {}
 
 }
 

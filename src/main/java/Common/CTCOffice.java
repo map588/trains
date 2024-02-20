@@ -1,6 +1,6 @@
 package Common;
 
-public interface CTCOffice{/*
+public interface CTCOffice{
     TrainModel dispatch(int trainID, int blockID);
     void resetDay();
     void getTime();
@@ -13,10 +13,10 @@ public interface CTCOffice{/*
     void setOccupancy(int blockID, boolean occupied);
     void setLightState(int blockID, boolean lightState);
     void setSwitchState(int switchID, boolean switchState);
-    void getOccupancy(int blockID);
-    void getLightState(int blockID);
-    void getSwitchState(int switchID);
+    boolean getOccupancy(boolean line, int blockID);
+    boolean getSwitchState(boolean line, int switchID);
+    boolean getLightState(boolean line, int blockID);
     void getMode();
-    void setTicketSales(int ticketSales);
-    void setTime(int time);*/
+//    void setTicketSales(int ticketSales);
+//    void setTime(int time);
 }
