@@ -3,10 +3,8 @@ package Framework.GUI.Managers;
 import Common.WaysideController;
 import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,13 +12,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import waysideController.WaysideControllerImpl;
 import waysideController.WaysideControllerSubject;
@@ -29,7 +24,6 @@ import waysideController.WaysideControllerSubjectFactory;
 import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class WaysideControllerManager {
@@ -57,7 +51,7 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn switchTableBlockOutColumn;
     @FXML
-    private CheckBox manualModeCheckbox;
+    private CheckBox maintenanceModeCheckbox;
     @FXML
     private TextField plcFolderTextField;
     @FXML
@@ -241,7 +235,7 @@ public class WaysideControllerManager {
     private void changeActiveController(WaysideController controller) {
         // Unbind previous subject
         if(currentSubject != null) {
-            manualModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.manualModeProperty());
+            maintenanceModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.maintenanceModeProperty());
             plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.PLCNameProperty());
             plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.activePLCColorProperty());
         }
@@ -252,7 +246,7 @@ public class WaysideControllerManager {
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
 
         // Bind new subject
-        manualModeCheckbox.selectedProperty().bindBidirectional(currentSubject.manualModeProperty());
+        maintenanceModeCheckbox.selectedProperty().bindBidirectional(currentSubject.maintenanceModeProperty());
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.PLCNameProperty());
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.activePLCColorProperty());
 

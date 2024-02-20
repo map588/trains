@@ -19,8 +19,8 @@ public class WaysideControllerImpl implements WaysideController {
 
     private final int trackLine;
 
-    // Whether the wayside controller is in manual mode
-    private boolean manualMode = false;
+    // Whether the wayside controller is in maintenance mode
+    private boolean maintenanceMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
     private final List<BlockInfo> trackList = new ArrayList<>();
@@ -54,20 +54,20 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
-    public boolean isManualMode() {
-        return this.manualMode;
+    public boolean isMaintenanceMode() {
+        return this.maintenanceMode;
     }
 
     @Override
-    public void setManualMode(boolean manualMode) {
-        this.manualMode = manualMode;
-        subject.manualModeProperty().set(manualMode);
+    public void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
+        subject.maintenanceModeProperty().set(maintenanceMode);
         updateActivePLCProp();
     }
 
     @Override
-    public void setManualModeNoUpdate(boolean manualMode) {
-        this.manualMode = manualMode;
+    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
         updateActivePLCProp();
     }
 
@@ -82,17 +82,37 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
-    public void disableBlock(int blockID) {
+    public void CTCDisableBlock(int blockID) {
 
     }
 
     @Override
-    public void enableBlock(int blockID) {
+    public void CTCEnableBlock(int blockID) {
 
     }
 
     @Override
-    public void enableAllBlocks() {
+    public void CTCEnableAllBlocks() {
+
+    }
+
+    @Override
+    public void CTCRequestSwitchState(int blockID, boolean switchState) {
+
+    }
+
+    @Override
+    public void maintenanceSetSwitch(int blockID, boolean switchState) {
+
+    }
+
+    @Override
+    public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
+
+    }
+
+    @Override
+    public void maintenanceSetCrossing(int blockID, boolean crossingState) {
 
     }
 
@@ -102,7 +122,7 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     private void updateActivePLCProp() {
-        if(!manualMode && PLC != null)
+        if(!maintenanceMode && PLC != null)
             subject.activePLCColorProperty().set(Color.BLUE);
         else
             subject.activePLCColorProperty().set(Color.GRAY);
