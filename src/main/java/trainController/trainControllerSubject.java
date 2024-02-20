@@ -105,7 +105,7 @@ public class trainControllerSubject implements AbstractSubject {
             System.err.println("Mismatch in property type and value type for " + property.getName());
         }
 
-        System.out.println("Property " + property.getName() + " updated to " + newValue + " in trainControllerSubject");
+        System.out.println("Property " + property.getName() + " updated to " + newValue + " in Subject");
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {

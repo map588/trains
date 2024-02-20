@@ -40,7 +40,6 @@ public class trainControllerManager {
     @FXML
     public void initialize() {
         factory = new trainControllerSubjectFactory();
-        createTrainController(0);
 
         setupMapChangeListener();
         bindGauges();
@@ -68,10 +67,6 @@ public class trainControllerManager {
             trainController_trainNo_ChoiceBox.setItems(FXCollections.observableArrayList(
                     new ArrayList<>(factory.subjectMap.keySet())));
         });
-    }
-
-    private void createTrainController(int trainID) {
-        currentSubject = factory.getSubject(trainID);
     }
 
     private void bindGauges() {
