@@ -3,9 +3,14 @@ package Utilities;
 public class Constants {
 
     // Constants for representing states on the track
+    /**
+     * SWITCH_MAIN represents the main line being used or lower block number
+     */
     final public static boolean SWITCH_MAIN = false;
+    /**
+     * SWITCH_ALT represents the alternate line being used or higher block number
+     */
     final public static boolean SWITCH_ALT = true;
-
     final public static boolean LIGHT_RED = false;
     final public static boolean LIGHT_GREEN = true;
 
