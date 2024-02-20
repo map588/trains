@@ -73,6 +73,9 @@ public class trackModelManager {
     private ComboBox<String> pickLine;
     @FXML
     private Button beaconChooseFile;
+    @FXML
+    private Button viewInfoBeacon;
+
 
     //switch information
     @FXML
@@ -105,9 +108,11 @@ public class trackModelManager {
     @FXML
     private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
 
+    //current layout
+    TrackLayoutInfo trackProperties = new TrackLayoutInfo();
 
     // potential variables to assist with control
-    // private trackModelImpl currTrackModel = null;
+    private trackModelImpl currTrackModel = null;
 
 
     public void initialize(){
@@ -134,15 +139,21 @@ public class trackModelManager {
         switchStateDisplay.setText("No Switch Present");
         switchBlockNumberDisplay.setText("NONE");
         beaconChooseFile.setOnAction(event -> chooseFolder());
+        lineTable.setItems(currTrackModel.getTrackInfo());
 
 
 
 
+        //viewInfoBeacon.setOnAction(event -> getBeaconInfo());
+        //initialize table
+        //sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
+        //failureColumn.setCellValueFactory(block -> block.getValue().);
 
+    }
 
-
-        // failureColumn.setCellValueFactory(block -> block.getValue().);
-
+    private String getBeaconInfo() {
+        // read in file or set text
+        return null;
     }
 
 
@@ -172,7 +183,6 @@ public class trackModelManager {
         String lineSelect = murphyLine.getValue();
         String blockSelect = murphyBlock.getValue();
         String failure = chooseFailureMode.getValue();
-        TrackLayoutInfo trackProperties = new TrackLayoutInfo();
 
         if(chooseFailureMode.getValue().equals("Fix Track Failure")){
             //set failure column in table at block and line to false
@@ -193,15 +203,9 @@ public class trackModelManager {
     private void addLineName(String text) {
         pickLine.getItems().add(text);
         murphyLine.getItems().add(text);
+        currTrackModel.setLine(text);
     }
     private ArrayList<String> csvParser(File file) {
-
-        //parse the csv file
-        //return the data
-        //if there is an error, return null
-
-
-
         return null;
     }
 
@@ -212,11 +216,6 @@ public class trackModelManager {
         File file = new File(trackFilePath.getText());
         ArrayList<String> csvData = csvParser(file);
 
-        //create a new track model
-        trackModelImpl currTrackModel = new trackModelImpl(csvData);
-
-        //populate the table
-        lineTable.setItems(currTrackModel.getTrackInfo());
     }
 
     //user input for track layout

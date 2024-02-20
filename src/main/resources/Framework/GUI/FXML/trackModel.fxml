@@ -10,7 +10,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -100,22 +99,26 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="92.0" prefWidth="246.0">
                                                                     <children>
-                                                                        <ToggleButton fx:id="trackHeaterIndicator" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" text="ON" textFill="#18b200" />
-                                                                        <Label fx:id="tempLabel" layoutX="138.0" layoutY="17.0" text="Outside Temp:">
+                                                                        <Label fx:id="tempLabel" layoutX="239.0" layoutY="17.0" text="Outside Temp:">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <Label fx:id="degF" layoutX="323.0" layoutY="17.0" prefHeight="18.0" prefWidth="47.0" text="º F">
+                                                                        <Label fx:id="degF" layoutX="424.0" layoutY="17.0" prefHeight="18.0" prefWidth="47.0" text="º F">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <Label fx:id="tempValueLabel" layoutX="279.0" layoutY="17.0" text="26">
+                                                                        <Label fx:id="tempValueLabel" layoutX="380.0" layoutY="17.0" text="26">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
+                                                      <Label fx:id="statusLabel" layoutX="14.0" layoutY="17.0" text="Status - ON">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
                                                                     </children>
                                                                 </AnchorPane>
                                                             </content>
@@ -197,7 +200,7 @@
                                                                                         </AnchorPane>
                                                                                     </content>
                                                                                 </Tab>
-                                                                                <Tab fx:id="signalTab" text="SIGNAL">
+                                                                                <Tab fx:id="signalTab" text="SIGNAL &amp; CROSSINGS">
                                                                                     <content>
                                                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                                             <children>
@@ -213,6 +216,16 @@
                                                                                                 </Label>
                                                                                                 <Label fx:id="signalBlockNumberDisplay" layoutX="252.0" layoutY="44.0" text="#'s" />
                                                                                                 <Label fx:id="signalStateDisplay" layoutX="252.0" layoutY="95.0" text="Color" />
+                                                                        <Label fx:id="statusLabel1" layoutX="359.0" layoutY="33.0" text="Crossing ? ">
+                                                                           <font>
+                                                                              <Font size="18.0" />
+                                                                           </font>
+                                                                        </Label>
+                                                                        <Label fx:id="crossingLabel" layoutX="375.0" layoutY="67.0" text="FALSE">
+                                                                           <font>
+                                                                              <Font size="18.0" />
+                                                                           </font>
+                                                                        </Label>
                                                                                             </children>
                                                                                         </AnchorPane>
                                                                                     </content>
@@ -230,7 +243,7 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="471.0">
                                                                     <children>
-                                                                        <Label fx:id="beaconInfoLabel" layoutX="26.0" layoutY="19.0" text="Upload Beacon Information">
+                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Select Block to Upload Beacon Information">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
@@ -243,7 +256,7 @@
                                                                             </font>
                                                                         </Label>
                                                                         <Button fx:id="beaconChooseFile" layoutX="336.0" layoutY="48.0" minHeight="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" text="Chose File" />
-                                                                        <Button fx:id="beaconUpload1" layoutX="358.0" layoutY="82.0" mnemonicParsing="false" text="View Info" />
+                                                                        <Button fx:id="viewInfoBeacon" layoutX="358.0" layoutY="82.0" mnemonicParsing="false" text="View Info" />
                                                                         <TextField fx:id="beaconTextInput" layoutX="86.0" layoutY="82.0" prefHeight="33.0" prefWidth="226.0" promptText="(128 character MAX)" />
                                                                         <Label fx:id="beaconTextLabel" layoutX="11.0" layoutY="86.0" text="Text :">
                                                                             <font>

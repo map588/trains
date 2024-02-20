@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class trackModelImpl implements TrackModel {
     private HashMap<Integer,Integer> trainAuthorities;
     private HashMap<Integer,Integer> trainCommandSpeeds;
-    private int line;
+    private ArrayList<String> line;
     private boolean blockOccupied;
     private boolean lightState;
     private boolean switchState;
@@ -25,7 +25,7 @@ public class trackModelImpl implements TrackModel {
     public trackModelImpl(ArrayList<String> csvData) {
         this.trainAuthorities = new HashMap<>();
         this.trainCommandSpeeds = new HashMap<>();
-        this.line = 0;
+        this.line = null;
         this.blockOccupied = false;
     }
     public int getAuthority(int trainID) {
@@ -64,8 +64,9 @@ public class trackModelImpl implements TrackModel {
         return this.blockOccupied;
     }
     public void setBlockOccupied(boolean state) { this.blockOccupied = state; }
-    public void setLine(int line) { this.line = line; }
-    public int getLine() { return this.line; }
+    public void setLine(String line) { this.line.add(line); }
+    public ArrayList<String> getLines() {return this.line;}
+    public String getLine(int lineNumber) { return this.line.get(lineNumber); }
 
 
 
