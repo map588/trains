@@ -159,7 +159,6 @@ public class trackModelManager {
         //get the line and block
         String lineSelect = pickLine.getValue();
         String beacon = beaconInput.getText();
-        TrackLayoutInfo trackProperties = new TrackLayoutInfo();
 
         //send the beacon to the track model
         //currTrackModel.setBeacon(line, block, beacon);
@@ -168,10 +167,6 @@ public class trackModelManager {
     private void updateTable() {
         //get the line
         String lineSelect = pickLine.getValue();
-        TrackLayoutInfo trackProperties = new TrackLayoutInfo();
-
-
-
         //send the line to the track model
         //currTrackModel.getLine(line);
     }
