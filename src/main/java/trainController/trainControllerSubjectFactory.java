@@ -2,7 +2,7 @@ package trainController;
 
 import Framework.SubjectFactory;
 
-class trainControllerSubjectFactory extends SubjectFactory<trainControllerSubject> {
+public class trainControllerSubjectFactory extends SubjectFactory<trainControllerSubject> {
 
     // Singleton
     private static final trainControllerSubjectFactory INSTANCE = new trainControllerSubjectFactory();
