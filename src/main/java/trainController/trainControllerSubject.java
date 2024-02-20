@@ -19,27 +19,29 @@ public class trainControllerSubject implements AbstractSubject {
     private boolean isGuiUpdate = false;
 
     public trainControllerSubject() {
-        this.authority = new SimpleIntegerProperty(this, "authority");
-        this.trainID = new SimpleIntegerProperty(this, "trainID");
-        this.blocksToNextStation = new SimpleIntegerProperty(this, "blocksToNextStation");
-        this.commandSpeed = new SimpleDoubleProperty(this, "commandSpeed");
-        this.currentSpeed = new SimpleDoubleProperty(this, "currentSpeed");
-        this.overrideSpeed = new SimpleDoubleProperty(this, "overrideSpeed");
-        this.maxSpeed = new SimpleDoubleProperty(this, "maxSpeed");
-        this.Ki = new SimpleDoubleProperty(this, "Ki");
-        this.Kp = new SimpleDoubleProperty(this, "Kp");
-        this.power = new SimpleDoubleProperty(this, "power");
-        this.serviceBrake = new SimpleBooleanProperty(this, "serviceBrake");
-        this.emergencyBrake = new SimpleBooleanProperty(this, "emergencyBrake");
-        this.automaticMode = new SimpleBooleanProperty(this, "automaticMode");
-        this.intLights = new SimpleBooleanProperty(this, "intLights");
-        this.extLights = new SimpleBooleanProperty(this, "extLights");
-        this.leftDoors = new SimpleBooleanProperty(this, "leftDoors");
-        this.rightDoors = new SimpleBooleanProperty(this, "rightDoors");
-        this.announcements = new SimpleBooleanProperty(this, "announcements");
-        this.signalFailure = new SimpleBooleanProperty(this, "signalFailure");
-        this.brakeFailure = new SimpleBooleanProperty(this, "brakeFailure");
-        this.powerFailure = new SimpleBooleanProperty(this, "powerFailure");
+        this.authority = new SimpleIntegerProperty(this, "authority",0);
+        this.trainID = new SimpleIntegerProperty(this, "trainID",0);
+        this.blocksToNextStation = new SimpleIntegerProperty(this, "blocksToNextStation",0);
+        this.commandSpeed = new SimpleDoubleProperty(this, "commandSpeed",0);
+        this.currentSpeed = new SimpleDoubleProperty(this, "currentSpeed",0);
+        this.overrideSpeed = new SimpleDoubleProperty(this, "overrideSpeed",0);
+        this.maxSpeed = new SimpleDoubleProperty(this, "maxSpeed",0);
+        this.Ki = new SimpleDoubleProperty(this, "Ki",0);
+        this.Kp = new SimpleDoubleProperty(this, "Kp",0);
+        this.power = new SimpleDoubleProperty(this, "power",0);
+        this.serviceBrake = new SimpleBooleanProperty(this, "serviceBrake",false);
+        this.emergencyBrake = new SimpleBooleanProperty(this, "emergencyBrake",false);
+        this.automaticMode = new SimpleBooleanProperty(this, "automaticMode",false);
+        this.intLights = new SimpleBooleanProperty(this, "intLights",false);
+        this.extLights = new SimpleBooleanProperty(this, "extLights",false);
+        this.leftDoors = new SimpleBooleanProperty(this, "leftDoors",false);
+        this.rightDoors = new SimpleBooleanProperty(this, "rightDoors",false);
+        this.announcements = new SimpleBooleanProperty(this, "announcements",false);
+        this.signalFailure = new SimpleBooleanProperty(this, "signalFailure",false);
+        this.brakeFailure = new SimpleBooleanProperty(this, "brakeFailure",false);
+        this.powerFailure = new SimpleBooleanProperty(this, "powerFailure",false);
+        this.temperature = new SimpleDoubleProperty(this, "temperature",0);
+        trainControllerSubjectFactory.getInstance().registerSubject(0, this);
     }
 
     public trainControllerSubject(TrainController controller) {

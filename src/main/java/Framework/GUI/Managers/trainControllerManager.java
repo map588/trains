@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import trainController.trainControllerImpl;
 import trainController.trainControllerSubjectFactory;
 import trainController.trainControllerSubject;
 
@@ -39,8 +40,10 @@ public class trainControllerManager {
 
     @FXML
     public void initialize() {
+        trainControllerImpl trainController = new trainControllerImpl(0);
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
+        currentSubject = factory.getSubjects().get(0);
         bindGauges();
         bindControls();
         bindIndicators();
