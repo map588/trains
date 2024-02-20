@@ -18,7 +18,7 @@ public class trainModelManager {
     @FXML
     public ToggleButton brakeFailureBtn, powerFailureBtn, signalFailureBtn;
     @FXML
-    public TableView passengerInfoTbl, getTrainInfoTbl;
+    public TableView passengerInfoTbl, trainInfoTbl;
     @FXML
     public TableColumn passengerInfoClm, passengerInfoNum, trainInfoNum, trainInfoClm;
     @FXML
