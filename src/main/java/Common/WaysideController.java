@@ -32,8 +32,13 @@ public interface WaysideController {
     // Adds a new track block under the wayside controller's control
     public void addBlock(BlockInfo block);
 
+    // Allows CTC to disable a specific block, which does not allow a train to occupy the block
     public void disableBlock(int blockID);
+
+    // Allows CTC to enable a specific block that was previously disabled
     public void enableBlock(int blockID);
+
+    // Allows CTC to enable all blocks that were previously disabled
     public void enableAllBlocks();
 
     // Returns the ID of the controller
