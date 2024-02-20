@@ -1,7 +1,9 @@
 package Framework.GUI.Managers;
 
-
 import CTCOffice.CTCBlockSubject;
+import CTCOffice.CTCBlockSubjectFactory;
+import CTCOffice.CTCOfficeImpl;
+import Common.CTCOffice;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.VBox;
+
+import java.util.Collection;
 
 
 public class CTCOfficeManager {
@@ -35,15 +39,19 @@ public class CTCOfficeManager {
 
     @FXML
     private TableColumn<CTCBlockSubject, Boolean> switchStateColumn;
-
+    CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
     @FXML
     public void initialize() {
+        CTCOffice one = new CTCOfficeImpl();
+
         blockTable.setEditable(true);
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
-        
 
+        Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
+
+        blockTable.getItems().addAll(blockList);
 
 
     }
