@@ -26,6 +26,9 @@ public interface WaysideController {
     // Sets whether the wayside controller is in manual mode
     public void setManualMode(boolean manualMode);
 
+    // Sets whether the wayside controller is in manual mode without updating the property
+    public void setManualModeNoUpdate(boolean manualMode);
+
     // Returns the list of block IDs under the wayside controller's control
     public List<BlockInfo> getBlockList();
 

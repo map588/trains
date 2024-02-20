@@ -39,12 +39,6 @@ public class WaysideControllerImpl implements WaysideController {
         this.id = id;
         this.trackLine = trackLine;
         subject = new WaysideControllerSubject(this);
-
-        subject.manualModeProperty().addListener((observableValue, oldValue, newVal) -> {
-            manualMode = newVal;
-            updateActivePLCProp();
-            System.out.println("Setting manual mode to " + newVal);
-        });
     }
 
     @Override
@@ -68,6 +62,12 @@ public class WaysideControllerImpl implements WaysideController {
     public void setManualMode(boolean manualMode) {
         this.manualMode = manualMode;
         subject.manualModeProperty().set(manualMode);
+        updateActivePLCProp();
+    }
+
+    @Override
+    public void setManualModeNoUpdate(boolean manualMode) {
+        this.manualMode = manualMode;
         updateActivePLCProp();
     }
 
