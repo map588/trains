@@ -44,12 +44,7 @@ public class staticBlockInfo {
         isSwitched.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-                if(newValue) {
-                    selectedSwitch.set(switchBlock2);
-                } else {
-                    selectedSwitch.set(switchBlock1);
-                }
-                switchedBlockNumber.set(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
+                engageSwitch(newValue);
             }
         });
     }
@@ -66,12 +61,7 @@ public class staticBlockInfo {
         isSwitched.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-                if(newValue) {
-                    selectedSwitch.set(switchBlock2);
-                } else {
-                    selectedSwitch.set(switchBlock1);
-                }
-                switchedBlockNumber.set(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
+                engageSwitch(newValue);
             }
         });
     }
@@ -83,5 +73,18 @@ public class staticBlockInfo {
 
     public IntegerProperty getBlockNumber() {
         return blockNumber;
+    }
+
+    /**
+     * Engage the switch
+     * @param engaged Whether the switch is engaged (True - Block 2, False - Block 1)
+     */
+    public void engageSwitch(boolean engaged) {
+        if(engaged) {
+            selectedSwitch.set(switchBlock2);
+        } else {
+            selectedSwitch.set(switchBlock1);
+        }
+        switchedBlockNumber.set(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
     }
 }
