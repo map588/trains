@@ -2,9 +2,11 @@ package Framework.GUI.Managers;
 
 import Common.TrainController;
 import eu.hansolo.medusa.Gauge;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -12,6 +14,7 @@ import javafx.scene.shape.Circle;
 import trainController.trainControllerSubjectFactory;
 import trainController.trainControllerSubject;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class trainControllerManager {
@@ -39,6 +42,7 @@ public class trainControllerManager {
         factory = new trainControllerSubjectFactory();
         createTrainController(0);
 
+        setupMapChangeListener();
         bindGauges();
         bindControls();
         bindIndicators();
@@ -49,6 +53,21 @@ public class trainControllerManager {
             }
         });
 
+    }
+
+    private void setupMapChangeListener() {
+        factory.subjectMap.addChangeListener((Integer key) -> {
+
+            updateChoiceBoxItems();
+        });
+        updateChoiceBoxItems();
+    }
+
+    private void updateChoiceBoxItems() {
+        Platform.runLater(() -> {
+            trainController_trainNo_ChoiceBox.setItems(FXCollections.observableArrayList(
+                    new ArrayList<>(factory.subjectMap.keySet())));
+        });
     }
 
     private void createTrainController(int trainID) {
@@ -110,12 +129,17 @@ public class trainControllerManager {
     }
 
     private void bindTextField(TextField textField, Consumer<Double> consumer) {
-        textField.textProperty().addListener((obs, oldSelection, newSelection) -> consumer.accept(Double.parseDouble(newSelection)));
+        textField.textProperty().addListener((obs, oldSelection, newSelection) -> {
+            try{
+                double value = Double.parseDouble(newSelection);
+                consumer.accept(value);
+            } catch (NumberFormatException e) {
+                consumer.accept(Double.parseDouble(oldSelection));
+            }
+        });
     }
 
-    public synchronized void addTrain(TrainController controller) {
-        factory.addSubject(controller.getID(), controller.getSubject());
-
+    public synchronized void addTrainToList(TrainController controller) {
         trainController_trainNo_ChoiceBox.getItems().add(controller.getID());
     }
 
