@@ -11,6 +11,7 @@ class CTCSwitchInfo {
         this.divergingBlockOneID = divergingBlockOneID;
         this.divergingBlockTwoID = divergingBlockTwoID;
         this.switchState = switchState;
+        setSwitchState(switchState);
     }
     void setSwitchState(boolean state) {
         this.switchState = state;

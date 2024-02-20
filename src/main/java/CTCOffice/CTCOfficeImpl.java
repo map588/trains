@@ -36,6 +36,10 @@ public class CTCOfficeImpl implements CTCOffice {
         CTCBlockInfo block13 = new CTCBlockInfo(13, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block14 = new CTCBlockInfo(14, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block15 = new CTCBlockInfo(15, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCSwitchInfo switch1 = new CTCSwitchInfo(5, 6, 11, false);
+
+        Map<Integer, CTCSwitchInfo> switches = new HashMap<Integer, CTCSwitchInfo>();
+        switches.put(5, switch1);
         ArrayList<CTCBlockInfo> line1 = new ArrayList<>() {{
             add(block0);add(block1);add(block2);add(block3);add(block4);add(block5);add(block6);add(block7);add(block8);add(block9);add(block10);add(block11);add(block12);add(block13);add(block14);add(block15);
         }};
