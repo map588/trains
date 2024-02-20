@@ -1,34 +1,29 @@
 package trainController;
 
-import Framework.SubjectFactory;
+public class trainControllerSubjectFactory {
 
-import java.util.HashMap;
+    private static final trainControllerSubjectFactory INSTANCE = new trainControllerSubjectFactory();
+    private ObservableHashMap<Integer, trainControllerSubject> subjects = new ObservableHashMap<>();
 
-public class trainControllerSubjectFactory implements SubjectFactory<trainControllerSubject> {
+    private trainControllerSubjectFactory() {}
 
-
-    public ObservableHashMap<Integer, trainControllerSubject> subjectMap;
-
-    public trainControllerSubjectFactory() {
-        subjectMap = new ObservableHashMap<>((key) -> {
-                System.out.println("subjectMap has changed. Key: " + key);
-        });
+    public static trainControllerSubjectFactory getInstance() {
+        return INSTANCE;
     }
 
-    public trainControllerSubject getSubject(int ID) {
-        if(subjectMap.containsKey(ID)) {
-            return subjectMap.get(ID);
-        }
-        else {
-            throw new IllegalArgumentException("Subject not found");
-        }
-    }//subject may or may not be deallocated
+    public ObservableHashMap<Integer, trainControllerSubject> getSubjects() {
+        return subjects;
+    }
+
     public void deleteSubject(int ID) {
-        subjectMap.remove(ID);
+        if(subjects.containsKey(ID)) {
+            subjects.remove(ID);
+        } else {
+            System.out.println("Attempted to delete a non-existent subject with ID: " + ID);
+        }
     }
 
-    public int getNumSubjects() {
-        return subjectMap.size();
+    public void registerSubject(int ID, trainControllerSubject subject){
+        subjects.put(ID, subject);
     }
-
 }
