@@ -16,7 +16,7 @@ public class CTCOfficeImpl implements CTCOffice {
     //private trainSubjectFactory trainSubjectMaker;
 
     private Map<Boolean, ArrayList<CTCBlockInfo>> track = new HashMap<Boolean, ArrayList<CTCBlockInfo>>();
-
+    private Map<Boolean ,Map<Integer, CTCSwitchInfo>> switches = new HashMap<Boolean, Map<Integer, CTCSwitchInfo>>();
 
 
     public CTCOfficeImpl() {
@@ -38,8 +38,11 @@ public class CTCOfficeImpl implements CTCOffice {
         CTCBlockInfo block15 = new CTCBlockInfo(15, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCSwitchInfo switch1 = new CTCSwitchInfo(5, 6, 11, false);
 
-        Map<Integer, CTCSwitchInfo> switches = new HashMap<Integer, CTCSwitchInfo>();
-        switches.put(5, switch1);
+
+        switches.put(false, new HashMap<Integer, CTCSwitchInfo>() {{
+            put(1, switch1);
+        }});
+
         ArrayList<CTCBlockInfo> line1 = new ArrayList<>() {{
             add(block0);add(block1);add(block2);add(block3);add(block4);add(block5);add(block6);add(block7);add(block8);add(block9);add(block10);add(block11);add(block12);add(block13);add(block14);add(block15);
         }};
@@ -57,20 +60,26 @@ public class CTCOfficeImpl implements CTCOffice {
             return newTrain;
         }
     }
+//**********************************************************************************************************************************************
+    public void setManualMode() {
 
-
-    public void setManualMode() {}
-
-    public void setMaintenanceMode() {}
-
-    public void setAuthority(int trainID, boolean line, int authority) {
     }
 
-    public void setSuggestedSpeed(int trainID, int speed) {}
+    public void setMaintenanceMode() {
 
-    public void setSelectedTrain(int trainID) {}
+    }
 
-    public void setSchedule(int trainID, String schedule) {}
+    public void setSuggestedSpeed(int trainID, int speed) {
+
+    }
+
+    public void setSelectedTrain(int trainID) {
+
+    }
+
+    public void setSchedule(int trainID, String schedule) {
+
+    }
 
     public void setOccupancy(int blockID, boolean occupied) {
 
@@ -84,6 +93,27 @@ public class CTCOfficeImpl implements CTCOffice {
 
     }
 
+    public boolean getOccupancy(boolean line, int blockID) {
+        return false;
+    }
+
+    public boolean getSwitchState(boolean line, int switchID) {
+        return false;
+    }
+
+    public boolean getLightState(boolean line, int blockID) {
+        return false;
+    }
+
+    public void getMode() {
+
+    }
+//*********************************************************************************************************************************************8
+
+    public void setSwitchState(boolean line, int switchID, boolean switchState) {
+        switches.get(line).get(switchID).setSwitchState(switchState);
+    }
+
     public void setOccupancy(int blockID,boolean line, boolean occupied) {
         track.get(line).get(blockID).setOccupied(occupied);
     }
@@ -92,25 +122,6 @@ public class CTCOfficeImpl implements CTCOffice {
         track.get(line).get(blockID).setLightState(lightState);
     }
 
-    public void setSwitchState(boolean line, int switchID, boolean switchState) {
-        track.get(line).get(switchID).setSwitchConState(switchState);
-    }
-
-    public void getMode() {}
-
-    public boolean getOccupancy(boolean line, int blockID) {
-        return track.get(line).get(blockID).getOccupied();
-    }
-
-    public boolean getSwitchState(boolean line, int switchID) {
-        return track.get(line).get(switchID).getSwitchConState();
-    }
-
-    public boolean getLightState(boolean line, int blockID) {
-        return track.get(line).get(blockID).getLightState();
-    }
-
-    public void setTicketSales(boolean ticketSales) {}
 
 }
 

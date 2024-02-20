@@ -72,21 +72,55 @@ public class CTCBlockSubject implements AbstractSubject {
             return;
         }
         switch (propertyName) {
-            case "line" -> updateProperty(line, newValue);
-            case "occupied" -> updateProperty(occupied, newValue);
-            case "hasLight" -> updateProperty(hasLight, newValue);
-            case "hasSwitchCon" -> updateProperty(hasSwitchCon, newValue);
-            case "hasSwitchDiv" -> updateProperty(hasSwitchDiv, newValue);
-            case "hasCrossing" -> updateProperty(hasCrossing, newValue);
-            case "lightState" -> updateProperty(lightState, newValue);
-            case "switchConState" -> updateProperty(switchConState, newValue);
-            case "switchDivState" -> updateProperty(switchDivState, newValue);
-            case "crossingState" -> updateProperty(crossingState, newValue);
-            case "speedLimit" -> updateProperty(speedLimit, newValue);
-            case "blockID" -> updateProperty(blockID, newValue);
-            case "blockLength" -> updateProperty(blockLength, newValue);
-            default -> System.err.println("Invalid property name: " + propertyName);
-
+            case "line" -> {
+                updateProperty(line, newValue);
+                line.set((Boolean) newValue);
+            }
+            case "occupied" -> {
+                updateProperty(occupied, newValue);
+                occupied.set((Boolean) newValue);
+            }
+            case "hasLight" -> {
+                updateProperty(hasLight, newValue);
+                hasLight.set((Boolean) newValue);
+            }
+            case "hasSwitchCon" -> {
+                updateProperty(hasSwitchCon, newValue);
+                hasSwitchCon.set((Boolean) newValue);
+            }
+            case "hasSwitchDiv" -> {
+                updateProperty(hasSwitchDiv, newValue);
+                hasSwitchDiv.set((Boolean) newValue);
+            }
+            case "hasCrossing" -> {
+                updateProperty(hasCrossing, newValue);
+                hasCrossing.set((Boolean) newValue);
+            }
+            case "lightState" -> {
+                updateProperty(lightState, newValue);
+                lightState.set((Boolean) newValue);
+            }
+            case "switchConState" -> {
+                updateProperty(switchConState, newValue);
+                switchConState.set((Boolean) newValue);
+            }
+            case "switchDivState" -> {
+                updateProperty(switchDivState, newValue);
+                switchDivState.set((Boolean) newValue);
+            }
+            case "crossingState" -> {
+                updateProperty(crossingState, newValue);
+                crossingState.set((Boolean) newValue);
+            }
+            case "speedLimit" -> {
+                updateProperty(speedLimit, newValue);
+                speedLimit.set((Double) newValue);
+            }
+            case "blockLength" -> {
+                updateProperty(blockLength, newValue);
+                blockLength.set((Integer) newValue);
+            }
+            default -> System.err.println("Unknown property " + propertyName);
         }
     }
 
