@@ -82,6 +82,21 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
+    public void disableBlock(int blockID) {
+
+    }
+
+    @Override
+    public void enableBlock(int blockID) {
+
+    }
+
+    @Override
+    public void enableAllBlocks() {
+
+    }
+
+    @Override
     public int getID() {
         return this.id;
     }
