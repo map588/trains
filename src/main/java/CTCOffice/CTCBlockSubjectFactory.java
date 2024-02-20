@@ -1,7 +1,7 @@
 package CTCOffice;
 
 import Framework.Support.SubjectFactory;
-import trainController.ObservableHashMap;
+import Framework.Support.ObservableHashMap;
 
 public class CTCBlockSubjectFactory extends SubjectFactory<CTCBlockSubject>{
     private static CTCBlockSubjectFactory INSTANCE = new CTCBlockSubjectFactory();

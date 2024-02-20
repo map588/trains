@@ -1,5 +1,6 @@
 package trainController;
 
+import Framework.Support.ObservableHashMap;
 import Framework.Support.SubjectFactory;
 
 public class trainControllerSubjectFactory extends SubjectFactory<trainControllerSubject> {

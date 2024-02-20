@@ -1,7 +1,7 @@
 package trainModel;
 
 import Framework.Support.SubjectFactory;
-import trainController.ObservableHashMap;
+import Framework.Support.ObservableHashMap;
 
 public class trainSubjectFactory extends SubjectFactory<trainModelSubject> {
     // Singleton
