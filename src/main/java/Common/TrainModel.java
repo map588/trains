@@ -8,6 +8,7 @@ public interface TrainModel {
     void setPower(double power);
     void setNumCars(int numCars);
     void setNumPassengers(int numPassengers);
+    void setCrewCount(int crewCount);
 
     //Murphy Signals
     void setBrakeFailure(boolean failure);
@@ -47,6 +48,5 @@ public interface TrainModel {
     boolean getRightDoors();
 
     //Vital Functions for simulating the train physics
-    void calculateSpeed();
-    void calculateAcceleration();
+    void trainModelPhysics();
 }

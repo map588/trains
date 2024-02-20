@@ -1,4 +1,4 @@
-package Framework;
+package Framework.Support;
 
 @FunctionalInterface
 public interface PropertyChangeListener {

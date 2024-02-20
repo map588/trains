@@ -1,8 +1,7 @@
 package Common;
 
 
-import Framework.Notifications;
-import Framework.PropertyChangeListener;
+import Framework.Support.Notifications;
 import trainController.trainControllerSubject;
 
 public interface TrainController extends Notifications {

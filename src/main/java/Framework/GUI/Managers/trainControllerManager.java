@@ -1,17 +1,22 @@
 package Framework.GUI.Managers;
 
 import Common.TrainController;
+import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import trainController.trainControllerImpl;
 import trainController.trainControllerSubjectFactory;
 import trainController.trainControllerSubject;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class trainControllerManager {
@@ -36,9 +41,10 @@ public class trainControllerManager {
 
     @FXML
     public void initialize() {
-        factory = new trainControllerSubjectFactory();
-        createTrainController(0);
-
+        trainControllerImpl trainController = new trainControllerImpl(0);
+        factory = trainControllerSubjectFactory.getInstance();
+        setupMapChangeListener();
+        currentSubject = factory.getSubjects().get(0);
         bindGauges();
         bindControls();
         bindIndicators();
@@ -51,8 +57,36 @@ public class trainControllerManager {
 
     }
 
-    private void createTrainController(int trainID) {
-        currentSubject = factory.getSubject(trainID);
+    private void setupMapChangeListener() {
+        ObservableHashMap<Integer, ?> subjects = factory.getSubjects();
+
+        ObservableHashMap.MapListener<Integer, ?> listener = new ObservableHashMap.MapListener<Integer, Object>() {
+            @Override
+            public void onAdded(Integer key, Object value) {
+                updateChoiceBoxItems();
+            }
+
+            @Override
+            public void onRemoved(Integer key, Object value) {
+                updateChoiceBoxItems();
+            }
+
+            @Override
+            public void onUpdated(Integer key, Object oldValue, Object newValue) {
+                updateChoiceBoxItems();
+            }
+        };
+
+        subjects.addChangeListener(listener);
+        updateChoiceBoxItems();
+    }
+
+
+    private void updateChoiceBoxItems() {
+        Platform.runLater(() -> {
+            trainController_trainNo_ChoiceBox.setItems(FXCollections.observableArrayList(
+                    new ArrayList<>(factory.getSubjects().keySet())));
+        });
     }
 
     private void bindGauges() {
@@ -110,12 +144,17 @@ public class trainControllerManager {
     }
 
     private void bindTextField(TextField textField, Consumer<Double> consumer) {
-        textField.textProperty().addListener((obs, oldSelection, newSelection) -> consumer.accept(Double.parseDouble(newSelection)));
+        textField.textProperty().addListener((obs, oldSelection, newSelection) -> {
+            try{
+                double value = Double.parseDouble(newSelection);
+                consumer.accept(value);
+            } catch (NumberFormatException e) {
+                consumer.accept(Double.parseDouble(oldSelection));
+            }
+        });
     }
 
-    public synchronized void addTrain(TrainController controller) {
-        factory.addSubject(controller.getID(), controller.getSubject());
-
+    public synchronized void addTrainToList(TrainController controller) {
         trainController_trainNo_ChoiceBox.getItems().add(controller.getID());
     }
 
@@ -133,7 +172,7 @@ public class trainControllerManager {
     }
 
     private void changeTrainView(int trainID) {
-        currentSubject = factory.getSubject(trainID);
+        currentSubject = factory.getSubjects().get(trainID);
         if(currentSubject != null) {
             unbindControls();
             bindControls();

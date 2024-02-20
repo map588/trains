@@ -18,6 +18,10 @@ public class stubTrainModel implements TrainModel {
     public void setNumPassengers(int numPassengers) {
     }
 
+    public void setCrewCount(int crewCount) {
+
+    }
+
     public void setBrakeFailure(boolean failure) {
     }
 
@@ -113,9 +117,8 @@ public class stubTrainModel implements TrainModel {
         return true;
     }
 
-    public void calculateSpeed() {
+    public void trainModelPhysics() {
+
     }
 
-    public void calculateAcceleration() {
-    }
 }

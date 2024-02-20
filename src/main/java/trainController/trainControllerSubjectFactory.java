@@ -1,36 +1,31 @@
 package trainController;
 
-import Framework.SubjectFactory;
+import Framework.Support.ObservableHashMap;
+import Framework.Support.SubjectFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+public class trainControllerSubjectFactory extends SubjectFactory<trainControllerSubject> {
 
-public class trainControllerSubjectFactory implements SubjectFactory<trainControllerSubject> {
+    // Singleton
+    private static final trainControllerSubjectFactory INSTANCE = new trainControllerSubjectFactory();
 
-    protected static final Map<Integer, trainControllerSubject> subjectMap = new HashMap<Integer, trainControllerSubject>();
+    // ObservableHashMap to store subjects
+    private ObservableHashMap<Integer, trainControllerSubject> subjects = new ObservableHashMap<>();
 
-    public trainControllerSubjectFactory() {}
+    // Private constructor
+    private trainControllerSubjectFactory() {}
 
-    //This is making a subject
-    public trainControllerSubject getSubject(int ID) {
-        if(subjectMap.containsKey(ID)) {
-            return subjectMap.get(ID);
-        }
-        else {
-            //Null trainControllerSubject
-            return new trainControllerSubject(-1);
-        }
-    }
-    public synchronized void addSubject(int ID, trainControllerSubject subject) {
-        subjectMap.put(ID, subject);
-    }
-    //subject may or may not be deallocated
-    public void deleteSubject(int ID) {
-        subjectMap.remove(ID);
+    // Singleton getter
+    public static trainControllerSubjectFactory getInstance() {
+        return INSTANCE;
     }
 
-    public int getNumSubjects() {
-        return subjectMap.size();
+    // Getter for subjects
+    public ObservableHashMap<Integer, trainControllerSubject> getSubjects() {
+        return subjects;
     }
 
+    // Register a subject
+    public void registerSubject(int ID, trainControllerSubject subject) {
+        subjects.put(ID, subject);
+    }
 }

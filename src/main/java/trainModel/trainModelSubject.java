@@ -1,16 +1,11 @@
 package trainModel;
 
-import Framework.AbstractSubject;
+import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
-import Common.TrainModel;
-import javafx.beans.value.ObservableValue;
 
-import javax.swing.*;
-import java.util.List;
+public class trainModelSubject implements AbstractSubject{
 
-public class trainModelSubject implements AbstractSubject {
-
-    private IntegerProperty authority, numCars, numPassengers;
+    private IntegerProperty authority, numCars, numPassengers, crewCount;
     private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
 
     //Vital Variables
@@ -36,6 +31,7 @@ public class trainModelSubject implements AbstractSubject {
         this.rightDoors = new SimpleBooleanProperty(false);
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
+        this.crewCount = new SimpleIntegerProperty(0);
     }
 
     public trainModelSubject(trainModelImpl trainModel) {
@@ -58,6 +54,7 @@ public class trainModelSubject implements AbstractSubject {
         this.rightDoors = new SimpleBooleanProperty(false);
         this.numCars = new SimpleIntegerProperty(0);
         this.numPassengers = new SimpleIntegerProperty(0);
+        this.crewCount = new SimpleIntegerProperty(0);
 
         model.addChangeListener(((propertyName, newValue) -> {
             switch (propertyName) {
@@ -112,77 +109,74 @@ public class trainModelSubject implements AbstractSubject {
                 case "numPassengers":
                     numPassengers.set((int) newValue);
                     break;
+                case "crewCount":
+                    crewCount.set((int) newValue);
+                    break;
             }
         }));
     }
 
-    public void updateProperty(BooleanProperty property, boolean newValue) {
-        if (property.get() != newValue)
-            property.set(newValue);
-    }
-
-    public void updateProperty(DoubleProperty property, double newValue) {
-        if (property.get() != newValue)
-            property.set(newValue);
-    }
-
-    public void updateProperty(IntegerProperty property, int newValue) {
-        if (property.get() != newValue)
-            property.set(newValue);
-    }
-
     public BooleanProperty getBooleanProperty (String propertyName) {
-        switch(propertyName) {
-            case "serviceBrake":
-                return serviceBrake;
-            case "emergencyBrake":
-                return emergencyBrake;
-            case "brakeFailure":
-                return brakeFailure;
-            case "powerFailure":
-                return powerFailure;
-            case "signalFailure":
-                return signalFailure;
-            case "extLights":
-                return extLights;
-            case "intLights":
-                return intLights;
-            case "leftDoors":
-                return leftDoors;
-            case "rightDoors":
-                return rightDoors;
-            default:
-                return null;
-        }
+        return switch (propertyName) {
+            case "serviceBrake" -> serviceBrake;
+            case "emergencyBrake" -> emergencyBrake;
+            case "brakeFailure" -> brakeFailure;
+            case "powerFailure" -> powerFailure;
+            case "signalFailure" -> signalFailure;
+            case "extLights" -> extLights;
+            case "intLights" -> intLights;
+            case "leftDoors" -> leftDoors;
+            case "rightDoors" -> rightDoors;
+            default -> null;
+        };
     }
 
     public DoubleProperty getDoubleProperty (String propertyName) {
-        switch (propertyName) {
-            case "commandSpeed":
-                return commandSpeed;
-            case "actualSpeed":
-                return actualSpeed;
-            case "acceleration":
-                return acceleration;
-            case "power":
-                return power;
-            case "temperature":
-                return temperature;
-            default:
-                return null;
-        }
+        return switch (propertyName) {
+            case "commandSpeed" -> commandSpeed;
+            case "actualSpeed" -> actualSpeed;
+            case "acceleration" -> acceleration;
+            case "power" -> power;
+            case "temperature" -> temperature;
+            default -> null;
+        };
     }
 
     public IntegerProperty getIntegerProperty (String propertyName) {
+        return switch (propertyName) {
+            case "authority" -> authority;
+            case "numCars" -> numCars;
+            case "numPassengers" -> numPassengers;
+            case "crewCount" -> crewCount;
+            default -> null;
+        };
+    }
+
+    public void setProperty(String propertyName, Object newValue) {
+        if (newValue == null) {
+            System.err.println("Null value for property " + propertyName);
+            return;
+        }
         switch (propertyName) {
-            case "authority":
-                return authority;
-            case "numCars":
-                return numCars;
-            case "numPassengers":
-                return numPassengers;
-            default:
-                return null;
+            case "authority" -> updateProperty(authority, newValue);
+            case "commandSpeed" -> updateProperty(commandSpeed, newValue);
+            case "actualSpeed" -> updateProperty(actualSpeed, newValue);
+            case "acceleration" -> updateProperty(acceleration, newValue);
+            case "power" -> updateProperty(power, newValue);
+            case "serviceBrake" -> updateProperty(serviceBrake, newValue);
+            case "emergencyBrake" -> updateProperty(emergencyBrake, newValue);
+            case "brakeFailure" -> updateProperty(brakeFailure, newValue);
+            case "powerFailure" -> updateProperty(powerFailure, newValue);
+            case "signalFailure" -> updateProperty(signalFailure, newValue);
+            case "extLights" -> updateProperty(extLights, newValue);
+            case "intLights" -> updateProperty(intLights, newValue);
+            case "leftDoors" -> updateProperty(leftDoors, newValue);
+            case "rightDoors" -> updateProperty(rightDoors, newValue);
+            case "temperature" -> updateProperty(temperature, newValue);
+            case "numCars" -> updateProperty(numCars, newValue);
+            case "numPassengers" -> updateProperty(numPassengers, newValue);
+            case "crewCount" -> updateProperty(crewCount, newValue);
+            default -> System.err.println("Unknown property " + propertyName);
         }
     }
 }

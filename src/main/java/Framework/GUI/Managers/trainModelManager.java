@@ -1,18 +1,13 @@
 package Framework.GUI.Managers;
 
-import Common.TrainModel;
+import Framework.Support.SubjectFactory;
 import eu.hansolo.medusa.Gauge;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import trainModel.trainSubjectFactory;
 import trainModel.trainModelSubject;
-
-import java.util.function.Consumer;
+import trainModel.trainSubjectFactory;
 
 public class trainModelManager {
 
@@ -31,14 +26,13 @@ public class trainModelManager {
     @FXML
     public Circle extLightsEn, intLightEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
-    private trainSubjectFactory factory;
+    private SubjectFactory<trainModelSubject> factory;
     private trainModelSubject subject;
 
     @FXML
     public void initialize() {
 
-        factory = new trainSubjectFactory();
-        createTrainModel(0);
+        factory = trainSubjectFactory.getInstance();
 
         bindGauges();
         bindIndicators();
@@ -50,8 +44,6 @@ public class trainModelManager {
             }
         });
     }
-
-    private void createTrainModel(int trainID) { subject = factory.getSubject(trainID); }
 
     private void bindGauges() {
         actualPowerDisp.valueProperty().bind(subject.getDoubleProperty("power"));
@@ -109,7 +101,7 @@ public class trainModelManager {
     }
 
     private void changeTrainView(int trainID) {
-        subject = factory.getSubject(trainID);
+        subject = factory.getSubjects().get(trainID);
         if(subject != null) {
             unbindControls();
             bindControls();
@@ -128,4 +120,3 @@ public class trainModelManager {
         signalFailureBtn.selectedProperty().unbind();
     }
 }
-
