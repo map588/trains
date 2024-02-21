@@ -1,6 +1,7 @@
 package Framework.GUI.Managers;
 
 import Utilities.TrackLayoutInfo;
+import trackModel.trackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import trackModel.trackModelImpl;
@@ -29,7 +30,7 @@ public class trackModelTB {
     @FXML
     private TableView<TrackLayoutInfo> tbTable;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSectionsColumn;
+    private TableColumn<TrackLayoutInfo, String> tbSectionColumn;
     @FXML
     private TableColumn<TrackLayoutInfo, Integer> tbBlockColumn;
     @FXML
@@ -41,16 +42,7 @@ public class trackModelTB {
 
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
     private trackModelImpl trackModel;
-
-
-    public trackModelTB(){
-
-        this.tbBlockColumn = new TableColumn<>();
-        this.tbSectionsColumn = new TableColumn<>();
-        this.tbSwitchColumn = new TableColumn<>();
-        this.tbSignalColumn = new TableColumn<>();
-        this.tbOccupiedColumn = new TableColumn<>();
-    }
+    private trackModelSubject trackModelSubject;
 
     public int getTempInput(){
         return Integer.parseInt(tbTempInput.getText());
@@ -60,8 +52,11 @@ public class trackModelTB {
         tbTempInput.setText(Integer.toString(temp));
     }
 
+    @FXML
     public void initialize() {
+        System.out.println("LAUNCHED TESTBENCH");
 
+        trackModelSubject = new trackModelSubject(trackModel);
         StringConverter<Integer> intConverter = new StringConverter<Integer>() {
             @Override
             public String toString(Integer integer) {
@@ -85,13 +80,13 @@ public class trackModelTB {
             }
         };
 
-        tbSectionsColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tbSectionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         tbBlockColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
         tbSwitchColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         tbSignalColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         tbOccupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tbOccupiedColumn));
 
-        tbSectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
+        tbSectionColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         tbBlockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty().asObject());
         tbSwitchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         tbSignalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
@@ -104,7 +99,23 @@ public class trackModelTB {
         trackProperties.setTicketSales(tbTicketSalesInput.getText());
         trackProperties.setPassEmbarked(tbPassEmbarkedInput.getText());
         trackProperties.setPassDisembarked(tbPassDisembarkedInput.getText());
-        trackModel.getTrackInfo();
+    }
+
+    private void selectBlock(){
+        if(trackProperties != null) {
+            // Unbind stuff here
+            tbPassEmbarkedInput.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
+            tbPassDisembarkedInput.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
+            tbTicketSalesInput.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
+            tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
+        }
+
+        trackProperties = tbTable.getSelectionModel().getSelectedItem();
+
+        tbPassEmbarkedInput.textProperty().unbindBidirectional(trackProperties.passEmbarkedProperty());
+        tbPassDisembarkedInput.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
+        tbTicketSalesInput.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
+        tbTempInput.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
 
     }
 
@@ -119,6 +130,10 @@ public class trackModelTB {
 
     public void setTrackModel(trackModelImpl trackModel) {
         this.trackModel = trackModel;
+    }
+    public void setTrackModelSubject(trackModelSubject trackModelSubject){
+        this.trackModelSubject = trackModelSubject;
+        tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
     }
 
     public void setPassEmbarked(int passEmbarked){
