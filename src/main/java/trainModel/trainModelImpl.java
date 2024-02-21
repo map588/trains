@@ -15,6 +15,8 @@ import Utilities.Constants;
 
 public class trainModelImpl implements TrainModel, Notifications {
 
+    private trainModelSubject subject;
+
     //Passed Variables
     private int authority;
     private double commandSpeed;
@@ -59,6 +61,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     private TrainController controller;
 
     public trainModelImpl(int trainID){
+
         this.authority = 0;
         this.commandSpeed = 0;
         this.speed = 0;
@@ -83,6 +86,8 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
+
+        this.subject = new trainModelSubject(this);
     }
 
     public void addChangeListener(PropertyChangeListener listener) {
@@ -157,6 +162,10 @@ public class trainModelImpl implements TrainModel, Notifications {
         notifyChange("temperature", temp);
     }
 
+    //Getters
+    public trainModelSubject getSubject(){
+        return this.subject;
+    }
     //Vital Getters
     public int getAuthority() {
         return this.authority;
@@ -215,6 +224,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         if (this.mass >= Constants.LOADED_TRAIN_MASS) {
             this.mass = Constants.LOADED_TRAIN_MASS;
         }
+
         //FAILURE STATES
         if (powerFailure) {
             this.power = 0;
@@ -222,8 +232,10 @@ public class trainModelImpl implements TrainModel, Notifications {
         if (brakeFailure) {
             this.serviceBrake = false;
         }
+
         //ACCELERATION PROGRESSION
         this.previousAcceleration = this.acceleration;
+
         //BRAKE FORCES
         if (this.serviceBrake && !this.emergencyBrake) {
             this.brakeForce = Constants.SERVICE_BRAKE_FORCE;
@@ -235,6 +247,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         if (!this.serviceBrake && !this.emergencyBrake) {
             this.brakeForce = 0;
         }
+
         //ENGINE FORCE
         try {
             this.engineForce = this.power / this.speed;
@@ -243,14 +256,17 @@ public class trainModelImpl implements TrainModel, Notifications {
                 this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             }
         }
+
         //SLOPE FORCE
         this.currentAngle = Math.atan(this.grade / 100);
         this.slopeForce = this.mass * Constants.GRAVITY * Math.sin(this.currentAngle);
+
         //NET FORCE
         this.netForce = this.engineForce - this.slopeForce - this.brakeForce;
         if (this.netForce > Constants.MAX_ENGINE_FORCE){
             this.netForce = Constants.MAX_ENGINE_FORCE;
         }
+
         //ACCELERATION CALCULATION
         this.acceleration = this.netForce / this.mass;
 
@@ -261,10 +277,5 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
-
     }
-
-
-
-
 }
