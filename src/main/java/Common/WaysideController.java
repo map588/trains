@@ -5,6 +5,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Paint;
+import waysideController.WaysideBlockInfo;
 import waysideController.WaysideControllerSubject;
 
 import java.io.File;
@@ -30,10 +31,10 @@ public interface WaysideController {
     public void setMaintenanceModeNoUpdate(boolean maintenanceMode);
 
     // Returns the list of block IDs under the wayside controller's control
-    public List<BlockInfo> getBlockList();
+    public List<WaysideBlockInfo> getBlockList();
 
     // Adds a new track block under the wayside controller's control
-    public void addBlock(BlockInfo block);
+    public void addBlock(WaysideBlockInfo block);
 
     // Allows Track Model to set train occupancy for a specific block
     public void trackModelSetOccupancy(int blockID, boolean isOccupied);

@@ -1,7 +1,6 @@
 package waysideController;
 
 import Common.WaysideController;
-import Utilities.BlockInfo;
 import javafx.scene.paint.Color;
 
 import java.io.File;
@@ -19,7 +18,7 @@ public class WaysideControllerImpl implements WaysideController {
     private boolean maintenanceMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private final List<BlockInfo> trackList = new ArrayList<>();
+    private final List<WaysideBlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
@@ -70,18 +69,19 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
-    public List<BlockInfo> getBlockList() {
+    public List<WaysideBlockInfo> getBlockList() {
         return this.trackList;
     }
 
     @Override
-    public void addBlock(BlockInfo block) {
+    public void addBlock(WaysideBlockInfo block) {
         this.trackList.add(block);
+        subject.addBlock(block);
     }
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
-        trackList.get(blockID).setTrackCircuitState(isOccupied);
+        trackList.get(blockID-1).occupationProperty().set(isOccupied);
         program.setOccupancy(blockID, isOccupied);
         program.runBlueLine();
     }

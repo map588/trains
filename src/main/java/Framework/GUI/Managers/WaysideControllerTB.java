@@ -1,47 +1,52 @@
 package Framework.GUI.Managers;
 
+import Common.WaysideController;
 import Utilities.BlockInfo;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.util.Callback;
+import waysideController.WaysideBlockInfo;
 
 public class WaysideControllerTB {
 
     @FXML
     public Label tbWaysideNumberLabel;
     @FXML
-    public TableView<BlockInfo> tbBlockTable;
+    public TableView<WaysideBlockInfo> tbBlockTable;
     @FXML
-    public TableView<BlockInfo> tbSwitchTable;
+    public TableView<WaysideBlockInfo> tbSwitchTable;
     @FXML
-    public TableColumn<BlockInfo, Integer> tbBTLeft;
+    public TableColumn<WaysideBlockInfo, Integer> tbBTLeft;
     @FXML
-    public TableColumn<BlockInfo, Boolean> tbBTRight;
+    public TableColumn<WaysideBlockInfo, Boolean> tbBTRight;
     @FXML
-    public TableColumn<BlockInfo, Integer> tbSTLeft;
+    public TableColumn<WaysideBlockInfo, Integer> tbSTLeft;
     @FXML
-    public TableColumn<BlockInfo, Integer> tbSTRight;
+    public TableColumn<WaysideBlockInfo, Integer> tbSTRight;
     @FXML
-    public TableColumn<BlockInfo, Boolean> tbSTEnable;
+    public TableColumn<WaysideBlockInfo, Boolean> tbSTEnable;
     private Object block;
+    WaysideController controller;
 
 
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
-        tbBTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber().getValue()));
-        tbBTRight.setCellValueFactory(block -> block.getValue().getTrackCircuitStateProperty());
+        tbBTLeft.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
+        tbBTRight.setCellValueFactory(block -> block.getValue().occupationProperty());
         tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
 
         tbSwitchTable.setEditable(true);
-        tbSTLeft.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().getBlockNumber().getValue()));
-        tbSTRight.setCellValueFactory(block -> block.getValue().getStaticInfo().switchedBlockNumber.asObject());
-        tbSTEnable.setCellValueFactory(block -> block.getValue().getStaticInfo().isSwitched);
+        tbSTLeft.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
+        tbSTRight.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
+        tbSTEnable.setCellValueFactory(block -> block.getValue().switchStateProperty());
         tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
 
         /**
@@ -57,11 +62,11 @@ public class WaysideControllerTB {
      * Read the block info from the wayside controller
      * @param blocks The list of blocks to read
      */
-    public void readBlockInfo(ObservableList<BlockInfo> blocks) {
+    public void readBlockInfo(ObservableList<WaysideBlockInfo> blocks) {
         tbBlockTable.setItems(blocks);
-        //tbLightTable.setItems(blocks);
-        for(BlockInfo item : blocks) {
-            if(item.getStaticInfo().isSwitch()) {
+        tbSwitchTable.getItems().clear();
+        for(WaysideBlockInfo item : blocks) {
+            if(item.isHasSwitch()) {
                 tbSwitchTable.getItems().add(item);
             }
         }

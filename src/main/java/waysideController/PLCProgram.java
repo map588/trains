@@ -53,7 +53,7 @@ public class PLCProgram {
             crossingList.set(0, CROSSING_CLOSED);
         }
         else {
-            crossingList.set(1, CROSSING_OPEN);
+            crossingList.set(0, CROSSING_OPEN);
         }
 
         for(int switchID = 0; switchID < switchStateList.size(); switchID++) {

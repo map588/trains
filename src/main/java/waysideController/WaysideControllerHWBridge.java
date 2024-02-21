@@ -47,7 +47,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     }
 
     @Override
-    public void addBlock(BlockInfo block) {
+    public void addBlock(WaysideBlockInfo block) {
         super.addBlock(block);
     }
 
