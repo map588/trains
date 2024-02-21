@@ -176,6 +176,9 @@ public class WaysideControllerManager {
         updateBlockList();
 
         currentSubject.getController().CTCSetSpeedAuth(new TrainSpeedAuth(1, 0, 0));
+
+        // IDK why but there's some bug with loading in the switches and this fixes it
+        changeActiveController(currentSubject.getController());
     }
 
     /**
