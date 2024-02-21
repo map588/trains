@@ -88,6 +88,10 @@ public class trainModelSubject implements AbstractSubject{
         );
     }
 
+    public TrainModel getModel() {
+        return model;
+    }
+
     public Property<?> getProperty(String propertyName) {
         return properties.get(propertyName);
     }

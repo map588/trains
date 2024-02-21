@@ -54,8 +54,6 @@ public class trainModelManager {
     @FXML
     public void initialize() {
 
-        testBench = launchTestBench();
-
         new trainModelImpl(0);
         new trainModelImpl(1);
         new trainModelImpl(2);
@@ -63,6 +61,7 @@ public class trainModelManager {
         factory = trainSubjectFactory.getInstance();
         setupMapChangeListener();
 
+        testBench = launchTestBench();
         if (!factory.getSubjects().isEmpty()) {
             Integer firstKey = factory.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
@@ -75,11 +74,14 @@ public class trainModelManager {
         bindIndicators();
         bindControls();
 
+
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
             }
         });
+
+
     }
 
     private void bindLabels() {
@@ -175,6 +177,7 @@ public class trainModelManager {
             bindGauges();
             bindIndicators();
             bindLabels();
+            testBench.changeModels(subject.getModel());
         }
     }
 
