@@ -6,10 +6,16 @@ import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class trainControllerSubject implements AbstractSubject {
+    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private TrainController controller;
-    private boolean isLogicUpdate = false;
+    public boolean isGUIUpdate = false;
+    public boolean isLogicUpdate = false;
 
     public trainControllerSubject(TrainController controller) {
         this.controller = controller;
@@ -21,41 +27,63 @@ public class trainControllerSubject implements AbstractSubject {
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available
         properties.put("authority", new SimpleIntegerProperty(controller.getAuthority()));
-        // Continue for other properties...
+        //properties.put("blocksToNextStation", new SimpleIntegerProperty(controller.getBlocksToNextStation()));
+        properties.put("commandSpeed", new SimpleDoubleProperty(controller.getCommandSpeed()));
+        properties.put("currentSpeed", new SimpleDoubleProperty(controller.getSpeed()));
+        properties.put("overrideSpeed", new SimpleDoubleProperty(controller.getOverrideSpeed()));
+        properties.put("maxSpeed", new SimpleDoubleProperty(controller.getMaxSpeed()));
+        properties.put("Ki", new SimpleDoubleProperty(controller.getKi()));
+        properties.put("Kp", new SimpleDoubleProperty(controller.getKp()));
+        properties.put("power", new SimpleDoubleProperty(controller.getPower()));
+        properties.put("serviceBrake", new SimpleBooleanProperty(controller.getServiceBrake()));
+        properties.put("emergencyBrake", new SimpleBooleanProperty(controller.getEmergencyBrake()));
+        properties.put("automaticMode", new SimpleBooleanProperty(controller.getAutomaticMode()));
+        properties.put("extLights", new SimpleBooleanProperty(controller.getExtLights()));
+        properties.put("intLights", new SimpleBooleanProperty(controller.getIntLights()));
+        properties.put("announcements", new SimpleBooleanProperty(controller.getAnnouncements()));
+        properties.put("signalFailure", new SimpleBooleanProperty(controller.getSignalFailure()));
+        properties.put("brakeFailure", new SimpleBooleanProperty(controller.getBrakeFailure()));
+        properties.put("powerFailure", new SimpleBooleanProperty(controller.getPowerFailure()));
+        properties.put("temperature", new SimpleDoubleProperty(controller.getTemperature()));
+        properties.put("leftDoors", new SimpleBooleanProperty(controller.getLeftDoors()));
+        properties.put("rightDoors", new SimpleBooleanProperty(controller.getRightDoors()));
+        properties.put("inTunnel", new SimpleBooleanProperty(controller.getInTunnel()));
+        properties.put("leftPlatform", new SimpleBooleanProperty(controller.getLeftPlatform()));
+        properties.put("rightPlatform", new SimpleBooleanProperty(controller.getRightPlatform()));
+
     }
 
     public void notifyChange(String propertyName, Object newValue) {
+        System.out.println("TController Subject notifyChange was called.");
         // Update property from controller, Internal Logic takes precedence over GUI updates
         updateFromLogic(() -> {
-        Platform.runLater(() -> {
-            Property<?> property = properties.get(propertyName);
-            if (property != null) {
+            Platform.runLater(() -> {
+                Property<?> property = properties.get(propertyName);
                 updateProperty(property, newValue);
-            } else {
-                System.err.println("No property found for string: " + propertyName);
-            }
-        });
+            });
         });
     }
 
     @Override
     public void setProperty(String propertyName, Object newValue) {
-        // Update property from GUI, GUI updates are delayed if internal logic is updating
-        while(isLogicUpdate) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Platform.runLater(() -> {
+        System.out.println("TController Subject setProperty was called.");
+        Runnable updateTask = () -> {
             Property<?> property = properties.get(propertyName);
-            if (property != null) {
-                    updateProperty(property, newValue);
-            } else {
-                System.err.println("No property found for string: " + propertyName);
-            }
-        });
+            Platform.runLater(() -> {
+                updateProperty(property, newValue);
+                controller.setValue(propertyName, newValue); // Ensure this method is thread-safe
+            });
+        };
+
+        if (isLogicUpdate) {
+            executorService.scheduleWithFixedDelay(() -> {
+                if (!isLogicUpdate) {
+                    updateFromGUI(updateTask);
+                }
+            }, 0, 10, TimeUnit.MILLISECONDS);
+        } else {
+            updateFromGUI(updateTask);
+        }
     }
 
     public Property<?> getProperty(String propertyName) {
@@ -65,12 +93,19 @@ public class trainControllerSubject implements AbstractSubject {
     // Update property safely with the correct type
     @Override
     public <T> void updateProperty(Property<T> property, Object newValue) {
+        if(newValue == null) {
+            System.err.println("Null value for property " + property.getName());
+            return;
+        }
         if (property instanceof IntegerProperty && newValue instanceof Number) {
             ((IntegerProperty) property).set(((Number) newValue).intValue());
+            System.out.println("TController Subject Integer Property " + property.getName() + " updated to " + newValue);
         } else if (property instanceof DoubleProperty && newValue instanceof Number) {
             ((DoubleProperty) property).set(((Number) newValue).doubleValue());
+            System.out.println("TController Subject Double Property " + property.getName() + " updated to " + newValue);
         } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
             ((BooleanProperty) property).set((Boolean) newValue);
+            System.out.println("TController Subject Boolean Property " + property.getName() + " updated to " + newValue);
         } else {
             throw new IllegalArgumentException("Mismatch in property type and value type for " + property.getName());
         }
@@ -105,6 +140,15 @@ public class trainControllerSubject implements AbstractSubject {
     }
 
     // Handling updates from the GUI
+    public void updateFromGUI(Runnable updateLogic) {
+        isGUIUpdate = true;
+        try {
+            Platform.runLater(updateLogic);
+        } finally {
+            isGUIUpdate = false;
+        }
+    }
+
     public void updateFromLogic(Runnable updateLogic) {
         isLogicUpdate = true;
         try {

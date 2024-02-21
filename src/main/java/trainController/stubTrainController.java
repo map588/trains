@@ -74,6 +74,10 @@ public class stubTrainController implements TrainController{
 
     }
 
+    public void setValue(String propertyName, Object newValue) {
+
+    }
+
     public int getID() {
         return 0;
     }

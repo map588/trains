@@ -88,4 +88,6 @@ public interface TrainController extends Notifications {
     // Extra Authority Info
     boolean getInTunnel();
     void setInTunnel(boolean inTunnel);
+
+    void setValue(String propertyName, Object newValue);
 }

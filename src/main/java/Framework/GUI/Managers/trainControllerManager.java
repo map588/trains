@@ -4,7 +4,6 @@ import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -52,6 +51,7 @@ public class trainControllerManager {
         //Creating a trainControllerImpl object results in a subject being created
         //and that subject being added to the factories Map of subjects
         new trainControllerImpl(0);
+        new trainControllerImpl(1);
 
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
@@ -88,9 +88,7 @@ public class trainControllerManager {
             }
         };
 
-
-        //subjects.addChangeListener(listener); *****************************************************************************************************************Commented out by Ty for compilation
-
+        subjects.addChangeListener(genericListener);
         updateChoiceBoxItems();
     }
 
@@ -127,39 +125,62 @@ public class trainControllerManager {
     }
 
     private void bindControls() {
-        // Ensure that properties are correctly typed and exist.
-        // This example assumes the existence of methods like getDoubleProperty and getBooleanProperty for type safety.
-
-        // Binding for Slider and TextField with type safety and preventing feedback loops.
+        // Binding Slider and TextField for "overrideSpeed"
         bindSliderAndTextField(setSpeedSlider, setSpeedTextField, newValue -> {
-            DoubleProperty overrideSpeedProperty = currentSubject.getDoubleProperty("overrideSpeed");
-            if (overrideSpeedProperty != null) {
-                overrideSpeedProperty.set(newValue);
-            }
+            currentSubject.setProperty("overrideSpeed", newValue);
         });
 
-        // Binding CheckBoxes with direct access to BooleanProperty for clarity and safety.
-        bindCheckBox(intLightCheckBox, currentSubject.getBooleanProperty("intLights"));
-        bindCheckBox(extLightCheckBox, currentSubject.getBooleanProperty("extLights"));
-        bindCheckBox(openDoorLeftCheckBox, currentSubject.getBooleanProperty("leftDoors"));
-        bindCheckBox(openDoorRightCheckBox, currentSubject.getBooleanProperty("rightDoors"));
-        bindCheckBox(toggleServiceBrakeCheckBox, currentSubject.getBooleanProperty("serviceBrake"));
-        bindCheckBox(autoModeCheckBox, currentSubject.getBooleanProperty("automaticMode"));
+        // Binding CheckBoxes
+        bindCheckBox(intLightCheckBox, "intLights");
+        bindCheckBox(extLightCheckBox, "extLights");
+        bindCheckBox(openDoorLeftCheckBox, "leftDoors");
+        bindCheckBox(openDoorRightCheckBox, "rightDoors");
+        bindCheckBox(toggleServiceBrakeCheckBox, "serviceBrake");
+        bindCheckBox(autoModeCheckBox, "automaticMode");
 
-        // Binding TextFields with direct access to DoubleProperty for numeric values.
-        bindTextField(setTemperatureTextField, currentSubject.getDoubleProperty("temperature"));
-        bindTextField(setKiTextField, currentSubject.getDoubleProperty("Ki"));
-        bindTextField(setKpTextField, currentSubject.getDoubleProperty("Kp"));
+        // Binding TextFields for numeric properties
+        bindTextField(setTemperatureTextField, "temperature");
+        bindTextField(setKiTextField, "Ki");
+        bindTextField(setKpTextField, "Kp");
 
-        // Actions for Buttons with immediate update and UI feedback.
-        emergencyBrakeButton.setOnAction(event -> toggleBooleanPropertyAndUpdateIndicator(currentSubject.getBooleanProperty("emergencyBrake"), eBrakeStatus));
-        makeAnnouncementsButton.setOnAction(event -> toggleBooleanProperty(currentSubject.getBooleanProperty("announcements")));
+        // Setting up Button actions
+        setupButtonActions();
     }
+
+    private void bindCheckBox(CheckBox checkBox, String propertyName) {
+        checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                currentSubject.setProperty(propertyName, newVal);
+        });
+    }
+
+
+    private void bindTextField(TextField textField, String propertyName) {
+        textField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                // Parse and update property
+                currentSubject.setProperty(propertyName, Double.parseDouble(newVal));
+            } catch (NumberFormatException e) {
+                textField.setText(oldVal); // Revert if parsing fails
+            }
+        });
+    }
+
+    private void setupButtonActions() {
+        emergencyBrakeButton.setOnAction(event -> {
+            BooleanProperty eBrakeProp = currentSubject.getBooleanProperty("emergencyBrake");
+            currentSubject.setProperty("emergencyBrake", !eBrakeProp.get());
+        });
+        makeAnnouncementsButton.setOnAction(event -> {
+            BooleanProperty announceProp = currentSubject.getBooleanProperty("announcements");
+            currentSubject.setProperty("announcements", !announceProp.get());
+        });
+    }
+
 
 
     private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
         slider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            textField.setText(String.format("%.2f", newVal));
+            textField.setText(String.format("%.1f", newVal));
         });
         textField.textProperty().addListener((obs, oldVal, newVal) -> {
             try {
@@ -173,31 +194,6 @@ public class trainControllerManager {
                 textField.setText(oldVal);
             }
         });
-    }
-
-    private void bindCheckBox(CheckBox checkBox, BooleanProperty property) {
-        checkBox.selectedProperty().bindBidirectional(property);
-    }
-
-    private void bindTextField(TextField textField, DoubleProperty property) {
-        textField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                double value = Double.parseDouble(newVal);
-                property.set(value);
-            } catch (NumberFormatException e) {
-                textField.setText(oldVal);
-            }
-        });
-    }
-
-    private void toggleBooleanPropertyAndUpdateIndicator(BooleanProperty property, Circle indicator) {
-        boolean newValue = !property.get();
-        property.set(newValue);
-        updateIndicator(indicator, newValue);
-    }
-
-    private void toggleBooleanProperty(BooleanProperty property) {
-        property.set(!property.get());
     }
 
 
