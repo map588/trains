@@ -2,12 +2,21 @@ package Framework.GUI.Managers;
 
 import Framework.Support.SubjectFactory;
 import eu.hansolo.medusa.Gauge;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Callback;
 import trainModel.trainModelSubject;
 import trainModel.trainSubjectFactory;
+import trainModel.trainModelImpl;
+
+import java.util.ArrayList;
 
 public class trainModelManager {
 
@@ -18,9 +27,8 @@ public class trainModelManager {
     @FXML
     public ToggleButton brakeFailureBtn, powerFailureBtn, signalFailureBtn;
     @FXML
-    public TableView passengerInfoTbl, trainInfoTbl;
-    @FXML
-    public TableColumn passengerInfoClm, passengerInfoNum, trainInfoNum, trainInfoClm;
+    public Label gradeLabel, maxPowerLabel, MaxAccelerationLabel, maxVelocityLabel, trainLengthLabel, trainHeightLabel, trainWidthLabel, numCarsLabel;
+    public Label numPassengersLabel, crewCountLabel, carWeightLabel, totalWeightLabel;
     @FXML
     public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp;
     @FXML
@@ -32,8 +40,12 @@ public class trainModelManager {
     @FXML
     public void initialize() {
 
+        trainModelImpl trainModel = new trainModelImpl(0);
         factory = trainSubjectFactory.getInstance();
 
+        subject = factory.getSubjects().get(0);
+
+        bindLabels();
         bindGauges();
         bindIndicators();
         bindControls();
@@ -45,6 +57,9 @@ public class trainModelManager {
         });
     }
 
+    private void bindLabels() {
+
+    }
     private void bindGauges() {
         actualPowerDisp.valueProperty().bind(subject.getDoubleProperty("power"));
         actualVelocityDisp.valueProperty().bind(subject.getDoubleProperty("actualSpeed"));

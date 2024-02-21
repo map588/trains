@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -41,7 +40,7 @@ public class trackModelManager {
     @FXML
     private ComboBox<String> murphyLine;
     @FXML
-    private ComboBox<String> murphyBlock;
+    private TextField murphyBlockInput;
     @FXML
     private ComboBox<String> chooseFailureMode;
     @FXML
@@ -105,6 +104,9 @@ public class trackModelManager {
     //constructor
     public trackModelManager() {
         this.trackProperties = new TrackLayoutInfo();
+        this.currTrackModel = new trackModelImpl();
+        this.testBench = new trackModelTB();
+        this.lineTable = new TableView<>();
 
         this.sectionsColumn = new TableColumn<>();
         this.blockColumn = new TableColumn<>();
@@ -163,7 +165,7 @@ public class trackModelManager {
         signalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
         switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
-
+        failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
 
     }
 
@@ -180,26 +182,14 @@ public class trackModelManager {
     private void murphyEnter() {
         //get the line and block
         String lineSelect = murphyLine.getValue();
-        String blockSelect = murphyBlock.getValue();
+        String blockSelect = murphyBlockInput.getText();
         String failure = chooseFailureMode.getValue();
 
         //send the failure to the track model
         currTrackModel.setFailure(Integer.parseInt(blockSelect), failure);
+        failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
+        trackProperties.setHasFailure(!chooseFailureMode.getValue().equals("Fix Track Failure"));
 
-        if(chooseFailureMode.getValue().equals("Fix Track Failure")){
-            //set failure column in table at block and line to false
-            trackProperties.setBlockNumber(Integer.parseInt(blockSelect));
-            trackProperties.setHasFailure(false);
-            failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
-        }
-        else{
-            //set failure column in table at block and line to true
-            trackProperties.setBlockNumber(Integer.parseInt(blockSelect));
-            trackProperties.setHasFailure(true);
-        }
-
-        //send the failure to the track model
-        //currTrackModel.setFailure(line, block, failure);
     }
 
     private void addLineName(String text) {
@@ -217,6 +207,7 @@ public class trackModelManager {
         File file = new File(trackFilePath.getText());
         ArrayList<String> csvData = csvParser(file);
         this.updateTable();
+        this.addLineName(lineNameInput.getText());
     }
 
     //user input for track layout

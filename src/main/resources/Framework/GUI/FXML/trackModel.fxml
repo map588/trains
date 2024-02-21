@@ -23,7 +23,7 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="884.0" prefWidth="1373.0">
                             <children>
-                                <TableView fx:id="lineTable" layoutX="526.0" layoutY="72.0" prefHeight="781.0" prefWidth="833.0">
+                                <TableView fx:id="lineTable" layoutX="537.0" layoutY="68.0" prefHeight="754.0" prefWidth="833.0">
                                     <columns>
                                         <TableColumn fx:id="occupiedColumn" editable="false" prefWidth="83.0" text="Occupied" />
                                         <TableColumn fx:id="sectionColumn" editable="false" prefWidth="83.0" text="Section" />
@@ -216,12 +216,12 @@
                                                                                                 </Label>
                                                                                                 <Label fx:id="signalBlockNumberDisplay" layoutX="252.0" layoutY="44.0" text="#'s" />
                                                                                                 <Label fx:id="signalStateDisplay" layoutX="252.0" layoutY="95.0" text="Color" />
-                                                                        <Label fx:id="statusLabel1" layoutX="359.0" layoutY="33.0" text="Crossing ? ">
+                                                                        <Label fx:id="crossingLabel" layoutX="359.0" layoutY="33.0" text="Crossing ? ">
                                                                            <font>
                                                                               <Font size="18.0" />
                                                                            </font>
                                                                         </Label>
-                                                                        <Label fx:id="crossingLabel" layoutX="375.0" layoutY="67.0" text="FALSE">
+                                                                        <Label fx:id="crossingState" layoutX="375.0" layoutY="67.0" text="FALSE">
                                                                            <font>
                                                                               <Font size="18.0" />
                                                                            </font>
@@ -243,12 +243,17 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="471.0">
                                                                     <children>
-                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Display Beacon Information:">
+                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Display Beacon Information On Block  :">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
                                                       <Label fx:id="displayBeaconInfo" layoutX="11.0" layoutY="53.0" text="NO CURRENT BEACON INFORMATION">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label fx:id="beaconBlockNumber" layoutX="337.0" layoutY="21.0" text="0">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>

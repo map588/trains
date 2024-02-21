@@ -5,19 +5,20 @@ import javafx.beans.property.*;
 
 
 public class CTCBlockSubject implements AbstractSubject {
-    private IntegerProperty blockID;
-    private BooleanProperty line;
-    private BooleanProperty occupied;
-    private BooleanProperty hasLight;
-    private BooleanProperty hasSwitchCon;
-    private BooleanProperty hasSwitchDiv;
-    private BooleanProperty hasCrossing;
-    private BooleanProperty lightState;
-    private BooleanProperty switchConState;
-    private BooleanProperty switchDivState;
-    private BooleanProperty crossingState;
-    private DoubleProperty  speedLimit;
-    private IntegerProperty blockLength;
+    private final IntegerProperty blockID;
+    private final BooleanProperty line;
+    private final BooleanProperty occupied;
+    private final BooleanProperty hasLight;
+    private final BooleanProperty hasSwitchCon;
+    private final BooleanProperty hasSwitchDiv;
+    private final BooleanProperty hasCrossing;
+    private final BooleanProperty lightState;
+    private final BooleanProperty switchConState;
+    private final BooleanProperty switchDivState;
+    private final BooleanProperty crossingState;
+    private final DoubleProperty  speedLimit;
+    private final IntegerProperty blockLength;
+
 
     CTCBlockSubject(CTCBlockInfo block) {
         this.blockID = new SimpleIntegerProperty(this, "blockID", block.getBlockID());
@@ -34,6 +35,11 @@ public class CTCBlockSubject implements AbstractSubject {
         this.speedLimit = new SimpleDoubleProperty(this, "speedLimit", block.getSpeedLimit());
         this.blockLength = new SimpleIntegerProperty(this, "blockLength", block.getBlockLength());
         CTCBlockSubjectFactory.getInstance().registerSubject(block.getBlockID(), this);
+        occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
+        lightState.addListener((observable, oldValue, newValue) -> block.setLightState(newValue));
+        switchConState.addListener((observable, oldValue, newValue) -> block.setSwitchConState(newValue));
+        switchDivState.addListener((observable, oldValue, newValue) -> block.setSwitchDivState(newValue));
+        crossingState.addListener((observable, oldValue, newValue) -> block.setCrossingState(newValue));
     }
     public BooleanProperty getBooleanProperty(String propertyName) {
         return switch (propertyName) {
@@ -74,7 +80,6 @@ public class CTCBlockSubject implements AbstractSubject {
         switch (propertyName) {
             case "line" -> {
                 updateProperty(line, newValue);
-                line.set((Boolean) newValue);
             }
             case "occupied" -> {
                 updateProperty(occupied, newValue);

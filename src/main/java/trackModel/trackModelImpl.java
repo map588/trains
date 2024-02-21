@@ -82,37 +82,23 @@ public class trackModelImpl implements TrackModel {
     public void setLine(String line) { this.line.add(line); }
     public ArrayList<String> getLines() {return this.line;}
     public String getLine(int lineNumber) { return this.line.get(lineNumber); }
-    public void setFailure(int block, boolean failure) {
 
-        for(int i = 0; i <= failures.size(); i++){
-            failures.add(i);
-        }
-
-
-    }
     public void setFailure(int block, String failure) {
-        switch (failure) {
-            case "Broken Rail" -> failures.add(block);
-            case "Track Circuit Failure" -> failures.add(block);
-            case "Power Failure" -> failures.add(block);
-            case "Fix Track Failure" -> failures.add(block);
-
+        if(failure.equals("Broken Rail") || failure.equals("Track Circuit Failure") || failure.equals("Power Failure")) {
+            failures.add(block);
+            this.trackInfo.get(block).setHasFailure(true);
+        }
+        if(failure.equals("Fix Track Failure")){
+            failures.remove(block);
+            this.trackInfo.get(block).setHasFailure(false);
         }
     }
-
-
-
 
     public List<TrackLayoutInfo> getTrackInfo() {
 
         for(int i = 0; i <= 15; i++){
             TrackLayoutInfo block = new TrackLayoutInfo();
-            if (failures.contains(i)){
-                block.setHasFailure(true);
-            }
-            else {
-                block.setHasFailure(false);
-            }
+            block.setHasFailure(failures.contains(i));
             block.setBlockNumber(i);
 
             if(i < 6){

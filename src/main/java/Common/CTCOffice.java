@@ -10,9 +10,9 @@ public interface CTCOffice{
     void setSuggestedSpeed(int trainID, int speed);
     void setSelectedTrain(int trainID);
     void setSchedule(int trainID, String schedule);
-    void setOccupancy(int blockID, boolean occupied);
-    void setLightState(int blockID, boolean lightState);
-    void setSwitchState(int switchID, boolean switchState);
+    void setOccupancy(boolean line, int blockID, boolean occupied);
+    void setLightState(boolean line, int blockID, boolean lightState);
+    void setSwitchState(boolean line, int switchID, boolean switchState);
     boolean getOccupancy(boolean line, int blockID);
     boolean getSwitchState(boolean line, int switchID);
     boolean getLightState(boolean line, int blockID);
