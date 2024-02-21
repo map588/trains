@@ -2,11 +2,13 @@ package waysideController;
 
 import Common.WaysideController;
 import Utilities.BlockInfo;
+import Utilities.TrainSpeedAuth;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -17,12 +19,15 @@ public class WaysideControllerSubject {
     private ObjectProperty<Paint> activePLCColor;
     private ObservableList<WaysideBlockInfo> blockList;
 
+    private ObservableList<TrainSpeedAuth> speedAuthList;
+
     public WaysideControllerSubject(WaysideController controller) {
         this.controller = controller;
         maintenanceMode = new SimpleBooleanProperty(controller.isMaintenanceMode());
         PLCName = new SimpleStringProperty();
         activePLCColor = new SimpleObjectProperty<>(Color.GRAY);
         blockList = FXCollections.observableArrayList();
+        speedAuthList = FXCollections.observableArrayList();
 
         maintenanceMode.addListener((observableValue, oldValue, newVal) -> {
             this.controller.setMaintenanceModeNoUpdate(newVal);
@@ -49,5 +54,15 @@ public class WaysideControllerSubject {
     }
     public WaysideController getController() {
         return this.controller;
+    }
+    public ObservableList<TrainSpeedAuth> getSpeedAuthList() {
+        return speedAuthList;
+    }
+    public void setSpeedAuth(TrainSpeedAuth speedAuth) {
+        if(speedAuthList.contains(speedAuth)) {
+            speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
+        } else {
+            speedAuthList.add(speedAuth);
+        }
     }
 }

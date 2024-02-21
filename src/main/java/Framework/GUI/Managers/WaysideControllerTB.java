@@ -1,17 +1,15 @@
 package Framework.GUI.Managers;
 
 import Common.WaysideController;
-import Utilities.BlockInfo;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
+import Utilities.TrainSpeedAuth;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.util.Callback;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 import waysideController.WaysideBlockInfo;
 
 public class WaysideControllerTB {
@@ -23,46 +21,93 @@ public class WaysideControllerTB {
     @FXML
     public TableView<WaysideBlockInfo> tbSwitchTable;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbBTLeft;
+    public TableColumn<WaysideBlockInfo, Integer> tbBTID;
     @FXML
-    public TableColumn<WaysideBlockInfo, Boolean> tbBTRight;
+    public TableColumn<WaysideBlockInfo, Boolean> tbBTOccupied;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbSTLeft;
+    public TableColumn<WaysideBlockInfo, Integer> tbSTID;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbSTRight;
+    public TableColumn<WaysideBlockInfo, Integer> tbSTSwitchTo;
     @FXML
     public TableColumn<WaysideBlockInfo, Boolean> tbSTEnable;
+    @FXML
+    public TableView<TrainSpeedAuth> tbSpeedAuthTable;
+    @FXML
+    public TableColumn<TrainSpeedAuth, Integer> tbSATID;
+    @FXML
+    public TableColumn<TrainSpeedAuth, Double> tbSATSpeedIn;
+    @FXML
+    public TableColumn<TrainSpeedAuth, Integer> tbSATAuthIn;
+    @FXML
+    public TableColumn<TrainSpeedAuth, Double> tbSATSpeedOut;
+    @FXML
+    public TableColumn<TrainSpeedAuth, Integer> tbSATAuthOut;
+
     private Object block;
     WaysideController controller;
+
+
+    private StringConverter<Double> doubleConverter = new StringConverter<Double>() {
+        @Override
+        public String toString(Double d) {
+            return d.toString();
+        }
+
+        @Override
+        public Double fromString(String s) {
+            return Double.parseDouble(s);
+        }
+    };
+
+    private StringConverter<Integer> intConverter = new StringConverter<Integer>() {
+        @Override
+        public String toString(Integer integer) {
+            return integer.toString();
+        }
+
+        @Override
+        public Integer fromString(String s) {
+            return Integer.parseInt(s);
+        }
+    };
 
 
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
-        tbBTLeft.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
-        tbBTRight.setCellValueFactory(block -> block.getValue().occupationProperty());
-        tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
+        tbBTID.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
+        tbBTOccupied.setCellValueFactory(block -> block.getValue().occupationProperty());
+        tbBTOccupied.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTOccupied));
 
         tbSwitchTable.setEditable(true);
-        tbSTLeft.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
-        tbSTRight.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
+        tbSTID.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
+        tbSTSwitchTo.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
         tbSTEnable.setCellValueFactory(block -> block.getValue().switchRequestedStateProperty());
         tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
 
-        /**
-        tbLightTable.setEditable(true);
-        tbLTLeft.setCellValueFactory(block -> block.getValue().lightInStateProperty().asObject());
-        tbLTLeft.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
-        tbLTRight.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
-        tbLTRight.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
-         */
+        tbSpeedAuthTable.setEditable(true);
+        tbSATID.setCellValueFactory(speedAuth -> speedAuth.getValue().trainIDProperty().asObject());
+        tbSATSpeedIn.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
+        tbSATAuthIn.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
+//        tbSATSpeedIn.setCellValueFactory(speedAuth -> new SimpleStringProperty("Speed"));
+//        tbSATAuthIn.setCellValueFactory(speedAuth -> new SimpleStringProperty("Authority"));
+        tbSATSpeedOut.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
+        tbSATAuthOut.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
+        tbSATSpeedIn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
+        tbSATAuthIn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+    }
+
+    public void setController(WaysideController controller) {
+        this.controller = controller;
+        readBlockInfo(controller.getSubject().blockListProperty());
+        tbSpeedAuthTable.setItems(controller.getSubject().getSpeedAuthList());
     }
 
     /**
      * Read the block info from the wayside controller
      * @param blocks The list of blocks to read
      */
-    public void readBlockInfo(ObservableList<WaysideBlockInfo> blocks) {
+    private void readBlockInfo(ObservableList<WaysideBlockInfo> blocks) {
         tbBlockTable.setItems(blocks);
         tbSwitchTable.getItems().clear();
         for(WaysideBlockInfo item : blocks) {

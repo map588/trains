@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.CTCOfficeManager">
+<AnchorPane minWidth="600" minHeight="400" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.CTCOfficeManager">
    <children>
-      <SplitPane dividerPositions="0.29797979797979796" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane fx:id="mainSplit" dividerPositions="0.7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane>
                <children>
                   <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ScrollPane prefHeight="10000">
-                           <content>
+                        <ScrollPane hbarPolicy="ALWAYS" prefHeight="10000" vbarPolicy="ALWAYS">
                               <AnchorPane prefHeight="795.0" prefWidth="377.0">
                                  <children>
                                     <HBox fx:id="TrackLinesBox">
@@ -25,10 +26,11 @@
                                                    <children>
                                                       <TableView fx:id="blockTable">
                                                         <columns>
-                                                          <TableColumn fx:id="blockNumberColumn" prefWidth="43" text="Block #" />
-                                                            <TableColumn fx:id="occupationLightColumn" prefWidth="43" text="Occ." />
-                                                              <TableColumn fx:id="switchLightColumn" prefWidth="43" text="Light" />
-                                                            <TableColumn fx:id="switchStateColumn" prefWidth="100" text="Switch State" />
+                                                            <TableColumn fx:id="blockNumberColumn" prefWidth="50" resizable="false" text="Block #" />
+                                                            <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ." />
+                                                            <TableColumn fx:id="switchStateColumn" prefWidth="100" maxWidth="100" text="Switch State" />
+                                                            <TableColumn fx:id="switchLightColumn" prefWidth="43" maxWidth="43" text="Light" />
+
                                                         </columns>
                                                        </TableView>
                                                        <VBox fx:id="FirstLineOccupationRadioButtons" alignment="TOP_CENTER" prefWidth="100.0">
@@ -38,13 +40,13 @@
                                                             <RadioButton fx:id="FirstLineOccupationOff" mnemonicParsing="false" text="2" />
                                                          </children>
                                                       </VBox>
-      
+
                                                    </children>
                                                 </HBox>
                                              </children>
                                           </VBox>
                                           <Separator orientation="VERTICAL" prefHeight="200.0" />
-      
+
                                           <VBox fx:id="SecondLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="194.0">
                                               <children>
                                              <Label fx:id="SecondLineLabel" text="GREEN Line" />
@@ -67,7 +69,6 @@
                                     </HBox>
                                  </children>
                               </AnchorPane>
-                           </content>
                         </ScrollPane>
                         <ToolBar prefHeight="40.0" prefWidth="200.0">
                           <items>
@@ -84,22 +85,29 @@
             </AnchorPane>
           <AnchorPane>
                <children>
-                  <VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="10040.0" prefWidth="173.71428571428572" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ToolBar prefHeight="40.0" prefWidth="200.0">
+                        <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
                           <items>
-                              <Button fx:id="automaticModeButton" mnemonicParsing="false" text="Button" />
-                            <Button fx:id="manualModeButton" mnemonicParsing="false" text="Button" />
-                              <Button fx:id="maintenanceModeButton" mnemonicParsing="false" text="Button" />
-
+                              <Button fx:id="maintenanceModeButton" mnemonicParsing="false" text="Maintenance" />
+                              <Button fx:id="manualModeButton" mnemonicParsing="false" text="Manual" />
+                              <Button fx:id="automaticModeButton" mnemonicParsing="false" text="Auto" />
                           </items>
+                           <opaqueInsets>
+                              <Insets right="20.0" />
+                           </opaqueInsets>
                         </ToolBar>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <VBox prefHeight="200.0" prefWidth="100.0" />
-                              <VBox prefHeight="200.0" prefWidth="100.0" />
-                           </children>
-                        </HBox>
+                        <Label text="Label">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <TableView prefHeight="200.0" prefWidth="200.0" maxWidth="400" minWidth="200">
+                          <columns>
+                            <TableColumn editable="false" prefWidth="75.0" text="File Name" />
+                            <TableColumn editable="false" prefWidth="75.0" text="Date Modified" />
+                          </columns>
+                        </TableView>
+
                      </children>
                   </VBox>
                </children></AnchorPane>
