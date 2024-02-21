@@ -94,6 +94,7 @@ public class WaysideControllerManager {
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
+        switchTable.setEditable(true);
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected()));
