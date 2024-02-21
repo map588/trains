@@ -4,9 +4,7 @@ import Common.TrainController;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -106,18 +104,18 @@ public class trainControllerManager {
     }
 
     private void bindIndicators() {
-        (BooleanProperty) currentSubject.getProperty("emergencyBrake").addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection);
-        currentSubject.getProperty("signalFailure").addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
-        currentSubject.getProperty("brakeFailure").addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
-        currentSubject.getProperty("powerFailure").addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
-        currentSubject.getProperty("inTunnel").addListener((obs,oldSelection, newSelection)->updateInTunnelIndicator(newSelection));
-        currentSubject.getProperty("leftPlatform").addListener((obs,oldSelection, newSelection)->updateleftPlatformIndicator(newSelection));
-        currentSubject.getProperty("rightPlatform").addListener((obs,oldSelection, newSelection)->updateRightPlatformIndicator(newSelection));
+        currentSubject.getBooleanProperty("emergencyBrake").addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
+        currentSubject.getBooleanProperty("signalFailure").addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("brakeFailure").addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("powerFailure").addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("inTunnel").addListener((obs,oldSelection, newSelection)->updateInTunnelIndicator(newSelection));
+        currentSubject.getBooleanProperty("leftPlatform").addListener((obs,oldSelection, newSelection)->updateleftPlatformIndicator(newSelection));
+        currentSubject.getBooleanProperty("rightPlatform").addListener((obs,oldSelection, newSelection)->updateRightPlatformIndicator(newSelection));
     }
 
     private void bindControls() {
         bindSliderAndTextField(trainController_setSpeed_Slider, trainController_setSpeed_TextField, ((DoubleProperty)currentSubject.getProperty("overrideSpeed"))::set);
-        bindCheckBox(trainController_intLight_CheckBox, (BooleanProperty)currentSubject.getProperty("intLights")::set);
+        bindCheckBox(trainController_intLight_CheckBox, currentSubject.getBooleanProperty("intLights")::set);
         bindCheckBox(trainController_extLight_CheckBox, currentSubject.getBooleanProperty("extLights")::set);
         bindCheckBox(trainController_openDoorLeft_CheckBox, currentSubject.getBooleanProperty("leftDoors")::set);
         bindCheckBox(trainController_openDoorRight_CheckBox, currentSubject.getBooleanProperty("rightDoors")::set);

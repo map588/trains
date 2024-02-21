@@ -86,6 +86,18 @@ public class trainControllerSubject implements AbstractSubject {
         return properties.get(propertyName);
     }
 
+    public BooleanProperty getBooleanProperty(String propertyName) {
+        return (BooleanProperty) getProperty(propertyName);
+    }
+
+    public DoubleProperty getDoubleProperty(String propertyName) {
+        return (DoubleProperty) getProperty(propertyName);
+    }
+
+    public IntegerProperty getIntegerProperty(String propertyName) {
+        return (IntegerProperty) getProperty(propertyName);
+    }
+
     public void updateFromGui(Runnable updateLogic) {
         isGuiUpdate = true;
         try {
