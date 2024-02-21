@@ -4,17 +4,15 @@ import Common.TrainController;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import trainController.trainControllerImpl;
-import trainController.trainControllerSubjectFactory;
 import trainController.trainControllerSubject;
+import trainController.trainControllerSubjectFactory;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -77,7 +75,9 @@ public class trainControllerManager {
             }
         };
 
-        subjects.addChangeListener(listener);
+
+        //subjects.addChangeListener(listener); *****************************************************************************************************************Commented out by Ty for compilation
+
         updateChoiceBoxItems();
     }
 

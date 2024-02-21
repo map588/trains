@@ -2,11 +2,7 @@ package waysideController;
 
 import Common.WaysideController;
 import Utilities.BlockInfo;
-import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,14 +15,15 @@ public class WaysideControllerImpl implements WaysideController {
 
     private final int trackLine;
 
-    // Whether the wayside controller is in manual mode
-    private boolean manualMode = false;
+    // Whether the wayside controller is in maintenance mode
+    private boolean maintenanceMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
     private final List<BlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
-    private File PLC = null;
+    private File PLCFile = null;
+    private PLCProgram program;
 
     private final WaysideControllerSubject subject;
 
@@ -38,36 +35,37 @@ public class WaysideControllerImpl implements WaysideController {
     public WaysideControllerImpl(int id, int trackLine) {
         this.id = id;
         this.trackLine = trackLine;
+        program = new PLCProgram();
         subject = new WaysideControllerSubject(this);
     }
 
     @Override
-    public File getPLC() {
-        return this.PLC;
+    public File getPLCFile() {
+        return this.PLCFile;
     }
 
     @Override
     public void loadPLC(File PLC) {
-        this.PLC = PLC;
+        this.PLCFile = PLC;
         subject.PLCNameProperty().set(PLC.getName());
         updateActivePLCProp();
     }
 
     @Override
-    public boolean isManualMode() {
-        return this.manualMode;
+    public boolean isMaintenanceMode() {
+        return this.maintenanceMode;
     }
 
     @Override
-    public void setManualMode(boolean manualMode) {
-        this.manualMode = manualMode;
-        subject.manualModeProperty().set(manualMode);
+    public void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
+        subject.maintenanceModeProperty().set(maintenanceMode);
         updateActivePLCProp();
     }
 
     @Override
-    public void setManualModeNoUpdate(boolean manualMode) {
-        this.manualMode = manualMode;
+    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
         updateActivePLCProp();
     }
 
@@ -82,17 +80,44 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
-    public void disableBlock(int blockID) {
+    public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
+        trackList.get(blockID).setTrackCircuitState(isOccupied);
+        program.setOccupancy(blockID, isOccupied);
+        program.runBlueLine();
+    }
+
+    @Override
+    public void CTCDisableBlock(int blockID) {
 
     }
 
     @Override
-    public void enableBlock(int blockID) {
+    public void CTCEnableBlock(int blockID) {
 
     }
 
     @Override
-    public void enableAllBlocks() {
+    public void CTCEnableAllBlocks() {
+
+    }
+
+    @Override
+    public void CTCRequestSwitchState(int blockID, boolean switchState) {
+
+    }
+
+    @Override
+    public void maintenanceSetSwitch(int blockID, boolean switchState) {
+
+    }
+
+    @Override
+    public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
+
+    }
+
+    @Override
+    public void maintenanceSetCrossing(int blockID, boolean crossingState) {
 
     }
 
@@ -102,7 +127,7 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     private void updateActivePLCProp() {
-        if(!manualMode && PLC != null)
+        if(!maintenanceMode && PLCFile != null)
             subject.activePLCColorProperty().set(Color.BLUE);
         else
             subject.activePLCColorProperty().set(Color.GRAY);

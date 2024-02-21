@@ -3,10 +3,8 @@ package Framework.GUI.Managers;
 import Common.WaysideController;
 import Utilities.BlockInfo;
 import Utilities.staticBlockInfo;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,13 +12,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import waysideController.WaysideControllerImpl;
 import waysideController.WaysideControllerSubject;
@@ -29,7 +25,6 @@ import waysideController.WaysideControllerSubjectFactory;
 import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class WaysideControllerManager {
@@ -47,17 +42,15 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<BlockInfo,Boolean> blockTableCrossingColumn;
     @FXML
-    private TableView switchTable;
+    private TableView<BlockInfo> switchTable;
     @FXML
-    private TableColumn switchTableIDColumn;
+    private TableColumn<BlockInfo, Integer> switchTableIDColumn;
     @FXML
-    private TableColumn switchTableBlockInColumn;
+    private TableColumn<BlockInfo, Boolean> switchTableStateColumn;
     @FXML
-    private TableColumn switchTableStateColumn;
+    private TableColumn<BlockInfo, Integer> switchTableBlockOutColumn;
     @FXML
-    private TableColumn switchTableBlockOutColumn;
-    @FXML
-    private CheckBox manualModeCheckbox;
+    private CheckBox maintenanceModeCheckbox;
     @FXML
     private TextField plcFolderTextField;
     @FXML
@@ -108,6 +101,12 @@ public class WaysideControllerManager {
 //        blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
 //        blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
 //        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
+
+        switchTableIDColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getStaticInfo().blockNumber.getValue()));
+        switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().switchedBlockNumber.asObject());
+        switchTableStateColumn.setCellValueFactory(block -> block.getValue().getStaticInfo().isSwitched);
+        switchTableStateColumn.setCellFactory(CheckBoxTableCell.forTableColumn(switchTableStateColumn));
+        switchTableStateColumn.setEditable(false);
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
@@ -164,7 +163,6 @@ public class WaysideControllerManager {
         currentSubject.getController().addBlock(newBlock3);
 
         updateBlockList();
-        updateSwitchList();
     }
 
     /**
@@ -217,13 +215,19 @@ public class WaysideControllerManager {
         ObservableList<BlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
         blockTable.setItems(blocks);
         testBench.readBlockInfo(blocks);
+        updateSwitchList();
     }
 
     /**
      * Updates the switch list in the GUI with the information from the current wayside controller
      */
     private void updateSwitchList() {
-
+        ObservableList<BlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
+        for(BlockInfo item : blocks) {
+            if(item.getStaticInfo().isSwitch()) {
+                switchTable.getItems().add(item);
+            }
+        }
     }
 
     /**
@@ -241,7 +245,7 @@ public class WaysideControllerManager {
     private void changeActiveController(WaysideController controller) {
         // Unbind previous subject
         if(currentSubject != null) {
-            manualModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.manualModeProperty());
+            maintenanceModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.maintenanceModeProperty());
             plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.PLCNameProperty());
             plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.activePLCColorProperty());
         }
@@ -252,7 +256,7 @@ public class WaysideControllerManager {
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
 
         // Bind new subject
-        manualModeCheckbox.selectedProperty().bindBidirectional(currentSubject.manualModeProperty());
+        maintenanceModeCheckbox.selectedProperty().bindBidirectional(currentSubject.maintenanceModeProperty());
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.PLCNameProperty());
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.activePLCColorProperty());
 

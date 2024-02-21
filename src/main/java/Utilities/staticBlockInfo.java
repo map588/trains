@@ -1,12 +1,12 @@
 package Utilities;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class staticBlockInfo {
     public IntegerProperty blockNumber;
+    public IntegerProperty switchedBlockNumber;
     public String section;
     public int blockLength;
     public int blockGrade;
@@ -18,7 +18,7 @@ public class staticBlockInfo {
     public boolean isStation;
     public final BlockInfo switchBlock1;
     public final BlockInfo switchBlock2;
-    public BlockInfo selectedSwitch;
+    public ObjectProperty<BlockInfo> selectedSwitch;
     public BooleanProperty isSwitched;
 
     // Default constructor
@@ -29,6 +29,7 @@ public class staticBlockInfo {
         switchBlock2 = null;
         selectedSwitch = null;
         isSwitched = new SimpleBooleanProperty(false);
+        switchedBlockNumber = null;
     }
 
     // Constructor with parameters to set switch
@@ -37,18 +38,32 @@ public class staticBlockInfo {
         isSwitch = true;
         this.switchBlock1 = switchBlock1;
         this.switchBlock2 = switchBlock2;
-        selectedSwitch = switchBlock1;
+        selectedSwitch = new SimpleObjectProperty<>(switchBlock1);
         isSwitched = new SimpleBooleanProperty(false);
+        switchedBlockNumber = new SimpleIntegerProperty(switchBlock1.getStaticInfo().blockNumber.getValue());
+        isSwitched.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+                engageSwitch(newValue);
+            }
+        });
     }
 
     // Constructor with parameters to set switch and define current switch
-    public staticBlockInfo(SimpleIntegerProperty val, BlockInfo switchBlock1, BlockInfo switchBlock2, BlockInfo selectedSwitch) {
+    public staticBlockInfo(SimpleIntegerProperty val, BlockInfo switchBlock1, BlockInfo switchBlock2, BlockInfo sselectedSwitch) {
         blockNumber = val;
         isSwitch = true;
         this.switchBlock1 = switchBlock1;
         this.switchBlock2 = switchBlock2;
-        this.selectedSwitch = selectedSwitch;
+        this.selectedSwitch = new SimpleObjectProperty<>(sselectedSwitch);
         isSwitched = new SimpleBooleanProperty(selectedSwitch.equals(switchBlock2));
+        switchedBlockNumber = new SimpleIntegerProperty(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
+        isSwitched.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+                engageSwitch(newValue);
+            }
+        });
     }
 
     //public CheckBox select;
@@ -58,5 +73,18 @@ public class staticBlockInfo {
 
     public IntegerProperty getBlockNumber() {
         return blockNumber;
+    }
+
+    /**
+     * Engage the switch
+     * @param engaged Whether the switch is engaged (True - Block 2, False - Block 1)
+     */
+    public void engageSwitch(boolean engaged) {
+        if(engaged) {
+            selectedSwitch.set(switchBlock2);
+        } else {
+            selectedSwitch.set(switchBlock1);
+        }
+        switchedBlockNumber.set(selectedSwitch.get().getStaticInfo().blockNumber.getValue());
     }
 }

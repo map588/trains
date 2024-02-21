@@ -35,13 +35,13 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     }
 
     @Override
-    public void setManualMode(boolean manualMode) {
-        super.setManualMode(manualMode);
+    public void setMaintenanceMode(boolean maintenanceMode) {
+        super.setMaintenanceMode(maintenanceMode);
         try {
-            System.out.println("Send: manualMode="+manualMode);
-            serialPort.getOutputStream().write(("manualMode="+manualMode).getBytes());
+            System.out.println("Send: maintenanceMode="+maintenanceMode);
+            serialPort.getOutputStream().write(("maintenanceMode="+maintenanceMode).getBytes());
         } catch (IOException e) {
-            System.out.println("Failed to write manualMode");
+            System.out.println("Failed to write maintenanceMode");
             throw new RuntimeException(e);
         }
     }
@@ -55,8 +55,8 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         String[] values = message.split("=", 2);
 
         switch(values[0]) {
-            case "manualMode":
-                super.setManualMode(Boolean.parseBoolean(values[1]));
+            case "maintenanceMode":
+                super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
         }
     }
 

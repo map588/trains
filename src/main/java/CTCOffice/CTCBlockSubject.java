@@ -8,11 +8,13 @@ public class CTCBlockSubject implements AbstractSubject {
     private IntegerProperty blockID;
     private BooleanProperty line;
     private BooleanProperty occupied;
-    private BooleanProperty lightData;
-    private BooleanProperty switchData;
-    private BooleanProperty crossingData;
+    private BooleanProperty hasLight;
+    private BooleanProperty hasSwitchCon;
+    private BooleanProperty hasSwitchDiv;
+    private BooleanProperty hasCrossing;
     private BooleanProperty lightState;
-    private BooleanProperty switchState;
+    private BooleanProperty switchConState;
+    private BooleanProperty switchDivState;
     private BooleanProperty crossingState;
     private DoubleProperty  speedLimit;
     private IntegerProperty blockLength;
@@ -21,11 +23,13 @@ public class CTCBlockSubject implements AbstractSubject {
         this.blockID = new SimpleIntegerProperty(this, "blockID", block.getBlockID());
         this.line = new SimpleBooleanProperty(this, "line", block.getLine());
         this.occupied = new SimpleBooleanProperty(this, "occupied", block.getOccupied());
-        this.lightData = new SimpleBooleanProperty(this, "lightData", block.getLightData());
-        this.switchData = new SimpleBooleanProperty(this, "switchData", block.getSwitchData());
-        this.crossingData = new SimpleBooleanProperty(this, "crossingData", block.getCrossingData());
+        this.hasLight = new SimpleBooleanProperty(this, "hasLight", block.getHasLight());
+        this.hasSwitchCon = new SimpleBooleanProperty(this, "hasSwitchCon", block.getHasSwitchCon());
+        this.hasSwitchDiv = new SimpleBooleanProperty(this, "hasSwitchDiv", block.getHasSwitchDiv());
+        this.hasCrossing = new SimpleBooleanProperty(this, "hasCrossing", block.getHasCrossing());
         this.lightState = new SimpleBooleanProperty(this, "lightState", block.getLightState());
-        this.switchState = new SimpleBooleanProperty(this, "switchState", block.getSwitchState());
+        this.switchConState = new SimpleBooleanProperty(this, "switchConState", block.getSwitchConState());
+        this.switchDivState = new SimpleBooleanProperty(this, "switchDivState", block.getSwitchDivState());
         this.crossingState = new SimpleBooleanProperty(this, "crossingState", block.getCrossingState());
         this.speedLimit = new SimpleDoubleProperty(this, "speedLimit", block.getSpeedLimit());
         this.blockLength = new SimpleIntegerProperty(this, "blockLength", block.getBlockLength());
@@ -35,11 +39,13 @@ public class CTCBlockSubject implements AbstractSubject {
         return switch (propertyName) {
             case "line" -> line;
             case "occupied" -> occupied;
-            case "lightData" -> lightData;
-            case "switchData" -> switchData;
-            case "crossingData" -> crossingData;
+            case "hasLight" -> hasLight;
+            case "hasSwitchCon" -> hasSwitchCon;
+            case "hasSwitchDiv" -> hasSwitchDiv;
+            case "hasCrossing" -> hasCrossing;
             case "lightState" -> lightState;
-            case "switchState" -> switchState;
+            case "switchConState" -> switchConState;
+            case "switchDivState" -> switchDivState;
             case "crossingState" -> crossingState;
             default -> null;
         };
@@ -66,19 +72,55 @@ public class CTCBlockSubject implements AbstractSubject {
             return;
         }
         switch (propertyName) {
-            case "line" -> updateProperty(line, newValue);
-            case "occupied" -> updateProperty(occupied, newValue);
-            case "lightData" -> updateProperty(lightData, newValue);
-            case "switchData" -> updateProperty(switchData, newValue);
-            case "crossingData" -> updateProperty(crossingData, newValue);
-            case "lightState" -> updateProperty(lightState, newValue);
-            case "switchState" -> updateProperty(switchState, newValue);
-            case "crossingState" -> updateProperty(crossingState, newValue);
-            case "speedLimit" -> updateProperty(speedLimit, newValue);
-            case "blockID" -> updateProperty(blockID, newValue);
-            case "blockLength" -> updateProperty(blockLength, newValue);
-            default -> System.err.println("Invalid property name: " + propertyName);
-
+            case "line" -> {
+                updateProperty(line, newValue);
+                line.set((Boolean) newValue);
+            }
+            case "occupied" -> {
+                updateProperty(occupied, newValue);
+                occupied.set((Boolean) newValue);
+            }
+            case "hasLight" -> {
+                updateProperty(hasLight, newValue);
+                hasLight.set((Boolean) newValue);
+            }
+            case "hasSwitchCon" -> {
+                updateProperty(hasSwitchCon, newValue);
+                hasSwitchCon.set((Boolean) newValue);
+            }
+            case "hasSwitchDiv" -> {
+                updateProperty(hasSwitchDiv, newValue);
+                hasSwitchDiv.set((Boolean) newValue);
+            }
+            case "hasCrossing" -> {
+                updateProperty(hasCrossing, newValue);
+                hasCrossing.set((Boolean) newValue);
+            }
+            case "lightState" -> {
+                updateProperty(lightState, newValue);
+                lightState.set((Boolean) newValue);
+            }
+            case "switchConState" -> {
+                updateProperty(switchConState, newValue);
+                switchConState.set((Boolean) newValue);
+            }
+            case "switchDivState" -> {
+                updateProperty(switchDivState, newValue);
+                switchDivState.set((Boolean) newValue);
+            }
+            case "crossingState" -> {
+                updateProperty(crossingState, newValue);
+                crossingState.set((Boolean) newValue);
+            }
+            case "speedLimit" -> {
+                updateProperty(speedLimit, newValue);
+                speedLimit.set((Double) newValue);
+            }
+            case "blockLength" -> {
+                updateProperty(blockLength, newValue);
+                blockLength.set((Integer) newValue);
+            }
+            default -> System.err.println("Unknown property " + propertyName);
         }
     }
 
