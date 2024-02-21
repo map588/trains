@@ -99,6 +99,18 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
 
     //Vital Setters
+    public void setCommandSpeed(double speed) {
+        this.commandSpeed = speed;
+        notifyChange("commandSpeed", speed);
+    }
+    public void setActualSpeed(double speed) {
+        this.speed = speed;
+        notifyChange("actualSpeed", speed);
+    }
+    public void setAuthority(int authority) {
+        this.authority = authority;
+        notifyChange("authority", authority);
+    }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
         notifyChange("emergencyBrake", brake);
