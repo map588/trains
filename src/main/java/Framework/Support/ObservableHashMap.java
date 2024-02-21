@@ -1,10 +1,11 @@
 package Framework.Support;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ObservableHashMap<K, V> extends HashMap<K, V> {
-    private ConcurrentHashMap<MapListener<K, V>, V> listeners = new ConcurrentHashMap<>();
+    private Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
 
     public interface MapListener<K, V> {
         void onAdded(K key, V value);
@@ -13,7 +14,7 @@ public class ObservableHashMap<K, V> extends HashMap<K, V> {
     }
 
     public void addChangeListener(MapListener<K, V> listener) {
-        listeners.put(listener, null);
+        listeners.add(listener);
     }
 
     public void removeChangeListener(MapListener<K, V> listener) {
@@ -31,7 +32,6 @@ public class ObservableHashMap<K, V> extends HashMap<K, V> {
         return oldValue;
     }
 
-
     @Override
     public V remove(Object key) {
         V oldValue = super.remove(key);
@@ -42,30 +42,14 @@ public class ObservableHashMap<K, V> extends HashMap<K, V> {
     }
 
     private void notifyListenersAdded(K key, V value) {
-        listeners.forEach((listener, oldValue) -> {
-            if(listener != null)
-                listener.onAdded(key, value);
-            else
-                System.out.println("Listener is null");
-        });
+        listeners.forEach(listener -> listener.onAdded(key, value));
     }
 
     private void notifyListenersRemoved(K key, V value) {
-        listeners.forEach((listener, oldValue) -> {
-            if(listener != null)
-                listener.onRemoved(key, value);
-            else
-                System.out.println("Listener is null");
-        });
+        listeners.forEach(listener -> listener.onRemoved(key, value));
     }
 
     private void notifyListenersUpdated(K key, V oldValue, V newValue) {
-        listeners.forEach((listener, ignoredValue) -> {
-            if(listener != null)
-                listener.onUpdated(key, oldValue, newValue);
-            else
-                System.out.println("Listener is null");
-        });
+        listeners.forEach(listener -> listener.onUpdated(key, oldValue, newValue));
     }
-
 }

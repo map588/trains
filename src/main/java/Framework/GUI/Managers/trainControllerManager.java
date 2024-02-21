@@ -68,21 +68,22 @@ public class trainControllerManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, ?> subjects = factory.getSubjects();
+        ObservableHashMap<Integer, trainControllerSubject> subjects = factory.getSubjects();
 
-        ObservableHashMap.MapListener<Integer, ?> listener = new ObservableHashMap.MapListener<Integer, Object>() {
+        // Create a listener that reacts to any change (add, remove, update) by updating choice box items
+        ObservableHashMap.MapListener<Integer, trainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
             @Override
-            public void onAdded(Integer key, Object value) {
+            public void onAdded(Integer key, trainControllerSubject value) {
                 updateChoiceBoxItems();
             }
 
             @Override
-            public void onRemoved(Integer key, Object value) {
+            public void onRemoved(Integer key, trainControllerSubject value) {
                 updateChoiceBoxItems();
             }
 
             @Override
-            public void onUpdated(Integer key, Object oldValue, Object newValue) {
+            public void onUpdated(Integer key, trainControllerSubject oldValue, trainControllerSubject newValue) {
                 updateChoiceBoxItems();
             }
         };
