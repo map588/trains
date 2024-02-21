@@ -1,17 +1,16 @@
 package trainModel;
 
 //import Common.TrackModel;
+
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
-import Framework.Support.PropertyChangeListener;
-//import trackModel.stubTrackModel;
+import Utilities.Constants;
+import javafx.beans.value.ChangeListener;
 import trainController.stubTrainController;
-import java.lang.Math;
 
 import java.util.ArrayList;
 import java.util.List;
-import Utilities.Constants;
 
 public class trainModelImpl implements TrainModel, Notifications {
 
@@ -22,39 +21,23 @@ public class trainModelImpl implements TrainModel, Notifications {
     private double commandSpeed;
 
     //Vital Variables
-    private double speed;
-    private double acceleration;
-    private double power;
-    private boolean serviceBrake;
-    private boolean emergencyBrake;
-    private double mass;
-    private double grade;
+    private double speed, acceleration, power;
+    private double mass, grade;
+    private boolean serviceBrake, emergencyBrake;
 
     //physics variables (no setters or getters, only to be used within train model
-    private double brakeForce;
-    private double engineForce;
-    private double slopeForce;
-    private double netForce;
-    private double currentAngle;
-    private double previousAcceleration;
+    private double brakeForce, engineForce, gravityForce;
+    private double netForce, currentAngle, previousAcceleration;
 
     //Murphy Variables
-    private boolean brakeFailure;
-    private boolean powerFailure;
-    private boolean signalFailure;
+    private boolean brakeFailure, powerFailure, signalFailure;
 
     //NonVital Variables
-    private boolean extLights;
-    private boolean intLights;
-    private boolean leftDoors;
-    private boolean rightDoors;
+    private boolean extLights, intLights, rightDoors, leftDoors;
     private double temperature;
+    private int numCars, numPassengers, crewCount;
 
-    private int numCars;
-    private int numPassengers;
-    private int crewCount;
-
-    private final List<PropertyChangeListener> listeners = new ArrayList<>();
+    private final List<ChangeListener> listeners = new ArrayList<>();
 
     //Module Stubs
   //  private final TrackModel track = new stubTrackModel();
@@ -90,89 +73,29 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.subject = new trainModelSubject(this);
     }
 
-    public void addChangeListener(PropertyChangeListener listener) {
-        this.listeners.add(listener);
-    }
 
     protected void notifyChange(String property, Object newValue) {
         listeners.forEach(listener -> listener.onPropertyChange(property, newValue));
     }
 
-    //Vital Setters
-    public void setCommandSpeed(double speed) {
-        this.commandSpeed = speed;
-        notifyChange("commandSpeed", speed);
-    }
-    public void setActualSpeed(double speed) {
-        this.speed = speed;
-        notifyChange("actualSpeed", speed);
-    }
-    public void setAuthority(int authority) {
-        this.authority = authority;
-        notifyChange("authority", authority);
-    }
-    public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake = brake;
-        notifyChange("emergencyBrake", brake);
-    }
-    public void setServiceBrake(boolean brake) {
-        this.serviceBrake = brake;
-        notifyChange("serviceBrake", brake);
-    }
-    public void setPower(double power) {
-        this.power = power;
-        notifyChange("power", power);
-    }
-    public void setGrade(double grade) {
-        this.grade = grade;
-        notifyChange("grade", grade);
-    }
-    //Murphy Setters
-    public void setBrakeFailure(boolean failure) {
-        this.brakeFailure = failure;
-        notifyChange("brakeFailure", failure);
-    }
-    public void setPowerFailure(boolean failure) {
-        this.powerFailure = failure;
-        notifyChange("powerFailure", failure);
-    }
-    public void setSignalFailure(boolean failure) {
-        this.signalFailure = failure;
-        notifyChange("signalFailure", failure);
-    }
-    //NonVital Setters
-    public void setNumCars(int numCars) {
-        this.numCars = numCars;
-        notifyChange("numCars", numCars);
-    }
-    public void setNumPassengers(int numPassengers) {
-        this.numPassengers = numPassengers;
-        notifyChange("numPassengers", numPassengers);
-    }
-    public void setCrewCount(int crewCount) {
-        this.crewCount = crewCount;
-        notifyChange("crewCount", crewCount);
-    }
-    public void setLeftDoors(boolean doors) {
-        this.leftDoors = doors;
-        notifyChange("leftDoors", doors);
-    }
-    public void setRightDoors(boolean doors) {
-        this.rightDoors = doors;
-        notifyChange("rightDoors", doors);
-    }
-    public void setExtLights(boolean lights) {
-        this.extLights = lights;
-        notifyChange("extLights", lights);
-    }
-    public void setIntLights(boolean lights) {
-        this.intLights = lights;
-        notifyChange("intLights", lights);
-    }
-    public void setTemperature(double temp) {
-        this.temperature = temp;
-        notifyChange("temperature", temp);
-    }
+    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", speed); }
+    public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", speed); }
+    public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
+    public void setEmergencyBrake(boolean brake) { this.emergencyBrake = brake; notifyChange("emergencyBrake", brake); }
+    public void setServiceBrake(boolean brake) { this.serviceBrake = brake; notifyChange("serviceBrake", brake); }
+    public void setPower(double power) { this.power = power; notifyChange("power", power); }
+    public void setGrade(double grade) { this.grade = grade; notifyChange("grade", grade); }
+    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange("brakeFailure", failure); }
+    public void setPowerFailure(boolean failure) { this.powerFailure = failure; notifyChange("powerFailure", failure); }
+    public void setSignalFailure(boolean failure) { this.signalFailure = failure; notifyChange("signalFailure", failure); }
+    public void setNumCars(int numCars) { this.numCars = numCars; notifyChange("numCars", numCars); }
+    public void setNumPassengers(int numPassengers) { this.numPassengers = numPassengers; notifyChange("numPassengers", numPassengers); }
+    public void setCrewCount(int crewCount) { this.crewCount = crewCount; notifyChange("crewCount", crewCount); }
+    public void setLeftDoors(boolean doors) { this.leftDoors = doors; notifyChange("leftDoors", doors); }
+    public void setRightDoors(boolean doors) { this.rightDoors = doors; notifyChange("rightDoors", doors); }
+    public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
+    public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
+    public void setTemperature(double temp) { this.temperature = temp; notifyChange("temperature", temp); }
 
     //Getters
     public trainModelSubject getSubject(){
@@ -271,10 +194,10 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         //SLOPE FORCE
         this.currentAngle = Math.atan(this.grade / 100);
-        this.slopeForce = this.mass * Constants.GRAVITY * Math.sin(this.currentAngle);
+        this.gravityForce = this.mass * Constants.GRAVITY * Math.sin(this.currentAngle);
 
         //NET FORCE
-        this.netForce = this.engineForce - this.slopeForce - this.brakeForce;
+        this.netForce = this.engineForce - this.gravityForce - this.brakeForce;
         if (this.netForce > Constants.MAX_ENGINE_FORCE){
             this.netForce = Constants.MAX_ENGINE_FORCE;
         }
@@ -289,5 +212,9 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
+    }
+
+    public void addChangeListener(ChangeListener<? super Object> listener) {
+        listeners.add(listener);
     }
 }

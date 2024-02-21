@@ -3,7 +3,7 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
-import Framework.Support.PropertyChangeListener;
+import javafx.beans.value.ChangeListener;
 import trainModel.stubTrainModel;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     private TrainModel train;
 
     private final trainControllerSubject subject;
-    private final List<PropertyChangeListener> listeners = new ArrayList<>();
+    private final List<ChangeListener<? super Object>> listeners = new ArrayList<>();
 
     //Passing with trainID actually adds the train to the subject list
     public trainControllerImpl(int trainID) {
@@ -77,17 +77,9 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.subject;
     }
 
-//    public int getBlocksToNextStation() {
-//        return this.blocksToNextStation;
-//    }
 
-    public void addChangeListener(PropertyChangeListener listener) {
+    public void addChangeListener(ChangeListener <? super Object> listener) {
         listeners.add(listener);
-    }
-
-    protected void notifyChange(String propertyName, Object newValue) {
-        System.out.println("Changed variable: " + propertyName + " to " + newValue.toString() + "in trainControllerImpl.");
-        listeners.forEach(listener -> listener.onPropertyChange(propertyName, newValue));
     }
 
     //-----------------Setters-----------------
@@ -96,6 +88,11 @@ public class trainControllerImpl implements TrainController, Notifications {
         notifyChange("CommandSpeed", this.commandSpeed);
         notifyChange("CurrentSpeed", this.currentSpeed);
         notifyChange("AutomaticMode", this.automaticMode);
+    }
+
+    protected void notifyChange(String propertyName, Object newValue) {
+        listeners.forEach(listener -> listener.changed(null, null, newValue));
+        subject.notifyChange(propertyName, newValue);
     }
 
     //Functions called by the internal logic to notify of changes
@@ -127,6 +124,9 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.trainID;
     }
 
+    //    public int getBlocksToNextStation() {
+//        return this.blocksToNextStation;
+//    }
 
     public double getSpeed() {
         return this.currentSpeed;
