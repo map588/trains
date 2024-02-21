@@ -1,5 +1,6 @@
 package Framework.GUI.Managers;
 import Common.TrainController;
+import Framework.Support.ListenerReference;
 import Utilities.BlockInfo;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -13,43 +14,65 @@ import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 //import trainController;
-;
+import java.util.ArrayList;
+import java.util.List;
+
 public class trainControllerTB {
     @FXML
-    public Button trainControllerTB_AddTrain_Button;
-    @FXML
-    public Button trainControllerTB_PassengerEBrake_Button;
-    @FXML
-    public ChoiceBox<String> trainControllerTB_StationName_ChoiceBox;
-    @FXML
-    public TextField trainControllerTB_trainNo_TextField;
-    @FXML
-    public TextField trainControllerTB_CurrentSpeed_TextField;
-    @FXML
-    public TextField trainControllerTB_SpeedLimit_TextField;
-    @FXML
-    public TextField trainControllerTB_CommandedSpeed_TextField;
-    @FXML
-    public TextField trainControllerTB_Grade_TextField;
-    @FXML
-    public TextField trainControllerTB_Authority_TextField;
-    @FXML
-    public TextField trainControllerTB_CurrentTemperature_TextField;
-    @FXML
-    public RadioButton trainControllerTB_LeftPlatform_RadioButton;
-    @FXML
-    public RadioButton trainControllerTB_RightPlatform_RadioButton;
-    @FXML
-    public CheckBox trainControllerTB_PowerFailure_CheckBox;
-    @FXML
-    public CheckBox trainControllerTB_BrakeFailure_CheckBox;
-    @FXML
-    public CheckBox trainControllerTB_SignalFailure_CheckBox;
-    @FXML
-    public CheckBox trainControllerTB_InTunnel_CheckBox;
+    private Button trainControllerTB_AddTrain_Button;
 
     @FXML
+    private TextField trainControllerTB_Authority_TextField;
+
+    @FXML
+    private CheckBox trainControllerTB_BrakeFailure_CheckBox;
+
+    @FXML
+    private TextField trainControllerTB_CommandedSpeed_TextField;
+
+    @FXML
+    private TextField trainControllerTB_CurrentSpeed_TextField;
+
+    @FXML
+    private TextField trainControllerTB_CurrentTemperature_TextField;
+
+    @FXML
+    private TextField trainControllerTB_Grade_TextField;
+
+    @FXML
+    private CheckBox trainControllerTB_InTunnel_CheckBox;
+
+    @FXML
+    private RadioButton trainControllerTB_LeftPlatform_RadioButton;
+
+    @FXML
+    private Button trainControllerTB_PassengerEBrake_Button;
+
+    @FXML
+    private CheckBox trainControllerTB_PowerFailure_CheckBox;
+
+    @FXML
+    private RadioButton trainControllerTB_RightPlatform_RadioButton;
+
+    @FXML
+    private CheckBox trainControllerTB_SignalFailure_CheckBox;
+
+    @FXML
+    private TextField trainControllerTB_SpeedLimit_TextField;
+
+    @FXML
+    private ChoiceBox<String> trainControllerTB_StationName_ChoiceBox;
+
+    @FXML
+    private TextField trainControllerTB_trainNo_TextField;
+
+    private TrainController controller;
+    //private trainControllerSubject subject;
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+    @FXML
     private void initialize(){
+
+
         // Make E-Brake Button Red
         trainControllerTB_PassengerEBrake_Button.setStyle("-fx-background-color: #FF5733; -fx-text-fill: #ffffff;");
 
