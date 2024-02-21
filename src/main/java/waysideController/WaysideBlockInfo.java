@@ -2,6 +2,8 @@ package waysideController;
 
 import Common.WaysideController;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class WaysideBlockInfo {
     private final ReadOnlyIntegerProperty blockID;
@@ -14,7 +16,7 @@ public class WaysideBlockInfo {
 
     private final BooleanProperty occupation;
     private final BooleanProperty switchState;
-    private final IntegerProperty switchedBlockID;
+    private IntegerProperty switchedBlockID;
     private final BooleanProperty lightState;
     private final BooleanProperty crossingState;
 
@@ -26,7 +28,6 @@ public class WaysideBlockInfo {
 
         this.occupation = new SimpleBooleanProperty(false);
         this.switchState = new SimpleBooleanProperty(false);
-        this.switchedBlockID = new SimpleIntegerProperty();
         this.lightState = new SimpleBooleanProperty(false);
         this.crossingState = new SimpleBooleanProperty(false);
     }
@@ -35,6 +36,14 @@ public class WaysideBlockInfo {
         this(blockID, hasSwitch, hasLight, hasCrossing);
         this.switchBlockMain = new ReadOnlyIntegerWrapper(switchBlockMain);
         this.switchBlockAlt = new ReadOnlyIntegerWrapper(switchBlockAlt);
+        this.switchedBlockID = new SimpleIntegerProperty(switchBlockMain);
+
+        this.switchState.addListener((observable, oldValue, newValue) -> {
+            if(newValue)
+                this.switchedBlockID.set(this.getSwitchBlockAlt());
+            else
+                this.switchedBlockID.set(this.getSwitchBlockMain());
+        });
     }
 
     public int getBlockID() {
