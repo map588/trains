@@ -103,6 +103,8 @@ public class WaysideControllerManager {
         maintenanceModeCheckbox.setOnAction(event -> {
             switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
             blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
+            System.out.println(currentSubject.blockListProperty().get(4).switchStateProperty().get());
+//            currentSubject.getController().runPLC();
         });
 
         // Set up cell factories for table views

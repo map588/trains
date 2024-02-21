@@ -50,6 +50,10 @@ public class WaysideControllerSubject {
     public void addBlock(WaysideBlockInfo block) {
         blockList.add(block);
         block.occupationProperty().addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(block.getBlockID(), newValue));
+        block.switchStateProperty().addListener((observable, oldValue, newValue) -> {
+            controller.maintenanceSetSwitch(block.getBlockID(), newValue);
+            System.out.println("Switch State Changed");
+        });
         block.switchRequestedStateProperty().addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(block.getBlockID(), newValue));
     }
     public WaysideController getController() {

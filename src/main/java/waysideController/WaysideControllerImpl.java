@@ -134,7 +134,7 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-
+        program.setSwitch(blockID, switchState);
     }
 
     @Override

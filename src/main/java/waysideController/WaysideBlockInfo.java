@@ -99,6 +99,14 @@ public class WaysideBlockInfo {
         this.lightState.setLightState(lightState);
     }
 
+    public void setSwitchState(boolean switchState) {
+        this.switchState.set(switchState);
+    }
+
+    public void setCrossingState(boolean crossingState) {
+        this.crossingState.set(crossingState);
+    }
+
     public TrafficLightState lightStateProperty() {
         return lightState;
     }

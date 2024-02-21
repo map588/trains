@@ -42,13 +42,20 @@ public class PLCProgram {
         switchRequestedStateList.put(5, switchState);
     }
 
+    public void setSwitch(int blockID, boolean switchState) {
+        switchStateList.put(blockID, switchState);
+    }
+
     public void runBlueLine() {
 
         // Process switch state requests
+        System.out.println("State of switch is " + switchStateList.get(5));
         if(switchStateList.get(5) != switchRequestedStateList.get(5)) {
             if(!occupancyList.get(5) && !occupancyList.get(6) && !occupancyList.get(11)) {
                 switchStateList.put(5, switchRequestedStateList.get(5));
-                controller.getBlockList().get(4).switchStateProperty().set(switchStateList.get(5));
+//                controller.getBlockList().get(4).switchStateProperty().set(switchStateList.get(5));
+                controller.getBlockList().get(4).setSwitchState(switchStateList.get(5));
+                System.out.println("Swapping switch state");
             }
         }
 
@@ -78,17 +85,13 @@ public class PLCProgram {
         else {
             crossingList.put(3, CROSSING_OPEN);
         }
+        controller.getBlockList().get(2).setCrossingState(crossingList.get(3));
 
-        for(int switchID = 0; switchID < switchStateList.size(); switchID++) {
-            System.out.println("Switch " + switchID + " = " + switchStateList.get(switchID));
-        }
+        System.out.println("Switch = " + switchStateList.get(5));
 
-        for(int lightID = 0; lightID < trafficLightList.size(); lightID++) {
-            System.out.println("Light " + lightID + " = " + trafficLightList.get(lightID));
-        }
+        System.out.println("Light 6 = " + trafficLightList.get(6));
+        System.out.println("Light 1 = " + trafficLightList.get(11));
 
-        for(int crossingID = 0; crossingID < crossingList.size(); crossingID++) {
-            System.out.println("Crossing " + crossingID + " = " + crossingList.get(crossingID));
-        }
+        System.out.println("Crossing = " + crossingList.get(3));
     }
 }
