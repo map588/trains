@@ -8,12 +8,14 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -99,7 +101,6 @@ public class WaysideControllerManager {
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
             switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
-            switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
         });
 
         // Set up cell factories for table views
@@ -114,6 +115,13 @@ public class WaysideControllerManager {
                 graphic = new BorderPane();
                 circle = new Circle(8);
                 graphic.setCenter(circle);
+                setOnMouseClicked(event -> {
+                    if(currentSubject.maintenanceModeProperty().get()) {
+                        if(this.getTableRow().getItem().hasLight()) {
+                            this.getTableRow().getItem().setLightState(!this.getTableRow().getItem().getLightState());
+                        }
+                    }
+                });
             }
 
             @Override
