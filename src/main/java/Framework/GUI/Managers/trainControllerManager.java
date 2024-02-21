@@ -9,18 +9,27 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
-
+import Common.TrainController;
+import javafx.util.StringConverter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.net.URL;
+import java.io.File;
 
 public class trainControllerManager {
 
@@ -48,12 +57,10 @@ public class trainControllerManager {
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
 
-    //private trainControllerTB testBench;
+    private trainControllerTB testBench;
 
     @FXML
     public void initialize() {
-        //testBench = launchTestBench();
-
         //Creating a trainControllerImpl object results in a subject being created
         //and that subject being added to the factories Map of subjects
         new trainControllerImpl(0);
@@ -71,6 +78,9 @@ public class trainControllerManager {
                 changeTrainView(newSelection);
             }
         });
+
+        emergencyBrakeButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: #ffffff;");
+        //testBench = launchTestBench();
     }
 
     private void setupMapChangeListener() {
@@ -254,7 +264,7 @@ public class trainControllerManager {
 //    private trainControllerTB launchTestBench(){
 //        System.out.println("Preparing to launch test bench");
 //        try{
-//            String tbFile = "Framework/GUI/FXML/trainController_TB.fxml";
+//            String tbFile = "/Framework/GUI/FXML/trainController_TB.fxml";
 //            URL url = getClass().getResource(tbFile);
 //            FXMLLoader loader = new FXMLLoader(url);
 //            Node content = loader.load();
