@@ -68,7 +68,7 @@ public interface TrainController extends Notifications {
 
     trainControllerSubject getSubject();
 
-    int getBlocksToNextStation();
+    //int getBlocksToNextStation();
 
     boolean getAnnouncements();
 
@@ -77,4 +77,15 @@ public interface TrainController extends Notifications {
     boolean getBrakeFailure();
 
     boolean getPowerFailure();
+
+    // Station Block Info
+    boolean getLeftPlatform();
+    boolean getRightPlatform();
+
+    void setLeftPlatform(boolean leftPlatform);
+    void setRightPlatform(boolean rightPlatform);
+
+    // Extra Authority Info
+    boolean getInTunnel();
+    void setInTunnel(boolean inTunnel);
 }

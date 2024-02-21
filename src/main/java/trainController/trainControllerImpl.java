@@ -35,6 +35,10 @@ public class trainControllerImpl implements TrainController, Notifications {
     private boolean brakeFailure;
     private boolean powerFailure;
 
+    private boolean leftPlatform;
+    private boolean rightPlatform;
+    private boolean inTunnel;
+
     private double temperature;
 
     private int trainID;
@@ -62,6 +66,9 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.leftDoors = false;
         this.rightDoors = false;
         this.temperature = 0.0;
+        this.inTunnel = false;
+        this.rightPlatform = false;
+        this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
         this.train = new stubTrainModel();
     }
@@ -70,9 +77,9 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.subject;
     }
 
-    public int getBlocksToNextStation() {
-        return this.blocksToNextStation;
-    }
+//    public int getBlocksToNextStation() {
+//        return this.blocksToNextStation;
+//    }
 
     public void addChangeListener(PropertyChangeListener listener) {
         listeners.add(listener);
@@ -110,7 +117,10 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void setSignalFailure(boolean signalFailure) {this.signalFailure = signalFailure;notifyChange("SignalFailure", signalFailure);}
     public void setBrakeFailure(boolean brakeFailure) {this.brakeFailure = brakeFailure;notifyChange("BrakeFailure", brakeFailure);}
     public void setPowerFailure(boolean powerFailure) {this.powerFailure = powerFailure;notifyChange("PowerFailure", powerFailure);}
+    public void setInTunnel(boolean tunnel){this.inTunnel = tunnel;notifyChange("InTunnel",tunnel);}
+    public void setLeftPlatform(boolean platform){this.leftPlatform = platform; notifyChange("LeftPlatform",platform);}
 
+    public void setRightPlatform(boolean platform){this.rightPlatform = platform; notifyChange("rightPlatform",platform);}
 
     //-----------------Getters-----------------
     public int getID() {
@@ -184,4 +194,11 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.temperature;
     }
 
+    public boolean getLeftPlatform(){return this.leftPlatform;}
+    public boolean getRightPlatform(){return this.rightPlatform;}
+    public boolean getInTunnel(){return this.inTunnel;}
+
+    // Power Calculations
+    // P = Fv;  Power = Force * velocity
+    // F = ma;  Force = Mass * Accceleration
 }

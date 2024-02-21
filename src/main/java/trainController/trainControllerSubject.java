@@ -6,9 +6,9 @@ import javafx.beans.property.*;
 import javafx.application.Platform;
 
 public class trainControllerSubject implements AbstractSubject {
-    private IntegerProperty authority, trainID, blocksToNextStation;
+    private IntegerProperty authority, trainID;
     private DoubleProperty commandSpeed, currentSpeed, overrideSpeed, maxSpeed, Ki, Kp, power, temperature;
-    private BooleanProperty serviceBrake, emergencyBrake, automaticMode, intLights, extLights, leftDoors, rightDoors;
+    private BooleanProperty serviceBrake, emergencyBrake, automaticMode, intLights, extLights, leftDoors, rightDoors,inTunnel,leftPlatform,rightPlatform;
     private BooleanProperty announcements, signalFailure, brakeFailure, powerFailure;
 
     private TrainController controller;
@@ -40,7 +40,7 @@ public class trainControllerSubject implements AbstractSubject {
         switch (propertyName) {
             case "authority" -> updateProperty(authority, newValue);
             case "trainID" -> updateProperty(trainID, newValue);
-            case "blocksToNextStation" -> updateProperty(blocksToNextStation, newValue);
+            //case "blocksToNextStation" -> updateProperty(blocksToNextStation, newValue);
             case "commandSpeed" -> updateProperty(commandSpeed, newValue);
             case "currentSpeed" -> updateProperty(currentSpeed, newValue);
             case "overrideSpeed" -> updateProperty(overrideSpeed, newValue);
@@ -60,6 +60,9 @@ public class trainControllerSubject implements AbstractSubject {
             case "brakeFailure" -> updateProperty(brakeFailure, newValue);
             case "powerFailure" -> updateProperty(powerFailure, newValue);
             case "temperature" -> updateProperty(temperature, newValue);
+            case "inTunnel" -> updateProperty(inTunnel,newValue);
+            case "leftPlatform" -> updateProperty(leftPlatform,newValue);
+            case "rightPlatform" -> updateProperty(rightPlatform,newValue);
             default -> System.err.println("Unknown property " + propertyName);
         }
     }
@@ -77,6 +80,9 @@ public class trainControllerSubject implements AbstractSubject {
             case "signalFailure" -> signalFailure;
             case "brakeFailure" -> brakeFailure;
             case "powerFailure" -> powerFailure;
+            case "inTunnel" -> inTunnel;
+            case "leftPlatform" -> leftPlatform;
+            case "rightPlatform" -> rightPlatform;
             default -> null;
         };
     }
@@ -99,7 +105,7 @@ public class trainControllerSubject implements AbstractSubject {
         return switch (propertyName) {
             case "authority" -> authority;
             case "trainID" -> trainID;
-            case "blocksToNextStation" -> blocksToNextStation;
+            //case "blocksToNextStation" -> blocksToNextStation;
             default -> null;
         };
     }
@@ -116,7 +122,7 @@ public class trainControllerSubject implements AbstractSubject {
     private trainControllerSubject() {
         this.authority = new SimpleIntegerProperty(this, "authority",0);
         this.trainID = new SimpleIntegerProperty(this, "trainID",0);
-        this.blocksToNextStation = new SimpleIntegerProperty(this, "blocksToNextStation",0);
+        //this.blocksToNextStation = new SimpleIntegerProperty(this, "blocksToNextStation",0);
         this.commandSpeed = new SimpleDoubleProperty(this, "commandSpeed",0);
         this.currentSpeed = new SimpleDoubleProperty(this, "currentSpeed",0);
         this.overrideSpeed = new SimpleDoubleProperty(this, "overrideSpeed",0);
@@ -136,6 +142,9 @@ public class trainControllerSubject implements AbstractSubject {
         this.brakeFailure = new SimpleBooleanProperty(this, "brakeFailure",false);
         this.powerFailure = new SimpleBooleanProperty(this, "powerFailure",false);
         this.temperature = new SimpleDoubleProperty(this, "temperature",0);
+        this.inTunnel = new SimpleBooleanProperty(this,"inTunnel",false);
+        this.leftPlatform = new SimpleBooleanProperty(this,"leftPlatform",false);
+        this.rightPlatform = new SimpleBooleanProperty(this,"rightPlatform",false);
         trainControllerSubjectFactory.getInstance().registerSubject(0, this);
     }
 
@@ -157,11 +166,14 @@ public class trainControllerSubject implements AbstractSubject {
         this.leftDoors.set(controller.getLeftDoors());
         this.rightDoors.set(controller.getRightDoors());
         this.temperature.set(controller.getTemperature());
-        this.blocksToNextStation.set(controller.getBlocksToNextStation());
+        //this.blocksToNextStation.set(controller.getBlocksToNextStation());
         this.announcements.set(controller.getAnnouncements());
         this.signalFailure.set(controller.getSignalFailure());
         this.brakeFailure.set(controller.getBrakeFailure());
         this.powerFailure.set(controller.getPowerFailure());
+        this.rightPlatform.set(controller.getRightPlatform());
+        this.leftPlatform.set(controller.getLeftPlatform());
+        this.inTunnel.set(controller.getInTunnel());
     }
 
 }

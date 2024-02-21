@@ -28,9 +28,9 @@ public class trainControllerManager {
     @FXML
     private Slider trainController_setSpeed_Slider;
     @FXML
-    private Gauge trainController_currentSpeed_Gauge, trainController_speedLimit_Gauge, trainController_commandedSpeed_Gauge, trainController_Authority_Gauge, trainController_powerOutput_Gauge, trainController_blocksToNextStation_Gauge;
+    private Gauge trainController_currentSpeed_Gauge, trainController_speedLimit_Gauge, trainController_commandedSpeed_Gauge, trainController_Authority_Gauge, trainController_powerOutput_Gauge;//, trainController_blocksToNextStation_Gauge;
     @FXML
-    private Circle trainController_eBrake_Status, trainController_signalFailure_Status, trainController_brakeFailure_Status, trainController_powerFailure_Status;
+    private Circle trainController_eBrake_Status, trainController_signalFailure_Status, trainController_brakeFailure_Status, trainController_powerFailure_Status, trainController_stationSideLeft_Status,trainController_stationSideRight_Status, trainController_inTunnel_Status;
     @FXML
     private ChoiceBox<Integer> trainController_trainNo_ChoiceBox;
 
@@ -95,7 +95,7 @@ public class trainControllerManager {
         trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("maxSpeed"));
         trainController_Authority_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
         trainController_powerOutput_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
-        trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
+        //trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
     }
 
     private void bindIndicators() {
@@ -103,6 +103,9 @@ public class trainControllerManager {
         currentSubject.getBooleanProperty("signalFailure").addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
         currentSubject.getBooleanProperty("brakeFailure").addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
         currentSubject.getBooleanProperty("powerFailure").addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
+        currentSubject.getBooleanProperty("inTunnel").addListener((obs,oldSelection, newSelection)->updateInTunnelIndicator(newSelection));
+        currentSubject.getBooleanProperty("leftPlatform").addListener((obs,oldSelection, newSelection)->updateleftPlatformIndicator(newSelection));
+        currentSubject.getBooleanProperty("rightPlatform").addListener((obs,oldSelection, newSelection)->updateRightPlatformIndicator(newSelection));
     }
 
     private void bindControls() {
@@ -169,6 +172,15 @@ public class trainControllerManager {
     }
     private void updatePowerFailureIndicator(boolean isPowerFailureActive) {
         trainController_powerFailure_Status.setFill(isPowerFailureActive ? Color.RED : Color.GRAY);
+    }
+    private void updateleftPlatformIndicator(boolean isLeftPlatformActive){
+        trainController_stationSideLeft_Status.setFill(isLeftPlatformActive ? Color.RED : Color.GRAY);
+    }
+    private void updateRightPlatformIndicator(boolean isRightPlatformActive){
+        trainController_stationSideRight_Status.setFill(isRightPlatformActive ? Color.RED : Color.GRAY);
+    }
+    private void updateInTunnelIndicator(boolean isInTunnelActive){
+        trainController_inTunnel_Status.setFill(isInTunnelActive ? Color.RED : Color.GRAY);
     }
 
     private void changeTrainView(int trainID) {

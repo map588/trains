@@ -65,6 +65,16 @@ public class stubTrainController implements TrainController{
 
     }
 
+    public void setLeftPlatform(boolean leftPlatform){
+
+    }
+    public void setRightPlatform(boolean rightPlatform){
+
+    }
+    public void setInTunnel(boolean inTunnel){
+
+    }
+
     public int getID() {
         return 0;
     }
@@ -164,6 +174,10 @@ public class stubTrainController implements TrainController{
     public boolean getPowerFailure() {
         return false;
     }
+
+    public boolean getLeftPlatform(){return false;}
+    public boolean getRightPlatform(){return  false;}
+    public boolean getInTunnel(){return false;}
 
     public void addChangeListener(PropertyChangeListener listener) {
 
