@@ -17,6 +17,7 @@ public class TrafficLightState {
         this.lightState = new SimpleBooleanProperty(false);
         this.lightColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
         this.lightState.addListener(event -> updateColor());
+        updateColor();
     }
 
     public boolean hasLight() {

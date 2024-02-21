@@ -1,16 +1,12 @@
 package waysideController;
 
-import Common.WaysideController;
+import Utilities.TrafficLightState;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class WaysideBlockInfo {
     private final ReadOnlyIntegerProperty blockID;
     private final ReadOnlyBooleanProperty hasSwitch;
-    private final ReadOnlyBooleanProperty hasLight;
     private final ReadOnlyBooleanProperty hasCrossing;
 
     private ReadOnlyIntegerProperty switchBlockMain;
@@ -21,36 +17,20 @@ public class WaysideBlockInfo {
 
     private final BooleanProperty switchRequestedState;
     private IntegerProperty switchedBlockID;
-    private final BooleanProperty lightState;
-
-    private final ObjectProperty<Paint> lightStateColor;
+    private final TrafficLightState lightState;
     private final BooleanProperty crossingState;
 
     public WaysideBlockInfo(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
         this.blockID = new ReadOnlyIntegerWrapper(blockID);
         this.hasSwitch = new ReadOnlyBooleanWrapper(hasSwitch);
-        this.hasLight = new ReadOnlyBooleanWrapper(hasLight);
         this.hasCrossing = new ReadOnlyBooleanWrapper(hasCrossing);
 
         this.occupation = new SimpleBooleanProperty(false);
         this.switchState = new SimpleBooleanProperty(false);
         this.switchRequestedState = new SimpleBooleanProperty(false);
-        this.lightState = new SimpleBooleanProperty(false);
-        this.lightStateColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
         this.crossingState = new SimpleBooleanProperty(false);
 
-//        this.lightState.addListener((observable, oldValue, newValue) -> {
-//            System.out.println("Listener");
-//            if(isHasLight()) {
-//                if(isLightState())
-//                    lightStateColor.set(Color.GREEN);
-//                else
-//                    lightStateColor.set(Color.RED);
-//            }
-//            else {
-//                lightStateColor.set(Color.TRANSPARENT);
-//            }
-//        });
+        this.lightState = new TrafficLightState(hasLight);
     }
 
     public WaysideBlockInfo(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
@@ -65,19 +45,6 @@ public class WaysideBlockInfo {
             else
                 this.switchedBlockID.set(this.getSwitchBlockMain());
         });
-    }
-
-    public void setLightState(boolean lightState) {
-        this.lightState.set(lightState);
-        if(isHasLight()) {
-            if(isLightState())
-                lightStateColor.set(Color.GREEN);
-            else
-                lightStateColor.set(Color.RED);
-        }
-        else {
-            lightStateColor.set(Color.TRANSPARENT);
-        }
     }
 
     public int getBlockID() {
@@ -96,12 +63,8 @@ public class WaysideBlockInfo {
         return hasSwitch;
     }
 
-    public boolean isHasLight() {
-        return hasLight.get();
-    }
-
-    public ReadOnlyBooleanProperty hasLightProperty() {
-        return hasLight;
+    public boolean hasLight() {
+        return lightState.hasLight();
     }
 
     public boolean isHasCrossing() {
@@ -128,11 +91,15 @@ public class WaysideBlockInfo {
         return switchState;
     }
 
-    public boolean isLightState() {
-        return lightState.get();
+    public boolean getLightState() {
+        return lightState.getLightState();
     }
 
-    public BooleanProperty lightStateProperty() {
+    public void setLightState(boolean lightState) {
+        this.lightState.setLightState(lightState);
+    }
+
+    public TrafficLightState lightStateProperty() {
         return lightState;
     }
 
@@ -176,11 +143,4 @@ public class WaysideBlockInfo {
         return switchRequestedState;
     }
 
-    public Paint getLightStateColor() {
-        return lightStateColor.get();
-    }
-
-    public ObjectProperty<Paint> lightStateColorProperty() {
-        return lightStateColor;
-    }
 }
