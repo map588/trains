@@ -6,9 +6,13 @@ public interface TrainModel {
     void setEmergencyBrake(boolean brake);
     void setServiceBrake(boolean brake);
     void setPower(double power);
+    void setCommandSpeed(double speed);
+    void setActualSpeed(double speed);
+    void setAuthority(int authority);
     void setNumCars(int numCars);
     void setNumPassengers(int numPassengers);
     void setCrewCount(int crewCount);
+    void setGrade(double grade);
 
     //Murphy Signals
     void setBrakeFailure(boolean failure);

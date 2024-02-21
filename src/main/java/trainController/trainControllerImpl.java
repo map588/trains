@@ -3,11 +3,7 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
-import Framework.Support.PropertyChangeListener;
 import trainModel.stubTrainModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class trainControllerImpl implements TrainController, Notifications {
@@ -45,7 +41,6 @@ public class trainControllerImpl implements TrainController, Notifications {
     private TrainModel train;
 
     private final trainControllerSubject subject;
-    private final List<PropertyChangeListener> listeners = new ArrayList<>();
 
     //Passing with trainID actually adds the train to the subject list
     public trainControllerImpl(int trainID) {
@@ -77,64 +72,168 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.subject;
     }
 
-//    public int getBlocksToNextStation() {
-//        return this.blocksToNextStation;
-//    }
 
-    public void addChangeListener(PropertyChangeListener listener) {
-        listeners.add(listener);
-    }
-
-    protected void notifyChange(String propertyName, Object newValue) {
-        System.out.println("Changed variable: " + propertyName + " to " + newValue.toString() + "in trainControllerImpl.");
-        listeners.forEach(listener -> listener.onPropertyChange(propertyName, newValue));
-    }
 
     //-----------------Setters-----------------
     public void assignTrainModel(TrainModel train) {
         this.train = train;
-        notifyChange("CommandSpeed", this.commandSpeed);
-        notifyChange("CurrentSpeed", this.currentSpeed);
-        notifyChange("AutomaticMode", this.automaticMode);
+        setOverrideSpeed(train.getSpeed());
+        setCommandSpeed(train.getSpeed());
+        setServiceBrake(train.getServiceBrake());
+        setEmergencyBrake(train.getEmergencyBrake());
+        setIntLights(train.getIntLights());
+        setExtLights(train.getExtLights());
+        setLeftDoors(train.getLeftDoors());
+        setRightDoors(train.getRightDoors());
+        setTemperature(train.getTemperature());
+        setSignalFailure(train.getSignalFailure());
+        setBrakeFailure(train.getBrakeFailure());
+        setPowerFailure(train.getPowerFailure());
+    }
+
+    public void notifyChange(String propertyName, Object newValue) {
+        System.out.println("Variable: " + propertyName + " changed to " + newValue);
+
+        // If the set is called by the GUI, it implies that the property is already changed
+        // and we should not notify the subject of the change, because its already changed...
+        if(!subject.isGUIUpdate) {
+            subject.notifyChange(propertyName, newValue);
+        }
     }
 
     //Functions called by the internal logic to notify of changes
-    public void setAutomaticMode(boolean mode) {this.automaticMode = mode;notifyChange("AutomaticMode", mode);}
-    public void setAuthority(int authority) {this.authority = authority;notifyChange("Authority", authority);}
-    public void setOverrideSpeed(double speed) {this.overrideSpeed = speed;notifyChange("OverrideSpeed", speed);}
-    public void setCommandSpeed(double speed) {this.commandSpeed = speed;notifyChange("CommandSpeed", speed);}
-    public void setServiceBrake(boolean brake) {this.serviceBrake = brake;notifyChange("ServiceBrake", brake);}
-    public void setEmergencyBrake(boolean brake) {this.emergencyBrake = brake;notifyChange("EmergencyBrake", brake);}
-    public void setKi(double Ki) {this.Ki = Ki;notifyChange("Ki", Ki);}
-    public void setKp(double Kp) {this.Kp = Kp;notifyChange("Kp", Kp);}
-    public void setPower(double power) {this.power = power;notifyChange("Power", power);}
-    public void setIntLights(boolean lights) {this.internalLights = lights;notifyChange("InternalLights", lights);}
-    public void setExtLights(boolean lights) {this.externalLights = lights;notifyChange("ExternalLights", lights);}
-    public void setLeftDoors(boolean doors) {this.leftDoors = doors;notifyChange("LeftDoors", doors);}
-    public void setRightDoors(boolean doors) {this.rightDoors = doors;notifyChange("RightDoors", doors);}
-    public void setTemperature(double temp) {this.temperature = temp;notifyChange("Temperature", temp);}
-    public void setAnnouncements(boolean announcements) {this.announcements = announcements;notifyChange("Announcements", announcements);}
-    public void setSignalFailure(boolean signalFailure) {this.signalFailure = signalFailure;notifyChange("SignalFailure", signalFailure);}
-    public void setBrakeFailure(boolean brakeFailure) {this.brakeFailure = brakeFailure;notifyChange("BrakeFailure", brakeFailure);}
-    public void setPowerFailure(boolean powerFailure) {this.powerFailure = powerFailure;notifyChange("PowerFailure", powerFailure);}
-    public void setInTunnel(boolean tunnel){this.inTunnel = tunnel;notifyChange("InTunnel",tunnel);}
-    public void setLeftPlatform(boolean platform){this.leftPlatform = platform; notifyChange("LeftPlatform",platform);}
+    public void setAutomaticMode(boolean mode) {
+        this.automaticMode = mode;
+        notifyChange("automaticMode", mode);
+    }
+    public void setAuthority(int authority) {
+        this.authority = authority;
+        notifyChange("authority", authority);
+    }
+    public void setOverrideSpeed(double speed) {
+        this.overrideSpeed = speed;
+        notifyChange("overrideSpeed", speed);
+    }
+    public void setCommandSpeed(double speed) {
+        this.commandSpeed = speed;
+        notifyChange("commandSpeed", speed);
+    }
+    public void setServiceBrake(boolean brake) {
+        this.serviceBrake = brake;
+        notifyChange("serviceBrake", brake);
+    }
+    public void setEmergencyBrake(boolean brake) {
+        this.emergencyBrake = brake;
+        notifyChange("emergencyBrake", brake);
+    }
+    public void setKi(double Ki) {
+        this.Ki = Ki;
+        notifyChange("Ki", Ki);
+    }
+    public void setKp(double Kp) {
+        this.Kp = Kp;
+        notifyChange("Kp", Kp);
+    }
+    public void setPower(double power) {
+        this.power = power;
+        notifyChange("power", power);
+    }
+    public void setIntLights(boolean lights) {
+        this.internalLights = lights;
+        notifyChange("internalLights", lights);
+    }
+    public void setExtLights(boolean lights) {
+        this.externalLights = lights;
+        notifyChange("externalLights", lights);
+    }
+    public void setLeftDoors(boolean doors) {
+        this.leftDoors = doors;
+        notifyChange("leftDoors", doors);
+    }
+    public void setRightDoors(boolean doors) {
+        this.rightDoors = doors;
+        notifyChange("rightDoors", doors);
+    }
+    public void setTemperature(double temp) {
+        this.temperature = temp;
+        notifyChange("temperature", temp);
+    }
+    public void setAnnouncements(boolean announcements) {
+        this.announcements = announcements;
+        notifyChange("announcements", announcements);
+    }
+    public void setSignalFailure(boolean signalFailure) {
+        this.signalFailure = signalFailure;
+        notifyChange("signalFailure", signalFailure);
+    }
+    public void setBrakeFailure(boolean brakeFailure) {
+        this.brakeFailure = brakeFailure;
+        notifyChange("brakeFailure", brakeFailure);
+    }
+    public void setPowerFailure(boolean powerFailure) {
+        this.powerFailure = powerFailure;
+        notifyChange("powerFailure", powerFailure);
+    }
+    public void setInTunnel(boolean tunnel){
+        this.inTunnel = tunnel;
+        notifyChange("inTunnel",tunnel);
+    }
 
-    public void setRightPlatform(boolean platform){this.rightPlatform = platform; notifyChange("rightPlatform",platform);}
+    public void setLeftPlatform(boolean platform){
+        this.leftPlatform = platform;
+        notifyChange("leftPlatform",platform);
+    }
+
+    public void setRightPlatform(boolean platform){
+        this.rightPlatform = platform;
+        notifyChange("rightPlatform",platform);
+    }
+
+    public void setValue(String propertyName, Object newValue) {
+        switch (propertyName) {
+            case "automaticMode" -> setAutomaticMode((boolean) newValue);
+            case "authority" -> setAuthority((int) newValue);
+            case "overrideSpeed" -> setOverrideSpeed((double) newValue);
+            case "commandSpeed" -> setCommandSpeed((double) newValue);
+            case "serviceBrake" -> setServiceBrake((boolean) newValue);
+            case "emergencyBrake" -> setEmergencyBrake((boolean) newValue);
+            case "Ki" -> setKi((double) newValue);
+            case "Kp" -> setKp((double) newValue);
+            case "power" -> setPower((double) newValue);
+            case "internalLights" -> setIntLights((boolean) newValue);
+            case "externalLights" -> setExtLights((boolean) newValue);
+            case "leftDoors" -> setLeftDoors((boolean) newValue);
+            case "rightDoors" -> setRightDoors((boolean) newValue);
+            case "temperature" -> setTemperature((double) newValue);
+            case "announcements" -> setAnnouncements((boolean) newValue);
+            case "signalFailure" -> setSignalFailure((boolean) newValue);
+            case "brakeFailure" -> setBrakeFailure((boolean) newValue);
+            case "powerFailure" -> setPowerFailure((boolean) newValue);
+            case "inTunnel" -> setInTunnel((boolean) newValue);
+            case "leftPlatform" -> setLeftPlatform((boolean) newValue);
+            case "rightPlatform" -> setRightPlatform((boolean) newValue);
+        }
+    }
+
+
+
 
     //-----------------Getters-----------------
     public int getID() {
         return this.trainID;
     }
 
+    //    public int getBlocksToNextStation() {
+//        return this.blocksToNextStation;
+//    }
 
-    public double getSpeed() {
+    public double  getSpeed() {
         return this.currentSpeed;
     }
-    public double getAcceleration() {
+    public double  getAcceleration() {
         return this.train.getAcceleration();
     }
-    public double getPower() {
+    public double  getPower() {
         return this.power;
     }
     public boolean getServiceBrake() {
@@ -143,19 +242,19 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getEmergencyBrake() {
         return this.emergencyBrake;
     }
-    public double getCommandSpeed() {
+    public double  getCommandSpeed() {
         return this.commandSpeed;
     }
-    public int getAuthority() {
+    public int     getAuthority() {
         return this.authority;
     }
-    public double getKi() {
+    public double  getKi() {
         return this.Ki;
     }
-    public double getKp() {
+    public double  getKp() {
         return this.Kp;
     }
-    public double getOverrideSpeed() {
+    public double  getOverrideSpeed() {
         return this.overrideSpeed;
     }
     public boolean getAutomaticMode() {
@@ -181,7 +280,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.powerFailure;
     }
 
-    public double getMaxSpeed() {
+    public double  getMaxSpeed() {
         return this.maxSpeed;
     }
     public boolean getLeftDoors() {
@@ -190,7 +289,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getRightDoors() {
         return this.rightDoors;
     }
-    public double getTemperature() {
+    public double  getTemperature() {
         return this.temperature;
     }
 

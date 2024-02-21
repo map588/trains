@@ -12,6 +12,21 @@ public class stubTrainModel implements TrainModel {
     public void setPower(double power) {
     }
 
+    @Override
+    public void setCommandSpeed(double speed) {
+
+    }
+
+    @Override
+    public void setActualSpeed(double speed) {
+
+    }
+
+    @Override
+    public void setAuthority(int authority) {
+
+    }
+
     public void setNumCars(int numCars) {
     }
 
@@ -19,6 +34,11 @@ public class stubTrainModel implements TrainModel {
     }
 
     public void setCrewCount(int crewCount) {
+
+    }
+
+    @Override
+    public void setGrade(double grade) {
 
     }
 

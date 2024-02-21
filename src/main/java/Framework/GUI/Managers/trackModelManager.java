@@ -8,9 +8,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import trackModel.trackModelImpl;
 
 import java.io.File;
@@ -53,16 +55,17 @@ public class trackModelManager {
     private TextField tempDisplay;
     @FXML
     private Label tempValueLabel;
+    private Label statusLabel;
 
     //station signal switch
     @FXML
     private TextField stationDisplay;
-//    @FXML
-//    private TextField passEmbarkDisplay;
-//    @FXML
-//    private TextField passDisembarkDisplay;
-//    @FXML
-//    private TextField ticketSalesDisplay;
+    @FXML
+    private Label passEmbarkedValue;
+    @FXML
+    private Label passDisembarkedValue;
+    @FXML
+    private Label ticketSalesValue;
 
     //beacon information
     @FXML
@@ -85,7 +88,7 @@ public class trackModelManager {
     @FXML
     private TableColumn<TrackLayoutInfo, Integer> blockColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> occupiedColumn;
+    private TableColumn<TrackLayoutInfo, Boolean> occupiedColumn;
     @FXML
     private TableColumn<TrackLayoutInfo, Integer> sizeColumn;
     @FXML
@@ -101,27 +104,6 @@ public class trackModelManager {
     @FXML
     private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
 
-    //constructor
-    public trackModelManager() {
-        this.trackProperties = new TrackLayoutInfo();
-        this.currTrackModel = new trackModelImpl();
-        this.testBench = new trackModelTB();
-        this.lineTable = new TableView<>();
-
-        this.sectionsColumn = new TableColumn<>();
-        this.blockColumn = new TableColumn<>();
-        this.occupiedColumn = new TableColumn<>();
-        this.sizeColumn = new TableColumn<>();
-        this.gradeColumn = new TableColumn<>();
-        this.stationColumn = new TableColumn<>();
-        this.signalColumn = new TableColumn<>();
-        this.switchColumn = new TableColumn<>();
-        this.speedLimitColumn = new TableColumn<>();
-        this.failureColumn = new TableColumn<>();
-
-
-    }
-
     //current layout
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
 
@@ -134,6 +116,7 @@ public class trackModelManager {
 
     public void initialize(){
         //initialize buttons and user inputs
+        testBench.setTrackModel(currTrackModel);
         logo.setOnMouseClicked(event -> launchTestBench());
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
@@ -158,7 +141,6 @@ public class trackModelManager {
         //set up cell factories
         sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty().asObject());
-        // occupiedColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
         sizeColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
         gradeColumn.setCellValueFactory(block -> block.getValue().blockGradeProperty().asObject());
         stationColumn.setCellValueFactory(block -> block.getValue().isStationProperty());
@@ -166,6 +148,65 @@ public class trackModelManager {
         switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
+        occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
+
+        //set up cell factories
+        StringConverter<Integer> intConverter = new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer integer) {
+                return integer.toString();
+            }
+
+            @Override
+            public Integer fromString(String s) {
+                return Integer.parseInt(s);
+            }
+        };
+        StringConverter<Boolean> boolConverter = new StringConverter<Boolean>() {
+            @Override
+            public String toString(Boolean bool) {
+                return bool.toString();
+            }
+
+            @Override
+            public Boolean fromString(String s) {
+                return Boolean.parseBoolean(s);
+            }
+        };
+        StringConverter<Double> doubleConverter = new StringConverter<Double>() {
+            @Override
+            public String toString(Double d) {
+                return d.toString();
+            }
+
+            @Override
+            public Double fromString(String s) {
+                return Double.parseDouble(s);
+            }
+        };
+        sectionsColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        blockColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+        sizeColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+        gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
+        speedLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+        stationColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+        signalColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+        switchColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+        failureColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+        occupiedColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+
+        //set track heater
+        tempValueLabel.setText(Integer.toString(currTrackModel.getTemperature()));
+        if(Integer.parseInt(tempValueLabel.getText()) < 32){
+            statusLabel.setText("Status - ON");
+        }
+        else{
+            statusLabel.setText("Status - OFF");
+        }
+
+        //labels
+        passEmbarkedValue.setText(trackProperties.getPassEmbarked());
+        passDisembarkedValue.setText(trackProperties.getPassDisembarked());
 
     }
 
@@ -206,7 +247,6 @@ public class trackModelManager {
         //parse the csv file
         File file = new File(trackFilePath.getText());
         ArrayList<String> csvData = csvParser(file);
-        this.updateTable();
         this.addLineName(lineNameInput.getText());
     }
 

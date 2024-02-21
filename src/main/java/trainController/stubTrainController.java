@@ -2,7 +2,6 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Support.PropertyChangeListener;
 
 public class stubTrainController implements TrainController{
 
@@ -72,6 +71,10 @@ public class stubTrainController implements TrainController{
 
     }
     public void setInTunnel(boolean inTunnel){
+
+    }
+
+    public void setValue(String propertyName, Object newValue) {
 
     }
 
@@ -179,7 +182,8 @@ public class stubTrainController implements TrainController{
     public boolean getRightPlatform(){return  false;}
     public boolean getInTunnel(){return false;}
 
-    public void addChangeListener(PropertyChangeListener listener) {
+
+    public void notifyChange(String property, Object newValue) {
 
     }
 }

@@ -2,47 +2,38 @@ package trackModel;
 
 
 import Utilities.TrackLayoutInfo;
-import Utilities.staticBlockInfo;
-import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import Common.TrackModel;
-import javafx.beans.property.BooleanProperty;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class trackModelImpl implements TrackModel {
 
+    private TrackLayoutInfo trackProperties;
+
     public trackModelImpl(){
         this.trainAuthorities = new HashMap<>();
         this.trainCommandSpeeds = new HashMap<>();
         this.line = new ArrayList<>();
-        this.blockOccupied = false;
         this.lightState = false;
         this.switchState = false;
+        this.blockOccupied = new ArrayList<Integer>();
+        this.failures = new ArrayList<Integer>();
     }
 
     private HashMap<Integer,Integer> trainAuthorities;
     private HashMap<Integer,Integer> trainCommandSpeeds;
     private ArrayList<String> line = new ArrayList<>();
-    private boolean blockOccupied;
+    private ArrayList<Integer> blockOccupied = new ArrayList<>();
     private boolean lightState;
     private boolean switchState;
+    private int temperature;
     private ArrayList<Integer> failures = new ArrayList<Integer>();
 
     private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
 
-    public trackModelImpl(ArrayList<String> csvData) {
-        this.trainAuthorities = new HashMap<>();
-        this.trainCommandSpeeds = new HashMap<>();
-        this.line = null;
-        this.blockOccupied = false;
-        this.failures = new ArrayList<Integer>();
-    }
     public int getAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
     }
@@ -59,6 +50,25 @@ public class trackModelImpl implements TrackModel {
     public boolean getSwitchState(int block){ return this.switchState; }
     public void setSwitchState(boolean state) { switchState = state; }
     public void setLightState(boolean state) { lightState = state; }
+    public void setTemperature(int temp){
+        temperature = temp;
+        trackProperties.setTemperature(Integer.toString(temp));
+    }
+    public int getTemperature(){ return temperature; }
+
+    public boolean getBlockOccupied(int block) {
+        return this.blockOccupied.contains(block);
+    }
+    public void setBlockOccupied(int block, boolean state) {
+        if(state){
+            this.blockOccupied.add(block);
+        }
+        else{
+            this.blockOccupied.remove(block);
+        }
+    }
+    public void setLine(String line) { this.line.add(line); }
+    public String getLine(int lineNumber) { return this.line.get(lineNumber); }
 
     public void setTrainAuthority(int trainID, int authority) {
         if(this.trainAuthorities.containsKey(trainID)) {
@@ -75,13 +85,7 @@ public class trackModelImpl implements TrackModel {
             this.trainCommandSpeeds.put(trainID, commandedSpeed);
         }
     }
-    public boolean blockOccupied(int block) {
-        return this.blockOccupied;
-    }
-    public void setBlockOccupied(boolean state) { this.blockOccupied = state; }
-    public void setLine(String line) { this.line.add(line); }
-    public ArrayList<String> getLines() {return this.line;}
-    public String getLine(int lineNumber) { return this.line.get(lineNumber); }
+
 
     public void setFailure(int block, String failure) {
         if(failure.equals("Broken Rail") || failure.equals("Track Circuit Failure") || failure.equals("Power Failure")) {
@@ -99,6 +103,7 @@ public class trackModelImpl implements TrackModel {
         for(int i = 0; i <= 15; i++){
             TrackLayoutInfo block = new TrackLayoutInfo();
             block.setHasFailure(failures.contains(i));
+            block.setIsOccupied(blockOccupied.contains(i));
             block.setBlockNumber(i);
 
             if(i < 6){
@@ -124,5 +129,10 @@ public class trackModelImpl implements TrackModel {
         }
 
         return this.trackInfo;
+    }
+
+
+    public void setTrackLayoutInfo(TrackLayoutInfo trackProperties) {
+        this.trackProperties = trackProperties;
     }
 }

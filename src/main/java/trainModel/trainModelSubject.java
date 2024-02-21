@@ -1,10 +1,14 @@
 package trainModel;
 
+import Common.TrainModel;
 import Framework.Support.AbstractSubject;
+import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
-import trainController.trainControllerSubjectFactory;
 
 public class trainModelSubject implements AbstractSubject{
+
+    private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
+    private TrainModel model;
 
     private IntegerProperty authority;
     private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
@@ -12,9 +16,8 @@ public class trainModelSubject implements AbstractSubject{
     private StringProperty numCars, numPassengers, crewCount, grade;
     private BooleanProperty serviceBrake, emergencyBrake, brakeFailure, powerFailure;
     private BooleanProperty signalFailure, extLights, intLights, rightDoors, leftDoors;
-    private trainModelImpl model;
 
-    public trainModelSubject() {
+    public void intitializeValues() {
         this.authority = new SimpleIntegerProperty(0);
         this.commandSpeed = new SimpleDoubleProperty(0);
         this.actualSpeed = new SimpleDoubleProperty(0);
@@ -37,91 +40,28 @@ public class trainModelSubject implements AbstractSubject{
         trainSubjectFactory.getInstance().registerSubject(0, this);
     }
 
-    public trainModelSubject(trainModelImpl trainModel) {
+    public trainModelSubject(TrainModel trainModel) {
         this.model = trainModel;
 
-        this.authority = new SimpleIntegerProperty(0);
-        this.commandSpeed = new SimpleDoubleProperty(0);
-        this.actualSpeed = new SimpleDoubleProperty(0);
-        this.acceleration = new SimpleDoubleProperty(0);
-        this.power = new SimpleDoubleProperty(0);
-        this.grade = new SimpleStringProperty("0");
-        this.serviceBrake = new SimpleBooleanProperty(false);
-        this.emergencyBrake = new SimpleBooleanProperty(false);
-        this.brakeFailure = new SimpleBooleanProperty(false);
-        this.powerFailure = new SimpleBooleanProperty(false);
-        this.signalFailure = new SimpleBooleanProperty(false);
-        this.temperature = new SimpleDoubleProperty(0);
-        this.extLights = new SimpleBooleanProperty(false);
-        this.intLights = new SimpleBooleanProperty(false);
-        this.leftDoors = new SimpleBooleanProperty(false);
-        this.rightDoors = new SimpleBooleanProperty(false);
-        this.numCars = new SimpleStringProperty("0");
-        this.numPassengers = new SimpleStringProperty("0");
-        this.crewCount = new SimpleStringProperty("0");
-        trainSubjectFactory.getInstance().registerSubject(0, this);
-
-        model.addChangeListener(((propertyName, newValue) -> {
-            switch (propertyName) {
-                case "authority":
-                    authority.set((int) newValue);
-                    break;
-                case "commandSpeed":
-                    commandSpeed.set((double) newValue);
-                    break;
-                case "actualSpeed":
-                    actualSpeed.set((double) newValue);
-                    break;
-                case "acceleration":
-                    acceleration.set((double) newValue);
-                    break;
-                case "power":
-                    power.set((double) newValue);
-                    break;
-                case "grade":
-                    grade.set(newValue.toString());
-                    break;
-                case "serviceBrake":
-                    serviceBrake.set((boolean) newValue);
-                    break;
-                case "emergencyBrake":
-                    emergencyBrake.set((boolean) newValue);
-                    break;
-                case "brakeFailure":
-                    brakeFailure.set((boolean) newValue);
-                    break;
-                case "powerFailure":
-                    powerFailure.set((boolean) newValue);
-                    break;
-                case "signalFailure":
-                    signalFailure.set((boolean) newValue);
-                    break;
-                case "extLights":
-                    extLights.set((boolean) newValue);
-                    break;
-                case "intLights":
-                    intLights.set((boolean) newValue);
-                    break;
-                case "leftDoors":
-                    leftDoors.set((boolean) newValue);
-                    break;
-                case "rightDoors":
-                    rightDoors.set((boolean) newValue);
-                    break;
-                case "temperature":
-                    temperature.set((double) newValue);
-                    break;
-                case "numCars":
-                    numCars.set(newValue.toString());
-                    break;
-                case "numPassengers":
-                    numPassengers.set(newValue.toString());
-                    break;
-                case "crewCount":
-                    crewCount.set(newValue.toString());
-                    break;
-            }
-        }));
+        properties.put("authority", new SimpleIntegerProperty(0));
+        properties.put("commandSpeed", new SimpleDoubleProperty(0));
+        properties.put("actualSpeed", new SimpleDoubleProperty(0));
+        properties.put("acceleration", new SimpleDoubleProperty(0));
+        properties.put("power", new SimpleDoubleProperty(0));
+        properties.put("grade", new SimpleStringProperty("0"));
+        properties.put("serviceBrake", new SimpleBooleanProperty(false));
+        properties.put("emergencyBrake", new SimpleBooleanProperty(false));
+        properties.put("brakeFailure", new SimpleBooleanProperty(false));
+        properties.put("powerFailure", new SimpleBooleanProperty(false));
+        properties.put("signalFailure", new SimpleBooleanProperty(false));
+        properties.put("temperature", new SimpleDoubleProperty(0));
+        properties.put("extLights", new SimpleBooleanProperty(false));
+        properties.put("intLights", new SimpleBooleanProperty(false));
+        properties.put("leftDoors", new SimpleBooleanProperty(false));
+        properties.put("rightDoors", new SimpleBooleanProperty(false));
+        properties.put("numCars", new SimpleStringProperty("0"));
+        properties.put("numPassengers", new SimpleStringProperty("0"));
+        properties.put("crewCount", new SimpleStringProperty("0"));
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {
@@ -194,6 +134,10 @@ public class trainModelSubject implements AbstractSubject{
             case "grade" -> updateProperty(grade, newValue.toString());
             default -> System.err.println("Unknown property " + propertyName);
         }
+    }
+
+    public Property<?> getProperty(String propertyName) {
+        return null;
     }
 }
 

@@ -1,215 +1,274 @@
 package Framework.GUI.Managers;
 
-import Common.TrainController;
+import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class trainControllerManager {
 
     @FXML
-    private CheckBox trainController_intLight_CheckBox, trainController_extLight_CheckBox, trainController_openDoorLeft_CheckBox, trainController_openDoorRight_CheckBox, trainController_toggleServiceBrake_CheckBox, trainController_autoMode_CheckBox;
+    private Text nextStationText;
     @FXML
-    private TextField trainController_setTemperature_TextField, trainController_setKi_TextField, trainController_setKp_TextField, trainController_setSpeed_TextField;
+    private Rectangle stationInf, blockInfo;
     @FXML
-    private Button trainController_emergencyBrake_Button, trainController_makeAnnouncements_Button;
+    private CheckBox intLightCheckBox, extLightCheckBox, openDoorLeftCheckBox, openDoorRightCheckBox, toggleServiceBrakeCheckBox, autoModeCheckBox;
     @FXML
-    private Slider trainController_setSpeed_Slider;
+    private TextField setTemperatureTextField, setKiTextField, setKpTextField, setSpeedTextField;
     @FXML
-    private Gauge trainController_currentSpeed_Gauge, trainController_speedLimit_Gauge, trainController_commandedSpeed_Gauge, trainController_Authority_Gauge, trainController_powerOutput_Gauge;//, trainController_blocksToNextStation_Gauge;
+    private Button emergencyBrakeButton, makeAnnouncementsButton;
     @FXML
-    private Circle trainController_eBrake_Status, trainController_signalFailure_Status, trainController_brakeFailure_Status, trainController_powerFailure_Status, trainController_stationSideLeft_Status,trainController_stationSideRight_Status, trainController_inTunnel_Status;
+    private Slider setSpeedSlider;
     @FXML
-    private ChoiceBox<Integer> trainController_trainNo_ChoiceBox;
+    private Gauge currentSpeedGauge, speedLimitGauge, commandedSpeedGauge, authorityGauge, powerOutputGauge;
+    @FXML
+    private Circle eBrakeStatus, signalFailureStatus, brakeFailureStatus, powerFailureStatus, stationSideLeftStatus, stationSideRightStatus, inTunnelStatus;
+    @FXML
+    private ChoiceBox<Integer> trainNoChoiceBox;
 
     private trainControllerSubjectFactory factory;
     private trainControllerSubject currentSubject;
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+
+
+    //private trainControllerTB testBench;
 
     @FXML
     public void initialize() {
-        trainControllerImpl trainController = new trainControllerImpl(0);
+        //testBench = launchTestBench();
+
+        //Creating a trainControllerImpl object results in a subject being created
+        //and that subject being added to the factories Map of subjects
+        new trainControllerImpl(0);
+        new trainControllerImpl(1);
+
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
-        currentSubject = factory.getSubjects().get(0);
-        bindGauges();
-        bindControls();
-        bindIndicators();
-
-        trainController_trainNo_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        // Select the first train by default if available
+        if (!factory.getSubjects().isEmpty()) {
+            Integer firstKey = factory.getSubjects().keySet().iterator().next();
+            changeTrainView(firstKey);
+        }
+        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
             }
         });
-
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, ?> subjects = factory.getSubjects();
+        ObservableHashMap<Integer, trainControllerSubject> subjects = factory.getSubjects();
 
-        ObservableHashMap.MapListener<Integer, ?> listener = new ObservableHashMap.MapListener<Integer, Object>() {
+        // Create a listener that reacts to any change (add, remove, update) by updating choice box items
+        ObservableHashMap.MapListener<Integer, trainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
             @Override
-            public void onAdded(Integer key, Object value) {
+            public void onAdded(Integer key, trainControllerSubject value) {
                 updateChoiceBoxItems();
             }
 
             @Override
-            public void onRemoved(Integer key, Object value) {
+            public void onRemoved(Integer key, trainControllerSubject value) {
                 updateChoiceBoxItems();
             }
 
             @Override
-            public void onUpdated(Integer key, Object oldValue, Object newValue) {
+            public void onUpdated(Integer key, trainControllerSubject oldValue, trainControllerSubject newValue) {
                 updateChoiceBoxItems();
             }
         };
 
-
-        //subjects.addChangeListener(listener); *****************************************************************************************************************Commented out by Ty for compilation
-
+        subjects.addChangeListener(genericListener);
         updateChoiceBoxItems();
     }
 
 
     private void updateChoiceBoxItems() {
         Platform.runLater(() -> {
-            trainController_trainNo_ChoiceBox.setItems(FXCollections.observableArrayList(
+            trainNoChoiceBox.setItems(FXCollections.observableArrayList(
                     new ArrayList<>(factory.getSubjects().keySet())));
         });
     }
 
     private void bindGauges() {
-        trainController_currentSpeed_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("currentSpeed"));
-        trainController_commandedSpeed_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("commandSpeed"));
-        trainController_speedLimit_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("maxSpeed"));
-        trainController_Authority_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
-        trainController_powerOutput_Gauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
+        currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("currentSpeed"));
+        commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("commandSpeed"));
+        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty("maxSpeed"));
+        authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
+        powerOutputGauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
         //trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
     }
 
     private void bindIndicators() {
-        currentSubject.getBooleanProperty("emergencyBrake").addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
-        currentSubject.getBooleanProperty("signalFailure").addListener((obs, oldSelection, newSelection) -> updateSignalFailureIndicator(newSelection));
-        currentSubject.getBooleanProperty("brakeFailure").addListener((obs, oldSelection, newSelection) -> updateBrakeFailureIndicator(newSelection));
-        currentSubject.getBooleanProperty("powerFailure").addListener((obs, oldSelection, newSelection) -> updatePowerFailureIndicator(newSelection));
-        currentSubject.getBooleanProperty("inTunnel").addListener((obs,oldSelection, newSelection)->updateInTunnelIndicator(newSelection));
-        currentSubject.getBooleanProperty("leftPlatform").addListener((obs,oldSelection, newSelection)->updateleftPlatformIndicator(newSelection));
-        currentSubject.getBooleanProperty("rightPlatform").addListener((obs,oldSelection, newSelection)->updateRightPlatformIndicator(newSelection));
+        appendListener(currentSubject.getBooleanProperty("emergencyBrake"), (obs, oldVal, newVal) -> updateIndicator(eBrakeStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("signalFailure"),(obs, oldVal, newVal) -> updateIndicator(signalFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("brakeFailure"),(obs, oldVal, newVal) -> updateIndicator(brakeFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("powerFailure"),(obs, oldVal, newVal) -> updateIndicator(powerFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("inTunnel"),(obs, oldVal, newVal) -> updateIndicator(inTunnelStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("leftPlatform"),(obs, oldVal, newVal) -> updateIndicator(stationSideLeftStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("rightPlatform"),(obs, oldVal, newVal) -> updateIndicator(stationSideRightStatus, newVal));
+    }
+
+
+    private void updateIndicator(Circle indicator, boolean isActive) {
+        Platform.runLater(() -> indicator.setFill(isActive ? Color.RED : Color.GRAY));
     }
 
     private void bindControls() {
-        bindSliderAndTextField(trainController_setSpeed_Slider, trainController_setSpeed_TextField, ((DoubleProperty)currentSubject.getDoubleProperty("overrideSpeed"))::set);
-        bindCheckBox(trainController_intLight_CheckBox, currentSubject.getBooleanProperty("intLights")::set);
-        bindCheckBox(trainController_extLight_CheckBox, currentSubject.getBooleanProperty("extLights")::set);
-        bindCheckBox(trainController_openDoorLeft_CheckBox, currentSubject.getBooleanProperty("leftDoors")::set);
-        bindCheckBox(trainController_openDoorRight_CheckBox, currentSubject.getBooleanProperty("rightDoors")::set);
-        bindCheckBox(trainController_toggleServiceBrake_CheckBox, currentSubject.getBooleanProperty("serviceBrake")::set);
-        bindCheckBox(trainController_autoMode_CheckBox, currentSubject.getBooleanProperty("automaticMode")::set);
-        bindTextField(trainController_setTemperature_TextField, currentSubject.getDoubleProperty("temperature")::set);
-        bindTextField(trainController_setKi_TextField, currentSubject.getDoubleProperty("Ki")::set);
-        bindTextField(trainController_setKp_TextField, currentSubject.getDoubleProperty("Kp")::set);
-        trainController_emergencyBrake_Button.setOnAction(event -> {
-            boolean newEBrake = !currentSubject.getBooleanProperty("emergencyBrake").get();
-            currentSubject.updateProperty(currentSubject.getBooleanProperty("emergencyBrake"), newEBrake);
-            updateEBrakeIndicator(newEBrake);
+        // Binding Slider and TextField for "overrideSpeed"
+        bindSliderAndTextField(setSpeedSlider, setSpeedTextField, newValue -> {
+            currentSubject.setProperty("overrideSpeed", newValue);
         });
-        trainController_makeAnnouncements_Button.setOnAction(event -> {
-            boolean enable = !currentSubject.getBooleanProperty("announcements").get();
-            currentSubject.updateProperty(currentSubject.getBooleanProperty("announcements"), enable);
+
+        // Binding CheckBoxes
+        bindCheckBox(intLightCheckBox, "intLights");
+        bindCheckBox(extLightCheckBox, "extLights");
+        bindCheckBox(openDoorLeftCheckBox, "leftDoors");
+        bindCheckBox(openDoorRightCheckBox, "rightDoors");
+        bindCheckBox(toggleServiceBrakeCheckBox, "serviceBrake");
+        bindCheckBox(autoModeCheckBox, "automaticMode");
+
+        // Binding TextFields for numeric properties
+        bindTextField(setTemperatureTextField, "temperature");
+        bindTextField(setKiTextField, "Ki");
+        bindTextField(setKpTextField, "Kp");
+
+        // Setting up Button actions
+        setupButtonActions();
+    }
+
+    private void bindCheckBox(CheckBox checkBox, String propertyName) {
+        appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
+                currentSubject.setProperty(propertyName, newVal);
         });
     }
 
-    private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
-        slider.valueProperty().addListener((obs, oldSelection, newSelection) -> {
-            consumer.accept(newSelection.doubleValue());
-            textField.setText(String.valueOf(newSelection.doubleValue()));
-        });
-        textField.textProperty().addListener((obs, oldSelection, newSelection) -> {
-            double value = Double.parseDouble(newSelection);
-            consumer.accept(value);
-            slider.setValue(value);
-        });
-    }
 
-    private void bindCheckBox(CheckBox checkBox, Consumer<Boolean> consumer) {
-        checkBox.selectedProperty().addListener((obs, oldSelection, newSelection) -> consumer.accept(newSelection));
-    }
-
-    private void bindTextField(TextField textField, Consumer<Double> consumer) {
-        textField.textProperty().addListener((obs, oldSelection, newSelection) -> {
-            try{
-                double value = Double.parseDouble(newSelection);
-                consumer.accept(value);
+    private void bindTextField(TextField textField, String propertyName) {
+        appendListener(textField.textProperty(),(obs, oldVal, newVal) -> {
+            try {
+                // Parse and update property
+                currentSubject.setProperty(propertyName, Double.parseDouble(newVal));
             } catch (NumberFormatException e) {
-                consumer.accept(Double.parseDouble(oldSelection));
+                // Clear if invalid input
+                textField.setText("");
             }
         });
     }
 
-    public synchronized void addTrainToList(TrainController controller) {
-        trainController_trainNo_ChoiceBox.getItems().add(controller.getID());
+    private void setupButtonActions() {
+        emergencyBrakeButton.setOnAction(event -> {
+            BooleanProperty eBrakeProp = currentSubject.getBooleanProperty("emergencyBrake");
+            currentSubject.setProperty("emergencyBrake", !eBrakeProp.get());
+        });
+        makeAnnouncementsButton.setOnAction(event -> {
+            BooleanProperty announceProp = currentSubject.getBooleanProperty("announcements");
+            currentSubject.setProperty("announcements", !announceProp.get());
+        });
     }
 
-    private void updateEBrakeIndicator(boolean isEmergencyBrakeActive) {
-        trainController_eBrake_Status.setFill(isEmergencyBrakeActive ? Color.RED : Color.GRAY);
-    }
-    private void updateSignalFailureIndicator(boolean isSignalFailureActive) {
-        trainController_signalFailure_Status.setFill(isSignalFailureActive ? Color.RED : Color.GRAY);
-    }
-    private void updateBrakeFailureIndicator(boolean isBrakeFailureActive) {
-        trainController_brakeFailure_Status.setFill(isBrakeFailureActive ? Color.RED : Color.GRAY);
-    }
-    private void updatePowerFailureIndicator(boolean isPowerFailureActive) {
-        trainController_powerFailure_Status.setFill(isPowerFailureActive ? Color.RED : Color.GRAY);
-    }
-    private void updateleftPlatformIndicator(boolean isLeftPlatformActive){
-        trainController_stationSideLeft_Status.setFill(isLeftPlatformActive ? Color.RED : Color.GRAY);
-    }
-    private void updateRightPlatformIndicator(boolean isRightPlatformActive){
-        trainController_stationSideRight_Status.setFill(isRightPlatformActive ? Color.RED : Color.GRAY);
-    }
-    private void updateInTunnelIndicator(boolean isInTunnelActive){
-        trainController_inTunnel_Status.setFill(isInTunnelActive ? Color.RED : Color.GRAY);
+
+
+    private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
+        appendListener(slider.valueProperty(), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;}
+            textField.setText(String.format("%.1f", newVal));
+            consumer.accept(newVal.doubleValue());
+        });
+        appendListener(textField.focusedProperty(),(obs, wasFocused, isNowFocused) -> {
+            if (wasFocused && !isNowFocused) { // TextField has lost focus
+                String newVal = textField.getText();
+                if(newVal.isEmpty()) {return;}
+                try {
+                    double value = Double.parseDouble(newVal);
+                    // Preventing feedback loop
+                    if (Math.abs(value - slider.getValue()) > 0.1) {
+                        consumer.accept(value);
+                        slider.setValue(value); // This line may be redundant due to the consumer updating the model
+                    }
+                } catch (NumberFormatException e) {
+                    textField.setText("");
+                }
+            }
+        });
     }
 
-    private void changeTrainView(int trainID) {
+
+    private <T> void appendListener(ObservableValue<T> observable, ChangeListener<T> listener) {
+        observable.addListener(listener);
+        listenerReferences.add(new ListenerReference<>(observable, listener));
+    }
+
+
+    private void changeTrainView(Integer trainID) {
         currentSubject = factory.getSubjects().get(trainID);
         if(currentSubject != null) {
             unbindControls();
             bindControls();
+            bindGauges();
+            bindIndicators();
         }
     }
 
     private void unbindControls() {
-        trainController_currentSpeed_Gauge.valueProperty().unbind();
-        trainController_commandedSpeed_Gauge.valueProperty().unbind();
-        trainController_speedLimit_Gauge.valueProperty().unbind();
-        trainController_Authority_Gauge.valueProperty().unbind();
-        trainController_powerOutput_Gauge.valueProperty().unbind();
+        listenerReferences.forEach(ListenerReference::detach);
+        listenerReferences.clear();
 
-        trainController_setSpeed_Slider.valueProperty().unbind();
-        trainController_setSpeed_TextField.textProperty().unbind();
+        currentSpeedGauge.valueProperty().unbind();
+        commandedSpeedGauge.valueProperty().unbind();
+        speedLimitGauge.valueProperty().unbind();
+        authorityGauge.valueProperty().unbind();
+        powerOutputGauge.valueProperty().unbind();
 
-        trainController_intLight_CheckBox.selectedProperty().unbind();
-        trainController_extLight_CheckBox.selectedProperty().unbind();
-        trainController_openDoorLeft_CheckBox.selectedProperty().unbind();
-        trainController_openDoorRight_CheckBox.selectedProperty().unbind();
-        trainController_toggleServiceBrake_CheckBox.selectedProperty().unbind();
-        trainController_autoMode_CheckBox.selectedProperty().unbind();
+        setSpeedSlider.valueProperty().unbind(); // Assuming you might bind this bidirectionally in another part of your code
+        setSpeedTextField.textProperty().unbind();
 
-        trainController_setTemperature_TextField.textProperty().unbind();
-        trainController_setKi_TextField.textProperty().unbind();
-        trainController_setKp_TextField.textProperty().unbind();
+        intLightCheckBox.selectedProperty().unbind();
+        extLightCheckBox.selectedProperty().unbind();
+        openDoorLeftCheckBox.selectedProperty().unbind();
+        openDoorRightCheckBox.selectedProperty().unbind();
+        toggleServiceBrakeCheckBox.selectedProperty().unbind();
+        autoModeCheckBox.selectedProperty().unbind();
+
+        setTemperatureTextField.textProperty().unbind();
+        setKiTextField.textProperty().unbind();
+        setKpTextField.textProperty().unbind();
     }
+
+//    private trainControllerTB launchTestBench(){
+//        System.out.println("Preparing to launch test bench");
+//        try{
+//            String tbFile = "Framework/GUI/FXML/trainController_TB.fxml";
+//            URL url = getClass().getResource(tbFile);
+//            FXMLLoader loader = new FXMLLoader(url);
+//            Node content = loader.load();
+//            Stage newStage = new Stage();
+//            Scene newScene = new Scene(new VBox(content));
+//            newStage.setScene(newScene);
+//            newStage.setTitle("Train Controller Test Bench");
+//            newStage.show();
+//            return loader.getController();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("Failed to launch test bench");
+//            throw new RuntimeException();
+//        }
+//    }
 }

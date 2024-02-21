@@ -26,14 +26,14 @@
                                 <TableView fx:id="lineTable" layoutX="537.0" layoutY="68.0" prefHeight="754.0" prefWidth="833.0">
                                     <columns>
                                         <TableColumn fx:id="occupiedColumn" editable="false" prefWidth="83.0" text="Occupied" />
-                                        <TableColumn fx:id="sectionColumn" editable="false" prefWidth="83.0" text="Section" />
+                                        <TableColumn fx:id="sectionsColumn" editable="false" prefWidth="83.0" text="Section" />
                                         <TableColumn fx:id="blockColumn" editable="false" prefWidth="83.0" text="Block" />
                                         <TableColumn fx:id="sizeColumn" editable="false" prefWidth="83.0" text="Size" />
                                         <TableColumn fx:id="gradeColumn" editable="false" prefWidth="83.0" text="Grade" />
                                         <TableColumn fx:id="speedLimitColumn" editable="false" prefWidth="83.0" text="Speed Limit" />
                                         <TableColumn fx:id="stationColumn" editable="false" prefWidth="83.0" text="Station" />
-                                        <TableColumn fx:id="signalColumn2" editable="false" prefWidth="83.0" text="Signal" />
-                                        <TableColumn fx:id="switchColumn1" editable="false" prefWidth="83.0" text="Switch" />
+                                        <TableColumn fx:id="signalColumn" editable="false" prefWidth="83.0" text="Signal" />
+                                        <TableColumn fx:id="switchColumn" editable="false" prefWidth="83.0" text="Switch" />
                                         <TableColumn fx:id="failureColumn" editable="false" prefWidth="83.0" text="Failure" />
                                     </columns>
                                 </TableView>
