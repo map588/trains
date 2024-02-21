@@ -3,6 +3,12 @@ package trainModel;
 import Common.TrainModel;
 
 public class stubTrainModel implements TrainModel {
+    private stubTrainModel() {
+    }
+    public static stubTrainModel createstubTrainModel() {
+        return new stubTrainModel();
+    }
+
     public void setEmergencyBrake(boolean brake) {
     }
 
@@ -68,7 +74,8 @@ public class stubTrainModel implements TrainModel {
 
     public void setTemperature(double temp) {
     }
-
+    public void setAcceleration(double acceleration) {
+    }
     public int getAuthority() {
         return 1;
     }
@@ -136,9 +143,13 @@ public class stubTrainModel implements TrainModel {
     public boolean getRightDoors() {
         return true;
     }
-
     public void trainModelPhysics() {
+    }
+
+    @Override
+    public void setValue(String propertyName, Object newValue) {
 
     }
+
 
 }

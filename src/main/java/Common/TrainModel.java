@@ -13,6 +13,7 @@ public interface TrainModel {
     void setNumPassengers(int numPassengers);
     void setCrewCount(int crewCount);
     void setGrade(double grade);
+    void setAcceleration(double acceleration);
 
     //Murphy Signals
     void setBrakeFailure(boolean failure);
@@ -53,4 +54,6 @@ public interface TrainModel {
 
     //Vital Functions for simulating the train physics
     void trainModelPhysics();
+
+    void setValue(String propertyName, Object newValue);
 }

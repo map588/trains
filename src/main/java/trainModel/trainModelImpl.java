@@ -6,6 +6,9 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
 import Utilities.Constants;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import trainController.stubTrainController;
 
 public class trainModelImpl implements TrainModel, Notifications {
@@ -69,6 +72,14 @@ public class trainModelImpl implements TrainModel, Notifications {
 
 
     public void notifyChange(String property, Object newValue) {
+
+        System.out.println("Variable: " + property + " changed to " + newValue);
+
+        // If the set is called by the GUI, it implies that the property is already changed
+        // and we should not notify the subject of the change, because its already changed...
+        if(!subject.isGUIUpdate) {
+            subject.notifyChange(property, newValue);
+        }
     }
 
     public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", speed); }
@@ -89,7 +100,33 @@ public class trainModelImpl implements TrainModel, Notifications {
     public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
     public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
     public void setTemperature(double temp) { this.temperature = temp; notifyChange("temperature", temp); }
+    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", acceleration); }
 
+    public void setValue(String propertyName, Object newValue){
+        if(newValue == null)
+            return;
+        switch(propertyName){
+            case "authority" -> setAuthority((int)newValue);
+            case "commandSpeed" -> setCommandSpeed((double)newValue);
+            case "actualSpeed" -> setActualSpeed((double)newValue);
+            case "acceleration" -> setAcceleration((double)newValue);
+            case "power" -> setPower((double)newValue);
+            case "grade" -> setGrade((double)newValue);
+            case "serviceBrake" -> setServiceBrake((boolean)newValue);
+            case "emergencyBrake" -> setEmergencyBrake((boolean)newValue);
+            case "brakeFailure" -> setBrakeFailure((boolean)newValue);
+            case "powerFailure" -> setPowerFailure((boolean)newValue);
+            case "signalFailure" -> setSignalFailure((boolean)newValue);
+            case "temperature" -> setTemperature((double)newValue);
+            case "extLights" -> setExtLights((boolean)newValue);
+            case "intLights" -> setIntLights((boolean)newValue);
+            case "leftDoors" -> setLeftDoors((boolean)newValue);
+            case "rightDoors" -> setRightDoors((boolean)newValue);
+            case "numCars" -> setNumCars((int)newValue);
+            case "numPassengers" -> setNumPassengers((int)newValue);
+            case "crewCount" -> setCrewCount((int)newValue);
+        }
+    }
     //Getters
     public trainModelSubject getSubject(){
         return this.subject;

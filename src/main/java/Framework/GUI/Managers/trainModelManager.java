@@ -1,7 +1,11 @@
 package Framework.GUI.Managers;
 
+import Framework.Support.ListenerReference;
 import Framework.Support.SubjectFactory;
 import eu.hansolo.medusa.Gauge;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -19,6 +23,8 @@ import trainModel.trainModelSubject;
 import trainModel.trainSubjectFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class trainModelManager {
 
@@ -37,6 +43,7 @@ public class trainModelManager {
     public Circle extLightsEn, intLightEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
     private SubjectFactory<trainModelSubject> factory;
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private trainModelSubject subject;
 
     private trainModelTB testBench;
@@ -64,20 +71,34 @@ public class trainModelManager {
     }
 
     private void bindLabels() {
-        gradeLabel.textProperty().bindBidirectional(subject.getStringProperty("grade"));
         maxPowerLabel.setText("643.68");
         maxVelocityLabel.setText("43.48");
         medAccelerationLabel.setText("1.64");
         trainLengthLabel.setText("105.74");
         trainHeightLabel.setText("11.22");
         trainWidthLabel.setText("8.69");
-        numCarsLabel.textProperty().bindBidirectional(subject.getStringProperty("numCars"));
-
-        numPassengersLabel.textProperty().bindBidirectional(subject.getStringProperty("numPassengers"));
-        crewCountLabel.textProperty().bindBidirectional(subject.getStringProperty("crewCount"));
         emptyWeightLabel.setText("40.9");
         loadedWeightLabel.setText("56.7");
+
+
+        bindLabelToProperty("numCars", numCarsLabel);
+        bindLabelToProperty("numPassengers", numPassengersLabel);
+        bindLabelToProperty("crewCount", crewCountLabel);
+        bindLabelToProperty("grade", gradeLabel);
     }
+
+    private void bindLabelToProperty(String property, Label label) {
+        appendListener(subject.getProperty(property) ,(obs, oldValue, newValue) -> {
+                String newVal = newValue.toString();
+                if(newVal.isEmpty()) {return;}
+                try {
+                    label.setText(newVal);
+                } catch (NumberFormatException e) {
+                    label.setText("");
+                }
+        });
+    }
+
 
     private void bindGauges() {
         actualPowerDisp.valueProperty().bind(subject.getDoubleProperty("power"));
@@ -88,30 +109,30 @@ public class trainModelManager {
     }
 
     private void bindIndicators() {
-        subject.getBooleanProperty("emergencyBrake").addListener((obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
-        subject.getBooleanProperty("serviceBrake").addListener((obs, oldSelection, newSelection) -> updateSBrakeIndicator(newSelection));
-        subject.getBooleanProperty("extLights").addListener((obs, oldSelection, newSelection) -> updateExtLightsIndicator(newSelection));
-        subject.getBooleanProperty("intLights").addListener((obs, oldSelection, newSelection) -> updateIntLightsIndicator(newSelection));
-        subject.getBooleanProperty("leftDoors").addListener((obs, oldSelection, newSelection) -> updateLeftDoorsIndicator(newSelection));
-        subject.getBooleanProperty("rightDoors").addListener((obs, oldSelection, newSelection) -> updateRightDoorsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty("emergencyBrake"), (obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
+        appendListener(subject.getBooleanProperty("serviceBrake"), (obs, oldSelection, newSelection) -> updateSBrakeIndicator(newSelection));
+        appendListener(subject.getBooleanProperty("extLights"), (obs, oldSelection, newSelection) -> updateExtLightsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty("intLights"), (obs, oldSelection, newSelection) -> updateIntLightsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty("leftDoors"), (obs, oldSelection, newSelection) -> updateLeftDoorsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty("rightDoors"), (obs, oldSelection, newSelection) -> updateRightDoorsIndicator(newSelection));
     }
 
     private void bindControls() {
-        eBrakeBtn.setOnAction(event -> subject.updateProperty(subject.getBooleanProperty("emergencyBrake"), true));
+        eBrakeBtn.setOnAction(event -> subject.setProperty("emergencyBrake", true));
 
         brakeFailureBtn.setOnAction(event -> {
-            boolean newBrakeFailure = !subject.getBooleanProperty("brakeFailure").get();
-            subject.updateProperty(subject.getBooleanProperty("brakeFailure"), newBrakeFailure);
+            BooleanProperty brakeFailure = subject.getBooleanProperty("brakeFailure");
+            subject.setProperty("brakeFailure", !brakeFailure.get());
         });
 
         powerFailureBtn.setOnAction(event -> {
-            boolean newPowerFailure = !subject.getBooleanProperty("powerFailure").get();
-            subject.updateProperty(subject.getBooleanProperty("powerFailure"), newPowerFailure);
+            BooleanProperty powerFailure = subject.getBooleanProperty("powerFailure");
+            subject.setProperty("powerFailure", !powerFailure.get());
         });
 
         signalFailureBtn.setOnAction(event -> {
-            boolean newSignalFailure = !subject.getBooleanProperty("signalFailure").get();
-            subject.updateProperty(subject.getBooleanProperty("signalFailure"), newSignalFailure);
+            BooleanProperty signalFailure = subject.getBooleanProperty("signalFailure");
+            subject.setProperty("signalFailure", !signalFailure.get());
         });
     }
 
@@ -137,12 +158,18 @@ public class trainModelManager {
     private void changeTrainView(int trainID) {
         subject = factory.getSubjects().get(trainID);
         if(subject != null) {
-            unbindControls();
+            unbindValues();
             bindControls();
+            bindGauges();
+            bindIndicators();
+            bindLabels();
         }
     }
 
-    private void unbindControls() {
+    private void unbindValues() {
+        listenerReferences.forEach(ListenerReference::detach);
+        listenerReferences.clear();
+
         cmdSpeedDisp.valueProperty().unbind();
         authorityDisp.valueProperty().unbind();
         actualVelocityDisp.valueProperty().unbind();
@@ -152,11 +179,11 @@ public class trainModelManager {
         brakeFailureBtn.selectedProperty().unbind();
         powerFailureBtn.selectedProperty().unbind();
         signalFailureBtn.selectedProperty().unbind();
+    }
 
-        gradeLabel.textProperty().unbindBidirectional(subject.getStringProperty("grade"));
-        numCarsLabel.textProperty().unbindBidirectional(subject.getStringProperty("numCars"));
-        numPassengersLabel.textProperty().unbindBidirectional(subject.getStringProperty("numPassengers"));
-        crewCountLabel.textProperty().unbindBidirectional(subject.getStringProperty("crewCount"));
+    private <T> void appendListener(ObservableValue<T> observable, ChangeListener<T> listener) {
+        observable.addListener(listener);
+        listenerReferences.add(new ListenerReference<>(observable, listener));
     }
 
     private trainModelTB launchTestBench() {

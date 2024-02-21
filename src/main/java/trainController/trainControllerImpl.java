@@ -65,7 +65,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.rightPlatform = false;
         this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
-        this.train = new stubTrainModel();
+        this.train = stubTrainModel.createstubTrainModel();
     }
 
     public trainControllerSubject getSubject() {
