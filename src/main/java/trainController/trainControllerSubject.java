@@ -54,36 +54,31 @@ public class trainControllerSubject implements AbstractSubject {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        System.out.println("TController Subject notifyChange was called.");
         // Update property from controller, Internal Logic takes precedence over GUI updates
-        updateFromLogic(() -> {
-                Property<?> property = properties.get(propertyName);
-                updateProperty(property, newValue);
-        });
+        Platform.runLater(() ->
+                updateFromLogic(() -> {
+                    Property<?> property = properties.get(propertyName);
+                    updateProperty(property, newValue);
+                })
+        );
     }
 
     public void setProperty(String propertyName, Object newValue) {
         Runnable updateTask = () -> {
             Property<?> property = properties.get(propertyName);
                 updateProperty(property, newValue);
-                System.out.println("Subject called setValue.");
-                try{
                     controller.setValue(propertyName, newValue);
-                } catch (Exception e) {
-                    System.out.println("Error in setValue: " + e);
-                }
         };
 
         if (isLogicUpdate) {
             executorService.scheduleWithFixedDelay(() -> {
                 if (!isLogicUpdate) {
-                    System.out.println("Executor delayed update from GUI");
-                    updateFromGUI(updateTask);
+                    System.out.println("Delayed setProperty from GUI");
+                    Platform.runLater(() -> updateFromGUI(updateTask));
                 }
             }, 0, 10, TimeUnit.MILLISECONDS);
         } else {
-            System.out.println("Direct update from GUI");
-            updateFromGUI(updateTask);
+            Platform.runLater(() -> updateFromGUI(updateTask));
         }
     }
 
@@ -99,13 +94,10 @@ public class trainControllerSubject implements AbstractSubject {
         }
         if (property instanceof IntegerProperty && newValue instanceof Number) {
             ((IntegerProperty) property).set(((Number) newValue).intValue());
-            System.out.println("Integer Property " + property.getName() + " updated to " + newValue);
         } else if (property instanceof DoubleProperty && newValue instanceof Number) {
             ((DoubleProperty) property).set(((Number) newValue).doubleValue());
-            System.out.println("Double Property " + property.getName() + " updated to " + newValue);
         } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
             ((BooleanProperty) property).set((Boolean) newValue);
-            System.out.println("Boolean Property " + property.getName() + " updated to " + newValue);
         } else {
             throw new IllegalArgumentException("Mismatch in property type and value type for " + property.getName());
         }
@@ -144,7 +136,7 @@ public class trainControllerSubject implements AbstractSubject {
         System.out.println("Called from updateFromGUI.");
         isGUIUpdate = true;
         try {
-            Platform.runLater(updateLogic);
+            updateLogic.run();
         } finally {
             isGUIUpdate = false;
         }
@@ -154,7 +146,7 @@ public class trainControllerSubject implements AbstractSubject {
         System.out.println("Called from updateFromLogic.");
         isLogicUpdate = true;
         try {
-            Platform.runLater(updateLogic);
+            updateLogic.run();
         } finally {
             isLogicUpdate = false;
         }

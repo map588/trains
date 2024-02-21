@@ -92,12 +92,13 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        System.out.println("TrainControllerImpl variable: " + propertyName + " changed to " + newValue);
+        System.out.println("Variable: " + propertyName + " changed to " + newValue);
 
         // If the set is called by the GUI, it implies that the property is already changed
         // and we should not notify the subject of the change, because its already changed...
-        if(!subject.isGUIUpdate)
+        if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
+        }
     }
 
     //Functions called by the internal logic to notify of changes
@@ -189,7 +190,6 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
     public void setValue(String propertyName, Object newValue) {
-        System.out.println("TrainControllerImpl setValue called with " + propertyName + " and " + newValue);
         switch (propertyName) {
             case "automaticMode" -> setAutomaticMode((boolean) newValue);
             case "authority" -> setAuthority((int) newValue);
