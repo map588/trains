@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="231.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="231.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainModelTB">
    <children>
       <TextField fx:id="tbPower" layoutX="61.0" layoutY="14.0" prefHeight="26.0" prefWidth="79.0" promptText="Enter Power" />
       <TextField fx:id="tbSpeed" layoutX="61.0" layoutY="40.0" prefHeight="26.0" prefWidth="102.0" promptText="Enter CmdSpeed" />
