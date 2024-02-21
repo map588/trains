@@ -19,9 +19,6 @@ public class TrackLayoutInfo {
     private BooleanProperty isBeacon;
     private BooleanProperty hasFailure;
 
-    public staticBlockInfo switchBlock1;
-    public staticBlockInfo switchBlock2;
-
     public TrackLayoutInfo(){
         blockNumber = new SimpleIntegerProperty();
         blockLength = new SimpleIntegerProperty();
