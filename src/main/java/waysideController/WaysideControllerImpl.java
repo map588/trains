@@ -1,11 +1,14 @@
 package waysideController;
 
 import Common.WaysideController;
+import Utilities.TrainSpeedAuth;
 import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WaysideControllerImpl implements WaysideController {
 
@@ -19,6 +22,8 @@ public class WaysideControllerImpl implements WaysideController {
 
     // List containing all the track blocks controlled by this instance of the wayside controller
     private final List<WaysideBlockInfo> trackList = new ArrayList<>();
+
+    private final List<TrainSpeedAuth> speedAuthList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
@@ -104,6 +109,17 @@ public class WaysideControllerImpl implements WaysideController {
     @Override
     public void CTCEnableAllBlocks() {
 
+    }
+
+    @Override
+    public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth) {
+        if(speedAuthList.contains(speedAuth)) {
+            speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
+        }
+        else {
+            speedAuthList.add(speedAuth);
+        }
+        subject.setSpeedAuth(speedAuth);
     }
 
     @Override

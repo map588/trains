@@ -1,10 +1,15 @@
 package Framework.GUI.Managers;
 
 import Common.WaysideController;
+import Utilities.TrainSpeedAuth;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 import waysideController.WaysideBlockInfo;
 
 public class WaysideControllerTB {
@@ -26,20 +31,45 @@ public class WaysideControllerTB {
     @FXML
     public TableColumn<WaysideBlockInfo, Boolean> tbSTEnable;
     @FXML
-    public TableView tbSpeedAuthTable;
+    public TableView<TrainSpeedAuth> tbSpeedAuthTable;
     @FXML
-    public TableColumn tbSATID;
+    public TableColumn<TrainSpeedAuth, Integer> tbSATID;
     @FXML
-    public TableColumn tbSATSpeedIn;
+    public TableColumn<TrainSpeedAuth, Double> tbSATSpeedIn;
     @FXML
-    public TableColumn tbSATAuthIn;
+    public TableColumn<TrainSpeedAuth, Integer> tbSATAuthIn;
     @FXML
-    public TableColumn tbSATSpeedOut;
+    public TableColumn<TrainSpeedAuth, Double> tbSATSpeedOut;
     @FXML
-    public TableColumn tbSATAuthOut;
+    public TableColumn<TrainSpeedAuth, Integer> tbSATAuthOut;
 
     private Object block;
     WaysideController controller;
+
+
+    private StringConverter<Double> doubleConverter = new StringConverter<Double>() {
+        @Override
+        public String toString(Double d) {
+            return d.toString();
+        }
+
+        @Override
+        public Double fromString(String s) {
+            return Double.parseDouble(s);
+        }
+    };
+
+    private StringConverter<Integer> intConverter = new StringConverter<Integer>() {
+        @Override
+        public String toString(Integer integer) {
+            return integer.toString();
+        }
+
+        @Override
+        public Integer fromString(String s) {
+            return Integer.parseInt(s);
+        }
+    };
 
 
     @FXML
@@ -54,13 +84,30 @@ public class WaysideControllerTB {
         tbSTSwitchTo.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
         tbSTEnable.setCellValueFactory(block -> block.getValue().switchRequestedStateProperty());
         tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
+
+        tbSpeedAuthTable.setEditable(true);
+        tbSATID.setCellValueFactory(speedAuth -> speedAuth.getValue().trainIDProperty().asObject());
+        tbSATSpeedIn.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
+        tbSATAuthIn.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
+//        tbSATSpeedIn.setCellValueFactory(speedAuth -> new SimpleStringProperty("Speed"));
+//        tbSATAuthIn.setCellValueFactory(speedAuth -> new SimpleStringProperty("Authority"));
+        tbSATSpeedOut.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
+        tbSATAuthOut.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
+        tbSATSpeedIn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
+        tbSATAuthIn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+    }
+
+    public void setController(WaysideController controller) {
+        this.controller = controller;
+        readBlockInfo(controller.getSubject().blockListProperty());
+        tbSpeedAuthTable.setItems(controller.getSubject().getSpeedAuthList());
     }
 
     /**
      * Read the block info from the wayside controller
      * @param blocks The list of blocks to read
      */
-    public void readBlockInfo(ObservableList<WaysideBlockInfo> blocks) {
+    private void readBlockInfo(ObservableList<WaysideBlockInfo> blocks) {
         tbBlockTable.setItems(blocks);
         tbSwitchTable.getItems().clear();
         for(WaysideBlockInfo item : blocks) {

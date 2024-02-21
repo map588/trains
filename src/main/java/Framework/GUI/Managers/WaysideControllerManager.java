@@ -2,6 +2,7 @@ package Framework.GUI.Managers;
 
 import Common.WaysideController;
 import Utilities.BlockInfo;
+import Utilities.TrainSpeedAuth;
 import Utilities.staticBlockInfo;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -173,6 +174,8 @@ public class WaysideControllerManager {
         currentSubject.getController().runPLC();
 
         updateBlockList();
+
+        currentSubject.getController().CTCSetSpeedAuth(new TrainSpeedAuth(1, 0, 0));
     }
 
     /**
@@ -223,7 +226,7 @@ public class WaysideControllerManager {
      */
     private void updateBlockList() {
         blockTable.setItems(currentSubject.blockListProperty());
-        testBench.readBlockInfo(currentSubject.blockListProperty());
+//        testBench.readBlockInfo(currentSubject.blockListProperty());
         updateSwitchList();
     }
 
@@ -269,6 +272,8 @@ public class WaysideControllerManager {
         maintenanceModeCheckbox.selectedProperty().bindBidirectional(currentSubject.maintenanceModeProperty());
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.PLCNameProperty());
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.activePLCColorProperty());
+
+        testBench.setController(controller);
 
         updateBlockList();
         updateSwitchList();

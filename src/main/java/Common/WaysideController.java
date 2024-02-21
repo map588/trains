@@ -1,5 +1,6 @@
 package Common;
 
+import Utilities.TrainSpeedAuth;
 import waysideController.WaysideBlockInfo;
 import waysideController.WaysideControllerSubject;
 
@@ -44,6 +45,8 @@ public interface WaysideController {
 
     // Allows CTC to enable all blocks that were previously disabled
     public void CTCEnableAllBlocks();
+
+    public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth);
 
     // Allows CTC to request a switch change (works with automatic mode)
     public void CTCRequestSwitchState(int blockID, boolean switchState);
