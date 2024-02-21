@@ -50,16 +50,10 @@ public class CTCOfficeManager {
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
-        switchLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("lightState"));
+        switchLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("hasSwitchCon"));
         //switchLightColumn.setCellFactory(
 
-
-
-
-
-
     }
-
 
     @FXML
     private void toggle_VBox() {
@@ -74,20 +68,3 @@ public class CTCOfficeManager {
 
 
 }
-/* failure
-@FXML
-public void initialize() {
-    blockNumberColumn.setCellValueFactory(new PropertyValueFactory<>("blockNumber"));
-    occupationLightColumn.setCellValueFactory(new PropertyValueFactory<>("occupationLight"));
-    switchLightColumn.setCellValueFactory(new PropertyValueFactory<>("switchLightColor"));
-    switchStateColumn.setCellValueFactory(new PropertyValueFactory<>("switchState"));
-    blockTable.getItems().addAll(
-            new CTCBlockSubject(1, true, red, straight),
-            new CTCBlockSubject(2, false, green, diverging),
-            new CTCBlockSubject(3, true, red, straight),
-            new CTCBlockSubject(4, false, green, diverging),
-            new CTCBlockSubject(5, true, red, straight),
-            new CTCBlockSubject(6, false, green, diverging)
-    );
-}
-    */
