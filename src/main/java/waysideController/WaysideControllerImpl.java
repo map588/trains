@@ -1,7 +1,6 @@
 package waysideController;
 
 import Common.WaysideController;
-import Utilities.BlockInfo;
 import javafx.scene.paint.Color;
 
 import java.io.File;
@@ -19,7 +18,7 @@ public class WaysideControllerImpl implements WaysideController {
     private boolean maintenanceMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private final List<BlockInfo> trackList = new ArrayList<>();
+    private final List<WaysideBlockInfo> trackList = new ArrayList<>();
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
@@ -35,7 +34,7 @@ public class WaysideControllerImpl implements WaysideController {
     public WaysideControllerImpl(int id, int trackLine) {
         this.id = id;
         this.trackLine = trackLine;
-        program = new PLCProgram();
+        program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
     }
 
@@ -49,6 +48,11 @@ public class WaysideControllerImpl implements WaysideController {
         this.PLCFile = PLC;
         subject.PLCNameProperty().set(PLC.getName());
         updateActivePLCProp();
+    }
+
+    @Override
+    public void runPLC() {
+        program.runBlueLine();
     }
 
     @Override
@@ -70,18 +74,19 @@ public class WaysideControllerImpl implements WaysideController {
     }
 
     @Override
-    public List<BlockInfo> getBlockList() {
+    public List<WaysideBlockInfo> getBlockList() {
         return this.trackList;
     }
 
     @Override
-    public void addBlock(BlockInfo block) {
+    public void addBlock(WaysideBlockInfo block) {
         this.trackList.add(block);
+        subject.addBlock(block);
     }
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
-        trackList.get(blockID).setTrackCircuitState(isOccupied);
+        trackList.get(blockID-1).occupationProperty().set(isOccupied);
         program.setOccupancy(blockID, isOccupied);
         program.runBlueLine();
     }
@@ -103,7 +108,9 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void CTCRequestSwitchState(int blockID, boolean switchState) {
-
+//        trackList.get(blockID-1).switchStateProperty().set(switchState);
+        program.setSwitchRequest(blockID, switchState);
+        program.runBlueLine();
     }
 
     @Override

@@ -5,6 +5,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Paint;
+import waysideController.WaysideBlockInfo;
 import waysideController.WaysideControllerSubject;
 
 import java.io.File;
@@ -20,6 +21,8 @@ public interface WaysideController {
     // Loads a new PLC program into the wayside controller from a given file
     public void loadPLC(File PLC);
 
+    public void runPLC();
+
     // Returns whether the wayside controller is in maintenance mode
     public boolean isMaintenanceMode();
 
@@ -30,10 +33,10 @@ public interface WaysideController {
     public void setMaintenanceModeNoUpdate(boolean maintenanceMode);
 
     // Returns the list of block IDs under the wayside controller's control
-    public List<BlockInfo> getBlockList();
+    public List<WaysideBlockInfo> getBlockList();
 
     // Adds a new track block under the wayside controller's control
-    public void addBlock(BlockInfo block);
+    public void addBlock(WaysideBlockInfo block);
 
     // Allows Track Model to set train occupancy for a specific block
     public void trackModelSetOccupancy(int blockID, boolean isOccupied);
