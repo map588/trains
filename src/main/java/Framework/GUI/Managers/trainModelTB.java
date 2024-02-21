@@ -61,12 +61,12 @@ public class trainModelTB {
     }
 
     private void bindTrain(){
-        tbEBrake.setOnAction(event -> model.setEmergencyBrake(tbEBrake.isSelected()));
-        tbSBrake.setOnAction(event -> model.setServiceBrake(tbSBrake.isSelected()));
-        tbIntLights.setOnAction(event -> model.setIntLights(tbIntLights.isSelected()));
-        tbExtLights.setOnAction(event -> model.setExtLights(tbExtLights.isSelected()));
-        tbLeftDoors.setOnAction(event -> model.setLeftDoors(tbLeftDoors.isSelected()));
-        tbRightDoors.setOnAction(event -> model.setRightDoors(tbRightDoors.isSelected()));
+        tbEBrake.setOnAction(event -> model.setEmergencyBrake(!model.getEmergencyBrake()));
+        tbSBrake.setOnAction(event -> model.setServiceBrake(!model.getServiceBrake()));
+        tbIntLights.setOnAction(event -> model.setIntLights(!model.getIntLights()));
+        tbExtLights.setOnAction(event -> model.setExtLights(!model.getExtLights()));
+        tbLeftDoors.setOnAction(event -> model.setLeftDoors(!model.getLeftDoors()));
+        tbRightDoors.setOnAction(event -> model.setRightDoors(!model.getRightDoors()));
 
         tbPower.setOnAction(event -> model.setPower(Double.parseDouble(tbPower.getText())));
         tbSpeed.setOnAction(event -> model.setCommandSpeed(Double.parseDouble(tbSpeed.getText())));
