@@ -40,7 +40,7 @@ public class CTCOfficeImpl implements CTCOffice {
 
 
         switches.put(false, new HashMap<Integer, CTCSwitchInfo>() {{
-            put(1, switch1);
+            put(5, switch1);
         }});
 
         ArrayList<CTCBlockInfo> line1 = new ArrayList<>() {{
@@ -60,7 +60,22 @@ public class CTCOfficeImpl implements CTCOffice {
             return newTrain;
         }
     }
-//**********************************************************************************************************************************************
+
+    public void setOccupancy(int blockID,boolean line, boolean occupied) {
+        track.get(line).get(blockID).setOccupied(occupied);
+        System.out.println("Block " + blockID + " is occupied: " + track.get(line).get(blockID).getOccupied());
+    }
+
+    public void setLightState(boolean line, int blockID, boolean lightState) {
+        track.get(line).get(blockID).setLightState(lightState);
+        System.out.println("Block " + blockID + " has light: " + track.get(line).get(blockID).getLightState());
+    }
+
+    public void setSwitchState(boolean line, int blockID, boolean switchConState) {
+        switches.get(line).get(blockID).setSwitchState(switchConState);
+        System.out.println("Switch " + blockID + " is towards: " + track.get(line).get(blockID).getSwitchConState());
+    }
+//*********************************************************************************************************************************************
     public void setManualMode() {
 
     }
@@ -81,15 +96,7 @@ public class CTCOfficeImpl implements CTCOffice {
 
     }
 
-    public void setOccupancy(int blockID, boolean occupied) {
-
-    }
-
-    public void setLightState(int blockID, boolean lightState) {
-
-    }
-
-    public void setSwitchState(int switchID, boolean switchState) {
+    public void setOccupancy(boolean line, int blockID, boolean occupied) {
 
     }
 
@@ -109,19 +116,6 @@ public class CTCOfficeImpl implements CTCOffice {
 
     }
 //*********************************************************************************************************************************************8
-
-    public void setSwitchState(boolean line, int switchID, boolean switchState) {
-        switches.get(line).get(switchID).setSwitchState(switchState);
-    }
-
-    public void setOccupancy(int blockID,boolean line, boolean occupied) {
-        track.get(line).get(blockID).setOccupied(occupied);
-    }
-
-    public void setLightState(boolean line, int blockID, boolean lightState) {
-        track.get(line).get(blockID).setLightState(lightState);
-    }
-
 
 }
 

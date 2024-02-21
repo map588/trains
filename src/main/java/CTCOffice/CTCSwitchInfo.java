@@ -24,4 +24,12 @@ class CTCSwitchInfo {
             CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
         }
     }
+
+    public int getDivergingBlockOneID() {
+        return divergingBlockOneID;
+    }
+
+    public int getDivergingBlockTwoID() {
+        return divergingBlockTwoID;
+    }
 }

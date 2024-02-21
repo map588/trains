@@ -2,13 +2,14 @@ package trainModel;
 
 import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
+import trainController.trainControllerSubjectFactory;
 
 public class trainModelSubject implements AbstractSubject{
 
-    private IntegerProperty authority, numCars, numPassengers, crewCount;
-    private DoubleProperty commandSpeed, actualSpeed, acceleration, power, grade, temperature;
+    private IntegerProperty authority;
+    private DoubleProperty commandSpeed, actualSpeed, acceleration, power, temperature;
 
-    //Vital Variables
+    private StringProperty numCars, numPassengers, crewCount, grade;
     private BooleanProperty serviceBrake, emergencyBrake, brakeFailure, powerFailure;
     private BooleanProperty signalFailure, extLights, intLights, rightDoors, leftDoors;
     private trainModelImpl model;
@@ -19,7 +20,7 @@ public class trainModelSubject implements AbstractSubject{
         this.actualSpeed = new SimpleDoubleProperty(0);
         this.acceleration = new SimpleDoubleProperty(0);
         this.power = new SimpleDoubleProperty(0);
-        this.grade = new SimpleDoubleProperty(0);
+        this.grade = new SimpleStringProperty("0");
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.brakeFailure = new SimpleBooleanProperty(false);
@@ -30,9 +31,10 @@ public class trainModelSubject implements AbstractSubject{
         this.intLights = new SimpleBooleanProperty(false);
         this.leftDoors = new SimpleBooleanProperty(false);
         this.rightDoors = new SimpleBooleanProperty(false);
-        this.numCars = new SimpleIntegerProperty(0);
-        this.numPassengers = new SimpleIntegerProperty(0);
-        this.crewCount = new SimpleIntegerProperty(0);
+        this.numCars = new SimpleStringProperty("0");
+        this.numPassengers = new SimpleStringProperty("0");
+        this.crewCount = new SimpleStringProperty("0");
+        trainSubjectFactory.getInstance().registerSubject(0, this);
     }
 
     public trainModelSubject(trainModelImpl trainModel) {
@@ -43,7 +45,7 @@ public class trainModelSubject implements AbstractSubject{
         this.actualSpeed = new SimpleDoubleProperty(0);
         this.acceleration = new SimpleDoubleProperty(0);
         this.power = new SimpleDoubleProperty(0);
-        this.grade = new SimpleDoubleProperty(0);
+        this.grade = new SimpleStringProperty("0");
         this.serviceBrake = new SimpleBooleanProperty(false);
         this.emergencyBrake = new SimpleBooleanProperty(false);
         this.brakeFailure = new SimpleBooleanProperty(false);
@@ -54,9 +56,10 @@ public class trainModelSubject implements AbstractSubject{
         this.intLights = new SimpleBooleanProperty(false);
         this.leftDoors = new SimpleBooleanProperty(false);
         this.rightDoors = new SimpleBooleanProperty(false);
-        this.numCars = new SimpleIntegerProperty(0);
-        this.numPassengers = new SimpleIntegerProperty(0);
-        this.crewCount = new SimpleIntegerProperty(0);
+        this.numCars = new SimpleStringProperty("0");
+        this.numPassengers = new SimpleStringProperty("0");
+        this.crewCount = new SimpleStringProperty("0");
+        trainSubjectFactory.getInstance().registerSubject(0, this);
 
         model.addChangeListener(((propertyName, newValue) -> {
             switch (propertyName) {
@@ -76,7 +79,7 @@ public class trainModelSubject implements AbstractSubject{
                     power.set((double) newValue);
                     break;
                 case "grade":
-                    grade.set((double) newValue);
+                    grade.set(newValue.toString());
                     break;
                 case "serviceBrake":
                     serviceBrake.set((boolean) newValue);
@@ -109,13 +112,13 @@ public class trainModelSubject implements AbstractSubject{
                     temperature.set((double) newValue);
                     break;
                 case "numCars":
-                    numCars.set((int) newValue);
+                    numCars.set(newValue.toString());
                     break;
                 case "numPassengers":
-                    numPassengers.set((int) newValue);
+                    numPassengers.set(newValue.toString());
                     break;
                 case "crewCount":
-                    crewCount.set((int) newValue);
+                    crewCount.set(newValue.toString());
                     break;
             }
         }));
@@ -142,7 +145,6 @@ public class trainModelSubject implements AbstractSubject{
             case "actualSpeed" -> actualSpeed;
             case "acceleration" -> acceleration;
             case "power" -> power;
-            case "grade" -> grade;
             case "temperature" -> temperature;
             default -> null;
         };
@@ -151,6 +153,13 @@ public class trainModelSubject implements AbstractSubject{
     public IntegerProperty getIntegerProperty (String propertyName) {
         return switch (propertyName) {
             case "authority" -> authority;
+            default -> null;
+        };
+    }
+
+    public StringProperty getStringProperty (String propertyName) {
+        return switch (propertyName) {
+            case "grade" -> grade;
             case "numCars" -> numCars;
             case "numPassengers" -> numPassengers;
             case "crewCount" -> crewCount;
@@ -179,9 +188,10 @@ public class trainModelSubject implements AbstractSubject{
             case "leftDoors" -> updateProperty(leftDoors, newValue);
             case "rightDoors" -> updateProperty(rightDoors, newValue);
             case "temperature" -> updateProperty(temperature, newValue);
-            case "numCars" -> updateProperty(numCars, newValue);
-            case "numPassengers" -> updateProperty(numPassengers, newValue);
-            case "crewCount" -> updateProperty(crewCount, newValue);
+            case "numCars" -> updateProperty(numCars, newValue.toString());
+            case "numPassengers" -> updateProperty(numPassengers, newValue.toString());
+            case "crewCount" -> updateProperty(crewCount, newValue.toString());
+            case "grade" -> updateProperty(grade, newValue.toString());
             default -> System.err.println("Unknown property " + propertyName);
         }
     }
