@@ -107,8 +107,8 @@
       <Label layoutX="158.0" layoutY="83.0" text="Label" />
       <Label layoutX="29.0" layoutY="100.0" prefHeight="26.0" prefWidth="68.0" text="Max Power:" />
       <Label fx:id="maxPowerLabel" layoutX="158.0" layoutY="105.0" text="Label" />
-      <Label layoutX="29.0" layoutY="122.0" prefHeight="26.0" prefWidth="98.0" text="Max Acceleration:" />
-      <Label fx:id="maxAccelerationLabel" layoutX="158.0" layoutY="127.0" text="Label" />
+      <Label layoutX="29.0" layoutY="122.0" prefHeight="26.0" prefWidth="98.0" text="Med Acceleration:" />
+      <Label fx:id="medAccelerationLabel" layoutX="158.0" layoutY="127.0" text="Label" />
       <Label layoutX="29.0" layoutY="143.0" prefHeight="26.0" prefWidth="98.0" text="Max Velocity:" />
       <Label layoutX="29.0" layoutY="164.0" prefHeight="26.0" prefWidth="98.0" text="Train Length:" />
       <Label layoutX="29.0" layoutY="184.0" prefHeight="26.0" prefWidth="98.0" text="Train Height:" />
@@ -134,10 +134,10 @@
       <Label layoutX="523.0" layoutY="78.0" prefHeight="26.0" prefWidth="126.0" text="Number of Passengers:" />
       <Label fx:id="numPassengerLabel" layoutX="653.0" layoutY="84.0" text="Label" />
       <Label layoutX="523.0" layoutY="100.0" prefHeight="26.0" prefWidth="68.0" text="Crew Count:" />
-      <Label layoutX="523.0" layoutY="122.0" prefHeight="26.0" prefWidth="68.0" text="Car Weight:" />
-      <Label layoutX="523.0" layoutY="144.0" prefHeight="26.0" prefWidth="75.0" text="Total Weight:" />
+      <Label layoutX="523.0" layoutY="122.0" prefHeight="26.0" prefWidth="68.0" text="Empty Train Weight:" />
+      <Label layoutX="523.0" layoutY="144.0" prefHeight="26.0" prefWidth="75.0" text="Loaded Train Weight:" />
       <Label fx:id="crewCountLabel" layoutX="653.0" layoutY="106.0" text="Label" />
-      <Label fx:id="carWeightLabel" layoutX="653.0" layoutY="127.0" text="Label" />
-      <Label fx:id="totalWeightLabel" layoutX="653.0" layoutY="149.0" text="Label" />
+      <Label fx:id="emptyWeightLabel" layoutX="653.0" layoutY="127.0" text="Label" />
+      <Label fx:id="loadedWeightLabel" layoutX="653.0" layoutY="149.0" text="Label" />
    </children>
 </AnchorPane>
