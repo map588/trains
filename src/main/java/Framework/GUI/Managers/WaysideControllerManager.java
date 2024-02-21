@@ -95,6 +95,7 @@ public class WaysideControllerManager {
         plcUploadButton.setOnAction(event ->  uploadPLC());
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
+        maintenanceModeCheckbox.setOnAction(event -> switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected()));
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
@@ -230,6 +231,7 @@ public class WaysideControllerManager {
      * Updates the switch list in the GUI with the information from the current wayside controller
      */
     private void updateSwitchList() {
+        switchTable.getItems().clear();
         ObservableList<WaysideBlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
         for(WaysideBlockInfo item : blocks) {
             if(item.isHasSwitch()) {

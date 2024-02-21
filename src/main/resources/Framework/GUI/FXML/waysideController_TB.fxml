@@ -9,19 +9,25 @@
    <children>
       <Label fx:id="tbWaysideNumberLabel" layoutX="14.0" layoutY="14.0" prefHeight="32.0" prefWidth="171.0" text="Wayside Controller #N" />
       <Label layoutX="14.0" layoutY="60.0" prefHeight="18.0" prefWidth="124.0" text="Block Occupancies" />
-      <Label layoutX="175.0" layoutY="51.0" prefHeight="18.0" prefWidth="124.0" text="Switch States" />
-      <TableView fx:id="tbBlockTable" layoutX="14.0" layoutY="79.0" prefHeight="200.0" prefWidth="135.0">
+      <Label layoutX="175.0" layoutY="51.0" prefHeight="18.0" text="CTC Switch State Suggestions" />
+      <TableView fx:id="tbBlockTable" layoutX="14.0" layoutY="79.0" prefHeight="302.0" prefWidth="124.0">
         <columns>
-          <TableColumn fx:id="tbBTLeft" prefWidth="44.80001926422119" text="ID" />
-          <TableColumn fx:id="tbBTRight" prefWidth="88.79998703002929" text="Occupied?" />
+          <TableColumn fx:id="tbBTLeft" prefWidth="44.80001926422119" style="-fx-alignment: CENTER;" text="ID" />
+          <TableColumn fx:id="tbBTRight" prefWidth="90.0" text="Occupied?" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
-      <TableView fx:id="tbSwitchTable" layoutX="175.0" layoutY="79.0" prefHeight="170.0" prefWidth="227.0">
+      <TableView fx:id="tbSwitchTable" layoutX="175.0" layoutY="79.0" prefHeight="123.0" prefWidth="210.0">
         <columns>
-          <TableColumn fx:id="tbSTLeft" prefWidth="75.0" text="Block ID" />
-          <TableColumn fx:id="tbSTRight" prefWidth="75.0" text="Switch To" />
-            <TableColumn fx:id="tbSTEnable" prefWidth="75.0" text="Is Alt?" />
+          <TableColumn fx:id="tbSTLeft" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Block ID" />
+          <TableColumn fx:id="tbSTRight" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Switch To" />
+            <TableColumn fx:id="tbSTEnable" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Is Alt?" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
    </children>
 </AnchorPane>
