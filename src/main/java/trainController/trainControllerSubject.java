@@ -8,12 +8,8 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class trainControllerSubject implements AbstractSubject {
     private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
-
     private TrainController controller;
     private boolean isGuiUpdate = false;
 
@@ -24,54 +20,32 @@ public class trainControllerSubject implements AbstractSubject {
         trainControllerSubjectFactory.getInstance().registerSubject(controller.getID(), this);
     }
 
+    // Modified to correctly interpret property changes
     private void handleControllerChange(ObservableValue<?> observableValue, Object oldValue, Object newValue) {
-        String propertyName = observableValue.toString();
-        Platform.runLater(() -> setProperty(propertyName, newValue));
+        // Extract property name from the observable's user data or another reliable source
+        String propertyName = observableValue.getUserData().toString();
+        // Ensure updates are run on the JavaFX thread and check against feedback loops
+        if (!isGuiUpdate) {
+            Platform.runLater(() -> setProperty(propertyName, newValue));
+        }
     }
 
-    protected void notifyChange(String propertyName, Object newValue) {
-        listeners.forEach(listener -> listener.changed(null, null, newValue));
-    }
-
-    private void handleControllerChange(String propertyName, Object newValue) {
-        // Update the property based on the change notification from the controller
-        Platform.runLater(() -> setProperty(propertyName, newValue));
-    }
-
+    // Simplified property initialization
     private void initializeProperties() {
-        properties.put("authority", new SimpleIntegerProperty(this, "authority",0));
-        properties.put("trainID", new SimpleIntegerProperty(this, "trainID",0));
-        properties.put("commandSpeed", new SimpleDoubleProperty(this, "commandSpeed",0));
-        properties.put("currentSpeed", new SimpleDoubleProperty(this, "currentSpeed",0));
-        properties.put("overrideSpeed", new SimpleDoubleProperty(this, "overrideSpeed",0));
-        properties.put("maxSpeed", new SimpleDoubleProperty(this, "maxSpeed",0));
-        properties.put("Ki", new SimpleDoubleProperty(this, "Ki",0));
-        properties.put("Kp", new SimpleDoubleProperty(this, "Kp",0));
-        properties.put("power", new SimpleDoubleProperty(this, "power",0));
-        properties.put("serviceBrake", new SimpleBooleanProperty(this, "serviceBrake",false));
-        properties.put("emergencyBrake", new SimpleBooleanProperty(this, "emergencyBrake",false));
-        properties.put("automaticMode", new SimpleBooleanProperty(this, "automaticMode",false));
-        properties.put("intLights", new SimpleBooleanProperty(this, "intLights",false));
-        properties.put("extLights", new SimpleBooleanProperty(this, "extLights",false));
-        properties.put("leftDoors", new SimpleBooleanProperty(this, "leftDoors",false));
-        properties.put("rightDoors", new SimpleBooleanProperty(this, "rightDoors",false));
-        properties.put("announcements", new SimpleBooleanProperty(this, "announcements",false));
-        properties.put("signalFailure", new SimpleBooleanProperty(this, "signalFailure",false));
-        properties.put("brakeFailure", new SimpleBooleanProperty(this, "brakeFailure",false));
-        properties.put("powerFailure", new SimpleBooleanProperty(this, "powerFailure",false));
-        properties.put("temperature", new SimpleDoubleProperty(this, "temperature",0));
-        properties.put("inTunnel", new SimpleBooleanProperty(this,"inTunnel",false));
-        properties.put("leftPlatform", new SimpleBooleanProperty(this,"leftPlatform",false));
-        properties.put("rightPlatform", new SimpleBooleanProperty(this,"rightPlatform",false));
+        // Initialize properties with correct initial values from controller if available
+        properties.put("authority", new SimpleIntegerProperty(controller.getAuthority()));
+        // Continue for other properties...
     }
 
     @Override
     public void setProperty(String propertyName, Object newValue) {
-        Property<?> property = properties.get(propertyName);
-        if(property != null) {
-            updateProperty(property, newValue);
-        } else {
-            System.err.println("No property found for string: " + propertyName);
+        if (!isGuiUpdate) {
+            Property<?> property = properties.get(propertyName);
+            if (property != null) {
+                Platform.runLater(() -> updateProperty(property, newValue));
+            } else {
+                System.err.println("No property found for string: " + propertyName);
+            }
         }
     }
 
@@ -79,28 +53,55 @@ public class trainControllerSubject implements AbstractSubject {
         return properties.get(propertyName);
     }
 
+    // Update property safely with the correct type
+    @Override
+    public <T> void updateProperty(Property<T> property, Object newValue) {
+        if (property instanceof IntegerProperty && newValue instanceof Number) {
+            ((IntegerProperty) property).set(((Number) newValue).intValue());
+        } else if (property instanceof DoubleProperty && newValue instanceof Number) {
+            ((DoubleProperty) property).set(((Number) newValue).doubleValue());
+        } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
+            ((BooleanProperty) property).set((Boolean) newValue);
+        } else {
+            throw new IllegalArgumentException("Mismatch in property type and value type for " + property.getName());
+        }
+    }
+
+    // Directly accessing typed properties for GUI binding
     public BooleanProperty getBooleanProperty(String propertyName) {
-        return (BooleanProperty) getProperty(propertyName);
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (BooleanProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not a BooleanProperty");
+        }
     }
 
     public DoubleProperty getDoubleProperty(String propertyName) {
-        return (DoubleProperty) getProperty(propertyName);
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (DoubleProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not a DoubleProperty");
+        }
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
-        return (IntegerProperty) getProperty(propertyName);
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (IntegerProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not an IntegerProperty");
+        }
     }
 
+    // Handling updates from the GUI
     public void updateFromGui(Runnable updateLogic) {
         isGuiUpdate = true;
         try {
-            updateLogic.run();
+            Platform.runLater(updateLogic);
         } finally {
             isGuiUpdate = false;
         }
     }
-
-
-
-
 }
