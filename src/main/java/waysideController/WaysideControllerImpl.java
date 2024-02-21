@@ -57,7 +57,8 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void runPLC() {
-        program.runBlueLine();
+        if(!maintenanceMode)
+            program.runBlueLine();
     }
 
     @Override
@@ -70,12 +71,14 @@ public class WaysideControllerImpl implements WaysideController {
         this.maintenanceMode = maintenanceMode;
         subject.maintenanceModeProperty().set(maintenanceMode);
         updateActivePLCProp();
+        runPLC();
     }
 
     @Override
     public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
         updateActivePLCProp();
+        runPLC();
     }
 
     @Override
@@ -93,7 +96,7 @@ public class WaysideControllerImpl implements WaysideController {
     public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
         trackList.get(blockID-1).occupationProperty().set(isOccupied);
         program.setOccupancy(blockID, isOccupied);
-        program.runBlueLine();
+        runPLC();
     }
 
     @Override
@@ -126,7 +129,7 @@ public class WaysideControllerImpl implements WaysideController {
     public void CTCRequestSwitchState(int blockID, boolean switchState) {
 //        trackList.get(blockID-1).switchStateProperty().set(switchState);
         program.setSwitchRequest(blockID, switchState);
-        program.runBlueLine();
+        runPLC();
     }
 
     @Override

@@ -96,7 +96,10 @@ public class WaysideControllerManager {
         plcUploadButton.setOnAction(event ->  uploadPLC());
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
-        maintenanceModeCheckbox.setOnAction(event -> switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected()));
+        maintenanceModeCheckbox.setOnAction(event -> {
+            switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+            switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+        });
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
@@ -120,6 +123,7 @@ public class WaysideControllerManager {
         });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
 
+        switchTable.setEditable(true);
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
         switchTableStateColumn.setCellValueFactory(block -> block.getValue().switchStateProperty());
@@ -173,9 +177,10 @@ public class WaysideControllerManager {
         currentSubject.getController().addBlock((new WaysideBlockInfo(15, false, false, false)));
         currentSubject.getController().runPLC();
 
-        updateBlockList();
-
         currentSubject.getController().CTCSetSpeedAuth(new TrainSpeedAuth(1, 0, 0));
+
+        updateBlockList();
+        testBench.setController(currentSubject.getController());
     }
 
     /**
