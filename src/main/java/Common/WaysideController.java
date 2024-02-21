@@ -1,10 +1,5 @@
 package Common;
 
-import Utilities.BlockInfo;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.paint.Paint;
 import waysideController.WaysideBlockInfo;
 import waysideController.WaysideControllerSubject;
 
