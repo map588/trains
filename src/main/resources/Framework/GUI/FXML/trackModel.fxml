@@ -58,7 +58,7 @@
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <ComboBox fx:id="simSpeedInput" layoutX="12.0" layoutY="52.0" prefHeight="33.0" prefWidth="106.0" promptText="10x" />
+                                                                        <ComboBox fx:id="simSpeedInput" layoutX="12.0" layoutY="52.0" prefHeight="33.0" prefWidth="106.0" promptText="1x" />
                                                                         <Label fx:id="uploadLayoutLabel" layoutX="148.0" layoutY="17.0" text="Upload Layout:">
                                                                             <font>
                                                                                 <Font size="18.0" />
@@ -109,7 +109,7 @@
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <Label fx:id="tempValueLabel" layoutX="380.0" layoutY="17.0" text="26">
+                                                                        <Label fx:id="tempValueLabel" layoutX="380.0" layoutY="17.0" text="0">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
@@ -156,17 +156,17 @@
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label fx:id="passEmbarkedValue" layoutX="245.0" layoutY="66.0" text="26">
+                                                                                                <Label fx:id="passEmbarkedValue" layoutX="245.0" layoutY="66.0" text="0">
                                                                                                     <font>
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label fx:id="passDisembarkValue" layoutX="245.0" layoutY="107.0" text="26">
+                                                                                                <Label fx:id="passDisembarkValue" layoutX="245.0" layoutY="107.0" text="0">
                                                                                                     <font>
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label fx:id="ticketSalesValue" layoutX="406.0" layoutY="106.0" text="26">
+                                                                                                <Label fx:id="ticketSalesValue" layoutX="406.0" layoutY="106.0" text="0">
                                                                                                     <font>
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
@@ -239,30 +239,20 @@
                                                                 <Font size="24.0" />
                                                             </font>
                                                         </TitledPane>
-                                                        <TitledPane fx:id="beaconInfoSec" animated="false" prefHeight="174.0" prefWidth="473.0" text="BEACON INFORMATION">
+                                                        <TitledPane fx:id="beaconInfoSec" animated="false" prefHeight="150.0" prefWidth="473.0" text="BEACON INFORMATION">
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="471.0">
                                                                     <children>
-                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Select Block to Upload Beacon Information">
+                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Display Beacon Information:">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <Button fx:id="beaconUpload" layoutX="359.0" layoutY="15.0" mnemonicParsing="false" text="UPLOAD" />
-                                                                        <TextField fx:id="beaconInput" layoutX="86.0" layoutY="50.0" prefHeight="33.0" prefWidth="226.0" promptText="/path/to/becon/file" />
-                                                                        <Label fx:id="beaconPathLabel" layoutX="11.0" layoutY="54.0" text="Path:">
-                                                                            <font>
-                                                                                <Font size="18.0" />
-                                                                            </font>
-                                                                        </Label>
-                                                                        <Button fx:id="beaconChooseFile" layoutX="336.0" layoutY="48.0" minHeight="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" text="Chose File" />
-                                                                        <Button fx:id="viewInfoBeacon" layoutX="358.0" layoutY="82.0" mnemonicParsing="false" text="View Info" />
-                                                                        <TextField fx:id="beaconTextInput" layoutX="86.0" layoutY="82.0" prefHeight="33.0" prefWidth="226.0" promptText="(128 character MAX)" />
-                                                                        <Label fx:id="beaconTextLabel" layoutX="11.0" layoutY="86.0" text="Text :">
-                                                                            <font>
-                                                                                <Font size="18.0" />
-                                                                            </font>
-                                                                        </Label>
+                                                      <Label fx:id="displayBeaconInfo" layoutX="11.0" layoutY="53.0" text="NO CURRENT BEACON INFORMATION">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
                                                                     </children>
                                                                 </AnchorPane>
                                                             </content>

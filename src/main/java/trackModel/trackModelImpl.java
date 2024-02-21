@@ -41,6 +41,7 @@ public class trackModelImpl implements TrackModel {
         this.trainCommandSpeeds = new HashMap<>();
         this.line = null;
         this.blockOccupied = false;
+        this.failures = new ArrayList<Integer>();
     }
     public int getAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
@@ -83,8 +84,22 @@ public class trackModelImpl implements TrackModel {
     public String getLine(int lineNumber) { return this.line.get(lineNumber); }
     public void setFailure(int block, boolean failure) {
 
+        for(int i = 0; i <= failures.size(); i++){
+            failures.add(i);
+        }
+
+
     }
-    public boolean getFailure(int block) { return false; }
+    public void setFailure(int block, String failure) {
+        switch (failure) {
+            case "Broken Rail" -> failures.add(block);
+            case "Track Circuit Failure" -> failures.add(block);
+            case "Power Failure" -> failures.add(block);
+            case "Fix Track Failure" -> failures.add(block);
+
+        }
+    }
+
 
 
 
@@ -92,7 +107,12 @@ public class trackModelImpl implements TrackModel {
 
         for(int i = 0; i <= 15; i++){
             TrackLayoutInfo block = new TrackLayoutInfo();
-            block.setHasFailure(getFailure(i));
+            if (failures.contains(i)){
+                block.setHasFailure(true);
+            }
+            else {
+                block.setHasFailure(false);
+            }
             block.setBlockNumber(i);
 
             if(i < 6){

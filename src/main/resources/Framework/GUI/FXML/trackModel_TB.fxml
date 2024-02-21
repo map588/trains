@@ -91,9 +91,9 @@
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="tbPassEmbarkedInput" layoutX="216.0" layoutY="67.0" prefHeight="33.0" prefWidth="50.0" text="#" />
-                        <TextField fx:id="tbPassDisembarkedInput" layoutX="216.0" layoutY="102.0" prefHeight="33.0" prefWidth="50.0" text="#" />
-                        <TextField fx:id="tbTicketSalesInput" layoutX="315.0" layoutY="84.0" prefHeight="33.0" prefWidth="50.0" text="#" />
+                        <TextField fx:id="tbPassEmbarkedInput" layoutX="216.0" layoutY="67.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
+                        <TextField fx:id="tbPassDisembarkedInput" layoutX="216.0" layoutY="102.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
+                        <TextField fx:id="tbTicketSalesInput" layoutX="315.0" layoutY="84.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
                     </children>
                 </AnchorPane>
             </content>
@@ -101,9 +101,18 @@
                 <Font size="24.0" />
             </font>
         </TitledPane>
-        <TitledPane fx:id="tbSetPassengersTab1" animated="false" layoutX="415.0" layoutY="497.0" prefHeight="213.0" prefWidth="402.0" text="SET ">
+        <TitledPane fx:id="tbSetPassengersTab1" animated="false" layoutX="415.0" layoutY="497.0" prefHeight="175.0" prefWidth="402.0" text="SET BEACON INFORMTAION">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
+               <children>
+                  <Label fx:id="passEmarkedLabel1" layoutX="14.0" layoutY="21.0" text="Choose Beacon - ">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="tbBeaconComboBox" layoutX="155.0" layoutY="20.0" prefHeight="33.0" prefWidth="213.0" promptText="Choose Beacon Block" />
+                  <TextField fx:id="tbBeaconInput" layoutX="14.0" layoutY="71.0" prefHeight="33.0" prefWidth="380.0" promptText="Input info 128 Characters MAX" />
+               </children></AnchorPane>
             </content>
             <font>
                 <Font size="24.0" />

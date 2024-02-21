@@ -80,11 +80,20 @@ public class trackModelTB {
         tbSignalColumn.setCellValueFactory(new PropertyValueFactory<>("isSignal"));
         tbOccupiedColumn.setCellValueFactory(new PropertyValueFactory<>("isOccupied"));
 
-        tbTable.setEditable(true);
-        ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(trackInfo.getTrackInfo());
-        tbTable.setItems(tableInfo);
+        tbChooseLine.setOnAction(event -> updateTable());
+
        // tbChooseLine.setOnAction(event -> updateTable());
 
+    }
+
+    public void updateTable() {
+
+        ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList();
+        tbTable.setItems(trackList);
+    }
+
+    public void setLine(String line) {
+        tbChooseLine.setValue(line);
     }
 
 

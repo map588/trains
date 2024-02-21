@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -20,22 +21,7 @@ import java.util.ArrayList;
 
 public class trackModelManager {
 
-    public trackModelManager() {
-        this.trackProperties = new TrackLayoutInfo();
 
-        this.sectionsColumn = new TableColumn<>();
-        this.blockColumn = new TableColumn<>();
-        this.occupiedColumn = new TableColumn<>();
-        this.sizeColumn = new TableColumn<>();
-        this.gradeColumn = new TableColumn<>();
-        this.stationColumn = new TableColumn<>();
-        this.signalColumn = new TableColumn<>();
-        this.switchColumn = new TableColumn<>();
-        this.speedLimitColumn = new TableColumn<>();
-        this.failureColumn = new TableColumn<>();
-
-
-    }
 
     //simulation information
     @FXML
@@ -116,6 +102,24 @@ public class trackModelManager {
     @FXML
     private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
 
+    //constructor
+    public trackModelManager() {
+        this.trackProperties = new TrackLayoutInfo();
+
+        this.sectionsColumn = new TableColumn<>();
+        this.blockColumn = new TableColumn<>();
+        this.occupiedColumn = new TableColumn<>();
+        this.sizeColumn = new TableColumn<>();
+        this.gradeColumn = new TableColumn<>();
+        this.stationColumn = new TableColumn<>();
+        this.signalColumn = new TableColumn<>();
+        this.switchColumn = new TableColumn<>();
+        this.speedLimitColumn = new TableColumn<>();
+        this.failureColumn = new TableColumn<>();
+
+
+    }
+
     //current layout
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
 
@@ -144,7 +148,7 @@ public class trackModelManager {
 //        passEmbarkDisplay.setText("0");
 //        passDisembarkDisplay.setText("0");
 //        ticketSalesDisplay.setText("0");
-        tempValueLabel.setText("26");
+        tempValueLabel.setText("0");
 //        statusLabel.setText("ON");
         switchStateDisplay.setText("No Switch Present");
 //        switchBlockNumberDisplay.setText("NONE");
@@ -159,10 +163,7 @@ public class trackModelManager {
         signalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
         switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
-        failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
 
-        //set beacon info
-        //viewInfoBeacon.setOnAction(event -> getBeaconInfo());
 
     }
 
@@ -181,6 +182,9 @@ public class trackModelManager {
         String lineSelect = murphyLine.getValue();
         String blockSelect = murphyBlock.getValue();
         String failure = chooseFailureMode.getValue();
+
+        //send the failure to the track model
+        currTrackModel.setFailure(Integer.parseInt(blockSelect), failure);
 
         if(chooseFailureMode.getValue().equals("Fix Track Failure")){
             //set failure column in table at block and line to false
@@ -202,6 +206,7 @@ public class trackModelManager {
         pickLine.getItems().add(text);
         murphyLine.getItems().add(text);
         currTrackModel.setLine(text);
+        testBench.setLine(text);
     }
     private ArrayList<String> csvParser(File file) {
         return null;
