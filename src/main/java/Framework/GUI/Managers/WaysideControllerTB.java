@@ -1,17 +1,10 @@
 package Framework.GUI.Managers;
 
 import Common.WaysideController;
-import Utilities.BlockInfo;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.util.Callback;
 import waysideController.WaysideBlockInfo;
 
 public class WaysideControllerTB {
@@ -23,15 +16,28 @@ public class WaysideControllerTB {
     @FXML
     public TableView<WaysideBlockInfo> tbSwitchTable;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbBTLeft;
+    public TableColumn<WaysideBlockInfo, Integer> tbBTID;
     @FXML
-    public TableColumn<WaysideBlockInfo, Boolean> tbBTRight;
+    public TableColumn<WaysideBlockInfo, Boolean> tbBTOccupied;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbSTLeft;
+    public TableColumn<WaysideBlockInfo, Integer> tbSTID;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbSTRight;
+    public TableColumn<WaysideBlockInfo, Integer> tbSTSwitchTo;
     @FXML
     public TableColumn<WaysideBlockInfo, Boolean> tbSTEnable;
+    @FXML
+    public TableView tbSpeedAuthTable;
+    @FXML
+    public TableColumn tbSATID;
+    @FXML
+    public TableColumn tbSATSpeedIn;
+    @FXML
+    public TableColumn tbSATAuthIn;
+    @FXML
+    public TableColumn tbSATSpeedOut;
+    @FXML
+    public TableColumn tbSATAuthOut;
+
     private Object block;
     WaysideController controller;
 
@@ -39,23 +45,15 @@ public class WaysideControllerTB {
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
-        tbBTLeft.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
-        tbBTRight.setCellValueFactory(block -> block.getValue().occupationProperty());
-        tbBTRight.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTRight));
+        tbBTID.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
+        tbBTOccupied.setCellValueFactory(block -> block.getValue().occupationProperty());
+        tbBTOccupied.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTOccupied));
 
         tbSwitchTable.setEditable(true);
-        tbSTLeft.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
-        tbSTRight.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
+        tbSTID.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
+        tbSTSwitchTo.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
         tbSTEnable.setCellValueFactory(block -> block.getValue().switchRequestedStateProperty());
         tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
-
-        /**
-        tbLightTable.setEditable(true);
-        tbLTLeft.setCellValueFactory(block -> block.getValue().lightInStateProperty().asObject());
-        tbLTLeft.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
-        tbLTRight.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
-        tbLTRight.setCellFactory(ComboBoxTableCell.forTableColumn(0, 1, 2));
-         */
     }
 
     /**
