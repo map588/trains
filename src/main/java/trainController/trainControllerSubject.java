@@ -50,7 +50,6 @@ public class trainControllerSubject implements AbstractSubject {
         properties.put("inTunnel", new SimpleBooleanProperty(controller.getInTunnel()));
         properties.put("leftPlatform", new SimpleBooleanProperty(controller.getLeftPlatform()));
         properties.put("rightPlatform", new SimpleBooleanProperty(controller.getRightPlatform()));
-
     }
 
     public void notifyChange(String propertyName, Object newValue) {

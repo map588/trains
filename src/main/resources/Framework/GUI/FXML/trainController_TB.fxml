@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainControllerTB">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainControllerTB">
     <children>
         <Text layoutX="59.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Number:" />
         <TextField fx:id="trainControllerTB_trainNo_TextField" layoutX="149.0" layoutY="31.0" prefHeight="26.0" prefWidth="54.0" />
@@ -44,4 +44,4 @@
       <CheckBox fx:id="trainControllerTB_InTunnel_CheckBox" layoutX="320.0" layoutY="280.0" mnemonicParsing="false" text="Inside Tunnel" />
       <ChoiceBox fx:id="trainControllerTB_StationName_ChoiceBox" layoutX="176.0" layoutY="246.0" prefHeight="26.0" prefWidth="110.0" />
     </children>
-</fx:root>
+</AnchorPane>
