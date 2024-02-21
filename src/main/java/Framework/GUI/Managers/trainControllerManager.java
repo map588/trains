@@ -78,7 +78,7 @@ public class trainControllerManager {
             }
         });
         testBench = launchTestBench();
-        emergencyBrakeButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: #ffffff;");
+        emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
 
     }
 

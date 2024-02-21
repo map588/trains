@@ -298,6 +298,23 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getInTunnel(){return this.inTunnel;}
 
     // Power Calculations
-    // P = Fv;  Power = Force * velocity
-    // F = ma;  Force = Mass * Accceleration
+    // ekprev = ek
+    // ek = command speed - currentspeed
+    //
+    double e_k = 0;
+    double u_k = 0;
+    double powerOut = 0;
+    double SamplingPeriod = 0;
+    public double calculatePower(){
+        // Error = commandSpeed - currentSpeed
+        double  e_kprev = e_k,
+                u_kprev = u_k;
+        e_k = commandSpeed - currentSpeed;
+         // T = sample period of train model......<<< KEY INPUT?????
+
+        if (powerOut < 120000) u_k += SamplingPeriod/2 * (e_k + e_kprev);
+
+        return powerOut = Kp * e_k + Ki*u_k;
+
+    }
 }
