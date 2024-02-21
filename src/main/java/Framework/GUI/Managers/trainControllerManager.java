@@ -10,26 +10,23 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.*;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
-import Common.TrainController;
-import javafx.util.StringConverter;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.net.URL;
-import java.io.File;
 
 public class trainControllerManager {
 
@@ -69,7 +66,7 @@ public class trainControllerManager {
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
 
-        testBench = launchTestBench();
+
         // Select the first train by default if available
         if (!factory.getSubjects().isEmpty()) {
             Integer firstKey = factory.getSubjects().keySet().iterator().next();
@@ -80,7 +77,7 @@ public class trainControllerManager {
                 changeTrainView(newSelection);
             }
         });
-
+        testBench = launchTestBench();
         emergencyBrakeButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: #ffffff;");
 
     }
@@ -128,18 +125,18 @@ public class trainControllerManager {
     }
 
     private void bindIndicators() {
-        appendListener(currentSubject.getBooleanProperty("emergencyBrake"), (obs, oldVal, newVal) -> updateIndicator(eBrakeStatus, newVal));
-        appendListener(currentSubject.getBooleanProperty("signalFailure"),(obs, oldVal, newVal) -> updateIndicator(signalFailureStatus, newVal));
-        appendListener(currentSubject.getBooleanProperty("brakeFailure"),(obs, oldVal, newVal) -> updateIndicator(brakeFailureStatus, newVal));
-        appendListener(currentSubject.getBooleanProperty("powerFailure"),(obs, oldVal, newVal) -> updateIndicator(powerFailureStatus, newVal));
-        appendListener(currentSubject.getBooleanProperty("inTunnel"),(obs, oldVal, newVal) -> updateIndicator(inTunnelStatus, newVal));
-        appendListener(currentSubject.getBooleanProperty("leftPlatform"),(obs, oldVal, newVal) -> updateIndicator(stationSideLeftStatus, newVal));
-        appendListener(currentSubject.getBooleanProperty("rightPlatform"),(obs, oldVal, newVal) -> updateIndicator(stationSideRightStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("emergencyBrake"), (obs, oldVal, newVal) -> updateIndicator(Color.RED, eBrakeStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("signalFailure"),(obs, oldVal, newVal) -> updateIndicator(Color.RED, signalFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("brakeFailure"),(obs, oldVal, newVal) -> updateIndicator(Color.RED, brakeFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("powerFailure"),(obs, oldVal, newVal) -> updateIndicator(Color.RED, powerFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("inTunnel"),(obs, oldVal, newVal) -> updateIndicator(Color.YELLOW, inTunnelStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("leftPlatform"),(obs, oldVal, newVal) -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("rightPlatform"),(obs, oldVal, newVal) -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal));
     }
 
 
-    private void updateIndicator(Circle indicator, boolean isActive) {
-        Platform.runLater(() -> indicator.setFill(isActive ? Color.RED : Color.GRAY));
+    private void updateIndicator(Color color, Circle indicator, boolean isActive) {
+        Platform.runLater(() -> indicator.setFill(isActive ? color : Color.GRAY));
     }
 
     private void bindControls() {

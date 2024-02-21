@@ -27,9 +27,6 @@ public interface AbstractSubject {
         } else {
             System.err.println("Mismatch in property type and value type for " + property.getName());
         }
-
         System.out.println("Property " + property.getName() + " updated to " + newValue + " in Subject");
  }
-
-
 }

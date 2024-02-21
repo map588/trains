@@ -1,19 +1,14 @@
 package Framework.GUI.Managers;
+
 import Common.TrainController;
 import Framework.Support.ListenerReference;
-import Utilities.BlockInfo;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.util.Callback;
-//import trainController;
+import trainController.trainControllerSubject;
+import trainController.trainControllerSubjectFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,12 +62,15 @@ public class trainControllerTB {
     private TextField trainControllerTB_trainNo_TextField;
 
     private TrainController controller;
-    //private trainControllerSubject subject;
+    private trainControllerSubjectFactory factory = trainControllerSubjectFactory.getInstance();
+    private trainControllerSubject subject;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     @FXML
     private void initialize(){
-
-
+        if (!factory.getSubjects().isEmpty()) {
+            Integer firstKey = factory.getSubjects().keySet().iterator().next();
+            subject = factory.getSubjects().get(firstKey);
+        }
         // Make E-Brake Button Red
         trainControllerTB_PassengerEBrake_Button.setStyle("-fx-background-color: #FF5733; -fx-text-fill: #ffffff;");
 
