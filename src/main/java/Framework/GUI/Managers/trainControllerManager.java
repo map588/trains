@@ -185,7 +185,7 @@ public class trainControllerManager {
                 double value = Double.parseDouble(newVal);
                 property.set(value);
             } catch (NumberFormatException e) {
-                textField.setText(property.getValue().toString());
+                textField.setText(oldVal);
             }
         });
     }

@@ -5,29 +5,16 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class trainControllerSubject implements AbstractSubject {
     private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private TrainController controller;
-    private boolean isGuiUpdate = false;
+    private boolean isLogicUpdate = false;
 
     public trainControllerSubject(TrainController controller) {
         this.controller = controller;
         initializeProperties();
-        controller.addChangeListener(this::handleControllerChange);
         trainControllerSubjectFactory.getInstance().registerSubject(controller.getID(), this);
-    }
-
-    // Modified to correctly interpret property changes
-    private void handleControllerChange(ObservableValue<?> observableValue, Object oldValue, Object newValue) {
-        // Extract property name from the observable's user data or another reliable source
-        String propertyName = observableValue.getUserData().toString();
-        // Ensure updates are run on the JavaFX thread and check against feedback loops
-        if (!isGuiUpdate) {
-            Platform.runLater(() -> setProperty(propertyName, newValue));
-        }
     }
 
     // Simplified property initialization
@@ -37,16 +24,38 @@ public class trainControllerSubject implements AbstractSubject {
         // Continue for other properties...
     }
 
-    @Override
-    public void setProperty(String propertyName, Object newValue) {
-        if (!isGuiUpdate) {
+    public void notifyChange(String propertyName, Object newValue) {
+        // Update property from controller, Internal Logic takes precedence over GUI updates
+        updateFromLogic(() -> {
+        Platform.runLater(() -> {
             Property<?> property = properties.get(propertyName);
             if (property != null) {
-                Platform.runLater(() -> updateProperty(property, newValue));
+                updateProperty(property, newValue);
             } else {
                 System.err.println("No property found for string: " + propertyName);
             }
+        });
+        });
+    }
+
+    @Override
+    public void setProperty(String propertyName, Object newValue) {
+        // Update property from GUI, GUI updates are delayed if internal logic is updating
+        while(isLogicUpdate) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        Platform.runLater(() -> {
+            Property<?> property = properties.get(propertyName);
+            if (property != null) {
+                    updateProperty(property, newValue);
+            } else {
+                System.err.println("No property found for string: " + propertyName);
+            }
+        });
     }
 
     public Property<?> getProperty(String propertyName) {
@@ -96,12 +105,12 @@ public class trainControllerSubject implements AbstractSubject {
     }
 
     // Handling updates from the GUI
-    public void updateFromGui(Runnable updateLogic) {
-        isGuiUpdate = true;
+    public void updateFromLogic(Runnable updateLogic) {
+        isLogicUpdate = true;
         try {
             Platform.runLater(updateLogic);
         } finally {
-            isGuiUpdate = false;
+            isLogicUpdate = false;
         }
     }
 }

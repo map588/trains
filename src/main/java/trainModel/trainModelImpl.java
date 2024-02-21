@@ -6,11 +6,7 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
 import Utilities.Constants;
-import javafx.beans.value.ChangeListener;
 import trainController.stubTrainController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class trainModelImpl implements TrainModel, Notifications {
 
@@ -36,8 +32,6 @@ public class trainModelImpl implements TrainModel, Notifications {
     private boolean extLights, intLights, rightDoors, leftDoors;
     private double temperature;
     private int numCars, numPassengers, crewCount;
-
-    private final List<ChangeListener> listeners = new ArrayList<>();
 
     //Module Stubs
   //  private final TrackModel track = new stubTrackModel();
@@ -74,8 +68,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
 
 
-    protected void notifyChange(String property, Object newValue) {
-        listeners.forEach(listener -> listener.onPropertyChange(property, newValue));
+    public void notifyChange(String property, Object newValue) {
     }
 
     public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", speed); }
@@ -214,7 +207,4 @@ public class trainModelImpl implements TrainModel, Notifications {
         if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
     }
 
-    public void addChangeListener(ChangeListener<? super Object> listener) {
-        listeners.add(listener);
-    }
 }

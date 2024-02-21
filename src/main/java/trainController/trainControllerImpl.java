@@ -3,11 +3,7 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
-import javafx.beans.value.ChangeListener;
 import trainModel.stubTrainModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class trainControllerImpl implements TrainController, Notifications {
@@ -45,7 +41,6 @@ public class trainControllerImpl implements TrainController, Notifications {
     private TrainModel train;
 
     private final trainControllerSubject subject;
-    private final List<ChangeListener<? super Object>> listeners = new ArrayList<>();
 
     //Passing with trainID actually adds the train to the subject list
     public trainControllerImpl(int trainID) {
@@ -78,9 +73,6 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
 
-    public void addChangeListener(ChangeListener <? super Object> listener) {
-        listeners.add(listener);
-    }
 
     //-----------------Setters-----------------
     public void assignTrainModel(TrainModel train) {
@@ -90,8 +82,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         notifyChange("AutomaticMode", this.automaticMode);
     }
 
-    protected void notifyChange(String propertyName, Object newValue) {
-        listeners.forEach(listener -> listener.changed(null, null, newValue));
+    public void notifyChange(String propertyName, Object newValue) {
         subject.notifyChange(propertyName, newValue);
     }
 

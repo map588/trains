@@ -2,7 +2,6 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import javafx.beans.value.ChangeListener;
 
 public class stubTrainController implements TrainController{
 
@@ -180,7 +179,7 @@ public class stubTrainController implements TrainController{
     public boolean getInTunnel(){return false;}
 
 
-    public void addChangeListener(ChangeListener<? super Object> listener) {
+    public void notifyChange(String property, Object newValue) {
 
     }
 }
