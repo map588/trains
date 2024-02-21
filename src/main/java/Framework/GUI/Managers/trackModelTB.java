@@ -1,8 +1,15 @@
 package Framework.GUI.Managers;
 
+import Utilities.TrackLayoutInfo;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import trackModel.trackModelImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 
 
 public class trackModelTB {
@@ -10,7 +17,7 @@ public class trackModelTB {
     @FXML
     private Label tbLogo;
     @FXML
-    private ComboBox tbChooseLine;
+    private ComboBox<String> tbChooseLine;
     @FXML
     private TextField tbTempInput;
     @FXML
@@ -20,24 +27,64 @@ public class trackModelTB {
     @FXML
     private TextField tbTicketSalesInput;
     @FXML
-    private TableView tbTable;
+    private TableView<TrackLayoutInfo> tbTable;
     @FXML
-    private TableColumn tbSectionsColumn;
+    private TableColumn<TrackLayoutInfo, String> tbSectionsColumn;
     @FXML
-    private TableColumn tbBlockColumn;
+    private TableColumn<TrackLayoutInfo, Integer> tbBlockColumn;
     @FXML
-    private TableColumn tbSwitchColumn;
+    private TableColumn<TrackLayoutInfo, Boolean> tbSwitchColumn;
     @FXML
-    private TableColumn tbSignalColumn;
+    private TableColumn<TrackLayoutInfo, Boolean> tbSignalColumn;
     @FXML
-    private TableColumn tbOccupiedColumn;
+    private TableColumn<TrackLayoutInfo, Boolean> tbOccupiedColumn;
+
+    private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
+    private trackModelImpl trackInfo = new trackModelImpl();
+
 
     public void initialize() {
+
+        StringConverter<Integer> intConverter = new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer integer) {
+                return integer.toString();
+            }
+
+            @Override
+            public Integer fromString(String s) {
+                return Integer.parseInt(s);
+            }
+        };
+        StringConverter<Boolean> boolConverter = new StringConverter<Boolean>() {
+            @Override
+            public String toString(Boolean bool) {
+                return bool.toString();
+            }
+
+            @Override
+            public Boolean fromString(String s) {
+                return Boolean.parseBoolean(s);
+            }
+        };
+
+        tbSectionsColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tbBlockColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+        tbSwitchColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+        tbSignalColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+        tbOccupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tbOccupiedColumn));
+
         tbSectionsColumn.setCellValueFactory(new PropertyValueFactory<>("section"));
-        tbBlockColumn.setCellValueFactory(new PropertyValueFactory<>("block"));
-        tbSwitchColumn.setCellValueFactory(new PropertyValueFactory<>("switch"));
-        tbSignalColumn.setCellValueFactory(new PropertyValueFactory<>("signal"));
-        tbOccupiedColumn.setCellValueFactory(new PropertyValueFactory<>("occupied"));
+        tbBlockColumn.setCellValueFactory(new PropertyValueFactory<>("blockNumber"));
+        tbSwitchColumn.setCellValueFactory(new PropertyValueFactory<>("isSwitch"));
+        tbSignalColumn.setCellValueFactory(new PropertyValueFactory<>("isSignal"));
+        tbOccupiedColumn.setCellValueFactory(new PropertyValueFactory<>("isOccupied"));
+
+        tbTable.setEditable(true);
+        ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(trackInfo.getTrackInfo());
+        tbTable.setItems(tableInfo);
+       // tbChooseLine.setOnAction(event -> updateTable());
+
     }
 
 

@@ -1,6 +1,8 @@
 package Framework.GUI.Managers;
 
 import Utilities.TrackLayoutInfo;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,6 +19,23 @@ import java.util.ArrayList;
 
 
 public class trackModelManager {
+
+    public trackModelManager() {
+        this.trackProperties = new TrackLayoutInfo();
+
+        this.sectionsColumn = new TableColumn<>();
+        this.blockColumn = new TableColumn<>();
+        this.occupiedColumn = new TableColumn<>();
+        this.sizeColumn = new TableColumn<>();
+        this.gradeColumn = new TableColumn<>();
+        this.stationColumn = new TableColumn<>();
+        this.signalColumn = new TableColumn<>();
+        this.switchColumn = new TableColumn<>();
+        this.speedLimitColumn = new TableColumn<>();
+        this.failureColumn = new TableColumn<>();
+
+
+    }
 
     //simulation information
     @FXML
@@ -62,31 +81,22 @@ public class trackModelManager {
 
     //beacon information
     @FXML
-    private TextField beaconInput;
-    @FXML
-    private TextField beaconTextInput;
-    @FXML
-    private Button beaconUpload;
-    @FXML
     private ComboBox<String> pickLine;
     @FXML
-    private Button beaconChooseFile;
-    @FXML
-    private Button viewInfoBeacon;
-
+    private TextField beaconLabel;
 
     //switch information
     @FXML
     private Label switchStateDisplay;
+
 //    @FXML
 //    private Label switchBlockNumberDisplay;
-
 
     //table
     @FXML
     private TableView<TrackLayoutInfo> lineTable;
     @FXML
-    private TableColumn<TrackLayoutInfo, Character> sectionsColumn;
+    private TableColumn<TrackLayoutInfo, String> sectionsColumn;
     @FXML
     private TableColumn<TrackLayoutInfo, Integer> blockColumn;
     @FXML
@@ -94,7 +104,7 @@ public class trackModelManager {
     @FXML
     private TableColumn<TrackLayoutInfo, Integer> sizeColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Float> gradeColumn;
+    private TableColumn<TrackLayoutInfo, Double> gradeColumn;
     @FXML
     private TableColumn<TrackLayoutInfo, Boolean> stationColumn;
     @FXML
@@ -107,10 +117,13 @@ public class trackModelManager {
     private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
 
     //current layout
-    TrackLayoutInfo trackProperties = new TrackLayoutInfo();
+    private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
 
     // potential variables to assist with control
-    private trackModelImpl currTrackModel = null;
+    private trackModelImpl currTrackModel = new trackModelImpl();
+
+    // test bench object
+    private trackModelTB testBench = new trackModelTB();
 
 
     public void initialize(){
@@ -127,7 +140,6 @@ public class trackModelManager {
                 "Fix Track Failure"
         );
         murphyEnter.setOnAction(event -> murphyEnter());
-        beaconUpload.setOnAction(event -> uploadBeacon());
         pickLine.setOnAction(event -> updateTable());
 //        passEmbarkDisplay.setText("0");
 //        passDisembarkDisplay.setText("0");
@@ -136,39 +148,32 @@ public class trackModelManager {
 //        statusLabel.setText("ON");
         switchStateDisplay.setText("No Switch Present");
 //        switchBlockNumberDisplay.setText("NONE");
-        beaconChooseFile.setOnAction(event -> chooseFolder());
-        lineTable.setItems(currTrackModel.getTrackInfo());
 
+        //set up cell factories
+        sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
+        blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty().asObject());
+        // occupiedColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
+        sizeColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
+        gradeColumn.setCellValueFactory(block -> block.getValue().blockGradeProperty().asObject());
+        stationColumn.setCellValueFactory(block -> block.getValue().isStationProperty());
+        signalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
+        switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
+        speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
+        failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
 
-
-
+        //set beacon info
         //viewInfoBeacon.setOnAction(event -> getBeaconInfo());
-        //initialize table
-        //sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
-        //failureColumn.setCellValueFactory(block -> block.getValue().);
 
-    }
-
-    private String getBeaconInfo() {
-        // read in file or set text
-        return null;
-    }
-
-
-    private void uploadBeacon() {
-        //get the line and block
-        String lineSelect = pickLine.getValue();
-        String beacon = beaconInput.getText();
-
-        //send the beacon to the track model
-        //currTrackModel.setBeacon(line, block, beacon);
     }
 
     private void updateTable() {
         //get the line
-        String lineSelect = pickLine.getValue();
+        //String lineSelect = pickLine.getValue();
         //send the line to the track model
         //currTrackModel.getLine(line);
+
+        ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
+        lineTable.setItems(tableInfo);
     }
 
     private void murphyEnter() {
@@ -202,13 +207,11 @@ public class trackModelManager {
         return null;
     }
 
-
-
     private void uploadTrack() {
         //parse the csv file
         File file = new File(trackFilePath.getText());
         ArrayList<String> csvData = csvParser(file);
-
+        this.updateTable();
     }
 
     //user input for track layout
