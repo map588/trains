@@ -1,22 +1,18 @@
 package trainController;
 
-import Framework.Support.AbstractSubject;
-
 import Common.TrainController;
-
+import Framework.Support.AbstractSubject;
+import Framework.Support.ObservableHashMap;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.application.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class trainControllerSubject implements AbstractSubject {
-    private Map<String, Property<?>> properties = new HashMap<>();
-    private List<ChangeListener<? super Object>> listeners = new ArrayList<>();
+    private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 
     private TrainController controller;
     private boolean isGuiUpdate = false;
@@ -69,16 +65,13 @@ public class trainControllerSubject implements AbstractSubject {
         properties.put("rightPlatform", new SimpleBooleanProperty(this,"rightPlatform",false));
     }
 
+    @Override
     public void setProperty(String propertyName, Object newValue) {
-        if (isGuiUpdate) {
-            return;
-        }
-
         Property<?> property = properties.get(propertyName);
         if(property != null) {
             updateProperty(property, newValue);
         } else {
-            System.err.println("No property found for " + propertyName);
+            System.err.println("No property found for string: " + propertyName);
         }
     }
 
