@@ -58,7 +58,6 @@ public class trackModelTB {
 
    public void setTemp(int temp){
         tbTempInput.setText(Integer.toString(temp));
-        trackModel.setTemperature(temp);
     }
 
     public void initialize() {
@@ -101,14 +100,12 @@ public class trackModelTB {
         tbChooseLine.getItems().add("blue");
         tbChooseLine.setOnAction(event -> updateTable());
 
-        // set labels
-        this.setPassDisembarked(Integer.parseInt(tbPassDisembarkedInput.getText()));
-        this.setPassEmbarked(Integer.parseInt(tbPassEmbarkedInput.getText()));
-        this.setTicketSales(Integer.parseInt(tbTicketSalesInput.getText()));
+        // set labels by getting text
+        trackProperties.setTicketSales(tbTicketSalesInput.getText());
+        trackProperties.setPassEmbarked(tbPassEmbarkedInput.getText());
+        trackProperties.setPassDisembarked(tbPassDisembarkedInput.getText());
+        trackModel.getTrackInfo();
 
-
-        //get temperature
-        this.setTemp(this.getTempInput());
     }
 
     public void updateTable() {
@@ -129,11 +126,11 @@ public class trackModelTB {
     }
 
     public void setPassDisembarked(int passDisembarked){
-        tbPassDisembarkedInput.setText(Integer.toString(passDisembarked));
+        trackProperties.setPassDisembarked(Integer.toString(passDisembarked));
     }
 
     public void setTicketSales(int ticketSales){
-        tbTicketSalesInput.setText(Integer.toString(ticketSales));
+        trackProperties.setTicketSales(Integer.toString(ticketSales));
     }
    }
 

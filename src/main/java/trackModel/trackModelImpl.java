@@ -34,6 +34,8 @@ public class trackModelImpl implements TrackModel {
 
     private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
 
+
+
     public int getAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
     }
@@ -50,11 +52,6 @@ public class trackModelImpl implements TrackModel {
     public boolean getSwitchState(int block){ return this.switchState; }
     public void setSwitchState(boolean state) { switchState = state; }
     public void setLightState(boolean state) { lightState = state; }
-    public void setTemperature(int temp){
-        temperature = temp;
-        trackProperties.setTemperature(Integer.toString(temp));
-    }
-    public int getTemperature(){ return temperature; }
 
     public boolean getBlockOccupied(int block) {
         return this.blockOccupied.contains(block);
@@ -85,7 +82,6 @@ public class trackModelImpl implements TrackModel {
             this.trainCommandSpeeds.put(trainID, commandedSpeed);
         }
     }
-
 
     public void setFailure(int block, String failure) {
         if(failure.equals("Broken Rail") || failure.equals("Track Circuit Failure") || failure.equals("Power Failure")) {

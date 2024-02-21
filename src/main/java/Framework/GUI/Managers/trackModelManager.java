@@ -55,6 +55,7 @@ public class trackModelManager {
     private TextField tempDisplay;
     @FXML
     private Label tempValueLabel;
+    @FXML
     private Label statusLabel;
 
     //station signal switch
@@ -111,13 +112,13 @@ public class trackModelManager {
     private trackModelImpl currTrackModel = new trackModelImpl();
 
     // test bench object
-    private trackModelTB testBench = new trackModelTB();
+    private trackModelTB testBench;
 
 
     public void initialize(){
         //initialize buttons and user inputs
+        testBench = launchTestBench();
         testBench.setTrackModel(currTrackModel);
-        logo.setOnMouseClicked(event -> launchTestBench());
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
         simSpeedInput.getItems().addAll("1x","2x","3x","4x","5x","6x","7x","8x","9x","10x");
@@ -130,13 +131,7 @@ public class trackModelManager {
         );
         murphyEnter.setOnAction(event -> murphyEnter());
         pickLine.setOnAction(event -> updateTable());
-//        passEmbarkDisplay.setText("0");
-//        passDisembarkDisplay.setText("0");
-//        ticketSalesDisplay.setText("0");
-        tempValueLabel.setText("0");
-//        statusLabel.setText("ON");
         switchStateDisplay.setText("No Switch Present");
-//        switchBlockNumberDisplay.setText("NONE");
 
         //set up cell factories
         sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
@@ -196,7 +191,7 @@ public class trackModelManager {
         occupiedColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
 
         //set track heater
-        tempValueLabel.setText(Integer.toString(currTrackModel.getTemperature()));
+        tempValueLabel.setText("0");
         if(Integer.parseInt(tempValueLabel.getText()) < 32){
             statusLabel.setText("Status - ON");
         }
@@ -205,8 +200,9 @@ public class trackModelManager {
         }
 
         //labels
-        passEmbarkedValue.setText(trackProperties.getPassEmbarked());
-        passDisembarkedValue.setText(trackProperties.getPassDisembarked());
+        passEmbarkedValue.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
+        passDisembarkedValue.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
+        ticketSalesValue.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
 
     }
 

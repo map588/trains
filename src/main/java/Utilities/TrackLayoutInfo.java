@@ -24,7 +24,6 @@ public class TrackLayoutInfo {
     private StringProperty passEmbarked;
     private StringProperty passDisembarked;
     private StringProperty ticketSales;
-    private StringProperty temperature;
     private StringProperty status;
     private StringProperty switchID;
     private StringProperty switchState;
@@ -32,6 +31,7 @@ public class TrackLayoutInfo {
     private StringProperty lightState;
     private StringProperty crossingState;
     private StringProperty tempDisplay;
+    private StringProperty setBeacon;
 
     public TrackLayoutInfo(){
         blockNumber = new SimpleIntegerProperty();
@@ -47,271 +47,140 @@ public class TrackLayoutInfo {
         isOccupied = new SimpleBooleanProperty();
         hasFailure = new SimpleBooleanProperty();
         section = new SimpleStringProperty();
+        passEmbarked = new SimpleStringProperty();
+        passDisembarked = new SimpleStringProperty();
+        ticketSales = new SimpleStringProperty();
+        status = new SimpleStringProperty();
+        switchID = new SimpleStringProperty();
+        switchState = new SimpleStringProperty();
+        lightID = new SimpleStringProperty();
+        lightState = new SimpleStringProperty();
+        crossingState = new SimpleStringProperty();
+        tempDisplay = new SimpleStringProperty();
+        setBeacon = new SimpleStringProperty();
     }
 
-    public String getSection() {
-        return section.get();
-    }
-    public StringProperty sectionProperty() {
-        return section;
-    }
-    public void setSection(String section) {
-        this.section.set(section);
-    }
+    public String getSection() { return section.get(); }
+    public StringProperty sectionProperty() { return section; }
+    public void setSection(String section) { this.section.set(section); }
 
-    public int getBlockNumber() {
-        return blockNumber.get();
-    }
-    public IntegerProperty blockNumberProperty() {
-        return blockNumber;
-    }
-    public void setBlockNumber(int blockNumber) {
-        this.blockNumber.set(blockNumber);
-    }
+    public int getBlockNumber() { return blockNumber.get(); }
+    public IntegerProperty blockNumberProperty() { return blockNumber; }
+    public void setBlockNumber(int blockNumber) { this.blockNumber.set(blockNumber); }
 
-    public int getBlockLength() {
-        return blockLength.get();
-    }
-    public IntegerProperty blockLengthProperty() {
-        return blockLength;
-    }
-    public void setBlockLength(int blockLength) {
-        this.blockLength.set(blockLength);
-    }
+    public int getBlockLength() { return blockLength.get(); }
+    public IntegerProperty blockLengthProperty() { return blockLength; }
+    public void setBlockLength(int blockLength) { this.blockLength.set(blockLength); }
 
-    public double getBlockGrade() {
-        return blockGrade.get();
-    }
-    public DoubleProperty blockGradeProperty() {
-        return blockGrade;
-    }
-    public void setBlockGrade(double blockGrade) {
-        this.blockGrade.set(blockGrade);
-    }
+    public double getBlockGrade() { return blockGrade.get(); }
+    public DoubleProperty blockGradeProperty() { return blockGrade; }
+    public void setBlockGrade(double blockGrade) { this.blockGrade.set(blockGrade); }
 
-    public int getSpeedLimit() {
-        return speedLimit.get();
-    }
-    public IntegerProperty speedLimitProperty() {
-        return speedLimit;
-    }
-    public void setSpeedLimit(int speedLimit) {
-        this.speedLimit.set(speedLimit);
-    }
+    public int getSpeedLimit() { return speedLimit.get(); }
+    public IntegerProperty speedLimitProperty() { return speedLimit; }
+    public void setSpeedLimit(int speedLimit) { this.speedLimit.set(speedLimit); }
 
-    public boolean isIsCrossing() {
-        return isCrossing.get();
-    }
-    public BooleanProperty isCrossingProperty() {
-        return isCrossing;
-    }
-    public void setIsCrossing(boolean isCrossing) {
-        this.isCrossing.set(isCrossing);
-    }
+    public boolean isIsCrossing() { return isCrossing.get(); }
+    public BooleanProperty isCrossingProperty() { return isCrossing; }
+    public void setIsCrossing(boolean isCrossing) { this.isCrossing.set(isCrossing); }
 
-    public boolean isIsUnderground() {
-        return isUnderground.get();
-    }
-    public BooleanProperty isUndergroundProperty() {
-        return isUnderground;
-    }
-    public void setIsUnderground(boolean isUnderground) {
-        this.isUnderground.set(isUnderground);
-    }
+    public boolean isIsUnderground() { return isUnderground.get(); }
+    public BooleanProperty isUndergroundProperty() {return isUnderground; }
+    public void setIsUnderground(boolean isUnderground) { this.isUnderground.set(isUnderground); }
 
-    public boolean isIsSignal() {
-        return isSignal.get();
-    }
-    public BooleanProperty isSignalProperty() {
-        return isSignal;
-    }
-    public void setIsSignal(boolean isSignal) {
-        this.isSignal.set(isSignal);
-    }
+    public boolean isIsSignal() { return isSignal.get(); }
+    public BooleanProperty isSignalProperty() { return isSignal; }
+    public void setIsSignal(boolean isSignal) { this.isSignal.set(isSignal); }
 
-    public boolean isIsSwitch() {
-        return isSwitch.get();
-    }
-    public BooleanProperty isSwitchProperty() {
-        return isSwitch;
-    }
-    public void setIsSwitch(boolean isSwitch) {
-        this.isSwitch.set(isSwitch);
-    }
+    public boolean isIsSwitch() { return isSwitch.get(); }
+    public BooleanProperty isSwitchProperty() { return isSwitch; }
+    public void setIsSwitch(boolean isSwitch) { this.isSwitch.set(isSwitch); }
 
-    public boolean isIsStation() {
-        return isStation.get();
-    }
-    public BooleanProperty isStationProperty() {
-        return isStation;
-    }
-    public void setIsStation(boolean isStation) {
-        this.isStation.set(isStation);
-    }
+    public boolean isIsStation() { return isStation.get(); }
+    public BooleanProperty isStationProperty() { return isStation; }
+    public void setIsStation(boolean isStation) { this.isStation.set(isStation); }
 
-    public boolean isIsBeacon() {
-        return isBeacon.get();
-    }
-    public BooleanProperty isBeaconProperty() {
-        return isBeacon;
-    }
-    public void setIsBeacon(boolean isBeacon) {
-        this.isBeacon.set(isBeacon);
-    }
+    public boolean isIsBeacon() { return isBeacon.get(); }
+    public BooleanProperty isBeaconProperty() { return isBeacon; }
+    public void setIsBeacon(boolean isBeacon) { this.isBeacon.set(isBeacon); }
 
-    public boolean isHasFailure() {
-        return hasFailure.get();
-    }
-    public BooleanProperty hasFailureProperty() {
-        return hasFailure;
-    }
-    public void setHasFailure(boolean hasFailure) {
-        this.hasFailure.set(hasFailure);
-    }
+    public boolean isHasFailure() { return hasFailure.get(); }
+    public BooleanProperty hasFailureProperty() { return hasFailure; }
+    public void setHasFailure(boolean hasFailure) { this.hasFailure.set(hasFailure); }
 
-    public boolean isIsOccupied() {
-        return isOccupied.get();
-    }
+    public boolean isIsOccupied() { return isOccupied.get(); }
 
-    public BooleanProperty isOccupiedProperty() {
-        return isOccupied;
-    }
+    public BooleanProperty isOccupiedProperty() { return isOccupied; }
 
-    public void setIsOccupied(boolean isOccupied) {
-        this.isOccupied.set(isOccupied);
-    }
+    public void setIsOccupied(boolean isOccupied) { this.isOccupied.set(isOccupied); }
 
-    public String getPassEmbarked() {
-        return passEmbarked.get();
-    }
+    public String getPassEmbarked() { return passEmbarked.get(); }
 
-    public StringProperty passEmbarkedProperty() {
-        return passEmbarked;
-    }
+    //LABELS
 
-    public void setPassEmbarked(String passEmbarked) {
-        this.passEmbarked.set(passEmbarked);
-    }
+    public StringProperty passEmbarkedProperty() { return passEmbarked; }
 
-    public String getPassDisembarked() {
-        return passDisembarked.get();
-    }
+    public void setPassEmbarked(String passEmbarked) { this.passEmbarked.set(passEmbarked); }
 
-    public StringProperty passDisembarkedProperty() {
-        return passDisembarked;
-    }
+    public String getPassDisembarked() { return passDisembarked.get(); }
 
-    public void setPassDisembarked(String passDisembarked) {
-        this.passDisembarked.set(passDisembarked);
-    }
+    public StringProperty passDisembarkedProperty() { return passDisembarked; }
 
-    public String getTicketSales() {
-        return ticketSales.get();
-    }
+    public void setPassDisembarked(String passDisembarked) { this.passDisembarked.set(passDisembarked); }
 
-    public StringProperty ticketSalesProperty() {
-        return ticketSales;
-    }
+    public String getTicketSales() { return ticketSales.get(); }
 
-    public void setTicketSales(String ticketSales) {
-        this.ticketSales.set(ticketSales);
-    }
+    public StringProperty ticketSalesProperty() { return ticketSales; }
 
-    public String getTemperature() {
-        return temperature.get();
-    }
+    public void setTicketSales(String ticketSales) { this.ticketSales.set(ticketSales); }
 
-    public StringProperty temperatureProperty() {
-        return temperature;
-    }
+    public String getStatus() { return status.get(); }
 
-    public void setTemperature(String temperature) {
-        this.temperature.set(temperature);
-    }
+    public StringProperty statusProperty() { return status; }
 
-    public String getStatus() {
-        return status.get();
-    }
+    public void setStatus(String status) { this.status.set(status); }
 
-    public StringProperty statusProperty() {
-        return status;
-    }
+    public String getSwitchID() { return switchID.get(); }
 
-    public void setStatus(String status) {
-        this.status.set(status);
-    }
+    public StringProperty switchIDProperty() { return switchID; }
 
-    public String getSwitchID() {
-        return switchID.get();
-    }
+    public void setSwitchID(String switchID) { this.switchID.set(switchID); }
 
-    public StringProperty switchIDProperty() {
-        return switchID;
-    }
+    public String getSwitchState() { return switchState.get(); }
 
-    public void setSwitchID(String switchID) {
-        this.switchID.set(switchID);
-    }
+    public StringProperty switchStateProperty() { return switchState; }
 
-    public String getSwitchState() {
-        return switchState.get();
-    }
+    public void setSwitchState(String switchState) { this.switchState.set(switchState); }
 
-    public StringProperty switchStateProperty() {
-        return switchState;
-    }
+    public String getLightID() { return lightID.get(); }
 
-    public void setSwitchState(String switchState) {
-        this.switchState.set(switchState);
-    }
+    public StringProperty lightIDProperty() { return lightID; }
 
-    public String getLightID() {
-        return lightID.get();
-    }
+    public void setLightID(String lightID) { this.lightID.set(lightID); }
 
-    public StringProperty lightIDProperty() {
-        return lightID;
-    }
+    public String getLightState() { return lightState.get(); }
 
-    public void setLightID(String lightID) {
-        this.lightID.set(lightID);
-    }
+    public StringProperty lightStateProperty() { return lightState; }
 
-    public String getLightState() {
-        return lightState.get();
-    }
+    public void setLightState(String lightState) { this.lightState.set(lightState); }
 
-    public StringProperty lightStateProperty() {
-        return lightState;
-    }
+    public String getCrossingState() { return crossingState.get(); }
 
-    public void setLightState(String lightState) {
-        this.lightState.set(lightState);
-    }
+    public StringProperty crossingStateProperty() { return crossingState; }
 
-    public String getCrossingState() {
-        return crossingState.get();
-    }
+    public void setCrossingState(String crossingState) { this.crossingState.set(crossingState); }
 
-    public StringProperty crossingStateProperty() {
-        return crossingState;
-    }
+    public String getTempDisplay() { return tempDisplay.get(); }
 
-    public void setCrossingState(String crossingState) {
-        this.crossingState.set(crossingState);
-    }
+    public StringProperty tempDisplayProperty() { return tempDisplay; }
 
-    public String getTempDisplay() {
-        return tempDisplay.get();
-    }
+    public void setTempDisplay(String tempDisplay) { this.tempDisplay.set(tempDisplay); }
 
-    public StringProperty tempDisplayProperty() {
-        return tempDisplay;
-    }
+    public String getSetBeacon() {return setBeacon.get();}
 
-    public void setTempDisplay(String tempDisplay) {
-        this.tempDisplay.set(tempDisplay);
-    }
+    public StringProperty setBeaconProperty() {return setBeacon;}
+
+    public void setSetBeacon(String setBeacon) {this.setBeacon.set(setBeacon);}
 
 
     //public CheckBox select;
