@@ -1,83 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.CTCOfficeManager">
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.CTCOfficeManager">
    <children>
       <SplitPane dividerPositions="0.29797979797979796" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane>
                <children>
-                  <ScrollPane prefHeight="10000" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <content>
-                        <AnchorPane prefHeight="795.0" prefWidth="377.0">
-                           <children>
-                              <HBox fx:id="TrackLinesBox">
+                  <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ScrollPane prefHeight="10000">
+                           <content>
+                              <AnchorPane prefHeight="795.0" prefWidth="377.0">
                                  <children>
-                                    <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="194.0">
+                                    <HBox fx:id="TrackLinesBox">
                                        <children>
-                                          <Label fx:id="FirstLineLabel" text="RED Line" />
-                                          <Separator prefWidth="200.0" />
-                                          <HBox fx:id="FirstLineContents" minWidth="-Infinity" prefHeight="779.0" prefWidth="332">
+                                          <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="194.0">
                                              <children>
-                                                <TableView fx:id="blockTable">
-                                                  <columns>
-                                                    <TableColumn fx:id="blockNumberColumn" prefWidth="43" text="Block #" />
-                                                      <TableColumn fx:id="occupationLightColumn" prefWidth="43" text="Occ." />
-                                                        <TableColumn fx:id="switchLightColumn" prefWidth="43" text="Light" />
-                                                      <TableColumn fx:id="switchStateColumn" prefWidth="100" text="Switch State" />
-                                                  </columns>
-                                                 </TableView>
-                                                 <VBox fx:id="FirstLineOccupationRadioButtons" alignment="TOP_CENTER" prefWidth="100.0">
+                                                <Label fx:id="FirstLineLabel" text="RED Line" />
+                                                <Separator prefWidth="200.0" />
+                                                <HBox fx:id="FirstLineContents" minWidth="-Infinity" prefHeight="779.0" prefWidth="332">
                                                    <children>
-                                                      <Label  text="Occupation" />
-                                                      <RadioButton fx:id="FirstLineOccupationOn" mnemonicParsing="false" text="1" />
-                                                      <RadioButton fx:id="FirstLineOccupationOff" mnemonicParsing="false" text="2" />
+                                                      <TableView fx:id="blockTable">
+                                                        <columns>
+                                                          <TableColumn fx:id="blockNumberColumn" prefWidth="43" text="Block #" />
+                                                            <TableColumn fx:id="occupationLightColumn" prefWidth="43" text="Occ." />
+                                                              <TableColumn fx:id="switchLightColumn" prefWidth="43" text="Light" />
+                                                            <TableColumn fx:id="switchStateColumn" prefWidth="100" text="Switch State" />
+                                                        </columns>
+                                                       </TableView>
+                                                       <VBox fx:id="FirstLineOccupationRadioButtons" alignment="TOP_CENTER" prefWidth="100.0">
+                                                         <children>
+                                                            <Label text="Occupation" />
+                                                            <RadioButton fx:id="FirstLineOccupationOn" mnemonicParsing="false" text="1" />
+                                                            <RadioButton fx:id="FirstLineOccupationOff" mnemonicParsing="false" text="2" />
+                                                         </children>
+                                                      </VBox>
+      
                                                    </children>
-                                                </VBox>
-
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" />
+      
+                                          <VBox fx:id="SecondLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="194.0">
+                                              <children>
+                                             <Label fx:id="SecondLineLabel" text="GREEN Line" />
+                                             <Separator prefWidth="200.0" />
+                                             <HBox fx:id="SecondLineContents" minWidth="-Infinity" prefHeight="779.0" prefWidth="300.0">
+                                                <children>
+                                                   <TableView fx:id="blockTable2" prefWidth="229">
+                                                     <columns>
+                                                       <TableColumn fx:id="blockNumberColumn2" prefWidth="43" text="Block #" />
+                                                         <TableColumn fx:id="occupationLightColumn2" prefWidth="43" text="Occ." />
+                                                           <TableColumn fx:id="switchLightColumn2" prefWidth="43" text="Light" />
+                                                         <TableColumn fx:id="switchStateColumn2" prefWidth="100" text="Switch State" />
+                                                     </columns>
+                                                   </TableView>
+                                                </children>
+                                              </HBox>
+                                              </children>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-
-                                    <VBox fx:id="SecondLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="194.0">
-                                        <children>
-                                       <Label fx:id="SecondLineLabel" text="GREEN Line" />
-                                       <Separator prefWidth="200.0" />
-                                       <HBox fx:id="SecondLineContents" minWidth="-Infinity" prefHeight="779.0" prefWidth="300.0">
-                                          <children>
-                                             <TableView fx:id="blockTable2" prefWidth="229">
-                                               <columns>
-                                                 <TableColumn fx:id="blockNumberColumn2" prefWidth="43" text="Block #" />
-                                                   <TableColumn fx:id="occupationLightColumn2" prefWidth="43" text="Occ." />
-                                                     <TableColumn fx:id="switchLightColumn2" prefWidth="43" text="Light" />
-                                                   <TableColumn fx:id="switchStateColumn2" prefWidth="100" text="Switch State" />
-                                               </columns>
-                                             </TableView>
-                                          </children>
-                                        </HBox>
-                                        </children>
-                                    </VBox>
+                                    </HBox>
                                  </children>
-                              </HBox>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </ScrollPane>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                        <ToolBar prefHeight="40.0" prefWidth="200.0">
+                          <items>
+                              <ComboBox fx:id="blockSelection" prefWidth="40" />
+                              <ComboBox fx:id="lineSelection" prefWidth="40" />
+                              <Button fx:id="switchLightToggle" mnemonicParsing="false" text="Light" />
+                              <Button fx:id="crossingToggle" mnemonicParsing="false" text="Crossing" />
+                              <Button fx:id="switchStateToggle" mnemonicParsing="false" text="Switch" />
+                          </items>
+                        </ToolBar>
+                     </children>
+                  </VBox>
                </children>
             </AnchorPane>
-          <AnchorPane />
+          <AnchorPane>
+               <children>
+                  <VBox>
+                     <children>
+                        <ToolBar prefHeight="40.0" prefWidth="200.0">
+                          <items>
+                              <Button fx:id="automaticModeButton" mnemonicParsing="false" text="Button" />
+                            <Button fx:id="manualModeButton" mnemonicParsing="false" text="Button" />
+                              <Button fx:id="maintenanceModeButton" mnemonicParsing="false" text="Button" />
+
+                          </items>
+                        </ToolBar>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0" />
+                              <VBox prefHeight="200.0" prefWidth="100.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
         </items>
       </SplitPane>
    </children>
