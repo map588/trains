@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class trackModelImpl implements TrackModel {
-
-    private TrackLayoutInfo trackProperties;
-
     public trackModelImpl(){
         this.trainAuthorities = new HashMap<>();
         this.trainCommandSpeeds = new HashMap<>();
@@ -121,14 +119,10 @@ public class trackModelImpl implements TrackModel {
             block.setIsUnderground(false);
             block.setIsStation(i == 10 || i == 15);
             block.setIsBeacon(i == 9 || i == 14);
+
             this.trackInfo.add(block);
         }
 
         return this.trackInfo;
-    }
-
-
-    public void setTrackLayoutInfo(TrackLayoutInfo trackProperties) {
-        this.trackProperties = trackProperties;
     }
 }

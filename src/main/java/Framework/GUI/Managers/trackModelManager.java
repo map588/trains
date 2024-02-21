@@ -1,6 +1,7 @@
 package Framework.GUI.Managers;
 
 import Utilities.TrackLayoutInfo;
+import trackModel.trackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -106,19 +107,26 @@ public class trackModelManager {
     private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
 
     //current layout
-    private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
+
 
     // potential variables to assist with control
     private trackModelImpl currTrackModel = new trackModelImpl();
+    //subject
+    private trackModelSubject trackModelSubject = new trackModelSubject(currTrackModel);
 
     // test bench object
     private trackModelTB testBench;
-
+    private TrackLayoutInfo trackProperties;
 
     public void initialize(){
         //initialize buttons and user inputs
+
         testBench = launchTestBench();
+        System.out.println(testBench);
+
         testBench.setTrackModel(currTrackModel);
+        testBench.setTrackModelSubject(trackModelSubject);
+
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
         simSpeedInput.getItems().addAll("1x","2x","3x","4x","5x","6x","7x","8x","9x","10x");
@@ -191,21 +199,31 @@ public class trackModelManager {
         occupiedColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
 
         //set track heater
-        tempValueLabel.setText("0");
-        if(Integer.parseInt(tempValueLabel.getText()) < 32){
-            statusLabel.setText("Status - ON");
-        }
-        else{
-            statusLabel.setText("Status - OFF");
-        }
 
         //labels
+        lineTable.getSelectionModel().selectedItemProperty().addListener(event -> selectBlock());
+    }
+
+    private void selectBlock(){
+        if(trackProperties != null) {
+            // Unbind stuff here
+            passEmbarkedValue.textProperty().unbindBidirectional(trackProperties.passEmbarkedProperty());
+            passDisembarkedValue.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
+            ticketSalesValue.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
+            tempValueLabel.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
+        }
+
+        trackProperties = lineTable.getSelectionModel().getSelectedItem();
+
+        // Bind stuff here
         passEmbarkedValue.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
         passDisembarkedValue.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
         ticketSalesValue.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
+        tempValueLabel.textProperty().bindBidirectional(trackModelSubject.tempProperty());
+
+        trackProperties.getPassEmbarked();
 
     }
-
     private void updateTable() {
         //get the line
         //String lineSelect = pickLine.getValue();
@@ -266,6 +284,7 @@ public class trackModelManager {
             newStage.setScene(newScene);
             newStage.setTitle("Track Model Test Bench");
             newStage.show();
+            System.out.println(loader.getController().toString());
             return loader.getController();
         } catch (Exception e) {
             e.printStackTrace();
