@@ -7,15 +7,23 @@ import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.io.File;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class trainControllerManager {
 
@@ -37,8 +45,12 @@ public class trainControllerManager {
     private trainControllerSubjectFactory factory;
     private trainControllerSubject currentSubject;
 
+    //private trainControllerTB testBench;
+
     @FXML
     public void initialize() {
+        //testBench = launchTestBench();
+
         trainControllerImpl trainController = new trainControllerImpl(0);
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
@@ -212,4 +224,25 @@ public class trainControllerManager {
         trainController_setKi_TextField.textProperty().unbind();
         trainController_setKp_TextField.textProperty().unbind();
     }
+
+//    private trainControllerTB launchTestBench(){
+//        System.out.println("Preparing to launch test bench");
+//        try{
+//            String tbFile = "Framework/GUI/FXML/trainController_TB.fxml";
+//            URL url = getClass().getResource(tbFile);
+//            FXMLLoader loader = new FXMLLoader(url);
+//            Node content = loader.load();
+//            Stage newStage = new Stage();
+//            Scene newScene = new Scene(new VBox(content));
+//            newStage.setScene(newScene);
+//            newStage.setTitle("Train Controller Test Bench");
+//            newStage.show();
+//            return loader.getController();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("Failed to launch test bench");
+//            throw new RuntimeException();
+//        }
+//    }
 }

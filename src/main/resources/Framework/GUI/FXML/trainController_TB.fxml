@@ -8,40 +8,40 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainControllerTB">
     <children>
         <Text layoutX="59.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Number:" />
-        <TextField layoutX="149.0" layoutY="31.0" prefHeight="26.0" prefWidth="54.0" />
-        <Button layoutX="210.0" layoutY="29.0" mnemonicParsing="false" text="Add Train" />
-        <CheckBox layoutX="59.0" layoutY="80.0" mnemonicParsing="false" text="Power Failure" />
-        <CheckBox layoutX="59.0" layoutY="118.0" mnemonicParsing="false" text="Brake Failure" />
-        <CheckBox layoutX="59.0" layoutY="156.0" mnemonicParsing="false" text="Signal Failure" />
-        <Button layoutX="59.0" layoutY="200.0" mnemonicParsing="false" text="Passenger E-Brake" />
+        <TextField fx:id="trainControllerTB_trainNo_TextField" layoutX="149.0" layoutY="31.0" prefHeight="26.0" prefWidth="54.0" />
+        <Button fx:id="trainControllerTB_AddTrain_Button" layoutX="210.0" layoutY="29.0" mnemonicParsing="false" text="Add Train" />
+        <CheckBox fx:id="trainControllerTB_PowerFailure_CheckBox" layoutX="59.0" layoutY="80.0" mnemonicParsing="false" text="Power Failure" />
+        <CheckBox fx:id="trainControllerTB_BrakeFailure_CheckBox" layoutX="59.0" layoutY="118.0" mnemonicParsing="false" text="Brake Failure" />
+        <CheckBox fx:id="trainControllerTB_SignalFailure_CheckBox" layoutX="59.0" layoutY="156.0" mnemonicParsing="false" text="Signal Failure" />
+        <Button fx:id="trainControllerTB_PassengerEBrake_Button" layoutX="59.0" layoutY="200.0" mnemonicParsing="false" text="Passenger E-Brake" />
         <Text layoutX="322.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed" />
         <Text layoutX="322.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed Limit" />
         <Text layoutX="322.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Commanded Speed" />
-        <TextField layoutX="468.0" layoutY="23.0" prefHeight="26.0" prefWidth="54.0" />
-        <TextField layoutX="468.0" layoutY="46.0" prefHeight="26.0" prefWidth="54.0" />
-        <TextField layoutX="468.0" layoutY="70.0" prefHeight="26.0" prefWidth="54.0" />
+        <TextField fx:id="trainControllerTB_CurrentSpeed_TextField" layoutX="468.0" layoutY="23.0" prefHeight="26.0" prefWidth="54.0" />
+        <TextField fx:id="trainControllerTB_SpeedLimit_TextField" layoutX="468.0" layoutY="46.0" prefHeight="26.0" prefWidth="54.0" />
+        <TextField fx:id="trainControllerTB_CommandedSpeed_TextField" layoutX="468.0" layoutY="70.0" prefHeight="26.0" prefWidth="54.0" />
         <Text layoutX="522.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH" wrappingWidth="48.166664123535156" />
         <Text layoutX="522.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH" wrappingWidth="48.166664123535156" />
         <Text layoutX="522.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH" wrappingWidth="48.166664123535156" />
-        <RadioButton layoutX="315.0" layoutY="115.0" mnemonicParsing="false" text="Left Platform" />
-        <RadioButton layoutX="438.0" layoutY="115.0" mnemonicParsing="false" text="Right Platform" />
+        <RadioButton fx:id="trainControllerTB_LeftPlatform_RadioButton" layoutX="315.0" layoutY="115.0" mnemonicParsing="false" text="Left Platform" />
+        <RadioButton fx:id="trainControllerTB_RightPlatform_RadioButton" layoutX="438.0" layoutY="115.0" mnemonicParsing="false" text="Right Platform" />
         <Text layoutX="322.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grade" />
-        <TextField layoutX="379.0" layoutY="152.0" prefHeight="26.0" prefWidth="54.0" />
+        <TextField fx:id="trainControllerTB_Grade_TextField" layoutX="379.0" layoutY="152.0" prefHeight="26.0" prefWidth="54.0" />
         <Text layoutX="436.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°" />
         <Text layoutX="322.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority" />
-        <TextField layoutX="379.0" layoutY="178.0" prefHeight="26.0" prefWidth="54.0" />
+        <TextField fx:id="trainControllerTB_Authority_TextField" layoutX="379.0" layoutY="178.0" prefHeight="26.0" prefWidth="54.0" />
         <Text layoutX="322.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Blocks" />
         <TextField layoutX="379.0" layoutY="202.0" prefHeight="26.0" prefWidth="54.0" />
         <Text layoutX="434.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ft." />
         <Text layoutX="434.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="blocks" />
       <Text layoutX="314.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Cabin Temperature" />
-      <TextField layoutX="472.0" layoutY="246.0" prefHeight="26.0" prefWidth="54.0" />
+      <TextField fx:id="trainControllerTB_CurrentTemperature_TextField" layoutX="472.0" layoutY="246.0" prefHeight="26.0" prefWidth="54.0" />
       <Text layoutX="526.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°F" wrappingWidth="48.166664123535156" />
       <Text layoutX="59.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Name" />
-      <CheckBox layoutX="320.0" layoutY="280.0" mnemonicParsing="false" text="Inside Tunnel" />
-      <ChoiceBox layoutX="176.0" layoutY="246.0" prefHeight="26.0" prefWidth="110.0" />
+      <CheckBox fx:id="trainControllerTB_InTunnel_CheckBox" layoutX="320.0" layoutY="280.0" mnemonicParsing="false" text="Inside Tunnel" />
+      <ChoiceBox fx:id="trainControllerTB_StationName_ChoiceBox" layoutX="176.0" layoutY="246.0" prefHeight="26.0" prefWidth="110.0" />
     </children>
-</AnchorPane>
+</fx:root>
