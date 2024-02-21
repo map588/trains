@@ -1,11 +1,14 @@
 package Framework.GUI.Managers;
 
 import Framework.Support.ListenerReference;
+import Framework.Support.ObservableHashMap;
 import Framework.Support.SubjectFactory;
 import eu.hansolo.medusa.Gauge;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -36,11 +39,11 @@ public class trainModelManager {
     public ToggleButton brakeFailureBtn, powerFailureBtn, signalFailureBtn;
     @FXML
     public Label gradeLabel, maxPowerLabel, medAccelerationLabel, maxVelocityLabel, trainLengthLabel, trainHeightLabel, trainWidthLabel, numCarsLabel;
-    public Label numPassengersLabel, crewCountLabel, emptyWeightLabel, loadedWeightLabel;
+    public Label numPassengerLabel, crewCountLabel, emptyWeightLabel, loadedWeightLabel;
     @FXML
     public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp;
     @FXML
-    public Circle extLightsEn, intLightEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
+    public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
     private SubjectFactory<trainModelSubject> factory;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
@@ -53,10 +56,19 @@ public class trainModelManager {
 
         testBench = launchTestBench();
 
-        trainModelImpl trainModel = new trainModelImpl(0);
-        factory = trainSubjectFactory.getInstance();
+        new trainModelImpl(0);
+        new trainModelImpl(1);
+        new trainModelImpl(2);
 
-        subject = factory.getSubjects().get(0);
+        factory = trainSubjectFactory.getInstance();
+        setupMapChangeListener();
+
+        if (!factory.getSubjects().isEmpty()) {
+            Integer firstKey = factory.getSubjects().keySet().iterator().next();
+            changeTrainView(firstKey);
+        }else{
+            System.out.println("No train models found");
+        }
 
         bindLabels();
         bindGauges();
@@ -82,7 +94,7 @@ public class trainModelManager {
 
 
         bindLabelToProperty("numCars", numCarsLabel);
-        bindLabelToProperty("numPassengers", numPassengersLabel);
+        bindLabelToProperty("numPassengers", numPassengerLabel);
         bindLabelToProperty("crewCount", crewCountLabel);
         bindLabelToProperty("grade", gradeLabel);
     }
@@ -146,7 +158,7 @@ public class trainModelManager {
         extLightsEn.setFill(active ? Color.YELLOW : Color.GRAY);
     }
     private void updateIntLightsIndicator(boolean active) {
-        intLightEn.setFill(active ? Color.YELLOW : Color.GRAY);
+        intLightsEn.setFill(active ? Color.YELLOW : Color.GRAY);
     }
     private void updateLeftDoorsIndicator(boolean active) {
         leftDoorsEn.setFill(active ? Color.YELLOW : Color.GRAY);
@@ -184,6 +196,38 @@ public class trainModelManager {
     private <T> void appendListener(ObservableValue<T> observable, ChangeListener<T> listener) {
         observable.addListener(listener);
         listenerReferences.add(new ListenerReference<>(observable, listener));
+    }
+
+    private void setupMapChangeListener() {
+        ObservableHashMap<Integer, trainModelSubject> subjects = factory.getSubjects();
+
+        // Create a listener that reacts to any change (add, remove, update) by updating choice box items
+        ObservableHashMap.MapListener<Integer, trainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
+            @Override
+            public void onAdded(Integer key, trainModelSubject value) {
+                updateChoiceBoxItems();
+            }
+
+            @Override
+            public void onRemoved(Integer key, trainModelSubject value) {
+                updateChoiceBoxItems();
+            }
+
+            @Override
+            public void onUpdated(Integer key, trainModelSubject oldValue, trainModelSubject newValue) {
+                updateChoiceBoxItems();
+            }
+        };
+
+        subjects.addChangeListener(genericListener);
+        updateChoiceBoxItems();
+    }
+
+    private void updateChoiceBoxItems() {
+        Platform.runLater(() -> {
+            trainDropDown.setItems(FXCollections.observableArrayList(
+                    new ArrayList<>(factory.getSubjects().keySet())));
+        });
     }
 
     private trainModelTB launchTestBench() {

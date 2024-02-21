@@ -6,7 +6,6 @@ import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +61,7 @@ public class trainModelSubject implements AbstractSubject{
 
     public void setProperty(String propertyName, Object newValue) {
         Runnable updateTask = () -> {
+            System.out.println("setProperty called from " + Thread.currentThread().getName() + " with " + propertyName + " and " + newValue);
             Property<?> property = properties.get(propertyName);
             updateProperty(property, newValue);
             model.setValue(propertyName, newValue);
