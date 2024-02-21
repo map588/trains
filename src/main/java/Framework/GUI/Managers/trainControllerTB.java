@@ -35,6 +35,9 @@ public class trainControllerTB {
     private TextField trainControllerTB_Grade_TextField;
 
     @FXML
+    private TextField trainControllerTB_SamplingPeriod_TextField;
+
+    @FXML
     private CheckBox trainControllerTB_InTunnel_CheckBox;
 
     @FXML
