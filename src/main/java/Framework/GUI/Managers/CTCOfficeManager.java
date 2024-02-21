@@ -6,10 +6,7 @@ import CTCOffice.CTCOfficeImpl;
 import Common.CTCOffice;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -42,6 +39,9 @@ public class CTCOfficeManager {
     private TableColumn<CTCBlockSubject, Paint> switchLightColumn;
 
     @FXML
+    private SplitPane mainSplit;
+
+    @FXML
     private TableColumn<CTCBlockSubject, Boolean> switchStateColumn;
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
 
@@ -53,6 +53,7 @@ public class CTCOfficeManager {
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
         blockTable.getItems().addAll(blockList);
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
+        blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
         switchLightColumn.setCellValueFactory(block -> {
@@ -79,15 +80,6 @@ public class CTCOfficeManager {
                 setGraphic(graphic);
             }
         });
-//        switchLightColumn.setCellValueFactory(block -> {
-//            if (block.getValue().getBooleanProperty("hasLight").getValue()) {
-//                return block.getValue().getBooleanProperty("lightState");
-//            } else {
-//                return null;
-//            }
-//                });
-        //switchLightColumn.setCellFactory(
-
     }
 
     @FXML
