@@ -68,6 +68,8 @@ public class trainControllerManager {
 
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
+
+        testBench = launchTestBench();
         // Select the first train by default if available
         if (!factory.getSubjects().isEmpty()) {
             Integer firstKey = factory.getSubjects().keySet().iterator().next();
@@ -80,7 +82,7 @@ public class trainControllerManager {
         });
 
         emergencyBrakeButton.setStyle("-fx-background-color: #FF5733; -fx-text-fill: #ffffff;");
-        //testBench = launchTestBench();
+
     }
 
     private void setupMapChangeListener() {
@@ -261,24 +263,23 @@ public class trainControllerManager {
         setKpTextField.textProperty().unbind();
     }
 
-//    private trainControllerTB launchTestBench(){
-//        System.out.println("Preparing to launch test bench");
-//        try{
-//            String tbFile = "/Framework/GUI/FXML/trainController_TB.fxml";
-//            URL url = getClass().getResource(tbFile);
-//            FXMLLoader loader = new FXMLLoader(url);
-//            Node content = loader.load();
-//            Stage newStage = new Stage();
-//            Scene newScene = new Scene(new VBox(content));
-//            newStage.setScene(newScene);
-//            newStage.setTitle("Train Controller Test Bench");
-//            newStage.show();
-//            return loader.getController();
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            System.out.println("Failed to launch test bench");
-//            throw new RuntimeException();
-//        }
-//    }
+    private trainControllerTB launchTestBench(){
+        System.out.println(System.getProperty("Preparing to launch test bench"));
+        try {
+            String tbFile = "/Framework/GUI/FXML/trainController_TB.fxml";
+            URL url = getClass().getResource(tbFile);
+            FXMLLoader loader = new FXMLLoader(url);
+            Node content = loader.load();
+            Stage newStage = new Stage();
+            Scene newScene = new Scene(new VBox(content));
+            newStage.setScene(newScene);
+            newStage.setTitle("Train Controller Test Bench");
+            newStage.show();
+            return loader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to launch test bench");
+            throw new RuntimeException(e);
+        }
+    }
 }
