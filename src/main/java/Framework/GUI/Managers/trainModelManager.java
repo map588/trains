@@ -1,29 +1,24 @@
 package Framework.GUI.Managers;
 
 import Framework.Support.SubjectFactory;
-import Utilities.Constants;
 import eu.hansolo.medusa.Gauge;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+import trainModel.trainModelImpl;
 import trainModel.trainModelSubject;
 import trainModel.trainSubjectFactory;
-import trainModel.trainModelImpl;
 
 import java.net.URL;
-import java.util.ArrayList;
 
 public class trainModelManager {
 
@@ -43,6 +38,7 @@ public class trainModelManager {
 
     private SubjectFactory<trainModelSubject> factory;
     private trainModelSubject subject;
+
     private trainModelTB testBench;
 
     @FXML

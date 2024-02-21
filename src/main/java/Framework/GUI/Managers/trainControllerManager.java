@@ -1,9 +1,12 @@
 package Framework.GUI.Managers;
 
+import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,6 +19,7 @@ import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class trainControllerManager {
@@ -41,6 +45,8 @@ public class trainControllerManager {
 
     private trainControllerSubjectFactory factory;
     private trainControllerSubject currentSubject;
+    private List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+
 
     //private trainControllerTB testBench;
 
@@ -110,13 +116,13 @@ public class trainControllerManager {
     }
 
     private void bindIndicators() {
-        currentSubject.getBooleanProperty("emergencyBrake").addListener((obs, oldVal, newVal) -> updateIndicator(eBrakeStatus, newVal));
-        currentSubject.getBooleanProperty("signalFailure").addListener((obs, oldVal, newVal) -> updateIndicator(signalFailureStatus, newVal));
-        currentSubject.getBooleanProperty("brakeFailure").addListener((obs, oldVal, newVal) -> updateIndicator(brakeFailureStatus, newVal));
-        currentSubject.getBooleanProperty("powerFailure").addListener((obs, oldVal, newVal) -> updateIndicator(powerFailureStatus, newVal));
-        currentSubject.getBooleanProperty("inTunnel").addListener((obs, oldVal, newVal) -> updateIndicator(inTunnelStatus, newVal));
-        currentSubject.getBooleanProperty("leftPlatform").addListener((obs, oldVal, newVal) -> updateIndicator(stationSideLeftStatus, newVal));
-        currentSubject.getBooleanProperty("rightPlatform").addListener((obs, oldVal, newVal) -> updateIndicator(stationSideRightStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("emergencyBrake"), (obs, oldVal, newVal) -> updateIndicator(eBrakeStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("signalFailure"),(obs, oldVal, newVal) -> updateIndicator(signalFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("brakeFailure"),(obs, oldVal, newVal) -> updateIndicator(brakeFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("powerFailure"),(obs, oldVal, newVal) -> updateIndicator(powerFailureStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("inTunnel"),(obs, oldVal, newVal) -> updateIndicator(inTunnelStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("leftPlatform"),(obs, oldVal, newVal) -> updateIndicator(stationSideLeftStatus, newVal));
+        appendListener(currentSubject.getBooleanProperty("rightPlatform"),(obs, oldVal, newVal) -> updateIndicator(stationSideRightStatus, newVal));
     }
 
 
@@ -148,14 +154,14 @@ public class trainControllerManager {
     }
 
     private void bindCheckBox(CheckBox checkBox, String propertyName) {
-        checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+        appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
                 currentSubject.setProperty(propertyName, newVal);
         });
     }
 
 
     private void bindTextField(TextField textField, String propertyName) {
-        textField.textProperty().addListener((obs, oldVal, newVal) -> {
+        appendListener(textField.textProperty(),(obs, oldVal, newVal) -> {
             try {
                 // Parse and update property
                 currentSubject.setProperty(propertyName, Double.parseDouble(newVal));
@@ -179,10 +185,10 @@ public class trainControllerManager {
 
 
     private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
-        slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+        appendListener(slider.valueProperty(), (obs, oldVal, newVal) -> {
             textField.setText(String.format("%.1f", newVal));
         });
-        textField.textProperty().addListener((obs, oldVal, newVal) -> {
+        appendListener(textField.textProperty(),(obs, oldVal, newVal) -> {
             try {
                 double value = Double.parseDouble(newVal);
                 // Preventing feedback loop
@@ -197,6 +203,11 @@ public class trainControllerManager {
     }
 
 
+    private <T> void appendListener(ObservableValue<T> observable, ChangeListener<T> listener) {
+        observable.addListener(listener);
+        listenerReferences.add(new ListenerReference<>(observable, listener));
+    }
+
 
     private void changeTrainView(Integer trainID) {
         currentSubject = factory.getSubjects().get(trainID);
@@ -209,6 +220,9 @@ public class trainControllerManager {
     }
 
     private void unbindControls() {
+        listenerReferences.forEach(ListenerReference::detach);
+        listenerReferences.clear();
+
         currentSpeedGauge.valueProperty().unbind();
         commandedSpeedGauge.valueProperty().unbind();
         speedLimitGauge.valueProperty().unbind();
