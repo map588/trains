@@ -1,15 +1,13 @@
 package Utilities;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class TrackLayoutInfo {
 
     private StringProperty section;
     private IntegerProperty blockNumber;
     private IntegerProperty blockLength;
-    private IntegerProperty blockGrade;
+    private DoubleProperty blockGrade;
     private IntegerProperty speedLimit;
 
     // boolean properties
@@ -23,6 +21,21 @@ public class TrackLayoutInfo {
 
     public staticBlockInfo switchBlock1;
     public staticBlockInfo switchBlock2;
+
+    public TrackLayoutInfo(){
+        blockNumber = new SimpleIntegerProperty();
+        blockLength = new SimpleIntegerProperty();
+        blockGrade = new SimpleDoubleProperty();
+        speedLimit = new SimpleIntegerProperty();
+        isCrossing = new SimpleBooleanProperty();
+        isUnderground = new SimpleBooleanProperty();
+        isSignal = new SimpleBooleanProperty();
+        isSwitch = new SimpleBooleanProperty();
+        isStation = new SimpleBooleanProperty();
+        isBeacon = new SimpleBooleanProperty();
+        hasFailure = new SimpleBooleanProperty();
+        section = new SimpleStringProperty();
+    }
 
     public String getSection() {
         return section.get();
@@ -54,13 +67,13 @@ public class TrackLayoutInfo {
         this.blockLength.set(blockLength);
     }
 
-    public int getBlockGrade() {
+    public double getBlockGrade() {
         return blockGrade.get();
     }
-    public IntegerProperty blockGradeProperty() {
+    public DoubleProperty blockGradeProperty() {
         return blockGrade;
     }
-    public void setBlockGrade(int blockGrade) {
+    public void setBlockGrade(double blockGrade) {
         this.blockGrade.set(blockGrade);
     }
 

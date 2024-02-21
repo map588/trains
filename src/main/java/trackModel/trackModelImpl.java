@@ -3,6 +3,8 @@ package trackModel;
 
 import Utilities.TrackLayoutInfo;
 import Utilities.staticBlockInfo;
+import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import Common.TrackModel;
 import javafx.beans.property.BooleanProperty;
@@ -11,16 +13,28 @@ import javafx.beans.property.BooleanProperty;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class trackModelImpl implements TrackModel {
+
+    public trackModelImpl(){
+        this.trainAuthorities = new HashMap<>();
+        this.trainCommandSpeeds = new HashMap<>();
+        this.line = new ArrayList<>();
+        this.blockOccupied = false;
+        this.lightState = false;
+        this.switchState = false;
+    }
+
     private HashMap<Integer,Integer> trainAuthorities;
     private HashMap<Integer,Integer> trainCommandSpeeds;
-    private ArrayList<String> line;
+    private ArrayList<String> line = new ArrayList<>();
     private boolean blockOccupied;
     private boolean lightState;
     private boolean switchState;
+    private ArrayList<Integer> failures = new ArrayList<Integer>();
 
-    private ObservableList<TrackLayoutInfo> trackInfo;
+    private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
 
     public trackModelImpl(ArrayList<String> csvData) {
         this.trainAuthorities = new HashMap<>();
@@ -67,16 +81,18 @@ public class trackModelImpl implements TrackModel {
     public void setLine(String line) { this.line.add(line); }
     public ArrayList<String> getLines() {return this.line;}
     public String getLine(int lineNumber) { return this.line.get(lineNumber); }
+    public void setFailure(int block, boolean failure) {
+
+    }
+    public boolean getFailure(int block) { return false; }
 
 
 
-    public ObservableList<TrackLayoutInfo> getTrackInfo() {
+    public List<TrackLayoutInfo> getTrackInfo() {
 
-        for(int i = 0; i < 15; i++){
-
-
+        for(int i = 0; i <= 15; i++){
             TrackLayoutInfo block = new TrackLayoutInfo();
-
+            block.setHasFailure(getFailure(i));
             block.setBlockNumber(i);
 
             if(i < 6){
@@ -96,7 +112,7 @@ public class trackModelImpl implements TrackModel {
             block.setIsSignal(i == 6 || i == 11);
             block.setIsSwitch(i == 5 || i == 6 || i == 11);
             block.setIsUnderground(false);
-            block.setIsStation(false);
+            block.setIsStation(i == 10 || i == 15);
             block.setIsBeacon(i == 9 || i == 14);
             this.trackInfo.add(block);
         }
