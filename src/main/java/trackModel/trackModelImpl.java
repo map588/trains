@@ -11,19 +11,22 @@ import java.util.List;
 
 public class trackModelImpl implements TrackModel {
 
+    private TrackLayoutInfo trackProperties;
+
     public trackModelImpl(){
         this.trainAuthorities = new HashMap<>();
         this.trainCommandSpeeds = new HashMap<>();
         this.line = new ArrayList<>();
-        this.blockOccupied = false;
         this.lightState = false;
         this.switchState = false;
+        this.blockOccupied = new ArrayList<Integer>();
+        this.failures = new ArrayList<Integer>();
     }
 
     private HashMap<Integer,Integer> trainAuthorities;
     private HashMap<Integer,Integer> trainCommandSpeeds;
     private ArrayList<String> line = new ArrayList<>();
-    private boolean blockOccupied;
+    private ArrayList<Integer> blockOccupied = new ArrayList<>();
     private boolean lightState;
     private boolean switchState;
     private int temperature;
@@ -31,13 +34,6 @@ public class trackModelImpl implements TrackModel {
 
     private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
 
-    public trackModelImpl(ArrayList<String> csvData) {
-        this.trainAuthorities = new HashMap<>();
-        this.trainCommandSpeeds = new HashMap<>();
-        this.line = null;
-        this.blockOccupied = false;
-        this.failures = new ArrayList<Integer>();
-    }
     public int getAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
     }
@@ -54,15 +50,24 @@ public class trackModelImpl implements TrackModel {
     public boolean getSwitchState(int block){ return this.switchState; }
     public void setSwitchState(boolean state) { switchState = state; }
     public void setLightState(boolean state) { lightState = state; }
-    public void setTemperature(int temp){ temperature = temp; }
+    public void setTemperature(int temp){
+        temperature = temp;
+        trackProperties.setTemperature(Integer.toString(temp));
+    }
     public int getTemperature(){ return temperature; }
 
-    public boolean blockOccupied(int block) {
-        return this.blockOccupied;
+    public boolean getBlockOccupied(int block) {
+        return this.blockOccupied.contains(block);
     }
-    public void setBlockOccupied(boolean state) { this.blockOccupied = state; }
+    public void setBlockOccupied(int block, boolean state) {
+        if(state){
+            this.blockOccupied.add(block);
+        }
+        else{
+            this.blockOccupied.remove(block);
+        }
+    }
     public void setLine(String line) { this.line.add(line); }
-    public ArrayList<String> getLines() {return this.line;}
     public String getLine(int lineNumber) { return this.line.get(lineNumber); }
 
     public void setTrainAuthority(int trainID, int authority) {
@@ -98,6 +103,7 @@ public class trackModelImpl implements TrackModel {
         for(int i = 0; i <= 15; i++){
             TrackLayoutInfo block = new TrackLayoutInfo();
             block.setHasFailure(failures.contains(i));
+            block.setIsOccupied(blockOccupied.contains(i));
             block.setBlockNumber(i);
 
             if(i < 6){
@@ -126,4 +132,7 @@ public class trackModelImpl implements TrackModel {
     }
 
 
+    public void setTrackLayoutInfo(TrackLayoutInfo trackProperties) {
+        this.trackProperties = trackProperties;
+    }
 }

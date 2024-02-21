@@ -9,5 +9,10 @@ public interface TrackModel {
     void setSwitchState(boolean state);
     void setTrainAuthority(int trainID, int authority);
     void setCommandedSpeed(int trainID, int commandedSpeed);
-    boolean blockOccupied(int block);
+    void setBlockOccupied(int block, boolean state);
+    void setTemperature(int temp);
+    int getTemperature();
+    boolean getBlockOccupied(int block);
+    void setLine(String line);
+    void setFailure(int block, String failure);
 }

@@ -52,6 +52,14 @@ public class trackModelTB {
         this.tbOccupiedColumn = new TableColumn<>();
     }
 
+    public int getTempInput(){
+        return Integer.parseInt(tbTempInput.getText());
+    }
+
+   public void setTemp(int temp){
+        tbTempInput.setText(Integer.toString(temp));
+        trackModel.setTemperature(temp);
+    }
 
     public void initialize() {
 
@@ -84,21 +92,27 @@ public class trackModelTB {
         tbSignalColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         tbOccupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tbOccupiedColumn));
 
-        tbSectionsColumn.setCellValueFactory(new PropertyValueFactory<>("section"));
-        tbBlockColumn.setCellValueFactory(new PropertyValueFactory<>("blockNumber"));
-        tbSwitchColumn.setCellValueFactory(new PropertyValueFactory<>("isSwitch"));
-        tbSignalColumn.setCellValueFactory(new PropertyValueFactory<>("isSignal"));
-        tbOccupiedColumn.setCellValueFactory(new PropertyValueFactory<>("isOccupied"));
+        tbSectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
+        tbBlockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty().asObject());
+        tbSwitchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
+        tbSignalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
+        tbOccupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
 
+        tbChooseLine.getItems().add("blue");
         tbChooseLine.setOnAction(event -> updateTable());
 
-       // tbChooseLine.setOnAction(event -> updateTable());
+        // set labels
+        this.setPassDisembarked(Integer.parseInt(tbPassDisembarkedInput.getText()));
+        this.setPassEmbarked(Integer.parseInt(tbPassEmbarkedInput.getText()));
+        this.setTicketSales(Integer.parseInt(tbTicketSalesInput.getText()));
 
+
+        //get temperature
+        this.setTemp(this.getTempInput());
     }
 
     public void updateTable() {
-
-        ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList();
+        ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList(trackModel.getTrackInfo());
         tbTable.setItems(trackList);
     }
 
@@ -110,6 +124,17 @@ public class trackModelTB {
         this.trackModel = trackModel;
     }
 
+    public void setPassEmbarked(int passEmbarked){
+        trackProperties.setPassEmbarked(Integer.toString(passEmbarked));
+    }
+
+    public void setPassDisembarked(int passDisembarked){
+        tbPassDisembarkedInput.setText(Integer.toString(passDisembarked));
+    }
+
+    public void setTicketSales(int ticketSales){
+        tbTicketSalesInput.setText(Integer.toString(ticketSales));
+    }
+   }
 
 
-}

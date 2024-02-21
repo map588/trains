@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class trackModelManager {
 
 
+
     //simulation information
     @FXML
     private Label logo;
@@ -54,16 +55,17 @@ public class trackModelManager {
     private TextField tempDisplay;
     @FXML
     private Label tempValueLabel;
+    private Label statusLabel;
 
     //station signal switch
     @FXML
     private TextField stationDisplay;
-//    @FXML
-//    private TextField passEmbarkDisplay;
-//    @FXML
-//    private TextField passDisembarkDisplay;
-//    @FXML
-//    private TextField ticketSalesDisplay;
+    @FXML
+    private Label passEmbarkedValue;
+    @FXML
+    private Label passDisembarkedValue;
+    @FXML
+    private Label ticketSalesValue;
 
     //beacon information
     @FXML
@@ -192,6 +194,19 @@ public class trackModelManager {
         switchColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         failureColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         occupiedColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
+
+        //set track heater
+        tempValueLabel.setText(Integer.toString(currTrackModel.getTemperature()));
+        if(Integer.parseInt(tempValueLabel.getText()) < 32){
+            statusLabel.setText("Status - ON");
+        }
+        else{
+            statusLabel.setText("Status - OFF");
+        }
+
+        //labels
+        passEmbarkedValue.setText(trackProperties.getPassEmbarked());
+        passDisembarkedValue.setText(trackProperties.getPassDisembarked());
 
     }
 
