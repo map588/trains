@@ -40,7 +40,17 @@ public class trackModelTB {
     private TableColumn<TrackLayoutInfo, Boolean> tbOccupiedColumn;
 
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
-    private trackModelImpl trackInfo = new trackModelImpl();
+    private trackModelImpl trackModel;
+
+
+    public trackModelTB(){
+
+        this.tbBlockColumn = new TableColumn<>();
+        this.tbSectionsColumn = new TableColumn<>();
+        this.tbSwitchColumn = new TableColumn<>();
+        this.tbSignalColumn = new TableColumn<>();
+        this.tbOccupiedColumn = new TableColumn<>();
+    }
 
 
     public void initialize() {

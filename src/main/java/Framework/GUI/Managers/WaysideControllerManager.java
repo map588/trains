@@ -99,7 +99,7 @@ public class WaysideControllerManager {
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().occupationProperty());
-        blockTableLightsColumn.setCellValueFactory(block -> block.getValue().lightStateColorProperty());
+        blockTableLightsColumn.setCellValueFactory(block -> block.getValue().lightStateProperty().lightColorProperty());
         blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockInfo, Paint>() {
             private BorderPane graphic;
             private Circle circle;

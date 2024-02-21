@@ -10,7 +10,12 @@ public class trainModelTB {
     @FXML
     public ToggleButton tbEBrake, tbSBrake, tbIntLights, tbExtLights, tbLeftDoors, tbRightDoors;
     @FXML
-    public TextField tbPower, tbSpeed, tbAuthority, tbGrade;
+    public TextField tbPower, tbSpeed, tbAuthority, tbGrade, tbTemp;
     @FXML
     public Circle tbBrakeFailure, tbPowerFailure, tbSignalFailure;
+
+    @FXML
+    public void initialize() {
+
+    }
 }

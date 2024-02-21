@@ -18,6 +18,7 @@ public class TrackLayoutInfo {
     private BooleanProperty isStation;
     private BooleanProperty isBeacon;
     private BooleanProperty hasFailure;
+    private BooleanProperty isOccupied;
 
     public TrackLayoutInfo(){
         blockNumber = new SimpleIntegerProperty();
@@ -30,6 +31,7 @@ public class TrackLayoutInfo {
         isSwitch = new SimpleBooleanProperty();
         isStation = new SimpleBooleanProperty();
         isBeacon = new SimpleBooleanProperty();
+        isOccupied = new SimpleBooleanProperty();
         hasFailure = new SimpleBooleanProperty();
         section = new SimpleStringProperty();
     }
@@ -152,6 +154,18 @@ public class TrackLayoutInfo {
     }
     public void setHasFailure(boolean hasFailure) {
         this.hasFailure.set(hasFailure);
+    }
+
+    public boolean isIsOccupied() {
+        return isOccupied.get();
+    }
+
+    public BooleanProperty isOccupiedProperty() {
+        return isOccupied;
+    }
+
+    public void setIsOccupied(boolean isOccupied) {
+        this.isOccupied.set(isOccupied);
     }
 
 

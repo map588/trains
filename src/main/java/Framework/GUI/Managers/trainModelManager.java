@@ -1,6 +1,7 @@
 package Framework.GUI.Managers;
 
 import Framework.Support.SubjectFactory;
+import Utilities.Constants;
 import eu.hansolo.medusa.Gauge;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.StringProperty;
@@ -8,14 +9,20 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import trainModel.trainModelSubject;
 import trainModel.trainSubjectFactory;
 import trainModel.trainModelImpl;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class trainModelManager {
@@ -27,8 +34,8 @@ public class trainModelManager {
     @FXML
     public ToggleButton brakeFailureBtn, powerFailureBtn, signalFailureBtn;
     @FXML
-    public Label gradeLabel, maxPowerLabel, MaxAccelerationLabel, maxVelocityLabel, trainLengthLabel, trainHeightLabel, trainWidthLabel, numCarsLabel;
-    public Label numPassengersLabel, crewCountLabel, carWeightLabel, totalWeightLabel;
+    public Label gradeLabel, maxPowerLabel, medAccelerationLabel, maxVelocityLabel, trainLengthLabel, trainHeightLabel, trainWidthLabel, numCarsLabel;
+    public Label numPassengersLabel, crewCountLabel, emptyWeightLabel, loadedWeightLabel;
     @FXML
     public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp;
     @FXML
@@ -36,9 +43,12 @@ public class trainModelManager {
 
     private SubjectFactory<trainModelSubject> factory;
     private trainModelSubject subject;
+    private trainModelTB testBench;
 
     @FXML
     public void initialize() {
+
+        testBench = launchTestBench();
 
         trainModelImpl trainModel = new trainModelImpl(0);
         factory = trainSubjectFactory.getInstance();
@@ -58,8 +68,21 @@ public class trainModelManager {
     }
 
     private void bindLabels() {
+        gradeLabel.textProperty().bindBidirectional(subject.getStringProperty("grade"));
+        maxPowerLabel.setText("643.68");
+        maxVelocityLabel.setText("43.48");
+        medAccelerationLabel.setText("1.64");
+        trainLengthLabel.setText("105.74");
+        trainHeightLabel.setText("11.22");
+        trainWidthLabel.setText("8.69");
+        numCarsLabel.textProperty().bindBidirectional(subject.getStringProperty("numCars"));
 
+        numPassengersLabel.textProperty().bindBidirectional(subject.getStringProperty("numPassengers"));
+        crewCountLabel.textProperty().bindBidirectional(subject.getStringProperty("crewCount"));
+        emptyWeightLabel.setText("40.9");
+        loadedWeightLabel.setText("56.7");
     }
+
     private void bindGauges() {
         actualPowerDisp.valueProperty().bind(subject.getDoubleProperty("power"));
         actualVelocityDisp.valueProperty().bind(subject.getDoubleProperty("actualSpeed"));
@@ -133,5 +156,30 @@ public class trainModelManager {
         brakeFailureBtn.selectedProperty().unbind();
         powerFailureBtn.selectedProperty().unbind();
         signalFailureBtn.selectedProperty().unbind();
+
+        gradeLabel.textProperty().unbindBidirectional(subject.getStringProperty("grade"));
+        numCarsLabel.textProperty().unbindBidirectional(subject.getStringProperty("numCars"));
+        numPassengersLabel.textProperty().unbindBidirectional(subject.getStringProperty("numPassengers"));
+        crewCountLabel.textProperty().unbindBidirectional(subject.getStringProperty("crewCount"));
+    }
+
+    private trainModelTB launchTestBench() {
+        System.out.println(System.getProperty("Preparing to launch test bench"));
+        try {
+            String tbFile = "/Framework/GUI/FXML/trainModel_TB.fxml";
+            URL url = getClass().getResource(tbFile);
+            FXMLLoader loader = new FXMLLoader(url);
+            Node content = loader.load();
+            Stage newStage = new Stage();
+            Scene newScene = new Scene(new VBox(content));
+            newStage.setScene(newScene);
+            newStage.setTitle("Train Model Test Bench");
+            newStage.show();
+            return loader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to launch test bench");
+            throw new RuntimeException(e);
+        }
     }
 }

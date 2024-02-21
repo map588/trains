@@ -2,15 +2,9 @@ package trackModel;
 
 
 import Utilities.TrackLayoutInfo;
-import Utilities.staticBlockInfo;
-import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import Common.TrackModel;
-import javafx.beans.property.BooleanProperty;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +26,7 @@ public class trackModelImpl implements TrackModel {
     private boolean blockOccupied;
     private boolean lightState;
     private boolean switchState;
+    private int temperature;
     private ArrayList<Integer> failures = new ArrayList<Integer>();
 
     private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
@@ -59,6 +54,16 @@ public class trackModelImpl implements TrackModel {
     public boolean getSwitchState(int block){ return this.switchState; }
     public void setSwitchState(boolean state) { switchState = state; }
     public void setLightState(boolean state) { lightState = state; }
+    public void setTemperature(int temp){ temperature = temp; }
+    public int getTemperature(){ return temperature; }
+
+    public boolean blockOccupied(int block) {
+        return this.blockOccupied;
+    }
+    public void setBlockOccupied(boolean state) { this.blockOccupied = state; }
+    public void setLine(String line) { this.line.add(line); }
+    public ArrayList<String> getLines() {return this.line;}
+    public String getLine(int lineNumber) { return this.line.get(lineNumber); }
 
     public void setTrainAuthority(int trainID, int authority) {
         if(this.trainAuthorities.containsKey(trainID)) {
@@ -75,13 +80,7 @@ public class trackModelImpl implements TrackModel {
             this.trainCommandSpeeds.put(trainID, commandedSpeed);
         }
     }
-    public boolean blockOccupied(int block) {
-        return this.blockOccupied;
-    }
-    public void setBlockOccupied(boolean state) { this.blockOccupied = state; }
-    public void setLine(String line) { this.line.add(line); }
-    public ArrayList<String> getLines() {return this.line;}
-    public String getLine(int lineNumber) { return this.line.get(lineNumber); }
+
 
     public void setFailure(int block, String failure) {
         if(failure.equals("Broken Rail") || failure.equals("Track Circuit Failure") || failure.equals("Power Failure")) {
@@ -125,4 +124,6 @@ public class trackModelImpl implements TrackModel {
 
         return this.trackInfo;
     }
+
+
 }
