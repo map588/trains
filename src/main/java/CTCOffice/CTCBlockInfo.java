@@ -15,6 +15,7 @@ class CTCBlockInfo {
     private boolean crossingState;
     private int speedLimit;
     private int blockLength;
+    private javafx.scene.paint.Paint lightColor;
 
     CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon, boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean switchConState, boolean switchDivState, boolean crossingState, int speedLimit, int blockLength) {
         this.blockID = blockID;
@@ -30,6 +31,7 @@ class CTCBlockInfo {
         this.crossingState = crossingState;
         this.speedLimit = speedLimit;
         this.blockLength = blockLength;
+        updateLightColor();
         CTCBlockSubjectFactory.getInstance().registerSubject(blockID, new CTCBlockSubject(this));
     }
     void setBlockID (int number){
@@ -84,6 +86,14 @@ class CTCBlockInfo {
         this.blockLength = blockLength;
     }
 
+    void updateLightColor() {
+        if(lightState) {
+            this.lightColor = javafx.scene.paint.Color.GREEN;
+        }else {
+            this.lightColor = javafx.scene.paint.Color.RED;
+        }
+    }
+
     int getBlockID() {
         return blockID;
     }
@@ -135,4 +145,9 @@ class CTCBlockInfo {
     int getBlockLength() {
         return blockLength;
     }
+
+    javafx.scene.paint.Paint getLightColor() {
+        return lightColor;
+    }
+
 }

@@ -31,7 +31,7 @@ public class CTCOfficeImpl implements CTCOffice {
         CTCBlockInfo block8  = new CTCBlockInfo(8,  false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block9  = new CTCBlockInfo(9,  false, true , false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block10 = new CTCBlockInfo(10, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
-        CTCBlockInfo block11 = new CTCBlockInfo(11, false, false, true , false, true ,false, LIGHT_GREEN, false,       false, false,         50,   50);
+        CTCBlockInfo block11 = new CTCBlockInfo(11, false, false, true , false, true ,false, LIGHT_RED, false,       false, false,         50,   50);
         CTCBlockInfo block12 = new CTCBlockInfo(12, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block13 = new CTCBlockInfo(13, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block14 = new CTCBlockInfo(14, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
@@ -63,17 +63,14 @@ public class CTCOfficeImpl implements CTCOffice {
 
     public void setOccupancy(int blockID,boolean line, boolean occupied) {
         track.get(line).get(blockID).setOccupied(occupied);
-        System.out.println("Block " + blockID + " is occupied: " + track.get(line).get(blockID).getOccupied());
     }
 
     public void setLightState(boolean line, int blockID, boolean lightState) {
         track.get(line).get(blockID).setLightState(lightState);
-        System.out.println("Block " + blockID + " has light: " + track.get(line).get(blockID).getLightState());
     }
 
     public void setSwitchState(boolean line, int blockID, boolean switchConState) {
         switches.get(line).get(blockID).setSwitchState(switchConState);
-        System.out.println("Switch " + blockID + " is towards: " + track.get(line).get(blockID).getSwitchConState());
     }
 //*********************************************************************************************************************************************
     public void setManualMode() {

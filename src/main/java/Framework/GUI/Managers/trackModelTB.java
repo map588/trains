@@ -106,6 +106,9 @@ public class trackModelTB {
         tbChooseLine.setValue(line);
     }
 
+    public void setTrackModel(trackModelImpl trackModel) {
+        this.trackModel = trackModel;
+    }
 
 
 

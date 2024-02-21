@@ -115,7 +115,7 @@ public class trackModelManager {
 
     public void initialize(){
         //initialize buttons and user inputs
-        testBench.setModelImpl(currTrackModel);
+        testBench.setTrackModel(currTrackModel);
         logo.setOnMouseClicked(event -> launchTestBench());
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
