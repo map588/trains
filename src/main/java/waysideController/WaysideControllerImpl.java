@@ -34,7 +34,7 @@ public class WaysideControllerImpl implements WaysideController {
     public WaysideControllerImpl(int id, int trackLine) {
         this.id = id;
         this.trackLine = trackLine;
-        program = new PLCProgram();
+        program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
     }
 
@@ -48,6 +48,11 @@ public class WaysideControllerImpl implements WaysideController {
         this.PLCFile = PLC;
         subject.PLCNameProperty().set(PLC.getName());
         updateActivePLCProp();
+    }
+
+    @Override
+    public void runPLC() {
+        program.runBlueLine();
     }
 
     @Override
@@ -103,7 +108,9 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void CTCRequestSwitchState(int blockID, boolean switchState) {
-
+//        trackList.get(blockID-1).switchStateProperty().set(switchState);
+        program.setSwitchRequest(blockID, switchState);
+        program.runBlueLine();
     }
 
     @Override

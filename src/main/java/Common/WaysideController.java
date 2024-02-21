@@ -21,6 +21,8 @@ public interface WaysideController {
     // Loads a new PLC program into the wayside controller from a given file
     public void loadPLC(File PLC);
 
+    public void runPLC();
+
     // Returns whether the wayside controller is in maintenance mode
     public boolean isMaintenanceMode();
 

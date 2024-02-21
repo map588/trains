@@ -13,10 +13,15 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import waysideController.WaysideBlockInfo;
 import waysideController.WaysideControllerImpl;
@@ -37,9 +42,7 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<WaysideBlockInfo,Boolean> blockTableCircuitColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo,Boolean> blockTableLightInColumn;
-//    @FXML
-//    private TableColumn<WaysideBlockInfo,Integer> blockTableLightOutColumn;
+    private TableColumn<WaysideBlockInfo, Paint> blockTableLightsColumn;
     @FXML
     private TableColumn<WaysideBlockInfo,Boolean> blockTableCrossingColumn;
     @FXML
@@ -96,12 +99,24 @@ public class WaysideControllerManager {
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().occupationProperty());
-        blockTableLightInColumn.setCellValueFactory(block -> block.getValue().lightStateProperty());
-//        blockTableLightOutColumn.setCellValueFactory(block -> block.getValue().lightOutStateProperty().asObject());
+        blockTableLightsColumn.setCellValueFactory(block -> block.getValue().lightStateColorProperty());
+        blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockInfo, Paint>() {
+            private BorderPane graphic;
+            private Circle circle;
+
+            {
+                graphic = new BorderPane();
+                circle = new Circle(8);
+                graphic.setCenter(circle);
+            }
+
+            @Override
+            public void updateItem(Paint paint, boolean empty) {
+                circle.setFill(paint);
+                setGraphic(graphic);
+            }
+        });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
-//        blockTableLightInColumn.setCellValueFactory(new PropertyValueFactory<>("lightInState"));
-//        blockTableLightOutColumn.setCellValueFactory(new PropertyValueFactory<>("lightOutState"));
-//        blockTableCrossingColumn.setCellValueFactory(new PropertyValueFactory<>("crossingClosed"));
 
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
@@ -154,6 +169,7 @@ public class WaysideControllerManager {
         currentSubject.getController().addBlock((new WaysideBlockInfo(13, false, false, false)));
         currentSubject.getController().addBlock((new WaysideBlockInfo(14, false, false, false)));
         currentSubject.getController().addBlock((new WaysideBlockInfo(15, false, false, false)));
+        currentSubject.getController().runPLC();
 
         updateBlockList();
     }
@@ -205,7 +221,6 @@ public class WaysideControllerManager {
      * Updates the block list in the GUI with the information from the current wayside controller
      */
     private void updateBlockList() {
-//        ObservableList<BlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
         blockTable.setItems(currentSubject.blockListProperty());
         testBench.readBlockInfo(currentSubject.blockListProperty());
         updateSwitchList();

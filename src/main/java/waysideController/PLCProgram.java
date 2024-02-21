@@ -1,5 +1,7 @@
 package waysideController;
 
+import Common.WaysideController;
+
 import java.util.Arrays;
 import java.util.List;
 import static Utilities.Constants.*;
@@ -11,24 +13,32 @@ public class PLCProgram {
     private final List<Boolean> trafficLightList;
     private final List<Boolean> crossingList;
 
-    public PLCProgram() {
+    private final WaysideController controller;
+
+    public PLCProgram(WaysideController controller) {
         occupancyList = Arrays.asList(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
         switchStateList = Arrays.asList(SWITCH_MAIN);
         switchRequestedStateList = Arrays.asList(SWITCH_MAIN);
         trafficLightList = Arrays.asList(LIGHT_RED, LIGHT_RED);
         crossingList = Arrays.asList(CROSSING_CLOSED);
+        this.controller = controller;
     }
 
     public void setOccupancy(int blockID, boolean occupied) {
         occupancyList.set(blockID, occupied);
     }
 
+    public void setSwitchRequest(int blockID, boolean switchState) {
+        switchRequestedStateList.set(0, switchState);
+    }
+
     public void runBlueLine() {
 
         // Process switch state requests
         if(switchStateList.get(0) != switchRequestedStateList.get(0)) {
-            if(!occupancyList.get(5) && occupancyList.get(6) && occupancyList.get(11)) {
+            if(!occupancyList.get(5) && !occupancyList.get(6) && !occupancyList.get(11)) {
                 switchStateList.set(0, switchRequestedStateList.get(0));
+                controller.getBlockList().get(4).switchStateProperty().set(switchStateList.get(0));
             }
         }
 
@@ -48,6 +58,9 @@ public class PLCProgram {
             trafficLightList.set(1, LIGHT_RED);
         }
 
+        controller.getBlockList().get(5).setLightState(trafficLightList.get(0));
+        controller.getBlockList().get(10).setLightState(trafficLightList.get(1));
+
         // Set Railroad Crossings
         if(occupancyList.get(2) || occupancyList.get(3) || occupancyList.get(4)) {
             crossingList.set(0, CROSSING_CLOSED);
@@ -65,7 +78,7 @@ public class PLCProgram {
         }
 
         for(int crossingID = 0; crossingID < crossingList.size(); crossingID++) {
-            System.out.println("Light " + crossingID + " = " + crossingList.get(crossingID));
+            System.out.println("Crossing " + crossingID + " = " + crossingList.get(crossingID));
         }
     }
 }

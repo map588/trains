@@ -4,6 +4,8 @@ import Common.WaysideController;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class WaysideBlockInfo {
     private final ReadOnlyIntegerProperty blockID;
@@ -16,8 +18,12 @@ public class WaysideBlockInfo {
 
     private final BooleanProperty occupation;
     private final BooleanProperty switchState;
+
+    private final BooleanProperty switchRequestedState;
     private IntegerProperty switchedBlockID;
     private final BooleanProperty lightState;
+
+    private final ObjectProperty<Paint> lightStateColor;
     private final BooleanProperty crossingState;
 
     public WaysideBlockInfo(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
@@ -28,8 +34,23 @@ public class WaysideBlockInfo {
 
         this.occupation = new SimpleBooleanProperty(false);
         this.switchState = new SimpleBooleanProperty(false);
+        this.switchRequestedState = new SimpleBooleanProperty(false);
         this.lightState = new SimpleBooleanProperty(false);
+        this.lightStateColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
         this.crossingState = new SimpleBooleanProperty(false);
+
+//        this.lightState.addListener((observable, oldValue, newValue) -> {
+//            System.out.println("Listener");
+//            if(isHasLight()) {
+//                if(isLightState())
+//                    lightStateColor.set(Color.GREEN);
+//                else
+//                    lightStateColor.set(Color.RED);
+//            }
+//            else {
+//                lightStateColor.set(Color.TRANSPARENT);
+//            }
+//        });
     }
 
     public WaysideBlockInfo(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
@@ -44,6 +65,19 @@ public class WaysideBlockInfo {
             else
                 this.switchedBlockID.set(this.getSwitchBlockMain());
         });
+    }
+
+    public void setLightState(boolean lightState) {
+        this.lightState.set(lightState);
+        if(isHasLight()) {
+            if(isLightState())
+                lightStateColor.set(Color.GREEN);
+            else
+                lightStateColor.set(Color.RED);
+        }
+        else {
+            lightStateColor.set(Color.TRANSPARENT);
+        }
     }
 
     public int getBlockID() {
@@ -132,5 +166,21 @@ public class WaysideBlockInfo {
 
     public IntegerProperty switchedBlockIDProperty() {
         return switchedBlockID;
+    }
+
+    public boolean isSwitchRequestedState() {
+        return switchRequestedState.get();
+    }
+
+    public BooleanProperty switchRequestedStateProperty() {
+        return switchRequestedState;
+    }
+
+    public Paint getLightStateColor() {
+        return lightStateColor.get();
+    }
+
+    public ObjectProperty<Paint> lightStateColorProperty() {
+        return lightStateColor;
     }
 }
