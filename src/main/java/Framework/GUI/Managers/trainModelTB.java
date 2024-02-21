@@ -39,13 +39,14 @@ public class trainModelTB {
             subject = factory.getSubjects().get(firstKey);
             model = factory.getSubjects().get(firstKey).getModel();
         }
-        bindTrain();
+        bindTrain(null);
     }
     public void changeModels(TrainModel model) {
         unbindTrain();
         this.model = model;
+        trainModelSubject oldSubject = subject;
         subject = factory.getSubjects().get(model.getTrainNumber());
-        bindTrain();
+        bindTrain(oldSubject);
     }
 
     private void updateBrakeFailureIndicator(boolean active) {
@@ -60,8 +61,8 @@ public class trainModelTB {
         tbSignalFailure.setFill(active ? Color.YELLOW : Color.GRAY);
     }
 
-    private void bindTrain(){
-        tbEBrake.setOnAction(event -> model.setEmergencyBrake(!model.getEmergencyBrake()));
+    private void bindTrain(trainModelSubject oldSubject) {
+        //tbEBrake.setOnAction(event -> model.setEmergencyBrake(!model.getEmergencyBrake()));
         tbSBrake.setOnAction(event -> model.setServiceBrake(!model.getServiceBrake()));
         tbIntLights.setOnAction(event -> model.setIntLights(!model.getIntLights()));
         tbExtLights.setOnAction(event -> model.setExtLights(!model.getExtLights()));
@@ -77,6 +78,10 @@ public class trainModelTB {
         appendListener(subject.getBooleanProperty("brakeFailure"), (observable, oldValue, newValue) -> updateBrakeFailureIndicator(newValue));
         appendListener(subject.getBooleanProperty("powerFailure"), (observable, oldValue, newValue) -> updatePowerFailureIndicator(newValue));
         appendListener(subject.getBooleanProperty("signalFailure"), (observable, oldValue, newValue) -> updateSignalFailureIndicator(newValue));
+        if (oldSubject != null) {
+            tbEBrake.selectedProperty().unbindBidirectional(oldSubject.getBooleanProperty("emergencyBrake"));
+        }
+        tbEBrake.selectedProperty().bindBidirectional(subject.getBooleanProperty("emergencyBrake"));
     }
 
     private void unbindTrain(){
