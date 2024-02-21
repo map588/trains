@@ -45,7 +45,7 @@ public class trainControllerManager {
 
     private trainControllerSubjectFactory factory;
     private trainControllerSubject currentSubject;
-    private List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
 
     //private trainControllerTB testBench;
@@ -166,7 +166,8 @@ public class trainControllerManager {
                 // Parse and update property
                 currentSubject.setProperty(propertyName, Double.parseDouble(newVal));
             } catch (NumberFormatException e) {
-                textField.setText(oldVal); // Revert if parsing fails
+                // Clear if invalid input
+                textField.setText("");
             }
         });
     }
@@ -186,18 +187,24 @@ public class trainControllerManager {
 
     private void bindSliderAndTextField(Slider slider, TextField textField, Consumer<Double> consumer) {
         appendListener(slider.valueProperty(), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;}
             textField.setText(String.format("%.1f", newVal));
+            consumer.accept(newVal.doubleValue());
         });
-        appendListener(textField.textProperty(),(obs, oldVal, newVal) -> {
-            try {
-                double value = Double.parseDouble(newVal);
-                // Preventing feedback loop
-                if (Math.abs(value - slider.getValue()) > 0.01) {
-                    consumer.accept(value);
-                    slider.setValue(value); // This line may be redundant due to the consumer updating the model
+        appendListener(textField.focusedProperty(),(obs, wasFocused, isNowFocused) -> {
+            if (wasFocused && !isNowFocused) { // TextField has lost focus
+                String newVal = textField.getText();
+                if(newVal.isEmpty()) {return;}
+                try {
+                    double value = Double.parseDouble(newVal);
+                    // Preventing feedback loop
+                    if (Math.abs(value - slider.getValue()) > 0.1) {
+                        consumer.accept(value);
+                        slider.setValue(value); // This line may be redundant due to the consumer updating the model
+                    }
+                } catch (NumberFormatException e) {
+                    textField.setText("");
                 }
-            } catch (NumberFormatException e) {
-                textField.setText(oldVal);
             }
         });
     }

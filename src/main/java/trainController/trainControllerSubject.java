@@ -11,9 +11,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class trainControllerSubject implements AbstractSubject {
-    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
-    private TrainController controller;
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
+    private final TrainController controller;
     public boolean isGUIUpdate = false;
     public boolean isLogicUpdate = false;
 
@@ -57,10 +57,8 @@ public class trainControllerSubject implements AbstractSubject {
         System.out.println("TController Subject notifyChange was called.");
         // Update property from controller, Internal Logic takes precedence over GUI updates
         updateFromLogic(() -> {
-            Platform.runLater(() -> {
                 Property<?> property = properties.get(propertyName);
                 updateProperty(property, newValue);
-            });
         });
     }
 
@@ -69,10 +67,8 @@ public class trainControllerSubject implements AbstractSubject {
         System.out.println("TController Subject setProperty was called.");
         Runnable updateTask = () -> {
             Property<?> property = properties.get(propertyName);
-            Platform.runLater(() -> {
                 updateProperty(property, newValue);
                 controller.setValue(propertyName, newValue); // Ensure this method is thread-safe
-            });
         };
 
         if (isLogicUpdate) {
