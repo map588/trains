@@ -89,8 +89,6 @@ public class WaysideControllerTB {
         tbSATID.setCellValueFactory(speedAuth -> speedAuth.getValue().trainIDProperty().asObject());
         tbSATSpeedIn.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
         tbSATAuthIn.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
-//        tbSATSpeedIn.setCellValueFactory(speedAuth -> new SimpleStringProperty("Speed"));
-//        tbSATAuthIn.setCellValueFactory(speedAuth -> new SimpleStringProperty("Authority"));
         tbSATSpeedOut.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
         tbSATAuthOut.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
         tbSATSpeedIn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));

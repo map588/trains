@@ -32,16 +32,16 @@
       <TableView fx:id="tbSpeedAuthTable" layoutX="159.0" layoutY="251.0" prefHeight="138.0" prefWidth="374.0">
         <columns>
           <TableColumn fx:id="tbSATID" prefWidth="65.60003662109375" style="-fx-alignment: CENTER;" text="Train ID" />
-          <TableColumn prefWidth="145.59999084472656" text="Input">
+          <TableColumn prefWidth="145.59999084472656" text="Speed (mph)">
                <columns>
-                  <TableColumn fx:id="tbSATSpeedIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Speed" />
-                  <TableColumn fx:id="tbSATAuthIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Authority" />
+                  <TableColumn fx:id="tbSATSpeedIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input" />
+                  <TableColumn fx:id="tbSATSpeedOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output" />
                </columns>
             </TableColumn>
-            <TableColumn prefWidth="75.0" text="Output">
+            <TableColumn prefWidth="75.0" text="Authority (miles)">
                <columns>
-                  <TableColumn fx:id="tbSATSpeedOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Speed" />
-                  <TableColumn fx:id="tbSATAuthOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Authority" />
+                  <TableColumn fx:id="tbSATAuthIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input" />
+                  <TableColumn fx:id="tbSATAuthOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output" />
                </columns>
             </TableColumn>
         </columns>

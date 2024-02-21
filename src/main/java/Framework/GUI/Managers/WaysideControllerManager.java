@@ -8,12 +8,14 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -95,9 +97,13 @@ public class WaysideControllerManager {
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
         switchTable.setEditable(true);
+        blockTable.setEditable(true);
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
-        maintenanceModeCheckbox.setOnAction(event -> switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected()));
+        maintenanceModeCheckbox.setOnAction(event -> {
+            switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+            blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
+        });
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
@@ -111,6 +117,13 @@ public class WaysideControllerManager {
                 graphic = new BorderPane();
                 circle = new Circle(8);
                 graphic.setCenter(circle);
+                setOnMouseClicked(event -> {
+                    if(currentSubject.maintenanceModeProperty().get()) {
+                        if(this.getTableRow().getItem().hasLight()) {
+                            this.getTableRow().getItem().setLightState(!this.getTableRow().getItem().getLightState());
+                        }
+                    }
+                });
             }
 
             @Override
@@ -120,7 +133,9 @@ public class WaysideControllerManager {
             }
         });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
-
+        blockTableCrossingColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableCrossingColumn));
+        blockTableCircuitColumn.setEditable(false);
+        switchTable.setEditable(true);
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
         switchTableStateColumn.setCellValueFactory(block -> block.getValue().switchStateProperty());
@@ -174,12 +189,10 @@ public class WaysideControllerManager {
         currentSubject.getController().addBlock((new WaysideBlockInfo(15, false, false, false)));
         currentSubject.getController().runPLC();
 
-        updateBlockList();
-
         currentSubject.getController().CTCSetSpeedAuth(new TrainSpeedAuth(1, 0, 0));
 
-        // IDK why but there's some bug with loading in the switches and this fixes it
-        changeActiveController(currentSubject.getController());
+        updateBlockList();
+        testBench.setController(currentSubject.getController());
     }
 
     /**
