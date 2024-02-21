@@ -136,5 +136,9 @@ public class CTCBlockSubject implements AbstractSubject {
         }
     }
 
+    public Property<?> getProperty(String propertyName) {
+        return null;
+    }
+
 }
 
