@@ -97,10 +97,12 @@ public class WaysideControllerManager {
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
         switchTable.setEditable(true);
+        blockTable.setEditable(true);
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
             switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+            blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
         });
 
         // Set up cell factories for table views
@@ -131,7 +133,8 @@ public class WaysideControllerManager {
             }
         });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
-
+        blockTableCrossingColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableCrossingColumn));
+        blockTableCircuitColumn.setEditable(false);
         switchTable.setEditable(true);
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
