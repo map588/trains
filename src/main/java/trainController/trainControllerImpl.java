@@ -92,138 +92,126 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        subject.notifyChange(propertyName, newValue);
         System.out.println("TrainControllerImpl variable: " + propertyName + " changed to " + newValue);
+
+        // If the set is called by the GUI, it implies that the property is already changed
+        // and we should not notify the subject of the change, because its already changed...
+        if(!subject.isGUIUpdate)
+            subject.notifyChange(propertyName, newValue);
     }
 
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        if(!subject.isGUIUpdate)
-            notifyChange("AutomaticMode", mode);
+        notifyChange("automaticMode", mode);
     }
     public void setAuthority(int authority) {
         this.authority = authority;
-        if(!subject.isGUIUpdate)
-            notifyChange("Authority", authority);
+        notifyChange("authority", authority);
     }
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        if(!subject.isGUIUpdate)
-            notifyChange("OverrideSpeed", speed);
+        notifyChange("overrideSpeed", speed);
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        if(!subject.isGUIUpdate)
-            notifyChange("CommandSpeed", speed);
+        notifyChange("commandSpeed", speed);
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        if(!subject.isGUIUpdate)
-            notifyChange("ServiceBrake", brake);
+        notifyChange("serviceBrake", brake);
     }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        if(!subject.isGUIUpdate)
-            notifyChange("EmergencyBrake", brake);
+        notifyChange("emergencyBrake", brake);
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
-        if(!subject.isGUIUpdate)
-            notifyChange("Ki", Ki);
+        notifyChange("Ki", Ki);
     }
     public void setKp(double Kp) {
         this.Kp = Kp;
-        if(!subject.isGUIUpdate)
-            notifyChange("Kp", Kp);
+        notifyChange("Kp", Kp);
     }
     public void setPower(double power) {
         this.power = power;
-        if(!subject.isGUIUpdate)
-            notifyChange("Power", power);
+        notifyChange("power", power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        if(!subject.isGUIUpdate)
-            notifyChange("InternalLights", lights);
+        notifyChange("internalLights", lights);
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
-        if(!subject.isGUIUpdate)
-            notifyChange("ExternalLights", lights);
+        notifyChange("externalLights", lights);
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        if(!subject.isGUIUpdate)
-            notifyChange("LeftDoors", doors);
+        notifyChange("leftDoors", doors);
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        if(!subject.isGUIUpdate)
-            notifyChange("RightDoors", doors);
+        notifyChange("rightDoors", doors);
     }
     public void setTemperature(double temp) {
         this.temperature = temp;
-        if(!subject.isGUIUpdate)
-            notifyChange("Temperature", temp);
+        notifyChange("temperature", temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        if(!subject.isGUIUpdate)
-            notifyChange("Announcements", announcements);
+        notifyChange("announcements", announcements);
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        if(!subject.isGUIUpdate)
-            notifyChange("SignalFailure", signalFailure);
+        notifyChange("signalFailure", signalFailure);
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        if(!subject.isGUIUpdate)
-            notifyChange("BrakeFailure", brakeFailure);
+        notifyChange("brakeFailure", brakeFailure);
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        if(!subject.isGUIUpdate)
-            notifyChange("PowerFailure", powerFailure);
+        notifyChange("powerFailure", powerFailure);
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
-        if(!subject.isGUIUpdate)
-            notifyChange("InTunnel",tunnel);
+        notifyChange("inTunnel",tunnel);
     }
 
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
-        if(!subject.isGUIUpdate)
-            notifyChange("LeftPlatform",platform);
+        notifyChange("leftPlatform",platform);
     }
 
-    public void setRightPlatform(boolean platform){this.rightPlatform = platform; notifyChange("rightPlatform",platform);}
+    public void setRightPlatform(boolean platform){
+        this.rightPlatform = platform;
+        notifyChange("rightPlatform",platform);
+    }
 
     public void setValue(String propertyName, Object newValue) {
+        System.out.println("TrainControllerImpl setValue called with " + propertyName + " and " + newValue);
         switch (propertyName) {
-            case "AutomaticMode" -> setAutomaticMode((boolean) newValue);
-            case "Authority" -> setAuthority((int) newValue);
-            case "OverrideSpeed" -> setOverrideSpeed((double) newValue);
-            case "CommandSpeed" -> setCommandSpeed((double) newValue);
-            case "ServiceBrake" -> setServiceBrake((boolean) newValue);
-            case "EmergencyBrake" -> setEmergencyBrake((boolean) newValue);
+            case "automaticMode" -> setAutomaticMode((boolean) newValue);
+            case "authority" -> setAuthority((int) newValue);
+            case "overrideSpeed" -> setOverrideSpeed((double) newValue);
+            case "commandSpeed" -> setCommandSpeed((double) newValue);
+            case "serviceBrake" -> setServiceBrake((boolean) newValue);
+            case "emergencyBrake" -> setEmergencyBrake((boolean) newValue);
             case "Ki" -> setKi((double) newValue);
             case "Kp" -> setKp((double) newValue);
-            case "Power" -> setPower((double) newValue);
-            case "InternalLights" -> setIntLights((boolean) newValue);
-            case "ExternalLights" -> setExtLights((boolean) newValue);
-            case "LeftDoors" -> setLeftDoors((boolean) newValue);
-            case "RightDoors" -> setRightDoors((boolean) newValue);
-            case "Temperature" -> setTemperature((double) newValue);
-            case "Announcements" -> setAnnouncements((boolean) newValue);
-            case "SignalFailure" -> setSignalFailure((boolean) newValue);
-            case "BrakeFailure" -> setBrakeFailure((boolean) newValue);
-            case "PowerFailure" -> setPowerFailure((boolean) newValue);
-            case "InTunnel" -> setInTunnel((boolean) newValue);
-            case "LeftPlatform" -> setLeftPlatform((boolean) newValue);
-            case "RightPlatform" -> setRightPlatform((boolean) newValue);
+            case "power" -> setPower((double) newValue);
+            case "internalLights" -> setIntLights((boolean) newValue);
+            case "externalLights" -> setExtLights((boolean) newValue);
+            case "leftDoors" -> setLeftDoors((boolean) newValue);
+            case "rightDoors" -> setRightDoors((boolean) newValue);
+            case "temperature" -> setTemperature((double) newValue);
+            case "announcements" -> setAnnouncements((boolean) newValue);
+            case "signalFailure" -> setSignalFailure((boolean) newValue);
+            case "brakeFailure" -> setBrakeFailure((boolean) newValue);
+            case "powerFailure" -> setPowerFailure((boolean) newValue);
+            case "inTunnel" -> setInTunnel((boolean) newValue);
+            case "leftPlatform" -> setLeftPlatform((boolean) newValue);
+            case "rightPlatform" -> setRightPlatform((boolean) newValue);
         }
     }
 

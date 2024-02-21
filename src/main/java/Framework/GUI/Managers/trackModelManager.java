@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class trackModelManager {
 
 
-
     //simulation information
     @FXML
     private Label logo;
