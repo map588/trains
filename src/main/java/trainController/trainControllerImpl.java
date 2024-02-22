@@ -369,8 +369,7 @@ public class trainControllerImpl implements TrainController, Notifications {
 
         // Convert Units
         double setSpeed, currSpeed, prevSpeed, pow, accel;
-        boolean contollerBrake = false;
-
+        boolean controllerBrake;
         if (automaticMode){
             setSpeed = convertVelocity(commandSpeed, velocityUnit.MPH, velocityUnit.MPS);
         }
@@ -386,18 +385,17 @@ public class trainControllerImpl implements TrainController, Notifications {
         rollingError += (float)samplingPeriod/2 * (error + prevError);
 
         pow = Kp * error + Ki * rollingError;
-        if(pow < 0){
-            pow = 0;
-            if(automaticMode){
-                contollerBrake = true;
-            }
-        }
+        controllerBrake = pow < 0 && automaticMode;
 
-        if(emergencyBrake || serviceBrake || powerFailure) {
+
+        if(emergencyBrake || serviceBrake || controllerBrake || powerFailure) {
             pow = 0;
             if(emergencyBrake){
                 accel = Constants.EMERGENCY_BRAKE_DECELERATION;
             }else if(serviceBrake) {
+                accel = Constants.SERVICE_BRAKE_DECELERATION;
+            }
+            else if(controllerBrake){
                 accel = Constants.SERVICE_BRAKE_DECELERATION;
             }
         } else {
@@ -406,17 +404,17 @@ public class trainControllerImpl implements TrainController, Notifications {
 
 
         currSpeed = prevSpeed + accel * (float)samplingPeriod/1000;
+        if(currSpeed < 0){
+            currSpeed = 0;
+        }
 
-
-<<<<<<< Updated upstream
-        pow = Kp * speedError + Ki * rollingError;
         power = convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER);
         setValue("power",power);
         //Do something with pow
-=======
+
         this.setSpeed(convertVelocity(currSpeed, velocityUnit.MPS, velocityUnit.MPH));
         this.setPower(convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER));
->>>>>>> Stashed changes
+
     }
 
 }
