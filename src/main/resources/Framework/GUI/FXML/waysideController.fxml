@@ -105,7 +105,6 @@
          </font>
       </Label>
       <Button fx:id="createNewControllerButton" layoutX="552.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" text="+" />
-      <TextField layoutX="139.0" layoutY="5.0" />
       <TextField fx:id="HWPortTextField" layoutX="552.0" layoutY="37.0" prefHeight="25.0" prefWidth="70.0" promptText="HW Port" />
    </children>
 </AnchorPane>
