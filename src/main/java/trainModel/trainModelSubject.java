@@ -40,6 +40,7 @@ public class trainModelSubject implements AbstractSubject{
         properties.put("numPassengers", new SimpleIntegerProperty(0));
         properties.put("crewCount", new SimpleIntegerProperty(0));
         properties.put("timeDelta", new SimpleDoubleProperty(0));
+        properties.put("mass", new SimpleDoubleProperty(0));
     }
 
     public trainModelSubject(TrainModel trainModel) {
@@ -58,6 +59,11 @@ public class trainModelSubject implements AbstractSubject{
 
     public IntegerProperty getIntegerProperty (String propertyName) {
         return (IntegerProperty) getProperty(propertyName);
+    }
+
+    public void runPhysics() {
+        System.out.println("Called runPhysics() from trainModelSubject.");
+        updateFromLogic(() -> model.trainModelPhysics());
     }
 
     public void setProperty(String propertyName, Object newValue) {

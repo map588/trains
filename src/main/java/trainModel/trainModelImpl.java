@@ -54,7 +54,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.brakeFailure = false;
         this.powerFailure = false;
         this.signalFailure = false;
-
+        this.TIME_DELTA = 10;
         this.temperature = 0;
         this.extLights = false;
         this.intLights = false;
@@ -101,6 +101,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
     public void setTemperature(double temp) { this.temperature = temp; notifyChange("temperature", temp); }
     public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", acceleration); }
+    public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
 
     public void setValue(String propertyName, Object newValue){
         if(newValue == null)
@@ -126,6 +127,7 @@ public class trainModelImpl implements TrainModel, Notifications {
             case "numPassengers" -> setNumPassengers((int)newValue);
             case "crewCount" -> setCrewCount((int)newValue);
             case "timeDelta" -> setTimeDelta((double)newValue);
+            case "mass" -> setMass((double)newValue);
         }
     }
     //Getters
@@ -190,17 +192,17 @@ public class trainModelImpl implements TrainModel, Notifications {
 
     public void trainModelPhysics() {
         //CALCULATE MASS
-        this.mass = Constants.EMPTY_TRAIN_MASS + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers));
+        this.setMass(Constants.EMPTY_TRAIN_MASS + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
         if (this.mass >= Constants.LOADED_TRAIN_MASS) {
-            this.mass = Constants.LOADED_TRAIN_MASS;
+            this.setMass(Constants.LOADED_TRAIN_MASS);
         }
 
         //FAILURE STATES
         if (powerFailure) {
-            this.power = 0;
+            this.setPower(0);
         }
         if (brakeFailure) {
-            this.serviceBrake = false;
+            this.setServiceBrake(false);
         }
 
         //ACCELERATION PROGRESSION
@@ -212,7 +214,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         }
         if (this.emergencyBrake) {
             this.brakeForce = Constants.EMERGENCY_BRAKE_FORCE;
-            this.power = 0;
+            this.setPower(0);
         }
         if (!this.serviceBrake && !this.emergencyBrake) {
             this.brakeForce = 0;
@@ -222,8 +224,8 @@ public class trainModelImpl implements TrainModel, Notifications {
         try {
             this.engineForce = this.power / this.speed;
         } catch (ArithmeticException e) {
-            if (this.power > 0) {
-                this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+            if (this.power > 0 && this.speed < 0.1) {
+                this.setActualSpeed(0.1); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             }
         }
 
@@ -238,15 +240,15 @@ public class trainModelImpl implements TrainModel, Notifications {
         }
 
         //ACCELERATION CALCULATION
-        this.acceleration = this.netForce / this.mass;
+        this.setAcceleration(this.netForce / this.mass);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
-            this.speed = this.speed + (this.TIME_DELTA * 0.001 / 2) * (this.acceleration + this.previousAcceleration);
+            this.setActualSpeed(this.speed + (this.TIME_DELTA * 0.001 / 2) * (this.acceleration + this.previousAcceleration));
         }
 
-        if (this.speed < 0) { this.speed = 0; }
-        if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
+        if (this.speed < 0) { this.setActualSpeed(0); }
+        if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
     }
 
 }

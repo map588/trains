@@ -4,6 +4,7 @@ package Framework.GUI.Managers;
 import Common.TrainModel;
 import Framework.Support.ListenerReference;
 import Framework.Support.SubjectFactory;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -26,7 +27,6 @@ public class trainModelTB {
     public TextField tbPower, tbSpeed, tbAuthority, tbGrade, tbTemp, tbTimeDelta;
     @FXML
     public Circle tbBrakeFailure, tbPowerFailure, tbSignalFailure;
-    private TrainModel model;
     private trainModelSubject subject;
     private SubjectFactory<trainModelSubject> factory;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
@@ -35,17 +35,17 @@ public class trainModelTB {
     public void initialize() {
         factory = trainSubjectFactory.getInstance();
 
-
         if (!factory.getSubjects().isEmpty()) {
             Integer firstKey = factory.getSubjects().keySet().iterator().next();
             subject = factory.getSubjects().get(firstKey);
-            model = factory.getSubjects().get(firstKey).getModel();
+        }else{
+            System.out.println("No damn subjects.");
         }
-        bindTrain(null);
+
+        bindTrain(subject);
     }
     public void changeModels(TrainModel model) {
         unbindTrain();
-        this.model = model;
         trainModelSubject oldSubject = subject;
         subject = factory.getSubjects().get(model.getTrainNumber());
         bindTrain(oldSubject);
@@ -64,19 +64,33 @@ public class trainModelTB {
     }
 
     private void bindTrain(trainModelSubject oldSubject) {
-        //tbEBrake.setOnAction(event -> model.setEmergencyBrake(!model.getEmergencyBrake()));
-        tbSBrake.setOnAction(event -> model.setServiceBrake(!model.getServiceBrake()));
-        tbIntLights.setOnAction(event -> model.setIntLights(!model.getIntLights()));
-        tbExtLights.setOnAction(event -> model.setExtLights(!model.getExtLights()));
-        tbLeftDoors.setOnAction(event -> model.setLeftDoors(!model.getLeftDoors()));
-        tbRightDoors.setOnAction(event -> model.setRightDoors(!model.getRightDoors()));
+        tbSBrake.setOnAction(event -> {
+            BooleanProperty sBrake = subject.getBooleanProperty("serviceBrake");
+            subject.setProperty("serviceBrake", !sBrake.get());
+        });
+        tbIntLights.setOnAction(event -> {
+            BooleanProperty intLights = subject.getBooleanProperty("intLights");
+            subject.setProperty("intLights", !intLights.get());
+        });
+        tbExtLights.setOnAction(event -> {
+            BooleanProperty extLights = subject.getBooleanProperty("extLights");
+            subject.setProperty("extLights", !extLights.get());
+        });
+        tbLeftDoors.setOnAction(event -> {
+            BooleanProperty leftDoors = subject.getBooleanProperty("leftDoors");
+            subject.setProperty("leftDoors", !leftDoors.get());
+        });
+        tbRightDoors.setOnAction(event -> {
+            BooleanProperty rightDoors = subject.getBooleanProperty("rightDoors");
+            subject.setProperty("rightDoors", !rightDoors.get());
+        });
 
-        tbPower.setOnAction(event -> model.setPower(Double.parseDouble(tbPower.getText())));
-        tbSpeed.setOnAction(event -> model.setCommandSpeed(Double.parseDouble(tbSpeed.getText())));
-        tbAuthority.setOnAction(event -> model.setAuthority(Integer.parseInt(tbSpeed.getText())));
-        tbGrade.setOnAction(event -> model.setGrade(Double.parseDouble(tbGrade.getText())));
-        tbTemp.setOnAction(event -> model.setTemperature(Double.parseDouble(tbTemp.getText())));
-        tbTimeButton.setOnAction(event -> model.trainModelPhysics());
+        tbPower.setOnAction(event -> subject.setProperty("power", Double.parseDouble(tbPower.getText())));
+        tbSpeed.setOnAction(event -> subject.setProperty("commandSpeed", Double.parseDouble(tbSpeed.getText())));
+        tbAuthority.setOnAction(event -> subject.setProperty("authority", Integer.parseInt(tbSpeed.getText())));
+        tbGrade.setOnAction(event -> subject.setProperty("grade", Double.parseDouble(tbGrade.getText())));
+        tbTemp.setOnAction(event -> subject.setProperty("temperature", Double.parseDouble(tbTemp.getText())));
+        tbTimeButton.setOnAction(event -> subject.runPhysics());
 
         appendListener(subject.getBooleanProperty("brakeFailure"), (observable, oldValue, newValue) -> updateBrakeFailureIndicator(newValue));
         appendListener(subject.getBooleanProperty("powerFailure"), (observable, oldValue, newValue) -> updatePowerFailureIndicator(newValue));
