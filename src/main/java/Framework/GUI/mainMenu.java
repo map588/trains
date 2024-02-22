@@ -41,7 +41,8 @@ public class mainMenu extends Application {
                 if (e.getButton() == MouseButton.SECONDARY) {
                     contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
                 } else if (e.getButton() == MouseButton.PRIMARY) {
-                    openModuleTab(tabPane, tabNames[moduleId]);
+//                    openModuleTab(tabPane, tabNames[moduleId]);
+                    openInNewWindow(tabNames[moduleId]);
                 }
             });
 
@@ -54,7 +55,7 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
 
-        Scene scene = new Scene(root, 1600, 900);
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
