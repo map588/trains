@@ -1,20 +1,18 @@
 package Framework.GUI.Managers;
 
-import CTCOffice.CTCBlockSubject;
-import CTCOffice.CTCBlockSubjectFactory;
-import CTCOffice.CTCOfficeImpl;
-import CTCOffice.ScheduleSubject;
-import CTCOffice.ScheduleSubjectFactory;
+import CTCOffice.*;
 import Common.CTCOffice;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 
 
@@ -43,6 +41,9 @@ public class CTCOfficeManager {
 
     @FXML
     private SplitPane mainSplit;
+
+    @FXML
+    private AnchorPane mainAnchor;
 
     @FXML
     private TableColumn<CTCBlockSubject, Boolean> switchStateColumn;
@@ -89,6 +90,21 @@ public class CTCOfficeManager {
                 setGraphic(graphic);
             }
         });
+
+        double dividerPosition = 505.0;
+        mainAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
+            if(mainAnchor.getWidth() > 0){
+                if(Array.getDouble(mainSplit.getDividerPositions(), 0) * mainAnchor.getWidth() > dividerPosition){
+                    mainSplit.setDividerPosition(0, dividerPosition / mainAnchor.getWidth());
+                }
+            }
+        });
+        mainSplit.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
+            if( dividerPosition / mainAnchor.getWidth() < newValue.doubleValue()){
+                mainSplit.setDividerPosition(0, dividerPosition / mainAnchor.getWidth());
+            }
+        });
+
 
 
     }
