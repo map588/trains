@@ -13,6 +13,7 @@ public class SingleStop {
 
     public SingleStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
         this.stationBlockID = stationBlockID;
+        System.out.println("Station Block ID: " + stationBlockID);
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;
         this.speedList = new ArrayList<Integer>(speedList);
@@ -21,6 +22,8 @@ public class SingleStop {
     }
 
     public int getStationBlockID() {
+        System.out.println(" Stop Station Block ID: " + stationBlockID);
+
         return stationBlockID;
     }
 

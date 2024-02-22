@@ -3,6 +3,8 @@ package Framework.GUI.Managers;
 import CTCOffice.CTCBlockSubject;
 import CTCOffice.CTCBlockSubjectFactory;
 import CTCOffice.CTCOfficeImpl;
+import CTCOffice.ScheduleSubject;
+import CTCOffice.ScheduleSubjectFactory;
 import Common.CTCOffice;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -38,12 +40,16 @@ public class CTCOfficeManager {
     @FXML
     private TableColumn<CTCBlockSubject, Paint> switchLightColumn;
 
+
     @FXML
     private SplitPane mainSplit;
 
     @FXML
     private TableColumn<CTCBlockSubject, Boolean> switchStateColumn;
+
+
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
+    ScheduleSubjectFactory scheduleFactory = ScheduleSubjectFactory.getInstance();
 
     @FXML
     public void initialize() {
@@ -51,6 +57,9 @@ public class CTCOfficeManager {
 
         blockTable.setEditable(true);
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
+        Collection<ScheduleSubject> scheduleList = scheduleFactory.getSubjects().values();
+
+        //left side of split pane
         blockTable.getItems().addAll(blockList);
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
         blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
@@ -80,6 +89,8 @@ public class CTCOfficeManager {
                 setGraphic(graphic);
             }
         });
+
+
     }
 //split plane at 0.685
     @FXML

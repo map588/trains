@@ -1,16 +1,20 @@
 package CTCOffice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Schedule {
     private int trainID;
     private int dispatchTime;
-    private List<SingleStop> stops;
+    private List<SingleStop> stops  = new ArrayList<SingleStop>();
 
-    Schedule(int trainID, int dispatchTime, List<SingleStop> stops) {
+    Schedule(int trainID, int dispatchTime, ArrayList<SingleStop> stops) {
         this.trainID = trainID;
+        System.out.println("Train ID constructor: " + trainID);
         this.dispatchTime = dispatchTime;
         this.stops = stops;
+        ScheduleSubjectFactory.getInstance().registerSubject(trainID, new ScheduleSubject(this));
+        System.out.println("after register");
     }
 
     public int getTrainID() {
@@ -50,6 +54,7 @@ public class Schedule {
     }
 
     public SingleStop getStop(int index) {
+        System.out.println("get stop " + stops.get(index));
         return stops.get(index);
     }
 
@@ -63,7 +68,7 @@ public class Schedule {
 
     public void printStops() {
         for (SingleStop stop : stops) {
-            System.out.println("Block ID: " + stop.getStationBlockID() + " Arrival Time: " + stop.getArrivalTime() + " Departure Time: " + stop.getDepartureTime());
+            System.out.println("Block ID: " + stop.getStationBlockID());
         }
     }
 

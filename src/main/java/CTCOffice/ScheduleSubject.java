@@ -24,6 +24,18 @@ public class ScheduleSubject implements AbstractSubject {
         }
     }
 
+    ScheduleSubject(int trainID, int dispatchTime, List<Integer> stationBlockID, List<Integer> arrivalTime, List<Integer> departureTime) {
+        this.trainID = new SimpleIntegerProperty(this, "trainID", trainID);
+        this.dispatchTime = new SimpleIntegerProperty(this, "dispatchTime", dispatchTime);
+        for (int i = 0; i < stationBlockID.size(); i++) {
+        System.out.println("making schedule" + stationBlockID.get(i));
+
+            this.stationBlockID.add(new SimpleIntegerProperty(this, "blockID", stationBlockID.get(i)));
+            this.arrivalTime.add(new SimpleIntegerProperty(this, "arrivalTime", arrivalTime.get(i)));
+            this.departureTime.add(new SimpleIntegerProperty(this, "departureTime", departureTime.get(i)));
+        }
+    }
+
     public void setProperty(String propertyName, Object newValue) {
         switch (propertyName) {
             case "trainID" -> trainID.set((Integer) newValue);

@@ -1,6 +1,6 @@
 package CTCOffice;
-
 import Framework.Support.AbstractSubject;
+
 import javafx.beans.property.*;
 import javafx.scene.paint.Paint;
 
@@ -37,7 +37,7 @@ public class CTCBlockSubject implements AbstractSubject {
         this.speedLimit = new SimpleDoubleProperty(this, "speedLimit", block.getSpeedLimit());
         this.blockLength = new SimpleIntegerProperty(this, "blockLength", block.getBlockLength());
         this.lightColor = new SimpleObjectProperty<>(this, "lightColor", block.getLightColor());
-        CTCBlockSubjectFactory.getInstance().registerSubject(block.getBlockID(), this);
+
         occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
         lightState.addListener((observable, oldValue, newValue) -> block.setLightState(newValue));
         switchConState.addListener((observable, oldValue, newValue) -> block.setSwitchConState(newValue));
