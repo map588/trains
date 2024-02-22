@@ -207,6 +207,7 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         //ACCELERATION PROGRESSION
         this.previousAcceleration = this.acceleration;
+        System.out.println("Previous Acceleration: " + this.previousAcceleration);
 
         //BRAKE FORCES
         if (this.serviceBrake && !this.emergencyBrake) {
@@ -224,10 +225,12 @@ public class trainModelImpl implements TrainModel, Notifications {
         try {
             this.engineForce = this.power / this.speed;
         } catch (ArithmeticException e) {
-            if (this.power > 0 && this.speed < 0.1) {
-                this.setActualSpeed(0.1); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+            if (this.power > 0 && this.speed < 0.0001) {
+                this.setActualSpeed(0.0001); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+                this.engineForce = this.power / this.speed;
             }
         }
+        System.out.println("Engine Force: " + this.engineForce);
 
         //SLOPE FORCE
         this.currentAngle = Math.atan(this.grade / 100);
@@ -238,9 +241,11 @@ public class trainModelImpl implements TrainModel, Notifications {
         if (this.netForce > Constants.MAX_ENGINE_FORCE){
             this.netForce = Constants.MAX_ENGINE_FORCE;
         }
+        System.out.println("Net Force: " + this.netForce);
 
         //ACCELERATION CALCULATION
         this.setAcceleration(this.netForce / this.mass);
+        System.out.println("Acceleration: " + this.acceleration);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
