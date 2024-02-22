@@ -1,30 +1,22 @@
 package Framework.GUI.Managers;
 
 import Common.WaysideController;
-import Utilities.BlockInfo;
-import Utilities.TrainSpeedAuth;
-import Utilities.staticBlockInfo;
+import waysideController.TrainSpeedAuth;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import waysideController.*;
 
@@ -200,8 +192,6 @@ public class WaysideControllerManager {
         // Create initial controller and update values
         createNewController();
         currentSubject.getController().runPLC();
-
-        currentSubject.getController().CTCSetSpeedAuth(new TrainSpeedAuth(1, 0, 0));
 
         updateBlockList();
         testBench.setController(currentSubject.getController());

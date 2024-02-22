@@ -1,9 +1,7 @@
 package Framework.GUI.Managers;
 
 import Common.WaysideController;
-import Utilities.TrainSpeedAuth;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import waysideController.TrainSpeedAuth;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -87,10 +85,10 @@ public class WaysideControllerTB {
 
         tbSpeedAuthTable.setEditable(true);
         tbSATID.setCellValueFactory(speedAuth -> speedAuth.getValue().trainIDProperty().asObject());
-        tbSATSpeedIn.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
-        tbSATAuthIn.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
-        tbSATSpeedOut.setCellValueFactory(speedAuth -> speedAuth.getValue().speedProperty().asObject());
-        tbSATAuthOut.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityProperty().asObject());
+        tbSATSpeedIn.setCellValueFactory(speedAuth -> speedAuth.getValue().speedInProperty().asObject());
+        tbSATAuthIn.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityInProperty().asObject());
+        tbSATSpeedOut.setCellValueFactory(speedAuth -> speedAuth.getValue().speedOutProperty().asObject());
+        tbSATAuthOut.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityOutProperty().asObject());
         tbSATSpeedIn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
         tbSATAuthIn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
     }

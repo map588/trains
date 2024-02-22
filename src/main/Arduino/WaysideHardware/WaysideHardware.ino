@@ -22,11 +22,8 @@ void handleCommsInput(String input) {
     runBlueLine();
   }
   else if(variable == "maintenanceMode") {
-    maintenanceMode = value == "true";
-
-    if(maintenanceMode) {
-      runBlueLine();
-    }
+    maintenanceMode = value.substring(0,4) == "true";
+    runBlueLine();
   }
   else if(variable == "occupancyList" || variable == "switchRequestedStateList") {
     int colonIndex = value.indexOf(':');
@@ -57,38 +54,40 @@ void sendTrackInfo() {
 }
 
 void runBlueLine() {
-  // Process switch state requests
-  if(switchStateList[4] != switchRequestedStateList[4]) {
-    if(!occupancyList[4] && !occupancyList[5] && !occupancyList[10]) {
-        switchStateList[4] = switchRequestedStateList[4];
+  if(!maintenanceMode) {
+    // Process switch state requests
+    if(switchStateList[4] != switchRequestedStateList[4]) {
+      if(!occupancyList[4] && !occupancyList[5] && !occupancyList[10]) {
+          switchStateList[4] = switchRequestedStateList[4];
+      }
     }
-  }
-
-  // Set traffic lights
-  if(!occupancyList[0] && !occupancyList[1] && !occupancyList[2] && !occupancyList[3] && !occupancyList[4]) {
-    if(switchStateList[4] == SWITCH_MAIN) {
-      trafficLightList[5] = LIGHT_GREEN;
-      trafficLightList[10] = LIGHT_RED;
+  
+    // Set traffic lights
+    if(!occupancyList[0] && !occupancyList[1] && !occupancyList[2] && !occupancyList[3] && !occupancyList[4]) {
+      if(switchStateList[4] == SWITCH_MAIN) {
+        trafficLightList[5] = LIGHT_GREEN;
+        trafficLightList[10] = LIGHT_RED;
+      }
+      else {
+        trafficLightList[5] = LIGHT_RED;
+        trafficLightList[10] = LIGHT_GREEN;
+      }
     }
     else {
       trafficLightList[5] = LIGHT_RED;
-      trafficLightList[10] = LIGHT_GREEN;
+      trafficLightList[10] = LIGHT_RED;
     }
+  
+    // Set Railroad Crossings
+    if(occupancyList[1] || occupancyList[2] || occupancyList[3]) {
+        crossingList[2] = CROSSING_CLOSED;
+    }
+    else {
+        crossingList[2] = CROSSING_OPEN;
+    }
+  
+    sendTrackInfo();
   }
-  else {
-    trafficLightList[5] = LIGHT_RED;
-    trafficLightList[10] = LIGHT_RED;
-  }
-
-  // Set Railroad Crossings
-  if(occupancyList[1] || occupancyList[2] || occupancyList[3]) {
-      crossingList[2] = CROSSING_CLOSED;
-  }
-  else {
-      crossingList[2] = CROSSING_OPEN;
-  }
-
-  sendTrackInfo();
 }
 
 void setup() {

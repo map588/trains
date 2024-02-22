@@ -1,14 +1,11 @@
 package waysideController;
 
 import Common.WaysideController;
-import Utilities.TrainSpeedAuth;
 import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WaysideControllerImpl implements WaysideController {
 
@@ -57,6 +54,10 @@ public class WaysideControllerImpl implements WaysideController {
         addBlock((new WaysideBlockInfo(13, false, false, false)));
         addBlock((new WaysideBlockInfo(14, false, false, false)));
         addBlock((new WaysideBlockInfo(15, false, false, false)));
+
+        CTCSetSpeedAuth(new TrainSpeedAuth(1));
+        CTCSetSpeedAuth(new TrainSpeedAuth(2));
+        CTCSetSpeedAuth(new TrainSpeedAuth(3));
     }
 
     @Override
@@ -139,6 +140,17 @@ public class WaysideControllerImpl implements WaysideController {
             speedAuthList.add(speedAuth);
         }
         subject.setSpeedAuth(speedAuth);
+        speedAuth.speedInProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.doubleValue() > 50) {
+                speedAuth.speedOutProperty().set(50.0);
+            }
+            else {
+                speedAuth.speedOutProperty().set(newValue.doubleValue());
+            }
+        });
+        speedAuth.authorityInProperty().addListener((observable, oldValue, newValue) -> {
+            speedAuth.authorityOutProperty().set(newValue.intValue());
+        });
     }
 
     @Override

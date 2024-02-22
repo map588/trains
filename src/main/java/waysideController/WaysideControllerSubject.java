@@ -1,14 +1,9 @@
 package waysideController;
 
 import Common.WaysideController;
-import Utilities.BlockInfo;
-import Utilities.TrainSpeedAuth;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 

@@ -1,6 +1,6 @@
 package Common;
 
-import Utilities.TrainSpeedAuth;
+import waysideController.TrainSpeedAuth;
 import waysideController.WaysideBlockInfo;
 import waysideController.WaysideControllerSubject;
 

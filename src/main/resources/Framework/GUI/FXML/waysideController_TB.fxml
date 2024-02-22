@@ -9,7 +9,7 @@
    <children>
       <Label fx:id="tbWaysideNumberLabel" layoutX="14.0" layoutY="14.0" prefHeight="32.0" prefWidth="171.0" text="Wayside Controller #N" />
       <Label layoutX="14.0" layoutY="60.0" prefHeight="18.0" prefWidth="124.0" text="Block Occupancies" />
-      <Label layoutX="175.0" layoutY="51.0" prefHeight="18.0" text="CTC Switch State Suggestions" />
+      <Label layoutX="175.0" layoutY="61.0" prefHeight="18.0" text="CTC Switch State Suggestions" />
       <TableView fx:id="tbBlockTable" layoutX="14.0" layoutY="79.0" prefHeight="309.0" prefWidth="124.0">
         <columns>
           <TableColumn fx:id="tbBTID" prefWidth="44.80001926422119" style="-fx-alignment: CENTER;" text="ID" />
@@ -38,7 +38,7 @@
                   <TableColumn fx:id="tbSATSpeedOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output" />
                </columns>
             </TableColumn>
-            <TableColumn prefWidth="75.0" text="Authority (miles)">
+            <TableColumn prefWidth="75.0" text="Authority (feet)">
                <columns>
                   <TableColumn fx:id="tbSATAuthIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input" />
                   <TableColumn fx:id="tbSATAuthOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output" />
@@ -49,5 +49,6 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <Label layoutX="159.0" layoutY="234.0" prefHeight="18.0" text="Speed &amp; Authority" />
    </children>
 </AnchorPane>
