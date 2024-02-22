@@ -3,14 +3,20 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
-import Utilities.Constants;
 import trainModel.stubTrainModel;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static Utilities.Conversion.*;
+import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
+import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
+import static Utilities.Conversion.convertPower;
+import static Utilities.Conversion.convertVelocity;
+import static Utilities.Conversion.powerUnits.HORSEPOWER;
+import static Utilities.Conversion.powerUnits.WATTS;
+import static Utilities.Conversion.velocityUnit.MPH;
+import static Utilities.Conversion.velocityUnit.MPS;
 
 
 public class trainControllerImpl implements TrainController, Notifications {
@@ -84,7 +90,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
         this.train = stubTrainModel.createstubTrainModel();
-        this.samplingPeriod = 100;
+        this.samplingPeriod = 10;
         this.nextStationName = "Yard";
         this.grade = 0;
         this.rollingError = 0;
@@ -368,53 +374,44 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void calculatePower(){
 
         // Convert Units
-        double setSpeed, currSpeed, prevSpeed, pow, accel;
-        boolean controllerBrake;
+        double setSpeed, currSpeed, pow, accel;
+
         if (automaticMode){
-            setSpeed = convertVelocity(commandSpeed, velocityUnit.MPH, velocityUnit.MPS);
+            setSpeed = convertVelocity(commandSpeed, MPH, MPS);
         }
         else{
-            setSpeed = convertVelocity(overrideSpeed, velocityUnit.MPH, velocityUnit.MPS);
+            setSpeed = convertVelocity(overrideSpeed, MPH, MPS);
         }
 
-        prevSpeed = convertVelocity(this.getSpeed(), velocityUnit.MPH, velocityUnit.MPS);
+        currSpeed = convertVelocity(currentSpeed, MPH, MPS);
         accel = 0;
+
+
+        error = setSpeed - currSpeed;
+        rollingError += (float)samplingPeriod/2 * (error + prevError);
         prevError = error;
 
-        error = setSpeed - prevSpeed;
-        rollingError += (float)samplingPeriod/2 * (error + prevError);
-
         pow = Kp * error + Ki * rollingError;
-        controllerBrake = pow < 0 && automaticMode;
 
 
-        if(emergencyBrake || serviceBrake || controllerBrake || powerFailure) {
+        if(emergencyBrake || serviceBrake || powerFailure || (pow < 0)) {
             pow = 0;
             if(emergencyBrake){
-                accel = -1 * Constants.EMERGENCY_BRAKE_DECELERATION;
+                accel = -1 * EMERGENCY_BRAKE_DECELERATION;
             }else if(serviceBrake) {
-                accel = -1 * Constants.SERVICE_BRAKE_DECELERATION;
-            }
-            else if(controllerBrake){
-                accel = -1 * Constants.SERVICE_BRAKE_DECELERATION;
+                accel = -1 * SERVICE_BRAKE_DECELERATION;
             }
         } else {
             accel = pow / train.getWeightKG();
         }
 
-
-        currSpeed = prevSpeed + accel * (float)samplingPeriod/1000;
+        currSpeed += accel * (float)samplingPeriod/1000;
         if(currSpeed < 0){
             currSpeed = 0;
         }
 
-        power = convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER);
-        setValue("power",power);
-        //Do something with pow
-
-        this.setSpeed(convertVelocity(currSpeed, velocityUnit.MPS, velocityUnit.MPH));
-        this.setPower(convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER));
-
+        this.setSpeed(convertVelocity(currSpeed, MPS, MPH));
+        this.setPower(convertPower(pow, WATTS, HORSEPOWER));
     }
 
 }
