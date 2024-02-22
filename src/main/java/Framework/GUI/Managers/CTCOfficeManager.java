@@ -77,6 +77,8 @@ public class CTCOfficeManager {
         blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
+
+
         switchStateColumn.setCellValueFactory(block -> {
             boolean hasSwitchCon = block.getValue().getBooleanProperty("hasSwitchCon").getValue();
             boolean hasSwitchDiv = block.getValue().getBooleanProperty("hasSwitchDiv").getValue();
@@ -105,8 +107,12 @@ public class CTCOfficeManager {
             }else {
                 return null;
             }
+
+
         });
+
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
+
 
         switchLightColumn.setCellValueFactory(block -> {
             if (block.getValue().getBooleanProperty("hasLight").getValue()) {

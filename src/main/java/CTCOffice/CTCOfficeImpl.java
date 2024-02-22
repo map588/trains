@@ -16,7 +16,6 @@ public class CTCOfficeImpl implements CTCOffice {
     //private trainSubjectFactory trainSubjectMaker;
 
     private Map<Boolean, ArrayList<CTCBlockInfo>> track = new HashMap<Boolean, ArrayList<CTCBlockInfo>>();
-    private Map<Boolean ,Map<Integer, CTCSwitchInfo>> switches = new HashMap<Boolean, Map<Integer, CTCSwitchInfo>>();
 
 
     public CTCOfficeImpl() {
@@ -71,7 +70,7 @@ public class CTCOfficeImpl implements CTCOffice {
     }
 
     public void setSwitchState(boolean line, int blockID, boolean switchConState) {
-        switches.get(line).get(blockID).setSwitchState(switchConState);
+        track.get(line).get(blockID).setSwitchConState(switchConState);
     }
 //*********************************************************************************************************************************************
     public void setManualMode() {
