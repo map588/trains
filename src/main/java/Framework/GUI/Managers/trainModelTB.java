@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import trainModel.trainModelSubject;
@@ -20,8 +21,9 @@ import java.util.List;
 public class trainModelTB {
     @FXML
     public ToggleButton tbEBrake, tbSBrake, tbIntLights, tbExtLights, tbLeftDoors, tbRightDoors;
+    public Button tbTimeButton;
     @FXML
-    public TextField tbPower, tbSpeed, tbAuthority, tbGrade, tbTemp;
+    public TextField tbPower, tbSpeed, tbAuthority, tbGrade, tbTemp, tbTimeDelta;
     @FXML
     public Circle tbBrakeFailure, tbPowerFailure, tbSignalFailure;
     private TrainModel model;
@@ -74,6 +76,7 @@ public class trainModelTB {
         tbAuthority.setOnAction(event -> model.setAuthority(Integer.parseInt(tbSpeed.getText())));
         tbGrade.setOnAction(event -> model.setGrade(Double.parseDouble(tbGrade.getText())));
         tbTemp.setOnAction(event -> model.setTemperature(Double.parseDouble(tbTemp.getText())));
+        tbTimeButton.setOnAction(event -> model.setTimeDelta(Double.parseDouble(tbTimeDelta.getText())));
 
         appendListener(subject.getBooleanProperty("brakeFailure"), (observable, oldValue, newValue) -> updateBrakeFailureIndicator(newValue));
         appendListener(subject.getBooleanProperty("powerFailure"), (observable, oldValue, newValue) -> updatePowerFailureIndicator(newValue));

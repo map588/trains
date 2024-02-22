@@ -161,5 +161,15 @@ public class stubTrainModel implements TrainModel {
 
     }
 
+    @Override
+    public void setTimeDelta(double v) {
+
+    }
+
+    @Override
+    public double getTimeDelta() {
+        return 0;
+    }
+
 
 }

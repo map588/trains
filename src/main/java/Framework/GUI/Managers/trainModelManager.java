@@ -67,12 +67,6 @@ public class trainModelManager {
             System.out.println("No train models found");
         }
 
-        bindLabels();
-        bindGauges();
-        bindIndicators();
-        bindControls();
-
-
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
