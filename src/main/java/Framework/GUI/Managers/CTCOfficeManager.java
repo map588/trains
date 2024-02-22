@@ -80,35 +80,11 @@ public class CTCOfficeManager {
 
 
         switchStateColumn.setCellValueFactory(block -> {
-            boolean hasSwitchCon = block.getValue().getBooleanProperty("hasSwitchCon").getValue();
-            boolean hasSwitchDiv = block.getValue().getBooleanProperty("hasSwitchDiv").getValue();
-            boolean switchState = block.getValue().getBooleanProperty("switchState").getValue();
-            int divergingBlockOneID = block.getValue().getIntegerProperty("divergingBlockOneID").getValue();
-            int divergingBlockTwoID = block.getValue().getIntegerProperty("divergingBlockTwoID").getValue();
-            int convergingBlockID = block.getValue().getIntegerProperty("convergingBlockID").getValue();
-            int thisBlockID = block.getValue().getIntegerProperty("blockID").getValue();
-
-            if(hasSwitchCon && !switchState) {
-                return new ReadOnlyObjectWrapper<>( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
-            }else if(hasSwitchCon && switchState) {
-                return new ReadOnlyObjectWrapper<>( divergingBlockOneID +"  ( "   + convergingBlockID + " == " + divergingBlockTwoID + " )");
-            }else if(hasSwitchDiv && !switchState) {
-                if(divergingBlockOneID == thisBlockID) {
-                    return new ReadOnlyObjectWrapper<>( divergingBlockOneID + " ==== " + convergingBlockID);
-                }else {
-                    return new ReadOnlyObjectWrapper<>( divergingBlockTwoID + "\t\t" + convergingBlockID);
-                }
-            }else if(hasSwitchDiv && switchState) {
-                if(divergingBlockTwoID == thisBlockID) {
-                    return new ReadOnlyObjectWrapper<>( divergingBlockTwoID + " ==== " + convergingBlockID);
-                }else {
-                    return new ReadOnlyObjectWrapper<>( divergingBlockOneID + "\t\t" + convergingBlockID);
-                }
-            }else {
+            if (block.getValue().getBooleanProperty("hasSwitchCon").getValue() || block.getValue().getBooleanProperty("hasSwitchDiv").getValue()) {
+                return block.getValue().getStringProperty("switchStateString");
+            } else {
                 return null;
             }
-
-
         });
 
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
@@ -181,6 +157,7 @@ public class CTCOfficeManager {
         switchStateToggle.setOnAction(event -> {
             CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
             block.setProperty("switchState", !block.getBooleanProperty("switchState").getValue());
+            blockTable.refresh();
         });
 
 

@@ -19,6 +19,7 @@ class CTCBlockInfo {
     private int divergingBlockOneID;
     private int divergingBlockTwoID;
     private boolean switchState;
+    private String switchStateString;
     private javafx.scene.paint.Paint lightColor;
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
 
@@ -41,6 +42,7 @@ class CTCBlockInfo {
         this.divergingBlockTwoID = divergingBlockTwoID;
         this.switchState = switchState;
         updateLightColor();
+        this.switchStateString = getSwitchStateString();
        factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
     void setBlockID (int number){
@@ -195,6 +197,32 @@ class CTCBlockInfo {
 
     public boolean getSwitchState() {
         return switchState;
+    }
+
+    public void setSwitchStateString(String switchStateString) {
+        this.switchStateString = getSwitchStateString();
+    }
+
+    public String getSwitchStateString() {
+        if(hasSwitchCon && !switchState) {
+            return ( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
+        }else if(hasSwitchCon && switchState) {
+            return ( divergingBlockOneID +"  ( "   + convergingBlockID + " == " + divergingBlockTwoID + " )");
+        }else if(hasSwitchDiv && !switchState) {
+            if(divergingBlockOneID == blockID) {
+                return ( divergingBlockOneID + " ==== " + convergingBlockID);
+            }else {
+                return ( divergingBlockTwoID + "\t\t" + convergingBlockID);
+            }
+        }else if(hasSwitchDiv && switchState) {
+            if(divergingBlockTwoID == blockID) {
+                return ( divergingBlockTwoID + " ==== " + convergingBlockID);
+            }else {
+                return ( divergingBlockOneID + "\t\t" + convergingBlockID);
+            }
+        }else {
+            return null;
+        }
     }
 }
 
