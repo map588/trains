@@ -64,7 +64,7 @@ public class mainMenu extends Application {
     private void openInNewWindow(String moduleName) {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // This now loads from FXML
-        Scene newScene = new Scene(new VBox(content), 1280, 720); // Ensure the layout fits the loaded content
+        Scene newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();
