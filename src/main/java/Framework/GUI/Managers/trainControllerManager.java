@@ -116,11 +116,11 @@ public class trainControllerManager {
     }
 
     private void bindGauges() {
-        currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("currentSpeed"));
-        commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("commandSpeed"));
-        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty("speedLimit"));
-        authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
-        powerOutputGauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
+        currentSpeedGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("currentSpeed"));
+        commandedSpeedGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("commandSpeed"));
+        speedLimitGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("speedLimit"));
+        authorityGauge.valueProperty().bindBidirectional(currentSubject.getIntegerProperty("authority"));
+        powerOutputGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("power"));
         //trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
     }
 
@@ -251,11 +251,11 @@ public class trainControllerManager {
         listenerReferences.forEach(ListenerReference::detach);
         listenerReferences.clear();
 
-        currentSpeedGauge.valueProperty().unbind();
-        commandedSpeedGauge.valueProperty().unbind();
-        speedLimitGauge.valueProperty().unbind();
-        authorityGauge.valueProperty().unbind();
-        powerOutputGauge.valueProperty().unbind();
+        currentSpeedGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("currentSpeed"));
+        commandedSpeedGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("commandSpeed"));
+        speedLimitGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("speedLimit"));
+        authorityGauge.valueProperty().unbindBidirectional(currentSubject.getIntegerProperty("authority"));
+        powerOutputGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("power"));
 
         setSpeedSlider.valueProperty().unbind(); // Assuming you might bind this bidirectionally in another part of your code
         setSpeedTextField.textProperty().unbind();
