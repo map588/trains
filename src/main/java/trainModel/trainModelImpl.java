@@ -125,6 +125,7 @@ public class trainModelImpl implements TrainModel, Notifications {
             case "numCars" -> setNumCars((int)newValue);
             case "numPassengers" -> setNumPassengers((int)newValue);
             case "crewCount" -> setCrewCount((int)newValue);
+            case "timeDelta" -> setTimeDelta((double)newValue);
         }
     }
     //Getters
