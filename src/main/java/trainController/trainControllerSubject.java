@@ -167,4 +167,7 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
             isLogicUpdate = false;
         }
     }
+    public void calculatePower(){
+        controller.calculatePower();
+    }
 }

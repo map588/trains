@@ -17,7 +17,8 @@ import java.util.List;
 public class trainControllerTB {
     @FXML
     private Button trainControllerTB_AddTrain_Button;
-
+    @FXML
+    private Button trainControllerTB_CalculatePower_Button;
     @FXML
     private TextField trainControllerTB_Authority_TextField;
 
@@ -86,6 +87,7 @@ public class trainControllerTB {
 
         trainControllerTB_AddTrain_Button.setOnAction(event -> createTrainController(Integer.parseInt(trainControllerTB_trainNo_TextField.getText())));
         trainControllerTB_PassengerEBrake_Button.setOnMouseClicked(event -> subject.setProperty("emergencyBrake", true));
+        trainControllerTB_CalculatePower_Button.setOnAction(event -> subject.calculatePower());
         trainControllerTB_BrakeFailure_CheckBox.setOnAction(event -> subject.setProperty("brakeFailure", !subject.getBooleanProperty("brakeFailure").getValue()));
         trainControllerTB_PowerFailure_CheckBox.setOnAction(event -> subject.setProperty("powerFailure", !subject.getBooleanProperty("powerFailure").getValue()));
         trainControllerTB_SignalFailure_CheckBox.setOnAction(event -> subject.setProperty("signalFailure", !subject.getBooleanProperty("signalFailure").getValue()));

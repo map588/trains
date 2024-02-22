@@ -127,11 +127,12 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
         notifyChange("overrideSpeed", speed);
-        calculatePower();
+        //calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
         notifyChange("commandSpeed", speed);
+        //calculatePower();
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
@@ -140,6 +141,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
         notifyChange("emergencyBrake", brake);
+
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
@@ -354,7 +356,8 @@ public class trainControllerImpl implements TrainController, Notifications {
         if (pow < 120000) rollingError += samplingPeriod/2 * (speedError + rollingError_prev);
 
         pow = Kp * speedError + Ki * rollingError;
-        pow = convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER);
+        power = convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER);
+        setValue("power",power);
         //Do something with pow
     }
 

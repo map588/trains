@@ -197,7 +197,7 @@ public class stubTrainController implements TrainController{
     public boolean getRightPlatform(){return  false;}
     public boolean getInTunnel(){return false;}
 
-
+    public void calculatePower(){}
     public void notifyChange(String property, Object newValue) {
 
     }
