@@ -224,7 +224,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         //ENGINE FORCE
         if (this.power > 0 && this.speed == 0) {
             this.setActualSpeed(0.1); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
-            this.engineForce = this.power / this.speed;
+            this.engineForce = this.power / 0.1;
         }
         else {
             this.engineForce = this.power / this.speed;
@@ -253,6 +253,7 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         if (this.speed < 0) { this.setActualSpeed(0); }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
+        System.out.println("Speed: " + this.speed);
     }
 
 }

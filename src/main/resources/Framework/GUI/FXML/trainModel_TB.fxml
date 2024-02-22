@@ -17,7 +17,6 @@
       <Text layoutX="1.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CmdSpeed" />
       <Text layoutX="5.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority" />
       <Text layoutX="14.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grade" />
-      <ToggleButton fx:id="tbEBrake" layoutX="193.0" layoutY="101.0" mnemonicParsing="false" text="E-Brake" />
       <ToggleButton fx:id="tbSBrake" layoutX="193.0" layoutY="131.0" mnemonicParsing="false" text="S-Brake" />
       <ToggleButton fx:id="tbIntLights" layoutX="193.0" layoutY="221.0" mnemonicParsing="false" text="Int Lights" />
       <ToggleButton fx:id="tbExtLights" layoutX="192.0" layoutY="251.0" mnemonicParsing="false" text="Ext Lights" />
@@ -34,5 +33,6 @@
       <Text layoutX="3.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TimeDelta" />
       <TextField fx:id="tbTimeDelta" layoutX="61.0" layoutY="143.0" prefHeight="26.0" prefWidth="117.0" promptText="Enter Time Interval" />
       <Button fx:id="tbTimeButton" layoutX="20.0" layoutY="196.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="161.0" text="Increment Time" />
+      <Button fx:id="tbEBrake" layoutX="193.0" layoutY="102.0" mnemonicParsing="false" text="E-Brake" />
    </children>
 </AnchorPane>
