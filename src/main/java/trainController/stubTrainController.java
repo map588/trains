@@ -74,6 +74,7 @@ public class stubTrainController implements TrainController{
 
     }
 
+
     public void setValue(String propertyName, Object newValue) {
 
     }
@@ -169,6 +170,8 @@ public class stubTrainController implements TrainController{
     public int getBlocksToNextStation() {
         return 0;
     }
+
+    public String getStationName(){return "Yard";}
 
     public boolean getAnnouncements() {
         return false;

@@ -132,8 +132,13 @@ public class trainControllerManager {
         appendListener(currentSubject.getBooleanProperty("inTunnel"),(obs, oldVal, newVal) -> updateIndicator(Color.YELLOW, inTunnelStatus, newVal));
         appendListener(currentSubject.getBooleanProperty("leftPlatform"),(obs, oldVal, newVal) -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal));
         appendListener(currentSubject.getBooleanProperty("rightPlatform"),(obs, oldVal, newVal) -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal));
+        bindStringText(nextStationText,"nextStationName");
     }
-
+    private void bindStringText(Text text, String propertyName){
+        appendListener(currentSubject.getProperty(propertyName),(obs,oldVal,newVal) -> {
+            Platform.runLater(()-> text.setText((String)newVal));
+        });
+    }
 
     private void updateIndicator(Color color, Circle indicator, boolean isActive) {
         Platform.runLater(() -> indicator.setFill(isActive ? color : Color.GRAY));
@@ -203,6 +208,14 @@ public class trainControllerManager {
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty("announcements");
             currentSubject.setProperty("announcements", !announceProp.get());
+
+            if (!nextStationText.getText().contains("yard") && !nextStationText.getText().contains("Yard")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Arrival");
+                alert.setHeaderText(null);
+                alert.setContentText("Arriving at " + nextStationText.getText());
+                alert.showAndWait();
+            }
         });
     }
 
@@ -277,12 +290,14 @@ public class trainControllerManager {
         if (currentSubject == null) {
             return;
         }
+
             // Update gauges
             currentSpeedGauge.setValue(currentSubject.getDoubleProperty("currentSpeed").get());
             commandedSpeedGauge.setValue(currentSubject.getDoubleProperty("commandSpeed").get());
             speedLimitGauge.setValue(currentSubject.getDoubleProperty("speedLimit").get());
             authorityGauge.setValue(currentSubject.getIntegerProperty("authority").get());
             powerOutputGauge.setValue(currentSubject.getDoubleProperty("power").get());
+            //powerOutputGauge.setValue(69);
 
             // Update indicators
             updateIndicator(Color.RED, eBrakeStatus, currentSubject.getBooleanProperty("emergencyBrake").get());

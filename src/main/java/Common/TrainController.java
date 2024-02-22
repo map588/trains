@@ -81,6 +81,7 @@ public interface TrainController extends Notifications {
     // Station Block Info
     boolean getLeftPlatform();
     boolean getRightPlatform();
+    String getStationName();
 
     void setLeftPlatform(boolean leftPlatform);
     void setRightPlatform(boolean rightPlatform);
@@ -90,4 +91,6 @@ public interface TrainController extends Notifications {
     void setInTunnel(boolean inTunnel);
 
     void setValue(String propertyName, Object newValue);
+
+
 }

@@ -45,6 +45,7 @@ public class trainControllerImpl implements TrainController, Notifications {
 
     private double temperature;
 
+    private String nextStationName;
     private int trainID;
     private TrainModel train;
 
@@ -58,8 +59,8 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.currentSpeed = 0.0;
         this.overrideSpeed = 0.0;
         this.speedLimit = 0.0;
-        this.Ki = 0.0;
-        this.Kp = 0.0;
+        this.Ki = 1.0;
+        this.Kp = 1.0;
         this.power = 0.0;
         this.serviceBrake = false;
         this.emergencyBrake = false;
@@ -77,6 +78,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.rollingError = 0;
         this.speedError = 0;
         this.samplingPeriod = 0;
+        this.nextStationName = "Yard";
     }
 
     public trainControllerSubject getSubject() {
@@ -149,6 +151,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void setPower(double power) {
         this.power = power;
         notifyChange("power", power);
+        //setValue("Power",power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
@@ -156,6 +159,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
+
         notifyChange("extLights", lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
@@ -205,6 +209,10 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.speedLimit = speedLimit;
         notifyChange("speedLimit",speedLimit);
     }
+    public void setNextStationName(String name){
+        this.nextStationName = name;
+        notifyChange("nextStationName",name);
+    }
 
 
     public void setValue(String propertyName, Object newValue) {
@@ -232,7 +240,9 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "rightPlatform" -> setRightPlatform((boolean) newValue);
             case "samplingPeriod" -> setSamplingPeriod((double) newValue);
             case "speedLimit" -> setSpeedLimit((double) newValue);
+            case "nextStationName" -> setNextStationName((String) newValue);
         }
+        calculatePower();
     }
 
 
@@ -311,7 +321,9 @@ public class trainControllerImpl implements TrainController, Notifications {
     public double  getTemperature() {
         return this.temperature;
     }
-
+    public String getStationName(){
+        return this.nextStationName;
+    }
     public boolean getLeftPlatform(){return this.leftPlatform;}
     public boolean getRightPlatform(){return this.rightPlatform;}
     public boolean getInTunnel(){return this.inTunnel;}
@@ -319,9 +331,10 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void calculatePower(){
 
         // Convert Units
-        double  commSpd, currSpd, pow;
+        double  calcSPD, currSpd, pow;
 
-        commSpd = convertVelocity(commandSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
+        if (automaticMode) calcSPD = convertVelocity(commandSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
+        else calcSPD = convertVelocity(overrideSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
         currSpd = convertVelocity(currentSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
         pow = convertPower(power,powerUnits.HORSEPOWER,powerUnits.WATTS);
 
@@ -329,13 +342,14 @@ public class trainControllerImpl implements TrainController, Notifications {
         // Error = commandSpeed - currentSpeed
         double  speedError_prev = speedError,
                 rollingError_prev = rollingError;
-        speedError = commSpd - currSpd;
+        speedError = calcSPD - currSpd;
         // T = sample period of train model......<<< KEY INPUT?????
 
         if (pow < 120000) rollingError += samplingPeriod/2 * (speedError + speedError_prev);
 
         pow = Kp * speedError + Ki * rollingError;
         setPower(convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER));
+
     }
 
 }

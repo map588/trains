@@ -101,6 +101,11 @@ public class trainControllerTB {
             boolean currentState = subject.getBooleanProperty("inTunnel").getValue();
             subject.setProperty("inTunnel", !currentState);
         });
+        trainControllerTB_StationName_ChoiceBox.setOnAction(event ->{
+            String nextStation = subject.getStringProperty("nextStationName").getValue();
+            subject.setProperty("nextStationName",trainControllerTB_StationName_ChoiceBox.getValue());
+
+        });
 
         // Set up ChoiceBox
         ObservableList<String> stationNamesList = FXCollections.observableArrayList("Station B","Station C");

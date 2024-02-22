@@ -51,10 +51,12 @@ public class trainControllerSubject implements AbstractSubject {
         properties.put("inTunnel", new SimpleBooleanProperty(controller.getInTunnel()));
         properties.put("leftPlatform", new SimpleBooleanProperty(controller.getLeftPlatform()));
         properties.put("rightPlatform", new SimpleBooleanProperty(controller.getRightPlatform()));
+        properties.put("nextStationName", new SimpleStringProperty(controller.getStationName()));
     }
 
     public void notifyChange(String propertyName, Object newValue) {
         // Update property from controller, Internal Logic takes precedence over GUI updates
+        System.out.println(propertyName + " " +newValue);
         Platform.runLater(() ->
                 updateFromLogic(() -> {
                     Property<?> property = properties.get(propertyName);
@@ -97,11 +99,23 @@ public class trainControllerSubject implements AbstractSubject {
             ((DoubleProperty) property).set(((Number) newValue).doubleValue());
         } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
             ((BooleanProperty) property).set((Boolean) newValue);
-        } else {
-            throw new IllegalArgumentException("Mismatch in property type and value type for " + property.getName());
+        } else if (property instanceof  StringProperty && newValue instanceof  String){
+            ((StringProperty) property).set((String) newValue);
+        }
+        else{
+                throw new IllegalArgumentException("Mismatch in property type and value type for " + property.getName());
         }
     }
 
+
+    public StringProperty getStringProperty(String propertyName){
+        Property<?> property = getProperty(propertyName);
+        try{
+            return (StringProperty) property;
+        }catch (ClassCastException e){
+            throw new IllegalArgumentException("Property " + propertyName + " is not a StringProperty");
+        }
+    }
     // Directly accessing typed properties for GUI binding
     public BooleanProperty getBooleanProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
