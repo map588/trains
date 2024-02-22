@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import eu.hansolo.medusa.Gauge?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import eu.hansolo.medusa.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="640" maxWidth="1024" prefHeight="640.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trainControllerManager">
    <children>
@@ -56,7 +49,7 @@
                   <Image url="@../../../Framework.GUI.Images/Lightbulb_White.png" />
                </image>
             </ImageView>
-            <Text layoutX="70.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temperature:" wrappingWidth="116.0">
+            <Text layoutX="61.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temperature:" wrappingWidth="93.0">
                <font>
                   <Font size="14.4" />
                </font>
@@ -91,7 +84,7 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Button>
-            <TextField fx:id="setTemperatureTextField" layoutX="156.0" layoutY="51.0" prefHeight="19.2" prefWidth="30.4" />
+            <TextField fx:id="setTemperatureTextField" layoutX="145.0" layoutY="51.0" prefHeight="26.0" prefWidth="42.0" />
          </children>
       </AnchorPane>
       <AnchorPane id="engineerInputPane" layoutX="36.0" layoutY="476.8" prefHeight="136.0" prefWidth="228.8">
@@ -132,7 +125,7 @@
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#dddddd" height="300.8" layoutY="0.8" stroke="BLACK" strokeType="INSIDE" width="396.8" />
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="62.4" layoutX="16.8" layoutY="182.4" stroke="BLACK" strokeType="INSIDE" width="363.2" />
             <Slider fx:id="setSpeedSlider" layoutX="40.8" layoutY="194.4" minorTickCount="5" prefHeight="39.2" prefWidth="314.4" showTickLabels="true" showTickMarks="true" />
-            <Text layoutX="133.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed">
+            <Text layoutX="112.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed (MPH)">
                <font>
                   <Font name="System Bold" size="19.2" />
                </font>
@@ -153,13 +146,13 @@
                   <Font size="19.2" />
                </font>
             </Text>
-            <TextField fx:id="setSpeedTextField" alignment="CENTER" layoutX="214.4" layoutY="260.0" prefHeight="2.4" prefWidth="40.0" text="0" />
-            <Text layoutX="256.8" layoutY="278.4" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH">
+            <TextField fx:id="setSpeedTextField" alignment="CENTER" layoutX="214.0" layoutY="260.0" prefHeight="26.0" prefWidth="55.0" text="0" />
+            <Text layoutX="273.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH">
                <font>
                   <Font size="19.2" />
                </font>
             </Text>
-            <Gauge fx:id="currentSpeedGauge" customFontEnabled="true" layoutX="107.2" layoutY="44.0" lcdDesign="YOCTOPUCE" lcdFont="STANDARD" prefHeight="126.4" prefWidth="182.4" skinType="LCD" unit="MPH" valueVisible="false">
+            <Gauge fx:id="currentSpeedGauge" customFontEnabled="true" layoutX="107.2" layoutY="44.0" lcdDesign="YOCTOPUCE" lcdFont="STANDARD" prefHeight="126.4" prefWidth="182.4" skinType="LCD" valueVisible="false">
                <customFont>
                   <Font name="Rockwell Bold" size="9.6" />
                </customFont>
@@ -208,12 +201,12 @@
                   <Image url="@../../../Framework.GUI.Images/Service_Brake.png" />
                </image>
             </ImageView>
-            <Gauge fx:id="powerOutputGauge" backgroundPaint="#ffffff00" foregroundPaint="#b1b1b100" layoutX="13.0" layoutY="47.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="138.0" prefWidth="201.0" skinType="LCD" unit="HP">
+            <Gauge fx:id="powerOutputGauge" backgroundPaint="#ffffff00" foregroundPaint="#b1b1b100" layoutX="13.0" layoutY="47.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="138.0" prefWidth="201.0" skinType="LCD">
                <customFont>
                   <Font name="Roboto Condensed Regular" size="9.6" />
                </customFont>
             </Gauge>
-            <Text layoutX="51.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Output">
+            <Text layoutX="39.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Output (HP)">
                <font>
                   <Font name="System Bold" size="19.2" />
                </font>
@@ -319,13 +312,13 @@
          <children>
             <Rectangle fx:id="stationInfo" arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="295.0" />
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="51.0" layoutX="156.0" layoutY="37.0" stroke="BLACK" strokeType="INSIDE" width="130.0" />
-            <Text layoutX="4.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Station">
+            <Text layoutX="30.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Station">
                <font>
                   <Font name="System Bold" size="19.2" />
                </font>
             </Text>
             <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="51.0" layoutX="14.0" layoutY="37.0" stroke="BLACK" strokeType="INSIDE" width="130.0" />
-            <Text fx:id="nextStationText" layoutX="27.0" layoutY="67.3" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Yard" textAlignment="RIGHT" wrappingWidth="104.98046875" />
+            <Text fx:id="nextStationText" layoutX="27.0" layoutY="67.3" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Yard" textAlignment="CENTER" wrappingWidth="104.98046875" />
             <Text layoutX="167.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Side">
                <font>
                   <Font name="System Bold" size="19.2" />
@@ -345,7 +338,6 @@
             </Text>
          </children>
       </AnchorPane>
-      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
 
    </children>
 </AnchorPane>

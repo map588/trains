@@ -11,6 +11,7 @@ public interface TrackModel {
     void setCommandedSpeed(int trainID, int commandedSpeed);
     void setBlockOccupied(int block, boolean state);
     boolean getBlockOccupied(int block);
+    void setTrackHeaters(int temp);
     void setLine(String line);
     void setFailure(int block, String failure);
 }

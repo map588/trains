@@ -56,4 +56,8 @@ public interface TrainModel {
     void trainModelPhysics();
 
     void setValue(String propertyName, Object newValue);
+
+    void setTimeDelta(double v);
+
+    double getTimeDelta();
 }

@@ -36,6 +36,7 @@ public class stubTrackModel implements TrackModel{
         return this.blockOccupied.contains(block);
     }
 
+    public void setTrackHeaters(int temp){ this.temp = temp; }
     public void setTemperature(int temp){ this.temp = temp; }
     public int getTemperature(){ return this.temp; }
 

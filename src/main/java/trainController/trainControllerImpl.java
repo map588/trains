@@ -3,7 +3,10 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
+import Utilities.Conversion;
 import trainModel.stubTrainModel;
+
+import static Utilities.Conversion.*;
 
 
 public class trainControllerImpl implements TrainController, Notifications {
@@ -149,11 +152,11 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        notifyChange("internalLights", lights);
+        notifyChange("intLights", lights); // This might've been the issue interiorLights -> intLights
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
-        notifyChange("externalLights", lights);
+        notifyChange("extLights", lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
@@ -187,12 +190,10 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.inTunnel = tunnel;
         notifyChange("inTunnel",tunnel);
     }
-
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
         notifyChange("leftPlatform",platform);
     }
-
     public void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
         notifyChange("rightPlatform",platform);
@@ -316,14 +317,25 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getInTunnel(){return this.inTunnel;}
 
     public void calculatePower(){
+
+        // Convert Units
+        double  commSpd, currSpd, pow;
+
+        commSpd = convertVelocity(commandSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
+        currSpd = convertVelocity(currentSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
+        pow = convertPower(power,powerUnits.HORSEPOWER,powerUnits.WATTS);
+
+
         // Error = commandSpeed - currentSpeed
         double  speedError_prev = speedError,
                 rollingError_prev = rollingError;
-        speedError = commandSpeed - currentSpeed;
-         // T = sample period of train model......<<< KEY INPUT?????
+        speedError = commSpd - currSpd;
+        // T = sample period of train model......<<< KEY INPUT?????
 
-        if (power < 120000) rollingError += samplingPeriod/2 * (speedError + speedError_prev);
+        if (pow < 120000) rollingError += samplingPeriod/2 * (speedError + speedError_prev);
 
-         power = Kp * speedError + Ki*rollingError;
+        pow = Kp * speedError + Ki * rollingError;
+        setPower(convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER));
     }
+
 }

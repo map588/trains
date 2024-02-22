@@ -61,26 +61,35 @@ public class trackModelManager {
 
     //station signal switch
     @FXML
-    private TextField stationDisplay;
+    private Label nameOfStationLabel;
     @FXML
     private Label passEmbarkedValue;
     @FXML
     private Label passDisembarkedValue;
     @FXML
     private Label ticketSalesValue;
+    @FXML
+    private Label signalStateDisplay;
+    @FXML
+    private Label signalBlockNumberDisplay;
 
     //beacon information
     @FXML
     private ComboBox<String> pickLine;
     @FXML
-    private TextField beaconLabel;
+    private Label displayBeaconInfo;
+    @FXML
+    private Label beaconBlockNumber;
 
     //switch information
     @FXML
     private Label switchStateDisplay;
 
-//    @FXML
-//    private Label switchBlockNumberDisplay;
+    @FXML
+    private Label switchBlockNumbersDisplay;
+    @FXML
+    private Label crossingState;
+
 
     //table
     @FXML
@@ -88,7 +97,7 @@ public class trackModelManager {
     @FXML
     private TableColumn<TrackLayoutInfo, String> sectionsColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> blockColumn;
+    private TableColumn<TrackLayoutInfo, String> blockColumn;
     @FXML
     private TableColumn<TrackLayoutInfo, Boolean> occupiedColumn;
     @FXML
@@ -118,6 +127,7 @@ public class trackModelManager {
     private trackModelTB testBench;
     private TrackLayoutInfo trackProperties;
 
+    @FXML
     public void initialize(){
         //initialize buttons and user inputs
 
@@ -126,6 +136,7 @@ public class trackModelManager {
 
         testBench.setTrackModel(currTrackModel);
         testBench.setTrackModelSubject(trackModelSubject);
+        testBench.setTrackModelManager(this);
 
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
@@ -143,7 +154,7 @@ public class trackModelManager {
 
         //set up cell factories
         sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
-        blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty().asObject());
+        blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
         sizeColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
         gradeColumn.setCellValueFactory(block -> block.getValue().blockGradeProperty().asObject());
         stationColumn.setCellValueFactory(block -> block.getValue().isStationProperty());
@@ -188,7 +199,7 @@ public class trackModelManager {
             }
         };
         sectionsColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        blockColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+        blockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         sizeColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
         gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
         speedLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
@@ -198,30 +209,110 @@ public class trackModelManager {
         failureColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         occupiedColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
 
+        crossingState.setText("false");
+
+
         //set track heater
 
         //labels
-        lineTable.getSelectionModel().selectedItemProperty().addListener(event -> selectBlock());
+        lineTable.getSelectionModel().selectedItemProperty().addListener(event -> {
+            selectBlock(lineTable.getSelectionModel().getSelectedItem());
+            testBench.selectBlock(lineTable.getSelectionModel().getSelectedItem());
+        });
     }
 
-    private void selectBlock(){
+    public void selectBlock(TrackLayoutInfo newProperties){
+        System.out.println("Selected block");
         if(trackProperties != null) {
             // Unbind stuff here
-            passEmbarkedValue.textProperty().unbindBidirectional(trackProperties.passEmbarkedProperty());
-            passDisembarkedValue.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
-            ticketSalesValue.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
+            if(trackProperties.isIsStation()){
+                passEmbarkedValue.textProperty().unbindBidirectional(trackProperties.passEmbarkedProperty());
+                passDisembarkedValue.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
+                ticketSalesValue.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
+                nameOfStationLabel.textProperty().unbindBidirectional(trackProperties.nameOfStationProperty());
+            }
+
+            if(trackProperties.isIsSwitch()){
+                switchBlockNumbersDisplay.textProperty().unbindBidirectional(trackProperties.switchBlockIDProperty());
+                switchStateDisplay.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
+            }
+
+            if(trackProperties.isIsSignal()){
+                signalStateDisplay.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
+                signalBlockNumberDisplay.textProperty().unbindBidirectional(trackProperties.signalIDProperty());
+            }
+
+            if(trackProperties.isIsCrossing()){
+
+                crossingState.textProperty().unbindBidirectional(trackProperties.crossingStateProperty());
+            }
+
+            if(trackProperties.isIsBeacon()){
+                displayBeaconInfo.textProperty().unbindBidirectional(trackProperties.setBeaconProperty());
+                beaconBlockNumber.textProperty().unbindBidirectional(trackProperties.blockNumberProperty());
+            }
+
+
+            statusLabel.textProperty().unbindBidirectional(trackProperties.trackHeaterProperty());
             tempValueLabel.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
+
         }
 
-        trackProperties = lineTable.getSelectionModel().getSelectedItem();
+        trackProperties = newProperties;
+        lineTable.getSelectionModel().select(newProperties);
+
 
         // Bind stuff here
-        passEmbarkedValue.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
-        passDisembarkedValue.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
-        ticketSalesValue.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
+        if(trackProperties.isIsStation()){
+
+            passEmbarkedValue.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
+            passDisembarkedValue.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
+            ticketSalesValue.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
+            nameOfStationLabel.textProperty().bindBidirectional(trackProperties.nameOfStationProperty());
+
+        }
+        else {
+            passEmbarkedValue.setText("");
+            passDisembarkedValue.setText("");
+            ticketSalesValue.setText("");
+        }
+
+        statusLabel.textProperty().bindBidirectional(trackProperties.trackHeaterProperty());
         tempValueLabel.textProperty().bindBidirectional(trackModelSubject.tempProperty());
 
-        trackProperties.getPassEmbarked();
+        if(trackProperties.isIsSwitch()){
+            switchBlockNumbersDisplay.textProperty().bindBidirectional(trackProperties.switchBlockIDProperty());
+            switchStateDisplay.textProperty().bindBidirectional(trackProperties.switchStateProperty());
+        }
+        else {
+            switchBlockNumbersDisplay.setText("NONE");
+            switchStateDisplay.setText("NONE");
+        }
+
+        if(trackProperties.isIsSignal()){
+            signalStateDisplay.textProperty().bindBidirectional(trackProperties.signalStateProperty());
+            signalBlockNumberDisplay.textProperty().bindBidirectional(trackProperties.signalIDProperty());
+        }
+        else {
+            signalStateDisplay.setText("NONE");
+            signalBlockNumberDisplay.setText("NONE");
+        }
+
+        if(trackProperties.isIsCrossing()){
+            crossingState.textProperty().bindBidirectional(trackProperties.crossingStateProperty());
+        }
+        else {
+            crossingState.setText("NONE");
+        }
+
+        if(trackProperties.isIsBeacon()){
+            displayBeaconInfo.textProperty().bindBidirectional(trackProperties.setBeaconProperty());
+            beaconBlockNumber.textProperty().bindBidirectional(trackProperties.blockNumberProperty());
+        }
+        else {
+            displayBeaconInfo.setText("NONE");
+        }
+
 
     }
     private void updateTable() {
@@ -284,7 +375,7 @@ public class trackModelManager {
             newStage.setScene(newScene);
             newStage.setTitle("Track Model Test Bench");
             newStage.show();
-            System.out.println(loader.getController().toString());
+            System.out.println("Test bench launched");
             return loader.getController();
         } catch (Exception e) {
             e.printStackTrace();

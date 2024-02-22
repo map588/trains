@@ -27,7 +27,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce, engineForce, gravityForce;
     private double netForce, currentAngle, previousAcceleration;
-
+    private double TIME_DELTA;
     //Murphy Variables
     private boolean brakeFailure, powerFailure, signalFailure;
 
@@ -125,6 +125,7 @@ public class trainModelImpl implements TrainModel, Notifications {
             case "numCars" -> setNumCars((int)newValue);
             case "numPassengers" -> setNumPassengers((int)newValue);
             case "crewCount" -> setCrewCount((int)newValue);
+            case "timeDelta" -> setTimeDelta((double)newValue);
         }
     }
     //Getters
@@ -183,6 +184,10 @@ public class trainModelImpl implements TrainModel, Notifications {
         return this.rightDoors;
     }
 
+    //TEMP TIME DELTA SETTER/GETTER
+    public void setTimeDelta(double timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
+    public double getTimeDelta() { return this.TIME_DELTA; }
+
     public void trainModelPhysics() {
         //CALCULATE MASS
         this.mass = Constants.EMPTY_TRAIN_MASS + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers));
@@ -237,7 +242,7 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
-            //this.speed = this.speed + (TIME_DELTA * 0.001 / 2) * (this.acceleration + this.previousAcceleration);
+            this.speed = this.speed + (this.TIME_DELTA * 0.001 / 2) * (this.acceleration + this.previousAcceleration);
         }
 
         if (this.speed < 0) { this.speed = 0; }
