@@ -29,6 +29,7 @@ public class trackModelImpl implements TrackModel {
     private boolean switchState;
     private int temperature;
     private ArrayList<Integer> failures = new ArrayList<Integer>();
+    private ArrayList<Integer> beacons = new ArrayList<Integer>();
 
     private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
 
@@ -54,14 +55,7 @@ public class trackModelImpl implements TrackModel {
     public boolean getBlockOccupied(int block) {
         return this.blockOccupied.contains(block);
     }
-    public void setBlockOccupied(int block, boolean state) {
-        if(state){
-            this.blockOccupied.add(block);
-        }
-        else{
-            this.blockOccupied.remove(block);
-        }
-    }
+    public void setBlockOccupied(int block, boolean state) { if(state){ this.blockOccupied.add(block); } }
     public void setLine(String line) { this.line.add(line); }
     public String getLine(int lineNumber) { return this.line.get(lineNumber); }
 
@@ -92,13 +86,30 @@ public class trackModelImpl implements TrackModel {
         }
     }
 
+    @Override
+    public void setTrackHeaters(int temp){
+        System.out.println("Setting Track Heaters: " + temp);
+        for(TrackLayoutInfo trackProperties : trackInfo) {
+            if(temp < 32){
+                trackProperties.trackHeaterProperty().set("STATUS - ON");
+            }
+            else{
+                trackProperties.trackHeaterProperty().set("STATUS - OFF");
+            }
+        }
+    }
+
+
+
     public List<TrackLayoutInfo> getTrackInfo() {
+
+        trackInfo.clear();
 
         for(int i = 0; i <= 15; i++){
             TrackLayoutInfo block = new TrackLayoutInfo();
             block.setHasFailure(failures.contains(i));
             block.setIsOccupied(blockOccupied.contains(i));
-            block.setBlockNumber(i);
+            block.setBlockNumber("" + i);
 
             if(i < 6){
                 block.setSection("A");
@@ -114,11 +125,47 @@ public class trackModelImpl implements TrackModel {
             block.setBlockGrade(0);
             block.setSpeedLimit(50);
             block.setIsCrossing(i == 3);
+
+            if(i == 3){
+                block.setIsCrossing(true);
+                block.setCrossingState("TRUE");
+            }
+
             block.setIsSignal(i == 6 || i == 11);
             block.setIsSwitch(i == 5 || i == 6 || i == 11);
             block.setIsUnderground(false);
             block.setIsStation(i == 10 || i == 15);
             block.setIsBeacon(i == 9 || i == 14);
+            if(i == 5){
+                block.setSwitchMain("6");
+                block.setSwitchAlt("11");
+                block.setSwitchBlockID("5");
+            }
+            
+            if(i == 9){
+                beacons.add(9);
+            }
+
+            if (i == 14){
+                beacons.add(14);
+            }
+
+            if(i == 6){
+                block.setSignalID("6");
+            }
+
+            if(i == 11){
+                block.setSignalID("11");
+            }
+
+            if(i == 10) {
+                block.setNameOfStation("Station B");
+            }
+            if(i == 15) {
+                block.setNameOfStation("Station C");
+            }
+
+
 
             this.trackInfo.add(block);
         }

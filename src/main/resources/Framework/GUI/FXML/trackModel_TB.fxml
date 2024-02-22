@@ -11,10 +11,10 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="779.0" prefWidth="817.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trackModelTB">
     <children>
-        <TableView fx:id="tbTable" editable="true" layoutX="35.0" layoutY="163.0" prefHeight="595.0" prefWidth="380.0">
+        <TableView fx:id="tbTable" editable="true" layoutX="21.0" layoutY="163.0" prefHeight="396.0" prefWidth="380.0">
             <columns>
-                <TableColumn fx:id="tbSectionColumn" prefWidth="75.0" text="Section" />
-                <TableColumn fx:id="tbBlockColumn" prefWidth="75.0" text="Block" />
+                <TableColumn fx:id="tbSectionColumn" editable="false" prefWidth="75.0" text="Section" />
+                <TableColumn fx:id="tbBlockColumn" editable="false" prefWidth="75.0" text="Block" />
                 <TableColumn fx:id="tbSwitchColumn" prefWidth="75.0" text="Switch" />
                 <TableColumn fx:id="tbSignalColumn" prefWidth="75.0" text="Signal" />
                 <TableColumn fx:id="tbOccupiedColumn" prefWidth="75.0" text="Occupied" />
@@ -36,7 +36,7 @@
                 <Font size="18.0" />
             </font>
         </Label>
-        <TitledPane fx:id="tbSetTempTab" animated="false" layoutX="415.0" layoutY="163.0" prefHeight="121.0" prefWidth="402.0" text="SET OUTSIDE TEMPERATURE">
+        <TitledPane fx:id="tbSetTempTab" animated="false" layoutX="415.0" layoutY="57.0" prefHeight="121.0" prefWidth="402.0" text="SET OUTSIDE TEMPERATURE">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
                     <children>
@@ -62,7 +62,7 @@
                 <Font size="24.0" />
             </font>
         </TitledPane>
-        <TitledPane fx:id="tbSetPassengersTab" animated="false" layoutX="415.0" layoutY="284.0" prefHeight="213.0" prefWidth="402.0" text="SET PASSENGERS">
+        <TitledPane fx:id="tbSetPassengersTab" animated="false" layoutX="415.0" layoutY="178.0" prefHeight="213.0" prefWidth="402.0" text="SET PASSENGERS">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
                     <children>
@@ -101,7 +101,7 @@
                 <Font size="24.0" />
             </font>
         </TitledPane>
-        <TitledPane fx:id="tbSetPassengersTab1" animated="false" layoutX="415.0" layoutY="497.0" prefHeight="175.0" prefWidth="402.0" text="SET BEACON INFORMTAION">
+        <TitledPane fx:id="tbSetPassengersTab1" animated="false" layoutX="415.0" layoutY="391.0" prefHeight="165.0" prefWidth="402.0" text="SET BEACON INFORMTAION">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
                <children>
@@ -118,5 +118,48 @@
                 <Font size="24.0" />
             </font>
         </TitledPane>
+      <TitledPane fx:id="comSpeedAuthority" animated="false" layoutX="414.0" layoutY="556.0" prefHeight="174.0" prefWidth="402.0" text="COM. SPEED AND AUTHORITY">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="172.0" prefWidth="400.0">
+               <children>
+                  <Label fx:id="passEmarkedLabel2" layoutX="10.0" layoutY="16.0" text="Commanded Speed">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="passDisembarkLabel1" layoutX="11.0" layoutY="54.0" text="Train Authority">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="comSpeedInput" layoutX="175.0" layoutY="15.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
+                  <TextField fx:id="trainAuthorityInput" layoutX="175.0" layoutY="58.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
+               </children>
+            </AnchorPane>
+         </content>
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TitledPane>
+      <Label fx:id="passEmarkedLabel21" layoutX="24.0" layoutY="628.0" text="Commanded Speed - ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="passDisembarkLabel11" layoutX="25.0" layoutY="666.0" text="Train Authority - ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="comSpeedOutput" layoutX="277.0" layoutY="628.0" text="NONE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="trainAuthorityOutput" layoutX="278.0" layoutY="666.0" text="NONE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

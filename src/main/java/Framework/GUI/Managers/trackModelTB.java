@@ -32,7 +32,7 @@ public class trackModelTB {
     @FXML
     private TableColumn<TrackLayoutInfo, String> tbSectionColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> tbBlockColumn;
+    private TableColumn<TrackLayoutInfo, String> tbBlockColumn;
     @FXML
     private TableColumn<TrackLayoutInfo, Boolean> tbSwitchColumn;
     @FXML
@@ -43,6 +43,7 @@ public class trackModelTB {
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
     private trackModelImpl trackModel;
     private trackModelSubject trackModelSubject;
+    private trackModelManager trackModelManager;
 
     public int getTempInput(){
         return Integer.parseInt(tbTempInput.getText());
@@ -81,13 +82,13 @@ public class trackModelTB {
         };
 
         tbSectionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tbBlockColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
+        tbBlockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         tbSwitchColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         tbSignalColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
         tbOccupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tbOccupiedColumn));
 
         tbSectionColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
-        tbBlockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty().asObject());
+        tbBlockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
         tbSwitchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         tbSignalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
         tbOccupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
@@ -95,13 +96,13 @@ public class trackModelTB {
         tbChooseLine.getItems().add("blue");
         tbChooseLine.setOnAction(event -> updateTable());
 
-        // set labels by getting text
-        trackProperties.setTicketSales(tbTicketSalesInput.getText());
-        trackProperties.setPassEmbarked(tbPassEmbarkedInput.getText());
-        trackProperties.setPassDisembarked(tbPassDisembarkedInput.getText());
+        tbTable.getSelectionModel().selectedItemProperty().addListener(event -> {
+            selectBlock(tbTable.getSelectionModel().getSelectedItem());
+            trackModelManager.selectBlock(tbTable.getSelectionModel().getSelectedItem());
+        });
     }
 
-    private void selectBlock(){
+    public void selectBlock(TrackLayoutInfo newProperties){
         if(trackProperties != null) {
             // Unbind stuff here
             tbPassEmbarkedInput.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
@@ -134,6 +135,10 @@ public class trackModelTB {
     public void setTrackModelSubject(trackModelSubject trackModelSubject){
         this.trackModelSubject = trackModelSubject;
         tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
+    }
+
+    public void setTrackModelManager(trackModelManager trackModelManager){
+        this.trackModelManager = trackModelManager;
     }
 
     public void setPassEmbarked(int passEmbarked){
