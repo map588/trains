@@ -43,5 +43,6 @@
       <Text layoutX="320.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sampling Period" />
       <TextField fx:id="trainControllerTB_SamplingPeriod_TextField" layoutX="413.0" layoutY="221.0" prefHeight="26.0" prefWidth="54.0" />
       <Text layoutX="480.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="seconds" />
+      <Button fx:id="trainControllerTB_CalculatePower_Button" layoutX="63.0" layoutY="298.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="207.0" text="Calculate Power" />
     </children>
 </AnchorPane>

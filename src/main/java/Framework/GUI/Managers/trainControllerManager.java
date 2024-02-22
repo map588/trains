@@ -121,8 +121,11 @@ public class trainControllerManager {
         speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty("speedLimit"));
         authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
         appendListener(currentSubject.getDoubleProperty("power"), (obs, oldVal, newVal) -> {
-            powerOutputGauge.setValue(newVal.doubleValue());
+            //powerOutputGauge.setValue(newVal.doubleValue());
+            double p = currentSubject.getDoubleProperty("power").get();
+            powerOutputGauge.setValue(p);
         });
+        //powerOutputGauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
     }
 
     private void bindIndicators() {
