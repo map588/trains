@@ -1,9 +1,14 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
 const bool SWITCH_MAIN = false;
 const bool SWITCH_ALT = true;
 const bool LIGHT_RED = false;
 const bool LIGHT_GREEN = true;
 const bool CROSSING_CLOSED = false;
 const bool CROSSING_OPEN = true;
+
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x20, 20, 4);
 
 bool maintenanceMode;
 String PLCFile;
@@ -47,10 +52,23 @@ void printBool(String prefix, bool boolVal) {
 }
 
 void sendTrackInfo() {
+  lcd.clear();
+  lcd.setCursor(0,0);
   printBool("switchStateList=5:",switchStateList[4]);
+  lcd.print("Switch 5: ");
+  lcd.print((switchStateList[4] ? "Alt" : "Main"));
+  lcd.setCursor(0,1);
   printBool("trafficLightList=6:",trafficLightList[5]);
+  lcd.print("Light 6: ");
+  lcd.print((trafficLightList[5] ? "Green" : "Red"));
+  lcd.setCursor(0,2);
   printBool("trafficLightList=11:",trafficLightList[10]);
+  lcd.print("Light 11: ");
+  lcd.print((trafficLightList[10] ? "Green" : "Red"));
+  lcd.setCursor(0,3);
   printBool("crossingList=3:",crossingList[2]);
+  lcd.print("Crossing 3: ");
+  lcd.print((crossingList[2] ? "Open" : "Closed"));
 }
 
 void runBlueLine() {
@@ -99,6 +117,8 @@ void setup() {
     trafficLightList[i] = false;
     crossingList[i] = false;
   }
+  lcd.init();
+  lcd.backlight();
   Serial.begin(9600);
 }
 
