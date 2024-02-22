@@ -244,7 +244,7 @@ public class trainModelImpl implements TrainModel, Notifications {
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
-            this.setActualSpeed(this.speed + (this.TIME_DELTA * 0.001 / 2) * (this.acceleration + this.previousAcceleration));
+            this.setActualSpeed(this.speed + (this.TIME_DELTA / 2) * (this.acceleration + this.previousAcceleration));
         }
 
         if (this.speed < 0) { this.setActualSpeed(0); }
