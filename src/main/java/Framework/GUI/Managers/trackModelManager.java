@@ -1,6 +1,7 @@
 package Framework.GUI.Managers;
 
 import Utilities.TrackLayoutInfo;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import trackModel.trackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -163,51 +164,6 @@ public class trackModelManager {
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
-
-        //set up cell factories
-        StringConverter<Integer> intConverter = new StringConverter<Integer>() {
-            @Override
-            public String toString(Integer integer) {
-                return integer.toString();
-            }
-
-            @Override
-            public Integer fromString(String s) {
-                return Integer.parseInt(s);
-            }
-        };
-        StringConverter<Boolean> boolConverter = new StringConverter<Boolean>() {
-            @Override
-            public String toString(Boolean bool) {
-                return bool.toString();
-            }
-
-            @Override
-            public Boolean fromString(String s) {
-                return Boolean.parseBoolean(s);
-            }
-        };
-        StringConverter<Double> doubleConverter = new StringConverter<Double>() {
-            @Override
-            public String toString(Double d) {
-                return d.toString();
-            }
-
-            @Override
-            public Double fromString(String s) {
-                return Double.parseDouble(s);
-            }
-        };
-        sectionsColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        blockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        sizeColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
-        gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
-        speedLimitColumn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
-        stationColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
-        signalColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
-        switchColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
-        failureColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
-        occupiedColumn.setCellFactory(TextFieldTableCell.forTableColumn(boolConverter));
 
         crossingState.setText("false");
 
