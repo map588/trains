@@ -49,7 +49,7 @@ public class CTCOfficeImpl implements CTCOffice {
         SingleStop stop1 = new SingleStop(10, 0, 0, blank, blank, blank);
         SingleStop stop2 = new SingleStop(15, 0, 0, blank, blank, blank);
         Schedule schedule = new Schedule(1, 0, new ArrayList<SingleStop>() {{
-            add(stop1);//add(stop2);
+            add(stop1);add(stop2);
         }});
 
 

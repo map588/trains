@@ -10,11 +10,9 @@ public class Schedule {
 
     Schedule(int trainID, int dispatchTime, ArrayList<SingleStop> stops) {
         this.trainID = trainID;
-        System.out.println("Train ID constructor: " + trainID);
         this.dispatchTime = dispatchTime;
         this.stops = stops;
         ScheduleSubjectFactory.getInstance().registerSubject(trainID, new ScheduleSubject(this));
-        System.out.println("after register");
     }
 
     public int getTrainID() {
@@ -54,7 +52,6 @@ public class Schedule {
     }
 
     public SingleStop getStop(int index) {
-        System.out.println("get stop " + stops.get(index));
         return stops.get(index);
     }
 

@@ -5,14 +5,15 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleSubject implements AbstractSubject {
     private final IntegerProperty trainID;
     private final IntegerProperty dispatchTime;
-    private List<IntegerProperty> stationBlockID;
-    private List<IntegerProperty> arrivalTime;
-    private List<IntegerProperty> departureTime;
+    private List<IntegerProperty> stationBlockID = new ArrayList<>();
+    private List<IntegerProperty> arrivalTime = new ArrayList<>();
+    private List<IntegerProperty> departureTime = new ArrayList<>();
 
     ScheduleSubject(Schedule schedule) {
         this.trainID = new SimpleIntegerProperty(this, "trainID", schedule.getTrainID());
