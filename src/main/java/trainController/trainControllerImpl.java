@@ -124,10 +124,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        boolean powerUpdate = propertyName.equals("power") || propertyName.equals("currentSpeed");
-        if(!powerUpdate) {
             System.out.println("Variable: " + propertyName + " changed to " + newValue);
-        }
         if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
         }
@@ -388,11 +385,17 @@ public class trainControllerImpl implements TrainController, Notifications {
 
 
         error = setSpeed - currSpeed;
-        rollingError += (float)samplingPeriod/2 * (error + prevError);
+        rollingError += (float)samplingPeriod/2000 * (error + prevError);
         prevError = error;
 
         pow = Kp * error + Ki * rollingError;
 
+        if(automaticMode && (pow < 0)){
+            pow = 0;
+            setServiceBrake(true);
+        }else if(serviceBrake && (pow > 0)){
+            setServiceBrake(false);
+        }
 
         if(emergencyBrake || serviceBrake || powerFailure || (pow < 0)) {
             pow = 0;

@@ -63,7 +63,7 @@ def getJavaFXLibPath() {
         } else {
             libPath += '-osx-x64'
         }
-    } else if (os.isLinux()) {
+    } else if (arch.startsWith("aarch64") || arch.startsWith("arm")){
         libPath += '-rpi'
     } else {
         throw new GradleException("Unsupported OS")
