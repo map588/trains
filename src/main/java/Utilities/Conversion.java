@@ -22,6 +22,10 @@ public class Conversion {
         MPS2,
         FPS2
     }
+    public enum powerUnits {
+        WATTS,
+        HORSEPOWER
+    }
 
     public static double convertDistance(double distance, distanceUnit from, distanceUnit to) {
         if (from == to) {
@@ -156,6 +160,39 @@ public class Conversion {
         return 0;
     }
 
+    public static double convertAcceleration(double acceleration, accelerationUnit from, accelerationUnit to) {
+        if (from == to) {
+            return acceleration;
+        }
+        if (from == accelerationUnit.MPS2) {
+            if (to == accelerationUnit.FPS2) {
+                return acceleration * 3.28084;
+            }
+        }
+        if (from == accelerationUnit.FPS2) {
+            if (to == accelerationUnit.MPS2) {
+                return acceleration / 3.28084;
+            }
+        }
+        return 0;
+    }
+
+    public static double convertPower(double power, powerUnits from, powerUnits to) {
+        if (from == to) {
+            return power;
+        }
+        if (from == powerUnits.WATTS) {
+            if (to == powerUnits.HORSEPOWER) {
+                return power / 745.7;
+            }
+        }
+        if (from == powerUnits.HORSEPOWER) {
+            if (to == powerUnits.WATTS) {
+                return power * 745.7;
+            }
+        }
+        return 0;
+    }
 
 }
 

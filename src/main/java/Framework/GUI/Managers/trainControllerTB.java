@@ -174,7 +174,7 @@ public class trainControllerTB {
 
     private void bindTrainController(){
         bindIntTextField(trainControllerTB_Authority_TextField, "authority");
-        bindDoubleTextField(trainControllerTB_CommandedSpeed_TextField, "commandedSpeed");
+        bindDoubleTextField(trainControllerTB_CommandedSpeed_TextField, "commandSpeed");
         bindDoubleTextField(trainControllerTB_CurrentSpeed_TextField, "currentSpeed");
         bindDoubleTextField(trainControllerTB_Grade_TextField, "grade");
         bindDoubleTextField(trainControllerTB_CurrentTemperature_TextField, "temperature");
