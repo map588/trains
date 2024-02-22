@@ -36,6 +36,38 @@ public class CTCOfficeImpl implements CTCOffice {
         CTCBlockInfo block13 = new CTCBlockInfo(13, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block14 = new CTCBlockInfo(14, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
         CTCBlockInfo block15 = new CTCBlockInfo(15, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+
+        CTCBlockInfo block16 = new CTCBlockInfo(16, true, false, false, false, false,false, false,       false,       false, false,         1000, 0);
+        CTCBlockInfo block17 = new CTCBlockInfo(17, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block18 = new CTCBlockInfo(18, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block19 = new CTCBlockInfo(19, true, false, true , false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block20 = new CTCBlockInfo(20, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block21 = new CTCBlockInfo(21, true, false, false, true , false,false, false,       SWITCH_MAIN, false, false,         50,   50);
+        CTCBlockInfo block22 = new CTCBlockInfo(22, true, false, true , false, true ,false, LIGHT_GREEN, false,       true , false,         50,   50);
+        CTCBlockInfo block23 = new CTCBlockInfo(23, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block24 = new CTCBlockInfo(24, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block25 = new CTCBlockInfo(25, true, false, true , false, true ,false, LIGHT_RED, false,       false, false,         50,   50);
+        CTCBlockInfo block26 = new CTCBlockInfo(26, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block27 = new CTCBlockInfo(27, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block28 = new CTCBlockInfo(28, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block29 = new CTCBlockInfo(29, true, false, false, false, false,false, false,       false,       false, false,         50,   50);
+
+        CTCBlockInfo block30 = new CTCBlockInfo(30, false, false, false, false, false,false, false,       false,       false, false,         1000, 0);
+        CTCBlockInfo block31 = new CTCBlockInfo(31, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block32 = new CTCBlockInfo(32, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block33 = new CTCBlockInfo(33, false, false, true , false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block34 = new CTCBlockInfo(34, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block35 = new CTCBlockInfo(35, false, false, false, true , false,false, false,       SWITCH_MAIN, false, false,         50,   50);
+        CTCBlockInfo block36 = new CTCBlockInfo(36, false, false, true , false, true ,false, LIGHT_GREEN, false,       true , false,         50,   50);
+        CTCBlockInfo block37 = new CTCBlockInfo(37, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block38 = new CTCBlockInfo(38, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block39 = new CTCBlockInfo(39, false, false, true , false, true ,false, LIGHT_RED, false,       false, false,         50,   50);
+        CTCBlockInfo block40 = new CTCBlockInfo(40, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block41 = new CTCBlockInfo(41, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block42 = new CTCBlockInfo(42, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+        CTCBlockInfo block43 = new CTCBlockInfo(43, false, false, false, false, false,false, false,       false,       false, false,         50,   50);
+
+
         CTCSwitchInfo switch1 = new CTCSwitchInfo(5, 6, 11, false);
         switches.put(false, new HashMap<Integer, CTCSwitchInfo>() {{
             put(5, switch1);
@@ -43,6 +75,7 @@ public class CTCOfficeImpl implements CTCOffice {
 
         ArrayList<CTCBlockInfo> line1 = new ArrayList<>() {{
             add(block0);add(block1);add(block2);add(block3);add(block4);add(block5);add(block6);add(block7);add(block8);add(block9);add(block10);add(block11);add(block12);add(block13);add(block14);add(block15);
+            add(block30);add(block31);add(block32);add(block33);add(block34);add(block35);add(block36);add(block37);add(block38);add(block39);add(block40);add(block41);add(block42);add(block43);
         }};
         track.put(true, line1);
         ArrayList<Integer> blank = new ArrayList<Integer>();

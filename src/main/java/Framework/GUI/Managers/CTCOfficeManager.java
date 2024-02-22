@@ -91,7 +91,7 @@ public class CTCOfficeManager {
             }
         });
 
-        double dividerPosition = 505.0;
+        double dividerPosition = 515.0;
         mainAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
             if(mainAnchor.getWidth() > 0){
                 if(Array.getDouble(mainSplit.getDividerPositions(), 0) * mainAnchor.getWidth() > dividerPosition){

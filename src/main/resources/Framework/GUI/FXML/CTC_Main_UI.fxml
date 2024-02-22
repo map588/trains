@@ -13,16 +13,16 @@
                <children>
                   <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ScrollPane hbarPolicy="ALWAYS" prefHeight="10000" prefWidth="505" vbarPolicy="ALWAYS">
+                        <ScrollPane hbarPolicy="ALWAYS" prefHeight="10000" vbarPolicy="ALWAYS">
                               <AnchorPane prefHeight="795.0">
                                  <children>
                                     <HBox fx:id="TrackLinesBox">
                                        <children>
-                                          <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="240">
+                                          <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" prefHeight="795.0" minWidth="238">
                                              <children>
                                                 <Label fx:id="FirstLineLabel" text="RED Line" />
                                                 <Separator  />
-                                                <HBox fx:id="FirstLineContents"  prefHeight="779.0" >
+                                                <HBox fx:id="FirstLineContents"  minHeight="20000" >
                                                    <children>
                                                       <TableView fx:id="blockTable">
                                                         <columns>
@@ -41,7 +41,7 @@
                                              <children>
                                                 <Label fx:id="SecondLineLabel" text="GREEN Line" />
                                                 <Separator  />
-                                                <HBox fx:id="SecondLineContents"  prefHeight="779.0" >
+                                                <HBox fx:id="SecondLineContents"  minHeight="20000" >
                                                    <children>
                                                       <TableView fx:id="blockTable2">
                                                         <columns>
