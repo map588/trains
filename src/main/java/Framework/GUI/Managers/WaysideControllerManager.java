@@ -100,12 +100,7 @@ public class WaysideControllerManager {
         blockTable.setEditable(true);
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
-        maintenanceModeCheckbox.setOnAction(event -> {
-            switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
-            blockTable.refresh();
-            //blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
-            System.out.println(currentSubject.blockListProperty().get(4).switchStateProperty().get());
-        });
+        maintenanceModeCheckbox.setOnAction(event -> updateMaintenanceWriteable());
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
@@ -228,6 +223,11 @@ public class WaysideControllerManager {
         testBench.setController(currentSubject.getController());
     }
 
+    private void updateMaintenanceWriteable() {
+        switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+        blockTable.refresh();
+    }
+
     /**
      * Loads a system dialog to select the folder for viewing PLC files in
      */
@@ -325,8 +325,8 @@ public class WaysideControllerManager {
 
         testBench.setController(controller);
 
+        updateMaintenanceWriteable();
         updateBlockList();
-        updateSwitchList();
     }
 
     private WaysideControllerTB launchTestBench() {
