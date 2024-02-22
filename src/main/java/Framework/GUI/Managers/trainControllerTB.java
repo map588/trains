@@ -185,7 +185,7 @@ public class trainControllerTB {
         bindDoubleTextField(trainControllerTB_CurrentSpeed_TextField, "currentSpeed");
         bindDoubleTextField(trainControllerTB_Grade_TextField, "grade");
         bindDoubleTextField(trainControllerTB_CurrentTemperature_TextField, "temperature");
-        bindDoubleTextField(trainControllerTB_SamplingPeriod_TextField, "samplingPeriod");
+        bindIntTextField(trainControllerTB_SamplingPeriod_TextField, "samplingPeriod");
         bindDoubleTextField(trainControllerTB_SpeedLimit_TextField, "speedLimit");
 
 

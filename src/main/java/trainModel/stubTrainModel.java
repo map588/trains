@@ -2,6 +2,7 @@ package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Utilities.Constants;
 
 public class stubTrainModel implements TrainModel {
     private TrainController controller;
@@ -119,7 +120,7 @@ public class stubTrainModel implements TrainModel {
     }
 
     public double getWeightKG() {
-        return 1.0;
+        return Constants.LOADED_TRAIN_MASS;
     }
 
     public boolean getBrakeFailure() {

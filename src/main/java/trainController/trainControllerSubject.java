@@ -29,7 +29,7 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
         // Initialize properties with correct initial values from controller if available
         properties.put("authority", new SimpleIntegerProperty(controller.getAuthority()));
         //properties.put("blocksToNextStation", new SimpleIntegerProperty(controller.getBlocksToNextStation()));
-        properties.put("samplingPeriod", new SimpleDoubleProperty(controller.getSamplingPeriod()));
+        properties.put("samplingPeriod", new SimpleIntegerProperty(controller.getSamplingPeriod()));
         properties.put("commandSpeed", new SimpleDoubleProperty(controller.getCommandSpeed()));
         properties.put("currentSpeed", new SimpleDoubleProperty(controller.getSpeed()));
         properties.put("overrideSpeed", new SimpleDoubleProperty(controller.getOverrideSpeed()));
@@ -60,13 +60,14 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
 
     public void notifyChange(String propertyName, Object newValue) {
         // Update property from controller, Internal Logic takes precedence over GUI updates
-        if (!isLogicUpdate) {
+        if (!isGUIUpdate) {
             updateFromLogic(() -> {
-                Property<?> property = properties.get(propertyName);
-                updateProperty(property, newValue);
+                    Property<?> property = properties.get(propertyName);
+                    updateProperty(property, newValue);
             });
-        }
+            }
     }
+
 
     public void setProperty(String propertyName, Object newValue) {
         Runnable updateTask = () -> {
@@ -159,7 +160,6 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     }
 
     public void updateFromLogic(Runnable updateLogic) {
-        System.out.println("Called from updateFromLogic.");
         isLogicUpdate = true;
         try {
             updateLogic.run();
