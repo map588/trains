@@ -26,10 +26,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import waysideController.WaysideBlockInfo;
-import waysideController.WaysideControllerImpl;
-import waysideController.WaysideControllerSubject;
-import waysideController.WaysideControllerSubjectFactory;
+import waysideController.*;
 
 import java.io.File;
 import java.net.URL;
@@ -38,6 +35,8 @@ import java.util.Date;
 
 public class WaysideControllerManager {
 
+    @FXML
+    private TextField HWPortTextField;
     @FXML
     private TableView<WaysideBlockInfo> blockTable;
     @FXML
@@ -297,7 +296,12 @@ public class WaysideControllerManager {
      * Creates a new wayside controller and adds it to the list of controllers
      */
     private void createNewController() {
-        WaysideController newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), 0);
+        WaysideController newController;
+        if(HWPortTextField.getText().isEmpty()) {
+            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), 0);
+        } else {
+            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(), 0, HWPortTextField.getText());
+        }
         WaysideControllerSubjectFactory.addController(newController);
         changeActiveController(newController);
     }

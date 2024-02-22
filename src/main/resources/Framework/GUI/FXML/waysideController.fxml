@@ -93,8 +93,8 @@
           </Tab>
         </tabs>
       </TabPane>
-      <ComboBox fx:id="changeControllerComboBox" layoutX="419.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
-      <Label fx:id="changeControllerLabel" layoutX="419.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
+      <ComboBox fx:id="changeControllerComboBox" layoutX="303.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
+      <Label fx:id="changeControllerLabel" layoutX="303.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
          <font>
             <Font size="16.0" />
          </font>
@@ -104,6 +104,8 @@
             <Font name="Papyrus" size="23.0" />
          </font>
       </Label>
-      <Button fx:id="createNewControllerButton" layoutX="585.0" layoutY="9.0" mnemonicParsing="false" text="+" />
+      <Button fx:id="createNewControllerButton" layoutX="479.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" text="+" />
+      <TextField layoutX="139.0" layoutY="5.0" />
+      <TextField fx:id="HWPortTextField" layoutX="473.0" layoutY="37.0" />
    </children>
 </AnchorPane>

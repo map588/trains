@@ -2,9 +2,10 @@ package waysideController;
 
 import Common.WaysideController;
 import Utilities.BlockInfo;
-import org.openmuc.jrxtx.Parity;
-import org.openmuc.jrxtx.SerialPort;
-import org.openmuc.jrxtx.SerialPortBuilder;
+import purejavacomm.*;
+//import org.openmuc.jrxtx.Parity;
+//import org.openmuc.jrxtx.SerialPort;
+//import org.openmuc.jrxtx.SerialPortBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,16 +18,26 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     public WaysideControllerHWBridge(int id, int trackLine, String COMPort) {
         super(id, trackLine);
-        SerialPortBuilder builder = SerialPortBuilder.newBuilder(COMPort);
-        builder.setBaudRate(19200);
-        builder.setParity(Parity.EVEN);
 
         try {
-            serialPort = builder.build();
-        } catch (IOException e) {
-            System.out.println("Failed to build serial port at: " + COMPort);
+            CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(COMPort);
+            serialPort = (SerialPort) portId.open("WaysideController", 2000);
+            serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+        }
+        catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException e) {
             throw new RuntimeException(e);
         }
+
+//        SerialPortBuilder builder = SerialPortBuilder.newBuilder(COMPort);
+//        builder.setBaudRate(19200);
+//        builder.setParity(Parity.EVEN);
+//
+//        try {
+//            serialPort = builder.build();
+//        } catch (IOException e) {
+//            System.out.println("Failed to build serial port at: " + COMPort);
+//            throw new RuntimeException(e);
+//        }
     }
 
     @Override
@@ -37,6 +48,18 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
         super.setMaintenanceMode(maintenanceMode);
+        try {
+            System.out.println("Send: maintenanceMode="+maintenanceMode);
+            serialPort.getOutputStream().write(("maintenanceMode="+maintenanceMode).getBytes());
+        } catch (IOException e) {
+            System.out.println("Failed to write maintenanceMode");
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
+        super.setMaintenanceModeNoUpdate(maintenanceMode);
         try {
             System.out.println("Send: maintenanceMode="+maintenanceMode);
             serialPort.getOutputStream().write(("maintenanceMode="+maintenanceMode).getBytes());
@@ -62,10 +85,10 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     @Override
     protected void finalize() {
-        try {
-            serialPort.close();
-        } catch (IOException e) {
-//            throw new RuntimeException(e);
-        }
+//        try {
+//            serialPort.close();
+//        } catch (IOException e) {
+////            throw new RuntimeException(e);
+//        }
     }
 }
