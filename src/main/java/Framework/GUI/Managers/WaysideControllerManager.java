@@ -102,6 +102,7 @@ public class WaysideControllerManager {
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
             switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+            blockTable.refresh();
             //blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
             System.out.println(currentSubject.blockListProperty().get(4).switchStateProperty().get());
         });
@@ -135,11 +136,6 @@ public class WaysideControllerManager {
         });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
 
-        //blockTableCrossingColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableCrossingColumn));
-
-        //blockTableCrossingColumn.setCellFactory(column -> new CheckBoxTableCell<>());
-
-        /**
         blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockInfo, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -154,14 +150,11 @@ public class WaysideControllerManager {
                         CheckBox checkBox;
                         {
                             checkBox = new CheckBox();
-                            checkBox.setDisable(false);
+                            checkBox.setDisable(!currentSubject.maintenanceModeProperty().get());
                             checkBox.setSelected(item);
                             checkBox.setOnMouseClicked(event -> {
                                 if(currentSubject.maintenanceModeProperty().get()) {
-                                    this.setDisable(false);
                                     this.getTableRow().getItem().setCrossingState(!this.getTableRow().getItem().isCrossingState());
-                                } else {
-                                    //this.setDisable(true);
                                 }
                             });
                         }
@@ -172,9 +165,7 @@ public class WaysideControllerManager {
                 }
 
             }
-
-
-        }); */
+        });
         blockTableCrossingColumn.setEditable(false);
         blockTableCircuitColumn.setEditable(false);
         switchTable.setEditable(true);
