@@ -24,6 +24,8 @@ public class CTCBlockSubject implements AbstractSubject {
     private final IntegerProperty divergingBlockOneID;
     private final IntegerProperty divergingBlockTwoID;
     private final BooleanProperty switchState;
+    private final StringProperty switchStateString;
+
     CTCBlockInfo blockInfo;
 
     CTCBlockSubject(CTCBlockInfo block) {
@@ -45,6 +47,7 @@ public class CTCBlockSubject implements AbstractSubject {
         this.divergingBlockOneID = new SimpleIntegerProperty(this, "divergingBlockOneID", block.getDivergingBlockOneID());
         this.divergingBlockTwoID = new SimpleIntegerProperty(this, "divergingBlockTwoID", block.getDivergingBlockTwoID());
         this.switchState = new SimpleBooleanProperty(this, "switchState", block.getSwitchState());
+        this.switchStateString = new SimpleStringProperty(this, "switchStateString", block.getSwitchStateString());
         this.blockInfo = block;
 
         occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
@@ -57,6 +60,7 @@ public class CTCBlockSubject implements AbstractSubject {
         lightColor.addListener(event -> block.updateLightColor());
 
         switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
+        switchStateString.addListener((observable, oldValue, newValue) -> block.setSwitchStateString(block.getSwitchStateString()));
     }
 
     public CTCBlockInfo getBlockInfo() {
@@ -102,6 +106,24 @@ public class CTCBlockSubject implements AbstractSubject {
             case "lightColor" -> lightColor;
             default -> null;
         };
+    }
+    public StringProperty getStringProperty(String propertyName) {
+        return switch (propertyName) {
+            case "switchStateString" -> switchStateString;
+            default -> null;
+        };
+    }
+    public void setStringProperty(String propertyName, String newValue) {
+        if (newValue == null) {
+            System.err.println("Null value for property " + propertyName);
+            return;
+        }
+        switch (propertyName) {
+            case "switchStateString" -> {
+                updateProperty(switchStateString, newValue);
+            }
+            default -> System.err.println("Unknown property " + propertyName);
+        }
     }
 
     public void setProperty(String propertyName, Object newValue) {

@@ -21,8 +21,8 @@ import java.util.List;
 
 public class trainModelTB {
     @FXML
-    public ToggleButton tbEBrake, tbSBrake, tbIntLights, tbExtLights, tbLeftDoors, tbRightDoors;
-    public Button tbTimeButton;
+    public ToggleButton tbSBrake, tbIntLights, tbExtLights, tbLeftDoors, tbRightDoors;
+    public Button tbTimeButton, tbEBrake;
     @FXML
     public TextField tbPower, tbSpeed, tbAuthority, tbGrade, tbTemp, tbTimeDelta;
     @FXML
@@ -42,13 +42,12 @@ public class trainModelTB {
             System.out.println("No damn subjects.");
         }
 
-        bindTrain(subject);
+        bindTrain();
     }
     public void changeModels(TrainModel model) {
         unbindTrain();
-        trainModelSubject oldSubject = subject;
         subject = factory.getSubjects().get(model.getTrainNumber());
-        bindTrain(oldSubject);
+        bindTrain();
     }
 
     private void updateBrakeFailureIndicator(boolean active) {
@@ -63,7 +62,11 @@ public class trainModelTB {
         tbSignalFailure.setFill(active ? Color.YELLOW : Color.GRAY);
     }
 
-    private void bindTrain(trainModelSubject oldSubject) {
+    private void bindTrain() {
+        tbEBrake.setOnAction(event -> {
+            BooleanProperty eBrake = subject.getBooleanProperty("emergencyBrake");
+            subject.setProperty("emergencyBrake", !eBrake.get());
+        });
         tbSBrake.setOnAction(event -> {
             BooleanProperty sBrake = subject.getBooleanProperty("serviceBrake");
             subject.setProperty("serviceBrake", !sBrake.get());
@@ -96,10 +99,6 @@ public class trainModelTB {
         appendListener(subject.getBooleanProperty("brakeFailure"), (observable, oldValue, newValue) -> updateBrakeFailureIndicator(newValue));
         appendListener(subject.getBooleanProperty("powerFailure"), (observable, oldValue, newValue) -> updatePowerFailureIndicator(newValue));
         appendListener(subject.getBooleanProperty("signalFailure"), (observable, oldValue, newValue) -> updateSignalFailureIndicator(newValue));
-        if (oldSubject != null) {
-            tbEBrake.selectedProperty().unbindBidirectional(oldSubject.getBooleanProperty("emergencyBrake"));
-        }
-        tbEBrake.selectedProperty().bindBidirectional(subject.getBooleanProperty("emergencyBrake"));
     }
 
     private void unbindTrain(){
