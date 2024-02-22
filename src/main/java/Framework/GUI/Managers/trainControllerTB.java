@@ -104,9 +104,7 @@ public class trainControllerTB {
             subject.setProperty("inTunnel", !currentState);
         });
         trainControllerTB_StationName_ChoiceBox.setOnAction(event ->{
-            String nextStation = subject.getStringProperty("nextStationName").getValue();
             subject.setProperty("nextStationName",trainControllerTB_StationName_ChoiceBox.getValue());
-
         });
 
         // Set up ChoiceBox
@@ -121,6 +119,7 @@ public class trainControllerTB {
         trainControllerTB_Grade_TextField.setText("0");
         trainControllerTB_CurrentTemperature_TextField.setText("72");
         trainControllerTB_SpeedLimit_TextField.setText("0");
+        createTrainController(Integer.parseInt(trainControllerTB_trainNo_TextField.getText()));
     }
 
     private void createTrainController(int trainID){

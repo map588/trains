@@ -60,7 +60,7 @@ public class trainControllerManager {
     public void initialize() {
         //Creating a trainControllerImpl object results in a subject being created
         //and that subject being added to the factories Map of subjects
-        new trainControllerImpl(0);
+        new trainControllerImpl(1);
 
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();

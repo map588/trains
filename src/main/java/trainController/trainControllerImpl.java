@@ -3,6 +3,7 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
+import Utilities.Constants;
 import trainModel.stubTrainModel;
 
 import java.util.concurrent.Executors;
@@ -389,6 +390,9 @@ public class trainControllerImpl implements TrainController, Notifications {
         prevError = error;
 
         pow = Kp * error + Ki * rollingError;
+        if(pow > Constants.MAX_POWER) {
+            pow = convertPower(Constants.MAX_POWER,HORSEPOWER, WATTS);
+        }
 
         if(automaticMode && (pow < 0)){
             pow = 0;
