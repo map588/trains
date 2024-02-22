@@ -6,11 +6,13 @@ import java.util.List;
 public class Schedule {
     private int trainID;
     private int dispatchTime;
+    private int carCount;
     private List<SingleStop> stops  = new ArrayList<SingleStop>();
 
-    Schedule(int trainID, int dispatchTime, ArrayList<SingleStop> stops) {
+    Schedule(int trainID, int dispatchTime, int carCount , ArrayList<SingleStop> stops) {
         this.trainID = trainID;
         this.dispatchTime = dispatchTime;
+        this.carCount = carCount;
         this.stops = stops;
         ScheduleSubjectFactory.getInstance().registerSubject(trainID, new ScheduleSubject(this));
     }
@@ -19,8 +21,13 @@ public class Schedule {
         return trainID;
     }
 
+
     public int getDispatchTime() {
         return dispatchTime;
+    }
+
+    public int getCarCount() {
+        return carCount;
     }
 
     public List<SingleStop> getStops() {
@@ -33,6 +40,10 @@ public class Schedule {
 
     public void setDispatchTime(int dispatchTime) {
         this.dispatchTime = dispatchTime;
+    }
+
+    public void setCarCount(int carCount) {
+        this.carCount = carCount;
     }
 
     public void setStops(List<SingleStop> stops) {

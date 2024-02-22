@@ -48,6 +48,41 @@ public class CTCOfficeManager {
     @FXML
     private TableColumn<CTCBlockSubject, Boolean> switchStateColumn;
 
+    @FXML
+    private TableView<ScheduleSubject> scheduleTable;
+
+    @FXML
+    private TableColumn<ScheduleSubject, Integer> trainIDColumn;
+
+    @FXML
+    private TableColumn<ScheduleSubject, Integer> dispatchTimeColumn;
+
+    @FXML
+    private TableColumn<ScheduleSubject, Integer> stationBlockIDColumn;
+
+    @FXML
+    private TableColumn<ScheduleSubject, Integer> arrivalTimeColumn;
+
+    @FXML
+    private TableColumn<ScheduleSubject, Integer> departureTimeColumn;
+
+    @FXML
+    private Button addTrainButton;
+
+    @FXML
+    private Button removeTrainButton;
+
+    @FXML
+    private Button removeStopButton;
+
+    @FXML
+    private Button addStopButton;
+
+    @FXML
+            private TableView<ScheduleSubject> scheduleEditTable;
+
+    @FXML
+
 
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
     ScheduleSubjectFactory scheduleFactory = ScheduleSubjectFactory.getInstance();

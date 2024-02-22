@@ -11,6 +11,7 @@ import java.util.List;
 public class ScheduleSubject implements AbstractSubject {
     private final IntegerProperty trainID;
     private final IntegerProperty dispatchTime;
+    private final IntegerProperty carCount;
     private List<IntegerProperty> stationBlockID = new ArrayList<>();
     private List<IntegerProperty> arrivalTime = new ArrayList<>();
     private List<IntegerProperty> departureTime = new ArrayList<>();
@@ -18,6 +19,7 @@ public class ScheduleSubject implements AbstractSubject {
     ScheduleSubject(Schedule schedule) {
         this.trainID = new SimpleIntegerProperty(this, "trainID", schedule.getTrainID());
         this.dispatchTime = new SimpleIntegerProperty(this, "dispatchTime", schedule.getDispatchTime());
+        this.carCount = new SimpleIntegerProperty(this, "carCount", schedule.getCarCount());
         for (int i = 0; i < schedule.getStopCount(); i++) {
             this.stationBlockID.add(new SimpleIntegerProperty(this, "blockID", schedule.getStop(i).getStationBlockID()));
             this.arrivalTime.add(new SimpleIntegerProperty(this, "arrivalTime", schedule.getStop(i).getArrivalTime()));
@@ -25,12 +27,12 @@ public class ScheduleSubject implements AbstractSubject {
         }
     }
 
-    ScheduleSubject(int trainID, int dispatchTime, List<Integer> stationBlockID, List<Integer> arrivalTime, List<Integer> departureTime) {
+    ScheduleSubject(int trainID, int dispatchTime, int carCount, List<Integer> stationBlockID, List<Integer> arrivalTime, List<Integer> departureTime) {
         this.trainID = new SimpleIntegerProperty(this, "trainID", trainID);
         this.dispatchTime = new SimpleIntegerProperty(this, "dispatchTime", dispatchTime);
+        this.carCount = new SimpleIntegerProperty(this, "carCount", carCount);
         for (int i = 0; i < stationBlockID.size(); i++) {
         System.out.println("making schedule" + stationBlockID.get(i));
-
             this.stationBlockID.add(new SimpleIntegerProperty(this, "blockID", stationBlockID.get(i)));
             this.arrivalTime.add(new SimpleIntegerProperty(this, "arrivalTime", arrivalTime.get(i)));
             this.departureTime.add(new SimpleIntegerProperty(this, "departureTime", departureTime.get(i)));
@@ -41,6 +43,7 @@ public class ScheduleSubject implements AbstractSubject {
         switch (propertyName) {
             case "trainID" -> trainID.set((Integer) newValue);
             case "dispatchTime" -> dispatchTime.set((Integer) newValue);
+            case "carCount" -> carCount.set((Integer) newValue);
             default -> System.err.println("Unknown property " + propertyName);
         };
     }
@@ -58,6 +61,7 @@ public class ScheduleSubject implements AbstractSubject {
         return switch (propertyName) {
             case "trainID" -> trainID;
             case "dispatchTime" -> dispatchTime;
+            case "carCount" -> carCount;
             default -> null;
         };
     }
@@ -74,6 +78,7 @@ public class ScheduleSubject implements AbstractSubject {
     public void updateProperties(Schedule currentSchedule) {
         trainID.set(currentSchedule.getTrainID());
         dispatchTime.set(currentSchedule.getDispatchTime());
+        carCount.set(currentSchedule.getCarCount());
         for (int i = 0; i < currentSchedule.getStopCount(); i++) {
             stationBlockID.get(i).set(currentSchedule.getStop(i).getStationBlockID());
             arrivalTime.get(i).set(currentSchedule.getStop(i).getArrivalTime());
