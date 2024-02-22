@@ -147,7 +147,7 @@ public class stubTrainController implements TrainController{
         return false;
     }
 
-    public double getSamplingPeriod() {
+    public int getSamplingPeriod() {
         return 0;
     }
 

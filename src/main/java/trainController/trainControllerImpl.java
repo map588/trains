@@ -3,12 +3,19 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
+import Utilities.Constants;
 import trainModel.stubTrainModel;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static Utilities.Conversion.*;
 
 
 public class trainControllerImpl implements TrainController, Notifications {
+
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private int authority;
     private int blocksToNextStation;
     private double commandSpeed;
@@ -20,9 +27,10 @@ public class trainControllerImpl implements TrainController, Notifications {
     private double Kp;
 
     //These are actually private, property mirror not necessary
-    private double speedError;      // Calculated internally
-    private double rollingError;    // Calculated internally
-    private double samplingPeriod;
+    private double rollingError;
+    private int samplingPeriod;
+    private double prevError;
+    private double error;
 
     private double power;
     private double grade;
@@ -76,11 +84,16 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
         this.train = stubTrainModel.createstubTrainModel();
-        this.rollingError = 0;
-        this.speedError = 0;
-        this.samplingPeriod = 0;
+        this.samplingPeriod = 100;
         this.nextStationName = "Yard";
         this.grade = 0;
+        this.rollingError = 0;
+        this.prevError = 0;
+        this.error = 0;
+        this.power = 0;
+
+        this.executorService.scheduleAtFixedRate(this::calculatePower, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+
     }
 
     public trainControllerSubject getSubject() {
@@ -105,12 +118,20 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        System.out.println("Variable: " + propertyName + " changed to " + newValue);
+        boolean powerUpdate = propertyName.equals("power") || propertyName.equals("currentSpeed");
+        if(!powerUpdate) {
+            System.out.println("Variable: " + propertyName + " changed to " + newValue);
+        }
+        if(!subject.isGUIUpdate) {
+            subject.notifyChange(propertyName, newValue);
+        }
+    }
 
-        // If the set is called by the GUI, it implies that the property is already changed
-        // and we should not notify the subject of the change, because its already changed...
-        // OR if it somehow did not get the memo
-        if(!subject.isGUIUpdate || subject.getProperty(propertyName).getValue() != newValue){
+    public void notifyChange(String propertyName, Object newValue, boolean suppressOutput) {
+        if(!suppressOutput) {
+            System.out.println("Variable: " + propertyName + " changed to " + newValue);
+        }
+        if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
         }
     }
@@ -134,6 +155,10 @@ public class trainControllerImpl implements TrainController, Notifications {
         notifyChange("commandSpeed", speed);
         //calculatePower();
     }
+    public void setSpeed(double speed) {
+        this.currentSpeed = speed;
+        notifyChange("currentSpeed", speed, true);
+    }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
         notifyChange("serviceBrake", brake);
@@ -153,7 +178,9 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
     public void setPower(double power) {
         this.power = power;
-        notifyChange("power", power);
+        subject.updateFromLogic(() -> {
+            notifyChange("power", power, true);
+        });
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
@@ -204,7 +231,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.rightPlatform = platform;
         notifyChange("rightPlatform",platform);
     }
-    public void setSamplingPeriod(double period){
+    public void setSamplingPeriod(int period){
         this.samplingPeriod = period;
         notifyChange("samplingPeriod",period);
     }
@@ -227,6 +254,7 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "authority" -> setAuthority((int) newValue);
             case "overrideSpeed" -> setOverrideSpeed((double) newValue);
             case "commandSpeed" -> setCommandSpeed((double) newValue);
+            case "currentSpeed" -> setSpeed((double) newValue);
             case "serviceBrake" -> setServiceBrake((boolean) newValue);
             case "emergencyBrake" -> setEmergencyBrake((boolean) newValue);
             case "Ki" -> setKi((double) newValue);
@@ -244,7 +272,7 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "inTunnel" -> setInTunnel((boolean) newValue);
             case "leftPlatform" -> setLeftPlatform((boolean) newValue);
             case "rightPlatform" -> setRightPlatform((boolean) newValue);
-            case "samplingPeriod" -> setSamplingPeriod((double) newValue);
+            case "samplingPeriod" -> setSamplingPeriod((int) newValue);
             case "speedLimit" -> setSpeedLimit((double) newValue);
             case "nextStationName" -> setNextStationName((String) newValue);
             case "grade" -> setGrade((double) newValue);
@@ -271,7 +299,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     public double  getAcceleration() {
         return this.train.getAcceleration();
     }
-    public double  getSamplingPeriod(){return this.samplingPeriod;}
+    public int  getSamplingPeriod(){return this.samplingPeriod;}
     public double  getPower() {
         return this.power;
     }
@@ -340,25 +368,55 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void calculatePower(){
 
         // Convert Units
-        double  calcSPD, currSpd, pow;
+        double setSpeed, currSpeed, prevSpeed, pow, accel;
+        boolean contollerBrake = false;
 
-        if (automaticMode) calcSPD = convertVelocity(commandSpeed, velocityUnit.MPH, velocityUnit.MPS);
-        else calcSPD = convertVelocity(overrideSpeed, velocityUnit.MPH, velocityUnit.MPS);
-        currSpd = convertVelocity(currentSpeed, velocityUnit.MPH, velocityUnit.MPS);
-        pow = convertPower(power,powerUnits.HORSEPOWER,powerUnits.WATTS);
+        if (automaticMode){
+            setSpeed = convertVelocity(commandSpeed, velocityUnit.MPH, velocityUnit.MPS);
+        }
+        else{
+            setSpeed = convertVelocity(overrideSpeed, velocityUnit.MPH, velocityUnit.MPS);
+        }
+
+        prevSpeed = convertVelocity(this.getSpeed(), velocityUnit.MPH, velocityUnit.MPS);
+        accel = 0;
+        prevError = error;
+
+        error = setSpeed - prevSpeed;
+        rollingError += (float)samplingPeriod/2 * (error + prevError);
+
+        pow = Kp * error + Ki * rollingError;
+        if(pow < 0){
+            pow = 0;
+            if(automaticMode){
+                contollerBrake = true;
+            }
+        }
+
+        if(emergencyBrake || serviceBrake || powerFailure) {
+            pow = 0;
+            if(emergencyBrake){
+                accel = Constants.EMERGENCY_BRAKE_DECELERATION;
+            }else if(serviceBrake) {
+                accel = Constants.SERVICE_BRAKE_DECELERATION;
+            }
+        } else {
+            accel = pow / train.getWeightKG();
+        }
 
 
-        // Error = commandSpeed - currentSpeed
-        double  rollingError_prev = rollingError;
-        speedError = calcSPD - currSpd;
-        // T = sample period of train model......<<< KEY INPUT?????
+        currSpeed = prevSpeed + accel * (float)samplingPeriod/1000;
 
-        if (pow < 120000) rollingError += samplingPeriod/2 * (speedError + rollingError_prev);
 
+<<<<<<< Updated upstream
         pow = Kp * speedError + Ki * rollingError;
         power = convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER);
         setValue("power",power);
         //Do something with pow
+=======
+        this.setSpeed(convertVelocity(currSpeed, velocityUnit.MPS, velocityUnit.MPH));
+        this.setPower(convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER));
+>>>>>>> Stashed changes
     }
 
 }

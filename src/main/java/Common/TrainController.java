@@ -58,7 +58,7 @@ public interface TrainController extends Notifications {
     boolean getIntLights();
     boolean getLeftDoors();
     boolean getRightDoors();
-    double getSamplingPeriod();
+    int getSamplingPeriod();
     double getTemperature();
 
     double getCommandSpeed();
