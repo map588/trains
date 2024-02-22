@@ -60,13 +60,17 @@ public class CTCBlockSubject implements AbstractSubject {
         lightColor.addListener(event -> block.updateLightColor());
 
         switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
-        switchStateString.addListener((observable, oldValue, newValue) -> block.setSwitchStateString(block.getSwitchStateString()));
+        switchStateString.addListener((observable) -> block.setSwitchStateString());
     }
 
     public CTCBlockInfo getBlockInfo() {
         return blockInfo;
     }
     public BooleanProperty getBooleanProperty(String propertyName) {
+        if(blockInfo == null) {
+            System.err.println("Null value for property " + propertyName);
+            return null;
+        }
         return switch (propertyName) {
             case "line" -> line;
             case "occupied" -> occupied;
@@ -113,16 +117,15 @@ public class CTCBlockSubject implements AbstractSubject {
             default -> null;
         };
     }
-    public void setStringProperty(String propertyName, String newValue) {
-        if (newValue == null) {
+    public void setStringProperty(String propertyName) {
+        if(propertyName == null) {
             System.err.println("Null value for property " + propertyName);
             return;
         }
         switch (propertyName) {
             case "switchStateString" -> {
-                updateProperty(switchStateString, newValue);
+                switchStateString.set(blockInfo.getSwitchStateString());
             }
-            default -> System.err.println("Unknown property " + propertyName);
         }
     }
 

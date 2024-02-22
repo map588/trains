@@ -42,7 +42,6 @@ class CTCBlockInfo {
         this.divergingBlockTwoID = divergingBlockTwoID;
         this.switchState = switchState;
         updateLightColor();
-        this.switchStateString = getSwitchStateString();
        factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
     void setBlockID (int number){
@@ -170,12 +169,15 @@ class CTCBlockInfo {
         }
         factory.getSubjects().get(convergingBlockID).setProperty("switchConState", state);
         if(!state){
-            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
-            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockTwoID).setProperty("switchDivState", false);
+            factory.getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
+            factory.getSubjects().get(divergingBlockTwoID).setProperty("switchDivState", false);
         } else {
-            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockTwoID).setProperty("switchDivState", false);
-            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
+            factory.getSubjects().get(divergingBlockTwoID).setProperty("switchDivState", false);
+            factory.getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
         }
+        factory.getSubjects().get(convergingBlockID).setStringProperty("switchStateString");
+        factory.getSubjects().get(divergingBlockOneID).setStringProperty("switchStateString");
+        factory.getSubjects().get(divergingBlockTwoID).setStringProperty("switchStateString");
     }
 
     public int getConvergingBlockID() {
@@ -199,11 +201,19 @@ class CTCBlockInfo {
         return switchState;
     }
 
-    public void setSwitchStateString(String switchStateString) {
+    public void setSwitchStateString() {
         this.switchStateString = getSwitchStateString();
+        if(factory.getSubjects().get(getBlockID()) != null){
+            factory.getSubjects().get(getBlockID()).setStringProperty("switchStateString");
+        }
     }
 
     public String getSwitchStateString() {
+        if(factory.getSubjects().get(getBlockID()) != null) {
+            if (convergingBlockID == 0 || divergingBlockOneID == 0 || divergingBlockTwoID == 0) {
+                return "";
+            }
+        }else{return null;}
         if(hasSwitchCon && !switchState) {
             return ( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
         }else if(hasSwitchCon && switchState) {
@@ -221,7 +231,7 @@ class CTCBlockInfo {
                 return ( divergingBlockOneID + "\t\t" + convergingBlockID);
             }
         }else {
-            return null;
+            return "";
         }
     }
 }
