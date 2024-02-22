@@ -61,7 +61,6 @@ public class trainControllerManager {
         //Creating a trainControllerImpl object results in a subject being created
         //and that subject being added to the factories Map of subjects
         new trainControllerImpl(0);
-        new trainControllerImpl(1);
 
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();
@@ -112,16 +111,16 @@ public class trainControllerManager {
         Platform.runLater(() -> {
             trainNoChoiceBox.setItems(FXCollections.observableArrayList(
                     new ArrayList<>(factory.getSubjects().keySet())));
+            trainNoChoiceBox.getSelectionModel().selectFirst();
         });
     }
 
     private void bindGauges() {
-        currentSpeedGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("currentSpeed"));
-        commandedSpeedGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("commandSpeed"));
-        speedLimitGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("speedLimit"));
-        authorityGauge.valueProperty().bindBidirectional(currentSubject.getIntegerProperty("authority"));
-        powerOutputGauge.valueProperty().bindBidirectional(currentSubject.getDoubleProperty("power"));
-        //trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
+        currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("currentSpeed"));
+        commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("commandSpeed"));
+        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty("speedLimit"));
+        authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
+        powerOutputGauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
     }
 
     private void bindIndicators() {
@@ -178,9 +177,9 @@ public class trainControllerManager {
         Runnable textFieldUpdate = () -> {
             try {
                 // Parse and update property
-                currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText()));
+                Platform.runLater(() -> currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText())));
             } catch (NumberFormatException e) {
-                // Clear if invalid input
+                e.printStackTrace();
                 textField.setText("");
             }
         };
@@ -264,11 +263,11 @@ public class trainControllerManager {
         listenerReferences.forEach(ListenerReference::detach);
         listenerReferences.clear();
 
-        currentSpeedGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("currentSpeed"));
-        commandedSpeedGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("commandSpeed"));
-        speedLimitGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("speedLimit"));
-        authorityGauge.valueProperty().unbindBidirectional(currentSubject.getIntegerProperty("authority"));
-        powerOutputGauge.valueProperty().unbindBidirectional(currentSubject.getDoubleProperty("power"));
+        currentSpeedGauge.valueProperty().unbind();
+        commandedSpeedGauge.valueProperty().unbind();
+        speedLimitGauge.valueProperty().unbind();
+        authorityGauge.valueProperty().unbind();
+        powerOutputGauge.valueProperty().unbind();
 
         setSpeedSlider.valueProperty().unbind(); // Assuming you might bind this bidirectionally in another part of your code
         setSpeedTextField.textProperty().unbind();
@@ -322,6 +321,7 @@ public class trainControllerManager {
             setKpTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty("Kp").get()));
             setSpeedTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty("overrideSpeed").get()));
 
+            nextStationText.setText(currentSubject.getStringProperty("nextStationName").get());
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty("overrideSpeed").get());
     }

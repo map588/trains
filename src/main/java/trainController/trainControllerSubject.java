@@ -77,7 +77,7 @@ public class trainControllerSubject implements AbstractSubject {
                     System.out.println("Delayed setProperty from GUI");
                     Platform.runLater(() -> updateFromGUI(updateTask));
                 }
-            }, 0, 10, TimeUnit.MILLISECONDS);
+            }, 1, 10, TimeUnit.MILLISECONDS);
         } else {
             Platform.runLater(() -> updateFromGUI(updateTask));
         }
@@ -103,7 +103,7 @@ public class trainControllerSubject implements AbstractSubject {
             ((StringProperty) property).set((String) newValue);
         }
         else{
-                throw new IllegalArgumentException("Mismatch in property type and value type for " + property.getName());
+                throw new IllegalArgumentException("Mismatch in property type and value type for " + property);
         }
     }
 
