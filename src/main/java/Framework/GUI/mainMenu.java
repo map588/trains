@@ -64,7 +64,12 @@ public class mainMenu extends Application {
     private void openInNewWindow(String moduleName) {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // This now loads from FXML
-        Scene newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
+        Scene newScene;
+        if(moduleName == "CTC_Main_UI") {
+            newScene = new Scene(new VBox(content) , 800, 600);
+        }else {
+            newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
+        }
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();
