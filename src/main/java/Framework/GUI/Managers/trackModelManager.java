@@ -153,6 +153,8 @@ public class trackModelManager {
         pickLine.setOnAction(event -> updateTable());
         switchStateDisplay.setText("No Switch Present");
 
+        occupiedColumn.setEditable(true);
+
         //set up cell factories
         sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
@@ -163,6 +165,7 @@ public class trackModelManager {
         switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
+//        occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
 
         crossingState.setText("false");
@@ -175,6 +178,8 @@ public class trackModelManager {
             selectBlock(lineTable.getSelectionModel().getSelectedItem());
             testBench.selectBlock(lineTable.getSelectionModel().getSelectedItem());
         });
+
+
     }
 
     public void selectBlock(TrackLayoutInfo newProperties){
@@ -191,6 +196,9 @@ public class trackModelManager {
             if(trackProperties.isIsSwitch()){
                 switchBlockNumbersDisplay.textProperty().unbindBidirectional(trackProperties.switchBlockIDProperty());
                 switchStateDisplay.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
+                switchColumn.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
+                switchStateDisplay.textProperty().unbindBidirectional(trackProperties.switchMainProperty());
+                switchStateDisplay.textProperty().unbindBidirectional(trackProperties.switchAltProperty());
             }
 
             if(trackProperties.isIsSignal()){
@@ -211,6 +219,8 @@ public class trackModelManager {
 
             statusLabel.textProperty().unbindBidirectional(trackProperties.trackHeaterProperty());
             tempValueLabel.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
+
+            //occupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
 
         }
 
@@ -236,9 +246,15 @@ public class trackModelManager {
         statusLabel.textProperty().bindBidirectional(trackProperties.trackHeaterProperty());
         tempValueLabel.textProperty().bindBidirectional(trackModelSubject.tempProperty());
 
+        //occupiedColumn.textProperty().bindBidirectional(trackProperties.isOccupiedProperty());
+
         if(trackProperties.isIsSwitch()){
             switchBlockNumbersDisplay.textProperty().bindBidirectional(trackProperties.switchBlockIDProperty());
             switchStateDisplay.textProperty().bindBidirectional(trackProperties.switchStateProperty());
+            switchStateDisplay.textProperty().bindBidirectional(trackProperties.switchMainProperty());
+            switchStateDisplay.textProperty().bindBidirectional(trackProperties.switchAltProperty());
+            switchColumn.textProperty().bindBidirectional(trackProperties.switchStateProperty());
+
         }
         else {
             switchBlockNumbersDisplay.setText("NONE");
@@ -268,7 +284,6 @@ public class trackModelManager {
         else {
             displayBeaconInfo.setText("NONE");
         }
-
 
     }
     private void updateTable() {

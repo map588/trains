@@ -70,6 +70,13 @@ public class TrackLayoutInfo {
 
         switchState.addListener((observableValue, oldValue, newVal) -> setSwitchState(newVal));
         signalState.addListener((observableValue, oldValue, newVal) -> setSignalState(newVal));
+        isOccupied.addListener((observableValue, oldValue, newVal) -> {
+            if (newVal) {
+                setStatus("OCCUPIED");
+            } else {
+                setStatus("UNOCCUPIED");
+            }
+        });
 
     }
 

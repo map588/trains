@@ -94,17 +94,24 @@ public class trackModelTB {
             }
         };
 
-        tbSectionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tbBlockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tbSwitchColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tbSignalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tbOccupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tbOccupiedColumn));
+        tbTable.setEditable(true);
+        tbOccupiedColumn.setEditable(true);
+        tbSwitchColumn.setEditable(true);
+        tbSignalColumn.setEditable(true);
 
         tbSectionColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         tbBlockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
         tbSwitchColumn.setCellValueFactory(block -> block.getValue().switchStateProperty());
         tbSignalColumn.setCellValueFactory(block -> block.getValue().signalStateProperty());
         tbOccupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
+
+
+        tbSectionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tbBlockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tbSwitchColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tbSignalColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tbOccupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tbOccupiedColumn));
+
 
         tbChooseLine.setOnAction(event -> updateTable());
 
@@ -129,16 +136,15 @@ public class trackModelTB {
                 tbPassDisembarkedInput.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
                 tbTicketSalesInput.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
                 tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
+                tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchMainProperty());
+                tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchAltProperty());
             }
 
             if(trackProperties.isIsSignal()){
                 tbSignalColumn.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
             }
 
-            if(trackProperties.isIsOccupied()){
-                tbOccupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
-            }
-
+            //tbOccupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
             if(trackProperties.isIsBeacon()){
                 tbBeaconInput.textProperty().unbindBidirectional(trackProperties.setBeaconProperty());
             }
@@ -157,6 +163,8 @@ public class trackModelTB {
             tbPassDisembarkedInput.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
             tbTicketSalesInput.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
             tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchStateProperty());
+            tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchMainProperty());
+            tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchAltProperty());
         }
 
         if(trackProperties.isIsSignal()){
