@@ -102,9 +102,8 @@ public class WaysideControllerManager {
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
             switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
-            blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
+            //blockTableCrossingColumn.setEditable(maintenanceModeCheckbox.isSelected());
             System.out.println(currentSubject.blockListProperty().get(4).switchStateProperty().get());
-//            currentSubject.getController().runPLC();
         });
 
         // Set up cell factories for table views
@@ -135,7 +134,48 @@ public class WaysideControllerManager {
             }
         });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
-        blockTableCrossingColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableCrossingColumn));
+
+        //blockTableCrossingColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableCrossingColumn));
+
+        //blockTableCrossingColumn.setCellFactory(column -> new CheckBoxTableCell<>());
+
+        /**
+        blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockInfo, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setGraphic(null);
+                    return;
+                } else {
+                    WaysideBlockInfo blockInfo = getTableView().getItems().get(getIndex());
+                    if(blockInfo.isHasCrossing()) {
+                        CheckBox checkBox;
+                        {
+                            checkBox = new CheckBox();
+                            checkBox.setDisable(false);
+                            checkBox.setSelected(item);
+                            checkBox.setOnMouseClicked(event -> {
+                                if(currentSubject.maintenanceModeProperty().get()) {
+                                    this.setDisable(false);
+                                    this.getTableRow().getItem().setCrossingState(!this.getTableRow().getItem().isCrossingState());
+                                } else {
+                                    //this.setDisable(true);
+                                }
+                            });
+                        }
+                        setGraphic(checkBox);
+                    } else {
+                        setGraphic(null);
+                    }
+                }
+
+            }
+
+
+        }); */
+        blockTableCrossingColumn.setEditable(false);
         blockTableCircuitColumn.setEditable(false);
         switchTable.setEditable(true);
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
