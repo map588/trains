@@ -3,7 +3,6 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
-import Utilities.Conversion;
 import trainModel.stubTrainModel;
 
 import static Utilities.Conversion.*;
@@ -26,6 +25,8 @@ public class trainControllerImpl implements TrainController, Notifications {
     private double samplingPeriod;
 
     private double power;
+    private double grade;
+
     private boolean serviceBrake;
     private boolean emergencyBrake;
     private boolean automaticMode;
@@ -46,7 +47,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     private double temperature;
 
     private String nextStationName;
-    private int trainID;
+    private final int trainID;
     private TrainModel train;
 
     private final trainControllerSubject subject;
@@ -79,6 +80,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.speedError = 0;
         this.samplingPeriod = 0;
         this.nextStationName = "Yard";
+        this.grade = 0;
     }
 
     public trainControllerSubject getSubject() {
@@ -90,18 +92,16 @@ public class trainControllerImpl implements TrainController, Notifications {
     //-----------------Setters-----------------
     public void assignTrainModel(TrainModel train) {
         this.train = train;
-        setOverrideSpeed(train.getSpeed());
-        setCommandSpeed(train.getSpeed());
-        setServiceBrake(train.getServiceBrake());
-        setEmergencyBrake(train.getEmergencyBrake());
-        setIntLights(train.getIntLights());
-        setExtLights(train.getExtLights());
-        setLeftDoors(train.getLeftDoors());
-        setRightDoors(train.getRightDoors());
-        setTemperature(train.getTemperature());
-        setSignalFailure(train.getSignalFailure());
-        setBrakeFailure(train.getBrakeFailure());
-        setPowerFailure(train.getPowerFailure());
+        this.setServiceBrake(train.getServiceBrake());
+        this.setEmergencyBrake(train.getEmergencyBrake());
+        this.setIntLights(train.getIntLights());
+        this.setExtLights(train.getExtLights());
+        this.setLeftDoors(train.getLeftDoors());
+        this.setRightDoors(train.getRightDoors());
+        this.setTemperature(train.getTemperature());
+        this.setSignalFailure(train.getSignalFailure());
+        this.setBrakeFailure(train.getBrakeFailure());
+        this.setPowerFailure(train.getPowerFailure());
     }
 
     public void notifyChange(String propertyName, Object newValue) {
@@ -151,7 +151,6 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void setPower(double power) {
         this.power = power;
         notifyChange("power", power);
-        //setValue("Power",power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
@@ -204,6 +203,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
     public void setSamplingPeriod(double period){
         this.samplingPeriod = period;
+        notifyChange("samplingPeriod",period);
     }
     public void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
@@ -213,7 +213,10 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.nextStationName = name;
         notifyChange("nextStationName",name);
     }
-
+    private void setGrade(double newValue) {
+        this.grade = newValue;
+        notifyChange("grade",newValue);
+    }
 
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
@@ -241,6 +244,7 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "samplingPeriod" -> setSamplingPeriod((double) newValue);
             case "speedLimit" -> setSpeedLimit((double) newValue);
             case "nextStationName" -> setNextStationName((String) newValue);
+            case "grade" -> setGrade((double) newValue);
         }
         calculatePower();
     }
@@ -321,35 +325,35 @@ public class trainControllerImpl implements TrainController, Notifications {
     public double  getTemperature() {
         return this.temperature;
     }
-    public String getStationName(){
+    public String  getStationName(){
         return this.nextStationName;
     }
     public boolean getLeftPlatform(){return this.leftPlatform;}
     public boolean getRightPlatform(){return this.rightPlatform;}
     public boolean getInTunnel(){return this.inTunnel;}
+    public double  getGrade(){return this.grade;}
 
     public void calculatePower(){
 
         // Convert Units
         double  calcSPD, currSpd, pow;
 
-        if (automaticMode) calcSPD = convertVelocity(commandSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
-        else calcSPD = convertVelocity(overrideSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
-        currSpd = convertVelocity(currentSpeed, Conversion.velocityUnit.MPH, Conversion.velocityUnit.MPS);
+        if (automaticMode) calcSPD = convertVelocity(commandSpeed, velocityUnit.MPH, velocityUnit.MPS);
+        else calcSPD = convertVelocity(overrideSpeed, velocityUnit.MPH, velocityUnit.MPS);
+        currSpd = convertVelocity(currentSpeed, velocityUnit.MPH, velocityUnit.MPS);
         pow = convertPower(power,powerUnits.HORSEPOWER,powerUnits.WATTS);
 
 
         // Error = commandSpeed - currentSpeed
-        double  speedError_prev = speedError,
-                rollingError_prev = rollingError;
+        double  rollingError_prev = rollingError;
         speedError = calcSPD - currSpd;
         // T = sample period of train model......<<< KEY INPUT?????
 
-        if (pow < 120000) rollingError += samplingPeriod/2 * (speedError + speedError_prev);
+        if (pow < 120000) rollingError += samplingPeriod/2 * (speedError + rollingError_prev);
 
         pow = Kp * speedError + Ki * rollingError;
-        setPower(convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER));
-
+        pow = convertPower(pow,powerUnits.WATTS,powerUnits.HORSEPOWER);
+        //Do something with pow
     }
 
 }

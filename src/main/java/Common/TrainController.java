@@ -93,4 +93,5 @@ public interface TrainController extends Notifications {
     void setValue(String propertyName, Object newValue);
 
 
+    double getGrade();
 }

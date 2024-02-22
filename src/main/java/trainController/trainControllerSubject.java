@@ -52,24 +52,26 @@ public class trainControllerSubject implements AbstractSubject {
         properties.put("leftPlatform", new SimpleBooleanProperty(controller.getLeftPlatform()));
         properties.put("rightPlatform", new SimpleBooleanProperty(controller.getRightPlatform()));
         properties.put("nextStationName", new SimpleStringProperty(controller.getStationName()));
+        properties.put("trainID", new SimpleIntegerProperty(controller.getID()));
+        properties.put("grade", new SimpleDoubleProperty(controller.getGrade()));
+
     }
 
     public void notifyChange(String propertyName, Object newValue) {
         // Update property from controller, Internal Logic takes precedence over GUI updates
-        System.out.println(propertyName + " " +newValue);
-        Platform.runLater(() ->
-                updateFromLogic(() -> {
-                    Property<?> property = properties.get(propertyName);
-                    updateProperty(property, newValue);
-                })
-        );
+        if (!isLogicUpdate) {
+            updateFromLogic(() -> {
+                Property<?> property = properties.get(propertyName);
+                updateProperty(property, newValue);
+            });
+        }
     }
 
     public void setProperty(String propertyName, Object newValue) {
         Runnable updateTask = () -> {
             Property<?> property = properties.get(propertyName);
                 updateProperty(property, newValue);
-                    controller.setValue(propertyName, newValue);
+                controller.setValue(propertyName, newValue);
         };
         if (isLogicUpdate) {
             executorService.scheduleWithFixedDelay(() -> {
@@ -77,7 +79,7 @@ public class trainControllerSubject implements AbstractSubject {
                     System.out.println("Delayed setProperty from GUI");
                     Platform.runLater(() -> updateFromGUI(updateTask));
                 }
-            }, 1, 10, TimeUnit.MILLISECONDS);
+            }, 0, 10, TimeUnit.MILLISECONDS);
         } else {
             Platform.runLater(() -> updateFromGUI(updateTask));
         }
@@ -99,11 +101,11 @@ public class trainControllerSubject implements AbstractSubject {
             ((DoubleProperty) property).set(((Number) newValue).doubleValue());
         } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
             ((BooleanProperty) property).set((Boolean) newValue);
-        } else if (property instanceof  StringProperty && newValue instanceof  String){
+        } else if (property instanceof StringProperty && newValue instanceof String){
             ((StringProperty) property).set((String) newValue);
         }
         else{
-                throw new IllegalArgumentException("Mismatch in property type and value type for " + property);
+            throw new IllegalArgumentException("Mismatch in property type and value type for " + property);
         }
     }
 

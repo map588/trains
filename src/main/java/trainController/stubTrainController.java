@@ -79,6 +79,10 @@ public class stubTrainController implements TrainController{
 
     }
 
+    public double getGrade() {
+        return 0;
+    }
+
     public int getID() {
         return 0;
     }
