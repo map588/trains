@@ -391,12 +391,12 @@ public class trainControllerImpl implements TrainController, Notifications {
         if(emergencyBrake || serviceBrake || controllerBrake || powerFailure) {
             pow = 0;
             if(emergencyBrake){
-                accel = Constants.EMERGENCY_BRAKE_DECELERATION;
+                accel = -1 * Constants.EMERGENCY_BRAKE_DECELERATION;
             }else if(serviceBrake) {
-                accel = Constants.SERVICE_BRAKE_DECELERATION;
+                accel = -1 * Constants.SERVICE_BRAKE_DECELERATION;
             }
             else if(controllerBrake){
-                accel = Constants.SERVICE_BRAKE_DECELERATION;
+                accel = -1 * Constants.SERVICE_BRAKE_DECELERATION;
             }
         } else {
             accel = pow / train.getWeightKG();
