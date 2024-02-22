@@ -222,13 +222,12 @@ public class trainModelImpl implements TrainModel, Notifications {
         }
 
         //ENGINE FORCE
-        try {
+        if (this.power > 0 && this.speed == 0) {
+            this.setActualSpeed(0.1); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             this.engineForce = this.power / this.speed;
-        } catch (ArithmeticException e) {
-            if (this.power > 0 && this.speed < 0.0001) {
-                this.setActualSpeed(0.0001); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
-                this.engineForce = this.power / this.speed;
-            }
+        }
+        else {
+            this.engineForce = this.power / this.speed;
         }
         System.out.println("Engine Force: " + this.engineForce);
 

@@ -23,7 +23,7 @@ public class CTCOfficeManager {
     @FXML private TableColumn<CTCBlockSubject, Paint> switchLightColumn;
     @FXML private SplitPane mainSplit;
     @FXML private AnchorPane mainAnchor;
-    @FXML private TableColumn<CTCBlockSubject, Integer> switchStateColumn;
+    @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
     @FXML private TableView<ScheduleSubject> scheduleTable;
     @FXML private TableColumn<ScheduleSubject, Integer> dispatchTimeColumn;
     @FXML private TableColumn<ScheduleSubject, Integer> stationBlockIDColumn;
@@ -77,16 +77,43 @@ public class CTCOfficeManager {
         blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
+
+
         switchStateColumn.setCellValueFactory(block -> {
-            if (block.getValue().getBooleanProperty("hasSwitchCon").getValue()) {
-                return new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("convergingBlockID").getValue());
-            }else if(block.getValue().getBooleanProperty("hasSwitchDiv").getValue() && !block.getValue().getBooleanProperty("switchState").getValue()){
-                return new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("divergingBlockOneID").getValue());
-            }else if(block.getValue().getBooleanProperty("hasSwitchDiv").getValue() && block.getValue().getBooleanProperty("switchState").getValue()){
-                return new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("divergingBlockTwoID").getValue());
+            boolean hasSwitchCon = block.getValue().getBooleanProperty("hasSwitchCon").getValue();
+            boolean hasSwitchDiv = block.getValue().getBooleanProperty("hasSwitchDiv").getValue();
+            boolean switchState = block.getValue().getBooleanProperty("switchState").getValue();
+            int divergingBlockOneID = block.getValue().getIntegerProperty("divergingBlockOneID").getValue();
+            int divergingBlockTwoID = block.getValue().getIntegerProperty("divergingBlockTwoID").getValue();
+            int convergingBlockID = block.getValue().getIntegerProperty("convergingBlockID").getValue();
+            int thisBlockID = block.getValue().getIntegerProperty("blockID").getValue();
+
+            if(hasSwitchCon && !switchState) {
+                return new ReadOnlyObjectWrapper<>( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
+            }else if(hasSwitchCon && switchState) {
+                return new ReadOnlyObjectWrapper<>( divergingBlockOneID +"  ( "   + convergingBlockID + " == " + divergingBlockTwoID + " )");
+            }else if(hasSwitchDiv && !switchState) {
+                if(divergingBlockOneID == thisBlockID) {
+                    return new ReadOnlyObjectWrapper<>( divergingBlockOneID + " ==== " + convergingBlockID);
+                }else {
+                    return new ReadOnlyObjectWrapper<>( divergingBlockTwoID + "\t\t" + convergingBlockID);
+                }
+            }else if(hasSwitchDiv && switchState) {
+                if(divergingBlockTwoID == thisBlockID) {
+                    return new ReadOnlyObjectWrapper<>( divergingBlockTwoID + " ==== " + convergingBlockID);
+                }else {
+                    return new ReadOnlyObjectWrapper<>( divergingBlockOneID + "\t\t" + convergingBlockID);
+                }
+            }else {
+                return null;
             }
-            return null;
+
+
         });
+
+        switchStateColumn.setStyle("-fx-alignment: CENTER;");
+
+
         switchLightColumn.setCellValueFactory(block -> {
             if (block.getValue().getBooleanProperty("hasLight").getValue()) {
                return block.getValue().getObjectProperty("lightColor");
@@ -142,12 +169,18 @@ public class CTCOfficeManager {
         });
 
 
+
+
         //Table editing bar
         blockSelection.getItems().addAll(factory.getSubjects().keySet());
         lineSelection.getItems().addAll(true, false);
         switchLightToggle.setOnAction(event -> {
             CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
             block.setProperty("lightState", !block.getBooleanProperty("lightState").getValue());
+        });
+        switchStateToggle.setOnAction(event -> {
+            CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
+            block.setProperty("switchState", !block.getBooleanProperty("switchState").getValue());
         });
 
 

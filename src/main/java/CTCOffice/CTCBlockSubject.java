@@ -55,7 +55,12 @@ public class CTCBlockSubject implements AbstractSubject {
         switchDivState.addListener((observable, oldValue, newValue) -> block.setSwitchDivState(newValue));
         crossingState.addListener((observable, oldValue, newValue) -> block.setCrossingState(newValue));
         lightColor.addListener(event -> block.updateLightColor());
+
         switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
+    }
+
+    public CTCBlockInfo getBlockInfo() {
+        return blockInfo;
     }
     public BooleanProperty getBooleanProperty(String propertyName) {
         return switch (propertyName) {
