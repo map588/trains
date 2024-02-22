@@ -2,6 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Framework.Support.AbstractSubject;
+import Framework.Support.Notifications;
 import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -10,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class trainControllerSubject implements AbstractSubject {
+public class trainControllerSubject implements AbstractSubject, Notifications {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainController controller;

@@ -109,7 +109,8 @@ public class trainControllerImpl implements TrainController, Notifications {
 
         // If the set is called by the GUI, it implies that the property is already changed
         // and we should not notify the subject of the change, because its already changed...
-        if(!subject.isGUIUpdate) {
+        // OR if it somehow did not get the memo
+        if(!subject.isGUIUpdate || subject.getProperty(propertyName).getValue() != newValue){
             subject.notifyChange(propertyName, newValue);
         }
     }
@@ -229,8 +230,8 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "Ki" -> setKi((double) newValue);
             case "Kp" -> setKp((double) newValue);
             case "power" -> setPower((double) newValue);
-            case "internalLights" -> setIntLights((boolean) newValue);
-            case "externalLights" -> setExtLights((boolean) newValue);
+            case "intLights" -> setIntLights((boolean) newValue);
+            case "extLights" -> setExtLights((boolean) newValue);
             case "leftDoors" -> setLeftDoors((boolean) newValue);
             case "rightDoors" -> setRightDoors((boolean) newValue);
             case "temperature" -> setTemperature((double) newValue);
@@ -245,8 +246,9 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "speedLimit" -> setSpeedLimit((double) newValue);
             case "nextStationName" -> setNextStationName((String) newValue);
             case "grade" -> setGrade((double) newValue);
+            default -> System.err.println("Property " + propertyName + " not found");
         }
-        calculatePower();
+        //calculatePower();
     }
 
 

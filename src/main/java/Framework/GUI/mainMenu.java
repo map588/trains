@@ -54,7 +54,7 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
 
-        Scene scene = new Scene(root, 1280, 720);
+        Scene scene = new Scene(root, 1600, 900);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
@@ -63,7 +63,7 @@ public class mainMenu extends Application {
     private void openInNewWindow(String moduleName) {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // This now loads from FXML
-        Scene newScene = new Scene(new VBox(content), 600, 400); // Ensure the layout fits the loaded content
+        Scene newScene = new Scene(new VBox(content), 1280, 720); // Ensure the layout fits the loaded content
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();
