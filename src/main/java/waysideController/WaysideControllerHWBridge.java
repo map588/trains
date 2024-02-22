@@ -7,14 +7,15 @@ import purejavacomm.*;
 //import org.openmuc.jrxtx.SerialPort;
 //import org.openmuc.jrxtx.SerialPortBuilder;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     private final SerialPort serialPort;
+    private final BufferedReader inputStream;
+    private final PrintStream outputStream;
 
     public WaysideControllerHWBridge(int id, int trackLine, String COMPort) {
         super(id, trackLine);
@@ -23,21 +24,18 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
             CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(COMPort);
             serialPort = (SerialPort) portId.open("WaysideController", 2000);
             serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+            inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+            outputStream = new PrintStream(serialPort.getOutputStream(), true);
+
+            SerialCheckerThread thread = new SerialCheckerThread(this);
+            thread.start();
+
+            System.out.println("Send: runPLC=true");
+            outputStream.println("runPLC=true");
         }
-        catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException e) {
+        catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | IOException e) {
             throw new RuntimeException(e);
         }
-
-//        SerialPortBuilder builder = SerialPortBuilder.newBuilder(COMPort);
-//        builder.setBaudRate(19200);
-//        builder.setParity(Parity.EVEN);
-//
-//        try {
-//            serialPort = builder.build();
-//        } catch (IOException e) {
-//            System.out.println("Failed to build serial port at: " + COMPort);
-//            throw new RuntimeException(e);
-//        }
     }
 
     @Override
@@ -48,25 +46,15 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
         super.setMaintenanceMode(maintenanceMode);
-        try {
-            System.out.println("Send: maintenanceMode="+maintenanceMode);
-            serialPort.getOutputStream().write(("maintenanceMode="+maintenanceMode).getBytes());
-        } catch (IOException e) {
-            System.out.println("Failed to write maintenanceMode");
-            throw new RuntimeException(e);
-        }
+        System.out.println("Send: maintenanceMode="+maintenanceMode);
+        outputStream.println("maintenanceMode="+maintenanceMode);
     }
 
     @Override
     public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
         super.setMaintenanceModeNoUpdate(maintenanceMode);
-        try {
-            System.out.println("Send: maintenanceMode="+maintenanceMode);
-            serialPort.getOutputStream().write(("maintenanceMode="+maintenanceMode).getBytes());
-        } catch (IOException e) {
-            System.out.println("Failed to write maintenanceMode");
-            throw new RuntimeException(e);
-        }
+        System.out.println("Send: maintenanceMode="+maintenanceMode);
+        outputStream.println("maintenanceMode="+maintenanceMode);
     }
 
     @Override
@@ -74,21 +62,72 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         super.addBlock(block);
     }
 
-    private void parseCOMMessage(String message) {
-        String[] values = message.split("=", 2);
-
-        switch(values[0]) {
-            case "maintenanceMode":
-                super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
-        }
+    @Override
+    public void trackModelSetOccupancy(int blockID, boolean occupied) {
+        super.trackModelSetOccupancy(blockID, occupied);
+        System.out.println("Send: occupancyList="+blockID+":"+occupied);
+        outputStream.println("occupancyList="+blockID+":"+occupied);
     }
 
     @Override
-    protected void finalize() {
-//        try {
-//            serialPort.close();
-//        } catch (IOException e) {
-////            throw new RuntimeException(e);
-//        }
+    public void CTCRequestSwitchState(int blockID, boolean occupied) {
+        super.CTCRequestSwitchState(blockID, occupied);
+        System.out.println("Send: switchRequestedStateList="+blockID+":"+occupied);
+        outputStream.println("switchRequestedStateList="+blockID+":"+occupied);
+    }
+
+    @Override
+    public void runPLC() {
+
+    }
+
+    private void parseCOMMessage(String message) {
+        System.out.println("Received: " + message);
+        String[] values = message.split("=", 2);
+
+        if (values[0].equals("maintenanceMode")) {
+            super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
+        }
+        else if (values[0].equals("switchStateList")) {
+            String[] setValues = values[1].split(":");
+            super.setSwitchState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+        }
+        else if (values[0].equals("trafficLightList")) {
+            String[] setValues = values[1].split(":");
+            super.setTrafficLightState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+        }
+        else if (values[0].equals("crossingList")) {
+            String[] setValues = values[1].split(":");
+            super.setCrossingState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+        }
+    }
+
+    protected BufferedReader getInputStream() {
+        return inputStream;
+    }
+
+    private class SerialCheckerThread extends Thread {
+
+        private final WaysideControllerHWBridge controller;
+        private final BufferedReader inputStream;
+        public SerialCheckerThread(WaysideControllerHWBridge controller) {
+            super("SerialCheckerThread");
+            this.controller = controller;
+            this.inputStream = controller.getInputStream();
+        }
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    if (inputStream.ready()) {
+                        parseCOMMessage(inputStream.readLine());
+                    }
+                    Thread.sleep(100);
+                }
+            }
+            catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

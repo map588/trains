@@ -41,6 +41,22 @@ public class WaysideControllerImpl implements WaysideController {
         this.trackLine = trackLine;
         program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
+
+        addBlock((new WaysideBlockInfo(1, false, false, false)));
+        addBlock((new WaysideBlockInfo(2, false, false, false)));
+        addBlock((new WaysideBlockInfo(3, false, false, true)));
+        addBlock((new WaysideBlockInfo(4, false, false, false)));
+        addBlock((new WaysideBlockInfo(5, true, false, false, 6, 11)));
+        addBlock((new WaysideBlockInfo(6, false, true, false)));
+        addBlock((new WaysideBlockInfo(7, false, false, false)));
+        addBlock((new WaysideBlockInfo(8, false, false, false)));
+        addBlock((new WaysideBlockInfo(9, false, false, false)));
+        addBlock((new WaysideBlockInfo(10, false, false, false)));
+        addBlock((new WaysideBlockInfo(11, false, true, false)));
+        addBlock((new WaysideBlockInfo(12, false, false, false)));
+        addBlock((new WaysideBlockInfo(13, false, false, false)));
+        addBlock((new WaysideBlockInfo(14, false, false, false)));
+        addBlock((new WaysideBlockInfo(15, false, false, false)));
     }
 
     @Override
@@ -127,7 +143,6 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void CTCRequestSwitchState(int blockID, boolean switchState) {
-//        trackList.get(blockID-1).switchStateProperty().set(switchState);
         program.setSwitchRequest(blockID, switchState);
         runPLC();
     }
@@ -157,6 +172,18 @@ public class WaysideControllerImpl implements WaysideController {
             subject.activePLCColorProperty().set(Color.BLUE);
         else
             subject.activePLCColorProperty().set(Color.GRAY);
+    }
+
+    protected void setSwitchState(int blockID, boolean switchState) {
+        trackList.get(blockID-1).switchStateProperty().set(switchState);
+    }
+
+    protected void setTrafficLightState(int blockID, boolean lightState) {
+        trackList.get(blockID-1).setLightState(lightState);
+    }
+
+    protected void setCrossingState(int blockID, boolean crossingState) {
+        trackList.get(blockID-1).setCrossingState(crossingState);
     }
 
     public WaysideControllerSubject getSubject() {

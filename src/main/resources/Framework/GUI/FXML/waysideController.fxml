@@ -39,7 +39,7 @@
                             <TableColumn fx:id="blockTableIDColumn" editable="false" prefWidth="35.0" style="-fx-alignment: CENTER;" text="ID" />
                             <TableColumn fx:id="blockTableCircuitColumn" editable="false" prefWidth="60.0" style="-fx-alignment: CENTER;" text="Track&#10;Circuit" />
                               <TableColumn fx:id="blockTableLightsColumn" editable="false" prefWidth="38.0" style="-fx-alignment: CENTER;" text="Light" />
-                              <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="119.0" style="-fx-alignment: CENTER;" text="Crossing" />
+                              <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="119.0" style="-fx-alignment: CENTER;" text="Crossing is Open?" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -93,8 +93,8 @@
           </Tab>
         </tabs>
       </TabPane>
-      <ComboBox fx:id="changeControllerComboBox" layoutX="303.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
-      <Label fx:id="changeControllerLabel" layoutX="303.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
+      <ComboBox fx:id="changeControllerComboBox" layoutX="379.0" layoutY="36.0" prefHeight="26.0" prefWidth="166.0" promptText="Change Controller" />
+      <Label fx:id="changeControllerLabel" layoutX="379.0" layoutY="9.0" prefHeight="26.0" prefWidth="166.0" text="Wayside Controller #N" textAlignment="RIGHT">
          <font>
             <Font size="16.0" />
          </font>
@@ -104,8 +104,8 @@
             <Font name="Papyrus" size="23.0" />
          </font>
       </Label>
-      <Button fx:id="createNewControllerButton" layoutX="479.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" text="+" />
+      <Button fx:id="createNewControllerButton" layoutX="552.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" text="+" />
       <TextField layoutX="139.0" layoutY="5.0" />
-      <TextField fx:id="HWPortTextField" layoutX="473.0" layoutY="37.0" />
+      <TextField fx:id="HWPortTextField" layoutX="552.0" layoutY="37.0" prefHeight="25.0" prefWidth="70.0" promptText="HW Port" />
    </children>
 </AnchorPane>
