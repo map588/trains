@@ -30,17 +30,8 @@
                                                             <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ." />
                                                             <TableColumn fx:id="switchStateColumn" prefWidth="100" maxWidth="100" text="Switch State" />
                                                             <TableColumn fx:id="switchLightColumn" prefWidth="43" maxWidth="43" text="Light" />
-
                                                         </columns>
                                                        </TableView>
-                                                       <VBox fx:id="FirstLineOccupationRadioButtons" alignment="TOP_CENTER" prefWidth="100.0">
-                                                         <children>
-                                                            <Label text="Occupation" />
-                                                            <RadioButton fx:id="FirstLineOccupationOn" mnemonicParsing="false" text="1" />
-                                                            <RadioButton fx:id="FirstLineOccupationOff" mnemonicParsing="false" text="2" />
-                                                         </children>
-                                                      </VBox>
-
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -103,8 +94,8 @@
                            </font></Label>
                         <TableView prefHeight="200.0" prefWidth="200.0" maxWidth="400" minWidth="200">
                           <columns>
-                            <TableColumn editable="false" prefWidth="75.0" text="File Name" />
-                            <TableColumn editable="false" prefWidth="75.0" text="Date Modified" />
+                            <TableColumn editable="false" minWidth="150.0" prefWidth="300.0" maxWidth="300" text="File Name" />
+                            <TableColumn editable="false" minWidth="50" prefWidth="100.0" maxWidth="100" text="Date Modified" />
                           </columns>
                         </TableView>
 
