@@ -1,6 +1,6 @@
 package CTCOffice;
-import Framework.Support.AbstractSubject;
 
+import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
 import javafx.scene.paint.Paint;
 
@@ -20,7 +20,11 @@ public class CTCBlockSubject implements AbstractSubject {
     private final DoubleProperty  speedLimit;
     private final IntegerProperty blockLength;
     private final ObjectProperty<Paint> lightColor;
-
+    private final IntegerProperty convergingBlockID;
+    private final IntegerProperty divergingBlockOneID;
+    private final IntegerProperty divergingBlockTwoID;
+    private final BooleanProperty switchState;
+    CTCBlockInfo blockInfo;
 
     CTCBlockSubject(CTCBlockInfo block) {
         this.blockID = new SimpleIntegerProperty(this, "blockID", block.getBlockID());
@@ -37,13 +41,21 @@ public class CTCBlockSubject implements AbstractSubject {
         this.speedLimit = new SimpleDoubleProperty(this, "speedLimit", block.getSpeedLimit());
         this.blockLength = new SimpleIntegerProperty(this, "blockLength", block.getBlockLength());
         this.lightColor = new SimpleObjectProperty<>(this, "lightColor", block.getLightColor());
+        this.convergingBlockID = new SimpleIntegerProperty(this, "convergingBlockID", block.getConvergingBlockID());
+        this.divergingBlockOneID = new SimpleIntegerProperty(this, "divergingBlockOneID", block.getDivergingBlockOneID());
+        this.divergingBlockTwoID = new SimpleIntegerProperty(this, "divergingBlockTwoID", block.getDivergingBlockTwoID());
+        this.switchState = new SimpleBooleanProperty(this, "switchState", block.getSwitchState());
+        this.blockInfo = block;
 
         occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
-        lightState.addListener((observable, oldValue, newValue) -> block.setLightState(newValue));
+        lightState.addListener((observable, oldValue, newValue) -> {
+            block.setLightState(newValue);
+        });
         switchConState.addListener((observable, oldValue, newValue) -> block.setSwitchConState(newValue));
         switchDivState.addListener((observable, oldValue, newValue) -> block.setSwitchDivState(newValue));
         crossingState.addListener((observable, oldValue, newValue) -> block.setCrossingState(newValue));
         lightColor.addListener(event -> block.updateLightColor());
+        switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
     }
     public BooleanProperty getBooleanProperty(String propertyName) {
         return switch (propertyName) {
@@ -57,6 +69,7 @@ public class CTCBlockSubject implements AbstractSubject {
             case "switchConState" -> switchConState;
             case "switchDivState" -> switchDivState;
             case "crossingState" -> crossingState;
+            case "switchState" -> switchState;
             default -> null;
         };
     }
@@ -72,6 +85,9 @@ public class CTCBlockSubject implements AbstractSubject {
         return switch (propertyName) {
             case "blockID" -> blockID;
             case "blockLength" -> blockLength;
+            case "convergingBlockID" -> convergingBlockID;
+            case "divergingBlockOneID" -> divergingBlockOneID;
+            case "divergingBlockTwoID" -> divergingBlockTwoID;
             default -> null;
         };
     }
@@ -128,17 +144,30 @@ public class CTCBlockSubject implements AbstractSubject {
             case "blockLength" -> {
                 updateProperty(blockLength, newValue);
             }
-            case "lightColor" -> {
-                updateProperty(lightColor, newValue);
+            case "convergingBlockID" -> {
+                updateProperty(convergingBlockID, newValue);
+            }
+            case "divergingBlockOneID" -> {
+                updateProperty(divergingBlockOneID, newValue);
+            }
+            case "divergingBlockTwoID" -> {
+                updateProperty(divergingBlockTwoID, newValue);
+            }
+            case "switchState" -> {
+                updateProperty(switchState, newValue);
             }
 
             default -> System.err.println("Unknown property " + propertyName);
         }
     }
+    public void setPaint(Paint newValue) {
+        lightColor.set(newValue);
+    }
 
     public Property<?> getProperty(String propertyName) {
         return null;
     }
+
 
 }
 

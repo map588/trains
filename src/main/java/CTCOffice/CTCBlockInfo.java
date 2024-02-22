@@ -15,9 +15,14 @@ class CTCBlockInfo {
     private boolean crossingState;
     private int speedLimit;
     private int blockLength;
+    private int convergingBlockID;
+    private int divergingBlockOneID;
+    private int divergingBlockTwoID;
+    private boolean switchState;
     private javafx.scene.paint.Paint lightColor;
+    CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
 
-    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon, boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean switchConState, boolean switchDivState, boolean crossingState, int speedLimit, int blockLength) {
+    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon, boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean switchConState, boolean switchDivState, boolean crossingState, int speedLimit, int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID, boolean switchState) {
         this.blockID = blockID;
         this.line = line;
         this.occupied = occupied;
@@ -31,8 +36,12 @@ class CTCBlockInfo {
         this.crossingState = crossingState;
         this.speedLimit = speedLimit;
         this.blockLength = blockLength;
+        this.convergingBlockID = convergingBlockID;
+        this.divergingBlockOneID = divergingBlockOneID;
+        this.divergingBlockTwoID = divergingBlockTwoID;
+        this.switchState = switchState;
         updateLightColor();
-        CTCBlockSubjectFactory.getInstance().registerSubject(blockID, new CTCBlockSubject(this));
+       factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
     void setBlockID (int number){
         this.blockID = number;
@@ -44,7 +53,6 @@ class CTCBlockInfo {
 
     void setOccupied(boolean occupied) {
         this.occupied = occupied;
-        System.out.println("Block " + blockID + " on line " + line + " is occupied: " + occupied);
     }
 
     void setHasLight(boolean hasLight) {
@@ -65,6 +73,7 @@ class CTCBlockInfo {
 
     void setLightState(boolean lightState) {
         this.lightState = lightState;
+        updateLightColor();
     }
 
     void setSwitchConState(boolean switchConState) {
@@ -88,10 +97,15 @@ class CTCBlockInfo {
     }
 
     void updateLightColor() {
-        if(lightState) {
+        if(factory.getSubjects().get(getBlockID()) != null) {
+        }
+        if(this.lightState) {
             this.lightColor = javafx.scene.paint.Color.GREEN;
         }else {
             this.lightColor = javafx.scene.paint.Color.RED;
+        }
+        if(factory.getSubjects().get(getBlockID()) != null){
+            factory.getSubjects().get(getBlockID()).setPaint( lightColor);
         }
     }
 
@@ -147,8 +161,40 @@ class CTCBlockInfo {
         return blockLength;
     }
 
-    javafx.scene.paint.Paint getLightColor() {
+    void setSwitchState(boolean state) {
+        this.switchState = state;
+        if(convergingBlockID == 0 || divergingBlockOneID == 0 || divergingBlockTwoID == 0){
+            return;
+        }
+        factory.getSubjects().get(convergingBlockID).setProperty("switchConState", state);
+        if(!state){
+            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
+            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockTwoID).setProperty("switchDivState", false);
+        } else {
+            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockTwoID).setProperty("switchDivState", false);
+            CTCBlockSubjectFactory.getInstance().getSubjects().get(divergingBlockOneID).setProperty("switchDivState", true);
+        }
+    }
+
+    public int getConvergingBlockID() {
+        return convergingBlockID;
+    }
+
+    public int getDivergingBlockOneID() {
+            return divergingBlockOneID;
+        }
+
+    public int getDivergingBlockTwoID() {
+        return divergingBlockTwoID;
+    }
+
+    public javafx.scene.paint.Paint getLightColor() {
+        updateLightColor();
         return lightColor;
     }
 
+    public boolean getSwitchState() {
+        return switchState;
+    }
 }
+
