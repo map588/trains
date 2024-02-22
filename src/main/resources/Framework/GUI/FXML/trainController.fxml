@@ -153,7 +153,7 @@
                   <Font size="19.2" />
                </font>
             </Text>
-            <TextField fx:id="setSpeedTextField" alignment="CENTER" layoutX="214.4" layoutY="260.0" prefHeight="2.4" prefWidth="40.0" text="44" />
+            <TextField fx:id="setSpeedTextField" alignment="CENTER" layoutX="214.4" layoutY="260.0" prefHeight="2.4" prefWidth="40.0" text="0" />
             <Text layoutX="256.8" layoutY="278.4" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH">
                <font>
                   <Font size="19.2" />
