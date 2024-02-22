@@ -63,7 +63,7 @@ public class Schedule {
 
     public void printStops() {
         for (SingleStop stop : stops) {
-            System.out.println("Block ID: " + stop.getBlockID() + " Arrival Time: " + stop.getArrivalTime() + " Departure Time: " + stop.getDepartureTime());
+            System.out.println("Block ID: " + stop.getStationBlockID() + " Arrival Time: " + stop.getArrivalTime() + " Departure Time: " + stop.getDepartureTime());
         }
     }
 
@@ -93,7 +93,7 @@ public class Schedule {
     }
 
     public void updateStop(int index, int blockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
-        stops.get(index).setBlockID(blockID);
+        stops.get(index).setStationBlockID(blockID);
         stops.get(index).setArrivalTime(arrivalTime);
         stops.get(index).setDepartureTime(departureTime);
         stops.get(index).setSpeedList(speedList);
@@ -109,7 +109,7 @@ public class Schedule {
         stops.get(stopIndex).updateSpeedList(speedIndex, speed);
     }
 
-    public void updateStopBlock(int stopIndex, int blockIndex, int block) {
+    public void updateStopStation(int stopIndex, int blockIndex, int block) {
         stops.get(stopIndex).updateBlockList(blockIndex, block);
     }
 

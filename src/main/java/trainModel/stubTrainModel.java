@@ -1,12 +1,19 @@
 package trainModel;
 
+import Common.TrainController;
 import Common.TrainModel;
 
 public class stubTrainModel implements TrainModel {
-    private stubTrainModel() {
-    }
+    private TrainController controller;
+
+    private stubTrainModel() {}
+
     public static stubTrainModel createstubTrainModel() {
         return new stubTrainModel();
+    }
+
+    public void setTrainController(TrainController controller) {
+
     }
 
     public void setEmergencyBrake(boolean brake) {
@@ -73,15 +80,18 @@ public class stubTrainModel implements TrainModel {
     }
 
     public void setTemperature(double temp) {
+
     }
     public void setAcceleration(double acceleration) {
+
     }
+
     public int getAuthority() {
-        return 1;
+        return 0;
     }
 
     public int getTrainNumber() {
-        return 1;
+        return controller.getID();
     }
 
     public double getCommandSpeed() {

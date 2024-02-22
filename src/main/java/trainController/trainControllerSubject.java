@@ -28,10 +28,11 @@ public class trainControllerSubject implements AbstractSubject {
         // Initialize properties with correct initial values from controller if available
         properties.put("authority", new SimpleIntegerProperty(controller.getAuthority()));
         //properties.put("blocksToNextStation", new SimpleIntegerProperty(controller.getBlocksToNextStation()));
+        properties.put("samplingPeriod", new SimpleDoubleProperty(controller.getSamplingPeriod()));
         properties.put("commandSpeed", new SimpleDoubleProperty(controller.getCommandSpeed()));
         properties.put("currentSpeed", new SimpleDoubleProperty(controller.getSpeed()));
         properties.put("overrideSpeed", new SimpleDoubleProperty(controller.getOverrideSpeed()));
-        properties.put("maxSpeed", new SimpleDoubleProperty(controller.getMaxSpeed()));
+        properties.put("speedLimit", new SimpleDoubleProperty(controller.getSpeedLimit()));
         properties.put("Ki", new SimpleDoubleProperty(controller.getKi()));
         properties.put("Kp", new SimpleDoubleProperty(controller.getKp()));
         properties.put("power", new SimpleDoubleProperty(controller.getPower()));

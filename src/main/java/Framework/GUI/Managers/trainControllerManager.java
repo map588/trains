@@ -118,7 +118,7 @@ public class trainControllerManager {
     private void bindGauges() {
         currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("currentSpeed"));
         commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty("commandSpeed"));
-        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty("maxSpeed"));
+        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty("speedLimit"));
         authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty("authority"));
         powerOutputGauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
         //trainController_blocksToNextStation_Gauge.valueProperty().bind(currentSubject.getIntegerProperty("blocksToNextStation"));
@@ -154,9 +154,9 @@ public class trainControllerManager {
         bindCheckBox(autoModeCheckBox, "automaticMode");
 
         // Binding TextFields for numeric properties
-        bindTextField(setTemperatureTextField, "temperature");
-        bindTextField(setKiTextField, "Ki");
-        bindTextField(setKpTextField, "Kp");
+        bindDoubleTextField(setTemperatureTextField, "temperature");
+        bindDoubleTextField(setKiTextField, "Ki");
+        bindDoubleTextField(setKpTextField, "Kp");
 
         // Setting up Button actions
         setupButtonActions();
@@ -169,16 +169,30 @@ public class trainControllerManager {
     }
 
 
-    private void bindTextField(TextField textField, String propertyName) {
-        appendListener(textField.textProperty(),(obs, oldVal, newVal) -> {
+    private void bindDoubleTextField(TextField textField, String propertyName) {
+        Runnable textFieldUpdate = () -> {
             try {
                 // Parse and update property
-                currentSubject.setProperty(propertyName, Double.parseDouble(newVal));
+                currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText()));
             } catch (NumberFormatException e) {
                 // Clear if invalid input
                 textField.setText("");
             }
-        });
+        };
+        textField.setOnAction(event -> textFieldUpdate.run());
+    }
+
+    private void bindIntTextField(TextField textField, String propertyName) {
+        Runnable textFieldUpdate = () -> {
+            try {
+                // Parse and update property
+                currentSubject.setProperty(propertyName, Integer.parseInt(textField.getText()));
+            } catch (NumberFormatException e) {
+                // Clear if invalid input
+                textField.setText("");
+            }
+        };
+        textField.setOnAction(event -> textFieldUpdate.run());
     }
 
     private void setupButtonActions() {
@@ -200,22 +214,19 @@ public class trainControllerManager {
             textField.setText(String.format("%.1f", newVal));
             consumer.accept(newVal.doubleValue());
         });
-        appendListener(textField.focusedProperty(),(obs, wasFocused, isNowFocused) -> {
-            if (wasFocused && !isNowFocused) { // TextField has lost focus
-                String newVal = textField.getText();
-                if(newVal.isEmpty()) {return;}
-                try {
-                    double value = Double.parseDouble(newVal);
-                    // Preventing feedback loop
-                    if (Math.abs(value - slider.getValue()) > 0.1) {
-                        consumer.accept(value);
-                        slider.setValue(value); // This line may be redundant due to the consumer updating the model
-                    }
-                } catch (NumberFormatException e) {
-                    textField.setText("");
+
+        Runnable textFieldUpdate = () -> {
+            try {
+                double newValue = Double.parseDouble(textField.getText());
+                if (newValue < slider.getMin() || newValue > slider.getMax()) {
+                    throw new NumberFormatException();
                 }
+                slider.setValue(newValue);
+            } catch (NumberFormatException e) {
+                textField.setText(String.format("%.1f", slider.getValue()));
             }
-        });
+        };
+       textField.setOnAction(event -> textFieldUpdate.run());
     }
 
 
@@ -229,6 +240,7 @@ public class trainControllerManager {
         currentSubject = factory.getSubjects().get(trainID);
         if(currentSubject != null) {
             unbindControls();
+            updateAll();
             bindControls();
             bindGauges();
             bindIndicators();
@@ -259,6 +271,46 @@ public class trainControllerManager {
         setKiTextField.textProperty().unbind();
         setKpTextField.textProperty().unbind();
     }
+
+    //Called when controller is switched, updates state of all UI elements
+    private void updateAll() {
+        if (currentSubject == null) {
+            return;
+        }
+            // Update gauges
+            currentSpeedGauge.setValue(currentSubject.getDoubleProperty("currentSpeed").get());
+            commandedSpeedGauge.setValue(currentSubject.getDoubleProperty("commandSpeed").get());
+            speedLimitGauge.setValue(currentSubject.getDoubleProperty("speedLimit").get());
+            authorityGauge.setValue(currentSubject.getIntegerProperty("authority").get());
+            powerOutputGauge.setValue(currentSubject.getDoubleProperty("power").get());
+
+            // Update indicators
+            updateIndicator(Color.RED, eBrakeStatus, currentSubject.getBooleanProperty("emergencyBrake").get());
+            updateIndicator(Color.RED, signalFailureStatus, currentSubject.getBooleanProperty("signalFailure").get());
+            updateIndicator(Color.RED, brakeFailureStatus, currentSubject.getBooleanProperty("brakeFailure").get());
+            updateIndicator(Color.RED, powerFailureStatus, currentSubject.getBooleanProperty("powerFailure").get());
+            updateIndicator(Color.YELLOW, inTunnelStatus, currentSubject.getBooleanProperty("inTunnel").get());
+            updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, currentSubject.getBooleanProperty("leftPlatform").get());
+            updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, currentSubject.getBooleanProperty("rightPlatform").get());
+
+            // Update checkboxes
+            intLightCheckBox.setSelected(currentSubject.getBooleanProperty("intLights").get());
+            extLightCheckBox.setSelected(currentSubject.getBooleanProperty("extLights").get());
+            openDoorLeftCheckBox.setSelected(currentSubject.getBooleanProperty("leftDoors").get());
+            openDoorRightCheckBox.setSelected(currentSubject.getBooleanProperty("rightDoors").get());
+            toggleServiceBrakeCheckBox.setSelected(currentSubject.getBooleanProperty("serviceBrake").get());
+            autoModeCheckBox.setSelected(currentSubject.getBooleanProperty("automaticMode").get());
+
+            // Update text fields
+            setTemperatureTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty("temperature").get()));
+            setKiTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty("Ki").get()));
+            setKpTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty("Kp").get()));
+            setSpeedTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty("overrideSpeed").get()));
+
+            // Update slider (Assuming it should match the overrideSpeed)
+            setSpeedSlider.setValue(currentSubject.getDoubleProperty("overrideSpeed").get());
+    }
+
 
     private trainControllerTB launchTestBench(){
         System.out.println(System.getProperty("Preparing to launch test bench"));

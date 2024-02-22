@@ -55,8 +55,6 @@ public class trainModelManager {
     public void initialize() {
 
         new trainModelImpl(0);
-        new trainModelImpl(1);
-        new trainModelImpl(2);
 
         factory = trainSubjectFactory.getInstance();
         setupMapChangeListener();

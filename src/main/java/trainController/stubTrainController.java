@@ -106,6 +106,10 @@ public class stubTrainController implements TrainController{
         return 0;
     }
 
+    public double getSpeedLimit() {
+        return 0;
+    }
+
     public double getMaxSpeed() {
         return 0;
     }
@@ -136,6 +140,10 @@ public class stubTrainController implements TrainController{
 
     public boolean getRightDoors() {
         return false;
+    }
+
+    public double getSamplingPeriod() {
+        return 0;
     }
 
     public double getTemperature() {

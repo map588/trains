@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SingleStop {
-    private int blockID;
+    private int stationBlockID;
     private int arrivalTime;
     private int departureTime;
     private List<Integer> speedList;
     private List<Integer> blockList;
     private List<Integer> authorityList;
 
-    public SingleStop(int blockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
-        this.blockID = blockID;
+    public SingleStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
+        this.stationBlockID = stationBlockID;
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;
         this.speedList = new ArrayList<Integer>(speedList);
@@ -20,8 +20,8 @@ public class SingleStop {
         this.authorityList = new ArrayList<Integer>(authorityList);
     }
 
-    public int getBlockID() {
-        return blockID;
+    public int getStationBlockID() {
+        return stationBlockID;
     }
 
     public int getArrivalTime() {
@@ -44,8 +44,8 @@ public class SingleStop {
         return authorityList;
     }
 
-    public void setBlockID(int blockID) {
-        this.blockID = blockID;
+    public void setStationBlockID(int stationBlockID) {
+        this.stationBlockID = stationBlockID;
     }
 
     public void setArrivalTime(int arrivalTime) {

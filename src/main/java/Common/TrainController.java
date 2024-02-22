@@ -48,7 +48,7 @@ public interface TrainController extends Notifications {
     double getKi();
     double getKp();
     double getOverrideSpeed();
-    double getMaxSpeed();
+    double getSpeedLimit();
 
     boolean getServiceBrake();
     boolean getEmergencyBrake();
@@ -58,7 +58,7 @@ public interface TrainController extends Notifications {
     boolean getIntLights();
     boolean getLeftDoors();
     boolean getRightDoors();
-
+    double getSamplingPeriod();
     double getTemperature();
 
     double getCommandSpeed();

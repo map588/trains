@@ -12,10 +12,15 @@ public class trainControllerImpl implements TrainController, Notifications {
     private double commandSpeed;
     private double currentSpeed;
     private double overrideSpeed;
-    private double maxSpeed;
+    private double speedLimit;
 
     private double Ki;
     private double Kp;
+
+    //These are actually private, property mirror not necessary
+    private double speedError;      // Calculated internally
+    private double rollingError;    // Calculated internally
+    private double samplingPeriod;
 
     private double power;
     private boolean serviceBrake;
@@ -49,7 +54,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.commandSpeed = 0.0;
         this.currentSpeed = 0.0;
         this.overrideSpeed = 0.0;
-        this.maxSpeed = 0.0;
+        this.speedLimit = 0.0;
         this.Ki = 0.0;
         this.Kp = 0.0;
         this.power = 0.0;
@@ -66,6 +71,9 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
         this.train = stubTrainModel.createstubTrainModel();
+        this.rollingError = 0;
+        this.speedError = 0;
+        this.samplingPeriod = 0;
     }
 
     public trainControllerSubject getSubject() {
@@ -113,6 +121,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
         notifyChange("overrideSpeed", speed);
+        calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
@@ -188,6 +197,14 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.rightPlatform = platform;
         notifyChange("rightPlatform",platform);
     }
+    public void setSamplingPeriod(double period){
+        this.samplingPeriod = period;
+    }
+    public void setSpeedLimit(double speedLimit){
+        this.speedLimit = speedLimit;
+        notifyChange("speedLimit",speedLimit);
+    }
+
 
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
@@ -212,6 +229,8 @@ public class trainControllerImpl implements TrainController, Notifications {
             case "inTunnel" -> setInTunnel((boolean) newValue);
             case "leftPlatform" -> setLeftPlatform((boolean) newValue);
             case "rightPlatform" -> setRightPlatform((boolean) newValue);
+            case "samplingPeriod" -> setSamplingPeriod((double) newValue);
+            case "speedLimit" -> setSpeedLimit((double) newValue);
         }
     }
 
@@ -233,6 +252,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     public double  getAcceleration() {
         return this.train.getAcceleration();
     }
+    public double  getSamplingPeriod(){return this.samplingPeriod;}
     public double  getPower() {
         return this.power;
     }
@@ -280,9 +300,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         return this.powerFailure;
     }
 
-    public double  getMaxSpeed() {
-        return this.maxSpeed;
-    }
+    public double  getSpeedLimit() {return this.speedLimit;}
     public boolean getLeftDoors() {
         return this.leftDoors;
     }
@@ -297,24 +315,15 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getRightPlatform(){return this.rightPlatform;}
     public boolean getInTunnel(){return this.inTunnel;}
 
-    // Power Calculations
-    // ekprev = ek
-    // ek = command speed - currentspeed
-    //
-    double e_k = 0;
-    double u_k = 0;
-    double powerOut = 0;
-    double SamplingPeriod = 0;
-    public double calculatePower(){
+    public void calculatePower(){
         // Error = commandSpeed - currentSpeed
-        double  e_kprev = e_k,
-                u_kprev = u_k;
-        e_k = commandSpeed - currentSpeed;
+        double  speedError_prev = speedError,
+                rollingError_prev = rollingError;
+        speedError = commandSpeed - currentSpeed;
          // T = sample period of train model......<<< KEY INPUT?????
 
-        if (powerOut < 120000) u_k += SamplingPeriod/2 * (e_k + e_kprev);
+        if (power < 120000) rollingError += samplingPeriod/2 * (speedError + speedError_prev);
 
-        return powerOut = Kp * e_k + Ki*u_k;
-
+         power = Kp * speedError + Ki*rollingError;
     }
 }
