@@ -27,7 +27,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
             inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
             outputStream = new PrintStream(serialPort.getOutputStream(), true);
 
-            SerialCheckerThread thread = new SerialCheckerThread(this);
+            SerialCheckerThread thread = new SerialCheckerThread();
             thread.start();
 
             System.out.println("Send: runPLC=true");
@@ -55,11 +55,6 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         super.setMaintenanceModeNoUpdate(maintenanceMode);
         System.out.println("Send: maintenanceMode="+maintenanceMode);
         outputStream.println("maintenanceMode="+maintenanceMode);
-    }
-
-    @Override
-    public void addBlock(WaysideBlockInfo block) {
-        super.addBlock(block);
     }
 
     @Override
@@ -108,12 +103,8 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     private class SerialCheckerThread extends Thread {
 
-        private final WaysideControllerHWBridge controller;
-        private final BufferedReader inputStream;
-        public SerialCheckerThread(WaysideControllerHWBridge controller) {
+        public SerialCheckerThread() {
             super("SerialCheckerThread");
-            this.controller = controller;
-            this.inputStream = controller.getInputStream();
         }
         @Override
         public void run() {

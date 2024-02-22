@@ -199,21 +199,6 @@ public class WaysideControllerManager {
 
         // Create initial controller and update values
         createNewController();
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(1, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(2, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(3, false, false, true)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(4, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(5, true, false, false, 6, 11)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(6, false, true, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(7, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(8, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(9, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(10, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(11, false, true, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(12, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(13, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(14, false, false, false)));
-//        currentSubject.getController().addBlock((new WaysideBlockInfo(15, false, false, false)));
         currentSubject.getController().runPLC();
 
         currentSubject.getController().CTCSetSpeedAuth(new TrainSpeedAuth(1, 0, 0));
