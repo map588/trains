@@ -44,6 +44,7 @@ class CTCBlockInfo {
 
     void setOccupied(boolean occupied) {
         this.occupied = occupied;
+        System.out.println("Block " + blockID + " on line " + line + " is occupied: " + occupied);
     }
 
     void setHasLight(boolean hasLight) {

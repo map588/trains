@@ -105,10 +105,8 @@ public class CTCOfficeManager {
             }
         });
 
-
-
     }
-//split plane at 0.685
+
     @FXML
     private void toggle_VBox() {
         if (collapsingVBox.isVisible()) {
