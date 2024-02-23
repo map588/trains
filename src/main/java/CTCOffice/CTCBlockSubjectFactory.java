@@ -4,7 +4,7 @@ import Framework.Support.SubjectFactory;
 import Framework.Support.ObservableHashMap;
 
 public class CTCBlockSubjectFactory extends SubjectFactory<CTCBlockSubject>{
-    private static CTCBlockSubjectFactory INSTANCE = new CTCBlockSubjectFactory();
+    private static final CTCBlockSubjectFactory INSTANCE = new CTCBlockSubjectFactory();
     private ObservableHashMap<Integer, CTCBlockSubject> subjects = new ObservableHashMap<>();
     private CTCBlockSubjectFactory() {
     }

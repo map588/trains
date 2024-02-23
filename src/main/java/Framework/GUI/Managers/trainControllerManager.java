@@ -294,6 +294,7 @@ public class trainControllerManager {
     //Called when controller is switched, updates state of all UI elements
     private void updateAll() {
         if (currentSubject == null) {
+            System.out.println("No subject to update");
             return;
         }
 
