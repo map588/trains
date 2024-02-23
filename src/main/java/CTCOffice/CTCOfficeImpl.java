@@ -2,6 +2,8 @@ package CTCOffice;
 
 import Common.CTCOffice;
 import Common.TrainModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import trainModel.trainModelImpl;
 
 import java.util.ArrayList;
@@ -46,7 +48,6 @@ public class CTCOfficeImpl implements CTCOffice {
         Schedule schedule = new Schedule(1, 0, 1, new ArrayList<SingleStop>() {{
             add(stop1);add(stop2);
         }});
-
 
     }
 

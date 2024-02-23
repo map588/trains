@@ -66,15 +66,11 @@ public class CTCOfficeManager {
     @FXML
     public void initialize() {
         CTCOffice one = new CTCOfficeImpl();
-
-        // Set the blockTable to be editable
         blockTable.setEditable(true);
-
-        // Get all the CTCBlockSubject instances from the factory and store them in a Collection
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
 
         // Get all the ScheduleSubject instances from the scheduleFactory and store them in a Collection
-        Collection<ScheduleSubject> scheduleList = scheduleFactory.getSubjects().values();
+        // Collection<ScheduleSubject> scheduleList = scheduleFactory.getSubjects().values();
 
         //first lane table view
         blockTable.getItems().addAll(blockList);
@@ -84,31 +80,22 @@ public class CTCOfficeManager {
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
 
 
-        switchStateColumn.setCellValueFactory(block -> {
-            if (block.getValue().getBooleanProperty("hasSwitchCon").getValue() || block.getValue().getBooleanProperty("hasSwitchDiv").getValue()) {
-                return block.getValue().getStringProperty("switchStateString");
-            } else {
-                return null;
-            }
-        });
-
+        switchStateColumn.setCellValueFactory(block ->
+                block.getValue().getBooleanProperty("hasSwitchCon").getValue() ||
+                block.getValue().getBooleanProperty("hasSwitchDiv").getValue() ?
+                block.getValue().getStringProperty("switchStateString") : null);
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
 
 
-        switchLightColumn.setCellValueFactory(block -> {
-            if (block.getValue().getBooleanProperty("hasLight").getValue()) {
-               return block.getValue().getObjectProperty("lightColor");
-            } else {
-                return null;
-            }
-        });
+
+        switchLightColumn.setCellValueFactory(block ->
+                block.getValue().getBooleanProperty("hasLight").getValue() ?
+                block.getValue().getObjectProperty("lightColor") : null);
+
         switchLightColumn.setCellFactory(column -> new TableCell<CTCBlockSubject, Paint>() {
-            private BorderPane graphic;
-            private Circle circle;
-            private ObjectProperty<Paint> paintProperty;
+            private final BorderPane graphic = new BorderPane();
+            private final Circle circle = new Circle(10);
             {
-                graphic = new BorderPane();
-                circle = new Circle(10);
                 graphic.setCenter(circle);
             }
             @Override
@@ -116,62 +103,18 @@ public class CTCOfficeManager {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setGraphic(null);
-                    if(paintProperty != null){
-                        paintProperty.removeListener(this::onPaintChanged);
-                        paintProperty = null;
-                    }
-                }else {
-                    System.out.println("Setting graphic to " + item);
+                } else {
                     circle.setFill(item);
                     setGraphic(graphic);
-                    CTCBlockSubject block = getTableView().getItems().get(getIndex());
-                    if (block != null) {
-                        paintProperty = block.getObjectProperty("lightColor");
-                        if(paintProperty != null){
-                            paintProperty.removeListener(this::onPaintChanged);
-                        }
-                        System.out.println("Adding listener to " + block);
-                        block.getObjectProperty("lightColor").addListener(this::onPaintChanged);
-                    }
-                }
-            }
-
-            private void onPaintChanged(javafx.beans.Observable observable, Paint oldValue, Paint newValue) {
-                circle.setFill(newValue);
-            }
-            @Override
-            public void updateIndex(int i) {
-                super.updateIndex(i);
-                if(paintProperty != null){
-                    paintProperty.removeListener(this::onPaintChanged);
-                    paintProperty = null;
                 }
             }
         });
-
-
-
 
         //Table editing bar
         blockSelection.getItems().addAll(factory.getSubjects().keySet());
         lineSelection.getItems().addAll(true, false);
-        switchLightToggle.setOnAction(event -> {
-            CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
-            block.setProperty("lightState", !block.getBooleanProperty("lightState").getValue());
-        });
-        switchStateToggle.setOnAction(event -> {
-            CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
-            block.setProperty("switchState", !block.getBooleanProperty("switchState").getValue());
-            blockTable.refresh();
-        });
-
-
-
-
-
-
-
-
+        switchLightToggle.setOnAction(event -> toggleProperty("lightState"));
+        switchStateToggle.setOnAction(event -> toggleProperty("switchState"));
 
 
         double dividerPosition = 515.0;
@@ -188,6 +131,12 @@ public class CTCOfficeManager {
             }
         });
 
+    }
+
+    private void toggleProperty(String propertyName) {
+        CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
+        block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
+        blockTable.refresh();
     }
 
 //    @FXML

@@ -110,10 +110,11 @@ public class trainControllerManager {
 
 
     private void updateChoiceBoxItems() {
+        int previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedIndex();
         Platform.runLater(() -> {
             trainNoChoiceBox.setItems(FXCollections.observableArrayList(
                     new ArrayList<>(factory.getSubjects().keySet())));
-            trainNoChoiceBox.getSelectionModel().selectFirst();
+            trainNoChoiceBox.getSelectionModel().select(previousSelection);
         });
     }
 
