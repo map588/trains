@@ -14,7 +14,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="706.0" maxWidth="1024" prefHeight="706.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainController.trainControllerManager">
    <children>
       <AnchorPane id="cabinSettingsPane" layoutX="36.0" layoutY="162.4" prefHeight="300.0" prefWidth="228.8">
@@ -297,13 +296,12 @@
                   <Font name="System Bold" size="19.2" />
                </font>
             </Text>
-            <Text layoutX="22.4" layoutY="81.6" strokeType="OUTSIDE" strokeWidth="0.0" text="Auto Mode">
+            <ChoiceBox fx:id="trainNoChoiceBox" layoutX="17.0" layoutY="37.0" prefHeight="16.0" prefWidth="124.0" />
+            <CheckBox fx:id="autoModeCheckBox" layoutX="18.0" layoutY="71.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="124.0" text="Auto Mode">
                <font>
-                  <Font size="14.4" />
+                  <Font name="System Bold" size="13.0" />
                </font>
-            </Text>
-            <ChoiceBox fx:id="trainNoChoiceBox" layoutX="17.0" layoutY="37.0" prefHeight="26.0" prefWidth="72.0" />
-            <Circle fx:id="autoModeCustomButton" fill="WHITE" layoutX="123.0" layoutY="75.0" radius="9.6" stroke="BLACK" strokeType="INSIDE" />
+            </CheckBox>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="39.0" layoutY="44.0" prefHeight="106.0" prefWidth="230.0">
