@@ -1,0 +1,20 @@
+occupancy[blockID]
+switch[blockID]
+switchRequest[blockID]
+light[blockID]
+crossing[blockID]
+
+if conditional:
+else conditional:
+endif
+
+!
+||
+&&
+
+RED
+GREEN
+MAIN
+ALT
+OPEN
+CLOSED

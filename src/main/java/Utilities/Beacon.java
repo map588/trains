@@ -18,7 +18,7 @@ public class Beacon {
         ArrayList<staticBlockInfo> tempBlocks = new ArrayList<staticBlockInfo>();
         for (staticBlockInfo block : blocks) {
             if (block.isSwitch()) {
-                lastSwitch = block.getBlockNumber();
+                lastSwitch = block.getBlockNumber().getValue();
             }
             tempBlocks.add(block);
         }

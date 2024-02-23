@@ -1,0 +1,4 @@
+   switch states : false = mainline, or if N/A lower block number, true = alternate or if N/A higher block number
+   light states : false = red, true = green
+   cross states : false = closed, true = open
+   lines : false = red line, true = green line (blue is false for now)
