@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static trainController.Properties.*;
+
 public class trainControllerSubject implements AbstractSubject, Notifications {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
@@ -27,34 +29,34 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     // Simplified property initialization
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available
-        properties.put("authority", new SimpleIntegerProperty(controller.getAuthority()));
-        //properties.put("blocksToNextStation", new SimpleIntegerProperty(controller.getBlocksToNextStation()));
-        properties.put("samplingPeriod", new SimpleIntegerProperty(controller.getSamplingPeriod()));
-        properties.put("commandSpeed", new SimpleDoubleProperty(controller.getCommandSpeed()));
-        properties.put("currentSpeed", new SimpleDoubleProperty(controller.getSpeed()));
-        properties.put("overrideSpeed", new SimpleDoubleProperty(controller.getOverrideSpeed()));
-        properties.put("speedLimit", new SimpleDoubleProperty(controller.getSpeedLimit()));
-        properties.put("Ki", new SimpleDoubleProperty(controller.getKi()));
-        properties.put("Kp", new SimpleDoubleProperty(controller.getKp()));
-        properties.put("power", new SimpleDoubleProperty(controller.getPower()));
-        properties.put("serviceBrake", new SimpleBooleanProperty(controller.getServiceBrake()));
-        properties.put("emergencyBrake", new SimpleBooleanProperty(controller.getEmergencyBrake()));
-        properties.put("automaticMode", new SimpleBooleanProperty(controller.getAutomaticMode()));
-        properties.put("extLights", new SimpleBooleanProperty(controller.getExtLights()));
-        properties.put("intLights", new SimpleBooleanProperty(controller.getIntLights()));
-        properties.put("announcements", new SimpleBooleanProperty(controller.getAnnouncements()));
-        properties.put("signalFailure", new SimpleBooleanProperty(controller.getSignalFailure()));
-        properties.put("brakeFailure", new SimpleBooleanProperty(controller.getBrakeFailure()));
-        properties.put("powerFailure", new SimpleBooleanProperty(controller.getPowerFailure()));
-        properties.put("temperature", new SimpleDoubleProperty(controller.getTemperature()));
-        properties.put("leftDoors", new SimpleBooleanProperty(controller.getLeftDoors()));
-        properties.put("rightDoors", new SimpleBooleanProperty(controller.getRightDoors()));
-        properties.put("inTunnel", new SimpleBooleanProperty(controller.getInTunnel()));
-        properties.put("leftPlatform", new SimpleBooleanProperty(controller.getLeftPlatform()));
-        properties.put("rightPlatform", new SimpleBooleanProperty(controller.getRightPlatform()));
-        properties.put("nextStationName", new SimpleStringProperty(controller.getStationName()));
-        properties.put("trainID", new SimpleIntegerProperty(controller.getID()));
-        properties.put("grade", new SimpleDoubleProperty(controller.getGrade()));
+        properties.put(authority_p, new SimpleIntegerProperty(controller.getAuthority()));
+        //properties.put(blocksToNextStation, new SimpleIntegerProperty(controller.getBlocksToNextStation()));
+        properties.put(samplingPeriod_p, new SimpleIntegerProperty(controller.getSamplingPeriod()));
+        properties.put(commandSpeed_p, new SimpleDoubleProperty(controller.getCommandSpeed()));
+        properties.put(currentSpeed_p, new SimpleDoubleProperty(controller.getSpeed()));
+        properties.put(overrideSpeed_p, new SimpleDoubleProperty(controller.getOverrideSpeed()));
+        properties.put(speedLimit_p, new SimpleDoubleProperty(controller.getSpeedLimit()));
+        properties.put(Ki_p, new SimpleDoubleProperty(controller.getKi()));
+        properties.put(Kp_p, new SimpleDoubleProperty(controller.getKp()));
+        properties.put(power_p, new SimpleDoubleProperty(controller.getPower()));
+        properties.put(serviceBrake_p, new SimpleBooleanProperty(controller.getServiceBrake()));
+        properties.put(emergencyBrake_p, new SimpleBooleanProperty(controller.getEmergencyBrake()));
+        properties.put(automaticMode_p, new SimpleBooleanProperty(controller.getAutomaticMode()));
+        properties.put(extLights_p, new SimpleBooleanProperty(controller.getExtLights()));
+        properties.put(intLights_p, new SimpleBooleanProperty(controller.getIntLights()));
+        properties.put(announcements_p, new SimpleBooleanProperty(controller.getAnnouncements()));
+        properties.put(signalFailure_p, new SimpleBooleanProperty(controller.getSignalFailure()));
+        properties.put(brakeFailure_p, new SimpleBooleanProperty(controller.getBrakeFailure()));
+        properties.put(powerFailure_p, new SimpleBooleanProperty(controller.getPowerFailure()));
+        properties.put(temperature_p, new SimpleDoubleProperty(controller.getTemperature()));
+        properties.put(leftDoors_p, new SimpleBooleanProperty(controller.getLeftDoors()));
+        properties.put(rightDoors_p, new SimpleBooleanProperty(controller.getRightDoors()));
+        properties.put(inTunnel_p, new SimpleBooleanProperty(controller.getInTunnel()));
+        properties.put(leftPlatform_p, new SimpleBooleanProperty(controller.getLeftPlatform()));
+        properties.put(rightPlatform_p, new SimpleBooleanProperty(controller.getRightPlatform()));
+        properties.put(nextStationName_p, new SimpleStringProperty(controller.getStationName()));
+        properties.put(trainID_p, new SimpleIntegerProperty(controller.getID()));
+        properties.put(grade_p, new SimpleDoubleProperty(controller.getGrade()));
 
     }
 
