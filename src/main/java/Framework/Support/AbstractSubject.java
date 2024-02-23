@@ -1,9 +1,6 @@
 package Framework.Support;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
+import javafx.beans.property.*;
 
 public interface AbstractSubject {
 //     void updateProperty(BooleanProperty property, boolean newValue);
@@ -24,7 +21,9 @@ public interface AbstractSubject {
             ((IntegerProperty) property).set(((Number) newValue).intValue());
         } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
             ((BooleanProperty) property).set((Boolean) newValue);
-        } else {
+        } else if(property instanceof StringProperty && newValue instanceof String){
+            ((StringProperty) property).set((String) newValue);
+        } else{
             System.err.println("Mismatch in property type and value type for " + property.getName());
         }
         System.out.println("Property " + property.getName() + " updated to " + newValue + " in Subject");

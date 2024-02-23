@@ -67,8 +67,13 @@ public class CTCOfficeManager {
     public void initialize() {
         CTCOffice one = new CTCOfficeImpl();
 
+        // Set the blockTable to be editable
         blockTable.setEditable(true);
+
+        // Get all the CTCBlockSubject instances from the factory and store them in a Collection
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
+
+        // Get all the ScheduleSubject instances from the scheduleFactory and store them in a Collection
         Collection<ScheduleSubject> scheduleList = scheduleFactory.getSubjects().values();
 
         //first lane table view
