@@ -16,6 +16,10 @@ public class WaysideControllerSubject {
 
     private ObservableList<TrainSpeedAuth> speedAuthList;
 
+    /**
+     * Constructor for the WaysideControllerSubject
+     * @param controller The wayside controller that this subject is observing
+     */
     public WaysideControllerSubject(WaysideController controller) {
         this.controller = controller;
         maintenanceMode = new SimpleBooleanProperty(controller.isMaintenanceMode());
@@ -30,18 +34,41 @@ public class WaysideControllerSubject {
         });
     }
 
+    /**
+     * Get the maintenance mode property
+     * @return The maintenance mode property
+     */
     public BooleanProperty maintenanceModeProperty() {
         return maintenanceMode;
     }
+
+    /**
+     * Get the PLC name property
+     * @return The PLC name property
+     */
     public StringProperty PLCNameProperty() {
         return PLCName;
     }
+
+    /**
+     * Get the active PLC color property
+     * @return The active PLC color property
+     */
     public ObjectProperty<Paint> activePLCColorProperty() {
         return activePLCColor;
     }
+
+    /**
+     * Get the block list property
+     * @return The block list property
+     */
     public ObservableList<WaysideBlockInfo> blockListProperty() {
         return blockList;
     }
+    /**
+     * Adds a block to the wayside controller's block list
+     * @param block The block to add
+     */
     public void addBlock(WaysideBlockInfo block) {
         blockList.add(block);
         block.occupationProperty().addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(block.getBlockID(), newValue));
@@ -51,12 +78,27 @@ public class WaysideControllerSubject {
         });
         block.switchRequestedStateProperty().addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(block.getBlockID(), newValue));
     }
+
+    /**
+     * Get the wayside controller
+     * @return The wayside controller
+     */
     public WaysideController getController() {
         return this.controller;
     }
+
+    /**
+     * Get the speed and authority of a train
+     * @return The speed and authority of the train
+     */
     public ObservableList<TrainSpeedAuth> getSpeedAuthList() {
         return speedAuthList;
     }
+
+    /**
+     * Set the speed and authority of a train
+     * @param speedAuth The speed and authority of the train
+     */
     public void setSpeedAuth(TrainSpeedAuth speedAuth) {
         if(speedAuthList.contains(speedAuth)) {
             speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
