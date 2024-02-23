@@ -33,32 +33,25 @@ public class trackModelImpl implements TrackModel {
 
     private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
 
-
-
     public int getAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
     }
-
     public int getTrainAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
     }
-
     public int getCommandedSpeed(int trainID) {
         return this.trainCommandSpeeds.get(trainID);
     }
-
     public boolean getLightState(int block){ return this.lightState; }
     public boolean getSwitchState(int block){ return this.switchState; }
     public void setSwitchState(boolean state) { switchState = state; }
     public void setLightState(boolean state) { lightState = state; }
-
     public boolean getBlockOccupied(int block) {
         return this.blockOccupied.contains(block);
     }
     public void setBlockOccupied(int block, boolean state) { if(state){ this.blockOccupied.add(block); } }
     public void setLine(String line) { this.line.add(line); }
     public String getLine(int lineNumber) { return this.line.get(lineNumber); }
-
     public void setTrainAuthority(int trainID, int authority) {
         if(this.trainAuthorities.containsKey(trainID)) {
             this.trainAuthorities.replace(trainID, authority);
@@ -66,7 +59,6 @@ public class trackModelImpl implements TrackModel {
             this.trainAuthorities.put(trainID, authority);
         }
     }
-
     public void setCommandedSpeed(int trainID, int commandedSpeed) {
         if(this.trainCommandSpeeds.containsKey(trainID)) {
             this.trainCommandSpeeds.replace(trainID, commandedSpeed);
@@ -74,7 +66,6 @@ public class trackModelImpl implements TrackModel {
             this.trainCommandSpeeds.put(trainID, commandedSpeed);
         }
     }
-
     public void setFailure(int block, String failure) {
         if(failure.equals("Broken Rail") || failure.equals("Track Circuit Failure") || failure.equals("Power Failure")) {
             failures.add(block);
@@ -85,7 +76,6 @@ public class trackModelImpl implements TrackModel {
             this.trackInfo.get(block).setHasFailure(false);
         }
     }
-
     @Override
     public void setTrackHeaters(int temp){
         System.out.println("Setting Track Heaters: " + temp);

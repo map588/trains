@@ -19,9 +19,20 @@ import static Utilities.Conversion.powerUnits.WATTS;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
 
-
+/**
+ * This is the constructor for the trainControllerImpl class.
+ * It initializes all the properties of the trainControllerImpl object.
+ * It sets the trainID to the passed value and initializes all other properties to their default values.
+ * It also creates a new trainControllerSubject object and assigns it to the subject property.
+ * A stubTrainModel object is created and assigned to the train property.
+ * The constructor also schedules the calculatePower method to be called at fixed rate intervals.
+ * The rate is determined by the samplingPeriod property.
+ *
+ */
 public class trainControllerImpl implements TrainController, Notifications {
-
+    /**
+     * An executor service that allows for scheduling and executing tasks in a single thread.
+     */
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private int authority;
     private int blocksToNextStation;
@@ -67,7 +78,17 @@ public class trainControllerImpl implements TrainController, Notifications {
 
     private final trainControllerSubject subject;
 
-    //Passing with trainID actually adds the train to the subject list
+    /**
+     * This is the constructor for the trainControllerImpl class.
+     * It initializes all the properties of the trainControllerImpl object.
+     * It sets the trainID to the passed value and initializes all other properties to their default values.
+     * It also creates a new trainControllerSubject object and assigns it to the subject property.
+     * A stubTrainModel object is created and assigned to the train property.
+     * The constructor also schedules the calculatePower method to be called at fixed rate intervals.
+     * The rate is determined by the samplingPeriod property.
+     *
+     * @param trainID  The ID of the train to be controlled by this trainControllerImpl object.
+     */
     public trainControllerImpl(int trainID) {
         this.trainID = trainID;
         this.authority = 0;
@@ -100,16 +121,15 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.power = 0;
 
         this.executorService.scheduleAtFixedRate(this::calculatePower, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
-
     }
 
-    public trainControllerSubject getSubject() {
-        return this.subject;
-    }
-
-
-
-    //-----------------Setters-----------------
+    /**
+     * This method is used to assign a TrainModel object to the trainControllerImpl.
+     * It first assigns the passed TrainModel object to the train variable of the trainControllerImpl.
+     * Then it sets the service brake, emergency brake, internal lights, external lights, left doors, right doors, temperature, signal failure, brake failure, and power failure of the trainControllerImpl to the corresponding values of the passed TrainModel object.
+     *
+     * @param train  The TrainModel object to be assigned to the trainControllerImpl.
+     */
     public void assignTrainModel(TrainModel train) {
         this.train = train;
         this.setServiceBrake(train.getServiceBrake());
@@ -124,13 +144,30 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.setPowerFailure(train.getPowerFailure());
     }
 
+    /**
+     * This method is used to notify the change in the value of a property.
+     * It prints the property name and the new value to the console and then notifies the subject of the change.
+     * The notification to the subject is only done if the GUI is not currently being updated.
+     *
+     * @param propertyName  The name of the property that has changed.
+     * @param newValue      The new value of the property.
+     */
     public void notifyChange(String propertyName, Object newValue) {
-            System.out.println("Variable: " + propertyName + " changed to " + newValue);
+        System.out.println("Variable: " + propertyName + " changed to " + newValue);
         if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
         }
     }
 
+    /**
+     * This method is similar to the above, but it includes an additional parameter to suppress console output.
+     * If suppressOutput is true, the method will not print the property name and new value to the console.
+     * Regardless of the value of suppressOutput, the method will still notify the subject of the change if the GUI is not currently being updated.
+     *
+     * @param propertyName  The name of the property that has changed.
+     * @param newValue      The new value of the property.
+     * @param suppressOutput If true, suppresses console output.
+     */
     public void notifyChange(String propertyName, Object newValue, boolean suppressOutput) {
         if(!suppressOutput) {
             System.out.println("Variable: " + propertyName + " changed to " + newValue);
@@ -252,6 +289,16 @@ public class trainControllerImpl implements TrainController, Notifications {
         notifyChange("grade",newValue);
     }
 
+    /**
+     * This method is used to set the value of a property based on the property name.
+     * It uses a switch statement to determine which property to set.
+     * The method casts the newValue parameter to the appropriate type based on the property.
+     * If the property name is not found, it prints an error message to the console.
+     * After setting the property, it does not calculate power.
+     *
+     * @param propertyName  The name of the property to be set.
+     * @param newValue      The new value to be set for the property.
+     */
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
             case "automaticMode" -> setAutomaticMode((boolean) newValue);
@@ -292,11 +339,6 @@ public class trainControllerImpl implements TrainController, Notifications {
     public int getID() {
         return this.trainID;
     }
-
-    //    public int getBlocksToNextStation() {
-//        return this.blocksToNextStation;
-//    }
-
     public double  getSpeed() {
         return this.currentSpeed;
     }
@@ -331,7 +373,9 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getAutomaticMode() {
         return this.automaticMode;
     }
-
+    public trainControllerSubject getSubject() {
+        return this.subject;
+    }
     public boolean getExtLights() {
         return this.externalLights;
     }
@@ -350,8 +394,9 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getPowerFailure() {
         return this.powerFailure;
     }
-
-    public double  getSpeedLimit() {return this.speedLimit;}
+    public double  getSpeedLimit() {
+        return this.speedLimit;
+    }
     public boolean getLeftDoors() {
         return this.leftDoors;
     }
@@ -369,8 +414,24 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getInTunnel(){return this.inTunnel;}
     public double  getGrade(){return this.grade;}
 
+    /**
+     * This method is used to calculate the power needed for the train.
+     * It first determines the set speed based on whether the train is in automatic mode or not.
+     * Then it calculates the current speed and initializes acceleration to 0.
+     * It calculates the error between the set speed and the current speed, and updates the rolling error.
+     * The power is then calculated using the proportional-integral (PI) controller formula.
+     * If the calculated power exceeds the maximum power, it is set to the maximum power.
+     * If the train is in automatic mode and the calculated power is less than 0, the power is set to 0 and the service brake is activated.
+     * If the service brake is active and the calculated power is greater than 0, the service brake is deactivated.
+     * If the emergency brake or service brake is active, or there is a power failure, or the calculated power is less than 0, the power is set to 0.
+     * If the emergency brake is active, the acceleration is set to the emergency brake deceleration.
+     * If the service brake is active, the acceleration is set to the service brake deceleration.
+     * Otherwise, the acceleration is calculated by dividing the power by the weight of the train.
+     * The current speed is then updated based on the calculated acceleration.
+     * If the current speed is less than 0, it is set to 0.
+     * Finally, the speed and power of the train are updated.
+     */
     public void calculatePower(){
-
         // Convert Units
         double setSpeed, currSpeed, pow, accel;
 

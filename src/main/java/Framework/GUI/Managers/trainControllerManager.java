@@ -76,6 +76,8 @@ public class trainControllerManager {
                 changeTrainView(newSelection);
             }
         });
+
+        currentSubject.setProperty("automaticMode", true);
         testBench = launchTestBench();
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
 
