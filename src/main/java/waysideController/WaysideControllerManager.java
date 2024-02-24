@@ -1,8 +1,11 @@
-package Framework.GUI.Managers;
+package waysideController;
 
 import Common.WaysideController;
-import waysideController.TrainSpeedAuth;
+import Framework.Support.ListenerReference;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,12 +21,15 @@ import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import waysideController.*;
 
 import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static waysideController.Properties.*;
 
 public class WaysideControllerManager {
 
@@ -77,6 +83,7 @@ public class WaysideControllerManager {
     private WaysideControllerSubject currentSubject = null;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
     private WaysideControllerTB testBench;
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -91,7 +98,10 @@ public class WaysideControllerManager {
         blockTable.setEditable(true);
         createNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
-        maintenanceModeCheckbox.setOnAction(event -> updateMaintenanceWriteable());
+        maintenanceModeCheckbox.setOnAction(event -> {
+            currentSubject.setProperty(maintenanceMode_p, maintenanceModeCheckbox.isSelected());
+            updateMaintenanceWriteable();
+        });
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
@@ -106,7 +116,7 @@ public class WaysideControllerManager {
                 circle = new Circle(8);
                 graphic.setCenter(circle);
                 setOnMouseClicked(event -> {
-                    if(currentSubject.maintenanceModeProperty().get()) {
+                    if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                         if(this.getTableRow().getItem().hasLight()) {
                             this.getTableRow().getItem().setLightState(!this.getTableRow().getItem().getLightState());
                         }
@@ -136,10 +146,10 @@ public class WaysideControllerManager {
                         CheckBox checkBox;
                         {
                             checkBox = new CheckBox();
-                            checkBox.setDisable(!currentSubject.maintenanceModeProperty().get());
+                            checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
                             checkBox.setSelected(item);
                             checkBox.setOnMouseClicked(event -> {
-                                if(currentSubject.maintenanceModeProperty().get()) {
+                                if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                                     this.getTableRow().getItem().setCrossingState(!this.getTableRow().getItem().isCrossingState());
                                 }
                             });
@@ -198,6 +208,7 @@ public class WaysideControllerManager {
     }
 
     private void updateMaintenanceWriteable() {
+        maintenanceModeCheckbox.setSelected(currentSubject.getBooleanProperty(maintenanceMode_p).get());
         switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
         blockTable.refresh();
     }
@@ -287,9 +298,13 @@ public class WaysideControllerManager {
     private void changeActiveController(WaysideController controller) {
         // Unbind previous subject
         if(currentSubject != null) {
-            maintenanceModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.maintenanceModeProperty());
-            plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.PLCNameProperty());
-            plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.activePLCColorProperty());
+            listenerReferences.forEach(ListenerReference::detach);
+            listenerReferences.clear();
+//            maintenanceModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.getBooleanProperty(maintenanceMode_p));
+//            maintenanceModeCheckbox.selectedProperty().unbind();
+            plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.getStringProperty(PLCName_p));
+            plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.getPaintProperty(activePLCColor_p));
+            currentSubject.getBooleanProperty(maintenanceMode_p).removeListener((observable, oldValue, newValue) -> updateMaintenanceWriteable());
         }
 
         // Update controller
@@ -298,14 +313,23 @@ public class WaysideControllerManager {
         testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
 
         // Bind new subject
-        maintenanceModeCheckbox.selectedProperty().bindBidirectional(currentSubject.maintenanceModeProperty());
-        plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.PLCNameProperty());
-        plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.activePLCColorProperty());
+        appendListener(currentSubject.getBooleanProperty(maintenanceMode_p), (observable, oldValue, newValue) -> updateMaintenanceWriteable());
+//        currentSubject.getBooleanProperty(maintenanceMode_p).addListener((observable, oldValue, newValue) -> updateMaintenanceWriteable());
+//        maintenanceModeCheckbox.selectedProperty().bindBidirectional(currentSubject.getBooleanProperty(maintenanceMode_p));
+//        maintenanceModeCheckbox.selectedProperty().bind(currentSubject.getBooleanProperty(maintenanceMode_p));
+//        currentSubject.getBooleanProperty(maintenanceMode_p).bind(maintenanceModeCheckbox.selectedProperty());
+        plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.getStringProperty(PLCName_p));
+        plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.getPaintProperty(activePLCColor_p));
 
         testBench.setController(controller);
 
         updateMaintenanceWriteable();
         updateBlockList();
+    }
+
+    private <T> void appendListener(ObservableValue<T> observable, ChangeListener<T> listener) {
+        observable.addListener(listener);
+        listenerReferences.add(new ListenerReference<>(observable, listener));
     }
 
     private WaysideControllerTB launchTestBench() {

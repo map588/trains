@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package waysideController;
 
 import Common.WaysideController;
 import waysideController.TrainSpeedAuth;

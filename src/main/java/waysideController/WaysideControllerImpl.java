@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static waysideController.Properties.*;
+
 public class WaysideControllerImpl implements WaysideController {
 
     // The ID of the wayside controller
@@ -68,7 +70,7 @@ public class WaysideControllerImpl implements WaysideController {
     @Override
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
-        subject.PLCNameProperty().set(PLC.getName());
+        notifyChange(PLCName_p, PLC.getName());
         updateActivePLCProp();
     }
 
@@ -86,7 +88,7 @@ public class WaysideControllerImpl implements WaysideController {
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
-        subject.maintenanceModeProperty().set(maintenanceMode);
+//        subject.maintenanceModeProperty().set(maintenanceMode);
         updateActivePLCProp();
         runPLC();
     }
@@ -181,9 +183,9 @@ public class WaysideControllerImpl implements WaysideController {
 
     private void updateActivePLCProp() {
         if(!maintenanceMode && PLCFile != null)
-            subject.activePLCColorProperty().set(Color.BLUE);
+            subject.getPaintProperty(activePLCColor_p).set(Color.BLUE);
         else
-            subject.activePLCColorProperty().set(Color.GRAY);
+            subject.getPaintProperty(activePLCColor_p).set(Color.GRAY);
     }
 
     protected void setSwitchState(int blockID, boolean switchState) {
@@ -200,6 +202,38 @@ public class WaysideControllerImpl implements WaysideController {
 
     public WaysideControllerSubject getSubject() {
         return subject;
+    }
+
+    /**
+     * This method is used to set the value of a property based on the property name.
+     * It uses a switch statement to determine which property to set.
+     * The method casts the newValue parameter to the appropriate type based on the property.
+     * If the property name is not found, it prints an error message to the console.
+     *
+     * @param propertyName  The name of the property to be set.
+     * @param newValue      The new value to be set for the property.
+     */
+    @Override
+    public void setValue(String propertyName, Object newValue) {
+        switch(propertyName) {
+            case maintenanceMode_p -> setMaintenanceMode((boolean) newValue);
+            default -> System.err.println("Property " + propertyName + " not found");
+        }
+    }
+
+    /**
+     * This method is used to notify the change in the value of a property.
+     * It prints the property name and the new value to the console and then notifies the subject of the change.
+     * The notification to the subject is only done if the GUI is not currently being updated.
+     *
+     * @param propertyName  The name of the property that has changed.
+     * @param newValue      The new value of the property.
+     */
+    public void notifyChange(String propertyName, Object newValue) {
+        System.out.println("Variable: " + propertyName + " changed to " + newValue);
+        if(!subject.isGUIUpdate) {
+            subject.notifyChange(propertyName, newValue);
+        }
     }
 
 }

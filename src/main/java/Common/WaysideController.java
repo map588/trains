@@ -65,5 +65,7 @@ public interface WaysideController {
 
     // Returns the subject attached to this controller
     public WaysideControllerSubject getSubject();
+
+    void setValue(String propertyName, Object newValue);
 }
 
