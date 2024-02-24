@@ -2,7 +2,7 @@ package Framework.Support;
 
 import trainController.trainControllerSubjectMap;
 
-public abstract class SubjectMap<K, S> {
+public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S>{
 
     protected final ObservableHashMap<K, S> subjects = new ObservableHashMap<>();
 
@@ -12,10 +12,6 @@ public abstract class SubjectMap<K, S> {
 
     public S getSubject(K ID) {
         return subjects.get(ID);
-    }
-
-    public static SubjectMap getInstance() {
-        return null;
     }
 
     public void removeSubject(K ID) {
