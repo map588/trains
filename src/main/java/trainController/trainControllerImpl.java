@@ -20,6 +20,7 @@ import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
+import static trainController.Properties.*;
 
 /**
  * This is the constructor for the trainControllerImpl class.
@@ -302,32 +303,32 @@ public class trainControllerImpl implements TrainController, Notifications {
      */
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
-            case "automaticMode" -> setAutomaticMode((boolean) newValue);
-            case "authority" -> setAuthority((int) newValue);
-            case "overrideSpeed" -> setOverrideSpeed((double) newValue);
-            case "commandSpeed" -> setCommandSpeed((double) newValue);
-            case "currentSpeed" -> setSpeed((double) newValue);
-            case "serviceBrake" -> setServiceBrake((boolean) newValue);
-            case "emergencyBrake" -> setEmergencyBrake((boolean) newValue);
-            case "Ki" -> setKi((double) newValue);
-            case "Kp" -> setKp((double) newValue);
-            case "power" -> setPower((double) newValue);
-            case "intLights" -> setIntLights((boolean) newValue);
-            case "extLights" -> setExtLights((boolean) newValue);
-            case "leftDoors" -> setLeftDoors((boolean) newValue);
-            case "rightDoors" -> setRightDoors((boolean) newValue);
-            case "temperature" -> setTemperature((double) newValue);
-            case "announcements" -> setAnnouncements((boolean) newValue);
-            case "signalFailure" -> setSignalFailure((boolean) newValue);
-            case "brakeFailure" -> setBrakeFailure((boolean) newValue);
-            case "powerFailure" -> setPowerFailure((boolean) newValue);
-            case "inTunnel" -> setInTunnel((boolean) newValue);
-            case "leftPlatform" -> setLeftPlatform((boolean) newValue);
-            case "rightPlatform" -> setRightPlatform((boolean) newValue);
-            case "samplingPeriod" -> setSamplingPeriod((int) newValue);
-            case "speedLimit" -> setSpeedLimit((double) newValue);
-            case "nextStationName" -> setNextStationName((String) newValue);
-            case "grade" -> setGrade((double) newValue);
+            case Properties.automaticMode_p -> setAutomaticMode((boolean) newValue);
+            case authority_p -> setAuthority((int) newValue);
+            case overrideSpeed_p -> setOverrideSpeed((double) newValue);
+            case commandSpeed_p -> setCommandSpeed((double) newValue);
+            case currentSpeed_p -> setSpeed((double) newValue);
+            case serviceBrake_p -> setServiceBrake((boolean) newValue);
+            case emergencyBrake_p -> setEmergencyBrake((boolean) newValue);
+            case Ki_p -> setKi((double) newValue);
+            case Kp_p -> setKp((double) newValue);
+            case power_p -> setPower((double) newValue);
+            case intLights_p -> setIntLights((boolean) newValue);
+            case extLights_p -> setExtLights((boolean) newValue);
+            case leftDoors_p -> setLeftDoors((boolean) newValue);
+            case rightDoors_p -> setRightDoors((boolean) newValue);
+            case temperature_p -> setTemperature((double) newValue);
+            case announcements_p -> setAnnouncements((boolean) newValue);
+            case signalFailure_p -> setSignalFailure((boolean) newValue);
+            case brakeFailure_p -> setBrakeFailure((boolean) newValue);
+            case powerFailure_p -> setPowerFailure((boolean) newValue);
+            case inTunnel_p -> setInTunnel((boolean) newValue);
+            case leftPlatform_p -> setLeftPlatform((boolean) newValue);
+            case rightPlatform_p -> setRightPlatform((boolean) newValue);
+            case samplingPeriod_p -> setSamplingPeriod((int) newValue);
+            case speedLimit_p -> setSpeedLimit((double) newValue);
+            case nextStationName_p -> setNextStationName((String) newValue);
+            case grade_p -> setGrade((double) newValue);
             default -> System.err.println("Property " + propertyName + " not found");
         }
         //calculatePower();
