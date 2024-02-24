@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
+import trainModel.trainModelImpl;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class trainControllerManager {
     public void initialize() {
         //Creating a trainControllerImpl object results in a subject being created
         //and that subject being added to the factories Map of subjects
-        new trainControllerImpl(1);
+        new trainControllerImpl( 1);
 
         factory = trainControllerSubjectFactory.getInstance();
         setupMapChangeListener();

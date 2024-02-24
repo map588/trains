@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
+import trainModel.trainModelImpl;
 
 import java.util.ArrayList;
 import java.util.List;

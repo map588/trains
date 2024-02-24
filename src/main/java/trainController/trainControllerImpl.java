@@ -4,7 +4,9 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
 import Utilities.Constants;
+import trainModel.stubTrainModel;
 import trainModel.trainModelImpl;
+import trainModel.trainSubjectFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -89,7 +91,7 @@ public class trainControllerImpl implements TrainController, Notifications {
      *
      * @param trainID  The ID of the train to be controlled by this trainControllerImpl object.
      */
-    public trainControllerImpl(TrainModel train, int trainID) {
+    public trainControllerImpl(int trainID) {
         this.trainID = trainID;
         this.authority = 0;
         this.commandSpeed = 0.0;
@@ -111,7 +113,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.rightPlatform = false;
         this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
-        this.train = train;
+        this.train = stubTrainModel.createstubTrainModel();
         this.samplingPeriod = 10;
         this.nextStationName = "Yard";
         this.grade = 0;

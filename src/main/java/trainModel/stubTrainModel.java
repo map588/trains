@@ -1,4 +1,4 @@
-package stubObjects;
+package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;

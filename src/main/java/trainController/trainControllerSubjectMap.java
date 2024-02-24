@@ -18,5 +18,4 @@ public class trainControllerSubjectMap extends SubjectMap<Integer ,trainControll
     public ObservableHashMap<Integer, trainControllerSubject> getSubjects() {
         return subjects;
     }
-
 }

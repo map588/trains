@@ -46,7 +46,8 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.power = 0;
         this.serviceBrake = false;
         this.emergencyBrake = false;
-        this.mass = (this.numCars + Constants.EMPTY_TRAIN_MASS) + (this.crewCount * Constants.PASSENGER_MASS);
+        //this.mass = (this.numCars + Constants.EMPTY_TRAIN_MASS) + (this.crewCount * Constants.PASSENGER_MASS);
+        this.mass = Constants.LOADED_TRAIN_MASS;
         this.grade = 0;
         this.brakeFailure = false;
         this.powerFailure = false;
