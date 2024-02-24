@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ObservableHashMap<K, V> extends HashMap<K, V> {
-    private Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
+    private final Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
 
     public interface MapListener<K, V> {
         void onAdded(K key, V value);
@@ -32,8 +32,7 @@ public class ObservableHashMap<K, V> extends HashMap<K, V> {
         return oldValue;
     }
 
-    @Override
-    public V remove(Object key) {
+    public V remove (Object key) {
         V oldValue = super.remove(key);
         if (oldValue != null) {
             notifyListenersRemoved((K) key, oldValue);

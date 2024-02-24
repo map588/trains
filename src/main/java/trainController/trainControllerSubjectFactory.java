@@ -7,6 +7,8 @@ public class trainControllerSubjectFactory extends SubjectFactory<trainControlle
 
     private static final trainControllerSubjectFactory INSTANCE = new trainControllerSubjectFactory();
 
+    private final ObservableHashMap<Integer, trainControllerSubject> subjects = new ObservableHashMap<>();
+
     private trainControllerSubjectFactory() {
         super();
     }
@@ -14,4 +16,13 @@ public class trainControllerSubjectFactory extends SubjectFactory<trainControlle
     public static trainControllerSubjectFactory getInstance() {
         return INSTANCE;
     }
+
+    public ObservableHashMap<Integer, trainControllerSubject> getSubject() {
+        return subjects;
+    }
+
+    public void registerSubject(Integer ID, trainControllerSubject subject) {
+        subjects.put(ID, subject);
+    }
+
 }

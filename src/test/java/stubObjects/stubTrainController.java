@@ -1,7 +1,8 @@
-package trainController;
+package stubObjects;
 
 import Common.TrainController;
 import Common.TrainModel;
+import trainController.trainControllerSubject;
 
 public class stubTrainController implements TrainController{
 

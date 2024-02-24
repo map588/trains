@@ -77,6 +77,10 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
                 updateProperty(property, newValue);
                 controller.setValue(propertyName, newValue);
         };
+
+
+
+
         if (isLogicUpdate) {
             executorService.scheduleWithFixedDelay(() -> {
                 if (!isLogicUpdate) {

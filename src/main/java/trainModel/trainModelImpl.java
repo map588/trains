@@ -6,10 +6,7 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
 import Utilities.Constants;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import trainController.stubTrainController;
+import trainController.trainControllerImpl;
 
 public class trainModelImpl implements TrainModel, Notifications {
 
@@ -64,7 +61,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.numPassengers = 1;
         this.crewCount = 2;
 
-        this.controller = new stubTrainController(trainID);
+        this.controller = new trainControllerImpl(trainID);
         controller.assignTrainModel(this);
 
         this.subject = new trainModelSubject(this);
