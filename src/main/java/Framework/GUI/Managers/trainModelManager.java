@@ -96,6 +96,7 @@ public class trainModelManager {
     private void bindLabelToProperty(String property, Label label) {
         appendListener(subject.getProperty(property) ,(obs, oldValue, newValue) -> {
                 String newVal = newValue.toString();
+                System.out.println("newVal: " + newVal);
                 if(newVal.isEmpty()) {return;}
                 try {
                     label.setText(newVal);
