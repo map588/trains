@@ -48,7 +48,7 @@ generateGrammarSource {
 
 
 application {
-    mainClass.set('Framework.GUI.mainMenu')
+    mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.GUI.mainMenu'
 }
 
 def getJavaFXLibPath() {
