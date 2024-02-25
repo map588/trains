@@ -15,7 +15,7 @@ repositories {
 }
 
 javafx {
-    version = "17.0.10" // Or the version that matches your requirements
+    version = "21.0.1" // Or the version that matches your requirements
     modules = [ 'javafx.controls', 'javafx.fxml']
 }
 
