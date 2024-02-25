@@ -38,6 +38,7 @@ dependencies {
     // Serial Library PureJavaComm
     //implementation group: 'org.openmuc', name: 'jrxtx', version: '1.0.1'
     implementation group: 'com.github.purejavacomm', name: 'purejavacomm', version: '1.0.1.RELEASE'
+    implementation 'com.fazecast:jSerialComm:2.10.4'
 }
 
 generateGrammarSource {

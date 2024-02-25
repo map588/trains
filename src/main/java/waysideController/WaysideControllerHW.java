@@ -1,6 +1,6 @@
 package waysideController;
 
-import purejavacomm.*;
+import com.fazecast.jSerialComm.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,16 +14,22 @@ public class WaysideControllerHW implements PLCRunner {
     private PLCProgram plcProgram;
     public WaysideControllerHW(String comPort) {
         plcProgram = new PLCProgram(this);
-        try {
-            CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(comPort);
-            SerialPort serialPort = (SerialPort) portId.open("WaysideController", 2000);
-            serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-            inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            outputStream = new PrintStream(serialPort.getOutputStream(), true);
-        }
-        catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(comPort);
+//            SerialPort serialPort = (SerialPort) portId.open("WaysideController", 2000);
+//            serialPort.setSerialPortParams(19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+//            inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+//            outputStream = new PrintStream(serialPort.getOutputStream(), true);
+//        }
+//        catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+            SerialPort port = SerialPort.getCommPort(comPort);
+            port.setComPortParameters(19200, 8, 1, 0);
+            port.openPort();
+            inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
+            outputStream = new PrintStream(port.getOutputStream(), true);
     }
 
     /**
@@ -74,6 +80,7 @@ public class WaysideControllerHW implements PLCRunner {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        System.out.println("Starting Wayside Controller");
         WaysideControllerHW controller = new WaysideControllerHW("/dev/ttyS0");
 
         while (true) {

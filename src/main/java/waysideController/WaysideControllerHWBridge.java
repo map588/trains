@@ -16,7 +16,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         try {
             CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(COMPort);
             serialPort = (SerialPort) portId.open("WaysideController", 2000);
-            serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+            serialPort.setSerialPortParams(19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
             outputStream = new PrintStream(serialPort.getOutputStream(), true);
 
