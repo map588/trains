@@ -27,6 +27,7 @@ public class WaysideControllerHW implements PLCRunner {
 
             SerialPort port = SerialPort.getCommPort(comPort);
             port.setComPortParameters(19200, 8, 1, 0);
+            port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
             port.openPort();
             inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
             outputStream = new PrintStream(port.getOutputStream(), true);
@@ -87,7 +88,6 @@ public class WaysideControllerHW implements PLCRunner {
             if (controller.inputStream.ready()) {
                 controller.parseCOMMessage(controller.inputStream.readLine());
             }
-            Thread.sleep(100);
         }
     }
 }
