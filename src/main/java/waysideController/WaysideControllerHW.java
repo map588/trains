@@ -71,7 +71,7 @@ public class WaysideControllerHW implements PLCRunner {
             plcProgram.setSwitchRequest(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
 
-        if(maintenanceMode)
+        if(!maintenanceMode)
             plcProgram.runBlueLine();
     }
 
