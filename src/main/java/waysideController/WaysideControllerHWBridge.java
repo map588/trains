@@ -1,34 +1,29 @@
 package waysideController;
 
-import purejavacomm.*;
+import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.*;
 
 public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
-    private final SerialPort serialPort;
     private final BufferedReader inputStream;
     private final PrintStream outputStream;
 
-    public WaysideControllerHWBridge(int id, int trackLine, String COMPort) {
+    public WaysideControllerHWBridge(int id, int trackLine, String comPort) {
         super(id, trackLine);
 
-        try {
-            CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(COMPort);
-            serialPort = (SerialPort) portId.open("WaysideController", 2000);
-            serialPort.setSerialPortParams(19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-            inputStream = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            outputStream = new PrintStream(serialPort.getOutputStream(), true);
+        SerialPort port = SerialPort.getCommPort(comPort);
+        port.setComPortParameters(19200, 8, 1, 0);
+        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
+        port.openPort();
+        inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
+        outputStream = new PrintStream(port.getOutputStream(), true);
 
-            SerialCheckerThread thread = new SerialCheckerThread();
-            thread.start();
+        SerialCheckerThread thread = new SerialCheckerThread();
+        thread.start();
 
-            System.out.println("Send: runPLC=true");
-            outputStream.println("runPLC=true");
-        }
-        catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("Send: runPLC=true");
+        outputStream.println("runPLC=true");
     }
 
     @Override
@@ -112,10 +107,9 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
                     if (inputStream.ready()) {
                         parseCOMMessage(inputStream.readLine());
                     }
-                    Thread.sleep(100);
                 }
             }
-            catch (IOException | InterruptedException e) {
+            catch (IOException e /*| InterruptedException e*/) {
                 throw new RuntimeException(e);
             }
         }
