@@ -163,12 +163,32 @@ public class stubTrainModel implements TrainModel {
     }
 
     @Override
-    public void setTimeDelta(double v) {
+    public void setTimeDelta(int v) {
 
     }
 
     @Override
-    public double getTimeDelta() {
+    public int getTimeDelta() {
+        return 0;
+    }
+
+    @Override
+    public double getGrade() {
+        return 0;
+    }
+
+    @Override
+    public int getCrewCount() {
+        return 0;
+    }
+
+    @Override
+    public int getNumPassengers() {
+        return 0;
+    }
+
+    @Override
+    public int getNumCars() {
         return 0;
     }
 

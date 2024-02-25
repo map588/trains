@@ -7,6 +7,7 @@ import Common.TrainModel;
 import Framework.Support.Notifications;
 import Utilities.Constants;
 import trainController.trainControllerImpl;
+import trainModel.Properties;
 
 public class trainModelImpl implements TrainModel, Notifications {
 
@@ -24,7 +25,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce, engineForce, gravityForce;
     private double netForce, currentAngle, previousAcceleration;
-    private double TIME_DELTA;
+    private int TIME_DELTA;
     //Murphy Variables
     private boolean brakeFailure, powerFailure, signalFailure;
 
@@ -105,27 +106,27 @@ public class trainModelImpl implements TrainModel, Notifications {
         if(newValue == null)
             return;
         switch(propertyName){
-            case "authority" -> setAuthority((int)newValue);
-            case "commandSpeed" -> setCommandSpeed((double)newValue);
-            case "actualSpeed" -> setActualSpeed((double)newValue);
-            case "acceleration" -> setAcceleration((double)newValue);
-            case "power" -> setPower((double)newValue);
-            case "grade" -> setGrade((double)newValue);
-            case "serviceBrake" -> setServiceBrake((boolean)newValue);
-            case "emergencyBrake" -> setEmergencyBrake((boolean)newValue);
-            case "brakeFailure" -> setBrakeFailure((boolean)newValue);
-            case "powerFailure" -> setPowerFailure((boolean)newValue);
-            case "signalFailure" -> setSignalFailure((boolean)newValue);
-            case "temperature" -> setTemperature((double)newValue);
-            case "extLights" -> setExtLights((boolean)newValue);
-            case "intLights" -> setIntLights((boolean)newValue);
-            case "leftDoors" -> setLeftDoors((boolean)newValue);
-            case "rightDoors" -> setRightDoors((boolean)newValue);
-            case "numCars" -> setNumCars((int)newValue);
-            case "numPassengers" -> setNumPassengers((int)newValue);
-            case "crewCount" -> setCrewCount((int)newValue);
-            case "timeDelta" -> setTimeDelta((double)newValue);
-            case "mass" -> setMass((double)newValue);
+            case Properties.authority_p -> setAuthority((int)newValue);
+            case Properties.commandSpeed_p -> setCommandSpeed((double)newValue);
+            case Properties.actualSpeed_p -> setActualSpeed((double)newValue);
+            case Properties.acceleration_p -> setAcceleration((double)newValue);
+            case Properties.power_p -> setPower((double)newValue);
+            case Properties.grade_p -> setGrade((double)newValue);
+            case Properties.serviceBrake_p -> setServiceBrake((boolean)newValue);
+            case Properties.emergencyBrake_p -> setEmergencyBrake((boolean)newValue);
+            case Properties.brakeFailure_p -> setBrakeFailure((boolean)newValue);
+            case Properties.powerFailure_p -> setPowerFailure((boolean)newValue);
+            case Properties.signalFailure_p -> setSignalFailure((boolean)newValue);
+            case Properties.temperature_p -> setTemperature((double)newValue);
+            case Properties.extLights_p -> setExtLights((boolean)newValue);
+            case Properties.intLights_p -> setIntLights((boolean)newValue);
+            case Properties.leftDoors_p -> setLeftDoors((boolean)newValue);
+            case Properties.rightDoors_p -> setRightDoors((boolean)newValue);
+            case Properties.numCars_p -> setNumCars((int)newValue);
+            case Properties.numPassengers_p -> setNumPassengers((int)newValue);
+            case Properties.crewCount_p -> setCrewCount((int)newValue);
+            case Properties.timeDelta_p -> setTimeDelta((int)newValue);
+            case Properties.mass_p -> setMass((double)newValue);
         }
     }
     //Getters
@@ -164,6 +165,21 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
     public double getGrade() { return grade; }
 
+    @Override
+    public int getCrewCount() {
+        return this.crewCount;
+    }
+
+    @Override
+    public int getNumPassengers() {
+        return this.numPassengers;
+    }
+
+    @Override
+    public int getNumCars() {
+        return this.numCars;
+    }
+
     //Murphy Getters
     public boolean getBrakeFailure() { return this.brakeFailure; }
     public boolean getPowerFailure() { return this.powerFailure; }
@@ -185,8 +201,8 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
 
     //TEMP TIME DELTA SETTER/GETTER
-    public void setTimeDelta(double timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
-    public double getTimeDelta() { return this.TIME_DELTA; }
+    public void setTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
+    public int getTimeDelta() { return this.TIME_DELTA; }
 
     public void trainModelPhysics() {
         //CALCULATE MASS
