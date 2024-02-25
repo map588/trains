@@ -9,7 +9,7 @@ import java.util.List;
 
 import static waysideController.Properties.*;
 
-public class WaysideControllerImpl implements WaysideController {
+public class WaysideControllerImpl implements WaysideController, PLCRunner {
 
     // The ID of the wayside controller
     private final int id;
@@ -163,7 +163,7 @@ public class WaysideControllerImpl implements WaysideController {
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-        program.setSwitch(blockID, switchState);
+        program.setSwitchState(blockID, switchState);
     }
 
     @Override
@@ -186,18 +186,6 @@ public class WaysideControllerImpl implements WaysideController {
             subject.getPaintProperty(activePLCColor_p).set(Color.BLUE);
         else
             subject.getPaintProperty(activePLCColor_p).set(Color.GRAY);
-    }
-
-    protected void setSwitchState(int blockID, boolean switchState) {
-        trackList.get(blockID-1).switchStateProperty().set(switchState);
-    }
-
-    protected void setTrafficLightState(int blockID, boolean lightState) {
-        trackList.get(blockID-1).setLightState(lightState);
-    }
-
-    protected void setCrossingState(int blockID, boolean crossingState) {
-        trackList.get(blockID-1).setCrossingState(crossingState);
     }
 
     public WaysideControllerSubject getSubject() {
@@ -236,4 +224,30 @@ public class WaysideControllerImpl implements WaysideController {
         }
     }
 
+    /**
+     * @param blockID
+     * @param switchState
+     */
+    @Override
+    public void setSwitchPLC(int blockID, boolean switchState) {
+        trackList.get(blockID-1).switchStateProperty().set(switchState);
+    }
+
+    /**
+     * @param blockID
+     * @param lightState
+     */
+    @Override
+    public void setTrafficLightPLC(int blockID, boolean lightState) {
+        trackList.get(blockID-1).setLightState(lightState);
+    }
+
+    /**
+     * @param blockID
+     * @param crossingState
+     */
+    @Override
+    public void setCrossingPLC(int blockID, boolean crossingState) {
+        trackList.get(blockID-1).setCrossingState(crossingState);
+    }
 }

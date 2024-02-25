@@ -1,15 +1,8 @@
 package waysideController;
 
-import Common.WaysideController;
-import Utilities.BlockInfo;
 import purejavacomm.*;
-//import org.openmuc.jrxtx.Parity;
-//import org.openmuc.jrxtx.SerialPort;
-//import org.openmuc.jrxtx.SerialPortBuilder;
 
 import java.io.*;
-import java.util.List;
-import java.util.StringTokenizer;
 
 public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
@@ -58,6 +51,12 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     }
 
     @Override
+    public void maintenanceSetSwitch(int blockID, boolean switchState) {
+        System.out.println("Send: switchStateList="+blockID+":"+switchState);
+        outputStream.println("switchStateList="+blockID+":"+switchState);
+    }
+
+    @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         super.trackModelSetOccupancy(blockID, occupied);
         System.out.println("Send: occupancyList="+blockID+":"+occupied);
@@ -85,15 +84,15 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         }
         else if (values[0].equals("switchStateList")) {
             String[] setValues = values[1].split(":");
-            super.setSwitchState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            super.setSwitchPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
         else if (values[0].equals("trafficLightList")) {
             String[] setValues = values[1].split(":");
-            super.setTrafficLightState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            super.setTrafficLightPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
         else if (values[0].equals("crossingList")) {
             String[] setValues = values[1].split(":");
-            super.setCrossingState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
     }
 
