@@ -57,7 +57,15 @@ public interface TrainModel {
 
     void setValue(String propertyName, Object newValue);
 
-    void setTimeDelta(double v);
+    void setTimeDelta(int v);
 
-    double getTimeDelta();
+    int getTimeDelta();
+
+    double getGrade();
+
+    int getCrewCount();
+
+    int getNumPassengers();
+
+    int getNumCars();
 }

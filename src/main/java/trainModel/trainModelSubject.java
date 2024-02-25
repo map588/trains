@@ -9,6 +9,7 @@ import javafx.beans.property.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import trainModel.Properties;
 
 public class trainModelSubject implements AbstractSubject{
 
@@ -20,27 +21,26 @@ public class trainModelSubject implements AbstractSubject{
 
 
     public void intitializeValues() {
-        properties.put("authority", new SimpleIntegerProperty(0));
-        properties.put("commandSpeed", new SimpleDoubleProperty(0));
-        properties.put("actualSpeed", new SimpleDoubleProperty(0));
-        properties.put("acceleration", new SimpleDoubleProperty(0));
-        properties.put("power", new SimpleDoubleProperty(0));
-        properties.put("grade", new SimpleDoubleProperty(0));
-        properties.put("serviceBrake", new SimpleBooleanProperty(false));
-        properties.put("emergencyBrake", new SimpleBooleanProperty(false));
-        properties.put("brakeFailure", new SimpleBooleanProperty(false));
-        properties.put("powerFailure", new SimpleBooleanProperty(false));
-        properties.put("signalFailure", new SimpleBooleanProperty(false));
-        properties.put("temperature", new SimpleDoubleProperty(0));
-        properties.put("extLights", new SimpleBooleanProperty(false));
-        properties.put("intLights", new SimpleBooleanProperty(false));
-        properties.put("leftDoors", new SimpleBooleanProperty(false));
-        properties.put("rightDoors", new SimpleBooleanProperty(false));
-        properties.put("numCars", new SimpleIntegerProperty(0));
-        properties.put("numPassengers", new SimpleIntegerProperty(0));
-        properties.put("crewCount", new SimpleIntegerProperty(0));
-        properties.put("timeDelta", new SimpleDoubleProperty(0));
-        properties.put("mass", new SimpleDoubleProperty(0));
+        properties.put(Properties.authority_p, new SimpleIntegerProperty(model.getAuthority()));
+        properties.put(Properties.commandSpeed_p, new SimpleDoubleProperty(model.getCommandSpeed()));
+        properties.put(Properties.actualSpeed_p, new SimpleDoubleProperty(model.getSpeed()));
+        properties.put(Properties.grade_p, new SimpleDoubleProperty(model.getGrade()));
+        properties.put(Properties.power_p, new SimpleDoubleProperty(model.getPower()));
+        properties.put(Properties.temperature_p, new SimpleDoubleProperty(model.getTemperature()));
+        properties.put(Properties.leftDoors_p, new SimpleBooleanProperty(model.getLeftDoors()));
+        properties.put(Properties.rightDoors_p, new SimpleBooleanProperty(model.getRightDoors()));
+        properties.put(Properties.extLights_p, new SimpleBooleanProperty(model.getExtLights()));
+        properties.put(Properties.intLights_p, new SimpleBooleanProperty(model.getIntLights()));
+        properties.put(Properties.brakeFailure_p, new SimpleBooleanProperty(model.getBrakeFailure()));
+        properties.put(Properties.powerFailure_p, new SimpleBooleanProperty(model.getPowerFailure()));
+        properties.put(Properties.signalFailure_p, new SimpleBooleanProperty(model.getSignalFailure()));
+        properties.put(Properties.serviceBrake_p, new SimpleBooleanProperty(model.getServiceBrake()));
+        properties.put(Properties.emergencyBrake_p, new SimpleBooleanProperty(model.getEmergencyBrake()));
+        properties.put(Properties.timeDelta_p, new SimpleIntegerProperty(model.getTimeDelta()));
+        properties.put(Properties.acceleration_p, new SimpleDoubleProperty(model.getAcceleration()));
+        properties.put(Properties.crewCount_p, new SimpleIntegerProperty(model.getCrewCount()));
+        properties.put(Properties.numPassengers_p, new SimpleIntegerProperty(model.getNumPassengers()));
+        properties.put(Properties.numCars_p, new SimpleIntegerProperty(model.getNumCars()));
     }
 
     public trainModelSubject(TrainModel trainModel) {
