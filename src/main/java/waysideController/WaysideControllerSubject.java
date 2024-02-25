@@ -22,7 +22,6 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private WaysideController controller;
     private ObservableList<WaysideBlockInfo> blockList;
-
     private ObservableList<TrainSpeedAuth> speedAuthList;
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();

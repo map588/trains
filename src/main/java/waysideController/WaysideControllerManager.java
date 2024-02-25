@@ -300,8 +300,6 @@ public class WaysideControllerManager {
         if(currentSubject != null) {
             listenerReferences.forEach(ListenerReference::detach);
             listenerReferences.clear();
-//            maintenanceModeCheckbox.selectedProperty().unbindBidirectional(currentSubject.getBooleanProperty(maintenanceMode_p));
-//            maintenanceModeCheckbox.selectedProperty().unbind();
             plcCurrentFileLabel.textProperty().unbindBidirectional(currentSubject.getStringProperty(PLCName_p));
             plcActiveIndicator.fillProperty().unbindBidirectional(currentSubject.getPaintProperty(activePLCColor_p));
             currentSubject.getBooleanProperty(maintenanceMode_p).removeListener((observable, oldValue, newValue) -> updateMaintenanceWriteable());
@@ -314,10 +312,6 @@ public class WaysideControllerManager {
 
         // Bind new subject
         appendListener(currentSubject.getBooleanProperty(maintenanceMode_p), (observable, oldValue, newValue) -> updateMaintenanceWriteable());
-//        currentSubject.getBooleanProperty(maintenanceMode_p).addListener((observable, oldValue, newValue) -> updateMaintenanceWriteable());
-//        maintenanceModeCheckbox.selectedProperty().bindBidirectional(currentSubject.getBooleanProperty(maintenanceMode_p));
-//        maintenanceModeCheckbox.selectedProperty().bind(currentSubject.getBooleanProperty(maintenanceMode_p));
-//        currentSubject.getBooleanProperty(maintenanceMode_p).bind(maintenanceModeCheckbox.selectedProperty());
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.getStringProperty(PLCName_p));
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.getPaintProperty(activePLCColor_p));
 
