@@ -1,6 +1,9 @@
 package waysideController;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
+import com.fazecast.jSerialComm.SerialPortMessageListener;
 
 import java.io.*;
 
@@ -14,13 +17,27 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
         SerialPort port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
-        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
+//        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
         inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
         outputStream = new PrintStream(port.getOutputStream(), true);
 
-        SerialCheckerThread thread = new SerialCheckerThread();
-        thread.start();
+        port.addDataListener(new SerialPortMessageListener() {
+            @Override
+            public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
+            @Override
+            public byte[] getMessageDelimiter() { return new byte[] { (byte) '\n' }; }
+            @Override
+            public boolean delimiterIndicatesEndOfMessage() {
+                return true;
+            }
+
+            @Override
+            public void serialEvent(SerialPortEvent event) {
+                byte[] message = event.getReceivedData();
+                parseCOMMessage(new String(message).trim());
+            }
+        });
 
         System.out.println("Send: runPLC=true");
         outputStream.println("runPLC=true");
@@ -88,30 +105,6 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         else if (values[0].equals("crossingList")) {
             String[] setValues = values[1].split(":");
             super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
-        }
-    }
-
-    protected BufferedReader getInputStream() {
-        return inputStream;
-    }
-
-    private class SerialCheckerThread extends Thread {
-
-        public SerialCheckerThread() {
-            super("SerialCheckerThread");
-        }
-        @Override
-        public void run() {
-            try {
-                while (true) {
-                    if (inputStream.ready()) {
-                        parseCOMMessage(inputStream.readLine());
-                    }
-                }
-            }
-            catch (IOException e /*| InterruptedException e*/) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }
