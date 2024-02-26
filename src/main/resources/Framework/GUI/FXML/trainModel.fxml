@@ -104,7 +104,7 @@
          </font>
       </Text>
       <Label layoutX="29.0" layoutY="78.0" prefHeight="26.0" prefWidth="51.0" text="Grade:" />
-      <Label layoutX="158.0" layoutY="83.0" text="Label" />
+      <Label fx:id="gradeLabel" layoutX="158.0" layoutY="83.0" text="Label" />
       <Label layoutX="29.0" layoutY="100.0" prefHeight="26.0" prefWidth="68.0" text="Max Power:" />
       <Label fx:id="maxPowerLabel" layoutX="158.0" layoutY="105.0" text="Label" />
       <Label layoutX="29.0" layoutY="122.0" prefHeight="26.0" prefWidth="98.0" text="Med Acceleration:" />
