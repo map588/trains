@@ -30,6 +30,7 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setSwitchPLC(int blockID, boolean switchState) {
+        System.out.println("Send: switchStateList="+blockID+":"+switchState);
         outputStream.println("switchStateList="+blockID+":"+switchState);
     }
 
@@ -39,6 +40,7 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
+        System.out.println("Send: trafficLightList="+blockID+":"+lightState);
         outputStream.println("trafficLightList="+blockID+":"+lightState);
     }
 
@@ -48,6 +50,7 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
+        System.out.println("Send: crossingList="+blockID+":"+crossingState);
         outputStream.println("crossingList="+blockID+":"+crossingState);
     }
 
