@@ -250,4 +250,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     public void setCrossingPLC(int blockID, boolean crossingState) {
         trackList.get(blockID-1).setCrossingState(crossingState);
     }
+
+    public String toString() {
+        return "SW Wayside Controller #" + id;
+    }
 }

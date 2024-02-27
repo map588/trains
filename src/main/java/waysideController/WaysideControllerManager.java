@@ -2,6 +2,7 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.ListenerReference;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
@@ -33,8 +34,7 @@ import static waysideController.Properties.*;
 
 public class WaysideControllerManager {
 
-    @FXML
-    private TextField HWPortTextField;
+
     @FXML
     private TableView<WaysideBlockInfo> blockTable;
     @FXML
@@ -67,8 +67,7 @@ public class WaysideControllerManager {
     private Button plcFolderButton;
     @FXML
     private Button plcUploadButton;
-    @FXML
-    private Button createNewControllerButton;
+
     @FXML
     private ProgressBar uploadProgressBar;
     @FXML
@@ -96,12 +95,19 @@ public class WaysideControllerManager {
         plcUploadButton.setOnAction(event ->  uploadPLC());
         switchTable.setEditable(true);
         blockTable.setEditable(true);
-        createNewControllerButton.setOnAction(event -> createNewController());
+        testBench.tbCreateNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
             currentSubject.setProperty(maintenanceMode_p, maintenanceModeCheckbox.isSelected());
             updateMaintenanceWriteable();
         });
+
+        testBench.tbHWPortComboBox.getItems().add("SW");
+        SerialPort[] ports = SerialPort.getCommPorts();
+        for(SerialPort port : ports) {
+            testBench.tbHWPortComboBox.getItems().add(port.getSystemPortName());
+        }
+        testBench.tbHWPortComboBox.setValue("SW");
 
         // Set up cell factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
@@ -175,35 +181,9 @@ public class WaysideControllerManager {
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
 
         changeControllerComboBox.itemsProperty().bindBidirectional(WaysideControllerSubjectFactory.getControllerList());
-        changeControllerComboBox.setCellFactory(listViews -> new ListCell<>() {
-            @Override
-            protected void updateItem(WaysideController item, boolean b) {
-                super.updateItem(item, b);
-                if (item != null) {
-                    setText("Wayside Controller #" + (item.getID() + 1));
-                }
-            }
-        });
-        changeControllerComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(WaysideController waysideController) {
-                if (waysideController != null)
-                    return "Wayside Controller #" + (waysideController.getID() + 1);
-                else
-                    return null;
-            }
-
-            @Override
-            public WaysideController fromString(String s) {
-                return null;
-            }
-        });
 
         // Create initial controller and update values
         createNewController();
-        currentSubject.getController().runPLC();
-
-        updateBlockList();
         testBench.setController(currentSubject.getController());
     }
 
@@ -261,7 +241,6 @@ public class WaysideControllerManager {
      */
     private void updateBlockList() {
         blockTable.setItems(currentSubject.blockListProperty());
-//        testBench.readBlockInfo(currentSubject.blockListProperty());
         updateSwitchList();
     }
 
@@ -283,10 +262,10 @@ public class WaysideControllerManager {
      */
     private void createNewController() {
         WaysideController newController;
-        if(HWPortTextField.getText().isEmpty()) {
+        if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
             newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), 0);
         } else {
-            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(), 0, HWPortTextField.getText());
+            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(), 0, testBench.tbHWPortComboBox.getValue());
         }
         WaysideControllerSubjectFactory.addController(newController);
         changeActiveController(newController);
@@ -307,8 +286,9 @@ public class WaysideControllerManager {
 
         // Update controller
         currentSubject = controller.getSubject();
-        changeControllerLabel.setText("Wayside Controller #" + (controller.getID()+1));
-        testBench.tbWaysideNumberLabel.setText("Wayside Controller #" + (controller.getID()+1));
+        changeControllerComboBox.getSelectionModel().select(controller);
+        changeControllerLabel.setText(controller.toString());
+        testBench.tbWaysideNumberLabel.setText(controller.toString());
 
         // Bind new subject
         appendListener(currentSubject.getBooleanProperty(maintenanceMode_p), (observable, oldValue, newValue) -> updateMaintenanceWriteable());
@@ -317,6 +297,7 @@ public class WaysideControllerManager {
 
         testBench.setController(controller);
 
+        currentSubject.getController().runPLC();
         updateMaintenanceWriteable();
         updateBlockList();
     }

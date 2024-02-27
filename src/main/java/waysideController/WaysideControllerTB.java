@@ -40,6 +40,10 @@ public class WaysideControllerTB {
     public TableColumn<TrainSpeedAuth, Double> tbSATSpeedOut;
     @FXML
     public TableColumn<TrainSpeedAuth, Integer> tbSATAuthOut;
+    @FXML
+    public Button tbCreateNewControllerButton;
+    @FXML
+    public ComboBox<String> tbHWPortComboBox;
 
     private Object block;
     WaysideController controller;

@@ -9,13 +9,14 @@ import java.io.*;
 
 public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
+    private final SerialPort port;
     private final BufferedReader inputStream;
     private final PrintStream outputStream;
 
     public WaysideControllerHWBridge(int id, int trackLine, String comPort) {
         super(id, trackLine);
 
-        SerialPort port = SerialPort.getCommPort(comPort);
+        port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
 //        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
@@ -106,5 +107,9 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
             String[] setValues = values[1].split(":");
             super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
+    }
+
+    public String toString() {
+        return "HW Wayside Controller #" + getID();
     }
 }
