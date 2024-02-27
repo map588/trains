@@ -119,21 +119,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     }
 
     @Override
-    public void CTCDisableBlock(int blockID) {
-
-    }
-
-    @Override
-    public void CTCEnableBlock(int blockID) {
-
-    }
-
-    @Override
-    public void CTCEnableAllBlocks() {
-
-    }
-
-    @Override
     public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth) {
         if(speedAuthList.contains(speedAuth)) {
             speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
@@ -164,6 +149,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         program.setSwitchState(blockID, switchState);
+    }
+
+    @Override
+    public void maintenanceSetAuthority(int blockID, boolean auth) {
+        program.setAuthState(blockID, auth);
     }
 
     @Override
@@ -252,7 +242,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     }
 
     @Override
-    public void setAuthority(int blockID, boolean auth) {
+    public void setAuthorityPLC(int blockID, boolean auth) {
         trackList.get(blockID-1).authorityStateProperty().set(auth);
     }
 

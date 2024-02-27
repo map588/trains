@@ -70,6 +70,12 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     }
 
     @Override
+    public void maintenanceSetAuthority(int blockID, boolean auth) {
+        System.out.println("Send: authList="+blockID+":"+auth);
+        outputStream.println("authList="+blockID+":"+auth);
+    }
+
+    @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         super.trackModelSetOccupancy(blockID, occupied);
         System.out.println("Send: occupancyList="+blockID+":"+occupied);
@@ -106,6 +112,10 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         else if (values[0].equals("crossingList")) {
             String[] setValues = values[1].split(":");
             super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+        }
+        else if (values[0].equals("authList")) {
+            String[] setValues = values[1].split(":");
+            super.setAuthorityPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
     }
 

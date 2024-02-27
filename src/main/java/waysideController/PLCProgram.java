@@ -1,10 +1,6 @@
 package waysideController;
 
-import Common.WaysideController;
-
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static Utilities.Constants.*;
@@ -54,6 +50,10 @@ public class PLCProgram {
         switchStateList.put(5, switchState);
     }
 
+    public void setAuthState(int blockID, boolean auth) {
+        authList.put(blockID, auth);
+    }
+
     private void setSwitch(int blockID, boolean switchState) {
         switchStateList.put(blockID, switchState);
         controller.setSwitchPLC(blockID, switchState);
@@ -71,7 +71,7 @@ public class PLCProgram {
 
     private void setAuth(int blockID, boolean auth) {
         authList.put(blockID, auth);
-        controller.setAuthority(blockID, auth);
+        controller.setAuthorityPLC(blockID, auth);
     }
 
     public void runBlueLine() {

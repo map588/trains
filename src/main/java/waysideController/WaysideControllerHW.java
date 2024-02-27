@@ -55,11 +55,9 @@ public class WaysideControllerHW implements PLCRunner {
     }
 
     @Override
-    public void setAuthority(int blockID, boolean auth) {
+    public void setAuthorityPLC(int blockID, boolean auth) {
         System.out.println("Send: authList="+blockID+":"+auth);
         outputStream.println("authList="+blockID+":"+auth);
-
-        // TODO Add listener for this to update the GUI
     }
 
     protected void parseCOMMessage(String message) {
@@ -80,6 +78,10 @@ public class WaysideControllerHW implements PLCRunner {
         else if (values[0].equals("switchRequestedStateList")) {
             String[] setValues = values[1].split(":");
             plcProgram.setSwitchRequest(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+        }
+        else if (values[0].equals("authList")) {
+            String[] setValues = values[1].split(":");
+            plcProgram.setAuthState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
         }
 
         if(!maintenanceMode)

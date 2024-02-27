@@ -37,15 +37,6 @@ public interface WaysideController {
     // Allows Track Model to set train occupancy for a specific block
     public void trackModelSetOccupancy(int blockID, boolean isOccupied);
 
-    // Allows CTC to disable a specific block, which does not allow a train to occupy the block
-    public void CTCDisableBlock(int blockID);
-
-    // Allows CTC to enable a specific block that was previously disabled
-    public void CTCEnableBlock(int blockID);
-
-    // Allows CTC to enable all blocks that were previously disabled
-    public void CTCEnableAllBlocks();
-
     public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth);
 
     // Allows CTC to request a switch change (works with automatic mode)
@@ -53,6 +44,8 @@ public interface WaysideController {
 
     // Manually sets a switch state in maintenance mode
     public void maintenanceSetSwitch(int blockID, boolean switchState);
+
+    public void maintenanceSetAuthority(int blockID, boolean auth);
 
     // Manually sets a traffic light state in maintenance mode
     public void maintenanceSetTrafficLight(int blockID, boolean lightState);
