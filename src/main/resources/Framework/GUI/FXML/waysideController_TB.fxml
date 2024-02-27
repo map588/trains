@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="366.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="waysideController.WaysideControllerTB">
    <children>
-      <Label fx:id="tbWaysideNumberLabel" alignment="CENTER" layoutX="388.0" layoutY="62.0" prefHeight="32.0" prefWidth="163.0" text="Wayside Controller #N" />
+      <Label fx:id="tbWaysideNumberLabel" alignment="CENTER" layoutX="388.0" layoutY="55.0" prefHeight="32.0" prefWidth="163.0" text="Wayside Controller #N" />
       <Label layoutX="16.0" layoutY="21.0" prefHeight="18.0" prefWidth="124.0" text="Block Occupancies" />
       <Label layoutX="177.0" layoutY="22.0" prefHeight="18.0" text="CTC Switch State Suggestions" />
       <TableView fx:id="tbBlockTable" layoutX="16.0" layoutY="40.0" prefHeight="309.0" prefWidth="124.0">
@@ -54,5 +54,6 @@
       <Label layoutX="161.0" layoutY="195.0" prefHeight="18.0" text="Speed &amp; Authority" />
       <Button fx:id="tbCreateNewControllerButton" layoutX="421.0" layoutY="98.0" mnemonicParsing="false" prefHeight="25.0" text="add controller" />
       <ComboBox fx:id="tbHWPortComboBox" layoutX="421.0" layoutY="127.0" prefHeight="25.0" prefWidth="92.0" />
+      <Label fx:id="tbHWPortLabel" alignment="CENTER" layoutX="410.0" layoutY="79.0" prefHeight="17.0" prefWidth="124.0" text="Port" />
    </children>
 </AnchorPane>

@@ -109,6 +109,10 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         }
     }
 
+    public String getPort() {
+        return port.getSystemPortName();
+    }
+
     public String toString() {
         return "HW Wayside Controller #" + getID();
     }

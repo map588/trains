@@ -44,8 +44,9 @@ public class WaysideControllerTB {
     public Button tbCreateNewControllerButton;
     @FXML
     public ComboBox<String> tbHWPortComboBox;
+    @FXML
+    public Label tbHWPortLabel;
 
-    private Object block;
     WaysideController controller;
 
 
@@ -101,6 +102,12 @@ public class WaysideControllerTB {
         this.controller = controller;
         readBlockInfo(controller.getSubject().blockListProperty());
         tbSpeedAuthTable.setItems(controller.getSubject().getSpeedAuthList());
+        if(controller instanceof WaysideControllerHWBridge) {
+            tbHWPortLabel.setText("HW Port: " + ((WaysideControllerHWBridge) controller).getPort());
+        }
+        else {
+            tbHWPortLabel.setText("HW Port: N/A");
+        }
     }
 
     /**
