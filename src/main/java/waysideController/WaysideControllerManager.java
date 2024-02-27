@@ -46,6 +46,8 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<WaysideBlockInfo,Boolean> blockTableCrossingColumn;
     @FXML
+    private TableColumn<WaysideBlockInfo, Boolean> blockTableAuthColumn;
+    @FXML
     private TableView<WaysideBlockInfo> switchTable;
     @FXML
     private TableColumn<WaysideBlockInfo, Integer> switchTableIDColumn;
@@ -168,8 +170,11 @@ public class WaysideControllerManager {
 
             }
         });
+        blockTableAuthColumn.setCellValueFactory(block -> block.getValue().authorityStateProperty());
+        blockTableAuthColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableAuthColumn));
         blockTableCrossingColumn.setEditable(false);
         blockTableCircuitColumn.setEditable(false);
+
         switchTable.setEditable(true);
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
@@ -190,6 +195,7 @@ public class WaysideControllerManager {
     private void updateMaintenanceWriteable() {
         maintenanceModeCheckbox.setSelected(currentSubject.getBooleanProperty(maintenanceMode_p).get());
         switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
+        blockTableAuthColumn.setEditable(maintenanceModeCheckbox.isSelected());
         blockTable.refresh();
     }
 

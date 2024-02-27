@@ -15,6 +15,8 @@ public class PLCProgram {
     private final Map<Integer, Boolean> switchRequestedStateList;
     private final Map<Integer, Boolean> trafficLightList;
     private final Map<Integer, Boolean> crossingList;
+    private final Map<Integer, Boolean> authList;
+    private final Map<Integer, Double> speedList;
 
     private final PLCRunner controller;
 
@@ -24,6 +26,8 @@ public class PLCProgram {
         switchRequestedStateList = new HashMap<>();
         trafficLightList = new HashMap<>();
         crossingList = new HashMap<>();
+        authList = new HashMap<>();
+        speedList = new HashMap<>();
 
         switchStateList.put(5, SWITCH_MAIN);
         switchRequestedStateList.put(5, SWITCH_MAIN);

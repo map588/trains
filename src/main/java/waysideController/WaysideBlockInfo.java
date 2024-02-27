@@ -14,6 +14,7 @@ public class WaysideBlockInfo {
 
     private final BooleanProperty occupation;
     private final BooleanProperty switchState;
+    private final BooleanProperty authorityState;
 
     private final BooleanProperty switchRequestedState;
     private IntegerProperty switchedBlockID;
@@ -29,6 +30,7 @@ public class WaysideBlockInfo {
         this.switchState = new SimpleBooleanProperty(false);
         this.switchRequestedState = new SimpleBooleanProperty(false);
         this.crossingState = new SimpleBooleanProperty(false);
+        this.authorityState = new SimpleBooleanProperty(false);
 
         this.lightState = new TrafficLightState(hasLight);
     }
@@ -151,4 +153,11 @@ public class WaysideBlockInfo {
         return switchRequestedState;
     }
 
+    public boolean isAuthorityState() {
+        return authorityState.get();
+    }
+
+    public BooleanProperty authorityStateProperty() {
+        return authorityState;
+    }
 }

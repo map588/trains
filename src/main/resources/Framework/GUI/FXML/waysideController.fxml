@@ -37,9 +37,10 @@
                         <TableView fx:id="blockTable" layoutX="23.0" layoutY="64.0" prefHeight="290.0" prefWidth="260.0">
                           <columns>
                             <TableColumn fx:id="blockTableIDColumn" editable="false" prefWidth="35.0" style="-fx-alignment: CENTER;" text="ID" />
-                            <TableColumn fx:id="blockTableCircuitColumn" editable="false" prefWidth="60.0" style="-fx-alignment: CENTER;" text="Track&#10;Circuit" />
-                              <TableColumn fx:id="blockTableLightsColumn" editable="false" prefWidth="38.0" style="-fx-alignment: CENTER;" text="Light" />
-                              <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="119.0" style="-fx-alignment: CENTER;" text="Crossing is Open?" />
+                            <TableColumn fx:id="blockTableCircuitColumn" editable="false" prefWidth="62.0" style="-fx-alignment: CENTER;" text="Track&#10;Circuit" />
+                              <TableColumn fx:id="blockTableLightsColumn" editable="false" prefWidth="53.0" style="-fx-alignment: CENTER;" text="Light" />
+                              <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="66.0" style="-fx-alignment: CENTER;" text="Crossing&#10;is Open?" />
+                              <TableColumn fx:id="blockTableAuthColumn" prefWidth="44.0" text="Auth" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
