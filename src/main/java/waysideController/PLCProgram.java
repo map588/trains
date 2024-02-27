@@ -10,7 +10,7 @@ import java.util.Map;
 import static Utilities.Constants.*;
 
 public class PLCProgram {
-    private final List<Boolean> occupancyList;
+    private final Map<Integer, Boolean> occupancyList;
     private final Map<Integer, Boolean> switchStateList;
     private final Map<Integer, Boolean> switchRequestedStateList;
     private final Map<Integer, Boolean> trafficLightList;
@@ -21,13 +21,17 @@ public class PLCProgram {
     private final PLCRunner controller;
 
     public PLCProgram(PLCRunner controller) {
-        occupancyList = Arrays.asList(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+        occupancyList = new HashMap<>();
         switchStateList = new HashMap<>();
         switchRequestedStateList = new HashMap<>();
         trafficLightList = new HashMap<>();
         crossingList = new HashMap<>();
         authList = new HashMap<>();
         speedList = new HashMap<>();
+
+        for(int i = 1; i <= 15; i++) {
+            occupancyList.put(i, false);
+        }
 
         switchStateList.put(5, SWITCH_MAIN);
         switchRequestedStateList.put(5, SWITCH_MAIN);
@@ -39,7 +43,7 @@ public class PLCProgram {
     }
 
     public void setOccupancy(int blockID, boolean occupied) {
-        occupancyList.set(blockID, occupied);
+        occupancyList.put(blockID, occupied);
     }
 
     public void setSwitchRequest(int blockID, boolean switchState) {
@@ -63,6 +67,11 @@ public class PLCProgram {
     private void setCrossing(int blockID, boolean crossingState) {
         crossingList.put(blockID, crossingState);
         controller.setCrossingPLC(blockID, crossingState);
+    }
+
+    private void setAuth(int blockID, boolean auth) {
+        authList.put(blockID, auth);
+        controller.setAuthority(blockID, auth);
     }
 
     public void runBlueLine() {
@@ -99,6 +108,30 @@ public class PLCProgram {
         else {
             setCrossing(3, CROSSING_OPEN);
         }
+
+        setAuth(1, !occupancyList.get(2) && !occupancyList.get(3));
+        setAuth(2, !occupancyList.get(3) && !occupancyList.get(4));
+        setAuth(3, !occupancyList.get(4) && !occupancyList.get(5));
+        if(switchStateList.get(5) == SWITCH_MAIN) {
+            setAuth(4, !occupancyList.get(5) && !occupancyList.get(6));
+            setAuth(5, !occupancyList.get(6) && !occupancyList.get(7));
+        }
+        else {
+            setAuth(4, !occupancyList.get(5) && !occupancyList.get(11));
+            setAuth(5, !occupancyList.get(11) && !occupancyList.get(12));
+        }
+
+        setAuth(6, !occupancyList.get(7) && !occupancyList.get(8));
+        setAuth(7, !occupancyList.get(8) && !occupancyList.get(9));
+        setAuth(8, !occupancyList.get(9) && !occupancyList.get(10));
+        setAuth(9, !occupancyList.get(10));
+        setAuth(10, false);
+
+        setAuth(11, !occupancyList.get(12) && !occupancyList.get(13));
+        setAuth(12, !occupancyList.get(13) && !occupancyList.get(14));
+        setAuth(13, !occupancyList.get(14) && !occupancyList.get(15));
+        setAuth(14, !occupancyList.get(15));
+        setAuth(15, false);
 
         System.out.println("Switch = " + switchStateList.get(5));
 

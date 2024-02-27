@@ -251,6 +251,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
         trackList.get(blockID-1).setCrossingState(crossingState);
     }
 
+    @Override
+    public void setAuthority(int blockID, boolean auth) {
+        trackList.get(blockID-1).authorityStateProperty().set(auth);
+    }
+
     public String toString() {
         return "SW Wayside Controller #" + id;
     }

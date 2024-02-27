@@ -54,6 +54,14 @@ public class WaysideControllerHW implements PLCRunner {
         outputStream.println("crossingList="+blockID+":"+crossingState);
     }
 
+    @Override
+    public void setAuthority(int blockID, boolean auth) {
+        System.out.println("Send: authList="+blockID+":"+auth);
+        outputStream.println("authList="+blockID+":"+auth);
+
+        // TODO Add listener for this to update the GUI
+    }
+
     protected void parseCOMMessage(String message) {
         System.out.println("Received: " + message);
         String[] values = message.split("=", 2);
