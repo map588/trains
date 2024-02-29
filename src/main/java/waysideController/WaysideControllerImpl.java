@@ -147,6 +147,21 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     }
 
     @Override
+    public void CTCDisableBlock(int blockID) {
+
+    }
+
+    @Override
+    public void CTCEnableBlock(int blockID) {
+
+    }
+
+    @Override
+    public void CTCEnableAllBlocks() {
+
+    }
+
+    @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         program.setSwitchState(blockID, switchState);
     }

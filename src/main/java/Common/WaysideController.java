@@ -42,6 +42,15 @@ public interface WaysideController {
     // Allows CTC to request a switch change (works with automatic mode)
     public void CTCRequestSwitchState(int blockID, boolean switchState);
 
+    // Allows CTC to disable a block (works with automatic mode)
+    public void CTCDisableBlock(int blockID);
+
+    // Allows CTC to enable a block (works with automatic mode)
+    public void CTCEnableBlock(int blockID);
+
+    // Allows CTC to enable all blocks (works with automatic mode)
+    public void CTCEnableAllBlocks();
+
     // Manually sets a switch state in maintenance mode
     public void maintenanceSetSwitch(int blockID, boolean switchState);
 
