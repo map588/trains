@@ -1,7 +1,7 @@
 package Common;
 
 import waysideController.TrainSpeedAuth;
-import waysideController.WaysideBlockInfo;
+import waysideController.WaysideBlockSubject;
 import waysideController.WaysideControllerSubject;
 
 import java.io.File;
@@ -29,10 +29,10 @@ public interface WaysideController {
     public void setMaintenanceModeNoUpdate(boolean maintenanceMode);
 
     // Returns the list of block IDs under the wayside controller's control
-    public List<WaysideBlockInfo> getBlockList();
+    public List<WaysideBlockSubject> getBlockList();
 
     // Adds a new track block under the wayside controller's control
-    public void addBlock(WaysideBlockInfo block);
+    public void addBlock(WaysideBlockSubject block);
 
     // Allows Track Model to set train occupancy for a specific block
     public void trackModelSetOccupancy(int blockID, boolean isOccupied);

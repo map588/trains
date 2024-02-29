@@ -20,7 +20,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     private boolean maintenanceMode = false;
 
     // List containing all the track blocks controlled by this instance of the wayside controller
-    private final List<WaysideBlockInfo> trackList = new ArrayList<>();
+    private final List<WaysideBlockSubject> trackList = new ArrayList<>();
 
     private final List<TrainSpeedAuth> speedAuthList = new ArrayList<>();
 
@@ -41,21 +41,21 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
         program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
 
-        addBlock((new WaysideBlockInfo(1, false, false, false)));
-        addBlock((new WaysideBlockInfo(2, false, false, false)));
-        addBlock((new WaysideBlockInfo(3, false, false, true)));
-        addBlock((new WaysideBlockInfo(4, false, false, false)));
-        addBlock((new WaysideBlockInfo(5, true, false, false, 6, 11)));
-        addBlock((new WaysideBlockInfo(6, false, true, false)));
-        addBlock((new WaysideBlockInfo(7, false, false, false)));
-        addBlock((new WaysideBlockInfo(8, false, false, false)));
-        addBlock((new WaysideBlockInfo(9, false, false, false)));
-        addBlock((new WaysideBlockInfo(10, false, false, false)));
-        addBlock((new WaysideBlockInfo(11, false, true, false)));
-        addBlock((new WaysideBlockInfo(12, false, false, false)));
-        addBlock((new WaysideBlockInfo(13, false, false, false)));
-        addBlock((new WaysideBlockInfo(14, false, false, false)));
-        addBlock((new WaysideBlockInfo(15, false, false, false)));
+        addBlock((new WaysideBlockSubject(1, false, false, false)));
+        addBlock((new WaysideBlockSubject(2, false, false, false)));
+        addBlock((new WaysideBlockSubject(3, false, false, true)));
+        addBlock((new WaysideBlockSubject(4, false, false, false)));
+        addBlock((new WaysideBlockSubject(5, true, false, false, 6, 11)));
+        addBlock((new WaysideBlockSubject(6, false, true, false)));
+        addBlock((new WaysideBlockSubject(7, false, false, false)));
+        addBlock((new WaysideBlockSubject(8, false, false, false)));
+        addBlock((new WaysideBlockSubject(9, false, false, false)));
+        addBlock((new WaysideBlockSubject(10, false, false, false)));
+        addBlock((new WaysideBlockSubject(11, false, true, false)));
+        addBlock((new WaysideBlockSubject(12, false, false, false)));
+        addBlock((new WaysideBlockSubject(13, false, false, false)));
+        addBlock((new WaysideBlockSubject(14, false, false, false)));
+        addBlock((new WaysideBlockSubject(15, false, false, false)));
 
         CTCSetSpeedAuth(new TrainSpeedAuth(1));
         CTCSetSpeedAuth(new TrainSpeedAuth(2));
@@ -101,12 +101,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     }
 
     @Override
-    public List<WaysideBlockInfo> getBlockList() {
+    public List<WaysideBlockSubject> getBlockList() {
         return this.trackList;
     }
 
     @Override
-    public void addBlock(WaysideBlockInfo block) {
+    public void addBlock(WaysideBlockSubject block) {
         this.trackList.add(block);
         subject.addBlock(block);
     }

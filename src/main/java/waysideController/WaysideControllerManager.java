@@ -3,7 +3,6 @@ package waysideController;
 import Common.WaysideController;
 import Framework.Support.ListenerReference;
 import com.fazecast.jSerialComm.SerialPort;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +20,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.io.File;
 import java.net.URL;
@@ -36,25 +34,25 @@ public class WaysideControllerManager {
 
 
     @FXML
-    private TableView<WaysideBlockInfo> blockTable;
+    private TableView<WaysideBlockSubject> blockTable;
     @FXML
-    private TableColumn<WaysideBlockInfo,Integer> blockTableIDColumn;
+    private TableColumn<WaysideBlockSubject,Integer> blockTableIDColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo,Boolean> blockTableCircuitColumn;
+    private TableColumn<WaysideBlockSubject,Boolean> blockTableCircuitColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo, Paint> blockTableLightsColumn;
+    private TableColumn<WaysideBlockSubject, Paint> blockTableLightsColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo,Boolean> blockTableCrossingColumn;
+    private TableColumn<WaysideBlockSubject,Boolean> blockTableCrossingColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo, Boolean> blockTableAuthColumn;
+    private TableColumn<WaysideBlockSubject, Boolean> blockTableAuthColumn;
     @FXML
-    private TableView<WaysideBlockInfo> switchTable;
+    private TableView<WaysideBlockSubject> switchTable;
     @FXML
-    private TableColumn<WaysideBlockInfo, Integer> switchTableIDColumn;
+    private TableColumn<WaysideBlockSubject, Integer> switchTableIDColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo, Boolean> switchTableStateColumn;
+    private TableColumn<WaysideBlockSubject, Boolean> switchTableStateColumn;
     @FXML
-    private TableColumn<WaysideBlockInfo, Integer> switchTableBlockOutColumn;
+    private TableColumn<WaysideBlockSubject, Integer> switchTableBlockOutColumn;
     @FXML
     private CheckBox maintenanceModeCheckbox;
     @FXML
@@ -115,7 +113,7 @@ public class WaysideControllerManager {
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().occupationProperty());
         blockTableLightsColumn.setCellValueFactory(block -> block.getValue().lightStateProperty().lightColorProperty());
-        blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockInfo, Paint>() {
+        blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Paint>() {
             private BorderPane graphic;
             private Circle circle;
 
@@ -140,7 +138,7 @@ public class WaysideControllerManager {
         });
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().crossingStateProperty());
 
-        blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockInfo, Boolean>() {
+        blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
@@ -149,7 +147,7 @@ public class WaysideControllerManager {
                     setGraphic(null);
                     return;
                 } else {
-                    WaysideBlockInfo blockInfo = getTableView().getItems().get(getIndex());
+                    WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
                     if(blockInfo.isHasCrossing()) {
                         CheckBox checkBox;
                         {
@@ -255,8 +253,8 @@ public class WaysideControllerManager {
      */
     private void updateSwitchList() {
         switchTable.getItems().clear();
-        ObservableList<WaysideBlockInfo> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
-        for(WaysideBlockInfo item : blocks) {
+        ObservableList<WaysideBlockSubject> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
+        for(WaysideBlockSubject item : blocks) {
             if(item.isHasSwitch()) {
                 switchTable.getItems().add(item);
             }

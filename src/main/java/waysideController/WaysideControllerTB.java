@@ -1,33 +1,31 @@
 package waysideController;
 
 import Common.WaysideController;
-import waysideController.TrainSpeedAuth;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
-import waysideController.WaysideBlockInfo;
 
 public class WaysideControllerTB {
 
     @FXML
     public Label tbWaysideNumberLabel;
     @FXML
-    public TableView<WaysideBlockInfo> tbBlockTable;
+    public TableView<WaysideBlockSubject> tbBlockTable;
     @FXML
-    public TableView<WaysideBlockInfo> tbSwitchTable;
+    public TableView<WaysideBlockSubject> tbSwitchTable;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbBTID;
+    public TableColumn<WaysideBlockSubject, Integer> tbBTID;
     @FXML
-    public TableColumn<WaysideBlockInfo, Boolean> tbBTOccupied;
+    public TableColumn<WaysideBlockSubject, Boolean> tbBTOccupied;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbSTID;
+    public TableColumn<WaysideBlockSubject, Integer> tbSTID;
     @FXML
-    public TableColumn<WaysideBlockInfo, Integer> tbSTSwitchTo;
+    public TableColumn<WaysideBlockSubject, Integer> tbSTSwitchTo;
     @FXML
-    public TableColumn<WaysideBlockInfo, Boolean> tbSTEnable;
+    public TableColumn<WaysideBlockSubject, Boolean> tbSTEnable;
     @FXML
     public TableView<TrainSpeedAuth> tbSpeedAuthTable;
     @FXML
@@ -114,10 +112,10 @@ public class WaysideControllerTB {
      * Read the block info from the wayside controller
      * @param blocks The list of blocks to read
      */
-    private void readBlockInfo(ObservableList<WaysideBlockInfo> blocks) {
+    private void readBlockInfo(ObservableList<WaysideBlockSubject> blocks) {
         tbBlockTable.setItems(blocks);
         tbSwitchTable.getItems().clear();
-        for(WaysideBlockInfo item : blocks) {
+        for(WaysideBlockSubject item : blocks) {
             if(item.isHasSwitch()) {
                 tbSwitchTable.getItems().add(item);
             }

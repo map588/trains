@@ -2,9 +2,8 @@ package waysideController;
 
 import Utilities.TrafficLightState;
 import javafx.beans.property.*;
-import javafx.scene.paint.Paint;
 
-public class WaysideBlockInfo {
+public class WaysideBlockSubject {
     private final ReadOnlyIntegerProperty blockID;
     private final ReadOnlyBooleanProperty hasSwitch;
     private final ReadOnlyBooleanProperty hasCrossing;
@@ -21,7 +20,7 @@ public class WaysideBlockInfo {
     private final TrafficLightState lightState;
     private final BooleanProperty crossingState;
 
-    public WaysideBlockInfo(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
+    public WaysideBlockSubject(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
         this.blockID = new ReadOnlyIntegerWrapper(blockID);
         this.hasSwitch = new ReadOnlyBooleanWrapper(hasSwitch);
         this.hasCrossing = new ReadOnlyBooleanWrapper(hasCrossing);
@@ -35,7 +34,7 @@ public class WaysideBlockInfo {
         this.lightState = new TrafficLightState(hasLight);
     }
 
-    public WaysideBlockInfo(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
+    public WaysideBlockSubject(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
         this(blockID, hasSwitch, hasLight, hasCrossing);
         this.switchBlockMain = new ReadOnlyIntegerWrapper(switchBlockMain);
         this.switchBlockAlt = new ReadOnlyIntegerWrapper(switchBlockAlt);

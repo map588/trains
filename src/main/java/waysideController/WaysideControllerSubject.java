@@ -21,7 +21,7 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private WaysideController controller;
-    private ObservableList<WaysideBlockInfo> blockList;
+    private ObservableList<WaysideBlockSubject> blockList;
     private ObservableList<TrainSpeedAuth> speedAuthList;
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
@@ -118,10 +118,10 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
         }
     }
 
-    public ObservableList<WaysideBlockInfo> blockListProperty() {
+    public ObservableList<WaysideBlockSubject> blockListProperty() {
         return blockList;
     }
-    public void addBlock(WaysideBlockInfo block) {
+    public void addBlock(WaysideBlockSubject block) {
         blockList.add(block);
         block.occupationProperty().addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(block.getBlockID(), newValue));
         block.switchStateProperty().addListener((observable, oldValue, newValue) -> {
