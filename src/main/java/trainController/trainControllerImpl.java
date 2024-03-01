@@ -339,42 +339,7 @@ public class trainControllerImpl implements TrainController, Notifications {
 
 
     //-----------------Getters-----------------
-    public boolean getBoolean(String propertyName){
-        switch (propertyName) {
-            case automaticMode_p : return this.automaticMode;
-            case serviceBrake_p : return this.serviceBrake;
-            case emergencyBrake_p : return this.emergencyBrake;
-            case intLights_p : return this.internalLights;
-            case extLights_p : return this.externalLights;
-            case leftDoors_p : return this.leftDoors;
-            case rightDoors_p : return this.rightDoors;
-            case announcements_p : return this.announcements;
-            case signalFailure_p : return this.signalFailure;
-            case brakeFailure_p : return this.brakeFailure;
-            case powerFailure_p : return this.powerFailure;
-            case inTunnel_p : return this.inTunnel;
-            case leftPlatform_p : return this.leftPlatform;
-            case rightPlatform_p : return this.rightPlatform;
-            default : System.err.println("Property " + propertyName + " not found");
-                return false;
-        }
-    }
 
-    public double getDouble(String propertyName){
-        switch (propertyName) {
-            case overrideSpeed_p : return this.overrideSpeed;
-            case commandSpeed_p : return this.commandSpeed;
-            case currentSpeed_p : return this.currentSpeed;
-            case Ki_p : return this.Ki;
-            case Kp_p : return this.Kp;
-            case power_p : return this.power;
-            case temperature_p : return this.temperature;
-            case speedLimit_p : return this.speedLimit;
-            case grade_p : return this.grade;
-            default : System.err.println("Property " + propertyName + " not found");
-                return 0;
-        }
-    }
 
     public int  getID() {
         return this.trainID;
