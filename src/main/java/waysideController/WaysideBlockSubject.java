@@ -1,9 +1,11 @@
 package waysideController;
 
+import Framework.Support.AbstractSubject;
+import Framework.Support.Notifications;
 import Utilities.TrafficLightState;
 import javafx.beans.property.*;
 
-public class WaysideBlockSubject {
+public class WaysideBlockSubject implements AbstractSubject, Notifications {
     private final ReadOnlyIntegerProperty blockID;
     private final ReadOnlyBooleanProperty hasSwitch;
     private final ReadOnlyBooleanProperty hasCrossing;
@@ -20,26 +22,22 @@ public class WaysideBlockSubject {
     private final TrafficLightState lightState;
     private final BooleanProperty crossingState;
 
-    public WaysideBlockSubject(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
-        this.blockID = new ReadOnlyIntegerWrapper(blockID);
-        this.hasSwitch = new ReadOnlyBooleanWrapper(hasSwitch);
-        this.hasCrossing = new ReadOnlyBooleanWrapper(hasCrossing);
+    public WaysideBlockSubject(WaysideBlock block) {
+        this.blockID = new ReadOnlyIntegerWrapper(block.getBlockID());
+        this.hasSwitch = new ReadOnlyBooleanWrapper(block.hasSwitch());
+        this.hasCrossing = new ReadOnlyBooleanWrapper(block.hasCrossing());
 
-        this.occupation = new SimpleBooleanProperty(false);
-        this.switchState = new SimpleBooleanProperty(false);
-        this.switchRequestedState = new SimpleBooleanProperty(false);
-        this.crossingState = new SimpleBooleanProperty(false);
-        this.authorityState = new SimpleBooleanProperty(false);
+        this.occupation = new SimpleBooleanProperty(block.isOccupied());
+        this.switchState = new SimpleBooleanProperty(block.getSwitchState());
+        this.switchRequestedState = new SimpleBooleanProperty(block.getSwitchRequest());
+        this.crossingState = new SimpleBooleanProperty(block.getCrossingState());
+        this.authorityState = new SimpleBooleanProperty(block.getAuthority());
 
-        this.lightState = new TrafficLightState(hasLight);
-    }
+        this.lightState = new TrafficLightState(block.hasLight());
 
-    public WaysideBlockSubject(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
-        this(blockID, hasSwitch, hasLight, hasCrossing);
-        this.switchBlockMain = new ReadOnlyIntegerWrapper(switchBlockMain);
-        this.switchBlockAlt = new ReadOnlyIntegerWrapper(switchBlockAlt);
-        this.switchedBlockID = new SimpleIntegerProperty(switchBlockMain);
-
+        this.switchBlockMain = new ReadOnlyIntegerWrapper(block.getSwitchBlockMain());
+        this.switchBlockAlt = new ReadOnlyIntegerWrapper(block.getSwitchBlockAlt());
+        this.switchedBlockID = new SimpleIntegerProperty(block.getSwitchBlockMain());
         this.switchState.addListener((observable, oldValue, newValue) -> {
             if(newValue)
                 this.switchedBlockID.set(this.getSwitchBlockAlt());
@@ -68,7 +66,7 @@ public class WaysideBlockSubject {
         return lightState.hasLight();
     }
 
-    public boolean isHasCrossing() {
+    public boolean hasCrossing() {
         return hasCrossing.get();
     }
 
@@ -78,6 +76,10 @@ public class WaysideBlockSubject {
 
     public boolean isOccupation() {
         return occupation.get();
+    }
+
+    public void setOccupation(boolean occupation) {
+        this.occupation.set(occupation);
     }
 
     public BooleanProperty occupationProperty() {
@@ -144,8 +146,12 @@ public class WaysideBlockSubject {
         return switchedBlockID;
     }
 
-    public boolean isSwitchRequestedState() {
+    public boolean getSwitchRequestedState() {
         return switchRequestedState.get();
+    }
+
+    public void setSwitchRequestedState(boolean switchRequestedState) {
+        this.switchRequestedState.set(switchRequestedState);
     }
 
     public BooleanProperty switchRequestedStateProperty() {
@@ -156,7 +162,26 @@ public class WaysideBlockSubject {
         return authorityState.get();
     }
 
+    public void setAuthorityState(boolean authorityState) {
+        this.authorityState.set(authorityState);
+    }
+
     public BooleanProperty authorityStateProperty() {
         return authorityState;
+    }
+
+    @Override
+    public void setProperty(String propertyName, Object newValue) {
+
+    }
+
+    @Override
+    public Property<?> getProperty(String propertyName) {
+        return null;
+    }
+
+    @Override
+    public void notifyChange(String property, Object newValue) {
+
     }
 }

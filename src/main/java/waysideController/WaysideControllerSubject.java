@@ -121,14 +121,21 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
     public ObservableList<WaysideBlockSubject> blockListProperty() {
         return blockList;
     }
+
+    public void updateActivePLCProp() {
+        if(!getBooleanProperty(maintenanceMode_p).get() && getStringProperty(PLCName_p).get() != null)
+            getPaintProperty(activePLCColor_p).set(Color.BLUE);
+        else
+            getPaintProperty(activePLCColor_p).set(Color.GRAY);
+    }
     public void addBlock(WaysideBlockSubject block) {
         blockList.add(block);
         block.occupationProperty().addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(block.getBlockID(), newValue));
-        block.switchStateProperty().addListener((observable, oldValue, newValue) -> {
-            controller.maintenanceSetSwitch(block.getBlockID(), newValue);
-            System.out.println("Switch State Changed");
-        });
+        block.switchStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetSwitch(block.getBlockID(), newValue));
+        block.lightStateProperty().lightStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetTrafficLight(block.getBlockID(), newValue));
+        block.crossingStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetCrossing(block.getBlockID(), newValue));
         block.switchRequestedStateProperty().addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(block.getBlockID(), newValue));
+        block.authorityStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetAuthority(block.getBlockID(), newValue));
     }
     public WaysideController getController() {
         return this.controller;

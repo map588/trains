@@ -6,10 +6,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WaysideControllerHW implements PLCRunner {
 
     private boolean maintenanceMode = false;
+    private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
     protected final BufferedReader inputStream;
     private final PrintStream outputStream;
     private PLCProgram plcProgram;
@@ -60,6 +63,11 @@ public class WaysideControllerHW implements PLCRunner {
         outputStream.println("authList="+blockID+":"+auth);
     }
 
+    @Override
+    public Map<Integer, WaysideBlock> getBlockMap() {
+        return blockMap;
+    }
+
     protected void parseCOMMessage(String message) {
         System.out.println("Received: " + message);
         String[] values = message.split("=", 2);
@@ -69,19 +77,23 @@ public class WaysideControllerHW implements PLCRunner {
         }
         else if (values[0].equals("occupancyList")) {
             String[] setValues = values[1].split(":");
-            plcProgram.setOccupancy(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+//            plcProgram.setOccupancy(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            blockMap.get(Integer.parseInt(setValues[0])).setOccupied(Boolean.parseBoolean(setValues[1]));
         }
         else if (values[0].equals("switchStateList")) {
             String[] setValues = values[1].split(":");
-            plcProgram.setSwitchState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+//            plcProgram.setSwitchState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            blockMap.get(Integer.parseInt(setValues[0])).setSwitchState(Boolean.parseBoolean(setValues[1]));
         }
         else if (values[0].equals("switchRequestedStateList")) {
             String[] setValues = values[1].split(":");
-            plcProgram.setSwitchRequest(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+//            plcProgram.setSwitchRequest(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            blockMap.get(Integer.parseInt(setValues[0])).setSwitchRequest(Boolean.parseBoolean(setValues[1]));
         }
         else if (values[0].equals("authList")) {
             String[] setValues = values[1].split(":");
-            plcProgram.setAuthState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+//            plcProgram.setAuthState(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Boolean.parseBoolean(setValues[1]));
         }
 
         if(!maintenanceMode)

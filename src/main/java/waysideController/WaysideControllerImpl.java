@@ -5,7 +5,9 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static waysideController.Properties.*;
 
@@ -19,10 +21,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
 
-    // List containing all the track blocks controlled by this instance of the wayside controller
-    private final List<WaysideBlockSubject> trackList = new ArrayList<>();
-
     private final List<TrainSpeedAuth> speedAuthList = new ArrayList<>();
+
+    private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
@@ -41,21 +42,21 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
         program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
 
-        addBlock((new WaysideBlockSubject(1, false, false, false)));
-        addBlock((new WaysideBlockSubject(2, false, false, false)));
-        addBlock((new WaysideBlockSubject(3, false, false, true)));
-        addBlock((new WaysideBlockSubject(4, false, false, false)));
-        addBlock((new WaysideBlockSubject(5, true, false, false, 6, 11)));
-        addBlock((new WaysideBlockSubject(6, false, true, false)));
-        addBlock((new WaysideBlockSubject(7, false, false, false)));
-        addBlock((new WaysideBlockSubject(8, false, false, false)));
-        addBlock((new WaysideBlockSubject(9, false, false, false)));
-        addBlock((new WaysideBlockSubject(10, false, false, false)));
-        addBlock((new WaysideBlockSubject(11, false, true, false)));
-        addBlock((new WaysideBlockSubject(12, false, false, false)));
-        addBlock((new WaysideBlockSubject(13, false, false, false)));
-        addBlock((new WaysideBlockSubject(14, false, false, false)));
-        addBlock((new WaysideBlockSubject(15, false, false, false)));
+        addBlock((new WaysideBlock(1, false, false, false)));
+        addBlock((new WaysideBlock(2, false, false, false)));
+        addBlock((new WaysideBlock(3, false, false, true)));
+        addBlock((new WaysideBlock(4, false, false, false)));
+        addBlock((new WaysideBlock(5, true, false, false, 6, 11)));
+        addBlock((new WaysideBlock(6, false, true, false)));
+        addBlock((new WaysideBlock(7, false, false, false)));
+        addBlock((new WaysideBlock(8, false, false, false)));
+        addBlock((new WaysideBlock(9, false, false, false)));
+        addBlock((new WaysideBlock(10, false, false, false)));
+        addBlock((new WaysideBlock(11, false, true, false)));
+        addBlock((new WaysideBlock(12, false, false, false)));
+        addBlock((new WaysideBlock(13, false, false, false)));
+        addBlock((new WaysideBlock(14, false, false, false)));
+        addBlock((new WaysideBlock(15, false, false, false)));
 
         CTCSetSpeedAuth(new TrainSpeedAuth(1));
         CTCSetSpeedAuth(new TrainSpeedAuth(2));
@@ -71,7 +72,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
         notifyChange(PLCName_p, PLC.getName());
-        updateActivePLCProp();
+        subject.updateActivePLCProp();
     }
 
     @Override
@@ -88,36 +89,25 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
-//        subject.maintenanceModeProperty().set(maintenanceMode);
-        updateActivePLCProp();
+        notifyChange(maintenanceMode_p, maintenanceMode);
+        subject.updateActivePLCProp();
         runPLC();
     }
 
     @Override
-    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
-        this.maintenanceMode = maintenanceMode;
-        updateActivePLCProp();
-        runPLC();
-    }
-
-    @Override
-    public List<WaysideBlockSubject> getBlockList() {
-        return this.trackList;
-    }
-
-    @Override
-    public void addBlock(WaysideBlockSubject block) {
-        this.trackList.add(block);
-        subject.addBlock(block);
+    public void addBlock(WaysideBlock block) {
+        blockMap.put(block.getBlockID(), block);
+        subject.addBlock(new WaysideBlockSubject(block));
     }
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
-        trackList.get(blockID-1).occupationProperty().set(isOccupied);
-        program.setOccupancy(blockID, isOccupied);
+        blockMap.get(blockID).setOccupied(isOccupied);
+        subject.blockListProperty().get(blockID-1).setOccupation(isOccupied);
         runPLC();
     }
 
+    // TODO Remove this!
     @Override
     public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth) {
         if(speedAuthList.contains(speedAuth)) {
@@ -142,7 +132,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
 
     @Override
     public void CTCRequestSwitchState(int blockID, boolean switchState) {
-        program.setSwitchRequest(blockID, switchState);
+        blockMap.get(blockID).setSwitchRequest(switchState);
+        subject.blockListProperty().get(blockID-1).setSwitchRequestedState(switchState);
         runPLC();
     }
 
@@ -163,22 +154,27 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-        program.setSwitchState(blockID, switchState);
+        blockMap.get(blockID).setSwitchState(switchState);
+//        subject.blockListProperty().get(blockID-1).setSwitchState(switchState);
+        System.out.println("maintenanceSetSwitch: " + blockID + " " + switchState);
     }
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        program.setAuthState(blockID, auth);
+        blockMap.get(blockID).setAuthority(auth);
+        System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
     }
 
     @Override
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
-
+        blockMap.get(blockID).setLightState(lightState);
+        System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
     }
 
     @Override
     public void maintenanceSetCrossing(int blockID, boolean crossingState) {
-
+        blockMap.get(blockID).setCrossingState(crossingState);
+        System.out.println("maintenanceSetCrossing: " + blockID + " " + crossingState);
     }
 
     @Override
@@ -186,15 +182,49 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
         return this.id;
     }
 
-    private void updateActivePLCProp() {
-        if(!maintenanceMode && PLCFile != null)
-            subject.getPaintProperty(activePLCColor_p).set(Color.BLUE);
-        else
-            subject.getPaintProperty(activePLCColor_p).set(Color.GRAY);
-    }
-
     public WaysideControllerSubject getSubject() {
         return subject;
+    }
+
+    /**
+     * @param blockID
+     * @param switchState
+     */
+    @Override
+    public void setSwitchPLC(int blockID, boolean switchState) {
+        subject.blockListProperty().get(blockID-1).setSwitchState(switchState);
+    }
+
+    /**
+     * @param blockID
+     * @param lightState
+     */
+    @Override
+    public void setTrafficLightPLC(int blockID, boolean lightState) {
+        subject.blockListProperty().get(blockID-1).setLightState(lightState);
+    }
+
+    /**
+     * @param blockID
+     * @param crossingState
+     */
+    @Override
+    public void setCrossingPLC(int blockID, boolean crossingState) {
+        subject.blockListProperty().get(blockID-1).setCrossingState(crossingState);
+    }
+
+    @Override
+    public void setAuthorityPLC(int blockID, boolean auth) {
+        subject.blockListProperty().get(blockID-1).setAuthorityState(auth);
+    }
+
+    @Override
+    public Map<Integer, WaysideBlock> getBlockMap() {
+        return blockMap;
+    }
+
+    public String toString() {
+        return "SW Wayside Controller #" + id;
     }
 
     /**
@@ -227,41 +257,5 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
         if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
         }
-    }
-
-    /**
-     * @param blockID
-     * @param switchState
-     */
-    @Override
-    public void setSwitchPLC(int blockID, boolean switchState) {
-        trackList.get(blockID-1).switchStateProperty().set(switchState);
-    }
-
-    /**
-     * @param blockID
-     * @param lightState
-     */
-    @Override
-    public void setTrafficLightPLC(int blockID, boolean lightState) {
-        trackList.get(blockID-1).setLightState(lightState);
-    }
-
-    /**
-     * @param blockID
-     * @param crossingState
-     */
-    @Override
-    public void setCrossingPLC(int blockID, boolean crossingState) {
-        trackList.get(blockID-1).setCrossingState(crossingState);
-    }
-
-    @Override
-    public void setAuthorityPLC(int blockID, boolean auth) {
-        trackList.get(blockID-1).authorityStateProperty().set(auth);
-    }
-
-    public String toString() {
-        return "SW Wayside Controller #" + id;
     }
 }

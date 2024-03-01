@@ -148,7 +148,7 @@ public class WaysideControllerManager {
                     return;
                 } else {
                     WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
-                    if(blockInfo.isHasCrossing()) {
+                    if(blockInfo.hasCrossing()) {
                         CheckBox checkBox;
                         {
                             checkBox = new CheckBox();
@@ -188,6 +188,9 @@ public class WaysideControllerManager {
         // Create initial controller and update values
         createNewController();
         testBench.setController(currentSubject.getController());
+
+        currentSubject.getController().setMaintenanceMode(true);
+//        currentSubject.getController().mai
     }
 
     private void updateMaintenanceWriteable() {
@@ -253,7 +256,7 @@ public class WaysideControllerManager {
      */
     private void updateSwitchList() {
         switchTable.getItems().clear();
-        ObservableList<WaysideBlockSubject> blocks = FXCollections.observableList(currentSubject.getController().getBlockList());
+        ObservableList<WaysideBlockSubject> blocks = currentSubject.blockListProperty();
         for(WaysideBlockSubject item : blocks) {
             if(item.isHasSwitch()) {
                 switchTable.getItems().add(item);

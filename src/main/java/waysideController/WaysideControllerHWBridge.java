@@ -56,12 +56,12 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         outputStream.println("maintenanceMode="+maintenanceMode);
     }
 
-    @Override
-    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
-        super.setMaintenanceModeNoUpdate(maintenanceMode);
-        System.out.println("Send: maintenanceMode="+maintenanceMode);
-        outputStream.println("maintenanceMode="+maintenanceMode);
-    }
+//    @Override
+//    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
+//        super.setMaintenanceModeNoUpdate(maintenanceMode);
+//        System.out.println("Send: maintenanceMode="+maintenanceMode);
+//        outputStream.println("maintenanceMode="+maintenanceMode);
+//    }
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
