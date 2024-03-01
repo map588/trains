@@ -62,6 +62,9 @@ class CTCBlockInfo {
         factory.getSubjects().get(convergingBlockID).setStringProperty("switchStateString");
         factory.getSubjects().get(divergingBlockOneID).setStringProperty("switchStateString");
         factory.getSubjects().get(divergingBlockTwoID).setStringProperty("switchStateString");
+        if(divergingBlockOneID == blockID || divergingBlockTwoID == blockID) {
+            factory.getSubjects().get(convergingBlockID).setProperty("switchState", state);
+        }
     }
 
     /**
@@ -72,12 +75,15 @@ class CTCBlockInfo {
             if (convergingBlockID == 0 || divergingBlockOneID == 0 || divergingBlockTwoID == 0) {
                 return "";
             }
-        }else{return null;}
+        }
+        else{return null;}
         if(hasSwitchCon && !switchState) {
             return ( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
-        }else if(hasSwitchCon) {
+        }
+        else if(hasSwitchCon) {
             return ( divergingBlockOneID +"  ( "   + convergingBlockID + " == " + divergingBlockTwoID + " )");
-        }else if(hasSwitchDiv && !switchState) {
+        }
+        else if(hasSwitchDiv && !switchState) {
             if(divergingBlockOneID == blockID) {
                 return ( divergingBlockOneID + " ==== " + convergingBlockID);
             }else {
@@ -98,16 +104,15 @@ class CTCBlockInfo {
      * Updates the color of the light based on its state.
      */
     void updateLightColor() {
-        if(factory.getSubjects().get(getBlockID()) != null) {
-            return;
-        }
-        if(this.lightState) {
-            this.lightColor = javafx.scene.paint.Color.GREEN;
-        }else {
-            this.lightColor = javafx.scene.paint.Color.RED;
-        }
-        if(factory.getSubjects().get(getBlockID()) != null){
-            factory.getSubjects().get(getBlockID()).setPaint( lightColor);
+        if(factory.getSubjects().get(getBlockID()) != null && hasLight) {
+            if (this.lightState) {
+                this.lightColor = javafx.scene.paint.Color.GREEN;
+            } else {
+                this.lightColor = javafx.scene.paint.Color.RED;
+            }
+            if (factory.getSubjects().get(getBlockID()) != null) {
+                factory.getSubjects().get(getBlockID()).setPaint(lightColor);
+            }
         }
     }
 

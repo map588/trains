@@ -103,9 +103,10 @@ public class CTCOfficeManager {
 
 
 
-        switchLightColumn.setCellValueFactory(block ->
-                block.getValue().getBooleanProperty("hasLight").getValue() ?
-                block.getValue().getObjectProperty("lightColor") : null);
+        switchLightColumn.setCellValueFactory(block -> {
+                block.getValue().setPaintProperty("lightColor");
+               return  block.getValue().getBooleanProperty("hasLight").getValue() ?
+                block.getValue().getObjectProperty("lightColor") : null; });
 
         switchLightColumn.setCellFactory(column -> new TableCell<CTCBlockSubject, Paint>() {
             private final BorderPane graphic = new BorderPane();

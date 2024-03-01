@@ -49,11 +49,14 @@ public class CTCBlockSubject implements AbstractSubject {
         occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
         lightState.addListener((observable, oldValue, newValue) -> {
             block.setLightState(newValue);
+            block.updateLightColor();
         });
         crossingState.addListener((observable, oldValue, newValue) -> block.setCrossingState(newValue));
-        lightColor.addListener(event -> block.updateLightColor());
-
         switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
+    }
+
+    CTCBlockInfo getBlockInfo() {
+        return blockInfo;
     }
 
     public BooleanProperty getBooleanProperty(String propertyName) {
@@ -116,6 +119,14 @@ public class CTCBlockSubject implements AbstractSubject {
                 switchStateString.set(blockInfo.getSwitchStateString());
                 System.out.println("setting new Switch state string for block " + blockID.get() + " to " + blockInfo.getSwitchStateString());
 
+    }
+
+    public void setPaintProperty(String propertyName) {
+        if (propertyName == null) {
+            System.err.println("Null value for property " + propertyName);
+            return;
+        }
+        lightColor.set(blockInfo.getLightColor());
     }
 
     /**
