@@ -184,18 +184,5 @@ class CTCBlockInfo {
         return hasSwitchDiv;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
