@@ -33,10 +33,6 @@ import static trainController.Properties.*;
  *
  */
 public class trainControllerImpl implements TrainController, Notifications {
-    /**
-     * An executor service that allows for scheduling and executing tasks in a single thread.
-     */
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private int authority;
     private int blocksToNextStation;
     private double commandSpeed;
@@ -123,7 +119,12 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.error = 0;
         this.power = 0;
 
-        this.executorService.scheduleAtFixedRate(this::calculatePower, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+        /**
+         * An executor service that allows for scheduling and executing tasks in a single thread.
+         */
+        try (ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor()) {
+            executorService.scheduleAtFixedRate(this::calculatePower, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+        }
     }
 
     /**
