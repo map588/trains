@@ -122,9 +122,8 @@ public class trainControllerImpl implements TrainController, Notifications {
         /**
          * An executor service that allows for scheduling and executing tasks in a single thread.
          */
-        try (ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor()) {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
             executorService.scheduleAtFixedRate(this::calculatePower, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
-        }
     }
 
     /**
