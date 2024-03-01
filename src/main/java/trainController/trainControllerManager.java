@@ -83,7 +83,7 @@ public class trainControllerManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, trainControllerSubject> subjects = subjectMap.getSubjects();
+        ObservableHashMap <Integer, trainControllerSubject> subjects = subjectMap.getSubjects();
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
         ObservableHashMap.MapListener<Integer, trainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
