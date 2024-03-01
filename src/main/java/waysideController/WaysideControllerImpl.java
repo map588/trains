@@ -1,7 +1,6 @@
 package waysideController;
 
 import Common.WaysideController;
-import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -215,7 +214,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner {
 
     @Override
     public void setAuthorityPLC(int blockID, boolean auth) {
-        subject.blockListProperty().get(blockID-1).setAuthorityState(auth);
+        subject.blockListProperty().get(blockID-1).setAuthority(auth);
     }
 
     @Override
