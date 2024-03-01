@@ -8,7 +8,7 @@ package CTCOffice;
 class CTCBlockInfo {
     private final int blockID, blockLength, speedLimit;
     private final boolean line;
-    private boolean occupied;
+    private boolean occupied, underMaintenance;
     private final boolean hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing;
     private boolean lightState, crossingState, switchState;
     private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
@@ -19,7 +19,7 @@ class CTCBlockInfo {
      * Constructor for the CTCBlockInfo class.
      * Initializes the block properties and registers the block with the CTCBlockSubjectFactory.
      */
-    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon, boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean switchConState, boolean switchDivState, boolean crossingState, int speedLimit, int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID, boolean switchState) {
+    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon, boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean crossingState, int speedLimit, int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID, boolean switchState) {
         this.blockID = blockID;
         this.line = line;
         this.occupied = occupied;

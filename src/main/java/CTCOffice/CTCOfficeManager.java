@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package CTCOffice;
 
 import CTCOffice.*;
 import Common.CTCOffice;

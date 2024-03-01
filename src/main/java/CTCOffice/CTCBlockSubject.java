@@ -54,9 +54,6 @@ public class CTCBlockSubject implements AbstractSubject {
         switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
     }
 
-    public CTCBlockInfo getBlockInfo() {
-        return blockInfo;
-    }
     public BooleanProperty getBooleanProperty(String propertyName) {
         if(blockInfo == null) {
             System.err.println("Null value for property " + propertyName);
@@ -100,12 +97,14 @@ public class CTCBlockSubject implements AbstractSubject {
             default -> null;
         };
     }
+
     public StringProperty getStringProperty(String propertyName) {
         return switch (propertyName) {
             case "switchStateString" -> switchStateString;
             default -> null;
         };
     }
+
     public void setStringProperty(String propertyName) {
         if(propertyName == null) {
             System.err.println("Null value for property " + propertyName);
@@ -126,51 +125,21 @@ public class CTCBlockSubject implements AbstractSubject {
             return;
         }
         switch (propertyName) {
-            case "line" -> {
-                updateProperty(line, newValue);
-            }
-            case "occupied" -> {
-                updateProperty(occupied, newValue);
-            }
-            case "hasLight" -> {
-                updateProperty(hasLight, newValue);
-            }
-            case "hasSwitchCon" -> {
-                updateProperty(hasSwitchCon, newValue);
-            }
-            case "hasSwitchDiv" -> {
-                updateProperty(hasSwitchDiv, newValue);
-            }
-            case "hasCrossing" -> {
-                updateProperty(hasCrossing, newValue);
-            }
-            case "lightState" -> {
-                updateProperty(lightState, newValue);
-            }
-            case "crossingState" -> {
-                updateProperty(crossingState, newValue);
-            }
-            case "speedLimit" -> {
-                updateProperty(speedLimit, newValue);
-            }
-            case "blockID" -> {
-                updateProperty(blockID, newValue);
-            }
-            case "blockLength" -> {
-                updateProperty(blockLength, newValue);
-            }
-            case "convergingBlockID" -> {
-                updateProperty(convergingBlockID, newValue);
-            }
-            case "divergingBlockOneID" -> {
-                updateProperty(divergingBlockOneID, newValue);
-            }
-            case "divergingBlockTwoID" -> {
-                updateProperty(divergingBlockTwoID, newValue);
-            }
-            case "switchState" -> {
-                updateProperty(switchState, newValue);
-            }
+            case "line"                 -> updateProperty(line, newValue);
+            case "occupied"             -> updateProperty(occupied, newValue);
+            case "hasLight"             -> updateProperty(hasLight, newValue);
+            case "hasSwitchCon"         -> updateProperty(hasSwitchCon, newValue);
+            case "hasSwitchDiv"         -> updateProperty(hasSwitchDiv, newValue);
+            case "hasCrossing"          -> updateProperty(hasCrossing, newValue);
+            case "lightState"           -> updateProperty(lightState, newValue);
+            case "crossingState"        -> updateProperty(crossingState, newValue);
+            case "speedLimit"           -> updateProperty(speedLimit, newValue);
+            case "blockID"              -> updateProperty(blockID, newValue);
+            case "blockLength"          -> updateProperty(blockLength, newValue);
+            case "convergingBlockID"    -> updateProperty(convergingBlockID, newValue);
+            case "divergingBlockOneID"  -> updateProperty(divergingBlockOneID, newValue);
+            case "divergingBlockTwoID"  -> updateProperty(divergingBlockTwoID, newValue);
+            case "switchState"          -> updateProperty(switchState, newValue);
 
             default -> System.err.println("Unknown property " + propertyName);
         }
@@ -183,67 +152,8 @@ public class CTCBlockSubject implements AbstractSubject {
         lightColor.set(newValue);
     }
 
-    /**
-     * Returns the property with the given name.
-     */
     public Property<?> getProperty(String propertyName) {
-        switch (propertyName) {
-            case "line" -> {
-                return line;
-            }
-            case "occupied" -> {
-                return occupied;
-            }
-            case "hasLight" -> {
-                return hasLight;
-            }
-            case "hasSwitchCon" -> {
-                return hasSwitchCon;
-            }
-            case "hasSwitchDiv" -> {
-                return hasSwitchDiv;
-            }
-            case "hasCrossing" -> {
-                return hasCrossing;
-            }
-            case "lightState" -> {
-                return lightState;
-            }
-            case "crossingState" -> {
-                return crossingState;
-            }
-            case "speedLimit" -> {
-                return speedLimit;
-            }
-            case "blockID" -> {
-                return blockID;
-            }
-            case "blockLength" -> {
-                return blockLength;
-            }
-            case "convergingBlockID" -> {
-                return convergingBlockID;
-            }
-            case "divergingBlockOneID" -> {
-                return divergingBlockOneID;
-            }
-            case "divergingBlockTwoID" -> {
-                return divergingBlockTwoID;
-            }
-            case "lightColor" -> {
-                return lightColor;
-            }
-            case "switchState" -> {
-                return switchState;
-            }
-            case "switchStateString" -> {
-                return switchStateString;
-            }
-            default -> {
-                System.err.println("Unknown property " + propertyName);
-                return null;
-            }
-        }
+        return null;
     }
 
 
