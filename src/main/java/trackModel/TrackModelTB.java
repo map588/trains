@@ -1,19 +1,16 @@
-package Framework.GUI.Managers;
+package trackModel;
 
 import Utilities.TrackLayoutInfo;
-import trackModel.trackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import trackModel.trackModelImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 
 
-public class trackModelTB {
+public class TrackModelTB {
 
     @FXML
     private Label tbLogo;
@@ -55,8 +52,8 @@ public class trackModelTB {
 
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
     private trackModelImpl trackModel;
-    private trackModelSubject trackModelSubject;
-    private trackModelManager trackModelManager;
+    private TrackModelSubject trackModelSubject;
+    private TrackModelManager trackModelManager;
 
     public int getTempInput(){
         return Integer.parseInt(tbTempInput.getText());
@@ -70,7 +67,7 @@ public class trackModelTB {
     public void initialize() {
         System.out.println("LAUNCHED TESTBENCH");
 
-        trackModelSubject = new trackModelSubject(trackModel);
+        trackModelSubject = new TrackModelSubject(trackModel);
         StringConverter<Integer> intConverter = new StringConverter<Integer>() {
             @Override
             public String toString(Integer integer) {
@@ -194,10 +191,10 @@ public class trackModelTB {
         this.trackModel = trackModel;
     }
 
-    public void setTrackModelManager(trackModelManager trackModelManager) {
+    public void setTrackModelManager(TrackModelManager trackModelManager) {
         this.trackModelManager = trackModelManager;
     }
-    public void setTrackModelSubject(trackModelSubject trackModelSubject){
+    public void setTrackModelSubject(TrackModelSubject trackModelSubject){
         this.trackModelSubject = trackModelSubject;
         tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
         comSpeedInput.textProperty().bindBidirectional(trackModelSubject.comSpeedProperty());

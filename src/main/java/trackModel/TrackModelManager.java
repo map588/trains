@@ -1,8 +1,6 @@
-package Framework.GUI.Managers;
+package trackModel;
 
 import Utilities.TrackLayoutInfo;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import trackModel.trackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,19 +8,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import trackModel.trackModelImpl;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 
 
-public class trackModelManager {
+public class TrackModelManager {
 
 
 
@@ -122,10 +117,10 @@ public class trackModelManager {
     // potential variables to assist with control
     private trackModelImpl currTrackModel = new trackModelImpl();
     //subject
-    private trackModelSubject trackModelSubject = new trackModelSubject(currTrackModel);
+    private TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
 
     // test bench object
-    private trackModelTB testBench;
+    private TrackModelTB testBench;
     private TrackLayoutInfo trackProperties;
 
     @FXML
@@ -335,7 +330,7 @@ public class trackModelManager {
     }
 
 
-    private trackModelTB launchTestBench() {
+    private TrackModelTB launchTestBench() {
         try {
             String tbFile = "/Framework/GUI/FXML/trackModel_TB.fxml";
             URL url = getClass().getResource(tbFile);
