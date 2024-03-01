@@ -93,7 +93,7 @@ public class trainModelTB {
         tbAuthority.setOnAction(event -> subject.setProperty("authority", Integer.parseInt(tbAuthority.getText())));
         tbGrade.setOnAction(event -> subject.setProperty("grade", Double.parseDouble(tbGrade.getText())));
         tbTemp.setOnAction(event -> subject.setProperty("temperature", Double.parseDouble(tbTemp.getText())));
-        tbTimeDelta.setOnAction(event -> subject.setProperty("timeDelta", Double.parseDouble(tbTimeDelta.getText())));
+        tbTimeDelta.setOnAction(event -> subject.setProperty("timeDelta", Integer.parseInt(tbTimeDelta.getText())));
         tbTimeButton.setOnAction(event -> subject.runPhysics());
 
         appendListener(subject.getBooleanProperty("brakeFailure"), (observable, oldValue, newValue) -> updateBrakeFailureIndicator(newValue));
