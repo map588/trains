@@ -135,7 +135,7 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
         block.lightStateProperty().lightStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetTrafficLight(block.getBlockID(), newValue));
         block.crossingStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetCrossing(block.getBlockID(), newValue));
         block.switchRequestedStateProperty().addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(block.getBlockID(), newValue));
-        block.authorityStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetAuthority(block.getBlockID(), newValue));
+        block.authorityProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetAuthority(block.getBlockID(), newValue));
     }
     public WaysideController getController() {
         return this.controller;

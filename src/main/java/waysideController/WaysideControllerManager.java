@@ -168,7 +168,7 @@ public class WaysideControllerManager {
 
             }
         });
-        blockTableAuthColumn.setCellValueFactory(block -> block.getValue().authorityStateProperty());
+        blockTableAuthColumn.setCellValueFactory(block -> block.getValue().authorityProperty());
         blockTableAuthColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableAuthColumn));
         blockTableCrossingColumn.setEditable(false);
         blockTableCircuitColumn.setEditable(false);

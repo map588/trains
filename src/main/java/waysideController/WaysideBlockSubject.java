@@ -15,7 +15,8 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
 
     private final BooleanProperty occupation;
     private final BooleanProperty switchState;
-    private final BooleanProperty authorityState;
+    private final BooleanProperty authority;
+    private final DoubleProperty speed;
 
     private final BooleanProperty switchRequestedState;
     private IntegerProperty switchedBlockID;
@@ -31,7 +32,8 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
         this.switchState = new SimpleBooleanProperty(block.getSwitchState());
         this.switchRequestedState = new SimpleBooleanProperty(block.getSwitchRequest());
         this.crossingState = new SimpleBooleanProperty(block.getCrossingState());
-        this.authorityState = new SimpleBooleanProperty(block.getAuthority());
+        this.authority = new SimpleBooleanProperty(block.getAuthority());
+        this.speed = new SimpleDoubleProperty(block.getSpeed());
 
         this.lightState = new TrafficLightState(block.hasLight());
 
@@ -158,16 +160,28 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
         return switchRequestedState;
     }
 
-    public boolean isAuthorityState() {
-        return authorityState.get();
+    public boolean getAuthority() {
+        return authority.get();
     }
 
-    public void setAuthorityState(boolean authorityState) {
-        this.authorityState.set(authorityState);
+    public void setAuthority(boolean authority) {
+        this.authority.set(authority);
     }
 
-    public BooleanProperty authorityStateProperty() {
-        return authorityState;
+    public BooleanProperty authorityProperty() {
+        return authority;
+    }
+
+    public double getSpeed() {
+        return speed.get();
+    }
+
+    public DoubleProperty speedProperty() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed.set(speed);
     }
 
     @Override
