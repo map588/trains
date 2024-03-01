@@ -48,7 +48,7 @@ public class trainControllerManager {
     @FXML
     private ChoiceBox<Integer> trainNoChoiceBox;
 
-    private trainControllerSubjectFactory factory;
+    private trainControllerSubjectMap subjectMap;
     private trainControllerSubject currentSubject;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
@@ -61,13 +61,13 @@ public class trainControllerManager {
         //and that subject being added to the factories Map of subjects
         new trainControllerImpl( 1);
 
-        factory = trainControllerSubjectFactory.getInstance();
+        subjectMap = trainControllerSubjectMap.getInstance();
         setupMapChangeListener();
 
 
         // Select the first train by default if available
-        if (!factory.getSubjects().isEmpty()) {
-            Integer firstKey = factory.getSubjects().keySet().iterator().next();
+        if (!subjectMap.getSubjects().isEmpty()) {
+            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
         }
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -76,14 +76,14 @@ public class trainControllerManager {
             }
         });
 
-        currentSubject.setProperty("automaticMode", true);
+        currentSubject.setProperty(automaticMode_p, true);
         testBench = launchTestBench();
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
 
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, trainControllerSubject> subjects = factory.getSubjects();
+        ObservableHashMap<Integer, trainControllerSubject> subjects = subjectMap.getSubjects();
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
         ObservableHashMap.MapListener<Integer, trainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
@@ -112,7 +112,7 @@ public class trainControllerManager {
         int previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedIndex();
         Platform.runLater(() -> {
             trainNoChoiceBox.setItems(FXCollections.observableArrayList(
-                    new ArrayList<>(factory.getSubjects().keySet())));
+                    new ArrayList<>(subjectMap.getSubjects().keySet())));
             trainNoChoiceBox.getSelectionModel().select(previousSelection);
         });
     }
@@ -256,7 +256,7 @@ public class trainControllerManager {
 
 
     private void changeTrainView(Integer trainID) {
-        currentSubject = factory.getSubjects().get(trainID);
+        currentSubject = subjectMap.getSubject(trainID);
         if(currentSubject != null) {
             unbindControls();
             updateAll();

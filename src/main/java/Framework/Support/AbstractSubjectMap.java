@@ -8,6 +8,6 @@ public interface AbstractSubjectMap<K, S> {
 
     void removeSubject(K ID);
 
-    ObservableHashMap<K, S> getAllSubjects();
+    ObservableHashMap<K, S> getSubjects();
 }
 

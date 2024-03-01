@@ -18,7 +18,7 @@ public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S>{
         subjects.remove(ID);
     }
 
-    public ObservableHashMap<K, S> getAllSubjects() {
+    public ObservableHashMap<K, S> getSubjects() {
         return subjects;
     }
 }

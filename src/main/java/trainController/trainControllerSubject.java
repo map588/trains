@@ -23,7 +23,7 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     public trainControllerSubject(TrainController controller) {
         this.controller = controller;
         initializeProperties();
-        trainControllerSubjectFactory.getInstance().registerSubject(controller.getID(), this);
+        trainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
     }
 
     // Simplified property initialization

@@ -3,7 +3,7 @@ package trainController;
 import Framework.Support.SubjectMap;
 import Framework.Support.ObservableHashMap;
 
-public class trainControllerSubjectMap extends SubjectMap<Integer ,trainControllerSubject> {
+public class trainControllerSubjectMap extends SubjectMap<Integer, trainControllerSubject> {
 
     private static final trainControllerSubjectMap INSTANCE = new trainControllerSubjectMap();
 
@@ -16,6 +16,6 @@ public class trainControllerSubjectMap extends SubjectMap<Integer ,trainControll
     }
 
     public ObservableHashMap<Integer, trainControllerSubject> getSubjects() {
-        return subjects;
+        return super.getSubjects();
     }
 }

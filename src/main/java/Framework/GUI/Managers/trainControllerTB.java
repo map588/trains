@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import trainController.trainControllerImpl;
 import trainController.trainControllerSubject;
 import trainController.trainControllerSubjectFactory;
+import trainController.trainControllerSubjectMap;
 import trainModel.trainModelImpl;
 
 import java.util.ArrayList;
@@ -68,14 +69,14 @@ public class trainControllerTB {
     @FXML
     private TextField trainControllerTB_trainNo_TextField;
 
-    private trainControllerSubjectFactory factory = trainControllerSubjectFactory.getInstance();
+    private trainControllerSubjectMap subjectMap = trainControllerSubjectMap.getInstance();
     private trainControllerSubject subject;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     @FXML
     private void initialize(){
-        if (!factory.getSubjects().isEmpty()) {
-            Integer firstKey = factory.getSubjects().keySet().iterator().next();
-            subject = factory.getSubjects().get(firstKey);
+        if (!subjectMap.getSubjects().isEmpty()) {
+            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
+            subject = subjectMap.getSubject(firstKey);
         }
 
         initializeTestBench();
@@ -124,7 +125,7 @@ public class trainControllerTB {
     }
 
     private void createTrainController(int trainID){
-        if(factory.getSubjects().containsKey(trainID)) {
+        if(subjectMap.getSubjects().containsKey(trainID)) {
             changeTrainView(trainID);
         }
         else {
@@ -132,7 +133,7 @@ public class trainControllerTB {
                 new trainControllerImpl(trainID);
 
             } finally{
-                subject = factory.getSubjects().get(trainID);
+                subject = subjectMap.getSubjects().get(trainID);
                 changeTrainView(trainID);
             }
         }
@@ -165,8 +166,8 @@ public class trainControllerTB {
     }
 
     private void changeTrainView(int trainID){
-        if(factory.getSubjects().containsKey(trainID)) {
-            subject = factory.getSubjects().get(trainID);
+        if(subjectMap.getSubjects().containsKey(trainID)) {
+            subject = subjectMap.getSubject(trainID);
             unbindTrainController();
             bindTrainController();
         }
@@ -202,7 +203,6 @@ public class trainControllerTB {
     private void unbindTrainController(){
         listenerReferences.forEach(ListenerReference::detach);
         listenerReferences.clear();
-
 
 
 
