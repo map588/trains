@@ -11,7 +11,8 @@ import javafx.scene.paint.Paint;
  */
 public class CTCBlockSubject implements AbstractSubject {
     private final IntegerProperty blockID, convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
-    private final BooleanProperty line, occupied, hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing, lightState, crossingState, switchState;
+    private final BooleanProperty line, occupied, hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing, lightState,
+                                    crossingState, switchState, underMaintenance;
     private final DoubleProperty  speedLimit;
     private final IntegerProperty blockLength;
     private final ObjectProperty<Paint> lightColor;
@@ -42,6 +43,7 @@ public class CTCBlockSubject implements AbstractSubject {
         this.divergingBlockTwoID = new SimpleIntegerProperty(this, "divergingBlockTwoID", block.getDivergingBlockTwoID());
         this.switchState = new SimpleBooleanProperty(this, "switchState", block.getSwitchState());
         this.switchStateString = new SimpleStringProperty(this, "switchStateString", block.getSwitchStateString());
+        this.underMaintenance = new SimpleBooleanProperty(this, "underMaintenance", block.getUnderMaintenance());
         this.blockInfo = block;
 
         occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
@@ -69,6 +71,7 @@ public class CTCBlockSubject implements AbstractSubject {
             case "lightState" -> lightState;
             case "crossingState" -> crossingState;
             case "switchState" -> switchState;
+            case "underMaintenance" -> underMaintenance;
             default -> null;
         };
     }
@@ -140,6 +143,7 @@ public class CTCBlockSubject implements AbstractSubject {
             case "divergingBlockOneID"  -> updateProperty(divergingBlockOneID, newValue);
             case "divergingBlockTwoID"  -> updateProperty(divergingBlockTwoID, newValue);
             case "switchState"          -> updateProperty(switchState, newValue);
+            case "underMaintenance"     -> updateProperty(underMaintenance, newValue);
 
             default -> System.err.println("Unknown property " + propertyName);
         }
