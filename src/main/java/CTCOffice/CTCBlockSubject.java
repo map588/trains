@@ -10,22 +10,11 @@ import javafx.scene.paint.Paint;
  * It also contains methods for getting and setting these properties.
  */
 public class CTCBlockSubject implements AbstractSubject {
-    private final IntegerProperty blockID;
-    private final BooleanProperty line;
-    private final BooleanProperty occupied;
-    private final BooleanProperty hasLight;
-    private final BooleanProperty hasSwitchCon;
-    private final BooleanProperty hasSwitchDiv;
-    private final BooleanProperty hasCrossing;
-    private final BooleanProperty lightState;
-    private final BooleanProperty crossingState;
+    private final IntegerProperty blockID, convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
+    private final BooleanProperty line, occupied, hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing, lightState, crossingState, switchState;
     private final DoubleProperty  speedLimit;
     private final IntegerProperty blockLength;
     private final ObjectProperty<Paint> lightColor;
-    private final IntegerProperty convergingBlockID;
-    private final IntegerProperty divergingBlockOneID;
-    private final IntegerProperty divergingBlockTwoID;
-    private final BooleanProperty switchState;
     private final StringProperty switchStateString;
 
     CTCBlockInfo blockInfo;
