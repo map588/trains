@@ -109,46 +109,25 @@ public class CTCOfficeImpl implements CTCOffice {
     public void setSwitchState(boolean line, int blockID, boolean switchState) {
         track.get(line).get(blockID).setSwitchState(switchState);
     }
+
 //*********************************************************************************************************************************************
-    public void setManualMode() {
-
-    }
-
-    public void setMaintenanceMode() {
-
-    }
-
-    public void setSuggestedSpeed(int trainID, int speed) {
-
-    }
-
-    public void setSelectedTrain(int trainID) {
-
-    }
-
-    public void setSchedule(int trainID, String schedule) {
-
-    }
-
-    public void setOccupancy(boolean line, int blockID, boolean occupied) {
-
-    }
-
+    public void setManualMode() {}
+    public void setMaintenanceMode() {}
+    public void setSuggestedSpeed(int trainID, int speed) {}
+    public void setSelectedTrain(int trainID) {}
+    public void setSchedule(int trainID, String schedule) {}
+    public void setOccupancy(boolean line, int blockID, boolean occupied) {}
     public boolean getOccupancy(boolean line, int blockID) {
         return false;
     }
-
     public boolean getSwitchState(boolean line, int switchID) {
         return false;
     }
-
     public boolean getLightState(boolean line, int blockID) {
         return false;
     }
+    public void getMode() {}
 
-    public void getMode() {
-
-    }
 //*********************************************************************************************************************************************8
 
 }

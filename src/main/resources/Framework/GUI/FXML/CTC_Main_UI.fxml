@@ -20,63 +20,39 @@
 
 <AnchorPane fx:id="mainAnchor" minHeight="400" minWidth="600" prefHeight="900.0" xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="CTCOffice.CTCOfficeManager">
-    <SplitPane fx:id="mainSplit" dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane fx:id="mainSplit" dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <AnchorPane>
-            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                  AnchorPane.topAnchor="0.0">
+            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <ScrollPane hbarPolicy="ALWAYS" prefHeight="10000" vbarPolicy="ALWAYS">
                     <AnchorPane prefHeight="795.0">
                         <HBox fx:id="TrackLinesBox">
-                            <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" minWidth="238"
-                                  prefHeight="795.0">
+                            <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" minWidth="238" prefHeight="795.0">
                                 <Label fx:id="FirstLineLabel" text="RED Line"/>
                                 <Separator/>
                                 <HBox fx:id="FirstLineContents" minHeight="20000">
                                     <TableView fx:id="blockTable">
                                         <columns>
-                                            <TableColumn fx:id="blockNumberColumn"
-                                                         prefWidth="50" resizable="false"
-                                                         text="Block #"/>
-                                            <TableColumn fx:id="occupationLightColumn"
-                                                         prefWidth="43" resizable="false"
-                                                         text="Occ."/>
-                                            <TableColumn fx:id="switchStateColumn"
-                                                         maxWidth="100" prefWidth="100"
-                                                         text="Switch State"/>
-                                            <TableColumn fx:id="switchLightColumn"
-                                                         maxWidth="43" prefWidth="43"
-                                                         text="Light"/>
-                                            <TableColumn fx:id="crossingColumn"
-                                                         maxWidth="100" prefWidth="100"
-                                                         text="Crossing"/>
-                                            <TableColumn fx:id="underMaintenanceColumn"
-                                                         maxWidth="100" prefWidth="100"
-                                                         text="Maintenance"/>
+                                            <TableColumn fx:id="blockNumberColumn" prefWidth="50" resizable="false" text="Block #"/>
+                                            <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ."/>
+                                            <TableColumn fx:id="switchStateColumn" maxWidth="100" prefWidth="100" text="Switch State"/>
+                                            <TableColumn fx:id="switchLightColumn" maxWidth="43" prefWidth="43" text="Light"/>
+                                            <TableColumn fx:id="crossingColumn" maxWidth="100" prefWidth="100" text="Crossing"/>
+                                            <TableColumn fx:id="underMaintenanceColumn" maxWidth="100" prefWidth="100" text="Maintenance"/>
                                         </columns>
                                     </TableView>
                                 </HBox>
                             </VBox>
                             <Separator orientation="VERTICAL" prefHeight="200.0"/>
-                            <VBox fx:id="SecondLineBox" alignment="TOP_CENTER" prefHeight="795.0"
-                                  prefWidth="240">
+                            <VBox fx:id="SecondLineBox" alignment="TOP_CENTER" prefHeight="795.0" prefWidth="240">
                                 <Label fx:id="SecondLineLabel" text="GREEN Line"/>
                                 <Separator/>
                                 <HBox fx:id="SecondLineContents" minHeight="20000">
                                     <TableView fx:id="blockTable2">
                                         <columns>
-                                            <TableColumn fx:id="blockNumberColumn2"
-                                                         prefWidth="50" resizable="false"
-                                                         text="Block #"/>
-                                            <TableColumn fx:id="occupationLightColumn2"
-                                                         prefWidth="43" resizable="false"
-                                                         text="Occ."/>
-                                            <TableColumn fx:id="switchStateColumn2"
-                                                         maxWidth="100" prefWidth="100"
-                                                         text="Switch State"/>
-                                            <TableColumn fx:id="switchLightColumn2"
-                                                         maxWidth="43" prefWidth="43"
-                                                         text="Light"/>
+                                            <TableColumn fx:id="blockNumberColumn2" prefWidth="50" resizable="false" text="Block #"/>
+                                            <TableColumn fx:id="occupationLightColumn2" prefWidth="43" resizable="false" text="Occ."/>
+                                            <TableColumn fx:id="switchStateColumn2" maxWidth="100" prefWidth="100" text="Switch State"/>
+                                            <TableColumn fx:id="switchLightColumn2" maxWidth="43" prefWidth="43" text="Light"/>
                                         </columns>
                                     </TableView>
                                 </HBox>
@@ -110,13 +86,10 @@
                         <Font size="14.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="scheduleTable" maxWidth="400" minWidth="200" prefHeight="200.0"
-                           prefWidth="200.0">
+                <TableView fx:id="scheduleTable" maxWidth="400" minWidth="200" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                        <TableColumn fx:id="scheduleNameColumn" editable="false" maxWidth="300"
-                                     minWidth="150.0" prefWidth="300.0" text="File Name"/>
-                        <TableColumn fx:id="scheduleDateModColumn" editable="false" maxWidth="100"
-                                     minWidth="50" prefWidth="100.0" text="Date Modified"/>
+                        <TableColumn fx:id="scheduleNameColumn" editable="false" maxWidth="300" minWidth="150.0" prefWidth="300.0" text="File Name"/>
+                        <TableColumn fx:id="scheduleDateModColumn" editable="false" maxWidth="100" minWidth="50" prefWidth="100.0" text="Date Modified"/>
                     </columns>
                 </TableView>
                 <HBox alignment="TOP_CENTER">
