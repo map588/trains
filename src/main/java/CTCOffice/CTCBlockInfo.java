@@ -6,21 +6,12 @@ package CTCOffice;
  * their states, speed limit, block length, IDs of converging and diverging blocks, and the state of the switch.
  */
 class CTCBlockInfo {
-    private int blockID;
-    private boolean line;
+    private final int blockID, blockLength, speedLimit;
+    private final boolean line;
     private boolean occupied;
-    private boolean hasLight;
-    private boolean hasSwitchCon;
-    private boolean hasSwitchDiv;
-    private boolean hasCrossing;
-    private boolean lightState;
-    private boolean crossingState;
-    private int speedLimit;
-    private int blockLength;
-    private final int convergingBlockID;
-    private final int divergingBlockOneID;
-    private final int divergingBlockTwoID;
-    private boolean switchState;
+    private final boolean hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing;
+    private boolean lightState, crossingState, switchState;
+    private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
     private javafx.scene.paint.Paint lightColor;
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
 
@@ -67,6 +58,7 @@ class CTCBlockInfo {
         factory.getSubjects().get(divergingBlockOneID).setStringProperty("switchStateString");
         factory.getSubjects().get(divergingBlockTwoID).setStringProperty("switchStateString");
     }
+
     /**
      * Returns a string representation of the switch state.
      */
@@ -96,6 +88,7 @@ class CTCBlockInfo {
             return "";
         }
     }
+
     /**
      * Updates the color of the light based on its state.
      */
@@ -118,11 +111,17 @@ class CTCBlockInfo {
     }
 
     // Simple setters and getters
-    int     getBlockID  () {
+    int     getBlockID      () {
         return blockID;
     }
-    boolean getLine     () {
+    boolean getLine         () {
         return line;
+    }
+    int     getSpeedLimit   () {
+        return speedLimit;
+    }
+    int     getBlockLength  () {
+        return blockLength;
     }
 
     void    setOccupied     (boolean occupied) {
@@ -149,48 +148,42 @@ class CTCBlockInfo {
     boolean getHasCrossing  () {
         return hasCrossing;
     }
-
-
-
-
-    boolean getHasSwitchCon() {
-        return hasSwitchCon;
+    boolean getCrossingState() {
+        return crossingState;
     }
 
-    boolean getHasSwitchDiv() {
+    public boolean getSwitchState           () {
+        return switchState;
+    }
+    public int     getConvergingBlockID     () {
+        return convergingBlockID;
+    }
+    public int     getDivergingBlockOneID   () {
+        return divergingBlockOneID;
+    }
+    public int     getDivergingBlockTwoID   () {
+        return divergingBlockTwoID;
+    }
+
+    boolean        getHasSwitchCon          () {
+        return hasSwitchCon;
+    }
+    boolean        getHasSwitchDiv          () {
         return hasSwitchDiv;
     }
 
 
 
 
-    boolean getCrossingState() {
-        return crossingState;
-    }
 
-    int getSpeedLimit() {
-        return speedLimit;
-    }
 
-    int getBlockLength() {
-        return blockLength;
-    }
 
-    public int getConvergingBlockID() {
-        return convergingBlockID;
-    }
 
-    public int getDivergingBlockOneID() {
-            return divergingBlockOneID;
-        }
 
-    public int getDivergingBlockTwoID() {
-        return divergingBlockTwoID;
-    }
 
-    public boolean getSwitchState() {
-        return switchState;
-    }
+
+
+
 
 }
 

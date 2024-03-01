@@ -84,14 +84,18 @@ public class CTCOfficeManager {
         blockTable.getItems().addAll(blockList);
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
         blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
+        blockNumberColumn.setEditable(false);
+
         occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
+        occupationLightColumn.setEditable(false);
 
-
-        switchStateColumn.setCellValueFactory(block ->
-                block.getValue().getBooleanProperty("hasSwitchCon").getValue() ||
+        switchStateColumn.setCellValueFactory(block -> {
+                block.getValue().setStringProperty("switchStateString");
+                return block.getValue().getBooleanProperty("hasSwitchCon").getValue() ||
                 block.getValue().getBooleanProperty("hasSwitchDiv").getValue() ?
-                block.getValue().getStringProperty("switchStateString") : null);
+                block.getValue().getStringProperty("switchStateString") : null;
+        });
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
 
 
@@ -124,6 +128,12 @@ public class CTCOfficeManager {
         switchLightToggle.setOnAction(event -> toggleProperty("lightState"));
         switchStateToggle.setOnAction(event -> toggleProperty("switchState"));
 
+        blockTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                blockSelection.setValue(newValue.getIntegerProperty("blockID").getValue());
+                lineSelection.setValue(newValue.getBooleanProperty("line").getValue());
+            }
+        });
 
         double dividerPosition = 515.0;
         mainAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -139,6 +149,7 @@ public class CTCOfficeManager {
             }
         });
 
+
     }
 
     /**
@@ -152,6 +163,8 @@ public class CTCOfficeManager {
         CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
+
+
 
 //    @FXML
 //    private void toggle_VBox() {

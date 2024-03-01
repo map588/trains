@@ -39,7 +39,7 @@
                                                    <children>
                                                       <TableView fx:id="blockTable">
                                                         <columns>
-                                                            <TableColumn fx:id="blockNumberColumn" prefWidth="50" resizable="false" text="Block #" editable="false" />
+                                                            <TableColumn fx:id="blockNumberColumn" prefWidth="50" resizable="false" text="Block #" />
                                                             <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ." />
                                                             <TableColumn fx:id="switchStateColumn" maxWidth="100" prefWidth="100" text="Switch State" />
                                                             <TableColumn fx:id="switchLightColumn" maxWidth="43" prefWidth="43" text="Light" />
