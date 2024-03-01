@@ -181,108 +181,108 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
 
     //Functions called by the internal logic to notify of changes
-    public void setAutomaticMode(boolean mode) {
+    private void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
         notifyChange(automaticMode_p, mode);
     }
-    public void setAuthority(int authority) {
+    private void setAuthority(int authority) {
         this.authority = authority;
         notifyChange(authority_p, authority);
     }
-    public void setOverrideSpeed(double speed) {
+    private void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
         notifyChange(overrideSpeed_p, speed);
         //calculatePower();
     }
-    public void setCommandSpeed(double speed) {
+    private void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
         notifyChange(commandSpeed_p, speed);
         //calculatePower();
     }
-    public void setSpeed(double speed) {
+    private void setSpeed(double speed) {
         this.currentSpeed = speed;
         notifyChange(currentSpeed_p, speed, true);
     }
-    public void setServiceBrake(boolean brake) {
+    private void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
         notifyChange(serviceBrake_p, brake);
     }
-    public void setEmergencyBrake(boolean brake) {
+    private void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
         notifyChange(emergencyBrake_p, brake);
     }
-    public void setKi(double Ki) {
+    private void setKi(double Ki) {
         this.Ki = Ki;
         notifyChange(Ki_p, Ki);
     }
-    public void setKp(double Kp) {
+    private void setKp(double Kp) {
         this.Kp = Kp;
         notifyChange(Kp_p, Kp);
     }
-    public void setPower(double power) {
+    private void setPower(double power) {
         this.power = power;
         subject.updateFromLogic(() -> {
             notifyChange(power_p, power, true);
         });
     }
-    public void setIntLights(boolean lights) {
+    private void setIntLights(boolean lights) {
         this.internalLights = lights;
         notifyChange(intLights_p, lights); // This might've been the issue interiorLights -> intLights
     }
-    public void setExtLights(boolean lights) {
+    private void setExtLights(boolean lights) {
         this.externalLights = lights;
 
         notifyChange(extLights_p, lights); // This might've been the issue exteriorLights -> extLights
     }
-    public void setLeftDoors(boolean doors) {
+    private void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
         notifyChange(leftDoors_p, doors);
     }
-    public void setRightDoors(boolean doors) {
+    private void setRightDoors(boolean doors) {
         this.rightDoors = doors;
         notifyChange(rightDoors_p, doors);
     }
-    public void setTemperature(double temp) {
+    private void setTemperature(double temp) {
         this.temperature = temp;
         notifyChange(temperature_p, temp);
     }
-    public void setAnnouncements(boolean announcements) {
+    private void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
         notifyChange(announcements_p, announcements);
     }
-    public void setSignalFailure(boolean signalFailure) {
+    private void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
         notifyChange(signalFailure_p, signalFailure);
     }
-    public void setBrakeFailure(boolean brakeFailure) {
+    private void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
         notifyChange(brakeFailure_p, brakeFailure);
     }
-    public void setPowerFailure(boolean powerFailure) {
+    private void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
         notifyChange(powerFailure_p, powerFailure);
     }
-    public void setInTunnel(boolean tunnel){
+    private void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
         notifyChange(inTunnel_p,tunnel);
     }
-    public void setLeftPlatform(boolean platform){
+    private void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
         notifyChange(leftPlatform_p,platform);
     }
-    public void setRightPlatform(boolean platform){
+    private void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
         notifyChange(rightPlatform_p,platform);
     }
-    public void setSamplingPeriod(int period){
+    private void setSamplingPeriod(int period){
         this.samplingPeriod = period;
         notifyChange(samplingPeriod_p,period);
     }
-    public void setSpeedLimit(double speedLimit){
+    private void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
         notifyChange(speedLimit_p,speedLimit);
     }
-    public void setNextStationName(String name){
+    private void setNextStationName(String name){
         this.nextStationName = name;
         notifyChange(nextStationName_p,name);
     }
@@ -339,83 +339,115 @@ public class trainControllerImpl implements TrainController, Notifications {
 
 
     //-----------------Getters-----------------
-    public int getID() {
+    public getValue(String propertyName){
+        switch (propertyName) {
+            case Properties.automaticMode_p -> return getAutomaticMode();
+            case authority_p -> return getAuthority();
+            case overrideSpeed_p -> return getOverrideSpeed();
+            case commandSpeed_p -> return getCommandSpeed();
+            case currentSpeed_p -> return getSpeed();
+            case serviceBrake_p -> return getServiceBrake();
+            case emergencyBrake_p -> return getEmergencyBrake();
+            case Ki_p -> return getKi();
+            case Kp_p -> return getKp();
+            case power_p -> return getPower();
+            case intLights_p -> return getIntLights();
+            case extLights_p -> return getExtLights();
+            case leftDoors_p -> return getLeftDoors();
+            case rightDoors_p -> return getRightDoors();
+            case temperature_p -> return getTemperature();
+            case announcements_p -> return getAnnouncements();
+            case signalFailure_p -> return getSignalFailure();
+            case brakeFailure_p -> return getBrakeFailure();
+            case powerFailure_p -> return getPowerFailure();
+            case inTunnel_p -> return getInTunnel();
+            case leftPlatform_p -> return getLeftPlatform();
+            case rightPlatform_p -> return getRightPlatform();
+            case samplingPeriod_p -> return getSamplingPeriod();
+            case speedLimit_p -> return getSpeedLimit();
+            case nextStationName_p -> return getStationName();
+            case grade_p -> return getGrade();
+            default -> System.err.println("Property " + propertyName + " not found");
+        }
+    }
+
+    private int  getID() {
         return this.trainID;
     }
-    public double  getSpeed() {
+    private double  getSpeed() {
         return this.currentSpeed;
     }
-    public double  getAcceleration() {
+    private double  getAcceleration() {
         return this.train.getAcceleration();
     }
-    public int  getSamplingPeriod(){return this.samplingPeriod;}
-    public double  getPower() {
+    private int  getSamplingPeriod(){return this.samplingPeriod;}
+    private double  getPower() {
         return this.power;
     }
-    public boolean getServiceBrake() {
+    private boolean getServiceBrake() {
         return this.serviceBrake;
     }
-    public boolean getEmergencyBrake() {
+    private boolean getEmergencyBrake() {
         return this.emergencyBrake;
     }
-    public double  getCommandSpeed() {
+    private double  getCommandSpeed() {
         return this.commandSpeed;
     }
-    public int     getAuthority() {
+    private int     getAuthority() {
         return this.authority;
     }
-    public double  getKi() {
+    private double  getKi() {
         return this.Ki;
     }
-    public double  getKp() {
+    private double  getKp() {
         return this.Kp;
     }
-    public double  getOverrideSpeed() {
+    private double  getOverrideSpeed() {
         return this.overrideSpeed;
     }
-    public boolean getAutomaticMode() {
+    private boolean getAutomaticMode() {
         return this.automaticMode;
     }
-    public trainControllerSubject getSubject() {
+    private trainControllerSubject getSubject() {
         return this.subject;
     }
-    public boolean getExtLights() {
+    private boolean getExtLights() {
         return this.externalLights;
     }
-    public boolean getIntLights() {
+    private boolean getIntLights() {
         return this.internalLights;
     }
-    public boolean getAnnouncements() {
+    private boolean getAnnouncements() {
         return this.announcements;
     }
-    public boolean getSignalFailure() {
+    private boolean getSignalFailure() {
         return this.signalFailure;
     }
-    public boolean getBrakeFailure() {
+    private boolean getBrakeFailure() {
         return this.brakeFailure;
     }
-    public boolean getPowerFailure() {
+    private boolean getPowerFailure() {
         return this.powerFailure;
     }
-    public double  getSpeedLimit() {
+    private double  getSpeedLimit() {
         return this.speedLimit;
     }
-    public boolean getLeftDoors() {
+    private boolean getLeftDoors() {
         return this.leftDoors;
     }
-    public boolean getRightDoors() {
+    private boolean getRightDoors() {
         return this.rightDoors;
     }
-    public double  getTemperature() {
+    private double  getTemperature() {
         return this.temperature;
     }
-    public String  getStationName(){
+    private String  getStationName(){
         return this.nextStationName;
     }
-    public boolean getLeftPlatform(){return this.leftPlatform;}
-    public boolean getRightPlatform(){return this.rightPlatform;}
-    public boolean getInTunnel(){return this.inTunnel;}
-    public double  getGrade(){return this.grade;}
+    private boolean getLeftPlatform(){return this.leftPlatform;}
+    private boolean getRightPlatform(){return this.rightPlatform;}
+    private boolean getInTunnel(){return this.inTunnel;}
+    private double  getGrade(){return this.grade;}
 
     /**
      * Profetta Notes:
