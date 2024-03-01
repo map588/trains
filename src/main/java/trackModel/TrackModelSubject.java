@@ -4,12 +4,12 @@ import Common.TrackModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class trackModelSubject {
+public class TrackModelSubject {
     private StringProperty tempProperty;
     private StringProperty comSpeed;
     private StringProperty trainAuthority;
 
-    public trackModelSubject(TrackModel model)  {
+    public TrackModelSubject(TrackModel model)  {
         tempProperty = new SimpleStringProperty();
         comSpeed = new SimpleStringProperty();
         trainAuthority = new SimpleStringProperty();

@@ -4,7 +4,7 @@ import Common.TrackModel;
 
 import java.util.ArrayList;
 
-public class stubTrackModel implements TrackModel{
+public class StubTrackModel implements TrackModel{
     boolean lightState;
     boolean switchState;
     int trainAuthority;
@@ -13,7 +13,7 @@ public class stubTrackModel implements TrackModel{
     ArrayList<String> line;
     ArrayList<Integer> blockOccupied, failures;
 
-    public stubTrackModel(){
+    public StubTrackModel(){
         this.lightState = false;
         this.switchState = false;
         this.trainAuthority = 0;

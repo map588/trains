@@ -1,7 +1,7 @@
 package trackModel;
 
 
-import Utilities.TrackLayoutInfo;
+import Utilities.TrackLayoutSubject;
 import Common.TrackModel;
 
 
@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class trackModelImpl implements TrackModel {
-    public trackModelImpl(){
+public class TrackModelImpl implements TrackModel {
+    public TrackModelImpl(){
         this.trainAuthorities = new HashMap<>();
         this.trainCommandSpeeds = new HashMap<>();
         this.line = new ArrayList<>();
@@ -20,6 +20,8 @@ public class trackModelImpl implements TrackModel {
         this.blockOccupied = new ArrayList<Integer>();
         this.failures = new ArrayList<Integer>();
     }
+
+
 
     private HashMap<Integer,Integer> trainAuthorities;
     private HashMap<Integer,Integer> trainCommandSpeeds;
@@ -31,7 +33,7 @@ public class trackModelImpl implements TrackModel {
     private ArrayList<Integer> failures = new ArrayList<Integer>();
     private ArrayList<Integer> beacons = new ArrayList<Integer>();
 
-    private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
+    private final List<TrackLayoutSubject> trackInfo = new ArrayList<>();
 
     public int getAuthority(int trainID) {
         return this.trainAuthorities.get(trainID);
@@ -76,10 +78,12 @@ public class trackModelImpl implements TrackModel {
             this.trackInfo.get(block).setHasFailure(false);
         }
     }
+
+
     @Override
     public void setTrackHeaters(int temp){
         System.out.println("Setting Track Heaters: " + temp);
-        for(TrackLayoutInfo trackProperties : trackInfo) {
+        for(TrackLayoutSubject trackProperties : trackInfo) {
             if(temp < 32){
                 trackProperties.trackHeaterProperty().set("STATUS - ON");
             }
@@ -91,12 +95,12 @@ public class trackModelImpl implements TrackModel {
 
 
 
-    public List<TrackLayoutInfo> getTrackInfo() {
+    public List<TrackLayoutSubject> getTrackInfo() {
 
         trackInfo.clear();
 
         for(int i = 0; i <= 15; i++){
-            TrackLayoutInfo block = new TrackLayoutInfo();
+            TrackLayoutSubject block = new TrackLayoutSubject();
             block.setHasFailure(failures.contains(i));
             block.setIsOccupied(blockOccupied.contains(i));
             block.setBlockNumber("" + i);

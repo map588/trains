@@ -1,14 +1,13 @@
 package Framework.GUI.Managers;
 
-import Utilities.TrackLayoutInfo;
-import trackModel.trackModelSubject;
+import Utilities.TrackLayoutSubject;
+import trackModel.TrackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import trackModel.trackModelImpl;
+import trackModel.TrackModelImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 
@@ -28,17 +27,17 @@ public class trackModelTB {
     @FXML
     private TextField tbTicketSalesInput;
     @FXML
-    private TableView<TrackLayoutInfo> tbTable;
+    private TableView<TrackLayoutSubject> tbTable;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSectionColumn;
+    private TableColumn<TrackLayoutSubject, String> tbSectionColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbBlockColumn;
+    private TableColumn<TrackLayoutSubject, String> tbBlockColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSwitchColumn;
+    private TableColumn<TrackLayoutSubject, String> tbSwitchColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSignalColumn;
+    private TableColumn<TrackLayoutSubject, String> tbSignalColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> tbOccupiedColumn;
+    private TableColumn<TrackLayoutSubject, Boolean> tbOccupiedColumn;
 
     @FXML
     private Label comSpeedOutput;
@@ -53,9 +52,9 @@ public class trackModelTB {
     @FXML
     private ComboBox<String> tbBeaconComboBox;
 
-    private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
-    private trackModelImpl trackModel;
-    private trackModelSubject trackModelSubject;
+    private TrackLayoutSubject trackProperties = new TrackLayoutSubject();
+    private TrackModelImpl trackModel;
+    private TrackModelSubject trackModelSubject;
     private trackModelManager trackModelManager;
 
     public int getTempInput(){
@@ -70,7 +69,7 @@ public class trackModelTB {
     public void initialize() {
         System.out.println("LAUNCHED TESTBENCH");
 
-        trackModelSubject = new trackModelSubject(trackModel);
+        trackModelSubject = new TrackModelSubject(trackModel);
         StringConverter<Integer> intConverter = new StringConverter<Integer>() {
             @Override
             public String toString(Integer integer) {
@@ -127,7 +126,7 @@ public class trackModelTB {
         trackProperties.setPassDisembarked(tbPassDisembarkedInput.getText());
     }
 
-    public void selectBlock(TrackLayoutInfo newProperties){
+    public void selectBlock(TrackLayoutSubject newProperties){
         if(trackProperties != null) {
             // Unbind stuff here
 
@@ -182,7 +181,7 @@ public class trackModelTB {
     }
 
     public void updateTable() {
-        ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList(trackModel.getTrackInfo());
+        ObservableList<TrackLayoutSubject> trackList = FXCollections.observableArrayList(trackModel.getTrackInfo());
         tbTable.setItems(trackList);
     }
 
@@ -190,14 +189,14 @@ public class trackModelTB {
         tbChooseLine.setValue(line);
     }
 
-    public void setTrackModel(trackModelImpl trackModel) {
+    public void setTrackModel(TrackModelImpl trackModel) {
         this.trackModel = trackModel;
     }
 
     public void setTrackModelManager(trackModelManager trackModelManager) {
         this.trackModelManager = trackModelManager;
     }
-    public void setTrackModelSubject(trackModelSubject trackModelSubject){
+    public void setTrackModelSubject(TrackModelSubject trackModelSubject){
         this.trackModelSubject = trackModelSubject;
         tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
         comSpeedInput.textProperty().bindBidirectional(trackModelSubject.comSpeedProperty());

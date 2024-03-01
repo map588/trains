@@ -1,8 +1,7 @@
 package Framework.GUI.Managers;
 
-import Utilities.TrackLayoutInfo;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import trackModel.trackModelSubject;
+import Utilities.TrackLayoutSubject;
+import trackModel.TrackModelSubject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,12 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import trackModel.trackModelImpl;
+import trackModel.TrackModelImpl;
 
 import java.io.File;
 import java.net.URL;
@@ -94,39 +91,39 @@ public class trackModelManager {
 
     //table
     @FXML
-    private TableView<TrackLayoutInfo> lineTable;
+    private TableView<TrackLayoutSubject> lineTable;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> sectionsColumn;
+    private TableColumn<TrackLayoutSubject, String> sectionsColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> blockColumn;
+    private TableColumn<TrackLayoutSubject, String> blockColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> occupiedColumn;
+    private TableColumn<TrackLayoutSubject, Boolean> occupiedColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> sizeColumn;
+    private TableColumn<TrackLayoutSubject, Integer> sizeColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Double> gradeColumn;
+    private TableColumn<TrackLayoutSubject, Double> gradeColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> stationColumn;
+    private TableColumn<TrackLayoutSubject, Boolean> stationColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> signalColumn;
+    private TableColumn<TrackLayoutSubject, Boolean> signalColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> switchColumn;
+    private TableColumn<TrackLayoutSubject, Boolean> switchColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> speedLimitColumn;
+    private TableColumn<TrackLayoutSubject, Integer> speedLimitColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
+    private TableColumn<TrackLayoutSubject, Boolean> failureColumn;
 
     //current layout
 
 
     // potential variables to assist with control
-    private trackModelImpl currTrackModel = new trackModelImpl();
+    private TrackModelImpl currTrackModel = new TrackModelImpl();
     //subject
-    private trackModelSubject trackModelSubject = new trackModelSubject(currTrackModel);
+    private TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
 
     // test bench object
     private trackModelTB testBench;
-    private TrackLayoutInfo trackProperties;
+    private TrackLayoutSubject trackProperties;
 
     @FXML
     public void initialize(){
@@ -182,7 +179,7 @@ public class trackModelManager {
 
     }
 
-    public void selectBlock(TrackLayoutInfo newProperties){
+    public void selectBlock(TrackLayoutSubject newProperties){
         System.out.println("Selected block");
         if(trackProperties != null) {
             // Unbind stuff here
@@ -292,7 +289,7 @@ public class trackModelManager {
         //send the line to the track model
         //currTrackModel.getLine(line);
 
-        ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
+        ObservableList<TrackLayoutSubject> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
         lineTable.setItems(tableInfo);
     }
 

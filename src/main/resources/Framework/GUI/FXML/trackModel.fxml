@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ToggleSwitch?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
 
 <AnchorPane prefHeight="954.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Framework.GUI.Managers.trackModelManager">
@@ -189,13 +190,23 @@
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label fx:id="switchStateLabel" layoutX="15.0" layoutY="92.0" prefHeight="23.0" prefWidth="126.0" text="Switch State :">
+                                                                                                <Label fx:id="switchStateLabel" layoutX="14.0" layoutY="104.0" prefHeight="23.0" prefWidth="126.0" text="Switch State :">
                                                                                                     <font>
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label fx:id="switchBlockNumbersDisplay" layoutX="252.0" layoutY="44.0" text="#'s" />
-                                                                                                <Label fx:id="switchStateDisplay" layoutX="252.0" layoutY="95.0" text="Main or Alt" />
+                                                                                                <Label fx:id="switchBlockNumbersDisplay" layoutX="252.0" layoutY="44.0" text="NONE" />
+                                                                        <ToggleSwitch fx:id="switchStateToggle" layoutX="223.0" layoutY="98.0" />
+                                                                        <Label fx:id="main" layoutX="162.0" layoutY="105.0" prefHeight="23.0" prefWidth="60.0" text="Main">
+                                                                           <font>
+                                                                              <Font size="18.0" />
+                                                                           </font>
+                                                                        </Label>
+                                                                        <Label fx:id="alt" layoutX="346.0" layoutY="105.0" prefHeight="23.0" prefWidth="60.0" text="Alt">
+                                                                           <font>
+                                                                              <Font size="18.0" />
+                                                                           </font>
+                                                                        </Label>
                                                                                             </children>
                                                                                         </AnchorPane>
                                                                                     </content>
@@ -214,14 +225,14 @@
                                                                                                         <Font size="18.0" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label fx:id="signalBlockNumberDisplay" layoutX="252.0" layoutY="44.0" text="#'s" />
-                                                                                                <Label fx:id="signalStateDisplay" layoutX="252.0" layoutY="95.0" text="Color" />
-                                                                        <Label fx:id="crossingLabel" layoutX="359.0" layoutY="33.0" text="Crossing ? ">
+                                                                                                <Label fx:id="signalBlockNumberDisplay" layoutX="252.0" layoutY="44.0" text="NONE" />
+                                                                                                <Label fx:id="signalStateDisplay" layoutX="252.0" layoutY="95.0" text="NONE" />
+                                                                        <Label fx:id="crossingLabel" layoutX="359.0" layoutY="33.0" text="Crossing: ">
                                                                            <font>
                                                                               <Font size="18.0" />
                                                                            </font>
                                                                         </Label>
-                                                                        <Label fx:id="crossingState" layoutX="375.0" layoutY="67.0" text="FALSE">
+                                                                        <Label fx:id="crossingState" layoutX="368.0" layoutY="67.0" text="NONE">
                                                                            <font>
                                                                               <Font size="18.0" />
                                                                            </font>
@@ -243,7 +254,7 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="471.0">
                                                                     <children>
-                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Display Beacon Information On Block  :">
+                                                                        <Label fx:id="beaconInfoLabel" layoutX="11.0" layoutY="20.0" text="Beacon Position :">
                                                                             <font>
                                                                                 <Font size="18.0" />
                                                                             </font>
@@ -253,7 +264,7 @@
                                                             <Font size="18.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="beaconBlockNumber" layoutX="337.0" layoutY="21.0" text="0">
+                                                      <Label fx:id="beaconBlockNumber" layoutX="185.0" layoutY="21.0" text="0">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>

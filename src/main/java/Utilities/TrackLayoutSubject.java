@@ -2,7 +2,7 @@ package Utilities;
 
 import javafx.beans.property.*;
 
-public class TrackLayoutInfo {
+public class TrackLayoutSubject {
 
     private final StringProperty section;
     private final StringProperty blockNumber;
@@ -38,7 +38,7 @@ public class TrackLayoutInfo {
     private final StringProperty trackHeater;
 
 
-    public TrackLayoutInfo() {
+    public TrackLayoutSubject() {
         blockNumber = new SimpleStringProperty();
         blockLength = new SimpleIntegerProperty();
         blockGrade = new SimpleDoubleProperty();
