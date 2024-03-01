@@ -1,10 +1,11 @@
 grammar PLC;
 
 program : (statement | statement NEWLINE)+;
-statement : set_list_value | if_statement ;
+statement : set_list_value | if_statement | if_else_statement ;
 
 set_list_value : list_value '=' (list_value | value_false | value_true) ;
 if_statement : 'if' compound_value NEWLINE statement NEWLINE 'endif' ;
+if_else_statement : 'if' compound_value NEWLINE statement NEWLINE 'else' NEWLINE statement NEWLINE 'endif' ;
 
 compound_value
     : (single_val | or_operator | and_operator)
