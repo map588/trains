@@ -183,114 +183,117 @@ public class trainControllerImpl implements TrainController, Notifications {
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        notifyChange("automaticMode", mode);
+        notifyChange(automaticMode_p, mode);
     }
     public void setAuthority(int authority) {
         this.authority = authority;
-        notifyChange("authority", authority);
+        notifyChange(authority_p, authority);
     }
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        notifyChange("overrideSpeed", speed);
+        notifyChange(overrideSpeed_p, speed);
         //calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        notifyChange("commandSpeed", speed);
+        notifyChange(commandSpeed_p, speed);
         //calculatePower();
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        notifyChange("currentSpeed", speed, true);
+        notifyChange(currentSpeed_p, speed, true);
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        notifyChange("serviceBrake", brake);
+        notifyChange(serviceBrake_p, brake);
     }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        notifyChange("emergencyBrake", brake);
+        notifyChange(emergencyBrake_p, brake);
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
-        notifyChange("Ki", Ki);
+        notifyChange(Ki_p, Ki);
     }
     public void setKp(double Kp) {
         this.Kp = Kp;
-        notifyChange("Kp", Kp);
+        notifyChange(Kp_p, Kp);
     }
     public void setPower(double power) {
         this.power = power;
         subject.updateFromLogic(() -> {
-            notifyChange("power", power, true);
+            notifyChange(power_p, power, true);
         });
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        notifyChange("intLights", lights); // This might've been the issue interiorLights -> intLights
+        notifyChange(intLights_p, lights); // This might've been the issue interiorLights -> intLights
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
 
-        notifyChange("extLights", lights); // This might've been the issue exteriorLights -> extLights
+        notifyChange(extLights_p, lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        notifyChange("leftDoors", doors);
+        notifyChange(leftDoors_p, doors);
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        notifyChange("rightDoors", doors);
+        notifyChange(rightDoors_p, doors);
     }
     public void setTemperature(double temp) {
         this.temperature = temp;
-        notifyChange("temperature", temp);
+        notifyChange(temperature_p, temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        notifyChange("announcements", announcements);
+        notifyChange(announcements_p, announcements);
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        notifyChange("signalFailure", signalFailure);
+        notifyChange(signalFailure_p, signalFailure);
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        notifyChange("brakeFailure", brakeFailure);
+        notifyChange(brakeFailure_p, brakeFailure);
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        notifyChange("powerFailure", powerFailure);
+        notifyChange(powerFailure_p, powerFailure);
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
-        notifyChange("inTunnel",tunnel);
+        notifyChange(inTunnel_p,tunnel);
     }
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
-        notifyChange("leftPlatform",platform);
+        notifyChange(leftPlatform_p,platform);
     }
     public void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
-        notifyChange("rightPlatform",platform);
+        notifyChange(rightPlatform_p,platform);
     }
     public void setSamplingPeriod(int period){
         this.samplingPeriod = period;
-        notifyChange("samplingPeriod",period);
+        notifyChange(samplingPeriod_p,period);
     }
     public void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
-        notifyChange("speedLimit",speedLimit);
+        notifyChange(speedLimit_p,speedLimit);
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
-        notifyChange("nextStationName",name);
+        notifyChange(nextStationName_p,name);
     }
     private void setGrade(double newValue) {
         this.grade = newValue;
-        notifyChange("grade",newValue);
+        notifyChange(grade_p,newValue);
     }
 
+    /**
+     * Why wouldn't we just put the setter in here?  Why have both?  Not sure.
+     */
     /**
      * This method is used to set the value of a property based on the property name.
      * It uses a switch statement to determine which property to set.
@@ -414,6 +417,11 @@ public class trainControllerImpl implements TrainController, Notifications {
     public boolean getInTunnel(){return this.inTunnel;}
     public double  getGrade(){return this.grade;}
 
+    /**
+     * Profetta Notes:
+     * The train controller is meant to stop if a command speed is not sent.  The wayside is not able to send a corrected speed,
+     * rather it just chooses not to send a speed at all, and if the train does not receive a speed, it should stop.
+     */
     /**
      * This method is used to calculate the power needed for the train.
      * It first determines the set speed based on whether the train is in automatic mode or not.
