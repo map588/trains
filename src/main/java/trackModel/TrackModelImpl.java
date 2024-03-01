@@ -1,7 +1,6 @@
 package trackModel;
 
 
-import Utilities.TrackLayoutInfo;
 import Common.TrackModel;
 
 
@@ -10,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class trackModelImpl implements TrackModel {
-    public trackModelImpl(){
+public class TrackModelImpl implements TrackModel {
+    public TrackModelImpl(){
         this.trainAuthorities = new HashMap<>();
         this.trainCommandSpeeds = new HashMap<>();
         this.line = new ArrayList<>();

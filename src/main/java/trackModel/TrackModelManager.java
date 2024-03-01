@@ -1,6 +1,5 @@
 package trackModel;
 
-import Utilities.TrackLayoutInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -115,7 +114,7 @@ public class TrackModelManager {
 
 
     // potential variables to assist with control
-    private trackModelImpl currTrackModel = new trackModelImpl();
+    private TrackModelImpl currTrackModel = new TrackModelImpl();
     //subject
     private TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
 

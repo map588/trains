@@ -1,6 +1,5 @@
 package trackModel;
 
-import Utilities.TrackLayoutInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -51,7 +50,7 @@ public class TrackModelTB {
     private ComboBox<String> tbBeaconComboBox;
 
     private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
-    private trackModelImpl trackModel;
+    private TrackModelImpl trackModel;
     private TrackModelSubject trackModelSubject;
     private TrackModelManager trackModelManager;
 
@@ -187,7 +186,7 @@ public class TrackModelTB {
         tbChooseLine.setValue(line);
     }
 
-    public void setTrackModel(trackModelImpl trackModel) {
+    public void setTrackModel(TrackModelImpl trackModel) {
         this.trackModel = trackModel;
     }
 
