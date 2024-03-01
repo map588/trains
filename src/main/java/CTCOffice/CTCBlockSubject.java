@@ -63,7 +63,6 @@ public class CTCBlockSubject implements AbstractSubject {
         lightColor.addListener(event -> block.updateLightColor());
 
         switchState.addListener((observable, oldValue, newValue) -> block.setSwitchState(newValue));
-        //switchStateString.addListener((observable) -> block.setSwitchStateString());
     }
 
     public CTCBlockInfo getBlockInfo() {

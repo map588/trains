@@ -21,7 +21,6 @@ class CTCBlockInfo {
     private final int divergingBlockOneID;
     private final int divergingBlockTwoID;
     private boolean switchState;
-    private String switchStateString;
     private javafx.scene.paint.Paint lightColor;
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
 
@@ -49,78 +48,7 @@ class CTCBlockInfo {
        factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
-    void setOccupied(boolean occupied) {
-        this.occupied = occupied;
-    }
-
-    void setLightState(boolean lightState) {
-        this.lightState = lightState;
-        updateLightColor();
-    }
-
-    void setCrossingState(boolean crossingState) {
-        this.crossingState = crossingState;
-    }
-
-    /**
-     * Updates the color of the light based on its state.
-     */
-    void updateLightColor() {
-        if(factory.getSubjects().get(getBlockID()) != null) {
-        }
-        if(this.lightState) {
-            this.lightColor = javafx.scene.paint.Color.GREEN;
-        }else {
-            this.lightColor = javafx.scene.paint.Color.RED;
-        }
-        if(factory.getSubjects().get(getBlockID()) != null){
-            factory.getSubjects().get(getBlockID()).setPaint( lightColor);
-        }
-    }
-
-    int getBlockID() {
-        return blockID;
-    }
-
-    boolean getLine() {
-        return line;
-    }
-
-    boolean getOccupied() {
-        return occupied;
-    }
-
-    boolean getHasLight() {
-        return hasLight;
-    }
-
-    boolean getHasSwitchCon() {
-        return hasSwitchCon;
-    }
-
-    boolean getHasSwitchDiv() {
-        return hasSwitchDiv;
-    }
-
-    boolean getHasCrossing() {
-        return hasCrossing;
-    }
-
-    boolean getLightState() {
-        return lightState;
-    }
-
-    boolean getCrossingState() {
-        return crossingState;
-    }
-
-    int getSpeedLimit() {
-        return speedLimit;
-    }
-
-    int getBlockLength() {
-        return blockLength;
-    }
+    // Complex setters and getters
 
     /**
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
@@ -133,41 +61,12 @@ class CTCBlockInfo {
         if(convergingBlockID == blockID) {
             factory.getSubjects().get(divergingBlockOneID).setProperty("switchState", state);
             factory.getSubjects().get(divergingBlockTwoID).setProperty("switchState", state);
-    }
+        }
         System.out.println("Switch State: " + switchState + " \n");
         factory.getSubjects().get(convergingBlockID).setStringProperty("switchStateString");
         factory.getSubjects().get(divergingBlockOneID).setStringProperty("switchStateString");
         factory.getSubjects().get(divergingBlockTwoID).setStringProperty("switchStateString");
     }
-
-    public int getConvergingBlockID() {
-        return convergingBlockID;
-    }
-
-    public int getDivergingBlockOneID() {
-            return divergingBlockOneID;
-        }
-
-    public int getDivergingBlockTwoID() {
-        return divergingBlockTwoID;
-    }
-
-    public javafx.scene.paint.Paint getLightColor() {
-        updateLightColor();
-        return lightColor;
-    }
-
-    public boolean getSwitchState() {
-        return switchState;
-    }
-
-    public void setSwitchStateString() {
-        this.switchStateString = getSwitchStateString();
-        if(factory.getSubjects().get(getBlockID()) != null){
-            factory.getSubjects().get(getBlockID()).setStringProperty("switchStateString");
-        }
-    }
-
     /**
      * Returns a string representation of the switch state.
      */
@@ -197,5 +96,101 @@ class CTCBlockInfo {
             return "";
         }
     }
+    /**
+     * Updates the color of the light based on its state.
+     */
+    void updateLightColor() {
+        if(factory.getSubjects().get(getBlockID()) != null) {
+        }
+        if(this.lightState) {
+            this.lightColor = javafx.scene.paint.Color.GREEN;
+        }else {
+            this.lightColor = javafx.scene.paint.Color.RED;
+        }
+        if(factory.getSubjects().get(getBlockID()) != null){
+            factory.getSubjects().get(getBlockID()).setPaint( lightColor);
+        }
+    }
+
+    public javafx.scene.paint.Paint getLightColor() {
+        updateLightColor();
+        return lightColor;
+    }
+
+    // Simple setters and getters
+    int     getBlockID  () {
+        return blockID;
+    }
+    boolean getLine     () {
+        return line;
+    }
+
+    void    setOccupied     (boolean occupied) {
+        this.occupied = occupied;
+    }
+    boolean getOccupied     () {
+        return occupied;
+    }
+
+    void    setLightState   (boolean lightState) {
+        this.lightState = lightState;
+        updateLightColor();
+    }
+    boolean getHasLight     () {
+        return hasLight;
+    }
+    boolean getLightState   () {
+        return lightState;
+    }
+
+    void    setCrossingState(boolean crossingState) {
+        this.crossingState = crossingState;
+    }
+    boolean getHasCrossing  () {
+        return hasCrossing;
+    }
+
+
+
+
+    boolean getHasSwitchCon() {
+        return hasSwitchCon;
+    }
+
+    boolean getHasSwitchDiv() {
+        return hasSwitchDiv;
+    }
+
+
+
+
+    boolean getCrossingState() {
+        return crossingState;
+    }
+
+    int getSpeedLimit() {
+        return speedLimit;
+    }
+
+    int getBlockLength() {
+        return blockLength;
+    }
+
+    public int getConvergingBlockID() {
+        return convergingBlockID;
+    }
+
+    public int getDivergingBlockOneID() {
+            return divergingBlockOneID;
+        }
+
+    public int getDivergingBlockTwoID() {
+        return divergingBlockTwoID;
+    }
+
+    public boolean getSwitchState() {
+        return switchState;
+    }
+
 }
 

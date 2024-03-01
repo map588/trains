@@ -151,7 +151,6 @@ public class CTCOfficeManager {
         System.out.println("\n ");
         CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
-        blockTable.refresh();
     }
 
 //    @FXML
