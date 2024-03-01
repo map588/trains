@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package trainModel;
 
 
 import Common.TrainModel;

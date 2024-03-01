@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package trainModel;
 
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
@@ -23,6 +23,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import trainModel.trainModelImpl;
 import trainModel.trainModelSubject;
+import trainModel.trainModelTB;
 import trainModel.trainSubjectFactory;
 
 import java.net.URL;
