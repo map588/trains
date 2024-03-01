@@ -65,7 +65,7 @@ public class mainMenu extends Application {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // This now loads from FXML
         Scene newScene;
-        if(moduleName == "CTC_Main_UI") {
+        if(moduleName.equals("CTC_Main_UI")) {
             newScene = new Scene(new VBox(content) , 800, 600);
         }else {
             newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
@@ -73,15 +73,6 @@ public class mainMenu extends Application {
         newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();
-    }
-
-
-    private void openModuleTab(TabPane tabPane, String moduleName) {
-        Tab tab = new Tab(moduleName);
-        Node content = createModuleContent(moduleName); // Get the complex UI for the module
-        tab.setContent(content); // Set the complex UI as the content of the tab
-        tabPane.getTabs().add(tab);
-        tabPane.getSelectionModel().select(tab);
     }
 
     private Node createModuleContent(String moduleName) {
