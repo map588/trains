@@ -12,14 +12,20 @@ import java.util.Map;
 
 import static Utilities.Constants.*;
 
-
+/**
+ * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).
+ * It manages the trains and the track blocks.
+ */
 public class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     //private trainSubjectFactory trainSubjectMaker;
 
     private Map<Boolean, ArrayList<CTCBlockInfo>> track = new HashMap<Boolean, ArrayList<CTCBlockInfo>>();
 
-
+    /**
+     * Constructor for the CTCOfficeImpl class.
+     * Initializes the track blocks and the schedule.
+     */
     public CTCOfficeImpl() {
         CTCBlockInfo block0  = new CTCBlockInfo(0,  false, false, false, false, false,false, false,       false,       false, false,         1000, 0,  0, 0, 0,  false);
         CTCBlockInfo block1  = new CTCBlockInfo(1,  false, false, false, false, false,false, false,       false,       false, false,         50,   50, 0, 0, 0,  false);
@@ -51,6 +57,15 @@ public class CTCOfficeImpl implements CTCOffice {
 
     }
 
+    /**
+     * Dispatches a train to a block.
+     * If the train already exists, it returns the existing train.
+     * Otherwise, it creates a new train, adds it to the trains map, and returns it.
+     *
+     * @param trainID The ID of the train to be dispatched.
+     * @param blockID The ID of the block where the train is to be dispatched.
+     * @return The dispatched train.
+     */
     public TrainModel dispatch(int trainID, int blockID) {
         if(trains.containsKey(trainID)) {
             return trains.get(trainID);
@@ -62,16 +77,37 @@ public class CTCOfficeImpl implements CTCOffice {
         }
     }
 
+    /**
+     * Sets the occupancy status of a block.
+     *
+     * @param blockID The ID of the block.
+     * @param line The line where the block is located.
+     * @param occupied The occupancy status to be set.
+     */
     public void setOccupancy(int blockID,boolean line, boolean occupied) {
         track.get(line).get(blockID).setOccupied(occupied);
     }
 
+    /**
+     * Sets the light state of a block.
+     *
+     * @param line The line where the block is located.
+     * @param blockID The ID of the block.
+     * @param lightState The light state to be set.
+     */
     public void setLightState(boolean line, int blockID, boolean lightState) {
         track.get(line).get(blockID).setLightState(lightState);
     }
 
-    public void setSwitchState(boolean line, int blockID, boolean switchConState) {
-        track.get(line).get(blockID).setSwitchConState(switchConState);
+    /**
+     * Sets the switch state of a block.
+     *
+     * @param line The line where the block is located.
+     * @param blockID The ID of the block.
+     * @param switchState The switch state to be set.
+     */
+    public void setSwitchState(boolean line, int blockID, boolean switchState) {
+        track.get(line).get(blockID).setSwitchState(switchState);
     }
 //*********************************************************************************************************************************************
     public void setManualMode() {

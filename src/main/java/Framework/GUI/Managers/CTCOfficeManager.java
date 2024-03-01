@@ -15,6 +15,10 @@ import javafx.scene.shape.Circle;
 import java.lang.reflect.Array;
 import java.util.Collection;
 
+/**
+ * This class manages the GUI for the Centralized Traffic Control (CTC) office.
+ * It contains FXML annotated fields for the various GUI components and methods for handling user interactions.
+ */
 public class CTCOfficeManager {
 
     @FXML private TableView<CTCBlockSubject> blockTable;
@@ -63,6 +67,10 @@ public class CTCOfficeManager {
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
     ScheduleSubjectFactory scheduleFactory = ScheduleSubjectFactory.getInstance();
 
+    /**
+     * Initializes the GUI components.
+     * This method is called after all the FXML annotated fields have been injected.
+     */
     @FXML
     public void initialize() {
         CTCOffice one = new CTCOfficeImpl();
@@ -133,7 +141,14 @@ public class CTCOfficeManager {
 
     }
 
+    /**
+     * Toggles the value of a property of a block.
+     * The property to be toggled and the block are specified by the user.
+     *
+     * @param propertyName The name of the property to be toggled.
+     */
     private void toggleProperty(String propertyName) {
+        System.out.println("\n ");
         CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
         blockTable.refresh();
