@@ -1,6 +1,5 @@
 package trainController;
 
-import Framework.GUI.Managers.trainControllerTB;
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
