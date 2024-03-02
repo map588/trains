@@ -40,8 +40,12 @@ public class CTCOfficeImpl implements CTCOffice {
      * Initializes the track blocks and the schedule.
      */
     private CTCOfficeImpl() {
-            track.put(lineNames.get(0), new ArrayList<>() {{ add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(0)))); }});
-
+        track.put(lineNames.get(0), new ArrayList<>() {{
+            add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(0))));
+        }});
+        for(int i = 1; i < blockList.get(lineNames.get(0)).size()-1; i++) {
+            track.get(lineNames.get(0)).add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(i))));
+        }
         ArrayList<Integer> blank = new ArrayList<>();
 
         schedules.put(1, new Schedule(1, 0, 1, new ArrayList<>() {{add(new SingleStop(10, 0, 0, blank, blank, blank));}}));

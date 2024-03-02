@@ -27,6 +27,7 @@ public class CSVTokenizer {
     }
 
     public static void parseCSVToTrueBlockInfo(String lineName) {
+        lineNames.add(lineName);
         try (BufferedReader br = new BufferedReader(new FileReader(CSVFileName))) {
             blockList.put(lineName, new ArrayList<>() {
                 {
@@ -61,9 +62,7 @@ public class CSVTokenizer {
                         br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                blockList.put(lineName, new ArrayList<>() {
-                    {
-                        add(new TrueBlockInfo(
+                blockList.get(lineName).add(new TrueBlockInfo(
                                 lineName,
                                 values[1].charAt(0),
                                 Integer.parseInt(values[2]),
@@ -89,9 +88,7 @@ public class CSVTokenizer {
                                 Integer.parseInt(values[22]),
                                 Integer.parseInt(values[23]),
                                 Integer.parseInt(values[24])));
-                    }
-                });
-            }
+                }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

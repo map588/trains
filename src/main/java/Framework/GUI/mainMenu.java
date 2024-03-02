@@ -25,7 +25,7 @@ public class mainMenu extends Application {
         root.setCenter(tabPane);
 
         CSVTokenizer csv = new CSVTokenizer();
-        csv.setCSVFile("src/main/java/Utilities/transcribed_data.csv");
+        csv.setCSVFile("src/main/java/Utilities/BlueLine.csv");
         CSVTokenizer.parseCSVToTrueBlockInfo("BlueLine");
         System.out.println((CSVTokenizer.blockList.get("BlueLine")).get(0).section());
 
