@@ -219,8 +219,8 @@ public class trainControllerManager {
     private void changeTrainView(Integer trainID) {
         currentSubject = subjectMap.getSubject(trainID);
         if(currentSubject != null) {
-            unbindControls();
             updateAll();
+            unbindControls();
             bindControls();
             bindGauges();
             bindIndicators();
@@ -260,7 +260,7 @@ public class trainControllerManager {
         }
 
         //Batch update all properties
-        Platform.runLater(() -> {
+            try{
             currentSpeedGauge.setValue(currentSubject.getDoubleProperty(currentSpeed_p).get());
             commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(commandSpeed_p).get());
             speedLimitGauge.setValue(currentSubject.getDoubleProperty(speedLimit_p).get());
@@ -293,7 +293,10 @@ public class trainControllerManager {
 
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(overrideSpeed_p).get());
-        });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
     }
 
 

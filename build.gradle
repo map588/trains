@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'antlr'
-    id 'org.openjfx.javafxplugin' version '0.1.0' // Make sure this is the latest or a compatible version
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 
 }
 group = 'org.james'
@@ -15,17 +15,19 @@ repositories {
 }
 
 javafx {
-    version = "21.0.1" // Or the version that matches your requirements
+    version = "17.0.10"
     modules = [ 'javafx.controls', 'javafx.fxml']
 }
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation('org.testfx:testfx-junit5:4.0.17')
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
+    testImplementation group: 'org.testfx', name: 'openjfx-monocle', version: '17.0.10'
+    testImplementation 'org.testfx:testfx-junit5:4.0.17'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     // Additional libraries
     implementation group: 'eu.hansolo', name: 'medusa', version: '17.1.7'
@@ -72,8 +74,46 @@ def getJavaFXLibPath() {
     return "${project.rootDir}/${libPath}/lib"
 }
 
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java'
+        }
+        resources {
+            srcDirs 'src/main/resources'
+        }
+    }
+    test {
+        java {
+            srcDirs 'src/test/java'
+        }
+        resources {
+            srcDirs 'src/main/resources'
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // or choose 'EXCLUDE' to ignore duplicates
+}
+
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    doFirst {
+        def javafxLibPath = getJavaFXLibPath()
+        jvmArgs = [
+                '--module-path',  javafxLibPath,
+                '--add-modules', 'javafx.controls,javafx.fxml',
+                '--add-opens', 'javafx.graphics/javafx.scene=ALL-UNNAMED',
+                '--add-opens', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED',
+                '--add-opens', 'javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED',
+                '--add-opens', 'javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED'
+        ]
+    }
 }
 
 run {
