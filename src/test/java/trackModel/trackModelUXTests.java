@@ -1,4 +1,4 @@
-package UXTests.trackModel;
+package trackModel;
 
 public class trackModelUXTests {
 }

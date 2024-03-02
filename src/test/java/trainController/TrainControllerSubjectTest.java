@@ -1,4 +1,4 @@
-package UXTests.trainController;
+package trainController;
 
 import Common.TrainController;
 import javafx.beans.property.Property;

@@ -1,4 +1,4 @@
-package UXTests.waysideController;
+package waysideController;
 
 public class waysideControllerUXTests {
 }

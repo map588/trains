@@ -69,7 +69,7 @@ public class trainControllerManager {
             }
         });
         currentSubject.setProperty(automaticMode_p, true);
-        testBench = launchTestBench();
+        //testBench = launchTestBench();
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
 
@@ -161,7 +161,6 @@ public class trainControllerManager {
             try {
                 currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText()));
             } catch (NumberFormatException e) {
-                e.printStackTrace();
                 textField.setText("");
             }
         };
@@ -219,8 +218,8 @@ public class trainControllerManager {
     private void changeTrainView(Integer trainID) {
         currentSubject = subjectMap.getSubject(trainID);
         if(currentSubject != null) {
-            updateAll();
             unbindControls();
+            updateAll();
             bindControls();
             bindGauges();
             bindIndicators();

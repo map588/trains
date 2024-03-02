@@ -408,8 +408,12 @@ public class trainControllerImpl implements TrainController, Notifications {
             }else if(serviceBrake) {
                 accel = -1 * SERVICE_BRAKE_DECELERATION;
             }
-        } else {
-            accel = pow / train.getWeightKG();
+        } else{
+            double mass = train.getWeightKG();
+            if(mass <= 0){
+                mass = 1;
+            }
+            accel = pow / mass;
         }
 
         currSpeed += accel * (float)samplingPeriod/1000;
