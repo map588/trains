@@ -43,7 +43,7 @@ public class CTCOfficeImpl implements CTCOffice {
         track.put(lineNames.get(0), new ArrayList<>() {{
             add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(0))));
         }});
-        for(int i = 1; i < blockList.get(lineNames.get(0)).size()-1; i++) {
+        for(int i = 1; i < blockList.get(lineNames.get(0)).size(); i++) {
             track.get(lineNames.get(0)).add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(i))));
         }
         ArrayList<Integer> blank = new ArrayList<>();

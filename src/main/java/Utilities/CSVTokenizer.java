@@ -15,10 +15,6 @@ public class CSVTokenizer {
 
     private static String CSVFileName;
 
-    public CSVTokenizer() {
-        CSVFileName = "BlueLine.csv";
-    }
-
     public void setCSVFile(String fileName) {
         CSVFileName = fileName;
     }

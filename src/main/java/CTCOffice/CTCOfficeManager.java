@@ -1,6 +1,7 @@
 package CTCOffice;
 
 import Common.CTCOffice;
+import Utilities.CSVTokenizer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -36,7 +37,7 @@ public class CTCOfficeManager {
     @FXML private TableView<ScheduleSubject> scheduleEditTable;
     @FXML private TableColumn<ScheduleSubject, Integer> lineColumn;
     @FXML private TableColumn<ScheduleSubject, Integer> carNumberColumn;
-    @FXML private ChoiceBox<Integer> lineStopSelector;
+    @FXML private ChoiceBox<String> lineStopSelector;
     @FXML private ChoiceBox<Integer> trainStopSelector;
     @FXML private Button AddStop;
     @FXML private Button RemoveStop;
@@ -58,7 +59,7 @@ public class CTCOfficeManager {
     @FXML private TableColumn<ScheduleSubject, String> scheduleNameColumn;
     @FXML private TableColumn<ScheduleSubject, String> scheduleDateModColumn;
     @FXML private ComboBox<Integer> blockSelection;
-    @FXML private ComboBox<Boolean> lineSelection;
+    @FXML private ComboBox<String> lineSelection;
     @FXML private Button switchLightToggle;
     @FXML private Button switchStateToggle;
     @FXML private Button crossingStateToggle;
@@ -117,7 +118,7 @@ public class CTCOfficeManager {
 
         //Table editing bar
         blockSelection.getItems().addAll(factory.getSubjects().keySet());
-        lineSelection.getItems().addAll(true, false);
+        lineSelection.getItems().addAll(CSVTokenizer.lineNames);
         switchLightToggle.setOnAction(event -> toggleProperty("switchLightState"));
         switchStateToggle.setOnAction(event -> toggleProperty("switchState"));
         crossingStateToggle.setOnAction(event -> toggleProperty("crossingState"));
@@ -126,7 +127,7 @@ public class CTCOfficeManager {
         blockTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 blockSelection.setValue(newValue.getIntegerProperty("blockID").getValue());
-                lineSelection.setValue(newValue.getBooleanProperty("line").getValue());
+                lineSelection.setValue(newValue.getStringProperty("line").getValue());
             }
         });
 
