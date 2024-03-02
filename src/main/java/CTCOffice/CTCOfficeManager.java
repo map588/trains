@@ -74,7 +74,6 @@ public class CTCOfficeManager {
      */
     @FXML
     public void initialize() {
-        CTCOffice one = new CTCOfficeImpl();
         blockTable.setEditable(true);
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
 
