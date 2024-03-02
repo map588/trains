@@ -129,6 +129,15 @@ public class trainControllerManager {
         //powerOutputGauge.valueProperty().bind(currentSubject.getDoubleProperty("power"));
     }
 
+//    private void bindGauge(String propertyName, Gauge gauge) {
+//        appendListener(currentSubject.getDoubleProperty(propertyName),(obs, oldVal, newVal) -> {
+//            double powerChange = Math.abs(newVal.doubleValue() - oldVal.doubleValue());
+//            if (powerChange > 0.1) {
+//                Platform.runLater(() -> gauge.setValue(newVal.doubleValue()));
+//            }
+//        });
+//    }
+
     private void bindIndicators() {
         appendListener(currentSubject.getBooleanProperty(emergencyBrake_p), (obs, oldVal, newVal) -> updateIndicator(Color.RED, eBrakeStatus, newVal));
         appendListener(currentSubject.getBooleanProperty(signalFailure_p),(obs, oldVal, newVal) -> updateIndicator(Color.RED, signalFailureStatus, newVal));
@@ -186,19 +195,6 @@ public class trainControllerManager {
                 Platform.runLater(() -> currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText())));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                textField.setText("");
-            }
-        };
-        textField.setOnAction(event -> textFieldUpdate.run());
-    }
-
-    private void bindIntTextField(TextField textField, String propertyName) {
-        Runnable textFieldUpdate = () -> {
-            try {
-                // Parse and update property
-                currentSubject.setProperty(propertyName, Integer.parseInt(textField.getText()));
-            } catch (NumberFormatException e) {
-                // Clear if invalid input
                 textField.setText("");
             }
         };
@@ -298,12 +294,14 @@ public class trainControllerManager {
         }
 
             // Update gauges
-            currentSpeedGauge.setValue(currentSubject.getDoubleProperty(currentSpeed_p).get());
-            commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(commandSpeed_p).get());
-            speedLimitGauge.setValue(currentSubject.getDoubleProperty(speedLimit_p).get());
-            authorityGauge.setValue(currentSubject.getIntegerProperty(authority_p).get());
-            powerOutputGauge.setValue(currentSubject.getDoubleProperty(power_p).get());
-            //powerOutputGauge.setValue(69);
+            Platform.runLater(() -> {
+                currentSpeedGauge.setValue(currentSubject.getDoubleProperty(currentSpeed_p).get());
+                commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(commandSpeed_p).get());
+                speedLimitGauge.setValue(currentSubject.getDoubleProperty(speedLimit_p).get());
+                authorityGauge.setValue(currentSubject.getIntegerProperty(authority_p).get());
+                powerOutputGauge.setValue(currentSubject.getDoubleProperty(power_p).get());
+                //powerOutputGauge.setValue(69);
+            });
 
             // Update indicators
             updateIndicator(Color.RED, eBrakeStatus, currentSubject.getBooleanProperty(emergencyBrake_p).get());
@@ -315,14 +313,18 @@ public class trainControllerManager {
             updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, currentSubject.getBooleanProperty(rightPlatform_p).get());
 
             // Update checkboxes
+            Platform.runLater(() -> {
             intLightCheckBox.setSelected(currentSubject.getBooleanProperty(intLights_p).get());
             extLightCheckBox.setSelected(currentSubject.getBooleanProperty(extLights_p).get());
             openDoorLeftCheckBox.setSelected(currentSubject.getBooleanProperty(leftDoors_p).get());
             openDoorRightCheckBox.setSelected(currentSubject.getBooleanProperty(rightDoors_p).get());
             toggleServiceBrakeCheckBox.setSelected(currentSubject.getBooleanProperty(serviceBrake_p).get());
             autoModeCheckBox.setSelected(currentSubject.getBooleanProperty(automaticMode_p).get());
+            });
 
             // Update text fields
+
+            Platform.runLater(() -> {
             setTemperatureTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(temperature_p).get()));
             setKiTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(Ki_p).get()));
             setKpTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(Kp_p).get()));
@@ -331,6 +333,7 @@ public class trainControllerManager {
             nextStationText.setText(currentSubject.getStringProperty(nextStationName_p).get());
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(overrideSpeed_p).get());
+            });
     }
 
 
