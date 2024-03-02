@@ -28,4 +28,5 @@ public interface TrackModel {
     int passengers(int disembarked);
 
 
+    void setTrackHeaters(int i);
 }
