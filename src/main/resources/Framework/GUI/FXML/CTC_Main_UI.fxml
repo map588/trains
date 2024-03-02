@@ -37,7 +37,7 @@
                                             <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ."/>
                                             <TableColumn fx:id="switchStateColumn" maxWidth="100" prefWidth="100" text="Switch State"/>
                                             <TableColumn fx:id="switchLightColumn" maxWidth="43" prefWidth="43" text="Light"/>
-                                            <TableColumn fx:id="crossingColumn" prefWidth="60" text="Crossing"/>
+                                            <TableColumn fx:id="crossingStateColumn" prefWidth="60" text="Crossing"/>
                                             <TableColumn fx:id="underMaintenanceColumn" prefWidth="100" text="Maintenance"/>
                                         </columns>
                                     </TableView>

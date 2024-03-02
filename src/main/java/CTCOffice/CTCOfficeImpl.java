@@ -2,8 +2,6 @@ package CTCOffice;
 
 import Common.CTCOffice;
 import Common.TrainModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import trainModel.trainModelImpl;
 
 import java.util.ArrayList;
@@ -96,7 +94,7 @@ public class CTCOfficeImpl implements CTCOffice {
      * @param lightState The light state to be set.
      */
     public void setLightState(boolean line, int blockID, boolean lightState) {
-        track.get(line).get(blockID).setLightState(lightState);
+        track.get(line).get(blockID).setSwitchLightState(lightState);
     }
 
     /**
