@@ -23,7 +23,6 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private WaysideController controller;
     private ObservableList<WaysideBlockSubject> blockList;
-    private ObservableList<TrainSpeedAuth> speedAuthList;
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     public boolean isLogicUpdate = false;
@@ -35,7 +34,6 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
         properties.put(PLCName_p, new SimpleStringProperty());
         properties.put(activePLCColor_p, new SimpleObjectProperty<>(Color.GRAY));
         blockList = FXCollections.observableArrayList();
-        speedAuthList = FXCollections.observableArrayList();
 
 //        properties.get(maintenanceMode_p).addListener((observable, oldValue, newValue) -> controller.setMaintenanceMode((Boolean) newValue));
     }
@@ -146,14 +144,5 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
     public WaysideController getController() {
         return this.controller;
     }
-    public ObservableList<TrainSpeedAuth> getSpeedAuthList() {
-        return speedAuthList;
-    }
-    public void setSpeedAuth(TrainSpeedAuth speedAuth) {
-        if(speedAuthList.contains(speedAuth)) {
-            speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
-        } else {
-            speedAuthList.add(speedAuth);
-        }
-    }
+
 }

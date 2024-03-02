@@ -1,12 +1,9 @@
 package Common;
 
-import waysideController.TrainSpeedAuth;
 import waysideController.WaysideBlock;
-import waysideController.WaysideBlockSubject;
 import waysideController.WaysideControllerSubject;
 
 import java.io.File;
-import java.util.List;
 
 
 // This is the interface for the wayside controller, which is used to control the various track blocks
@@ -37,8 +34,6 @@ public interface WaysideController {
 
     // Allows Track Model to set train occupancy for a specific block
     public void trackModelSetOccupancy(int blockID, boolean isOccupied);
-
-    public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth);
 
     // Allows CTC to request a switch change (works with automatic mode)
     public void CTCRequestSwitchState(int blockID, boolean switchState);

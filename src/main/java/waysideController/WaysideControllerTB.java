@@ -29,18 +29,6 @@ public class WaysideControllerTB {
     @FXML
     public TableColumn<WaysideBlockSubject, Boolean> tbSTEnable;
     @FXML
-    public TableView<TrainSpeedAuth> tbSpeedAuthTable;
-    @FXML
-    public TableColumn<TrainSpeedAuth, Integer> tbSATID;
-    @FXML
-    public TableColumn<TrainSpeedAuth, Double> tbSATSpeedIn;
-    @FXML
-    public TableColumn<TrainSpeedAuth, Integer> tbSATAuthIn;
-    @FXML
-    public TableColumn<TrainSpeedAuth, Double> tbSATSpeedOut;
-    @FXML
-    public TableColumn<TrainSpeedAuth, Integer> tbSATAuthOut;
-    @FXML
     public Button tbCreateNewControllerButton;
     @FXML
     public ComboBox<String> tbHWPortComboBox;
@@ -107,21 +95,11 @@ public class WaysideControllerTB {
             });
             return cell;
         });
-
-        tbSpeedAuthTable.setEditable(true);
-        tbSATID.setCellValueFactory(speedAuth -> speedAuth.getValue().trainIDProperty().asObject());
-        tbSATSpeedIn.setCellValueFactory(speedAuth -> speedAuth.getValue().speedInProperty().asObject());
-        tbSATAuthIn.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityInProperty().asObject());
-        tbSATSpeedOut.setCellValueFactory(speedAuth -> speedAuth.getValue().speedOutProperty().asObject());
-        tbSATAuthOut.setCellValueFactory(speedAuth -> speedAuth.getValue().authorityOutProperty().asObject());
-        tbSATSpeedIn.setCellFactory(TextFieldTableCell.forTableColumn(doubleConverter));
-        tbSATAuthIn.setCellFactory(TextFieldTableCell.forTableColumn(intConverter));
     }
 
     public void setController(WaysideController controller) {
         this.controller = controller;
         readBlockInfo(controller.getSubject().blockListProperty());
-        tbSpeedAuthTable.setItems(controller.getSubject().getSpeedAuthList());
         if(controller instanceof WaysideControllerHWBridge) {
             tbHWPortLabel.setText("HW Port: " + ((WaysideControllerHWBridge) controller).getPort());
         }

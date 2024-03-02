@@ -23,8 +23,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
 
-    private final List<TrainSpeedAuth> speedAuthList = new ArrayList<>();
-
     private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
@@ -47,12 +45,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         List<TrueBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
         for(int blockID : blockIDList) {
-            addBlock(new WaysideBlock(CSVTokenizer.blockList.get(trackLine).get(blockID)));
+            addBlock(new WaysideBlock(fullBlockList.get(blockID)));
         }
-
-        CTCSetSpeedAuth(new TrainSpeedAuth(1));
-        CTCSetSpeedAuth(new TrainSpeedAuth(2));
-        CTCSetSpeedAuth(new TrainSpeedAuth(3));
     }
 
     @Override
@@ -96,29 +90,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
         blockMap.get(blockID).setOccupied(isOccupied);
         runPLC();
-    }
-
-    // TODO Remove this!
-    @Override
-    public void CTCSetSpeedAuth(TrainSpeedAuth speedAuth) {
-        if(speedAuthList.contains(speedAuth)) {
-            speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
-        }
-        else {
-            speedAuthList.add(speedAuth);
-        }
-        subject.setSpeedAuth(speedAuth);
-        speedAuth.speedInProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue.doubleValue() > 50) {
-                speedAuth.speedOutProperty().set(50.0);
-            }
-            else {
-                speedAuth.speedOutProperty().set(newValue.doubleValue());
-            }
-        });
-        speedAuth.authorityInProperty().addListener((observable, oldValue, newValue) -> {
-            speedAuth.authorityOutProperty().set(newValue.intValue());
-        });
     }
 
     @Override

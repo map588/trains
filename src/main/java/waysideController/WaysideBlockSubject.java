@@ -130,6 +130,15 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
         }
     }
 
+    public DoubleProperty getDoubleProperty(String propertyName) {
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (DoubleProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not an DoubleProperty");
+        }
+    }
+
     public ObjectProperty<Paint> getTrafficLightColor() {
         try {
             return (ObjectProperty<Paint>) properties.get(lightColor_p);

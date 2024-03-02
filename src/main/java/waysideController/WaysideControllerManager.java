@@ -46,6 +46,8 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<WaysideBlockSubject, Boolean> blockTableAuthColumn;
     @FXML
+    private TableColumn<WaysideBlockSubject, Double> blockTableSpeedColumn;
+    @FXML
     private TableView<WaysideBlockSubject> switchTable;
     @FXML
     private TableColumn<WaysideBlockSubject, Integer> switchTableIDColumn;
@@ -180,6 +182,7 @@ public class WaysideControllerManager {
             });
             return cell;
         });
+        blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
         blockTableCrossingColumn.setEditable(false);
         blockTableCircuitColumn.setEditable(false);
 
