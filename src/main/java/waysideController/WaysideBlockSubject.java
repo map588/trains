@@ -2,200 +2,153 @@ package waysideController;
 
 import Framework.Support.AbstractSubject;
 import Framework.Support.Notifications;
+import Framework.Support.ObservableHashMap;
 import Utilities.TrafficLightState;
+import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static waysideController.Properties.*;
 
 public class WaysideBlockSubject implements AbstractSubject, Notifications {
-    private final ReadOnlyIntegerProperty blockID;
-    private final ReadOnlyBooleanProperty hasSwitch;
-    private final ReadOnlyBooleanProperty hasCrossing;
 
-    private ReadOnlyIntegerProperty switchBlockMain;
-    private ReadOnlyIntegerProperty switchBlockAlt;
-
-    private final BooleanProperty occupation;
-    private final BooleanProperty switchState;
-    private final BooleanProperty authority;
-    private final DoubleProperty speed;
-
-    private final BooleanProperty switchRequestedState;
-    private IntegerProperty switchedBlockID;
-    private final TrafficLightState lightState;
-    private final BooleanProperty crossingState;
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
+    private final WaysideBlock block;
+    public boolean isLogicUpdate = false;
+    public boolean isGUIUpdate = false;
 
     public WaysideBlockSubject(WaysideBlock block) {
-        this.blockID = new ReadOnlyIntegerWrapper(block.getBlockID());
-        this.hasSwitch = new ReadOnlyBooleanWrapper(block.hasSwitch());
-        this.hasCrossing = new ReadOnlyBooleanWrapper(block.hasCrossing());
+        this.block = block;
+        block.setSubject(this);
 
-        this.occupation = new SimpleBooleanProperty(block.isOccupied());
-        this.switchState = new SimpleBooleanProperty(block.getSwitchState());
-        this.switchRequestedState = new SimpleBooleanProperty(block.getSwitchRequest());
-        this.crossingState = new SimpleBooleanProperty(block.getCrossingState());
-        this.authority = new SimpleBooleanProperty(block.getAuthority());
-        this.speed = new SimpleDoubleProperty(block.getSpeed());
+        properties.put(blockID_p, new ReadOnlyIntegerWrapper(block.getBlockID()));
+        properties.put(hasSwitch_p, new ReadOnlyBooleanWrapper(block.hasSwitch()));
+        properties.put(hasLight_p, new ReadOnlyBooleanWrapper(block.hasLight()));
+        properties.put(hasCrossing_p, new ReadOnlyBooleanWrapper(block.hasCrossing()));
 
-        this.lightState = new TrafficLightState(block.hasLight());
+        properties.put(occupied_p, new SimpleBooleanProperty(block.isOccupied()));
+        properties.put(switchState_p, new SimpleBooleanProperty(block.getSwitchState()));
+        properties.put(switchRequest_p, new SimpleBooleanProperty(block.getSwitchRequest()));
+        properties.put(lightState_p, new SimpleBooleanProperty(block.getLightState()));
+        properties.put(crossingState_p, new SimpleBooleanProperty(block.getCrossingState()));
+        properties.put(authority_p, new SimpleBooleanProperty(block.getAuthority()));
+        properties.put(speed_p, new SimpleDoubleProperty(block.getSpeed()));
 
-        this.switchBlockMain = new ReadOnlyIntegerWrapper(block.getSwitchBlockMain());
-        this.switchBlockAlt = new ReadOnlyIntegerWrapper(block.getSwitchBlockAlt());
-        this.switchedBlockID = new SimpleIntegerProperty(block.getSwitchBlockMain());
-        this.switchState.addListener((observable, oldValue, newValue) -> {
-            if(newValue)
-                this.switchedBlockID.set(this.getSwitchBlockAlt());
+        properties.put(lightColor_p, new SimpleObjectProperty<Paint>());
+        updateLightColor();
+        properties.get(lightState_p).addListener((observable, oldValue, newValue) -> updateLightColor());
+
+        properties.put(switchBlockMain_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockMain()));
+        properties.put(switchBlockAlt_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockAlt()));
+        properties.put(switchedBlockID_p, new SimpleIntegerProperty(block.getSwitchBlockMain()));
+        ((BooleanProperty)properties.get(switchState_p)).addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                setProperty(switchedBlockID_p, block.getSwitchBlockAlt());
+            }
             else
-                this.switchedBlockID.set(this.getSwitchBlockMain());
+                setProperty(switchedBlockID_p, block.getSwitchBlockMain());
         });
     }
 
-    public int getBlockID() {
-        return blockID.get();
+    public WaysideBlock getBlock() {
+        return block;
     }
 
-    public ReadOnlyIntegerProperty blockIDProperty() {
-        return blockID;
-    }
-
-    public boolean isHasSwitch() {
-        return hasSwitch.get();
-    }
-
-    public ReadOnlyBooleanProperty hasSwitchProperty() {
-        return hasSwitch;
-    }
-
-    public boolean hasLight() {
-        return lightState.hasLight();
-    }
-
-    public boolean hasCrossing() {
-        return hasCrossing.get();
-    }
-
-    public ReadOnlyBooleanProperty hasCrossingProperty() {
-        return hasCrossing;
-    }
-
-    public boolean isOccupation() {
-        return occupation.get();
-    }
-
-    public void setOccupation(boolean occupation) {
-        this.occupation.set(occupation);
-    }
-
-    public BooleanProperty occupationProperty() {
-        return occupation;
-    }
-
-    public boolean isSwitchState() {
-        return switchState.get();
-    }
-
-    public BooleanProperty switchStateProperty() {
-        return switchState;
-    }
-
-    public boolean getLightState() {
-        return lightState.getLightState();
-    }
-
-    public void setLightState(boolean lightState) {
-        this.lightState.setLightState(lightState);
-    }
-
-    public void setSwitchState(boolean switchState) {
-        this.switchState.set(switchState);
-    }
-
-    public void setCrossingState(boolean crossingState) {
-        this.crossingState.set(crossingState);
-    }
-
-    public TrafficLightState lightStateProperty() {
-        return lightState;
-    }
-
-    public boolean isCrossingState() {
-        return crossingState.get();
-    }
-
-    public BooleanProperty crossingStateProperty() {
-        return crossingState;
-    }
-
-    public int getSwitchBlockMain() {
-        return switchBlockMain.get();
-    }
-
-    public ReadOnlyIntegerProperty switchBlockMainProperty() {
-        return switchBlockMain;
-    }
-
-    public int getSwitchBlockAlt() {
-        return switchBlockAlt.get();
-    }
-
-    public ReadOnlyIntegerProperty switchBlockAltProperty() {
-        return switchBlockAlt;
-    }
-
-    public int getSwitchedBlockID() {
-        return switchedBlockID.get();
-    }
-
-    public IntegerProperty switchedBlockIDProperty() {
-        return switchedBlockID;
-    }
-
-    public boolean getSwitchRequestedState() {
-        return switchRequestedState.get();
-    }
-
-    public void setSwitchRequestedState(boolean switchRequestedState) {
-        this.switchRequestedState.set(switchRequestedState);
-    }
-
-    public BooleanProperty switchRequestedStateProperty() {
-        return switchRequestedState;
-    }
-
-    public boolean getAuthority() {
-        return authority.get();
-    }
-
-    public void setAuthority(boolean authority) {
-        this.authority.set(authority);
-    }
-
-    public BooleanProperty authorityProperty() {
-        return authority;
-    }
-
-    public double getSpeed() {
-        return speed.get();
-    }
-
-    public DoubleProperty speedProperty() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed.set(speed);
+    private void updateLightColor() {
+        if(block.hasLight()) {
+            if(getBooleanProperty(lightState_p).get())
+                getTrafficLightColor().set(Color.GREEN);
+            else
+                getTrafficLightColor().set(Color.RED);
+        }
+        else {
+            getTrafficLightColor().set(Color.TRANSPARENT);
+        }
     }
 
     @Override
     public void setProperty(String propertyName, Object newValue) {
+        Runnable updateTask = () -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+            block.setValue(propertyName, newValue);
+        };
 
+        if (isLogicUpdate) {
+            executorService.scheduleWithFixedDelay(() -> {
+                if (!isLogicUpdate) {
+                    System.out.println("Delayed setProperty from GUI");
+                    Platform.runLater(() -> updateFromGUI(updateTask));
+                }
+            }, 0, 10, TimeUnit.MILLISECONDS);
+        } else {
+            Platform.runLater(() -> updateFromGUI(updateTask));
+        }
+    }
+
+    public void updateFromGUI(Runnable updateLogic) {
+        System.out.println("Called from updateFromGUI.");
+        isGUIUpdate = true;
+        try {
+            updateLogic.run();
+        } finally {
+            isGUIUpdate = false;
+        }
+    }
+
+    public void updateFromLogic(Runnable updateLogic) {
+        isLogicUpdate = true;
+        try {
+            updateLogic.run();
+        } finally {
+            isLogicUpdate = false;
+        }
     }
 
     @Override
     public Property<?> getProperty(String propertyName) {
-        return null;
+        return properties.get(propertyName);
+    }
+    public BooleanProperty getBooleanProperty(String propertyName) {
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (BooleanProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not a BooleanProperty");
+        }
+    }
+
+    public IntegerProperty getIntegerProperty(String propertyName) {
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (IntegerProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not an IntegerProperty");
+        }
+    }
+
+    public ObjectProperty<Paint> getTrafficLightColor() {
+        try {
+            return (ObjectProperty<Paint>) properties.get(lightColor_p);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Failed to get TrafficLightState property");
+        }
     }
 
     @Override
-    public void notifyChange(String property, Object newValue) {
-
+    public void notifyChange(String propertyName, Object newValue) {
+        // Update property from controller, Internal Logic takes precedence over GUI updates
+        if (!isGUIUpdate) {
+            updateFromLogic(() -> {
+                Property<?> property = properties.get(propertyName);
+                updateProperty(property, newValue);
+            });
+        }
     }
 }
