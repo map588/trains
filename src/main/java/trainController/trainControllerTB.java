@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package trainController;
 
 import Framework.Support.ListenerReference;
 import javafx.beans.value.ChangeListener;

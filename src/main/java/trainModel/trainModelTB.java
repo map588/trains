@@ -28,16 +28,16 @@ public class trainModelTB {
     @FXML
     public Circle tbBrakeFailure, tbPowerFailure, tbSignalFailure;
     private trainModelSubject subject;
-    private SubjectFactory<trainModelSubject> factory;
+    private trainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        factory = trainSubjectFactory.getInstance();
+        subjectMap = trainModelSubjectMap.getInstance();
 
-        if (!factory.getSubjects().isEmpty()) {
-            Integer firstKey = factory.getSubjects().keySet().iterator().next();
-            subject = factory.getSubjects().get(firstKey);
+        if (!subjectMap.getSubjects().isEmpty()) {
+            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
+            subject = subjectMap.getSubjects().get(firstKey);
         }else{
             System.out.println("No damn subjects.");
         }
@@ -46,7 +46,7 @@ public class trainModelTB {
     }
     public void changeModels(TrainModel model) {
         unbindTrain();
-        subject = factory.getSubjects().get(model.getTrainNumber());
+        subject = subjectMap.getSubject(model.getTrainNumber());
         bindTrain();
     }
 

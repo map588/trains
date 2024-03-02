@@ -286,7 +286,7 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.nextStationName = name;
         notifyChange(nextStationName_p,name);
     }
-    private void setGrade(double newValue) {
+    public void setGrade(double newValue) {
         this.grade = newValue;
         notifyChange(grade_p,newValue);
     }
@@ -339,7 +339,9 @@ public class trainControllerImpl implements TrainController, Notifications {
 
 
     //-----------------Getters-----------------
-    public int getID() {
+
+
+    public int  getID() {
         return this.trainID;
     }
     public double  getSpeed() {

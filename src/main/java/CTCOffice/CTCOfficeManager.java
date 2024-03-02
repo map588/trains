@@ -1,4 +1,4 @@
-package Framework.GUI.Managers;
+package CTCOffice;
 
 import CTCOffice.*;
 import Common.CTCOffice;
@@ -28,6 +28,8 @@ public class CTCOfficeManager {
     @FXML private SplitPane mainSplit;
     @FXML private AnchorPane mainAnchor;
     @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
+    @FXML private TableColumn<CTCBlockSubject, Boolean> crossingStateColumn;
+    @FXML private TableColumn<CTCBlockSubject, Boolean> maintenanceColumn;
     @FXML private TableView<ScheduleSubject> scheduleTable;
     @FXML private TableColumn<ScheduleSubject, Integer> dispatchTimeColumn;
     @FXML private TableColumn<ScheduleSubject, Integer> stationBlockIDColumn;
@@ -62,6 +64,7 @@ public class CTCOfficeManager {
     @FXML private Button switchLightToggle;
     @FXML private Button switchStateToggle;
     @FXML private Button crossingStateToggle;
+    @FXML private Button maintenanceToggle;
 
 
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();

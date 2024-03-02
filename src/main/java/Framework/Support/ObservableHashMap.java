@@ -8,9 +8,15 @@ public class ObservableHashMap<K, V> extends HashMap<K, V> {
     private final Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
 
     public interface MapListener<K, V> {
-        void onAdded(K key, V value);
-        void onRemoved(K key, V value);
-        void onUpdated(K key, V oldValue, V newValue);
+        default void onAdded(K key, V value) {
+            return;
+        }
+        default void onRemoved(K key, V value){
+            return;
+        }
+        default void onUpdated(K key, V oldValue, V newValue){
+            return;
+        }
     }
 
     public void addChangeListener(MapListener<K, V> listener) {

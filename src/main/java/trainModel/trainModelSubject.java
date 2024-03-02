@@ -18,7 +18,7 @@ public class trainModelSubject implements AbstractSubject{
     private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private TrainModel model;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-
+    private final trainModelSubjectMap map = trainModelSubjectMap.getInstance();
 
     public void intitializeValues() {
         properties.put(Properties.authority_p, new SimpleIntegerProperty(model.getAuthority()));
@@ -46,7 +46,7 @@ public class trainModelSubject implements AbstractSubject{
     public trainModelSubject(TrainModel trainModel) {
         this.model = trainModel;
         intitializeValues();
-        trainSubjectFactory.getInstance().registerSubject(0, this);
+        map.registerSubject(trainModel.getTrainNumber(),this);
     }
 
     public BooleanProperty getBooleanProperty (String propertyName) {

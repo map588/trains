@@ -1,7 +1,5 @@
 package trackModel;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -286,8 +284,8 @@ public class TrackModelManager {
         //send the line to the track model
         //currTrackModel.getLine(line);
 
-        ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
-        lineTable.setItems(tableInfo);
+       // ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
+        //lineTable.setItems(tableInfo);
     }
 
     private void murphyEnter() {
@@ -306,7 +304,6 @@ public class TrackModelManager {
     private void addLineName(String text) {
         pickLine.getItems().add(text);
         murphyLine.getItems().add(text);
-        currTrackModel.setLine(text);
         testBench.setLine(text);
     }
     private ArrayList<String> csvParser(File file) {

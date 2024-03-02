@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 import trainModel.trainModelImpl;
 import trainModel.trainModelSubject;
 import trainModel.trainModelTB;
-import trainModel.trainSubjectFactory;
+import trainModel.trainModelSubjectMap;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class trainModelManager {
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
-    private SubjectFactory<trainModelSubject> factory;
+    private trainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private trainModelSubject subject;
 
@@ -57,12 +57,12 @@ public class trainModelManager {
 
         new trainModelImpl(0);
 
-        factory = trainSubjectFactory.getInstance();
+        subjectMap = trainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
         testBench = launchTestBench();
-        if (!factory.getSubjects().isEmpty()) {
-            Integer firstKey = factory.getSubjects().keySet().iterator().next();
+        if (!subjectMap.getSubjects().isEmpty()) {
+            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
         }else{
             System.out.println("No train models found");
@@ -165,7 +165,7 @@ public class trainModelManager {
     }
 
     private void changeTrainView(int trainID) {
-        subject = factory.getSubjects().get(trainID);
+        subject = subjectMap.getSubject(trainID);
         if(subject != null) {
             unbindValues();
             bindControls();
@@ -198,7 +198,7 @@ public class trainModelManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, trainModelSubject> subjects = factory.getSubjects();
+        ObservableHashMap<Integer, trainModelSubject> subjects = subjectMap.getSubjects();
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
         ObservableHashMap.MapListener<Integer, trainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
@@ -225,7 +225,7 @@ public class trainModelManager {
     private void updateChoiceBoxItems() {
         Platform.runLater(() -> {
             trainDropDown.setItems(FXCollections.observableArrayList(
-                    new ArrayList<>(factory.getSubjects().keySet())));
+                    new ArrayList<>(subjectMap.getSubjects().keySet())));
         });
     }
 

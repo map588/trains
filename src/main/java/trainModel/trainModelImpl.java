@@ -6,6 +6,7 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifications;
 import Utilities.Constants;
+import trainController.stubTrainController;
 import trainController.trainControllerImpl;
 import trainModel.Properties;
 
@@ -63,7 +64,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.numPassengers = 1;
         this.crewCount = 2;
 
-        this.controller = new trainControllerImpl(trainID);
+        this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
 
         this.subject = new trainModelSubject(this);

@@ -8,7 +8,7 @@ package CTCOffice;
 class CTCBlockInfo {
     private final int blockID, blockLength, speedLimit;
     private final boolean line;
-    private boolean occupied;
+    private boolean occupied, underMaintenance;
     private final boolean hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing;
     private boolean lightState, crossingState, switchState;
     private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
@@ -19,7 +19,11 @@ class CTCBlockInfo {
      * Constructor for the CTCBlockInfo class.
      * Initializes the block properties and registers the block with the CTCBlockSubjectFactory.
      */
-    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon, boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean switchConState, boolean switchDivState, boolean crossingState, int speedLimit, int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID, boolean switchState) {
+    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon,
+                boolean hasSwitchDiv, boolean hasCrossing, boolean lightState, boolean crossingState, int speedLimit,
+                int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID,
+                boolean switchState, boolean underMaintenance) {
+
         this.blockID = blockID;
         this.line = line;
         this.occupied = occupied;
@@ -35,6 +39,7 @@ class CTCBlockInfo {
         this.divergingBlockOneID = divergingBlockOneID;
         this.divergingBlockTwoID = divergingBlockTwoID;
         this.switchState = switchState;
+        this.underMaintenance = underMaintenance;
         updateLightColor();
        factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
@@ -94,6 +99,7 @@ class CTCBlockInfo {
      */
     void updateLightColor() {
         if(factory.getSubjects().get(getBlockID()) != null) {
+            return;
         }
         if(this.lightState) {
             this.lightColor = javafx.scene.paint.Color.GREEN;
@@ -129,6 +135,12 @@ class CTCBlockInfo {
     }
     boolean getOccupied     () {
         return occupied;
+    }
+    boolean getUnderMaintenance () {
+        return underMaintenance;
+    }
+    void    setUnderMaintenance (boolean underMaintenance) {
+        this.underMaintenance = underMaintenance;
     }
 
     void    setLightState   (boolean lightState) {
@@ -171,19 +183,6 @@ class CTCBlockInfo {
     boolean        getHasSwitchDiv          () {
         return hasSwitchDiv;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 
