@@ -2,6 +2,8 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.Notifications;
+import Utilities.CSVTokenizer;
+import Utilities.TrueBlockInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // The ID of the wayside controller
     private final int id;
 
-    private final int trackLine;
+    private final String trackLine;
 
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
@@ -36,27 +38,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id, int trackLine) {
+    public WaysideControllerImpl(int id, String lineName, List<Integer> blockIDList) {
         this.id = id;
-        this.trackLine = trackLine;
+        this.trackLine = lineName;
+
         program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
 
-        addBlock((new WaysideBlock(1, false, false, false)));
-        addBlock((new WaysideBlock(2, false, false, false)));
-        addBlock((new WaysideBlock(3, false, false, true)));
-        addBlock((new WaysideBlock(4, false, false, false)));
-        addBlock((new WaysideBlock(5, true, false, false, 6, 11)));
-        addBlock((new WaysideBlock(6, false, true, false)));
-        addBlock((new WaysideBlock(7, false, false, false)));
-        addBlock((new WaysideBlock(8, false, false, false)));
-        addBlock((new WaysideBlock(9, false, false, false)));
-        addBlock((new WaysideBlock(10, false, false, false)));
-        addBlock((new WaysideBlock(11, false, true, false)));
-        addBlock((new WaysideBlock(12, false, false, false)));
-        addBlock((new WaysideBlock(13, false, false, false)));
-        addBlock((new WaysideBlock(14, false, false, false)));
-        addBlock((new WaysideBlock(15, false, false, false)));
+        List<TrueBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+        for(int blockID : blockIDList) {
+            addBlock(new WaysideBlock(CSVTokenizer.blockList.get(trackLine).get(blockID)));
+        }
 
         CTCSetSpeedAuth(new TrainSpeedAuth(1));
         CTCSetSpeedAuth(new TrainSpeedAuth(2));

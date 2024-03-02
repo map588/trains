@@ -294,9 +294,9 @@ public class WaysideControllerManager {
     private void createNewController() {
         WaysideController newController;
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
-            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), 0);
+            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), "BlueLine", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15));
         } else {
-            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(), 0, testBench.tbHWPortComboBox.getValue());
+            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(), "BlueLine", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), testBench.tbHWPortComboBox.getValue());
         }
         WaysideControllerSubjectFactory.addController(newController);
         changeActiveController(newController);

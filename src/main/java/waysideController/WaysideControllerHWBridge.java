@@ -6,6 +6,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 
 import java.io.*;
+import java.util.List;
 
 public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
@@ -13,8 +14,8 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     private final BufferedReader inputStream;
     private final PrintStream outputStream;
 
-    public WaysideControllerHWBridge(int id, int trackLine, String comPort) {
-        super(id, trackLine);
+    public WaysideControllerHWBridge(int id, String trackLine, List<Integer> blockIDList, String comPort) {
+        super(id, trackLine, blockIDList);
 
         port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
