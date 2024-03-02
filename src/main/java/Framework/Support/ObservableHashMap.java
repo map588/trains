@@ -1,10 +1,9 @@
 package Framework.Support;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ObservableHashMap<K, V> extends HashMap<K, V> {
+public class ObservableHashMap<K, V> extends ConcurrentHashMap<K, V> {
     private final Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
 
     public interface MapListener<K, V> {
