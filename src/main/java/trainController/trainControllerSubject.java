@@ -17,8 +17,10 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainController controller;
-    public boolean isGUIUpdate = false;
-    public boolean isLogicUpdate = false;
+
+    public  volatile boolean isGUIUpdateInProgress   = false;
+    private volatile boolean isLogicUpdateInProgress = false;
+
 
     public trainControllerSubject(TrainController controller) {
         this.controller = controller;
@@ -30,7 +32,6 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available
         properties.put(authority_p, new SimpleIntegerProperty(controller.getAuthority()));
-        //properties.put(blocksToNextStation, new SimpleIntegerProperty(controller.getBlocksToNextStation()));
         properties.put(samplingPeriod_p, new SimpleIntegerProperty(controller.getSamplingPeriod()));
         properties.put(commandSpeed_p, new SimpleDoubleProperty(controller.getCommandSpeed()));
         properties.put(currentSpeed_p, new SimpleDoubleProperty(controller.getSpeed()));
@@ -61,32 +62,63 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        // Update property from controller, Internal Logic takes precedence over GUI updates
-        if (!isGUIUpdate) {
-            updateFromLogic(() -> {
-                    Property<?> property = properties.get(propertyName);
-                    updateProperty(property, newValue);
-            });
-            }
+        Property<?> property = properties.get(propertyName);
+        if (property != null && newValue != null) {
+            executeUpdate(() -> updateProperty(property, newValue), !isLogicUpdateInProgress);
+        }
     }
 
 
     public void setProperty(String propertyName, Object newValue) {
-        Runnable updateTask = () -> {
-            Property<?> property = properties.get(propertyName);
-                updateProperty(property, newValue);
-                controller.setValue(propertyName, newValue);
+        Property<?> property = properties.get(propertyName);
+
+        if (property != null && !isLogicUpdateInProgress) {
+            isGUIUpdateInProgress = true;
+            try {
+                executeUpdate(() -> {
+                    updateProperty(property, newValue);
+                    controller.setValue(propertyName, newValue);
+                }, true);
+            } finally {
+                isGUIUpdateInProgress = false;
+            }
+        }
+    }
+
+    // Update property safely with the correct type
+    public <T> void updateProperty(Property<T> property, Object newValue) {
+        Runnable updateAction = () -> {
+            if (newValue == null) {
+                System.err.println("Null value for property " + property.getName());
+                return;
+            }
+            try {
+                if (property instanceof IntegerProperty) {
+                    ((IntegerProperty) property).set(((Number) newValue).intValue());
+                } else if (property instanceof DoubleProperty) {
+                    ((DoubleProperty) property).set(((Number) newValue).doubleValue());
+                } else if (property instanceof BooleanProperty) {
+                    ((BooleanProperty) property).set((Boolean) newValue);
+                } else if (property instanceof StringProperty) {
+                    ((StringProperty) property).set((String) newValue);
+                }
+            } catch (ClassCastException e) {
+                System.err.println("Type mismatch for property " + property.getName() + ": " + e.getMessage());
+            }
         };
 
-        if (isLogicUpdate) {
-            executorService.scheduleWithFixedDelay(() -> {
-                if (!isLogicUpdate) {
-                    System.out.println("Delayed setProperty from GUI");
-                    Platform.runLater(() -> updateFromGUI(updateTask));
-                }
-            }, 0, 10, TimeUnit.MILLISECONDS);
+        if (Platform.isFxApplicationThread()) {
+            updateAction.run();
         } else {
-            Platform.runLater(() -> updateFromGUI(updateTask));
+            Platform.runLater(updateAction);
+        }
+    }
+
+    private void executeUpdate(Runnable updateTask, boolean runImmediately) {
+        if (Platform.isFxApplicationThread() && runImmediately) {
+            updateTask.run();
+        } else {
+            Platform.runLater(updateTask);
         }
     }
 
@@ -94,83 +126,31 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
         return properties.get(propertyName);
     }
 
-    // Update property safely with the correct type
-    public <T> void updateProperty(Property<T> property, Object newValue) {
-        if(newValue == null) {
-            System.err.println("Null value for property " + property.getName());
-            return;
-        }
-        if (property instanceof IntegerProperty && newValue instanceof Number) {
-            ((IntegerProperty) property).set(((Number) newValue).intValue());
-        } else if (property instanceof DoubleProperty && newValue instanceof Number) {
-            ((DoubleProperty) property).set(((Number) newValue).doubleValue());
-        } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
-            ((BooleanProperty) property).set((Boolean) newValue);
-        } else if (property instanceof StringProperty && newValue instanceof String){
-            ((StringProperty) property).set((String) newValue);
-        }
-        else{
-            throw new IllegalArgumentException("Mismatch in property type and value type for " + property);
-        }
-    }
-
-
     public StringProperty getStringProperty(String propertyName){
         Property<?> property = getProperty(propertyName);
-        try{
             return (StringProperty) property;
-        }catch (ClassCastException e){
-            throw new IllegalArgumentException("Property " + propertyName + " is not a StringProperty");
-        }
     }
     // Directly accessing typed properties for GUI binding
     public BooleanProperty getBooleanProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
-        try {
             return (BooleanProperty) property;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Property " + propertyName + " is not a BooleanProperty");
-        }
     }
 
     public DoubleProperty getDoubleProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
-        try {
-            return (DoubleProperty) property;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Property " + propertyName + " is not a DoubleProperty");
-        }
+        return (DoubleProperty) property;
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
-        try {
-            return (IntegerProperty) property;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Property " + propertyName + " is not an IntegerProperty");
-        }
+        return (IntegerProperty) property;
     }
 
-    // Handling updates from the GUI
-    public void updateFromGUI(Runnable updateLogic) {
-        System.out.println("Called from updateFromGUI.");
-        isGUIUpdate = true;
-        try {
-            updateLogic.run();
-        } finally {
-            isGUIUpdate = false;
-        }
-    }
-
-    public void updateFromLogic(Runnable updateLogic) {
-        isLogicUpdate = true;
-        try {
-            updateLogic.run();
-        } finally {
-            isLogicUpdate = false;
-        }
-    }
     public void calculatePower(){
         controller.calculatePower();
+    }
+
+    public trainControllerImpl getController() {
+        return (trainControllerImpl) controller;
     }
 }

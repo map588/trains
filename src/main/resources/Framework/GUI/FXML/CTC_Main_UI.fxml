@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainAnchor" minHeight="400" minWidth="600" xmlns="http://javafx.com/javafx/21"
+<AnchorPane fx:id="mainAnchor" minHeight="400" minWidth="600" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="CTCOffice.CTCOfficeManager">
     <SplitPane fx:id="mainSplit" dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <AnchorPane>
@@ -37,7 +37,7 @@
                                             <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ."/>
                                             <TableColumn fx:id="switchStateColumn" maxWidth="100" prefWidth="100" text="Switch State"/>
                                             <TableColumn fx:id="switchLightColumn" maxWidth="43" prefWidth="43" text="Light"/>
-                                            <TableColumn fx:id="crossingColumn" prefWidth="60" text="Crossing"/>
+                                            <TableColumn fx:id="crossingStateColumn" prefWidth="60" text="Crossing"/>
                                             <TableColumn fx:id="underMaintenanceColumn" prefWidth="100" text="Maintenance"/>
                                         </columns>
                                     </TableView>

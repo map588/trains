@@ -33,49 +33,25 @@ import static trainController.Properties.*;
  *
  */
 public class trainControllerImpl implements TrainController, Notifications {
-    private int authority;
-    private int blocksToNextStation;
-    private double commandSpeed;
-    private double currentSpeed;
-    private double overrideSpeed;
-    private double speedLimit;
-
-    private double Ki;
-    private double Kp;
-
-    //These are actually private, property mirror not necessary
-    private double rollingError;
-    private int samplingPeriod;
-    private double prevError;
-    private double error;
-
-    private double power;
-    private double grade;
-
-    private boolean serviceBrake;
-    private boolean emergencyBrake;
-    private boolean automaticMode;
-
-    private boolean internalLights;
-    private boolean externalLights;
-    private boolean leftDoors;
-    private boolean rightDoors;
-    private boolean announcements;
-    private boolean signalFailure;
-    private boolean brakeFailure;
-    private boolean powerFailure;
-
-    private boolean leftPlatform;
-    private boolean rightPlatform;
-    private boolean inTunnel;
-
-    private double temperature;
-
-    private String nextStationName;
     private final int trainID;
+    private final trainControllerSubject subject;
     private TrainModel train;
 
-    private final trainControllerSubject subject;
+
+    private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
+            speedLimit = 0.0, Ki = 1.0, Kp = 1.0, power = 0.0, grade = 0.0,
+            temperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
+
+    private int blocksToNextStation, samplingPeriod = 10, authority = 0;
+
+    private boolean serviceBrake = false, emergencyBrake = false, automaticMode = false,
+            internalLights = false, externalLights = false, leftDoors = false,
+            rightDoors = false, announcements = false, signalFailure = false,
+            brakeFailure = false, powerFailure = false, leftPlatform = false,
+            rightPlatform = false, inTunnel = false;
+
+    private String nextStationName;
+
 
     /**
      * This is the constructor for the trainControllerImpl class.
@@ -90,40 +66,15 @@ public class trainControllerImpl implements TrainController, Notifications {
      */
     public trainControllerImpl(int trainID) {
         this.trainID = trainID;
-        this.authority = 0;
-        this.commandSpeed = 0.0;
-        this.currentSpeed = 0.0;
-        this.overrideSpeed = 0.0;
-        this.speedLimit = 0.0;
-        this.Ki = 1.0;
-        this.Kp = 1.0;
-        this.power = 0.0;
-        this.serviceBrake = false;
-        this.emergencyBrake = false;
-        this.automaticMode = false;
-        this.internalLights = false;
-        this.externalLights = false;
-        this.leftDoors = false;
-        this.rightDoors = false;
-        this.temperature = 0.0;
-        this.inTunnel = false;
-        this.rightPlatform = false;
-        this.leftPlatform = false;
         this.subject = new trainControllerSubject(this);
         this.train = stubTrainModel.createstubTrainModel();
-        this.samplingPeriod = 10;
         this.nextStationName = "Yard";
-        this.grade = 0;
-        this.rollingError = 0;
-        this.prevError = 0;
-        this.error = 0;
-        this.power = 0;
+        schedulePowerCalculation();
+    }
 
-        /**
-         * An executor service that allows for scheduling and executing tasks in a single thread.
-         */
+    private void schedulePowerCalculation() {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            executorService.scheduleAtFixedRate(this::calculatePower, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(this::calculatePower, 0, samplingPeriod, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -156,29 +107,9 @@ public class trainControllerImpl implements TrainController, Notifications {
      * @param newValue      The new value of the property.
      */
     public void notifyChange(String propertyName, Object newValue) {
-        System.out.println("Variable: " + propertyName + " changed to " + newValue);
-        if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
-        }
     }
 
-    /**
-     * This method is similar to the above, but it includes an additional parameter to suppress console output.
-     * If suppressOutput is true, the method will not print the property name and new value to the console.
-     * Regardless of the value of suppressOutput, the method will still notify the subject of the change if the GUI is not currently being updated.
-     *
-     * @param propertyName  The name of the property that has changed.
-     * @param newValue      The new value of the property.
-     * @param suppressOutput If true, suppresses console output.
-     */
-    public void notifyChange(String propertyName, Object newValue, boolean suppressOutput) {
-        if(!suppressOutput) {
-            System.out.println("Variable: " + propertyName + " changed to " + newValue);
-        }
-        if(!subject.isGUIUpdate) {
-            subject.notifyChange(propertyName, newValue);
-        }
-    }
 
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
@@ -201,7 +132,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        notifyChange(currentSpeed_p, speed, true);
+        notifyChange(currentSpeed_p, speed);
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
@@ -221,9 +152,7 @@ public class trainControllerImpl implements TrainController, Notifications {
     }
     public void setPower(double power) {
         this.power = power;
-        subject.updateFromLogic(() -> {
-            notifyChange(power_p, power, true);
-        });
+        notifyChange(power_p, power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
@@ -306,32 +235,32 @@ public class trainControllerImpl implements TrainController, Notifications {
      */
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
-            case Properties.automaticMode_p -> setAutomaticMode((boolean) newValue);
-            case authority_p -> setAuthority((int) newValue);
-            case overrideSpeed_p -> setOverrideSpeed((double) newValue);
-            case commandSpeed_p -> setCommandSpeed((double) newValue);
-            case currentSpeed_p -> setSpeed((double) newValue);
-            case serviceBrake_p -> setServiceBrake((boolean) newValue);
-            case emergencyBrake_p -> setEmergencyBrake((boolean) newValue);
-            case Ki_p -> setKi((double) newValue);
-            case Kp_p -> setKp((double) newValue);
-            case power_p -> setPower((double) newValue);
-            case intLights_p -> setIntLights((boolean) newValue);
-            case extLights_p -> setExtLights((boolean) newValue);
-            case leftDoors_p -> setLeftDoors((boolean) newValue);
-            case rightDoors_p -> setRightDoors((boolean) newValue);
-            case temperature_p -> setTemperature((double) newValue);
-            case announcements_p -> setAnnouncements((boolean) newValue);
-            case signalFailure_p -> setSignalFailure((boolean) newValue);
-            case brakeFailure_p -> setBrakeFailure((boolean) newValue);
-            case powerFailure_p -> setPowerFailure((boolean) newValue);
-            case inTunnel_p -> setInTunnel((boolean) newValue);
-            case leftPlatform_p -> setLeftPlatform((boolean) newValue);
-            case rightPlatform_p -> setRightPlatform((boolean) newValue);
-            case samplingPeriod_p -> setSamplingPeriod((int) newValue);
-            case speedLimit_p -> setSpeedLimit((double) newValue);
-            case nextStationName_p -> setNextStationName((String) newValue);
-            case grade_p -> setGrade((double) newValue);
+            case Properties.automaticMode_p -> this.automaticMode = (boolean) newValue;
+            case authority_p -> this.authority = (int) newValue;
+            case overrideSpeed_p -> this.overrideSpeed = (double) newValue;
+            case commandSpeed_p -> this.commandSpeed = (double) newValue;
+            case currentSpeed_p -> this.currentSpeed = (double) newValue;
+            case serviceBrake_p -> this.serviceBrake = (boolean) newValue;
+            case emergencyBrake_p -> this.emergencyBrake = (boolean) newValue;
+            case Ki_p -> this.Ki = (double) newValue;
+            case Kp_p -> this.Kp = (double) newValue;
+            case power_p -> this.power = (double) newValue;
+            case intLights_p -> this.internalLights = (boolean) newValue;
+            case extLights_p -> this.externalLights = (boolean) newValue;
+            case leftDoors_p -> this.leftDoors = (boolean) newValue;
+            case rightDoors_p -> this.rightDoors = (boolean) newValue;
+            case temperature_p -> this.temperature = (double) newValue;
+            case announcements_p -> this.announcements = (boolean) newValue;
+            case signalFailure_p -> this.signalFailure = (boolean) newValue;
+            case brakeFailure_p -> this.brakeFailure = (boolean) newValue;
+            case powerFailure_p -> this.powerFailure = (boolean) newValue;
+            case inTunnel_p -> this.inTunnel = (boolean) newValue;
+            case leftPlatform_p -> this.leftPlatform = (boolean) newValue;
+            case rightPlatform_p -> this.rightPlatform = (boolean) newValue;
+            case samplingPeriod_p -> this.samplingPeriod = (int) newValue;
+            case speedLimit_p -> this.speedLimit = (double) newValue;
+            case nextStationName_p -> this.nextStationName = (String) newValue;
+            case grade_p -> this.grade = (double) newValue;
             default -> System.err.println("Property " + propertyName + " not found");
         }
         //calculatePower();

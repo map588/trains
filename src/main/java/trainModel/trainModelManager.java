@@ -40,6 +40,7 @@ public class trainModelManager {
     public ToggleButton brakeFailureBtn, powerFailureBtn, signalFailureBtn;
     @FXML
     public Label gradeLabel, maxPowerLabel, medAccelerationLabel, maxVelocityLabel, trainLengthLabel, trainHeightLabel, trainWidthLabel, numCarsLabel;
+    @FXML
     public Label numPassengerLabel, crewCountLabel, emptyWeightLabel, loadedWeightLabel;
     @FXML
     public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp, tempDisp;

@@ -1,8 +1,6 @@
 package CTCOffice;
 
-import CTCOffice.*;
 import Common.CTCOffice;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -28,8 +26,8 @@ public class CTCOfficeManager {
     @FXML private SplitPane mainSplit;
     @FXML private AnchorPane mainAnchor;
     @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
-    @FXML private TableColumn<CTCBlockSubject, Boolean> crossingStateColumn;
-    @FXML private TableColumn<CTCBlockSubject, Boolean> maintenanceColumn;
+    @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumn;
+    @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumn;
     @FXML private TableView<ScheduleSubject> scheduleTable;
     @FXML private TableColumn<ScheduleSubject, Integer> dispatchTimeColumn;
     @FXML private TableColumn<ScheduleSubject, Integer> stationBlockIDColumn;
@@ -102,35 +100,30 @@ public class CTCOfficeManager {
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
 
 
-
         switchLightColumn.setCellValueFactory(block -> {
-                block.getValue().setPaintProperty("lightColor");
+                block.getValue().setPaintProperty("switchLightColor");
                return  block.getValue().getBooleanProperty("hasLight").getValue() ?
-                block.getValue().getObjectProperty("lightColor") : null; });
+                block.getValue().getPaintProperty("switchLightColor") : null; });
+        switchLightColumn.setCellFactory(column -> createColoredCircleCell());
 
-        switchLightColumn.setCellFactory(column -> new TableCell<CTCBlockSubject, Paint>() {
-            private final BorderPane graphic = new BorderPane();
-            private final Circle circle = new Circle(10);
-            {
-                graphic.setCenter(circle);
-            }
-            @Override
-            protected void updateItem(Paint item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    circle.setFill(item);
-                    setGraphic(graphic);
-                }
-            }
-        });
+        crossingStateColumn.setCellValueFactory(block -> {
+            block.getValue().setPaintProperty("crossingLightColor");
+            return block.getValue().getBooleanProperty("hasCrossing").getValue() ?
+                    block.getValue().getPaintProperty("crossingLightColor") : null; });
+        crossingStateColumn.setCellFactory(column -> createColoredCircleCell());
+
+        underMaintenanceColumn.setCellValueFactory(block -> {
+            block.getValue().setPaintProperty("maintenanceLightColor");
+            return block.getValue().getPaintProperty("maintenanceLightColor");});
+        underMaintenanceColumn.setCellFactory(column -> createColoredCircleCell());
 
         //Table editing bar
         blockSelection.getItems().addAll(factory.getSubjects().keySet());
         lineSelection.getItems().addAll(true, false);
-        switchLightToggle.setOnAction(event -> toggleProperty("lightState"));
+        switchLightToggle.setOnAction(event -> toggleProperty("switchLightState"));
         switchStateToggle.setOnAction(event -> toggleProperty("switchState"));
+        crossingStateToggle.setOnAction(event -> toggleProperty("crossingState"));
+        maintenanceToggle.setOnAction(event -> toggleProperty("underMaintenance"));
 
         blockTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -138,6 +131,7 @@ public class CTCOfficeManager {
                 lineSelection.setValue(newValue.getBooleanProperty("line").getValue());
             }
         });
+
 
         double dividerPosition = 515.0;
         mainAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -168,6 +162,25 @@ public class CTCOfficeManager {
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
 
+    private TableCell<CTCBlockSubject, Paint> createColoredCircleCell() {
+        return new TableCell<CTCBlockSubject, Paint>() {
+            private final BorderPane graphic = new BorderPane();
+            private final Circle circle = new Circle(10);
+            {
+                graphic.setCenter(circle);
+            }
+            @Override
+            protected void updateItem(Paint item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    circle.setFill(item);
+                    setGraphic(graphic);
+                }
+            }
+        };
+    }
 
 
 //    @FXML

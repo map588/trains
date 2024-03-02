@@ -200,9 +200,15 @@ public class TrackModelImpl implements TrackModel {
         return (int) Math.round(Math.random());
     }
 
+    @Override
+    public void setTrackHeaters(int i) {
+        return;
+    }
 
 
-
+    public TrackLayoutInfo getTrackInfo() {
+        return new TrackLayoutInfo();
+    }
 }
 
 
