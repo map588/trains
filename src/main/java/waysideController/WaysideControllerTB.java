@@ -80,13 +80,33 @@ public class WaysideControllerTB {
         tbBlockTable.setEditable(true);
         tbBTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbBTOccupied.setCellValueFactory(block -> block.getValue().getBooleanProperty(occupied_p));
-        tbBTOccupied.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTOccupied));
+//        tbBTOccupied.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTOccupied));
+        tbBTOccupied.setCellFactory(column -> {
+            CheckBoxTableCell<WaysideBlockSubject, Boolean> cell = new CheckBoxTableCell<>();
+            cell.itemProperty().addListener((obs, oldValue, newValue) -> {
+                if (cell.getTableRow() != null && cell.getIndex() >= 0) {
+                    WaysideBlockSubject block = cell.getTableView().getItems().get(cell.getIndex());
+                    controller.trackModelSetOccupancy(block.getBlock().getBlockID(), newValue);
+                }
+            });
+            return cell;
+        });
 
         tbSwitchTable.setEditable(true);
         tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
         tbSTEnable.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchRequest_p));
-        tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
+//        tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
+        tbSTEnable.setCellFactory(column -> {
+            CheckBoxTableCell<WaysideBlockSubject, Boolean> cell = new CheckBoxTableCell<>();
+            cell.itemProperty().addListener((obs, oldValue, newValue) -> {
+                if (cell.getTableRow() != null && cell.getIndex() >= 0) {
+                    WaysideBlockSubject block = cell.getTableView().getItems().get(cell.getIndex());
+                    controller.CTCRequestSwitchState(block.getBlock().getBlockID(), newValue);
+                }
+            });
+            return cell;
+        });
 
         tbSpeedAuthTable.setEditable(true);
         tbSATID.setCellValueFactory(speedAuth -> speedAuth.getValue().trainIDProperty().asObject());

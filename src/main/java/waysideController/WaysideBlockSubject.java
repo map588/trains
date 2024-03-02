@@ -47,13 +47,9 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
         properties.put(switchBlockMain_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockMain()));
         properties.put(switchBlockAlt_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockAlt()));
         properties.put(switchedBlockID_p, new SimpleIntegerProperty(block.getSwitchBlockMain()));
-        ((BooleanProperty)properties.get(switchState_p)).addListener((observable, oldValue, newValue) -> {
-            if(newValue) {
-                setProperty(switchedBlockID_p, block.getSwitchBlockAlt());
-            }
-            else
-                setProperty(switchedBlockID_p, block.getSwitchBlockMain());
-        });
+        getBooleanProperty(switchState_p).addListener((observable, oldValue, newValue) ->
+                getIntegerProperty(switchedBlockID_p).set(newValue ? block.getSwitchBlockAlt() : block.getSwitchBlockMain())
+        );
     }
 
     public WaysideBlock getBlock() {
@@ -78,6 +74,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
             Property<?> property = properties.get(propertyName);
             updateProperty(property, newValue);
             block.setValue(propertyName, newValue);
+            System.out.println("Property " + propertyName + " updated to " + newValue + " in Subject");
         };
 
         if (isLogicUpdate) {
@@ -148,6 +145,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
             updateFromLogic(() -> {
                 Property<?> property = properties.get(propertyName);
                 updateProperty(property, newValue);
+                System.out.println("Property " + propertyName + " updated to " + newValue + " in Subject");
             });
         }
     }

@@ -1,1 +1,13 @@
-switch[2] = MAIN
+if switch[1] and (switch[2] or not switch[3] or switch[4])
+    switch[5] = ALT
+endif
+
+if not occupancy[6]
+    authority[5] = TRUE
+else
+    authority[5] = FALSE
+endif
+
+crossing[1] = CLOSED
+
+light[2] = switch_request[5]

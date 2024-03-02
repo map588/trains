@@ -81,6 +81,7 @@ public class WaysideBlock implements Notifications {
     }
 
     public void setOccupied(boolean occupied) {
+        System.out.println("Occupied: " + occupied);
         this.occupied = occupied;
         subject.notifyChange(occupied_p, occupied);
     }
@@ -90,6 +91,7 @@ public class WaysideBlock implements Notifications {
     }
 
     public void setSwitchState(boolean switchState) {
+        System.out.println("Switch State: " + switchState);
         this.switchState = switchState;
         subject.notifyChange(switchState_p, switchState);
     }
