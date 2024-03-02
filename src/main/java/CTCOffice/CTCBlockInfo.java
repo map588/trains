@@ -110,7 +110,7 @@ class CTCBlockInfo {
      * Updates the color of the light based on its state.
      */
     void updateSwitchLightColor() {
-        if(factory.getSubjects().get(getBlockID()) != null && hasLight) {
+        if(factory.getSubjects().get(getBlockID()) != null) {
             if (this.switchLightState) {
                 this.switchLightColor = javafx.scene.paint.Color.GREEN;
             } else {
@@ -179,54 +179,38 @@ class CTCBlockInfo {
         return occupied;
     }
     boolean getUnderMaintenance () {
-        updateMaintenanceLightColor();
         return underMaintenance;
     }
     void    setUnderMaintenance (boolean underMaintenance) {
         this.underMaintenance = underMaintenance;
-        updateMaintenanceLightColor();
         factory.getSubjects().get(blockID).setPaintProperty("maintenanceLightColor");
     }
 
     void setSwitchLightState(boolean switchLightState) {
         this.switchLightState = switchLightState;
-        updateSwitchLightColor();
         factory.getSubjects().get(blockID).setPaintProperty("switchLightColor");
     }
     boolean getHasLight     () {
         return hasLight;
     }
     boolean getSwitchLightState() {
-        updateSwitchLightColor();
         return switchLightState;
     }
 
     void    setCrossingState(boolean crossingState) {
         this.crossingState = crossingState;
-        updateCrossingLightColor();
         factory.getSubjects().get(blockID).setPaintProperty("crossingLightColor");
     }
     boolean getHasCrossing  () {
         return hasCrossing;
     }
     boolean getCrossingState() {
-        updateCrossingLightColor();
         return crossingState;
     }
 
     public boolean getSwitchState           () {
         return switchState;
     }
-    public int     getConvergingBlockID     () {
-        return convergingBlockID;
-    }
-    public int     getDivergingBlockOneID   () {
-        return divergingBlockOneID;
-    }
-    public int     getDivergingBlockTwoID   () {
-        return divergingBlockTwoID;
-    }
-
     boolean        getHasSwitchCon          () {
         return hasSwitchCon;
     }
