@@ -15,16 +15,27 @@ import static Utilities.Constants.*;
  * It manages the trains and the track blocks.
  */
 public class CTCOfficeImpl implements CTCOffice {
+
+    private int time;
+    private int ticketSales;
+    private int mode;
+    private boolean manualMode;
+    private boolean maintenanceMode;
+    private boolean autoMode;
+
+
     public Map<Integer, TrainModel> trains = new HashMap<Integer, TrainModel>();
     //private trainSubjectFactory trainSubjectMaker;
 
     private Map<Boolean, ArrayList<CTCBlockInfo>> track = new HashMap<Boolean, ArrayList<CTCBlockInfo>>();
 
+    public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
+
     /**
      * Constructor for the CTCOfficeImpl class.
      * Initializes the track blocks and the schedule.
      */
-    public CTCOfficeImpl() {
+    private CTCOfficeImpl() {
         CTCBlockInfo block0  = new CTCBlockInfo(0,  false, false, false, false, false,false, false,       false,         1000, 0,  0, 0, 0,  false, false);
         CTCBlockInfo block1  = new CTCBlockInfo(1,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false);
         CTCBlockInfo block2  = new CTCBlockInfo(2,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false);
@@ -55,76 +66,89 @@ public class CTCOfficeImpl implements CTCOffice {
 
     }
 
-    /**
-     * Dispatches a train to a block.
-     * If the train already exists, it returns the existing train.
-     * Otherwise, it creates a new train, adds it to the trains map, and returns it.
-     *
-     * @param trainID The ID of the train to be dispatched.
-     * @param blockID The ID of the block where the train is to be dispatched.
-     * @return The dispatched train.
-     */
-    public TrainModel dispatch(int trainID, int blockID) {
-        if(trains.containsKey(trainID)) {
-            return trains.get(trainID);
-        }
-        else {
-            TrainModel newTrain = new trainModelImpl(trainID);
-            trains.put(trainID, newTrain);
-            return newTrain;
-        }
-    }
+    public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {
 
-    /**
-     * Sets the occupancy status of a block.
-     *
-     * @param blockID The ID of the block.
-     * @param line The line where the block is located.
-     * @param occupied The occupancy status to be set.
-     */
-    public void setOccupancy(int blockID,boolean line, boolean occupied) {
-        track.get(line).get(blockID).setOccupied(occupied);
     }
-
-    /**
-     * Sets the light state of a block.
-     *
-     * @param line The line where the block is located.
-     * @param blockID The ID of the block.
-     * @param lightState The light state to be set.
-     */
-    public void setLightState(boolean line, int blockID, boolean lightState) {
-        track.get(line).get(blockID).setSwitchLightState(lightState);
-    }
-
-    /**
-     * Sets the switch state of a block.
-     *
-     * @param line The line where the block is located.
-     * @param blockID The ID of the block.
-     * @param switchState The switch state to be set.
-     */
-    public void setSwitchState(boolean line, int blockID, boolean switchState) {
-        track.get(line).get(blockID).setSwitchState(switchState);
-    }
-
-//*********************************************************************************************************************************************
-    public void setManualMode() {}
-    public void setMaintenanceMode() {}
-    public void setSuggestedSpeed(int trainID, int speed) {}
-    public void setSelectedTrain(int trainID) {}
-    public void setSchedule(int trainID, String schedule) {}
-    public void setOccupancy(boolean line, int blockID, boolean occupied) {}
-    public boolean getOccupancy(boolean line, int blockID) {
+    public boolean  getBlockOccupancy(boolean line, int blockID) {
         return false;
     }
-    public boolean getSwitchState(boolean line, int switchID) {
+
+    public void     setSwitchState(boolean line, int blockID, boolean switchState) {
+
+    }
+    public boolean  getSwitchState(boolean line, int switchID) {
         return false;
     }
-    public boolean getLightState(boolean line, int blockID) {
+
+    public void     setLightState(boolean line, int blockID, boolean lightState) {
+
+    }
+    public boolean  getLightState(boolean line, int blockID) {
         return false;
     }
-    public void getMode() {}
+
+    public void     setCrossingState(boolean line, int blockID, boolean crossingState) {
+
+    }
+    public boolean  getCrossingState(boolean line, int blockID) {
+        return false;
+    }
+
+    public void     setUnderMaintenance(boolean line, int blockID, boolean underMaintenance) {
+
+    }
+    public boolean  getUnderMaintenance(boolean line, int blockID) {
+        return false;
+    }
+
+    void setTime(int time) {
+        this.time = time;
+    }
+    int getTime() {
+        return time;
+    }
+
+    void setTicketSales(int ticketSales) {
+        this.ticketSales = ticketSales;
+    }
+    int getTicketSales() {
+        return ticketSales;
+    }
+
+    void setMode(int mode) {
+        this.mode = mode;
+    }
+    int getMode() {
+        return mode;
+    }
+
+    void setManualMode(boolean manualMode) {
+        this.manualMode = manualMode;
+    }
+    boolean getManualMode() {
+        return manualMode;
+    }
+
+    void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
+    }
+    boolean getMaintenanceMode() {
+        return maintenanceMode;
+    }
+
+    void setAutoMode(boolean autoMode) {
+        this.autoMode = autoMode;
+    }
+    boolean getAutoMode() {
+        return autoMode;
+    }
+
+
+
+
+
+
+
 
 //*********************************************************************************************************************************************8
 
