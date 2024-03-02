@@ -4,6 +4,7 @@ import Common.WaysideController;
 import Framework.Support.AbstractSubject;
 import Framework.Support.Notifications;
 import Framework.Support.ObservableHashMap;
+import Utilities.TrafficLightState;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -129,13 +130,14 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
             getPaintProperty(activePLCColor_p).set(Color.GRAY);
     }
     public void addBlock(WaysideBlockSubject block) {
+        int blockID = block.getBlock().getBlockID();
         blockList.add(block);
-        block.occupationProperty().addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(block.getBlockID(), newValue));
-        block.switchStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetSwitch(block.getBlockID(), newValue));
-        block.lightStateProperty().lightStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetTrafficLight(block.getBlockID(), newValue));
-        block.crossingStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetCrossing(block.getBlockID(), newValue));
-        block.switchRequestedStateProperty().addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(block.getBlockID(), newValue));
-        block.authorityProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetAuthority(block.getBlockID(), newValue));
+        block.getBooleanProperty("occupation").addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(blockID, newValue));
+        block.getBooleanProperty("switchState").addListener((observable, oldValue, newValue) -> controller.maintenanceSetSwitch(blockID, newValue));
+        ((ObjectProperty<TrafficLightState>)block.getProperty("lightState")).get().lightStateProperty().addListener((observable, oldValue, newValue) -> controller.maintenanceSetTrafficLight(blockID, newValue));
+        block.getBooleanProperty("crossingState").addListener((observable, oldValue, newValue) -> controller.maintenanceSetCrossing(blockID, newValue));
+        block.getBooleanProperty("switchRequestedState").addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(blockID, newValue));
+        block.getBooleanProperty("authority").addListener((observable, oldValue, newValue) -> controller.maintenanceSetAuthority(blockID, newValue));
     }
     public WaysideController getController() {
         return this.controller;

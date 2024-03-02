@@ -8,6 +8,8 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 
+import static waysideController.Properties.*;
+
 public class WaysideControllerTB {
 
     @FXML
@@ -76,14 +78,14 @@ public class WaysideControllerTB {
     @FXML
     private void initialize() {
         tbBlockTable.setEditable(true);
-        tbBTID.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
-        tbBTOccupied.setCellValueFactory(block -> block.getValue().occupationProperty());
+        tbBTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
+        tbBTOccupied.setCellValueFactory(block -> block.getValue().getBooleanProperty(occupied_p));
         tbBTOccupied.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTOccupied));
 
         tbSwitchTable.setEditable(true);
-        tbSTID.setCellValueFactory(block -> block.getValue().blockIDProperty().asObject());
-        tbSTSwitchTo.setCellValueFactory(block -> block.getValue().switchedBlockIDProperty().asObject());
-        tbSTEnable.setCellValueFactory(block -> block.getValue().switchRequestedStateProperty());
+        tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
+        tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
+        tbSTEnable.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchRequest_p));
         tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
 
         tbSpeedAuthTable.setEditable(true);
@@ -116,7 +118,7 @@ public class WaysideControllerTB {
         tbBlockTable.setItems(blocks);
         tbSwitchTable.getItems().clear();
         for(WaysideBlockSubject item : blocks) {
-            if(item.isHasSwitch()) {
+            if(item.getBlock().hasSwitch()) {
                 tbSwitchTable.getItems().add(item);
             }
         }
