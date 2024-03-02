@@ -4,17 +4,18 @@ import Framework.Support.AbstractSubject;
 import javafx.beans.property.*;
 import javafx.scene.paint.Paint;
 
+import static CTCOffice.Properties.BlockProperties.*;
+
 /**
  * This class represents a subject in the Observer pattern for the CTCBlockInfo class.
  * It contains properties of the block that can be observed by other classes.
  * It also contains methods for getting and setting these properties.
  */
 public class CTCBlockSubject implements AbstractSubject {
-    private final IntegerProperty blockID, convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
+
+    private final IntegerProperty blockID;
     private final BooleanProperty line, occupied, hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing, switchLightState,
                                     crossingState, switchState, underMaintenance;
-    private final DoubleProperty  speedLimit;
-    private final IntegerProperty blockLength;
     private final ObjectProperty<Paint> switchLightColor, crossingLightColor, maintenanceLightColor;
     private final StringProperty switchStateString;
 
@@ -26,26 +27,21 @@ public class CTCBlockSubject implements AbstractSubject {
      * Also sets up listeners for changes in the properties.
      */
     CTCBlockSubject(CTCBlockInfo block) {
-        this.blockID = new SimpleIntegerProperty(this, "blockID", block.getBlockID());
-        this.line = new SimpleBooleanProperty(this, "line", block.getLine());
-        this.occupied = new SimpleBooleanProperty(this, "occupied", block.getOccupied());
-        this.hasLight = new SimpleBooleanProperty(this, "hasLight", block.getHasLight());
-        this.hasSwitchCon = new SimpleBooleanProperty(this, "hasSwitchCon", block.getHasSwitchCon());
-        this.hasSwitchDiv = new SimpleBooleanProperty(this, "hasSwitchDiv", block.getHasSwitchDiv());
-        this.hasCrossing = new SimpleBooleanProperty(this, "hasCrossing", block.getHasCrossing());
-        this.switchLightState = new SimpleBooleanProperty(this, "switchLightState", block.getSwitchLightState());
-        this.crossingState = new SimpleBooleanProperty(this, "crossingState", block.getCrossingState());
-        this.speedLimit = new SimpleDoubleProperty(this, "speedLimit", block.getSpeedLimit());
-        this.blockLength = new SimpleIntegerProperty(this, "blockLength", block.getBlockLength());
-        this.switchLightColor = new SimpleObjectProperty<>(this, "switchLightColor", block.getSwitchLightColor());
-        this.crossingLightColor = new SimpleObjectProperty<>(this, "crossingLightColor", block.getCrossingLightColor());
-        this.maintenanceLightColor = new SimpleObjectProperty<>(this, "maintenanceLightColor", block.getMaintenanceLightColor());
-        this.convergingBlockID = new SimpleIntegerProperty(this, "convergingBlockID", block.getConvergingBlockID());
-        this.divergingBlockOneID = new SimpleIntegerProperty(this, "divergingBlockOneID", block.getDivergingBlockOneID());
-        this.divergingBlockTwoID = new SimpleIntegerProperty(this, "divergingBlockTwoID", block.getDivergingBlockTwoID());
-        this.switchState = new SimpleBooleanProperty(this, "switchState", block.getSwitchState());
-        this.switchStateString = new SimpleStringProperty(this, "switchStateString", block.getSwitchStateString());
-        this.underMaintenance = new SimpleBooleanProperty(this, "underMaintenance", block.getUnderMaintenance());
+        this.blockID = new SimpleIntegerProperty(this, BLOCK_ID_PROPERTY, block.getBlockID());
+        this.line = new SimpleBooleanProperty(this, LINE_PROPERTY, block.getLine());
+        this.occupied = new SimpleBooleanProperty(this, OCCUPIED_PROPERTY, block.getOccupied());
+        this.hasLight = new SimpleBooleanProperty(this, HAS_LIGHT_PROPERTY, block.getHasLight());
+        this.hasSwitchCon = new SimpleBooleanProperty(this, HAS_SWITCH_CON_PROPERTY, block.getHasSwitchCon());
+        this.hasSwitchDiv = new SimpleBooleanProperty(this, HAS_SWITCH_DIV_PROPERTY, block.getHasSwitchDiv());
+        this.hasCrossing = new SimpleBooleanProperty(this, HAS_CROSSING_PROPERTY, block.getHasCrossing());
+        this.switchLightState = new SimpleBooleanProperty(this, SWITCH_LIGHT_STATE_PROPERTY, block.getSwitchLightState());
+        this.crossingState = new SimpleBooleanProperty(this, CROSSING_STATE_PROPERTY, block.getCrossingState());
+        this.switchLightColor = new SimpleObjectProperty<>(this, SWITCH_LIGHT_COLOR_PROPERTY, block.getSwitchLightColor());
+        this.crossingLightColor = new SimpleObjectProperty<>(this, CROSSING_LIGHT_COLOR_PROPERTY, block.getCrossingLightColor());
+        this.maintenanceLightColor = new SimpleObjectProperty<>(this, MAINTENANCE_LIGHT_COLOR_PROPERTY, block.getMaintenanceLightColor());
+        this.switchState = new SimpleBooleanProperty(this, SWITCH_STATE_PROPERTY, block.getSwitchState());
+        this.switchStateString = new SimpleStringProperty(this, SWITCH_STATE_STRING_PROPERTY, block.getSwitchStateString());
+        this.underMaintenance = new SimpleBooleanProperty(this, UNDER_MAINTENANCE_PROPERTY, block.getUnderMaintenance());
         this.blockInfo = block;
 
         occupied.addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
@@ -78,50 +74,39 @@ public class CTCBlockSubject implements AbstractSubject {
             return null;
         }
         return switch (propertyName) {
-            case "line" -> line;
-            case "occupied" -> occupied;
-            case "hasLight" -> hasLight;
-            case "hasSwitchCon" -> hasSwitchCon;
-            case "hasSwitchDiv" -> hasSwitchDiv;
-            case "hasCrossing" -> hasCrossing;
-            case "switchLightState" -> switchLightState;
-            case "crossingState" -> crossingState;
-            case "switchState" -> switchState;
-            case "underMaintenance" -> underMaintenance;
-            default -> null;
-        };
-    }
-
-    public DoubleProperty getDoubleProperty(String propertyName) {
-        return switch (propertyName) {
-            case "speedLimit" -> speedLimit;
+            case LINE_PROPERTY -> line;
+            case OCCUPIED_PROPERTY -> occupied;
+            case HAS_LIGHT_PROPERTY -> hasLight;
+            case HAS_SWITCH_CON_PROPERTY -> hasSwitchCon;
+            case HAS_SWITCH_DIV_PROPERTY -> hasSwitchDiv;
+            case HAS_CROSSING_PROPERTY -> hasCrossing;
+            case SWITCH_LIGHT_STATE_PROPERTY -> switchLightState;
+            case CROSSING_STATE_PROPERTY -> crossingState;
+            case SWITCH_STATE_PROPERTY -> switchState;
+            case UNDER_MAINTENANCE_PROPERTY -> underMaintenance;
             default -> null;
         };
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
         return switch (propertyName) {
-            case "blockID" -> blockID;
-            case "blockLength" -> blockLength;
-            case "convergingBlockID" -> convergingBlockID;
-            case "divergingBlockOneID" -> divergingBlockOneID;
-            case "divergingBlockTwoID" -> divergingBlockTwoID;
+            case BLOCK_ID_PROPERTY -> blockID;
             default -> null;
         };
     }
 
     public ObjectProperty<Paint> getPaintProperty(String propertyName) {
         return switch (propertyName) {
-            case "switchLightColor" -> switchLightColor;
-            case "crossingLightColor" -> crossingLightColor;
-            case "maintenanceLightColor" -> maintenanceLightColor;
+            case SWITCH_LIGHT_COLOR_PROPERTY -> switchLightColor;
+            case CROSSING_LIGHT_COLOR_PROPERTY -> crossingLightColor;
+            case MAINTENANCE_LIGHT_COLOR_PROPERTY -> maintenanceLightColor;
             default -> null;
         };
     }
 
     public StringProperty getStringProperty(String propertyName) {
         return switch (propertyName) {
-            case "switchStateString" -> switchStateString;
+            case SWITCH_STATE_STRING_PROPERTY -> switchStateString;
             default -> null;
         };
     }
@@ -138,9 +123,9 @@ public class CTCBlockSubject implements AbstractSubject {
 
     public void setPaintProperty(String propertyName) {
         switch (propertyName) {
-            case "switchLightColor" -> switchLightColor.set(blockInfo.getSwitchLightColor());
-            case "crossingLightColor" -> crossingLightColor.set(blockInfo.getCrossingLightColor());
-            case "maintenanceLightColor" -> maintenanceLightColor.set(blockInfo.getMaintenanceLightColor());
+            case SWITCH_LIGHT_COLOR_PROPERTY -> switchLightColor.set(blockInfo.getSwitchLightColor());
+            case CROSSING_LIGHT_COLOR_PROPERTY -> crossingLightColor.set(blockInfo.getCrossingLightColor());
+            case MAINTENANCE_LIGHT_COLOR_PROPERTY -> maintenanceLightColor.set(blockInfo.getMaintenanceLightColor());
             default -> System.err.println("Unknown property " + propertyName);
         }
     }
@@ -155,22 +140,17 @@ public class CTCBlockSubject implements AbstractSubject {
             return;
         }
         switch (propertyName) {
-            case "line"                 -> updateProperty(line, newValue);
-            case "occupied"             -> updateProperty(occupied, newValue);
-            case "hasLight"             -> updateProperty(hasLight, newValue);
-            case "hasSwitchCon"         -> updateProperty(hasSwitchCon, newValue);
-            case "hasSwitchDiv"         -> updateProperty(hasSwitchDiv, newValue);
-            case "hasCrossing"          -> updateProperty(hasCrossing, newValue);
-            case "switchLightState"     -> updateProperty(switchLightState, newValue);
-            case "crossingState"        -> updateProperty(crossingState, newValue);
-            case "speedLimit"           -> updateProperty(speedLimit, newValue);
-            case "blockID"              -> updateProperty(blockID, newValue);
-            case "blockLength"          -> updateProperty(blockLength, newValue);
-            case "convergingBlockID"    -> updateProperty(convergingBlockID, newValue);
-            case "divergingBlockOneID"  -> updateProperty(divergingBlockOneID, newValue);
-            case "divergingBlockTwoID"  -> updateProperty(divergingBlockTwoID, newValue);
-            case "switchState"          -> updateProperty(switchState, newValue);
-            case "underMaintenance"     -> updateProperty(underMaintenance, newValue);
+            case LINE_PROPERTY -> updateProperty(line, newValue);
+            case OCCUPIED_PROPERTY -> updateProperty(occupied, newValue);
+            case HAS_LIGHT_PROPERTY -> updateProperty(hasLight, newValue);
+            case HAS_SWITCH_CON_PROPERTY -> updateProperty(hasSwitchCon, newValue);
+            case HAS_SWITCH_DIV_PROPERTY -> updateProperty(hasSwitchDiv, newValue);
+            case HAS_CROSSING_PROPERTY -> updateProperty(hasCrossing, newValue);
+            case SWITCH_LIGHT_STATE_PROPERTY -> updateProperty(switchLightState, newValue);
+            case CROSSING_STATE_PROPERTY -> updateProperty(crossingState, newValue);
+            case BLOCK_ID_PROPERTY -> updateProperty(blockID, newValue);
+            case SWITCH_STATE_PROPERTY -> updateProperty(switchState, newValue);
+            case UNDER_MAINTENANCE_PROPERTY -> updateProperty(underMaintenance, newValue);
 
             default -> System.err.println("Unknown property " + propertyName);
         }
