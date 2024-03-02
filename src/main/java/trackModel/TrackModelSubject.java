@@ -16,7 +16,7 @@ public class TrackModelSubject {
 
         tempProperty.addListener((observable, oldValue, newValue) -> {
             System.out.println("Temp change detected");
-//            model.setTrackHeaters(Integer.parseInt(newValue));
+            model.setTrackHeaters(Integer.parseInt(newValue));
         }
         );
 
