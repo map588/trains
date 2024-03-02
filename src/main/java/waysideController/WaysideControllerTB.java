@@ -68,32 +68,54 @@ public class WaysideControllerTB {
         tbBlockTable.setEditable(true);
         tbBTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbBTOccupied.setCellValueFactory(block -> block.getValue().getBooleanProperty(occupied_p));
-//        tbBTOccupied.setCellFactory(CheckBoxTableCell.forTableColumn(tbBTOccupied));
-        tbBTOccupied.setCellFactory(column -> {
-            CheckBoxTableCell<WaysideBlockSubject, Boolean> cell = new CheckBoxTableCell<>();
-            cell.itemProperty().addListener((obs, oldValue, newValue) -> {
-                if (cell.getTableRow() != null && cell.getIndex() >= 0) {
-                    WaysideBlockSubject block = cell.getTableView().getItems().get(cell.getIndex());
-                    controller.trackModelSetOccupancy(block.getBlock().getBlockID(), newValue);
+        tbBTOccupied.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setGraphic(null);
+                    return;
+                } else {
+                    WaysideBlockSubject block = getTableView().getItems().get(getIndex());
+                    CheckBox checkBox;
+                    {
+                        checkBox = new CheckBox();
+                        checkBox.setSelected(item);
+                        checkBox.setOnAction(event -> {
+                            controller.trackModelSetOccupancy(block.getBlock().getBlockID(), checkBox.isSelected());
+                        });
+                    }
+                    setGraphic(checkBox);
                 }
-            });
-            return cell;
+            }
         });
 
         tbSwitchTable.setEditable(true);
         tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
         tbSTEnable.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchRequest_p));
-//        tbSTEnable.setCellFactory(CheckBoxTableCell.forTableColumn(tbSTEnable));
-        tbSTEnable.setCellFactory(column -> {
-            CheckBoxTableCell<WaysideBlockSubject, Boolean> cell = new CheckBoxTableCell<>();
-            cell.itemProperty().addListener((obs, oldValue, newValue) -> {
-                if (cell.getTableRow() != null && cell.getIndex() >= 0) {
-                    WaysideBlockSubject block = cell.getTableView().getItems().get(cell.getIndex());
-                    controller.CTCRequestSwitchState(block.getBlock().getBlockID(), newValue);
+        tbSTEnable.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setGraphic(null);
+                    return;
+                } else {
+                    WaysideBlockSubject block = getTableView().getItems().get(getIndex());
+                    CheckBox checkBox;
+                    {
+                        checkBox = new CheckBox();
+                        checkBox.setSelected(item);
+                        checkBox.setOnAction(event -> {
+                            controller.CTCRequestSwitchState(block.getBlock().getBlockID(), checkBox.isSelected());
+                        });
+                    }
+                    setGraphic(checkBox);
                 }
-            });
-            return cell;
+            }
         });
     }
 

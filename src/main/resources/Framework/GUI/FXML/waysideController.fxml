@@ -40,7 +40,7 @@
                             <TableColumn fx:id="blockTableCircuitColumn" editable="false" prefWidth="58.0" style="-fx-alignment: CENTER;" text="Track&#10;Circuit" />
                               <TableColumn fx:id="blockTableLightsColumn" editable="false" prefWidth="49.0" style="-fx-alignment: CENTER;" text="Light" />
                               <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="71.0" style="-fx-alignment: CENTER;" text="Crossing&#10;is Open?" />
-                              <TableColumn fx:id="blockTableAuthColumn" prefWidth="51.0" text="Auth" />
+                              <TableColumn fx:id="blockTableAuthColumn" prefWidth="51.0" style="-fx-alignment: CENTER;" text="Auth" />
                               <TableColumn fx:id="blockTableSpeedColumn" prefWidth="67.0" style="-fx-alignment: CENTER;" text="Speed&#10;(mph)" />
                           </columns>
                            <columnResizePolicy>

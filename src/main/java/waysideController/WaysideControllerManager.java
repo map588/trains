@@ -155,11 +155,10 @@ public class WaysideControllerManager {
                         {
                             checkBox = new CheckBox();
                             checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
+                            checkBox.setOpacity(1.0);
                             checkBox.setSelected(item);
                             checkBox.setOnMouseClicked(event -> {
-                                if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
-                                    this.getTableRow().getItem().setProperty(crossingState_p, !this.getTableRow().getItem().getBooleanProperty(crossingState_p).get());
-                                }
+                                this.getTableRow().getItem().setProperty(crossingState_p, !this.getTableRow().getItem().getBooleanProperty(crossingState_p).get());
                             });
                         }
                         setGraphic(checkBox);
@@ -171,16 +170,29 @@ public class WaysideControllerManager {
             }
         });
         blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
-//        blockTableAuthColumn.setCellFactory(CheckBoxTableCell.forTableColumn(blockTableAuthColumn));
-        blockTableAuthColumn.setCellFactory(column -> {
-            CheckBoxTableCell<WaysideBlockSubject, Boolean> cell = new CheckBoxTableCell<>();
-            cell.itemProperty().addListener((obs, oldValue, newValue) -> {
-                if (cell.getTableRow() != null && cell.getIndex() >= 0) {
-                    WaysideBlockSubject block = cell.getTableView().getItems().get(cell.getIndex());
-                    currentSubject.getController().maintenanceSetAuthority(block.getBlock().getBlockID(), newValue);
+        blockTableAuthColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setGraphic(null);
+                    return;
+                } else {
+                    WaysideBlockSubject block = getTableView().getItems().get(getIndex());
+                    CheckBox checkBox;
+                    {
+                        checkBox = new CheckBox();
+                        checkBox.setSelected(item);
+                        checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
+                        checkBox.setOpacity(1.0);
+                        checkBox.setOnAction(event -> {
+                            currentSubject.getController().maintenanceSetAuthority(block.getBlock().getBlockID(), checkBox.isSelected());
+                        });
+                    }
+                    setGraphic(checkBox);
                 }
-            });
-            return cell;
+            }
         });
         blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
         blockTableCrossingColumn.setEditable(false);
@@ -190,16 +202,29 @@ public class WaysideControllerManager {
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
         switchTableStateColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchState_p));
-//        switchTableStateColumn.setCellFactory(CheckBoxTableCell.forTableColumn(switchTableStateColumn));
-        switchTableStateColumn.setCellFactory(column -> {
-            CheckBoxTableCell<WaysideBlockSubject, Boolean> cell = new CheckBoxTableCell<>();
-            cell.itemProperty().addListener((obs, oldValue, newValue) -> {
-                if (cell.getTableRow() != null && cell.getIndex() >= 0) {
-                    WaysideBlockSubject block = cell.getTableView().getItems().get(cell.getIndex());
-                    currentSubject.getController().maintenanceSetSwitch(block.getBlock().getBlockID(), newValue);
+        switchTableStateColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setGraphic(null);
+                    return;
+                } else {
+                    WaysideBlockSubject block = getTableView().getItems().get(getIndex());
+                    CheckBox checkBox;
+                    {
+                        checkBox = new CheckBox();
+                        checkBox.setSelected(item);
+                        checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
+                        checkBox.setOpacity(1.0);
+                        checkBox.setOnAction(event -> {
+                            currentSubject.getController().maintenanceSetSwitch(block.getBlock().getBlockID(), checkBox.isSelected());
+                        });
+                    }
+                    setGraphic(checkBox);
                 }
-            });
-            return cell;
+            }
         });
         switchTableStateColumn.setEditable(false);
 
@@ -213,11 +238,11 @@ public class WaysideControllerManager {
         testBench.setController(currentSubject.getController());
 
         // Some testing of code triggered events:
-        currentSubject.getController().setMaintenanceMode(true);
-        currentSubject.getController().maintenanceSetAuthority(1, false);
-        currentSubject.getController().maintenanceSetSwitch(5, true);
-        currentSubject.getController().maintenanceSetTrafficLight(6, false);
-        currentSubject.getController().maintenanceSetCrossing(3, false);
+//        currentSubject.getController().setMaintenanceMode(true);
+//        currentSubject.getController().maintenanceSetAuthority(1, false);
+//        currentSubject.getController().maintenanceSetSwitch(5, true);
+//        currentSubject.getController().maintenanceSetTrafficLight(6, false);
+//        currentSubject.getController().maintenanceSetCrossing(3, false);
     }
 
     private void updateMaintenanceWriteable() {
@@ -225,6 +250,7 @@ public class WaysideControllerManager {
         switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
         blockTableAuthColumn.setEditable(maintenanceModeCheckbox.isSelected());
         blockTable.refresh();
+        switchTable.refresh();
     }
 
     /**

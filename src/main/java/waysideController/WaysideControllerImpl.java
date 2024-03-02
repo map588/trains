@@ -23,7 +23,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
 
-    private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
+    protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
