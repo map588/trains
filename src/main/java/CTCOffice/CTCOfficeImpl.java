@@ -2,12 +2,17 @@ package CTCOffice;
 
 import Common.CTCOffice;
 import Common.TrainModel;
+import Utilities.TrueBlockInfo;
 import trainModel.trainModelImpl;
 
+import Utilities.CSVTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import Framework.Support.ObservableHashMap;
+
+import static Utilities.CSVTokenizer.blockList;
+import static Utilities.CSVTokenizer.lineNames;
 import static Utilities.Constants.*;
 
 /**
@@ -26,7 +31,7 @@ public class CTCOfficeImpl implements CTCOffice {
 
     public Map<Integer, TrainModel> trains = new HashMap<>();
 
-    final static Map<Boolean, ArrayList<CTCBlockSubject>> track = new ObservableHashMap<>();
+    final static Map<String, ArrayList<CTCBlockSubject>> track = new ObservableHashMap<>();
     final static Map<Integer, Schedule> schedules = new ObservableHashMap<>();
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
 
@@ -35,24 +40,7 @@ public class CTCOfficeImpl implements CTCOffice {
      * Initializes the track blocks and the schedule.
      */
     private CTCOfficeImpl() {
-        track.put(false, new ArrayList<>() {{
-        add(new CTCBlockSubject( new CTCBlockInfo(0,  false, false, false, false, false,false, false,       false,         1000, 0,  0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(1,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(2,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(3,  false, true , false, false, false,true , false,       CROSSING_OPEN, 50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(4,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(5,  false, false, false, true , false,false, false,       false,         50,   50, 5, 6, 11, false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(6,  false, false, true , false, true ,false, LIGHT_GREEN, false,         50,   50, 5, 6, 11, false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(7,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(8,  false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(9,  false, true , false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(10, false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(11, false, false, true , false, true ,false, LIGHT_RED,   false,         50,   50, 5, 6, 11, false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(12, false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(13, false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(14, false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        add(new CTCBlockSubject( new CTCBlockInfo(15, false, false, false, false, false,false, false,       false,         50,   50, 0, 0, 0,  false, false)));
-        }});
+            track.put(lineNames.get(0), new ArrayList<>() {{ add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(0)))); }});
 
         ArrayList<Integer> blank = new ArrayList<>();
 

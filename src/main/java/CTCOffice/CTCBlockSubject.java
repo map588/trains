@@ -25,7 +25,7 @@ public class CTCBlockSubject implements AbstractSubject {
      */
      CTCBlockSubject(CTCBlockInfo block) {
         properties.put(BLOCK_ID_PROPERTY, new SimpleIntegerProperty(this, BLOCK_ID_PROPERTY, block.getBlockID()));
-        properties.put(LINE_PROPERTY, new SimpleBooleanProperty(this, LINE_PROPERTY, block.getLine()));
+        properties.put(LINE_PROPERTY, new SimpleStringProperty(this, LINE_PROPERTY, block.getLine()));
         properties.put(OCCUPIED_PROPERTY, new SimpleBooleanProperty(this, OCCUPIED_PROPERTY, block.getOccupied()));
         properties.put(HAS_LIGHT_PROPERTY, new SimpleBooleanProperty(this, HAS_LIGHT_PROPERTY, block.getHasLight()));
         properties.put(HAS_SWITCH_CON_PROPERTY, new SimpleBooleanProperty(this, HAS_SWITCH_CON_PROPERTY, block.getHasSwitchCon()));
@@ -62,7 +62,6 @@ public class CTCBlockSubject implements AbstractSubject {
             return null;
         }
         return switch (propertyName) {
-            case LINE_PROPERTY -> (BooleanProperty) getProperty(LINE_PROPERTY);
             case OCCUPIED_PROPERTY -> (BooleanProperty) getProperty(OCCUPIED_PROPERTY);
             case HAS_LIGHT_PROPERTY -> (BooleanProperty) getProperty(HAS_LIGHT_PROPERTY);
             case HAS_CROSSING_PROPERTY -> (BooleanProperty) getProperty(HAS_CROSSING_PROPERTY);
@@ -95,6 +94,7 @@ public class CTCBlockSubject implements AbstractSubject {
     public StringProperty getStringProperty(String propertyName) {
         return switch (propertyName) {
             case SWITCH_STATE_STRING_PROPERTY -> (StringProperty) getProperty(SWITCH_STATE_STRING_PROPERTY);
+            case LINE_PROPERTY -> (StringProperty) getProperty(LINE_PROPERTY);
             default -> null;
         };
     }
@@ -104,10 +104,11 @@ public class CTCBlockSubject implements AbstractSubject {
             System.err.println("Null value for property " + propertyName);
             return;
         }
-                getStringProperty(SWITCH_STATE_STRING_PROPERTY).set(blockInfo.getSwitchStateString());
-                System.out.println("setting new Switch state string for block " + getIntegerProperty(BLOCK_ID_PROPERTY).get()
-                        + " to " + blockInfo.getSwitchStateString());
+                switch (propertyName) {
+                    case SWITCH_STATE_STRING_PROPERTY -> updateProperty(getProperty(SWITCH_STATE_STRING_PROPERTY), blockInfo.getSwitchStateString());
+                    case LINE_PROPERTY -> updateProperty(getProperty(LINE_PROPERTY), blockInfo.getLine());
 
+                }
     }
 
     public void setPaintProperty(String propertyName) {

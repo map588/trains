@@ -1,5 +1,7 @@
 package Framework.GUI;
 
+import Utilities.CSVTokenizer;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +23,11 @@ public class mainMenu extends Application {
         BorderPane root = new BorderPane();
         TabPane tabPane = new TabPane();
         root.setCenter(tabPane);
+
+        CSVTokenizer csv = new CSVTokenizer();
+        csv.setCSVFile("src/main/java/Utilities/transcribed_data.csv");
+        CSVTokenizer.parseCSVToTrueBlockInfo("BlueLine");
+        System.out.println((CSVTokenizer.blockList.get("BlueLine")).get(0).section());
 
         // ToolBar for module buttons, as a replacement for direct MenuBar usage for tabs
         ToolBar toolBar = new ToolBar();

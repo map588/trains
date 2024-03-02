@@ -1,5 +1,6 @@
 package CTCOffice;
 
+import Utilities.TrueBlockInfo;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -10,7 +11,7 @@ import javafx.scene.paint.Paint;
  */
 class CTCBlockInfo {
     private final int blockID, blockLength, speedLimit;
-    private final boolean line;
+    private final String line;
     private boolean occupied, underMaintenance;
     private final boolean hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing;
     private boolean switchLightState, crossingState, switchState;
@@ -22,7 +23,7 @@ class CTCBlockInfo {
      * Constructor for the CTCBlockInfo class.
      * Initializes the block properties and registers the block with the CTCBlockSubjectFactory.
      */
-    CTCBlockInfo(int blockID, boolean line, boolean occupied, boolean hasLight, boolean hasSwitchCon,
+    CTCBlockInfo(int blockID, String line, boolean occupied, boolean hasLight, boolean hasSwitchCon,
                  boolean hasSwitchDiv, boolean hasCrossing, boolean switchLightState, boolean crossingState, int speedLimit,
                  int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID,
                  boolean switchState, boolean underMaintenance) {
@@ -50,9 +51,15 @@ class CTCBlockInfo {
        factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
-    // Complex setters and getters
+    CTCBlockInfo(TrueBlockInfo block) {
+        this(block.blockNumber(), block.line(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
+                block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
+                block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),
+                block.underMaintenance());
+    }
+                 // Complex setters and getters
 
-    /**
+                 /**
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean state) {
@@ -162,7 +169,7 @@ class CTCBlockInfo {
     int     getBlockID      () {
         return blockID;
     }
-    boolean getLine         () {
+    String getLine         () {
         return line;
     }
     int     getSpeedLimit   () {
