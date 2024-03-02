@@ -23,15 +23,6 @@ public interface WaysideController {
     // Sets whether the wayside controller is in maintenance mode
     public void setMaintenanceMode(boolean maintenanceMode);
 
-    // Sets whether the wayside controller is in maintenance mode without updating the property
-//    public void setMaintenanceModeNoUpdate(boolean maintenanceMode);
-
-    // Returns the list of block IDs under the wayside controller's control
-//    public List<WaysideBlockSubject> getBlockList();
-
-    // Adds a new track block under the wayside controller's control
-    public void addBlock(WaysideBlock block);
-
     // Allows Track Model to set train occupancy for a specific block
     public void trackModelSetOccupancy(int blockID, boolean isOccupied);
 

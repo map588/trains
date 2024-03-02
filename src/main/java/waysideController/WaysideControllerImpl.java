@@ -80,8 +80,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
-    @Override
-    public void addBlock(WaysideBlock block) {
+    private void addBlock(WaysideBlock block) {
         blockMap.put(block.getBlockID(), block);
         subject.addBlock(new WaysideBlockSubject(block));
     }

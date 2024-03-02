@@ -88,7 +88,9 @@ public class WaysideBlock implements Notifications {
     public void setOccupied(boolean occupied) {
         System.out.println("Occupied: " + occupied);
         this.occupied = occupied;
-        subject.notifyChange(occupied_p, occupied);
+
+        if(subject != null)
+            subject.notifyChange(occupied_p, occupied);
     }
 
     public boolean getSwitchState() {
@@ -98,7 +100,9 @@ public class WaysideBlock implements Notifications {
     public void setSwitchState(boolean switchState) {
         System.out.println("Switch State: " + switchState);
         this.switchState = switchState;
-        subject.notifyChange(switchState_p, switchState);
+
+        if(subject != null)
+            subject.notifyChange(switchState_p, switchState);
     }
 
     public boolean getSwitchRequest() {
@@ -107,7 +111,9 @@ public class WaysideBlock implements Notifications {
 
     public void setSwitchRequest(boolean switchRequest) {
         this.switchRequest = switchRequest;
-        subject.notifyChange(switchRequest_p, switchRequest);
+
+        if(subject != null)
+            subject.notifyChange(switchRequest_p, switchRequest);
     }
 
     public boolean getLightState() {
@@ -116,7 +122,9 @@ public class WaysideBlock implements Notifications {
 
     public void setLightState(boolean lightState) {
         this.lightState = lightState;
-        subject.notifyChange(lightState_p, lightState);
+
+        if(subject != null)
+            subject.notifyChange(lightState_p, lightState);
     }
 
     public boolean getCrossingState() {
@@ -125,7 +133,9 @@ public class WaysideBlock implements Notifications {
 
     public void setCrossingState(boolean crossingState) {
         this.crossingState = crossingState;
-        subject.notifyChange(crossingState_p, crossingState);
+
+        if(subject != null)
+            subject.notifyChange(crossingState_p, crossingState);
     }
 
     public boolean getAuthority() {
@@ -134,7 +144,9 @@ public class WaysideBlock implements Notifications {
 
     public void setAuthority(boolean authority) {
         this.authority = authority;
-        subject.notifyChange(authority_p, authority);
+
+        if(subject != null)
+            subject.notifyChange(authority_p, authority);
     }
 
     public double getSpeed() {
@@ -143,7 +155,9 @@ public class WaysideBlock implements Notifications {
 
     public void setSpeed(double speed) {
         this.speed = speed;
-        subject.notifyChange(speed_p, speed);
+
+        if(subject != null)
+            subject.notifyChange(speed_p, speed);
     }
 
     @Override

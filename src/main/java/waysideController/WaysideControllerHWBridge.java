@@ -57,13 +57,6 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         outputStream.println("maintenanceMode="+maintenanceMode);
     }
 
-//    @Override
-//    public void setMaintenanceModeNoUpdate(boolean maintenanceMode) {
-//        super.setMaintenanceModeNoUpdate(maintenanceMode);
-//        System.out.println("Send: maintenanceMode="+maintenanceMode);
-//        outputStream.println("maintenanceMode="+maintenanceMode);
-//    }
-
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         System.out.println("Send: switchStateList="+blockID+":"+switchState);
@@ -99,24 +92,26 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         System.out.println("Received: " + message);
         String[] values = message.split("=", 2);
 
-        if (values[0].equals("maintenanceMode")) {
-            super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
-        }
-        else if (values[0].equals("switchStateList")) {
-            String[] setValues = values[1].split(":");
-            super.setSwitchPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
-        }
-        else if (values[0].equals("trafficLightList")) {
-            String[] setValues = values[1].split(":");
-            super.setTrafficLightPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
-        }
-        else if (values[0].equals("crossingList")) {
-            String[] setValues = values[1].split(":");
-            super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
-        }
-        else if (values[0].equals("authList")) {
-            String[] setValues = values[1].split(":");
-            super.setAuthorityPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+        switch (values[0]) {
+            case "maintenanceMode" -> {
+                super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
+            }
+            case "switchStateList" -> {
+                String[] setValues = values[1].split(":");
+                super.setSwitchPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            }
+            case "trafficLightList" -> {
+                String[] setValues = values[1].split(":");
+                super.setTrafficLightPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            }
+            case "crossingList" -> {
+                String[] setValues = values[1].split(":");
+                super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            }
+            case "authList" -> {
+                String[] setValues = values[1].split(":");
+                super.setAuthorityPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
+            }
         }
     }
 
