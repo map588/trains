@@ -32,7 +32,6 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available
         properties.put(authority_p, new SimpleIntegerProperty(controller.getAuthority()));
-        //properties.put(blocksToNextStation, new SimpleIntegerProperty(controller.getBlocksToNextStation()));
         properties.put(samplingPeriod_p, new SimpleIntegerProperty(controller.getSamplingPeriod()));
         properties.put(commandSpeed_p, new SimpleDoubleProperty(controller.getCommandSpeed()));
         properties.put(currentSpeed_p, new SimpleDoubleProperty(controller.getSpeed()));
@@ -123,47 +122,29 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
         }
     }
 
-
     public Property<?> getProperty(String propertyName) {
         return properties.get(propertyName);
     }
 
     public StringProperty getStringProperty(String propertyName){
         Property<?> property = getProperty(propertyName);
-        try{
             return (StringProperty) property;
-        }catch (ClassCastException e){
-            throw new IllegalArgumentException("Property " + propertyName + " is not a StringProperty");
-        }
     }
     // Directly accessing typed properties for GUI binding
     public BooleanProperty getBooleanProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
-        try {
             return (BooleanProperty) property;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Property " + propertyName + " is not a BooleanProperty");
-        }
     }
 
     public DoubleProperty getDoubleProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
-        try {
-            return (DoubleProperty) property;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Property " + propertyName + " is not a DoubleProperty");
-        }
+        return (DoubleProperty) property;
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
         Property<?> property = getProperty(propertyName);
-        try {
-            return (IntegerProperty) property;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Property " + propertyName + " is not an IntegerProperty");
-        }
+        return (IntegerProperty) property;
     }
-
 
     public void calculatePower(){
         controller.calculatePower();
