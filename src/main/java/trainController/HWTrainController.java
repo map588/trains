@@ -13,7 +13,7 @@ public class HWTrainController implements TrainController {
     public HWTrainController(int trainID) {
         this.ID = trainID;
         this.train = stubTrainModel.createstubTrainModel();
-        this.subject = trainControllerSubjectFactory.getInstance().getSubject().get(trainID);
+        this.subject = trainControllerSubjectMap.getInstance().getSubject(trainID);
     }
 
     public void assignTrainModel(TrainModel train) {

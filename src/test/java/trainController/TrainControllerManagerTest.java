@@ -1,5 +1,6 @@
 package trainController;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
@@ -104,21 +105,6 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testSetTemperatureTextField() {
-        String newTemperature = "25.5";
-        TextField setTemperatureTextField = lookup("#setTemperatureTextField").queryAs(TextField.class);
-
-        // Set the temperature to a new value
-        clickOn(setTemperatureTextField).write(newTemperature);
-
-        // Press Enter to trigger the action
-        type(KeyCode.ENTER);
-
-        // Verify the temperature's new value in the controller
-        assertEquals(Double.parseDouble(newTemperature), controller.getTemperature());
-    }
-
-    @Test
     public void testLightToggle() {
         // Toggle internal light checkbox
         CheckBox intLightCheckBox = lookup("#intLightCheckBox").queryAs(CheckBox.class);
@@ -158,6 +144,22 @@ public class TrainControllerManagerTest extends ApplicationTest {
         controller.setTemperature(newTemperature); // Assuming such a setter exists
         assertEquals(newTemperature, controller.getTemperature(), "The temperature should match the newly set value.");
     }
+
+    @Test
+    public void testSetTemperatureTextField() {
+        String newTemperature = "25.5";
+        TextField setTemperatureTextField = lookup("#setTemperatureTextField").queryAs(TextField.class);
+
+        // Programmatically set the text field value and fire action event
+        interact(() -> {
+            setTemperatureTextField.setText(newTemperature);
+            setTemperatureTextField.fireEvent(new ActionEvent());
+        });
+
+        // Verify the temperature's new value in the controller
+        assertEquals(Double.parseDouble(newTemperature), controller.getTemperature(), "Temperature should be updated based on TextField input.");
+    }
+
 
     private void setSliderValue(Slider slider, double value) {
         interact(() -> slider.setValue(value));
