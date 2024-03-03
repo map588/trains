@@ -37,8 +37,8 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setSwitchPLC(int blockID, boolean switchState) {
-        System.out.println("Send: switchStateList="+blockID+":"+switchState);
-        outputStream.println("switchStateList="+blockID+":"+switchState);
+        System.out.println("Send: switchState="+blockID+":"+switchState);
+        outputStream.println("switchState="+blockID+":"+switchState);
     }
 
     /**
@@ -47,8 +47,8 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
-        System.out.println("Send: trafficLightList="+blockID+":"+lightState);
-        outputStream.println("trafficLightList="+blockID+":"+lightState);
+        System.out.println("Send: trafficLight="+blockID+":"+lightState);
+        outputStream.println("trafficLight="+blockID+":"+lightState);
     }
 
     /**
@@ -57,14 +57,14 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
-        System.out.println("Send: crossingList="+blockID+":"+crossingState);
-        outputStream.println("crossingList="+blockID+":"+crossingState);
+        System.out.println("Send: crossing="+blockID+":"+crossingState);
+        outputStream.println("crossing="+blockID+":"+crossingState);
     }
 
     @Override
     public void setAuthorityPLC(int blockID, boolean auth) {
-        System.out.println("Send: authList="+blockID+":"+auth);
-        outputStream.println("authList="+blockID+":"+auth);
+        System.out.println("Send: auth="+blockID+":"+auth);
+        outputStream.println("auth="+blockID+":"+auth);
     }
 
     @Override
