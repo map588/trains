@@ -36,7 +36,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id, String lineName, List<Integer> blockIDList) {
+    public WaysideControllerImpl(int id, String lineName, int[] blockIDList) {
         this.id = id;
         this.trackLine = lineName;
 

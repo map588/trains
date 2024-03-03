@@ -6,61 +6,32 @@ import java.util.Map;
 import static Utilities.Constants.*;
 
 public class PLCProgram {
-//    private final Map<Integer, Boolean> occupancyList;
-//    private final Map<Integer, Boolean> switchStateList;
-//    private final Map<Integer, Boolean> switchRequestedStateList;
-//    private final Map<Integer, Boolean> trafficLightList;
-//    private final Map<Integer, Boolean> crossingList;
-//    private final Map<Integer, Boolean> authList;
-//    private final Map<Integer, Double> speedList;
 
     private final Map<Integer, WaysideBlock> blockMap;
-
     private final PLCRunner controller;
 
     public PLCProgram(PLCRunner controller) {
         this.blockMap = controller.getBlockMap();
-//        occupancyList = new HashMap<>();
-//        switchStateList = new HashMap<>();
-//        switchRequestedStateList = new HashMap<>();
-//        trafficLightList = new HashMap<>();
-//        crossingList = new HashMap<>();
-//        authList = new HashMap<>();
-//        speedList = new HashMap<>();
-//
-//        for(int i = 1; i <= 15; i++) {
-//            occupancyList.put(i, false);
-//        }
-//
-//        switchStateList.put(5, SWITCH_MAIN);
-//        switchRequestedStateList.put(5, SWITCH_MAIN);
-//        trafficLightList.put(6, LIGHT_RED);
-//        trafficLightList.put(11, LIGHT_RED);
-//        crossingList.put(3, CROSSING_OPEN);
 
         this.controller = controller;
     }
 
     private void setSwitch(int blockID, boolean switchState) {
-//        switchStateList.put(blockID, switchState);
         blockMap.get(blockID).setSwitchState(switchState);
         controller.setSwitchPLC(blockID, switchState);
     }
 
     private void setLight(int blockID, boolean lightState) {
-//        trafficLightList.put(blockID, lightState);
         blockMap.get(blockID).setLightState(lightState);
         controller.setTrafficLightPLC(blockID, lightState);
     }
 
     private void setCrossing(int blockID, boolean crossingState) {
-//        crossingList.put(blockID, crossingState);
         blockMap.get(blockID).setCrossingState(crossingState);
         controller.setCrossingPLC(blockID, crossingState);
     }
 
     private void setAuth(int blockID, boolean auth) {
-//        authList.put(blockID, auth);
         blockMap.get(blockID).setAuthority(auth);
         controller.setAuthorityPLC(blockID, auth);
     }

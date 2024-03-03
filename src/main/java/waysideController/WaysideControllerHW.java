@@ -15,17 +15,13 @@ import java.util.Map;
 public class WaysideControllerHW implements PLCRunner {
 
     private boolean maintenanceMode = false;
+    private String trackLine;
     private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
     protected final BufferedReader inputStream;
     private final PrintStream outputStream;
     private PLCProgram plcProgram;
-    public WaysideControllerHW(String trackLine, List<Integer> blockIDList, String comPort) {
+    public WaysideControllerHW(String comPort) {
         plcProgram = new PLCProgram(this);
-
-        List<TrueBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
-        for(int blockID : blockIDList) {
-            blockMap.put(blockID, new WaysideBlock(fullBlockList.get(blockID)));
-        }
 
         SerialPort port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
@@ -76,27 +72,46 @@ public class WaysideControllerHW implements PLCRunner {
         return blockMap;
     }
 
+    private void setupBlocks(int[] blockIDList) {
+        blockMap.clear();
+        List<TrueBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+        for(int blockID : blockIDList) {
+            blockMap.put(blockID, new WaysideBlock(fullBlockList.get(blockID)));
+        }
+    }
+
     protected void parseCOMMessage(String message) {
         System.out.println("Received: " + message);
         String[] values = message.split("=", 2);
 
         switch (values[0]) {
+            case "setLine" -> {
+                trackLine = values[1];
+            }
+            case "blockList" -> {
+                String[] blockListStrings = values[1].split(",");
+                int[] blockList = new int[blockListStrings.length];
+                for (int i = 0; i < blockListStrings.length; i++) {
+                    blockList[i] = Integer.parseInt(blockListStrings[i]);
+                }
+                setupBlocks(blockList);
+            }
             case "maintenanceMode" -> {
                 maintenanceMode = Boolean.parseBoolean(values[1]);
             }
-            case "occupancyList" -> {
+            case "occupancy" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setOccupied(Boolean.parseBoolean(setValues[1]));
             }
-            case "switchStateList" -> {
+            case "switchState" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setSwitchState(Boolean.parseBoolean(setValues[1]));
             }
-            case "switchRequestedStateList" -> {
+            case "switchRequestedState" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setSwitchRequest(Boolean.parseBoolean(setValues[1]));
             }
-            case "authList" -> {
+            case "auth" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Boolean.parseBoolean(setValues[1]));
             }
@@ -112,7 +127,7 @@ public class WaysideControllerHW implements PLCRunner {
         CSVTokenizer.parseCSVToTrueBlockInfo("BlueLine");
 
         System.out.println("Starting Wayside Controller");
-        WaysideControllerHW controller = new WaysideControllerHW("BlueLine", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), "/dev/ttyS0");
+        WaysideControllerHW controller = new WaysideControllerHW("/dev/ttyS0");
 
         while (true) {
             if (controller.inputStream.ready()) {

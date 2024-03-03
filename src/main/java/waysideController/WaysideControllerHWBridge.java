@@ -14,7 +14,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     private final BufferedReader inputStream;
     private final PrintStream outputStream;
 
-    public WaysideControllerHWBridge(int id, String trackLine, List<Integer> blockIDList, String comPort) {
+    public WaysideControllerHWBridge(int id, String trackLine, int[] blockIDList, String comPort) {
         super(id, trackLine, blockIDList);
 
         port = SerialPort.getCommPort(comPort);
@@ -41,6 +41,16 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
             }
         });
 
+        outputStream.println("setLine="+trackLine);
+        outputStream.print("blockList=");
+        for(int i = 0; i < blockIDList.length-1; i++) {
+            outputStream.print(blockIDList[i]);
+            if(i < blockIDList.length - 1) {
+                outputStream.print(",");
+            }
+        }
+        outputStream.println(blockIDList[blockIDList.length-1]);
+
         System.out.println("Send: runPLC=true");
         outputStream.println("runPLC=true");
     }
@@ -59,28 +69,28 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-        System.out.println("Send: switchStateList="+blockID+":"+switchState);
-        outputStream.println("switchStateList="+blockID+":"+switchState);
+        System.out.println("Send: switchState="+blockID+":"+switchState);
+        outputStream.println("switchState="+blockID+":"+switchState);
     }
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        System.out.println("Send: authList="+blockID+":"+auth);
-        outputStream.println("authList="+blockID+":"+auth);
+        System.out.println("Send: auth="+blockID+":"+auth);
+        outputStream.println("auth="+blockID+":"+auth);
     }
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         super.trackModelSetOccupancy(blockID, occupied);
-        System.out.println("Send: occupancyList="+blockID+":"+occupied);
-        outputStream.println("occupancyList="+blockID+":"+occupied);
+        System.out.println("Send: occupancy="+blockID+":"+occupied);
+        outputStream.println("occupancy="+blockID+":"+occupied);
     }
 
     @Override
     public void CTCRequestSwitchState(int blockID, boolean occupied) {
         super.CTCRequestSwitchState(blockID, occupied);
-        System.out.println("Send: switchRequestedStateList="+blockID+":"+occupied);
-        outputStream.println("switchRequestedStateList="+blockID+":"+occupied);
+        System.out.println("Send: switchRequestedState="+blockID+":"+occupied);
+        outputStream.println("switchRequestedState="+blockID+":"+occupied);
     }
 
     @Override
@@ -96,22 +106,22 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
             case "maintenanceMode" -> {
                 super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
             }
-            case "switchStateList" -> {
+            case "switchState" -> {
                 String[] setValues = values[1].split(":");
 //                super.setSwitchPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setSwitchState(Boolean.parseBoolean(setValues[1]));
             }
-            case "trafficLightList" -> {
+            case "trafficLight" -> {
                 String[] setValues = values[1].split(":");
 //                super.setTrafficLightPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setLightState(Boolean.parseBoolean(setValues[1]));
             }
-            case "crossingList" -> {
+            case "crossing" -> {
                 String[] setValues = values[1].split(":");
 //                super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setCrossingState(Boolean.parseBoolean(setValues[1]));
             }
-            case "authList" -> {
+            case "auth" -> {
                 String[] setValues = values[1].split(":");
 //                super.setAuthorityPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Boolean.parseBoolean(setValues[1]));
