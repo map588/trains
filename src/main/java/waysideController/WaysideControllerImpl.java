@@ -99,14 +99,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // TODO: Update PLC program to account for block access state
     @Override
-    public void CTCDisableBlock(int blockID) {
-        blockMap.get(blockID).setBlockAccessState(false);
-        runPLC();
-    }
-
-    @Override
-    public void CTCEnableBlock(int blockID) {
-        blockMap.get(blockID).setBlockAccessState(true);
+    public void CTCChangeBlockAccessState(int blockID, boolean accessState) {
+        blockMap.get(blockID).setBlockAccessState(accessState);
         runPLC();
     }
 
