@@ -126,7 +126,7 @@ public class WaysideControllerManager {
                 setOnMouseClicked(event -> {
                     if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                         if(this.getTableRow().getItem().getBlock().hasLight()) {
-                            this.getTableRow().getItem().setProperty(lightState_p, !this.getTableRow().getItem().getBlock().getLightState());
+                            currentSubject.getController().maintenanceSetTrafficLight(this.getTableRow().getItem().getBlock().getBlockID(), !this.getTableRow().getItem().getBlock().getLightState());
                         }
                     }
                 });
@@ -158,7 +158,7 @@ public class WaysideControllerManager {
                             checkBox.setOpacity(1.0);
                             checkBox.setSelected(item);
                             checkBox.setOnMouseClicked(event -> {
-                                this.getTableRow().getItem().setProperty(crossingState_p, !this.getTableRow().getItem().getBooleanProperty(crossingState_p).get());
+                                currentSubject.getController().maintenanceSetCrossing(blockInfo.getBlock().getBlockID(), checkBox.isSelected());
                             });
                         }
                         setGraphic(checkBox);
