@@ -117,7 +117,7 @@ public class WaysideControllerHW implements PLCRunner {
             }
         }
 
-        if(!maintenanceMode)
+        if(!maintenanceMode && blockMap.size() > 0)
             plcProgram.runBlueLine();
     }
 
