@@ -32,7 +32,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifications {
         properties.put(hasLight_p, new ReadOnlyBooleanWrapper(block.hasLight()));
         properties.put(hasCrossing_p, new ReadOnlyBooleanWrapper(block.hasCrossing()));
 
-        properties.put(occupied_p, new SimpleBooleanProperty(block.isOccupied()));
+        properties.put(occupied_p, new SimpleBooleanProperty(occupied_p, occupied_p, block.isOccupied()));
         properties.put(switchState_p, new SimpleBooleanProperty(block.getSwitchState()));
         properties.put(switchRequest_p, new SimpleBooleanProperty(block.getSwitchRequest()));
         properties.put(lightState_p, new SimpleBooleanProperty(block.getLightState()));

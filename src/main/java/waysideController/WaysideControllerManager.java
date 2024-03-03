@@ -62,14 +62,13 @@ public class WaysideControllerManager {
     @FXML
     private TableView<File> plcFileTable;
     @FXML
-    public TableColumn<File,String> plcFileNameColumn;
+    private TableColumn<File,String> plcFileNameColumn;
     @FXML
-    public TableColumn<File,String> plcFileDateModifiedColumn;
+    private TableColumn<File,String> plcFileDateModifiedColumn;
     @FXML
     private Button plcFolderButton;
     @FXML
     private Button plcUploadButton;
-
     @FXML
     private ProgressBar uploadProgressBar;
     @FXML
@@ -91,12 +90,11 @@ public class WaysideControllerManager {
         // Launch the test bench
         testBench = launchTestBench();
 
+
         // Set up event listeners
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
-        switchTable.setEditable(true);
-        blockTable.setEditable(true);
         testBench.tbCreateNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
@@ -104,17 +102,55 @@ public class WaysideControllerManager {
             updateMaintenanceWriteable();
         });
 
-        testBench.tbHWPortComboBox.getItems().add("SW");
-        SerialPort[] ports = SerialPort.getCommPorts();
-        for(SerialPort port : ports) {
-            testBench.tbHWPortComboBox.getItems().add(port.getSystemPortName());
-        }
-        testBench.tbHWPortComboBox.setValue("SW");
 
-        // Set up cell factories for table views
+        // Set up cell value factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(occupied_p));
         blockTableLightsColumn.setCellValueFactory(block -> block.getValue().getTrafficLightColor());
+        blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(crossingState_p));
+        blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
+        blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
+
+        switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
+        switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
+        switchTableStateColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchState_p));
+
+        plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
+        plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
+
+
+        // Set cell factories for editable columns
+        setupTableCellFactories();
+
+
+        // Set up editable columns
+        blockTable.setEditable(true);
+        blockTableCrossingColumn.setEditable(false);
+        blockTableCircuitColumn.setEditable(false);
+
+        switchTable.setEditable(true);
+        switchTableStateColumn.setEditable(false);
+
+
+        // Setup controller combo box
+        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideControllerSubjectFactory.getControllerList());
+
+        // Create initial controller and update values
+        createNewController();
+        testBench.setController(currentSubject);
+
+        // Some testing of code triggered events:
+//        currentSubject.getController().setMaintenanceMode(true);
+//        currentSubject.getController().maintenanceSetAuthority(1, false);
+//        currentSubject.getController().maintenanceSetSwitch(5, true);
+//        currentSubject.getController().maintenanceSetTrafficLight(6, false);
+//        currentSubject.getController().maintenanceSetCrossing(3, false);
+    }
+
+    /**
+     * Sets up the cell factories for the table views
+     */
+    private void setupTableCellFactories() {
         blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Paint>() {
             private BorderPane graphic;
             private Circle circle;
@@ -138,7 +174,6 @@ public class WaysideControllerManager {
                 setGraphic(graphic);
             }
         });
-        blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(crossingState_p));
 
         blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
@@ -169,7 +204,6 @@ public class WaysideControllerManager {
 
             }
         });
-        blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
         blockTableAuthColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -194,14 +228,6 @@ public class WaysideControllerManager {
                 }
             }
         });
-        blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
-        blockTableCrossingColumn.setEditable(false);
-        blockTableCircuitColumn.setEditable(false);
-
-        switchTable.setEditable(true);
-        switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
-        switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
-        switchTableStateColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchState_p));
         switchTableStateColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -226,25 +252,11 @@ public class WaysideControllerManager {
                 }
             }
         });
-        switchTableStateColumn.setEditable(false);
-
-        plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
-        plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
-
-        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideControllerSubjectFactory.getControllerList());
-
-        // Create initial controller and update values
-        createNewController();
-        testBench.setController(currentSubject.getController());
-
-        // Some testing of code triggered events:
-//        currentSubject.getController().setMaintenanceMode(true);
-//        currentSubject.getController().maintenanceSetAuthority(1, false);
-//        currentSubject.getController().maintenanceSetSwitch(5, true);
-//        currentSubject.getController().maintenanceSetTrafficLight(6, false);
-//        currentSubject.getController().maintenanceSetCrossing(3, false);
     }
 
+    /**
+     * Updates the maintenance mode checkbox and the editable state of the table columns
+     */
     private void updateMaintenanceWriteable() {
         maintenanceModeCheckbox.setSelected(currentSubject.getBooleanProperty(maintenanceMode_p).get());
         switchTableStateColumn.setEditable(maintenanceModeCheckbox.isSelected());
@@ -297,19 +309,13 @@ public class WaysideControllerManager {
     }
 
     /**
-     * Updates the block list in the GUI with the information from the current wayside controller
+     * Updates the block list and switch list in the GUI with the information from the current wayside controller
      */
     private void updateBlockList() {
-        blockTable.setItems(currentSubject.blockListProperty());
-        updateSwitchList();
-    }
-
-    /**
-     * Updates the switch list in the GUI with the information from the current wayside controller
-     */
-    private void updateSwitchList() {
-        switchTable.getItems().clear();
         ObservableList<WaysideBlockSubject> blocks = currentSubject.blockListProperty();
+
+        blockTable.setItems(blocks);
+        switchTable.getItems().clear();
         for(WaysideBlockSubject item : blocks) {
             if(item.getBlock().hasSwitch()) {
                 switchTable.getItems().add(item);
@@ -323,10 +329,18 @@ public class WaysideControllerManager {
     private void createNewController() {
         WaysideController newController;
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
-            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(), "BlueLine", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15));
+            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(),
+                    "BlueLine",
+                    List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15));
         } else {
-            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(), "BlueLine", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), testBench.tbHWPortComboBox.getValue());
+            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(),
+                    "BlueLine",
+                    List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+                    testBench.tbHWPortComboBox.getValue());
         }
+
+        newController.runPLC();
+
         WaysideControllerSubjectFactory.addController(newController);
         changeActiveController(newController);
     }
@@ -355,9 +369,9 @@ public class WaysideControllerManager {
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.getStringProperty(PLCName_p));
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.getPaintProperty(activePLCColor_p));
 
-        testBench.setController(controller);
+        testBench.setController(controller.getSubject());
 
-        currentSubject.getController().runPLC();
+        // Update block lists
         updateMaintenanceWriteable();
         updateBlockList();
     }
@@ -367,6 +381,10 @@ public class WaysideControllerManager {
         listenerReferences.add(new ListenerReference<>(observable, listener));
     }
 
+    /**
+     * Launches the wayside controller test bench
+     * @return The controller for the test bench
+     */
     private WaysideControllerTB launchTestBench() {
         System.out.println(System.getProperty("Preparing to launch test bench"));
         try {

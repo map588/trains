@@ -1,6 +1,7 @@
 package waysideController;
 
 import Common.WaysideController;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -35,39 +36,39 @@ public class WaysideControllerTB {
     @FXML
     public Label tbHWPortLabel;
 
-    WaysideController controller;
-
-
-    private StringConverter<Double> doubleConverter = new StringConverter<Double>() {
-        @Override
-        public String toString(Double d) {
-            return d.toString();
-        }
-
-        @Override
-        public Double fromString(String s) {
-            return Double.parseDouble(s);
-        }
-    };
-
-    private StringConverter<Integer> intConverter = new StringConverter<Integer>() {
-        @Override
-        public String toString(Integer integer) {
-            return integer.toString();
-        }
-
-        @Override
-        public Integer fromString(String s) {
-            return Integer.parseInt(s);
-        }
-    };
+    WaysideControllerSubject currentSubject;
 
 
     @FXML
     private void initialize() {
-        tbBlockTable.setEditable(true);
+        // Set up cell value factories for table views
         tbBTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbBTOccupied.setCellValueFactory(block -> block.getValue().getBooleanProperty(occupied_p));
+
+        tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
+        tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
+        tbSTEnable.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchRequest_p));
+
+        // Set up cell factories for table views
+        setupTableCellFactories();
+
+        // Set up editable columns
+        tbBlockTable.setEditable(true);
+        tbSwitchTable.setEditable(true);
+
+        // Set up the hardware port combo box
+        tbHWPortComboBox.getItems().add("SW");
+        SerialPort[] ports = SerialPort.getCommPorts();
+        for(SerialPort port : ports) {
+            tbHWPortComboBox.getItems().add(port.getSystemPortName());
+        }
+        tbHWPortComboBox.setValue("SW");
+    }
+
+    /**
+     * Sets up the cell factories for the table views
+     */
+    private void setupTableCellFactories() {
         tbBTOccupied.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -83,18 +84,13 @@ public class WaysideControllerTB {
                         checkBox = new CheckBox();
                         checkBox.setSelected(item);
                         checkBox.setOnAction(event -> {
-                            controller.trackModelSetOccupancy(block.getBlock().getBlockID(), checkBox.isSelected());
+                            currentSubject.getController().trackModelSetOccupancy(block.getBlock().getBlockID(), checkBox.isSelected());
                         });
                     }
                     setGraphic(checkBox);
                 }
             }
         });
-
-        tbSwitchTable.setEditable(true);
-        tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
-        tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
-        tbSTEnable.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchRequest_p));
         tbSTEnable.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -110,7 +106,7 @@ public class WaysideControllerTB {
                         checkBox = new CheckBox();
                         checkBox.setSelected(item);
                         checkBox.setOnAction(event -> {
-                            controller.CTCRequestSwitchState(block.getBlock().getBlockID(), checkBox.isSelected());
+                            currentSubject.getController().CTCRequestSwitchState(block.getBlock().getBlockID(), checkBox.isSelected());
                         });
                     }
                     setGraphic(checkBox);
@@ -119,11 +115,11 @@ public class WaysideControllerTB {
         });
     }
 
-    public void setController(WaysideController controller) {
-        this.controller = controller;
-        readBlockInfo(controller.getSubject().blockListProperty());
-        if(controller instanceof WaysideControllerHWBridge) {
-            tbHWPortLabel.setText("HW Port: " + ((WaysideControllerHWBridge) controller).getPort());
+    public void setController(WaysideControllerSubject subject) {
+        this.currentSubject = subject;
+        readBlockInfo(subject.blockListProperty());
+        if(subject.getController() instanceof WaysideControllerHWBridge) {
+            tbHWPortLabel.setText("HW Port: " + ((WaysideControllerHWBridge) subject.getController()).getPort());
         }
         else {
             tbHWPortLabel.setText("HW Port: N/A");
