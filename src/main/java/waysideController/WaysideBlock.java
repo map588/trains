@@ -20,6 +20,7 @@ public class WaysideBlock implements Notifications {
     private boolean crossingState;
     private boolean authority;
     private double speed;
+    private boolean open;
 
     private WaysideBlockSubject subject;
 
@@ -28,6 +29,7 @@ public class WaysideBlock implements Notifications {
         this.hasSwitch = hasSwitch;
         this.hasLight = hasLight;
         this.hasCrossing = hasCrossing;
+        this.open = true;
     }
 
     public WaysideBlock(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
@@ -53,6 +55,7 @@ public class WaysideBlock implements Notifications {
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setAuthority((boolean) newValue);
             case speed_p -> setSpeed((double) newValue);
+            case open_p -> setBlockAccessState((boolean) newValue);
             default -> System.err.println("Property " + propertyName + " not found in WaysideBlock");
         }
     }
@@ -84,7 +87,7 @@ public class WaysideBlock implements Notifications {
     public boolean isOccupied() {
         return occupied;
     }
-
+    public boolean isOpen() { return open; }
     public void setOccupied(boolean occupied) {
         System.out.println("Occupied: " + occupied);
         this.occupied = occupied;
@@ -93,6 +96,13 @@ public class WaysideBlock implements Notifications {
             subject.notifyChange(occupied_p, occupied);
     }
 
+    public void setBlockAccessState(boolean open) {
+        System.out.println("Block Access State: " + open);
+        this.open = open;
+
+        if(subject != null)
+            subject.notifyChange(open_p, open);
+    }
     public boolean getSwitchState() {
         return switchState;
     }
@@ -170,6 +180,7 @@ public class WaysideBlock implements Notifications {
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setAuthority((boolean) newValue);
             case speed_p -> setSpeed((double) newValue);
+            case open_p -> setBlockAccessState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
     }
