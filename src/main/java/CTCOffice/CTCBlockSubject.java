@@ -99,7 +99,7 @@ public class CTCBlockSubject implements AbstractSubject {
         };
     }
 
-    public void setStringProperty(String propertyName) {
+    public void updateStringProperty(String propertyName) {
         if(propertyName == null) {
             System.err.println("Null value for property " + propertyName);
             return;
@@ -111,7 +111,7 @@ public class CTCBlockSubject implements AbstractSubject {
                 }
     }
 
-    public void setPaintProperty(String propertyName) {
+    public void updatePaintProperty(String propertyName) {
         switch (propertyName) {
             case SWITCH_LIGHT_COLOR_PROPERTY      -> updateProperty(getProperty(SWITCH_LIGHT_COLOR_PROPERTY), blockInfo.getSwitchLightColor());
             case CROSSING_LIGHT_COLOR_PROPERTY    -> updateProperty(getProperty(CROSSING_LIGHT_COLOR_PROPERTY), blockInfo.getCrossingLightColor());

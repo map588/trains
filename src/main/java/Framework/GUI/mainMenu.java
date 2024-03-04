@@ -81,7 +81,7 @@ public class mainMenu extends Application {
         Node content = createModuleContent(moduleName); // This now loads from FXML
         Scene newScene;
         if(moduleName.equals("CTC_Main_UI")) {
-            newScene = new Scene(new VBox(content) , 800, 600);
+            newScene = new Scene(new VBox(content) , 900, 600);
         }else {
             newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
         }

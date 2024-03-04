@@ -1,8 +1,9 @@
 package CTCOffice;
 
-import Common.CTCOffice;
 import Utilities.CSVTokenizer;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -79,7 +80,7 @@ public class CTCOfficeManager {
         blockTable.setEditable(true);
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
 
-
+        //TODO: Make a data structure that sucks less for tables
         //first lane table view
         blockTable.getItems().addAll(blockList);
         blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
@@ -91,34 +92,44 @@ public class CTCOfficeManager {
         occupationLightColumn.setEditable(false);
 
         switchStateColumn.setCellValueFactory(block -> {
-                block.getValue().setStringProperty("switchStateString");
-                return block.getValue().getBooleanProperty("hasSwitchCon").getValue() ||
-                block.getValue().getBooleanProperty("hasSwitchDiv").getValue() ?
-                block.getValue().getStringProperty("switchStateString") : null;
+            block.getValue().updateStringProperty("switchStateString");
+            boolean isConvergingSwitch = block.getValue().getBooleanProperty("hasSwitchCon").getValue();
+            boolean isDivergingSwitch = block.getValue().getBooleanProperty("hasSwitchDiv").getValue();
+            StringProperty stateString = block.getValue().getStringProperty("switchStateString");
+
+            return isConvergingSwitch || isDivergingSwitch ? stateString : null;
         });
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
 
 
         switchLightColumn.setCellValueFactory(block -> {
-                block.getValue().setPaintProperty("switchLightColor");
-               return  block.getValue().getBooleanProperty("hasLight").getValue() ?
-                block.getValue().getPaintProperty("switchLightColor") : null; });
+            block.getValue().updatePaintProperty("switchLightColor");
+            boolean hasLight = block.getValue().getBooleanProperty("hasLight").getValue();
+            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty("switchLightColor");
+
+            return  hasLight ? lightColor : null;
+        });
         switchLightColumn.setCellFactory(column -> createColoredCircleCell());
 
         crossingStateColumn.setCellValueFactory(block -> {
-            block.getValue().setPaintProperty("crossingLightColor");
-            return block.getValue().getBooleanProperty("hasCrossing").getValue() ?
-                    block.getValue().getPaintProperty("crossingLightColor") : null; });
+            block.getValue().updatePaintProperty("crossingLightColor");
+            boolean hasCrossing = block.getValue().getBooleanProperty("hasCrossing").getValue();
+            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty("crossingLightColor");
+
+            return hasCrossing ? lightColor : null;
+        });
         crossingStateColumn.setCellFactory(column -> createColoredCircleCell());
 
         underMaintenanceColumn.setCellValueFactory(block -> {
-            block.getValue().setPaintProperty("maintenanceLightColor");
-            return block.getValue().getPaintProperty("maintenanceLightColor");});
+            block.getValue().updatePaintProperty("maintenanceLightColor");
+            return block.getValue().getPaintProperty("maintenanceLightColor");
+        });
         underMaintenanceColumn.setCellFactory(column -> createColoredCircleCell());
 
         //Table editing bar
         blockSelection.getItems().addAll(factory.getSubjects().keySet());
         lineSelection.getItems().addAll(CSVTokenizer.lineNames);
+
         switchLightToggle.setOnAction(event -> toggleProperty("switchLightState"));
         switchStateToggle.setOnAction(event -> toggleProperty("switchState"));
         crossingStateToggle.setOnAction(event -> toggleProperty("crossingState"));
@@ -130,6 +141,9 @@ public class CTCOfficeManager {
                 lineSelection.setValue(newValue.getStringProperty("line").getValue());
             }
         });
+
+        blockSelection.setValue(1);
+        lineSelection.setValue(CSVTokenizer.lineNames.get(0));
 
 
 

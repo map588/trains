@@ -19,13 +19,15 @@ public record BasicBlockInfo(
     boolean isSwitchDivergingBlock,
     boolean hasCrossing,
     boolean hasSwitchLight,
+    int convergingBlockID,
+    int divergingBlockID_Main,
+    int divergingBlockID_Alt,
+
+    //TODO: The below fields are not constants, and should be constructed in a class that operates on them.
     boolean isOccupied,
     boolean underMaintenance,
     boolean switchState,
     boolean crossingState,
-    boolean switchLightState,
-    int convergingBlockID,
-    int divergingBlockID_Main,
-    int divergingBlockID_Alt) {
-}
+    boolean switchLightState) {}
+//TODO: add non positional constructor
 

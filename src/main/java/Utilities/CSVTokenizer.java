@@ -26,31 +26,33 @@ public class CSVTokenizer {
         try (BufferedReader br = new BufferedReader(new FileReader(CSVFileName))) {
             blockList.put(lineName, new ArrayList<>() {
                 {
-                    add(new BasicBlockInfo(lineName,
-                            'A',
-                            1,
-                            100,
-                            0.0,
-                            1000,
-                            0.0,
-                            0.0,
-                            false,
-                            false,
-                            "Yard",
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            0,
-                            0,
-                            0));
+                    add(new BasicBlockInfo(
+                        lineName,
+                        'A',
+                        1,
+                        100,
+                        0.0,
+                        1000,
+                        0.0,
+                        0.0,
+                        false,
+                        false,
+                        "Yard",
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        0,
+                        0,
+                        0,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false)
+                    );
                 }});
 
             String line;
@@ -75,14 +77,15 @@ public class CSVTokenizer {
                                 Boolean.parseBoolean(values[14]),
                                 Boolean.parseBoolean(values[15]),
                                 Boolean.parseBoolean(values[16]),
+                        Integer.parseInt(values[22]),
+                        Integer.parseInt(values[23]),
+                        Integer.parseInt(values[24]),
                                 Boolean.parseBoolean(values[17]),
                                 Boolean.parseBoolean(values[18]),
                                 Boolean.parseBoolean(values[19]),
                                 Boolean.parseBoolean(values[20]),
-                                Boolean.parseBoolean(values[21]),
-                                Integer.parseInt(values[22]),
-                                Integer.parseInt(values[23]),
-                                Integer.parseInt(values[24])));
+                                Boolean.parseBoolean(values[21])
+                                ));
                 }
         } catch (IOException e) {
             System.out.println(e.getMessage());

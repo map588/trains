@@ -72,9 +72,9 @@ class CTCBlockInfo {
             factory.getSubjects().get(divergingBlockTwoID).setProperty("switchState", state);
         }
         System.out.println("Switch State: " + switchState + " \n");
-        factory.getSubjects().get(convergingBlockID).setStringProperty("switchStateString");
-        factory.getSubjects().get(divergingBlockOneID).setStringProperty("switchStateString");
-        factory.getSubjects().get(divergingBlockTwoID).setStringProperty("switchStateString");
+        factory.getSubjects().get(convergingBlockID).updateStringProperty("switchStateString");
+        factory.getSubjects().get(divergingBlockOneID).updateStringProperty("switchStateString");
+        factory.getSubjects().get(divergingBlockTwoID).updateStringProperty("switchStateString");
         if(divergingBlockOneID == blockID || divergingBlockTwoID == blockID) {
             factory.getSubjects().get(convergingBlockID).setProperty("switchState", state);
         }
@@ -190,12 +190,12 @@ class CTCBlockInfo {
     }
     void    setUnderMaintenance (boolean underMaintenance) {
         this.underMaintenance = underMaintenance;
-        factory.getSubjects().get(blockID).setPaintProperty("maintenanceLightColor");
+        factory.getSubjects().get(blockID).updatePaintProperty("maintenanceLightColor");
     }
 
     void setSwitchLightState(boolean switchLightState) {
         this.switchLightState = switchLightState;
-        factory.getSubjects().get(blockID).setPaintProperty("switchLightColor");
+        factory.getSubjects().get(blockID).updatePaintProperty("switchLightColor");
     }
     boolean getHasLight     () {
         return hasLight;
@@ -206,7 +206,7 @@ class CTCBlockInfo {
 
     void    setCrossingState(boolean crossingState) {
         this.crossingState = crossingState;
-        factory.getSubjects().get(blockID).setPaintProperty("crossingLightColor");
+        factory.getSubjects().get(blockID).updatePaintProperty("crossingLightColor");
     }
     boolean getHasCrossing  () {
         return hasCrossing;

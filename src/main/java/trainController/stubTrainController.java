@@ -250,8 +250,4 @@ public class stubTrainController implements TrainController{
         return 0;
     }
 
-    @Override
-    public void notifyChange(String property, Object newValue) {
-
-    }
 }

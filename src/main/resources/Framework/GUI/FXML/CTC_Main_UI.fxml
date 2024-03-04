@@ -48,8 +48,8 @@
                     </AnchorPane>
                 </ScrollPane>
                 <ToolBar prefHeight="40.0" prefWidth="200.0">
-                    <ComboBox fx:id="blockSelection" prefWidth="60"/>
-                    <ComboBox fx:id="lineSelection" prefWidth="40"/>
+                    <ComboBox fx:id="blockSelection" prefWidth="20"/>
+                    <ComboBox fx:id="lineSelection" minWidth="80"/>
                     <Button fx:id="switchLightToggle" mnemonicParsing="false" text="Light"/>
                     <Button fx:id="crossingStateToggle" mnemonicParsing="false" text="Crossing"/>
                     <Button fx:id="switchStateToggle" mnemonicParsing="false" text="Switch"/>
