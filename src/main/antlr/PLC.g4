@@ -32,7 +32,7 @@ compound_value
 or_operator: single_val (' or ' single_val)+ ;
 and_operator: single_val (' and ' single_val)+ ;
 single_val : not_operator | list_value ;
-not_operator : 'not ' list_value;
+not_operator : 'not ' list_value ;
 list_value : (OCCUPANCY | SWITCH | SWITCH_REQUEST | LIGHT | CROSSING | AUTHORITY) '[' INDEX ']' ;
 value_false : FALSE | RED | MAIN | CLOSED ;
 value_true : TRUE | GREEN | ALT | OPEN ;
