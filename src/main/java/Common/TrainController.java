@@ -70,8 +70,6 @@ public interface TrainController extends GUIModifiable {
 
     trainControllerSubject getSubject();
 
-    //int getBlocksToNextStation();
-
     boolean getAnnouncements();
 
     boolean getSignalFailure();
