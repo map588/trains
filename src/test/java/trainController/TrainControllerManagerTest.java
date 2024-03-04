@@ -37,6 +37,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
         stage.setScene(scene);
         stage.show();
         stage.toFront();
+
         currentSubject = trainControllerSubjectMap.getInstance().getSubject(1);
         controller = trainControllerSubjectMap.getInstance().getSubject(1).getController();
     }
@@ -100,7 +101,6 @@ public class TrainControllerManagerTest extends ApplicationTest {
 
         // Verify slider's new value
         assertEquals(newValue, setSpeedSlider.getValue());
-        // Verify the change in command speed in the controller
         assertEquals(newValue, controller.getOverrideSpeed());
     }
 
@@ -116,8 +116,6 @@ public class TrainControllerManagerTest extends ApplicationTest {
         // Toggle external light checkbox
         CheckBox extLightCheckBox = lookup("#extLightCheckBox").queryAs(CheckBox.class);
         clickOn(extLightCheckBox);
-
-        // Verify external light status change
         assertEquals(extLightCheckBox.isSelected(), controller.getExtLights());
     }
 

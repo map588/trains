@@ -24,7 +24,6 @@ class trainControllerImplTest {
         controller.setCommandSpeed(50); // Example condition
 
         // Invocations and Assertions go here
-
     }
 
     // Additional tests for property setters, assignTrainModel, notifyChange, etc.

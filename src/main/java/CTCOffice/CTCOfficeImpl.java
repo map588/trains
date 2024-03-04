@@ -2,10 +2,7 @@ package CTCOffice;
 
 import Common.CTCOffice;
 import Common.TrainModel;
-import Utilities.TrueBlockInfo;
-import trainModel.trainModelImpl;
 
-import Utilities.CSVTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +10,6 @@ import Framework.Support.ObservableHashMap;
 
 import static Utilities.CSVTokenizer.blockList;
 import static Utilities.CSVTokenizer.lineNames;
-import static Utilities.Constants.*;
 
 /**
  * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).

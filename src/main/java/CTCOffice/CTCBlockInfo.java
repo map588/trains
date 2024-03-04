@@ -1,6 +1,6 @@
 package CTCOffice;
 
-import Utilities.TrueBlockInfo;
+import Utilities.BasicBlockInfo;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -51,7 +51,7 @@ class CTCBlockInfo {
        factory.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
-    CTCBlockInfo(TrueBlockInfo block) {
+    CTCBlockInfo(BasicBlockInfo block) {
         this(block.blockNumber(), block.line(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
                 block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
                 block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),

@@ -1,7 +1,7 @@
 package waysideController;
 
 import Utilities.CSVTokenizer;
-import Utilities.TrueBlockInfo;
+import Utilities.BasicBlockInfo;
 import com.fazecast.jSerialComm.*;
 
 import java.io.BufferedReader;
@@ -74,7 +74,7 @@ public class WaysideControllerHW implements PLCRunner {
 
     private void setupBlocks(int[] blockIDList) {
         blockMap.clear();
-        List<TrueBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
         for(int blockID : blockIDList) {
             blockMap.put(blockID, new WaysideBlock(fullBlockList.get(blockID)));
         }

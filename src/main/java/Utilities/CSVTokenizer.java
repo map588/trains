@@ -1,6 +1,5 @@
 package Utilities;
 
-import CTCOffice.CTCBlockSubject;
 import Framework.Support.ObservableHashMap;
 
 import java.io.BufferedReader;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 
 public class CSVTokenizer {
 
-    public final static ObservableHashMap<String, ArrayList<TrueBlockInfo>> blockList = new ObservableHashMap<>();
+    public final static ObservableHashMap<String, ArrayList<BasicBlockInfo>> blockList = new ObservableHashMap<>();
     public final static ArrayList<String> lineNames = new ArrayList<>();
 
     private static String CSVFileName;
@@ -27,7 +26,7 @@ public class CSVTokenizer {
         try (BufferedReader br = new BufferedReader(new FileReader(CSVFileName))) {
             blockList.put(lineName, new ArrayList<>() {
                 {
-                    add(new TrueBlockInfo(lineName,
+                    add(new BasicBlockInfo(lineName,
                             'A',
                             1,
                             100,
@@ -58,7 +57,7 @@ public class CSVTokenizer {
                         br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                blockList.get(lineName).add(new TrueBlockInfo(
+                blockList.get(lineName).add(new BasicBlockInfo(
                                 lineName,
                                 values[1].charAt(0),
                                 Integer.parseInt(values[2]),

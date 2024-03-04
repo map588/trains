@@ -1,5 +1,0 @@
-
-PACKAGE DESCRIPTION
--------------------
-This package will be used to hold common code, constants, and other
-resources that are used by multiple packages in the project.

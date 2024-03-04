@@ -1,7 +1,7 @@
 package waysideController;
 
 import Framework.Support.Notifications;
-import Utilities.TrueBlockInfo;
+import Utilities.BasicBlockInfo;
 
 import static waysideController.Properties.*;
 
@@ -38,7 +38,7 @@ public class WaysideBlock implements Notifications {
         this.switchBlockAlt = switchBlockAlt;
     }
 
-    public WaysideBlock(TrueBlockInfo blockInfo) {
+    public WaysideBlock(BasicBlockInfo blockInfo) {
         this(blockInfo.blockNumber(), blockInfo.isSwitchConvergingBlock(), blockInfo.hasSwitchLight(), blockInfo.hasCrossing(), blockInfo.divergingBlockID_Main(), blockInfo.divergingBlockID_Alt());
     }
 

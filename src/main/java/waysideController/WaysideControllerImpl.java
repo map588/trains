@@ -3,10 +3,9 @@ package waysideController;
 import Common.WaysideController;
 import Framework.Support.Notifications;
 import Utilities.CSVTokenizer;
-import Utilities.TrueBlockInfo;
+import Utilities.BasicBlockInfo;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
 
-        List<TrueBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
         for(int blockID : blockIDList) {
             addBlock(new WaysideBlock(fullBlockList.get(blockID)));
         }
