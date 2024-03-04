@@ -1,8 +1,8 @@
 package Utilities;
 
-import Utilities.BasicBlockInfo;
-import Utilities.BasicBlockInfo.DoorSide;
-import Utilities.BasicBlockInfo.BlockType;
+import Utilities.ParsedBlock;
+import Utilities.ParsedBlock.DoorSide;
+import Utilities.ParsedBlock.BlockType;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,8 +13,8 @@ import java.util.Optional;
 
 public class CSVToHashMap {
 
-    public static HashMap<String, ArrayDeque<BasicBlockInfo>> parseCSV(String filePath) {
-        HashMap<String, ArrayDeque<BasicBlockInfo>> map = new HashMap<>();
+    public static HashMap<String, ArrayDeque<ParsedBlock>> parseCSV(String filePath) {
+        HashMap<String, ArrayDeque<ParsedBlock>> map = new HashMap<>();
 
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -45,7 +45,7 @@ public class CSVToHashMap {
 
                 // Parse the Infrastructure column to determine the block type and additional data
                 String infrastructure = values[infrastructureIndex];
-                BasicBlockInfo blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
+                ParsedBlock blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
                         isUnderground, infrastructure);
 
@@ -58,7 +58,7 @@ public class CSVToHashMap {
         return map;
     }
 
-    private static BasicBlockInfo parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
+    private static ParsedBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
                                                       double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
                                                       boolean isUnderground, String infrastructure) {
         // Default values for prevBlock and nextBlock as an example
@@ -66,27 +66,27 @@ public class CSVToHashMap {
         int nextBlock = -1; // These should be determined based on actual logic
 
         if (infrastructure == null || infrastructure.isEmpty()) {
-            return BasicBlockInfo.ofRegular(trackLine, section, blockNumber, blockLength,
+            return ParsedBlock.ofRegular(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground, prevBlock, nextBlock);
         } else if (infrastructure.contains("RAILWAY CROSSING")) {
-            return BasicBlockInfo.ofCrossing(trackLine, section, blockNumber, blockLength,
+            return ParsedBlock.ofCrossing(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground, prevBlock, nextBlock);
         } else if (infrastructure.contains("Switch")) {
             // Determine if it's SWITCH_IN or SWITCH_OUT based on specific logic
             // This is simplified; actual parsing of the infrastructure string is needed to extract switch details
-            return BasicBlockInfo.ofSwitchIn(trackLine, section, blockNumber, blockLength,
+            return ParsedBlock.ofSwitchIn(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground, prevBlock, nextBlock, -1); // Example, adjust alternativeSwitchBlock accordingly
         } else if (infrastructure.contains("STATION;")) {
             String stationName = infrastructure.split(";")[1].trim();
-            return BasicBlockInfo.ofStation(trackLine, section, blockNumber, blockLength,
+            return ParsedBlock.ofStation(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground, prevBlock, nextBlock, stationName, DoorSide.BOTH); // Example, adjust doorSide accordingly
         }
         // Default to REGULAR if no specific type is matched
-        return BasicBlockInfo.ofRegular(trackLine, section, blockNumber, blockLength,
+        return ParsedBlock.ofRegular(trackLine, section, blockNumber, blockLength,
                 blockGrade, speedLimit, elevation, cumulativeElevation,
                 isUnderground, prevBlock, nextBlock);
     }
@@ -102,7 +102,7 @@ public class CSVToHashMap {
 
     public static void main(String[] args) {
         String filePath = "path/to/track_layout.csv";
-        HashMap<String, ArrayDeque<BasicBlockInfo>> trackLines = parseCSV(filePath);
+        HashMap<String, ArrayDeque<ParsedBlock>> trackLines = parseCSV(filePath);
         // Further processing...
     }
 }
