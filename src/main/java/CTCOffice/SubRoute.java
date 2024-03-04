@@ -3,20 +3,21 @@ package CTCOffice;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleStop {
+// A path in between two stations, a schedule is mostly just a list of these.
+public class SubRoute { //SubRoute
     private int stationBlockID;
     private int arrivalTime;
     private int departureTime;
     private List<Integer> speedList;
-    private List<Integer> blockList;
+    private List<Integer> routePath; //routePath
     private List<Integer> authorityList;
 
-    public SingleStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
+    public SubRoute(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
         this.stationBlockID = stationBlockID;
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;
         this.speedList = new ArrayList<Integer>(speedList);
-        this.blockList = new ArrayList<Integer>(blockList);
+        this.routePath = new ArrayList<Integer>(routePath);
         this.authorityList = new ArrayList<Integer>(authorityList);
     }
 
@@ -32,12 +33,13 @@ public class SingleStop {
         return departureTime;
     }
 
+
     public List<Integer> getSpeedList() {
         return speedList;
     }
 
-    public List<Integer> getBlockList() {
-        return blockList;
+    public List<Integer> getRoutePath() {
+        return routePath;
     }
 
     public List<Integer> getAuthorityList() {
@@ -60,8 +62,8 @@ public class SingleStop {
         this.speedList = new ArrayList<Integer>(speedList);
     }
 
-    public void setBlockList(List<Integer> blockList) {
-        this.blockList = new ArrayList<Integer>(blockList);
+    public void setRoutePath(List<Integer> routePath) {
+        this.routePath = new ArrayList<Integer>(routePath);
     }
 
     public void setAuthorityList(List<Integer> authorityList) {
@@ -73,7 +75,7 @@ public class SingleStop {
     }
 
     public void updateBlockList(int index, int block) {
-        blockList.set(index, block);
+        routePath.set(index, block);
     }
 
     public void updateAuthorityList(int index, int authority) {

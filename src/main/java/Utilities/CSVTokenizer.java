@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class CSVTokenizer {
 
+
+
     public final static ObservableHashMap<String, ArrayList<BasicBlockInfo>> blockList = new ObservableHashMap<>();
     public final static ArrayList<String> lineNames = new ArrayList<>();
 
@@ -47,6 +49,8 @@ public class CSVTokenizer {
                         0,
                         0,
                         0,
+                        0,
+                        1,
                         false,
                         false,
                         false,
@@ -80,6 +84,8 @@ public class CSVTokenizer {
                         Integer.parseInt(values[22]),
                         Integer.parseInt(values[23]),
                         Integer.parseInt(values[24]),
+                        Integer.parseInt(values[25]),
+                        Integer.parseInt(values[26]),
                                 Boolean.parseBoolean(values[17]),
                                 Boolean.parseBoolean(values[18]),
                                 Boolean.parseBoolean(values[19]),

@@ -7,20 +7,20 @@ public class Schedule {
     private int trainID;
     private int dispatchTime;
     private int carCount;
-    private List<SingleStop> stops  = new ArrayList<SingleStop>();
+    private List<SubRoute> stops  = new ArrayList<SubRoute>();
+    private final ScheduleSubjectFactory factory = ScheduleSubjectFactory.getInstance();
 
-    Schedule(int trainID, int dispatchTime, int carCount , ArrayList<SingleStop> stops) {
+    Schedule(int trainID, int dispatchTime, int carCount , ArrayList<SubRoute> stops) {
         this.trainID = trainID;
         this.dispatchTime = dispatchTime;
         this.carCount = carCount;
         this.stops = stops;
-        ScheduleSubjectFactory.getInstance().registerSubject(trainID, new ScheduleSubject(this));
+        factory.registerSubject(trainID, new ScheduleSubject(this));
     }
 
     public int getTrainID() {
         return trainID;
     }
-
 
     public int getDispatchTime() {
         return dispatchTime;
@@ -30,7 +30,7 @@ public class Schedule {
         return carCount;
     }
 
-    public List<SingleStop> getStops() {
+    public List<SubRoute> getStops() {
         return stops;
     }
 
@@ -46,11 +46,11 @@ public class Schedule {
         this.carCount = carCount;
     }
 
-    public void setStops(List<SingleStop> stops) {
+    public void setStops(List<SubRoute> stops) {
         this.stops = stops;
     }
 
-    public void addStop(SingleStop stop) {
+    public void addStop(SubRoute stop) {
         stops.add(stop);
     }
 
@@ -58,11 +58,11 @@ public class Schedule {
         stops.remove(index);
     }
 
-    public void updateStop(int index, SingleStop stop) {
+    public void updateStop(int index, SubRoute stop) {
         stops.set(index, stop);
     }
 
-    public SingleStop getStop(int index) {
+    public SubRoute getStop(int index) {
         return stops.get(index);
     }
 
@@ -75,7 +75,7 @@ public class Schedule {
     }
 
     public void printStops() {
-        for (SingleStop stop : stops) {
+        for (SubRoute stop : stops) {
             System.out.println("Block ID: " + stop.getStationBlockID());
         }
     }
@@ -98,7 +98,7 @@ public class Schedule {
     }
 
     public void updateStopBlockList(int index, List<Integer> blockList) {
-        stops.get(index).setBlockList(blockList);
+        stops.get(index).setRoutePath(blockList);
     }
 
     public void updateStopAuthorityList(int index, List<Integer> authorityList) {
@@ -110,24 +110,24 @@ public class Schedule {
         stops.get(index).setArrivalTime(arrivalTime);
         stops.get(index).setDepartureTime(departureTime);
         stops.get(index).setSpeedList(speedList);
-        stops.get(index).setBlockList(blockList);
+        stops.get(index).setRoutePath(blockList);
         stops.get(index).setAuthorityList(authorityList);
     }
 
     public void addStop(int blockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
-        stops.add(new SingleStop(blockID, arrivalTime, departureTime, speedList, blockList, authorityList));
+        stops.add(new SubRoute(blockID, arrivalTime, departureTime, speedList, blockList, authorityList));
     }
 
-    public void updateStopSpeed(int stopIndex, int speedIndex, int speed) {
-        stops.get(stopIndex).updateSpeedList(speedIndex, speed);
+    public void setSpeed(int subRouteIndex, int blockID, int speed) {
+        stops.get(subRouteIndex).updateSpeedList(blockID, speed);
     }
 
-    public void updateStopStation(int stopIndex, int blockIndex, int block) {
-        stops.get(stopIndex).updateBlockList(blockIndex, block);
+    public void setAuthority(int subRouteIndex, int blockID, int authority) {
+        stops.get(subRouteIndex).updateAuthorityList(blockID, authority);
     }
 
-    public void updateStopAuthority(int stopIndex, int authorityIndex, int authority) {
-        stops.get(stopIndex).updateAuthorityList(authorityIndex, authority);
+    public void setDestination(int subRouteIndex, int blockID) {
+        stops.get(subRouteIndex).setStationBlockID(blockID);
     }
 
 }

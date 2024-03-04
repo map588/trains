@@ -44,8 +44,8 @@ public class CTCOfficeImpl implements CTCOffice {
         }
         ArrayList<Integer> blank = new ArrayList<>();
 
-        schedules.put(1, new Schedule(1, 0, 1, new ArrayList<>() {{add(new SingleStop(10, 0, 0, blank, blank, blank));}}));
-        schedules.put(2, new Schedule(2, 0, 1, new ArrayList<>() {{add(new SingleStop(15, 0, 0, blank, blank, blank));}}));
+        schedules.put(1, new Schedule(1, 0, 1, new ArrayList<>() {{add(new SubRoute(10, 0, 0, blank, blank, blank));}}));
+        schedules.put(2, new Schedule(2, 0, 1, new ArrayList<>() {{add(new SubRoute(15, 0, 0, blank, blank, blank));}}));
 
     }
 

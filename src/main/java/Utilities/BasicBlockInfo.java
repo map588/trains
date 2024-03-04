@@ -22,6 +22,8 @@ public record BasicBlockInfo(
     int convergingBlockID,
     int divergingBlockID_Main,
     int divergingBlockID_Alt,
+    int blockBeforeThis,
+    int blockAfterThis,
 
     //TODO: The below fields are not constants, and should be constructed in a class that operates on them.
     boolean isOccupied,
