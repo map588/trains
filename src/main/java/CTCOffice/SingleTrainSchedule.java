@@ -3,19 +3,26 @@ package CTCOffice;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Schedule {
+public class SingleTrainSchedule {
+    private String scheduleName;
+    private String modifiedTime;
     private int trainID;
+    private String line;
     private int dispatchTime;
     private int carCount;
     private List<SubRoute> stops  = new ArrayList<SubRoute>();
     private final ScheduleSubjectFactory factory = ScheduleSubjectFactory.getInstance();
 
-    Schedule(int trainID, int dispatchTime, int carCount , ArrayList<SubRoute> stops) {
+    SingleTrainSchedule(String scheduleName, String modifiedTime, int trainID, String line, int dispatchTime, int carCount, List<SubRoute> stops) {
+        this.scheduleName = scheduleName;
+        this.modifiedTime = modifiedTime;
         this.trainID = trainID;
+        this.line = line;
         this.dispatchTime = dispatchTime;
         this.carCount = carCount;
         this.stops = stops;
-        factory.registerSubject(trainID, new ScheduleSubject(this));
+
+        factory.registerSubject(trainID, new SingleTrainScheduleSubject(this));
     }
 
     public int getTrainID() {
@@ -129,5 +136,34 @@ public class Schedule {
     public void setDestination(int subRouteIndex, int blockID) {
         stops.get(subRouteIndex).setStationBlockID(blockID);
     }
+
+    public void setModifiedTime(String modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public String getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public String getScheduleName() {
+        return scheduleName;
+    }
+
+    public void setScheduleName(String scheduleName) {
+        this.scheduleName = scheduleName;
+    }
+
+    public void updateModifiedTime() {
+        this.modifiedTime = java.time.LocalDateTime.now().toString();
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
 
 }

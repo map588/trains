@@ -27,8 +27,8 @@ public class CTCOfficeImpl implements CTCOffice {
 
     public Map<Integer, TrainModel> trains = new HashMap<>();
 
-    final static Map<String, ArrayList<CTCBlockSubject>> track = new ObservableHashMap<>();
-    final static Map<Integer, Schedule> schedules = new ObservableHashMap<>();
+    final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
+    public final static HashMap<Integer, SingleTrainScheduleSubject> schedules = new HashMap<>();
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
 
     /**
@@ -44,9 +44,8 @@ public class CTCOfficeImpl implements CTCOffice {
         }
         ArrayList<Integer> blank = new ArrayList<>();
 
-        schedules.put(1, new Schedule(1, 0, 1, new ArrayList<>() {{add(new SubRoute(10, 0, 0, blank, blank, blank));}}));
-        schedules.put(2, new Schedule(2, 0, 1, new ArrayList<>() {{add(new SubRoute(15, 0, 0, blank, blank, blank));}}));
-
+        schedules.put(1, new SingleTrainScheduleSubject(new SingleTrainSchedule("A", "0",1, "BlueLine", 0, 1, new ArrayList<>() {{add(new SubRoute(10, 0, 0, blank, blank, blank));}})));
+        schedules.put(2, new SingleTrainScheduleSubject(new SingleTrainSchedule("B", "1",2, "BlueLine", 1, 2,new ArrayList<>() {{add(new SubRoute(15, 0, 0, blank, blank, blank));}})));
     }
 
     public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {

@@ -22,6 +22,8 @@ public record BasicBlockInfo(
     int convergingBlockID,
     int divergingBlockID_Main,
     int divergingBlockID_Alt,
+
+    // -1 is a void block (no block before or after), 0 is a yard block, -2 is a switch block, and other positive values are normal blocks
     int blockBeforeThis,
     int blockAfterThis,
 

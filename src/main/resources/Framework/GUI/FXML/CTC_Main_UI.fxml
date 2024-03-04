@@ -60,7 +60,7 @@
         <AnchorPane>
             <VBox alignment="TOP_CENTER" prefHeight="10040.0" AnchorPane.bottomAnchor="0.0"
                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
+                <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0">
                     <opaqueInsets>
                         <Insets right="20.0"/>
                     </opaqueInsets>
@@ -73,18 +73,18 @@
                         <Font size="14.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="scheduleTable" maxWidth="400" minWidth="200" prefHeight="200.0" prefWidth="200.0">
+                <TableView fx:id="scheduleTable" prefHeight="200.0">
                     <columns>
-                        <TableColumn fx:id="scheduleNameColumn" editable="false" maxWidth="300" minWidth="150.0" prefWidth="300.0" text="File Name"/>
-                        <TableColumn fx:id="scheduleDateModColumn" editable="false" maxWidth="100" minWidth="50" prefWidth="100.0" text="Date Modified"/>
+                        <TableColumn fx:id="scheduleNameColumn" editable="false"  text="File Name"/>
+                        <TableColumn fx:id="scheduleDateModColumn" editable="false" text="Date Modified"/>
                     </columns>
                 </TableView>
                 <HBox alignment="TOP_CENTER">
-                    <ComboBox prefWidth="150.0"/>
-                    <Button mnemonicParsing="false" text="Select"/>
+                    <ComboBox fx:id="scheduleSelector" prefWidth="150.0"/>
+                    <Button fx:id="selectScheduleButton" mnemonicParsing="false" text="Select"/>
                 </HBox>
                 <TextField/>
-                <TableView fx:id="scheduleEditTable" prefHeight="200.0" prefWidth="200.0">
+                <TableView fx:id="scheduleEditTable" prefHeight="200.0">
                     <columns>
                         <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
                         <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
@@ -96,7 +96,7 @@
 
                     </columns>
                 </TableView>
-                <ToolBar fx:id="stopsToolBar" prefHeight="40.0" prefWidth="200.0">
+                <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
                     <ChoiceBox fx:id="lineStopSelector" prefWidth="50.0"/>
                     <ChoiceBox fx:id="trainStopSelector" prefWidth="50.0"/>
                     <ChoiceBox fx:id="stationStopSelector" prefWidth="50.0"/>
@@ -107,7 +107,7 @@
                     <ComboBox fx:id="departureTimeSelector" prefWidth="50.0"/>
                     <Button fx:id="saveStopButton" mnemonicParsing="false" text="Save"/>
                 </ToolBar>
-                <ToolBar fx:id="trainToolBar" prefHeight="40.0" prefWidth="200.0">
+                <ToolBar fx:id="trainToolBar" prefHeight="40.0" >
                     <ChoiceBox fx:id="lineTrainSelector" prefWidth="50.0"/>
                     <ChoiceBox fx:id="trainIDSelector" prefWidth="50.0"/>
                     <Button fx:id="AddTrain" mnemonicParsing="false" text="Add Train"/>

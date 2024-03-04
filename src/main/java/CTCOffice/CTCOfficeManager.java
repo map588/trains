@@ -14,6 +14,13 @@ import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import static CTCOffice.CTCOfficeImpl.schedules;
+import static CTCOffice.Properties.BlockProperties.*;
+import static CTCOffice.Properties.ScheduleProperties.*;
+import static CTCOffice.SingleTrainScheduleSubject.scheduleNames;
 
 /**
  * This class manages the GUI for the Centralized Traffic Control (CTC) office.
@@ -30,14 +37,18 @@ public class CTCOfficeManager {
     @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
     @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumn;
     @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumn;
-    @FXML private TableView<ScheduleSubject> scheduleTable;
-    @FXML private TableColumn<ScheduleSubject, Integer> dispatchTimeColumn;
-    @FXML private TableColumn<ScheduleSubject, Integer> stationBlockIDColumn;
-    @FXML private TableColumn<ScheduleSubject, Integer> arrivalTimeColumn;
-    @FXML private TableColumn<ScheduleSubject, Integer> departureTimeColumn;
-    @FXML private TableView<ScheduleSubject> scheduleEditTable;
-    @FXML private TableColumn<ScheduleSubject, Integer> lineColumn;
-    @FXML private TableColumn<ScheduleSubject, Integer> carNumberColumn;
+    @FXML private TableView<SingleTrainScheduleSubject> scheduleTable;
+    @FXML private TableColumn<SingleTrainScheduleSubject, String> scheduleNameColumn;
+    @FXML private TableColumn<SingleTrainScheduleSubject, String> scheduleDateModColumn;
+    @FXML private ComboBox<String> scheduleSelector;
+    @FXML private Button selectScheduleButton;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> dispatchTimeColumn;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> stationBlockIDColumn;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> arrivalTimeColumn;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> departureTimeColumn;
+    @FXML private TableView<SingleTrainScheduleSubject> scheduleEditTable;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> lineColumn;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> carNumberColumn;
     @FXML private ChoiceBox<String> lineStopSelector;
     @FXML private ChoiceBox<Integer> trainStopSelector;
     @FXML private Button AddStop;
@@ -48,7 +59,7 @@ public class CTCOfficeManager {
     @FXML private ChoiceBox<Integer> stationStopSelector;
     @FXML private Button saveScheduleButton;
     @FXML private Button saveStopButton;
-    @FXML private TableColumn<ScheduleSubject, Integer> scheduledTrainColumn;
+    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> scheduledTrainColumn;
     @FXML private ChoiceBox<Integer> lineTrainSelector;
     @FXML private ChoiceBox<Integer> trainIDSelector;
     @FXML private Button AddTrain;
@@ -57,8 +68,6 @@ public class CTCOfficeManager {
     @FXML private Spinner<Integer> carsSelector;
     @FXML private Button saveTrainButton;
     @FXML private Button DispatchButton;
-    @FXML private TableColumn<ScheduleSubject, String> scheduleNameColumn;
-    @FXML private TableColumn<ScheduleSubject, String> scheduleDateModColumn;
     @FXML private ComboBox<Integer> blockSelection;
     @FXML private ComboBox<String> lineSelection;
     @FXML private Button switchLightToggle;
@@ -83,19 +92,19 @@ public class CTCOfficeManager {
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
         blockTable.getItems().addAll(blockList);
-        blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty("blockID").getValue()));
+        blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
         blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
         blockNumberColumn.setEditable(false);
 
-        occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty("occupied"));
+        occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
         occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
         occupationLightColumn.setEditable(false);
 
         switchStateColumn.setCellValueFactory(block -> {
-            block.getValue().updateStringProperty("switchStateString");
-            boolean isConvergingSwitch = block.getValue().getBooleanProperty("hasSwitchCon").getValue();
-            boolean isDivergingSwitch = block.getValue().getBooleanProperty("hasSwitchDiv").getValue();
-            StringProperty stateString = block.getValue().getStringProperty("switchStateString");
+            block.getValue().updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
+            boolean isConvergingSwitch = block.getValue().getBooleanProperty(HAS_SWITCH_CON_PROPERTY).getValue();
+            boolean isDivergingSwitch = block.getValue().getBooleanProperty(HAS_SWITCH_DIV_PROPERTY).getValue();
+            StringProperty stateString = block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
 
             return isConvergingSwitch || isDivergingSwitch ? stateString : null;
         });
@@ -103,26 +112,26 @@ public class CTCOfficeManager {
 
 
         switchLightColumn.setCellValueFactory(block -> {
-            block.getValue().updatePaintProperty("switchLightColor");
-            boolean hasLight = block.getValue().getBooleanProperty("hasLight").getValue();
-            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty("switchLightColor");
+            block.getValue().updatePaintProperty(SWITCH_LIGHT_COLOR_PROPERTY);
+            boolean hasLight = block.getValue().getBooleanProperty(HAS_LIGHT_PROPERTY).getValue();
+            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty(SWITCH_LIGHT_COLOR_PROPERTY);
 
-            return  hasLight ? lightColor : null;
+            return hasLight ? lightColor : null;
         });
         switchLightColumn.setCellFactory(column -> createColoredCircleCell());
 
         crossingStateColumn.setCellValueFactory(block -> {
-            block.getValue().updatePaintProperty("crossingLightColor");
-            boolean hasCrossing = block.getValue().getBooleanProperty("hasCrossing").getValue();
-            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty("crossingLightColor");
+            block.getValue().updatePaintProperty(CROSSING_LIGHT_COLOR_PROPERTY);
+            boolean hasCrossing = block.getValue().getBooleanProperty(HAS_CROSSING_PROPERTY).getValue();
+            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty(CROSSING_LIGHT_COLOR_PROPERTY);
 
             return hasCrossing ? lightColor : null;
         });
         crossingStateColumn.setCellFactory(column -> createColoredCircleCell());
 
         underMaintenanceColumn.setCellValueFactory(block -> {
-            block.getValue().updatePaintProperty("maintenanceLightColor");
-            return block.getValue().getPaintProperty("maintenanceLightColor");
+            block.getValue().updatePaintProperty(MAINTENANCE_LIGHT_COLOR_PROPERTY);
+            return block.getValue().getPaintProperty(MAINTENANCE_LIGHT_COLOR_PROPERTY);
         });
         underMaintenanceColumn.setCellFactory(column -> createColoredCircleCell());
 
@@ -130,15 +139,15 @@ public class CTCOfficeManager {
         blockSelection.getItems().addAll(factory.getSubjects().keySet());
         lineSelection.getItems().addAll(CSVTokenizer.lineNames);
 
-        switchLightToggle.setOnAction(event -> toggleProperty("switchLightState"));
-        switchStateToggle.setOnAction(event -> toggleProperty("switchState"));
-        crossingStateToggle.setOnAction(event -> toggleProperty("crossingState"));
-        maintenanceToggle.setOnAction(event -> toggleProperty("underMaintenance"));
+        switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
+        switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
+        crossingStateToggle.setOnAction(event -> toggleProperty(CROSSING_STATE_PROPERTY));
+        maintenanceToggle.setOnAction(event -> toggleProperty(UNDER_MAINTENANCE_PROPERTY));
 
         blockTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                blockSelection.setValue(newValue.getIntegerProperty("blockID").getValue());
-                lineSelection.setValue(newValue.getStringProperty("line").getValue());
+                blockSelection.setValue(newValue.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
+                lineSelection.setValue(newValue.getStringProperty(LINE_PROPERTY).getValue());
             }
         });
 
@@ -146,23 +155,69 @@ public class CTCOfficeManager {
         lineSelection.setValue(CSVTokenizer.lineNames.get(0));
 
 
+        //schedules table
+        scheduleTable.setEditable(true);
+        scheduleTable.getItems().addAll(scheduleFactory.getSubjects().values());
+        scheduleNameColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(SCHEDULE_NAME_PROPERTY));
+        scheduleDateModColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(MODIFIED_TIME_PROPERTY));
+        for(int i = 0; i < scheduleNames.size(); i++) {
+            scheduleSelector.getItems().add(scheduleNames.get(i));
+        }
 
 
-        double dividerPosition = 515.0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // divider position listeners for the main split pane
+
+        double minDividerPosition = 460.0;
+        double maxDividerPosition = 300.0;
+        double tableWidthAdjustment = 8.0;
         mainAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
-            if(mainAnchor.getWidth() > 0){
-                if(Array.getDouble(mainSplit.getDividerPositions(), 0) * mainAnchor.getWidth() > dividerPosition){
-                    mainSplit.setDividerPosition(0, dividerPosition / mainAnchor.getWidth());
+            if (mainAnchor.getWidth() > 0) {
+                if (Array.getDouble(mainSplit.getDividerPositions(), 0) * mainAnchor.getWidth() < minDividerPosition) {
+                    mainSplit.setDividerPosition(0, minDividerPosition / mainAnchor.getWidth());
+                } else if ((1 - Array.getDouble(mainSplit.getDividerPositions(), 0)) * mainAnchor.getWidth() > maxDividerPosition) {
+                    mainSplit.setDividerPosition(0, 1 - (maxDividerPosition / mainAnchor.getWidth()));
                 }
+
+                scheduleNameColumn.setMaxWidth(((newValue.doubleValue() * (1 - mainSplit.getDividerPositions()[0])) - tableWidthAdjustment) * 0.7);
+                scheduleDateModColumn.setMaxWidth(((newValue.doubleValue() * (1 - mainSplit.getDividerPositions()[0])) - tableWidthAdjustment) * 0.3);
+                scheduleNameColumn.setMinWidth(((newValue.doubleValue() * (1 - mainSplit.getDividerPositions()[0])) - tableWidthAdjustment) * 0.7);
+                scheduleDateModColumn.setMinWidth(((newValue.doubleValue() * (1 - mainSplit.getDividerPositions()[0])) - tableWidthAdjustment) * 0.3);
             }
         });
+
         mainSplit.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
-            if( dividerPosition / mainAnchor.getWidth() < newValue.doubleValue()){
-                mainSplit.setDividerPosition(0, dividerPosition / mainAnchor.getWidth());
+            if (minDividerPosition / mainAnchor.getWidth() > newValue.doubleValue()) {
+                mainSplit.setDividerPosition(0, minDividerPosition / mainAnchor.getWidth());
+            } else if (1 - (maxDividerPosition / mainAnchor.getWidth()) < newValue.doubleValue()) {
+                mainSplit.setDividerPosition(0, 1 - (maxDividerPosition / mainAnchor.getWidth()));
             }
+            scheduleNameColumn.setMaxWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.7);
+            scheduleDateModColumn.setMaxWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.3);
+            scheduleNameColumn.setMinWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.7);
+            scheduleDateModColumn.setMinWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.3);
+
+
         });
-
-
     }
 
     /**
