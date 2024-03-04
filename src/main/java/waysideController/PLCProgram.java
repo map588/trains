@@ -39,11 +39,9 @@ public class PLCProgram {
     public void runBlueLine() {
 
         // Process switch state requests
-        System.out.println("State of switch is " + blockMap.get(5).getSwitchState());
         if(blockMap.get(5).getSwitchState() != blockMap.get(5).getSwitchRequest()) {
             if(!blockMap.get(5).isOccupied() && !blockMap.get(6).isOccupied() && !blockMap.get(11).isOccupied()) {
                 setSwitch(5, blockMap.get(5).getSwitchRequest());
-                System.out.println("Swapping switch state");
             }
         }
 
@@ -94,12 +92,5 @@ public class PLCProgram {
         setAuth(13, !blockMap.get(14).isOccupied() && !blockMap.get(15).isOccupied());
         setAuth(14, !blockMap.get(15).isOccupied());
         setAuth(15, false);
-
-        System.out.println("Switch = " + blockMap.get(5).getSwitchState());
-
-        System.out.println("Light 6 = " + blockMap.get(6).getLightState());
-        System.out.println("Light 1 = " + blockMap.get(11).getLightState());
-
-        System.out.println("Crossing = " + blockMap.get(3).getLightState());
     }
 }
