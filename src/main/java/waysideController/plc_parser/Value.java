@@ -14,16 +14,16 @@ public class Value {
         return (Boolean)value;
     }
 
-    public Double asDouble() {
-        return (Double)value;
+    public Integer asInteger() {
+        return (Integer)value;
     }
 
     public String asString() {
         return String.valueOf(value);
     }
 
-    public boolean isDouble() {
-        return value instanceof Double;
+    public boolean isInteger() {
+        return value instanceof Integer;
     }
 
     @Override

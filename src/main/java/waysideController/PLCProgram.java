@@ -1,5 +1,15 @@
 package waysideController;
 
+import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import waysideController.plc_parser.PLCEvalVisitor;
+import waysideController.plc_parser.PLCLexer;
+import waysideController.plc_parser.PLCParser;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +19,19 @@ public class PLCProgram {
 
     private final Map<Integer, WaysideBlock> blockMap;
     private final PLCRunner controller;
+    private ParseTree tree;
+    private PLCEvalVisitor evalVisitor;
 
     public PLCProgram(PLCRunner controller) {
+        this.controller = controller;
         this.blockMap = controller.getBlockMap();
 
-        this.controller = controller;
+        PLCLexer lexer = new PLCLexer(CharStreams.fromString("switch[1] = occupied[2] or occupied[3]"));
+        PLCParser parser = new PLCParser(new CommonTokenStream(lexer));
+        tree = parser.program();
+        evalVisitor = new PLCEvalVisitor(blockMap);
+
+        evalVisitor.visit(tree);
     }
 
     private void setSwitch(int blockID, boolean switchState) {
@@ -92,5 +110,8 @@ public class PLCProgram {
         setAuth(13, !blockMap.get(14).isOccupied() && !blockMap.get(15).isOccupied());
         setAuth(14, !blockMap.get(15).isOccupied());
         setAuth(15, false);
+
+        evalVisitor.visit(tree);
+        System.out.println(blockMap.get(1).getSwitchState());
     }
 }

@@ -39,13 +39,14 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         this.id = id;
         this.trackLine = lineName;
 
-        program = new PLCProgram(this);
         subject = new WaysideControllerSubject(this);
 
         List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
         for(int blockID : blockIDList) {
             addBlock(new WaysideBlock(fullBlockList.get(blockID)));
         }
+
+        program = new PLCProgram(this);
     }
 
     @Override

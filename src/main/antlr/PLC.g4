@@ -3,7 +3,7 @@ grammar PLC;
 program : (statement | statement NEWLINE | NEWLINE)+;
 statement : set_list_value | if_statement | if_else_statement ;
 
-set_list_value : list_value '=' (compound_value | value_false | value_true) ;
+set_list_value : list_name '[' index ']' '=' (compound_value | value_false | value_true) ;
 
 if_statement
     : 'if ' (compound_value | equality_check)
@@ -33,7 +33,9 @@ or_operator: single_val (' or ' single_val)+ ;
 and_operator: single_val (' and ' single_val)+ ;
 single_val : not_operator | list_value ;
 not_operator : 'not ' list_value ;
-list_value : (OCCUPANCY | SWITCH | SWITCH_REQUEST | LIGHT | CROSSING | AUTHORITY) '[' INDEX ']' ;
+list_value : list_name '[' index ']' ;
+index : INDEX ;
+list_name : (OCCUPANCY | SWITCH | SWITCH_REQUEST | LIGHT | CROSSING | AUTHORITY) ;
 value_false : FALSE | RED | MAIN | CLOSED ;
 value_true : TRUE | GREEN | ALT | OPEN ;
 
