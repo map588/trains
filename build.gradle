@@ -42,8 +42,9 @@ dependencies {
 }
 
 generateGrammarSource {
-    arguments += ['-visitor', '-no-listener', '-package', 'waysideController.plc.parser']
-    outputDirectory = file("src/main/java/waysideController/plc.parser")
+    println "Generating grammar source"
+    arguments += ['-visitor', '-no-listener']
+    outputDirectory = file("src/main/java/waysideController/plc_parser")
 }
 
 
@@ -118,6 +119,7 @@ test {
 }
 
 run {
+    println "Running application"
     doFirst {
         def javafxLibPath = getJavaFXLibPath()
         jvmArgs = [
