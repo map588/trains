@@ -26,5 +26,6 @@ public record BasicBlockInfo(
     boolean switchLightState,
     int convergingBlockID,
     int divergingBlockID_Main,
-    int divergingBlockID_Alt) {}
+    int divergingBlockID_Alt) {
+}
 

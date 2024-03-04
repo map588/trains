@@ -52,7 +52,7 @@ class CTCBlockInfo {
     }
 
     CTCBlockInfo(BasicBlockInfo block) {
-        this(block.blockNumber(), block.line(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
+        this(block.blockNumber(), block.trackLine(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
                 block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
                 block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),
                 block.underMaintenance());

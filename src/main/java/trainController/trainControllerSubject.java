@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import static trainController.Properties.*;
 
 public class trainControllerSubject implements AbstractSubject, Notifications {
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainController controller;
 
@@ -61,6 +60,7 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
 
     }
 
+    //Change coming from the logic side
     public void notifyChange(String propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
@@ -68,7 +68,7 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
         }
     }
 
-
+    //Change coming from the GUI side
     public void setProperty(String propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
 
@@ -78,10 +78,18 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
                 executeUpdate(() -> {
                     updateProperty(property, newValue);
                     controller.setValue(propertyName, newValue);
-                }, true);
+                }, false);
             } finally {
                 isGUIUpdateInProgress = false;
             }
+        }
+    }
+
+    private void executeUpdate(Runnable updateTask, boolean runImmediately) {
+        if (runImmediately) {
+            updateTask.run();
+        } else {
+            Platform.runLater(updateTask);
         }
     }
 
@@ -111,14 +119,6 @@ public class trainControllerSubject implements AbstractSubject, Notifications {
             updateAction.run();
         } else {
             Platform.runLater(updateAction);
-        }
-    }
-
-    private void executeUpdate(Runnable updateTask, boolean runImmediately) {
-        if (Platform.isFxApplicationThread() && runImmediately) {
-            updateTask.run();
-        } else {
-            Platform.runLater(updateTask);
         }
     }
 

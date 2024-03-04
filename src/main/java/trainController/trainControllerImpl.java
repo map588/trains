@@ -2,6 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Framework.Support.GUIModifiable;
 import Framework.Support.Notifications;
 import Utilities.Constants;
 import trainModel.stubTrainModel;
@@ -32,7 +33,7 @@ import static trainController.Properties.*;
  * The rate is determined by the samplingPeriod property.
  *
  */
-public class trainControllerImpl implements TrainController, Notifications {
+public class trainControllerImpl implements TrainController, GUIModifiable {
     private final int trainID;
     private final trainControllerSubject subject;
     private TrainModel train;
@@ -98,126 +99,114 @@ public class trainControllerImpl implements TrainController, Notifications {
         this.setPowerFailure(train.getPowerFailure());
     }
 
-    /**
-     * This method is used to notify the change in the value of a property.
-     * It prints the property name and the new value to the console and then notifies the subject of the change.
-     * The notification to the subject is only done if the GUI is not currently being updated.
-     *
-     * @param propertyName  The name of the property that has changed.
-     * @param newValue      The new value of the property.
-     */
-    public void notifyChange(String propertyName, Object newValue) {
-            subject.notifyChange(propertyName, newValue);
-    }
-
 
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        notifyChange(automaticMode_p, mode);
+        subject.notifyChange(automaticMode_p, mode);
     }
     public void setAuthority(int authority) {
         this.authority = authority;
-        notifyChange(authority_p, authority);
+        subject.notifyChange(authority_p, authority);
     }
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        notifyChange(overrideSpeed_p, speed);
+        subject.notifyChange(overrideSpeed_p, speed);
         //calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        notifyChange(commandSpeed_p, speed);
+        subject.notifyChange(commandSpeed_p, speed);
         //calculatePower();
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        notifyChange(currentSpeed_p, speed);
+        subject.notifyChange(currentSpeed_p, speed);
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        notifyChange(serviceBrake_p, brake);
+        subject.notifyChange(serviceBrake_p, brake);
     }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        notifyChange(emergencyBrake_p, brake);
+        subject.notifyChange(emergencyBrake_p, brake);
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
-        notifyChange(Ki_p, Ki);
+        subject.notifyChange(Ki_p, Ki);
     }
     public void setKp(double Kp) {
         this.Kp = Kp;
-        notifyChange(Kp_p, Kp);
+        subject.notifyChange(Kp_p, Kp);
     }
     public void setPower(double power) {
         this.power = power;
-        notifyChange(power_p, power);
+        subject.notifyChange(power_p, power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        notifyChange(intLights_p, lights); // This might've been the issue interiorLights -> intLights
+        subject.notifyChange(intLights_p, lights); // This might've been the issue interiorLights -> intLights
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
 
-        notifyChange(extLights_p, lights); // This might've been the issue exteriorLights -> extLights
+        subject.notifyChange(extLights_p, lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        notifyChange(leftDoors_p, doors);
+        subject.notifyChange(leftDoors_p, doors);
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        notifyChange(rightDoors_p, doors);
+        subject.notifyChange(rightDoors_p, doors);
     }
     public void setTemperature(double temp) {
         this.temperature = temp;
-        notifyChange(temperature_p, temp);
+        subject.notifyChange(temperature_p, temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        notifyChange(announcements_p, announcements);
+        subject.notifyChange(announcements_p, announcements);
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        notifyChange(signalFailure_p, signalFailure);
+        subject.notifyChange(signalFailure_p, signalFailure);
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        notifyChange(brakeFailure_p, brakeFailure);
+        subject.notifyChange(brakeFailure_p, brakeFailure);
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        notifyChange(powerFailure_p, powerFailure);
+        subject.notifyChange(powerFailure_p, powerFailure);
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
-        notifyChange(inTunnel_p,tunnel);
+        subject.notifyChange(inTunnel_p,tunnel);
     }
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
-        notifyChange(leftPlatform_p,platform);
+        subject.notifyChange(leftPlatform_p,platform);
     }
     public void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
-        notifyChange(rightPlatform_p,platform);
+        subject.notifyChange(rightPlatform_p,platform);
     }
     public void setSamplingPeriod(int period){
         this.samplingPeriod = period;
-        notifyChange(samplingPeriod_p,period);
+        subject.notifyChange(samplingPeriod_p,period);
     }
     public void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
-        notifyChange(speedLimit_p,speedLimit);
+        subject.notifyChange(speedLimit_p,speedLimit);
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
-        notifyChange(nextStationName_p,name);
+        subject.notifyChange(nextStationName_p,name);
     }
     public void setGrade(double newValue) {
         this.grade = newValue;
-        notifyChange(grade_p,newValue);
+        subject.notifyChange(grade_p,newValue);
     }
 
     /**

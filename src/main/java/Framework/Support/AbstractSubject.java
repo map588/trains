@@ -2,6 +2,7 @@ package Framework.Support;
 
 import javafx.beans.property.*;
 
+//public interface AbstractSubject extends Notifications {
 public interface AbstractSubject {
 //     void updateProperty(BooleanProperty property, boolean newValue);
 //     void updateProperty(DoubleProperty property, double newValue);

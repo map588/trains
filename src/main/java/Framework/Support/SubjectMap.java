@@ -21,4 +21,5 @@ public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S>{
     public ObservableHashMap<K, S> getSubjects() {
         return subjects;
     }
+
 }

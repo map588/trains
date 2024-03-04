@@ -37,18 +37,18 @@ public class mainMenu extends Application {
             Button tabButton = new Button(tabNames[i]);
             final int moduleId = i;
 
-            // Right-click menu for opening in a new window
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem openInNewWindow = new MenuItem("Open in new window");
-            openInNewWindow.setOnAction(e -> openInNewWindow(tabNames[moduleId]));
-            contextMenu.getItems().add(openInNewWindow);
+//            // Right-click menu for opening in a new window
+//          ContextMenu contextMenu = new ContextMenu();
+//          MenuItem openInTab = new MenuItem("Open in tab.");
+//          openInTab.setOnAction(e -> openModuleTab(tabPane, tabNames[moduleId]));
+//          contextMenu.getItems().add(openInTab);
 
             // Consolidate event handling for right and left clicks
             tabButton.setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.SECONDARY) {
-                    contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
+                    //contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
+                    openModuleTab(tabPane, tabNames[moduleId]);
                 } else if (e.getButton() == MouseButton.PRIMARY) {
-//                    openModuleTab(tabPane, tabNames[moduleId]);
                     openInNewWindow(tabNames[moduleId]);
                 }
             });
@@ -66,6 +66,14 @@ public class mainMenu extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
+    }
+
+    private void openModuleTab(TabPane tabPane, String moduleName) {
+        Tab tab = new Tab(moduleName);
+        Node content = createModuleContent(moduleName); // Get the complex UI for the module
+        tab.setContent(content); // Set the complex UI as the content of the tab
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
     }
 
     private void openInNewWindow(String moduleName) {

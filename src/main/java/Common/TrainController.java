@@ -1,10 +1,11 @@
 package Common;
 
 
+import Framework.Support.GUIModifiable;
 import Framework.Support.Notifications;
 import trainController.trainControllerSubject;
 
-public interface TrainController extends Notifications {
+public interface TrainController extends GUIModifiable {
 
     //Called at train initialization
     void assignTrainModel(TrainModel train);
@@ -43,6 +44,7 @@ public interface TrainController extends Notifications {
     int getID();
 
     double getSpeed();
+
     double getAcceleration();
     double getPower();
     double getKi();
@@ -89,8 +91,6 @@ public interface TrainController extends Notifications {
     // Extra Authority Info
     boolean getInTunnel();
     void setInTunnel(boolean inTunnel);
-
-    void setValue(String propertyName, Object newValue);
 
     void calculatePower();
 
