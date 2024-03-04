@@ -10,8 +10,9 @@ public interface TrackModel {
     void setTrainAuthority(int trainID, int authority);
     void setCommandedSpeed(int trainID, int commandedSpeed);
     void setTemperature(int temp);
-    void addLine(String lines);
+    void setLine(String lines);
     void setFailure(int block, String failure);
+    void setStation(int block, String station);
 
     int getTrainAuthority(int trainID);
     int getCommandedSpeed(int trainID);
@@ -23,10 +24,9 @@ public interface TrackModel {
     String getFailures(int block);
     int getTemperature();
     String getStation(int block);
-    String getLine(int block);
+    String getLine();
     int ticketSales();
     int passengers(int disembarked);
+    void csvParser(String file);
 
-
-    void setTrackHeaters(int i);
 }

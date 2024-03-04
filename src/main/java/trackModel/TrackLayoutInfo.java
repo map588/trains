@@ -314,7 +314,6 @@ public class TrackLayoutInfo {
             this.switchBlockID.set(switchAlt.get());
         }
 
-
         this.switchState.set(switchState);
     }
 

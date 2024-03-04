@@ -4,10 +4,10 @@ package trackModel;
 import Common.TrackModel;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 
 public class TrackModelImpl implements TrackModel {
@@ -20,9 +20,126 @@ public class TrackModelImpl implements TrackModel {
         this.blockOccupied = new HashMap<>();
         this.failureMap = new HashMap<>();
         this.stationMap = new HashMap<>();
+        this.crossingMap = new HashMap<>();
 
         this.temperature = 0;
 
+        this.blockInfo = new List<TrackLayoutInfo>() {
+              @Override
+                public int size() {
+                    return 0;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public boolean contains(Object o) {
+                    return false;
+                }
+
+                @Override
+                public Iterator<TrackLayoutInfo> iterator() {
+                    return null;
+                }
+
+                @Override
+                public Object[] toArray() {
+                    return new Object[0];
+                }
+
+                @Override
+                public <T> T[] toArray(T[] a) {
+                    return null;
+                }
+
+                @Override
+                public boolean add(TrackLayoutInfo trackLayoutInfo) {
+                    return false;
+                }
+
+                @Override
+                public boolean remove(Object o) {
+                    return false;
+                }
+
+                @Override
+                public boolean containsAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean addAll(Collection<? extends TrackLayoutInfo> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean addAll(int index, Collection<? extends TrackLayoutInfo> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean removeAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean retainAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public void clear() {
+
+                }
+
+                @Override
+                public TrackLayoutInfo get(int index) {
+                    return null;
+                }
+
+                @Override
+                public TrackLayoutInfo set(int index, TrackLayoutInfo element) {
+                    return null;
+                }
+
+                @Override
+                public void add(int index, TrackLayoutInfo element) {
+
+                }
+
+                @Override
+                public TrackLayoutInfo remove(int index) {
+                    return null;
+                }
+
+                @Override
+                public int indexOf(Object o) {
+                    return 0;
+                }
+
+                @Override
+                public int lastIndexOf(Object o) {
+                    return 0;
+                }
+
+                @Override
+                public ListIterator<TrackLayoutInfo> listIterator() {
+                    return null;
+                }
+
+                @Override
+                public ListIterator<TrackLayoutInfo> listIterator(int index) {
+                    return null;
+                }
+
+                @Override
+                public List<TrackLayoutInfo> subList(int fromIndex, int toIndex) {
+                    return null;
+                }
+        };
         this.lines = new ArrayList<>();
     }
 
@@ -36,12 +153,14 @@ public class TrackModelImpl implements TrackModel {
     private HashMap<Integer, String> stationMap;
     private HashMap<Integer, Boolean> crossingMap;
 
+    //should lines just be a string?
     private ArrayList<String> lines = new ArrayList<>();
-    private int temperature;
+    private final int temperature;
 
-    private final List<TrackLayoutInfo> trackInfo = new ArrayList<>();
+    private List<TrackLayoutInfo> blockInfo = new ArrayList<>();
 
-    public void addLine(String lines) {
+
+    public void setLine(String lines) {
         this.lines.add(lines);
     }
 
@@ -80,7 +199,7 @@ public class TrackModelImpl implements TrackModel {
     @Override
     public void setTemperature(int temp) {
         System.out.println("Setting Track Heaters: " + temp);
-        for (TrackLayoutInfo trackProperties : trackInfo) {
+        for (TrackLayoutInfo trackProperties : blockInfo) {
             if (temp < 40) {
                 trackProperties.trackHeaterProperty().set("STATUS - ON");
             } else {
@@ -106,10 +225,10 @@ public class TrackModelImpl implements TrackModel {
     }
 
     public void setCrossing(int block, boolean state) {
-        if (this.blockOccupied.containsKey(block)) {
-            this.blockOccupied.replace(block, state);
+        if (this.crossingMap.containsKey(block)) {
+            this.crossingMap.replace(block, state);
         } else {
-            this.blockOccupied.put(block, state);
+            this.crossingMap.put(block, state);
         }
     }
 
@@ -162,7 +281,7 @@ public class TrackModelImpl implements TrackModel {
     }
 
     public boolean getCrossingState(int block) {
-        return this.blockOccupied.get(block);
+        return this.crossingMap.get(block);
     }
 
     public String getFailures(int block) {
@@ -188,8 +307,8 @@ public class TrackModelImpl implements TrackModel {
     public String getStation(int block) {
         return this.stationMap.get(block);
     }
-    public String getLine(int block) {
-        return this.lines.get(block);
+    public String getLine() {
+        return this.lines.get(lines.size() - 1);
     }
 
     public int ticketSales(){
@@ -200,15 +319,64 @@ public class TrackModelImpl implements TrackModel {
         return (int) Math.round(Math.random());
     }
 
-    @Override
-    public void setTrackHeaters(int i) {
-        return;
-    }
+    public void csvParser(String file) {
+        try(BufferedReader br = new BufferedReader(new FileReader(file)))
+        {
+            String line = "";
+            String lineName = "";
+            String infrastructure = "";
+            this.setLine(br.readLine());
+            while((line = br.readLine()) != null){
+                String[] values = line.split(",");
+                TrackLayoutInfo block = new TrackLayoutInfo();
+                lineName = values[0];
+                block.setSection(values[1]);
+                block.setBlockNumber(values[2]);
+                block.setBlockLength(Integer.parseInt(values[3]));
+                block.setBlockGrade(Integer.parseInt(values[4]));
+                block.setSpeedLimit(Integer.parseInt(values[5]));
+
+                //interpret the infrastructure
+                infrastructure = values[6];
+
+                block.setIsCrossing(infrastructure.equals("RAILWAY CROSSING"));
+
+                if(infrastructure.contains("STATION")){
+                    block.setIsStation(true);
+                    block.setNameOfStation(infrastructure);
+                }
+                else{
+                    block.setIsStation(false);
+                    block.setNameOfStation("No Station Present");
+                }
+
+                if(infrastructure.contains("SWITCH")){
+                    block.setIsSwitch(true);
+                    block.setSwitchBlockID(infrastructure);
+                }
+                else{
+                    block.setIsSwitch(false);
+                    block.setSwitchBlockID("No Switch Present");
+                }
+
+                block.setIsUnderground(infrastructure.contains("UNDERGROUND"));
+
+                this.blockInfo.add(block);
+
+                //figure out what to do with station side, elevation
+                //and traversal time back to yard for green line
+            }
+
+            this.setLine(lineName);
 
 
-    public TrackLayoutInfo getTrackInfo() {
-        return new TrackLayoutInfo();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
+
 }
 
 
