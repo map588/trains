@@ -88,6 +88,7 @@ public class CTCOfficeManager {
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
         blockTable.setEditable(true);
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
+        Collection<SingleTrainScheduleSubject> scheduleList = scheduleFactory.getSubjects().values();
 
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
@@ -160,9 +161,8 @@ public class CTCOfficeManager {
         scheduleTable.getItems().addAll(scheduleFactory.getSubjects().values());
         scheduleNameColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(SCHEDULE_NAME_PROPERTY));
         scheduleDateModColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(MODIFIED_TIME_PROPERTY));
-        for(int i = 0; i < scheduleNames.size(); i++) {
-            scheduleSelector.getItems().add(scheduleNames.get(i));
-        }
+        scheduleSelector.getItems().addAll(scheduleNames);
+
 
 
 

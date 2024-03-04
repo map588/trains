@@ -11,7 +11,6 @@ public class SingleTrainSchedule {
     private int dispatchTime;
     private int carCount;
     private List<SubRoute> stops  = new ArrayList<SubRoute>();
-    private final ScheduleSubjectFactory factory = ScheduleSubjectFactory.getInstance();
 
     SingleTrainSchedule(String scheduleName, String modifiedTime, int trainID, String line, int dispatchTime, int carCount, List<SubRoute> stops) {
         this.scheduleName = scheduleName;
@@ -22,7 +21,7 @@ public class SingleTrainSchedule {
         this.carCount = carCount;
         this.stops = stops;
 
-        factory.registerSubject(trainID, new SingleTrainScheduleSubject(this));
+
     }
 
     public int getTrainID() {

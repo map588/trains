@@ -178,8 +178,8 @@ public class TrackModelTB {
     }
 
     public void updateTable() {
-        ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList(trackModel.getTrackInfo());
-        tbTable.setItems(trackList);
+        //ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList(trackModel.getTrackInfo());
+        //tbTable.setItems(trackList);
     }
 
     public void setLine(String line) {
