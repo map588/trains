@@ -21,6 +21,7 @@ public class SingleTrainScheduleSubject implements AbstractSubject {
             properties.put(DESTINATION_PROPERTY + i, new SimpleIntegerProperty(this, DESTINATION_PROPERTY + i, schedule.getStops().get(i).getStationBlockID()));
             properties.put(ARRIVAL_TIME_PROPERTY + i, new SimpleIntegerProperty(this, ARRIVAL_TIME_PROPERTY + i, schedule.getStops().get(i).getArrivalTime()));
             properties.put(DEPARTURE_TIME_PROPERTY + i, new SimpleIntegerProperty(this, DEPARTURE_TIME_PROPERTY + i, schedule.getStops().get(i).getDepartureTime()));
+            System.out.println("declared : " + DESTINATION_PROPERTY + i  + " " + ARRIVAL_TIME_PROPERTY + i + " " + DEPARTURE_TIME_PROPERTY + i);
         }
         this.schedule = schedule;
        // ScheduleLibrary.getInstance().registerSubject(schedule.
@@ -53,11 +54,11 @@ public class SingleTrainScheduleSubject implements AbstractSubject {
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
+        System.out.println("Getting integer property " + propertyName);
         return switch (propertyName) {
             case TRAIN_ID_PROPERTY -> (IntegerProperty) getProperty(TRAIN_ID_PROPERTY);
             case DISPATCH_TIME_PROPERTY -> (IntegerProperty) getProperty(DISPATCH_TIME_PROPERTY);
             case CAR_COUNT_PROPERTY -> (IntegerProperty) getProperty(CAR_COUNT_PROPERTY);
-
             default -> null;
         };
     }
