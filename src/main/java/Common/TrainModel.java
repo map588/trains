@@ -68,4 +68,8 @@ public interface TrainModel {
     int getNumPassengers();
 
     int getNumCars();
+
+    double getDistanceTraveled();
+
+    double getMass();
 }

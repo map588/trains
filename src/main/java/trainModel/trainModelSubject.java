@@ -41,6 +41,8 @@ public class trainModelSubject implements AbstractSubject{
         properties.put(Properties.crewCount_p, new SimpleIntegerProperty(model.getCrewCount()));
         properties.put(Properties.numPassengers_p, new SimpleIntegerProperty(model.getNumPassengers()));
         properties.put(Properties.numCars_p, new SimpleIntegerProperty(model.getNumCars()));
+        properties.put(Properties.mass_p, new SimpleDoubleProperty(model.getMass()));
+        properties.put(Properties.distanceTraveled_p, new SimpleDoubleProperty(model.getDistanceTraveled()));
     }
 
     public trainModelSubject(TrainModel trainModel) {

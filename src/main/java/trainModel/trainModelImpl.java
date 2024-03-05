@@ -22,6 +22,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     private double speed, acceleration, power;
     private double mass, grade;
     private boolean serviceBrake, emergencyBrake;
+    private double distanceTraveled;
 
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce, engineForce, gravityForce;
@@ -63,6 +64,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.numCars = 1;
         this.numPassengers = 1;
         this.crewCount = 2;
+        this.distanceTraveled = 0;
 
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
@@ -102,6 +104,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     public void setTemperature(double temp) { this.temperature = temp; notifyChange("temperature", temp); }
     public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", acceleration); }
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
+    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", distance); }
 
     public void setValue(String propertyName, Object newValue){
         if(newValue == null)
@@ -128,6 +131,7 @@ public class trainModelImpl implements TrainModel, Notifications {
             case Properties.crewCount_p -> setCrewCount((int)newValue);
             case Properties.timeDelta_p -> setTimeDelta((int)newValue);
             case Properties.mass_p -> setMass((double)newValue);
+            case Properties.distanceTraveled_p -> setDistanceTraveled((double)newValue);
         }
     }
     //Getters
@@ -165,6 +169,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         return 0;
     }
     public double getGrade() { return grade; }
+    public double getDistanceTraveled() { return distanceTraveled; }
 
     @Override
     public int getCrewCount() {
@@ -179,6 +184,11 @@ public class trainModelImpl implements TrainModel, Notifications {
     @Override
     public int getNumCars() {
         return this.numCars;
+    }
+
+    @Override
+    public double getMass() {
+        return 0;
     }
 
     //Murphy Getters

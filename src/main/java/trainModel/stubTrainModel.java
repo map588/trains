@@ -192,5 +192,15 @@ public class stubTrainModel implements TrainModel {
         return 0;
     }
 
+    @Override
+    public double getDistanceTraveled() {
+        return 0;
+    }
+
+    @Override
+    public double getMass() {
+        return 0;
+    }
+
 
 }
