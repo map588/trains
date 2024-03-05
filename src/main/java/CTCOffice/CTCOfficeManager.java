@@ -44,7 +44,7 @@ public class CTCOfficeManager {
     @FXML private TableColumn<SingleTrainScheduleSubject, Integer> stationBlockIDColumn;
     @FXML private TableColumn<SingleTrainScheduleSubject, Integer> arrivalTimeColumn;
     @FXML private TableColumn<SingleTrainScheduleSubject, Integer> departureTimeColumn;
-    @FXML private TableView<SingleTrainScheduleSubject> scheduleEditTable;
+    @FXML private TableView<FullScheduleFileSubject> scheduleEditTable;
     @FXML private TableColumn<SingleTrainScheduleSubject, Integer> lineColumn;
     @FXML private TableColumn<SingleTrainScheduleSubject, Integer> carNumberColumn;
     @FXML private ChoiceBox<String> lineStopSelector;
@@ -75,7 +75,7 @@ public class CTCOfficeManager {
 
 
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
-   // ScheduleSubjectFactory scheduleFactory = ScheduleSubjectFactory.getInstance();
+    ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
 
     /**
      * Initializes the GUI components.
@@ -86,7 +86,6 @@ public class CTCOfficeManager {
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
         blockTable.setEditable(true);
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
-        Collection<FullScheduleFile> scheduleList = scheduleLibrary.getSubjects().values();
 
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
@@ -156,16 +155,12 @@ public class CTCOfficeManager {
 
         //schedules table
         scheduleTable.setEditable(true);
-        scheduleTable.getItems().addAll(scheduleList);
-        scheduleNameColumn.setCellValueFactory(schedule ->
+        scheduleTable.getItems().addAll(scheduleLibrary.getSubjects().values());
+        scheduleNameColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(SCHEDULE_FILE_NAME_PROPERTY));
+
+        scheduleSelector.getItems().addAll(scheduleLibrary.getSubjects().keySet());
 
         selectScheduleButton.setOnAction(event -> {
-            SingleTrainScheduleSubject schedule =
-            scheduleEditTable.getItems().clear();
-            scheduleEditTable.getItems().add(schedule);
-            lineStopSelector.getItems().clear();
-            lineStopSelector.getItems().addAll(CSVTokenizer.lineNames);
-            lineStopSelector.setValue(schedule.getStringProperty(TRAIN_LINE_PROPERTY).getValue());
         });
 
 
@@ -219,6 +214,12 @@ public class CTCOfficeManager {
         System.out.println("\n ");
         CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
+    }
+
+    private void selectNewSchedule() {
+        FullScheduleFileSubject schedule = scheduleLibrary.getSubject(scheduleSelector.getValue());
+        scheduleEditTable.getItems().clear();
+        //scheduleEditTable.getItems().addAll(schedule.getSchedule().getMultipleTrainScheduleSubjects());
     }
 
     private TableCell<CTCBlockSubject, Paint> createColoredCircleCell() {

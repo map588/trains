@@ -92,4 +92,8 @@ public class SingleTrainScheduleSubject implements AbstractSubject {
         }
     }
 
+    public SingleTrainSchedule getSchedule(){
+        return schedule;
+    }
+
 }

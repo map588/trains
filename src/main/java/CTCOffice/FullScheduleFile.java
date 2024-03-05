@@ -1,6 +1,7 @@
 package CTCOffice;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 
@@ -29,6 +30,9 @@ public class FullScheduleFile {
         multipleTrainScheduleSubjects.remove(index);
     }
 
+    public SingleTrainSchedule getTrainSchedule(int trainID) {
+        return multipleTrainSchedules.get(trainID);
+    }
     public HashMap<Integer, SingleTrainSchedule> getMultipleTrainSchedules() {
         return this.multipleTrainSchedules;
     }
@@ -47,5 +51,9 @@ public class FullScheduleFile {
 
     public String getLastModified() {
         return this.lastModified;
+    }
+
+    public HashMap<Integer, SingleTrainScheduleSubject> getMultipleTrainScheduleSubjects() {
+        return this.multipleTrainScheduleSubjects;
     }
 }

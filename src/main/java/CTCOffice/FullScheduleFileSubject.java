@@ -2,6 +2,7 @@ package CTCOffice;
 
 
 import Framework.Support.AbstractSubject;
+import Framework.Support.GUIModifiable;
 import Framework.Support.ObservableHashMap;
 import Framework.Support.SubjectMap;
 import javafx.beans.property.*;
@@ -21,8 +22,15 @@ public class FullScheduleFileSubject implements AbstractSubject {
     public void setProperty(String propertyName, Object newValue) {
 
     }
+    public StringProperty getStringProperty(String propertyName) {
+        return (StringProperty) properties.get(propertyName);
+    }
 
     public Property<?> getProperty(String propertyName) {
         return null;
+    }
+
+    public FullScheduleFile getSchedule() {
+        return schedule;
     }
 }
