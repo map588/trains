@@ -7,7 +7,7 @@ public class ScheduleProperties {
     public static final String DESTINATION_PROPERTY = "blockID";
     public static final String ARRIVAL_TIME_PROPERTY = "arrivalTime";
     public static final String DEPARTURE_TIME_PROPERTY = "departureTime";
-    public static final String SCHEDULE_NAME_PROPERTY = "scheduleName";
-    public static final String MODIFIED_TIME_PROPERTY = "modifiedTime";
     public static final String TRAIN_LINE_PROPERTY = "line";
+    public static final String SCHEDULE_FILE_NAME_PROPERTY = "scheduleFileName";
+    public static final String LAST_MODIFIED_PROPERTY = "lastModified";
 }

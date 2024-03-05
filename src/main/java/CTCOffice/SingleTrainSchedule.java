@@ -4,23 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SingleTrainSchedule {
-    private String scheduleName;
-    private String modifiedTime;
     private int trainID;
     private String line;
     private int dispatchTime;
     private int carCount;
+    private int destination;
     private List<SubRoute> stops  = new ArrayList<SubRoute>();
+    SingleTrainScheduleSubject subject;
 
-    SingleTrainSchedule(String scheduleName, String modifiedTime, int trainID, String line, int dispatchTime, int carCount, List<SubRoute> stops) {
-        this.scheduleName = scheduleName;
-        this.modifiedTime = modifiedTime;
+    SingleTrainSchedule(int trainID, String line, int dispatchTime, int carCount, List<SubRoute> stops) {
         this.trainID = trainID;
         this.line = line;
         this.dispatchTime = dispatchTime;
         this.carCount = carCount;
         this.stops = stops;
 
+        subject = new SingleTrainScheduleSubject(this);
 
     }
 
@@ -86,11 +85,6 @@ public class SingleTrainSchedule {
         }
     }
 
-    public void printSchedule() {
-        System.out.println("Train ID: " + trainID + " Departure Time: " + dispatchTime);
-        printStops();
-    }
-
     public void updateStopArrivalTime(int index, int arrivalTime) {
         stops.get(index).setArrivalTime(arrivalTime);
     }
@@ -136,24 +130,8 @@ public class SingleTrainSchedule {
         stops.get(subRouteIndex).setStationBlockID(blockID);
     }
 
-    public void setModifiedTime(String modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
-    public String getModifiedTime() {
-        return modifiedTime;
-    }
-
-    public String getScheduleName() {
-        return scheduleName;
-    }
-
-    public void setScheduleName(String scheduleName) {
-        this.scheduleName = scheduleName;
-    }
-
-    public void updateModifiedTime() {
-        this.modifiedTime = java.time.LocalDateTime.now().toString();
+    public int getDestination(int subRouteIndex) {
+        return stops.get(subRouteIndex).getStationBlockID();
     }
 
     public String getLine() {
@@ -164,5 +142,8 @@ public class SingleTrainSchedule {
         this.line = line;
     }
 
+    public  SingleTrainScheduleSubject getSubject() {
+       return subject;
+    }
 
 }

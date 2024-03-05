@@ -28,23 +28,29 @@ public class CTCOfficeImpl implements CTCOffice {
     public Map<Integer, TrainModel> trains = new HashMap<>();
 
     final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
-    public final static HashMap<Integer, SingleTrainScheduleSubject> schedules = new HashMap<>();
+
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
+
+    public static final ScheduleLibrary scheduleLibrary = new ScheduleLibrary();
 
     /**
      * Constructor for the CTCOfficeImpl class.
      * Initializes the track blocks and the schedule.
      */
     private CTCOfficeImpl() {
+
         track.put(lineNames.get(0), new ArrayList<>() {{
             add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(0))));
         }});
         for(int i = 1; i < blockList.get(lineNames.get(0)).size(); i++) {
             track.get(lineNames.get(0)).add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(i))));
         }
-        ArrayList<Integer> blank = new ArrayList<>();
-        new SingleTrainScheduleSubject(new SingleTrainSchedule("A", "0",1, "BlueLine", 0, 1, new ArrayList<>() {{add(new SubRoute(10, 0, 0, blank, blank, blank));}}));
-       new SingleTrainScheduleSubject(new SingleTrainSchedule("B", "1",2, "BlueLine", 1, 2,new ArrayList<>() {{add(new SubRoute(15, 0, 0, blank, blank, blank));}}));
+        scheduleLibrary.addFullSchedule("Schedule1", new FullScheduleFile("Schedule1", "12/12/2019"));
+
+        scheduleLibrary.getFullSchedule("Schedule1").putTrainSchedule(1, new SingleTrainSchedule(1,
+                "BlueLine", 0, 1, new ArrayList<>() {{add(new SubRoute(10,
+                0, 0, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));}}));
+
     }
 
     public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {

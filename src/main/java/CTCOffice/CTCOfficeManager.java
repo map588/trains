@@ -17,11 +17,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static CTCOffice.CTCOfficeImpl.schedules;
+import static CTCOffice.CTCOfficeImpl.scheduleLibrary;
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
-import static CTCOffice.SingleTrainScheduleSubject.scheduleNames;
-
 /**
  * This class manages the GUI for the Centralized Traffic Control (CTC) office.
  * It contains FXML annotated fields for the various GUI components and methods for handling user interactions.
@@ -37,9 +35,9 @@ public class CTCOfficeManager {
     @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
     @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumn;
     @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumn;
-    @FXML private TableView<SingleTrainScheduleSubject> scheduleTable;
-    @FXML private TableColumn<SingleTrainScheduleSubject, String> scheduleNameColumn;
-    @FXML private TableColumn<SingleTrainScheduleSubject, String> scheduleDateModColumn;
+    @FXML private TableView<FullScheduleFileSubject> scheduleTable;
+    @FXML private TableColumn<FullScheduleFileSubject, String> scheduleNameColumn;
+    @FXML private TableColumn<FullScheduleFileSubject, String> scheduleDateModColumn;
     @FXML private ComboBox<String> scheduleSelector;
     @FXML private Button selectScheduleButton;
     @FXML private TableColumn<SingleTrainScheduleSubject, Integer> dispatchTimeColumn;
@@ -77,7 +75,7 @@ public class CTCOfficeManager {
 
 
     CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
-    ScheduleSubjectFactory scheduleFactory = ScheduleSubjectFactory.getInstance();
+   // ScheduleSubjectFactory scheduleFactory = ScheduleSubjectFactory.getInstance();
 
     /**
      * Initializes the GUI components.
@@ -88,7 +86,7 @@ public class CTCOfficeManager {
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
         blockTable.setEditable(true);
         Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
-        Collection<SingleTrainScheduleSubject> scheduleList = scheduleFactory.getSubjects().values();
+        Collection<FullScheduleFile> scheduleList = scheduleLibrary.getSubjects().values();
 
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
@@ -158,26 +156,17 @@ public class CTCOfficeManager {
 
         //schedules table
         scheduleTable.setEditable(true);
-        scheduleTable.getItems().addAll(scheduleFactory.getSubjects().values());
-        scheduleNameColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(SCHEDULE_NAME_PROPERTY));
-        scheduleDateModColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(MODIFIED_TIME_PROPERTY));
-        scheduleSelector.getItems().addAll(scheduleNames);
+        scheduleTable.getItems().addAll(scheduleList);
+        scheduleNameColumn.setCellValueFactory(schedule ->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        selectScheduleButton.setOnAction(event -> {
+            SingleTrainScheduleSubject schedule =
+            scheduleEditTable.getItems().clear();
+            scheduleEditTable.getItems().add(schedule);
+            lineStopSelector.getItems().clear();
+            lineStopSelector.getItems().addAll(CSVTokenizer.lineNames);
+            lineStopSelector.setValue(schedule.getStringProperty(TRAIN_LINE_PROPERTY).getValue());
+        });
 
 
 
