@@ -118,7 +118,7 @@ public class WaysideControllerHW implements PLCRunner {
         }
 
         if(!maintenanceMode && blockMap.size() > 0)
-            plcProgram.runBlueLine();
+            plcProgram.run();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

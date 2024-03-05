@@ -6,38 +6,38 @@ statement : set_list_value | if_statement | if_else_statement ;
 set_list_value : list_name '[' index ']' '=' (compound_value | value_false | value_true) ;
 
 if_statement
-    : 'if ' (compound_value | equality_check)
+    : IF (compound_value | equality_check)
     NEWLINE (statement | statement NEWLINE | NEWLINE)+
-    NEWLINE 'endif' ;
+    NEWLINE ENDIF ;
 
 if_else_statement
-    : 'if ' (compound_value | equality_check)
-    NEWLINE (statement | statement NEWLINE | NEWLINE)+ NEWLINE 'else'
+    : IF (compound_value | equality_check)
+    NEWLINE (statement | statement NEWLINE | NEWLINE)+ NEWLINE ELSE
     NEWLINE (statement | statement NEWLINE | NEWLINE)+
-    NEWLINE 'endif' ;
+    NEWLINE ENDIF ;
 
 equality_check : equals_statement | not_equals_statement ;
 equals_statement : compound_value '==' (compound_value | value_false | value_true) ;
 not_equals_statement : compound_value '!=' (compound_value | value_false | value_true) ;
 
-compound_value
-    : (single_val | or_operator | and_operator)
-    | '(' compound_value ') and (' compound_value ')'
-    | '(' compound_value ') and ' single_val
-    | single_val ' and (' compound_value ')'
-    | '(' compound_value ') or (' compound_value ')'
-    | '(' compound_value ') or' single_val
-    | single_val ' or (' compound_value ')' ;
+compound_value : (and_operator | or_operator | single_val) ;
 
-or_operator: single_val (' or ' single_val)+ ;
-and_operator: single_val (' and ' single_val)+ ;
+or_operator: (and_operator | single_val | ('(' compound_value ')')) (OR (and_operator | single_val | ('(' compound_value ')')))+ ;
+and_operator: (single_val | ('(' compound_value ')')) (AND (single_val | ('(' compound_value ')')))+ ;
 single_val : not_operator | list_value ;
-not_operator : 'not ' list_value ;
+not_operator : NOT list_value ;
 list_value : list_name '[' index ']' ;
 index : INDEX ;
 list_name : (OCCUPANCY | SWITCH | SWITCH_REQUEST | LIGHT | CROSSING | AUTHORITY) ;
 value_false : FALSE | RED | MAIN | CLOSED ;
 value_true : TRUE | GREEN | ALT | OPEN ;
+
+AND : 'and' | 'AND' ;
+OR : 'or' | 'OR' ;
+NOT : 'not' | 'NOT' ;
+IF : 'if' | 'IF' ;
+ELSE : 'else' | 'ELSE' ;
+ENDIF : 'endif' | 'ENDIF' ;
 
 OCCUPANCY : 'occupied' ;
 SWITCH : 'switch' ;
