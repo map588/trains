@@ -98,7 +98,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
         printStream.println("uploadPLC");
         try (InputStream in = new FileInputStream(PLC)) {
             in.transferTo(printStream);
-            printStream.println("%EndOfFile%");
+            printStream.println("\n%EndOfFile%");
         } catch (IOException e) {
             e.printStackTrace();
         }

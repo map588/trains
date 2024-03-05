@@ -93,6 +93,7 @@ public class WaysideControllerHW implements PLCRunner {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                System.out.println("PLC Uploaded");
                 plcProgram.loadPLC(plcFile.getAbsolutePath());
             }
             case "setLine" -> {
