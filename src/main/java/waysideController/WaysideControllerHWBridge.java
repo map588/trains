@@ -12,7 +12,6 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     private final SerialPort port;
     private final BufferedReader inputStream;
-    private final OutputStream outputStream;
     private final PrintStream printStream;
 
     public WaysideControllerHWBridge(int id, String trackLine, int[] blockIDList, String comPort) {
@@ -23,8 +22,7 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 //        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
         inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
-        outputStream = port.getOutputStream();
-        printStream = new PrintStream(outputStream, true);
+        printStream = new PrintStream(port.getOutputStream(), true);
 
         port.addDataListener(new SerialPortMessageListener() {
             @Override
@@ -99,7 +97,8 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
     public void loadPLC(File PLC) {
         printStream.println("uploadPLC");
         try (InputStream in = new FileInputStream(PLC)) {
-            in.transferTo(outputStream);
+            in.transferTo(printStream);
+            printStream.println("%EndOfFile%");
         } catch (IOException e) {
             e.printStackTrace();
         }

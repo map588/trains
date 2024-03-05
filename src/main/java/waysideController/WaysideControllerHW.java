@@ -14,7 +14,6 @@ public class WaysideControllerHW implements PLCRunner {
     private boolean maintenanceMode = false;
     private String trackLine;
     private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
-    private final InputStream inputStream;
     protected final BufferedReader bufferedReader;
     private final PrintStream outputStream;
     private File plcFile;
@@ -27,8 +26,7 @@ public class WaysideControllerHW implements PLCRunner {
         port.setComPortParameters(19200, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
-        inputStream = port.getInputStream();
-        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        bufferedReader = new BufferedReader(new InputStreamReader(port.getInputStream()));
         outputStream = new PrintStream(port.getOutputStream(), true);
     }
 
@@ -88,7 +86,10 @@ public class WaysideControllerHW implements PLCRunner {
         switch (values[0]) {
             case "uploadPLC" -> {
                 try (OutputStream out = new FileOutputStream(plcFile)) {
-                    inputStream.transferTo(out);
+                    String line;
+                    while (!(line = bufferedReader.readLine()).equals("%EndOfFile%")) {
+                        out.write((line + "\n").getBytes());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
