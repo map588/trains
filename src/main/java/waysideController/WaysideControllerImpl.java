@@ -57,6 +57,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
+        program.loadPLC(PLC.getAbsolutePath());
         notifyChange(PLCName_p, PLC.getName());
         subject.updateActivePLCProp();
     }
@@ -64,7 +65,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void runPLC() {
         if(!maintenanceMode)
-            program.runBlueLine();
+            program.run();
     }
 
     @Override

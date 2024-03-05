@@ -1,37 +1,45 @@
 package waysideController;
 
 import org.antlr.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CharStream;
+import org.antlr.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
-import waysideController.plc_parser.PLCEvalVisitor;
-import waysideController.plc_parser.PLCLexer;
-import waysideController.plc_parser.PLCParser;
+import waysideController.plc_parser.*;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static Utilities.Constants.*;
 
-public class PLCProgram {
+public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVisitor<Value> {
 
     private final Map<Integer, WaysideBlock> blockMap;
     private final PLCRunner controller;
-    private ParseTree tree;
-    private PLCEvalVisitor evalVisitor;
+    private ParseTree PLCTree;
 
     public PLCProgram(PLCRunner controller) {
         this.controller = controller;
         this.blockMap = controller.getBlockMap();
+    }
 
-        PLCLexer lexer = new PLCLexer(CharStreams.fromString("switch[1] = occupied[2] or occupied[3]"));
-        PLCParser parser = new PLCParser(new CommonTokenStream(lexer));
-        tree = parser.program();
-        evalVisitor = new PLCEvalVisitor(blockMap);
+    public void loadPLC(String filename) {
+        try {
+            PLCLexer lexer = new PLCLexer(CharStreams.fromFileName(filename));
+            PLCParser parser = new PLCParser(new CommonTokenStream(lexer));
+            PLCTree = parser.program();
+            run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        evalVisitor.visit(tree);
+    public void run() {
+        if(PLCTree != null)
+            visit(PLCTree);
     }
 
     private void setSwitch(int blockID, boolean switchState) {
@@ -54,64 +62,182 @@ public class PLCProgram {
         controller.setAuthorityPLC(blockID, auth);
     }
 
-    public void runBlueLine() {
+    @Override
+    public Value visitProgram(PLCParser.ProgramContext ctx) {
+        return visitChildren(ctx);
+    }
 
-        // Process switch state requests
-        if(blockMap.get(5).getSwitchState() != blockMap.get(5).getSwitchRequest()) {
-            if(!blockMap.get(5).isOccupied() && !blockMap.get(6).isOccupied() && !blockMap.get(11).isOccupied()) {
-                setSwitch(5, blockMap.get(5).getSwitchRequest());
+    @Override
+    public Value visitStatement(PLCParser.StatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitSet_list_value(PLCParser.Set_list_valueContext ctx) {
+        int index = visit(ctx.index()).asInteger();
+        String listName = visit(ctx.list_name()).asString();
+        boolean value = visit(ctx.getChild(5)).asBoolean();
+
+        System.out.println(listName + "[" + index + "] = " + value);
+
+        switch (listName) {
+            case "crossing":
+                setCrossing(index, value);
+                break;
+            case "light":
+                setLight(index, value);
+                break;
+            case "switch":
+                setSwitch(index, value);
+                break;
+            case "authority":
+                setAuth(index, value);
+                break;
+            default:
+                throw new RuntimeException("Unknown list name: " + listName);
+        }
+
+        return new Value(value);
+    }
+
+    @Override
+    public Value visitIf_statement(PLCParser.If_statementContext ctx) {
+        boolean conditional = visit(ctx.getChild(1)).asBoolean();
+
+        if(conditional) {
+            for(PLCParser.StatementContext statement : ctx.statement()) {
+                visit(statement);
+            }
+        }
+        return new Value(conditional);
+    }
+
+    @Override
+    public Value visitIf_else_statement(PLCParser.If_else_statementContext ctx) {
+        boolean conditional = visit(ctx.getChild(1)).asBoolean();
+
+        int index = 2;
+        for(; index < ctx.getChildCount(); index++) {
+            ParseTree statement = ctx.getChild(index);
+            if(conditional && statement instanceof PLCParser.StatementContext)
+                visit(statement);
+
+            else if(statement.getText().equals("else"))
+                break;
+        }
+        if(!conditional) {
+            for(; index < ctx.getChildCount(); index++) {
+                ParseTree statement = ctx.getChild(index);
+                if(statement instanceof PLCParser.StatementContext)
+                    visit(statement);
+            }
+        }
+        return new Value(conditional);
+    }
+
+    @Override
+    public Value visitEquality_check(PLCParser.Equality_checkContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitEquals_statement(PLCParser.Equals_statementContext ctx) {
+        boolean left = visit(ctx.compound_value(0)).asBoolean();
+        boolean right = visit(ctx.getChild(2)).asBoolean();
+        return new Value(left == right);
+    }
+
+    @Override
+    public Value visitNot_equals_statement(PLCParser.Not_equals_statementContext ctx) {
+        boolean left = visit(ctx.compound_value(0)).asBoolean();
+        boolean right = visit(ctx.getChild(2)).asBoolean();
+        return new Value(left != right);
+    }
+
+    @Override
+    public Value visitCompound_value(PLCParser.Compound_valueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitOr_operator(PLCParser.Or_operatorContext ctx) {
+        for(int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+            if(child instanceof PLCParser.Single_valContext | child instanceof PLCParser.Compound_valueContext | child instanceof PLCParser.And_operatorContext) {
+                if (visit(child).asBoolean()) {
+                    return new Value(true);
+                }
             }
         }
 
-        // Set traffic lights
-        if(!blockMap.get(1).isOccupied() && !blockMap.get(2).isOccupied() && !blockMap.get(3).isOccupied() && !blockMap.get(4).isOccupied() && !blockMap.get(5).isOccupied()) {
-            if(blockMap.get(5).getSwitchState() == SWITCH_MAIN) {
-                setLight(6, LIGHT_GREEN);
-                setLight(11, LIGHT_RED);
+        return new Value(false);
+    }
+
+    @Override
+    public Value visitAnd_operator(PLCParser.And_operatorContext ctx) {
+        for(int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+            if(child instanceof PLCParser.Single_valContext | child instanceof PLCParser.Compound_valueContext) {
+                if (!visit(child).asBoolean()) {
+                    return new Value(false);
+                }
             }
-            else {
-                setLight(6, LIGHT_RED);
-                setLight(11, LIGHT_GREEN);
-            }
-        }
-        else {
-            setLight(6, LIGHT_RED);
-            setLight(11, LIGHT_RED);
         }
 
-        // Set Railroad Crossings
-        if(blockMap.get(2).isOccupied() || blockMap.get(3).isOccupied() || blockMap.get(4).isOccupied()) {
-            setCrossing(3, CROSSING_CLOSED);
-        }
-        else {
-            setCrossing(3, CROSSING_OPEN);
-        }
+        return new Value(true);
+    }
 
-        setAuth(1, !blockMap.get(2).isOccupied() && !blockMap.get(3).isOccupied());
-        setAuth(2, !blockMap.get(3).isOccupied() && !blockMap.get(4).isOccupied());
-        setAuth(3, !blockMap.get(4).isOccupied() && !blockMap.get(5).isOccupied());
-        if(blockMap.get(5).getSwitchState() == SWITCH_MAIN) {
-            setAuth(4, !blockMap.get(5).isOccupied() && !blockMap.get(6).isOccupied());
-            setAuth(5, !blockMap.get(6).isOccupied() && !blockMap.get(7).isOccupied());
+    @Override
+    public Value visitSingle_val(PLCParser.Single_valContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitNot_operator(PLCParser.Not_operatorContext ctx) {
+        Boolean right = visit(ctx.list_value()).asBoolean();
+        return new Value(!right);
+    }
+
+    @Override
+    public Value visitList_value(PLCParser.List_valueContext ctx) {
+        int index = visit(ctx.index()).asInteger();
+        String listName = visit(ctx.list_name()).asString();
+
+        switch(listName) {
+            case "occupied":
+                return new Value(blockMap.get(index).isOccupied());
+            case "crossing":
+                return new Value(blockMap.get(index).getCrossingState());
+            case "light":
+                return new Value(blockMap.get(index).getLightState());
+            case "switch":
+                return new Value(blockMap.get(index).getSwitchState());
+            case "switch_request":
+                return new Value(blockMap.get(index).getSwitchRequest());
+            case "authority":
+                return new Value(blockMap.get(index).getAuthority());
+            default:
+                throw new RuntimeException("Unknown list name: " + listName);
         }
-        else {
-            setAuth(4, !blockMap.get(5).isOccupied() && !blockMap.get(11).isOccupied());
-            setAuth(5, !blockMap.get(11).isOccupied() && !blockMap.get(12).isOccupied());
-        }
+    }
 
-        setAuth(6, !blockMap.get(7).isOccupied() && !blockMap.get(8).isOccupied());
-        setAuth(7, !blockMap.get(8).isOccupied() && !blockMap.get(9).isOccupied());
-        setAuth(8, !blockMap.get(9).isOccupied() && !blockMap.get(10).isOccupied());
-        setAuth(9, !blockMap.get(10).isOccupied());
-        setAuth(10, false);
+    @Override
+    public Value visitIndex(PLCParser.IndexContext ctx) {
+        return new Value(Integer.parseInt(ctx.getText()));
+    }
 
-        setAuth(11, !blockMap.get(12).isOccupied() && !blockMap.get(13).isOccupied());
-        setAuth(12, !blockMap.get(13).isOccupied() && !blockMap.get(14).isOccupied());
-        setAuth(13, !blockMap.get(14).isOccupied() && !blockMap.get(15).isOccupied());
-        setAuth(14, !blockMap.get(15).isOccupied());
-        setAuth(15, false);
+    @Override
+    public Value visitList_name(PLCParser.List_nameContext ctx) {
+        return new Value(ctx.getText());
+    }
 
-        evalVisitor.visit(tree);
-        System.out.println(blockMap.get(1).getSwitchState());
+    @Override
+    public Value visitValue_false(PLCParser.Value_falseContext ctx) {
+        return new Value(false);
+    }
+
+    @Override
+    public Value visitValue_true(PLCParser.Value_trueContext ctx) {
+        return new Value(true);
     }
 }
