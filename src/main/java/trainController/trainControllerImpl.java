@@ -6,8 +6,6 @@ import Framework.Support.GUIModifiable;
 import Framework.Support.Notifications;
 import Utilities.Constants;
 import trainModel.stubTrainModel;
-import trainModel.trainModelImpl;
-import trainModel.trainSubjectFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

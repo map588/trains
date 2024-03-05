@@ -75,7 +75,6 @@ public class trainModelManager {
             }
         });
 
-
     }
 
     private void bindLabels() {
