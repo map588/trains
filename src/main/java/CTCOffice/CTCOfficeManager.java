@@ -1,14 +1,14 @@
 package CTCOffice;
 
+import Framework.Support.ObservableHashMap;
 import Utilities.CSVTokenizer;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
@@ -16,8 +16,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import static CTCOffice.CTCOfficeImpl.scheduleLibrary;
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
 /**
@@ -74,8 +74,11 @@ public class CTCOfficeManager {
     @FXML private Button maintenanceToggle;
 
 
-    CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
+    CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
+    Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors = new ConcurrentHashMap<>();
+    Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors = new ConcurrentHashMap<>();
+    Map<CTCBlockSubject, ObjectProperty<Paint>> maintenanceColors = new ConcurrentHashMap<>();
 
     /**
      * Initializes the GUI components.
@@ -83,9 +86,10 @@ public class CTCOfficeManager {
      */
     @FXML
     public void initialize() {
+        setupMapChangeListener();
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
         blockTable.setEditable(true);
-        Collection<CTCBlockSubject> blockList = factory.getSubjects().values();
+        Collection<CTCBlockSubject> blockList = blockMap.getSubjects().values();
 
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
@@ -109,32 +113,16 @@ public class CTCOfficeManager {
         switchStateColumn.setStyle("-fx-alignment: CENTER;");
 
 
-        switchLightColumn.setCellValueFactory(block -> {
-            block.getValue().updatePaintProperty(SWITCH_LIGHT_COLOR_PROPERTY);
-            boolean hasLight = block.getValue().getBooleanProperty(HAS_LIGHT_PROPERTY).getValue();
-            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty(SWITCH_LIGHT_COLOR_PROPERTY);
-
-            return hasLight ? lightColor : null;
-        });
         switchLightColumn.setCellFactory(column -> createColoredCircleCell());
-
-        crossingStateColumn.setCellValueFactory(block -> {
-            block.getValue().updatePaintProperty(CROSSING_LIGHT_COLOR_PROPERTY);
-            boolean hasCrossing = block.getValue().getBooleanProperty(HAS_CROSSING_PROPERTY).getValue();
-            ObjectProperty<Paint> lightColor = block.getValue().getPaintProperty(CROSSING_LIGHT_COLOR_PROPERTY);
-
-            return hasCrossing ? lightColor : null;
-        });
         crossingStateColumn.setCellFactory(column -> createColoredCircleCell());
-
-        underMaintenanceColumn.setCellValueFactory(block -> {
-            block.getValue().updatePaintProperty(MAINTENANCE_LIGHT_COLOR_PROPERTY);
-            return block.getValue().getPaintProperty(MAINTENANCE_LIGHT_COLOR_PROPERTY);
-        });
         underMaintenanceColumn.setCellFactory(column -> createColoredCircleCell());
 
+        crossingStateColumn.setCellValueFactory(block -> crossingColors.get(block.getValue()));
+        underMaintenanceColumn.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
+        switchLightColumn.setCellValueFactory(block -> switchColors.get(block.getValue()));
+
         //Table editing bar
-        blockSelection.getItems().addAll(factory.getSubjects().keySet());
+        blockSelection.getItems().addAll(blockMap.getSubjects().keySet());
         lineSelection.getItems().addAll(CSVTokenizer.lineNames);
 
         switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
@@ -142,6 +130,7 @@ public class CTCOfficeManager {
         crossingStateToggle.setOnAction(event -> toggleProperty(CROSSING_STATE_PROPERTY));
         maintenanceToggle.setOnAction(event -> toggleProperty(UNDER_MAINTENANCE_PROPERTY));
 
+        //This is bad, because these properties don't change
         blockTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 blockSelection.setValue(newValue.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
@@ -149,8 +138,8 @@ public class CTCOfficeManager {
             }
         });
 
-        blockSelection.setValue(1);
-        lineSelection.setValue(CSVTokenizer.lineNames.get(0));
+        //blockSelection.setValue(1);
+        //lineSelection.setValue(CSVTokenizer.lineNames.get(0));
 
 
         //schedules table
@@ -174,11 +163,6 @@ public class CTCOfficeManager {
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(ARRIVAL_TIME_PROPERTY, 0).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DEPARTURE_TIME_PROPERTY, 0).getValue()));
         carNumberColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(CAR_COUNT_PROPERTY).getValue()));
-
-
-
-
-
 
 
 
@@ -225,14 +209,13 @@ public class CTCOfficeManager {
      */
     private void toggleProperty(String propertyName) {
         System.out.println("\n ");
-        CTCBlockSubject block = factory.getSubjects().get(blockSelection.getValue());
+        CTCBlockSubject block = blockMap.getSubject(blockSelection.getValue());
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
 
 
-
     private TableCell<CTCBlockSubject, Paint> createColoredCircleCell() {
-        return new TableCell<CTCBlockSubject, Paint>() {
+        return new TableCell<>() {
             private final BorderPane graphic = new BorderPane();
             private final Circle circle = new Circle(10);
             {
@@ -249,6 +232,73 @@ public class CTCOfficeManager {
                 }
             }
         };
+    }
+
+    private void switchColorListener(CTCBlockSubject block){
+
+        if(block.hasLight()) {switchColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>()).setValue(Color.RED);}
+        else {switchColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>());}
+
+        block.getBooleanProperty(SWITCH_LIGHT_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            boolean hasLight = block.getBooleanProperty(HAS_LIGHT_PROPERTY).getValue();
+            if(newValue && hasLight)
+                switchColors.get(block).setValue(Color.GREEN);
+            else if(hasLight) {
+                switchColors.get(block).setValue(Color.RED);
+            }
+            else{
+                switchColors.get(block).setValue(Color.TRANSPARENT);
+            }
+        });
+    }
+
+    private void crossingColorListener(CTCBlockSubject block){
+
+        if(block.hasCrossing()) {crossingColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>()).setValue(Color.DARKGRAY);}
+        else {crossingColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>());}
+
+        block.getBooleanProperty(CROSSING_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            boolean hasCrossing = block.getBooleanProperty(HAS_CROSSING_PROPERTY).getValue();
+            if(newValue && hasCrossing)
+                crossingColors.get(block).setValue(Color.RED);
+            else if(hasCrossing) {
+                crossingColors.get(block).setValue(Color.DARKGRAY);
+            }
+            else{
+                crossingColors.get(block).setValue(Color.TRANSPARENT);
+            }
+        });
+    }
+
+    private void maintenanceColorListener(CTCBlockSubject block){
+        maintenanceColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>());
+        block.getBooleanProperty(UNDER_MAINTENANCE_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            if(newValue)
+                maintenanceColors.get(block).setValue(Color.RED);
+            else {
+                maintenanceColors.get(block).setValue(Color.TRANSPARENT);
+            }
+        });
+    }
+
+    private void setupMapChangeListener() {
+        ObservableHashMap<Integer, CTCBlockSubject> subjects = blockMap.getSubjects();
+
+        // Add a listener to the map of CTCBlockSubjects to add a color property for each new block is added
+        ObservableHashMap.MapListener<Integer, CTCBlockSubject> colorListener = new ObservableHashMap.MapListener<>() {
+            public void onAdded(Integer key, CTCBlockSubject value) {
+                switchColorListener(value);
+                crossingColorListener(value);
+                maintenanceColorListener(value);
+            }
+            public void onRemoved(Integer key, CTCBlockSubject value) {
+                switchColors.remove(value);
+                crossingColors.remove(value);
+                maintenanceColors.remove(value);
+            }
+        };
+
+        subjects.addChangeListener(colorListener);
     }
 
 

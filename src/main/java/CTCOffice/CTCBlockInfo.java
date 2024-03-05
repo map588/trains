@@ -16,8 +16,8 @@ class CTCBlockInfo {
     private final boolean hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing;
     private boolean switchLightState, crossingState, switchState;
     private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
-    private javafx.scene.paint.Paint switchLightColor, crossingLightColor, maintenanceLightColor;
-    CTCBlockSubjectFactory factory = CTCBlockSubjectFactory.getInstance();
+    //private javafx.scene.paint.Paint switchLightColor, crossingLightColor, maintenanceLightColor;
+    CTCBlockSubjectMap map = CTCBlockSubjectMap.getInstance();
 
     /**
      * Constructor for the CTCBlockInfo class.
@@ -44,11 +44,11 @@ class CTCBlockInfo {
         this.divergingBlockTwoID = divergingBlockTwoID;
         this.switchState = switchState;
         this.underMaintenance = underMaintenance;
-        updateSwitchLightColor();
-        updateCrossingLightColor();
-        updateMaintenanceLightColor();
+//        updateSwitchLightColor();
+//        updateCrossingLightColor();
+//        updateMaintenanceLightColor();
 
-       factory.registerSubject(blockID, new CTCBlockSubject(this));
+       map.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
     CTCBlockInfo(BasicBlockInfo block) {
@@ -68,15 +68,15 @@ class CTCBlockInfo {
             return;
         }
         if(convergingBlockID == blockID) {
-            factory.getSubjects().get(divergingBlockOneID).setProperty("switchState", state);
-            factory.getSubjects().get(divergingBlockTwoID).setProperty("switchState", state);
+            map.getSubject(divergingBlockOneID).setProperty("switchState", state);
+            map.getSubject(divergingBlockTwoID).setProperty("switchState", state);
         }
         System.out.println("Switch State: " + switchState + " \n");
-        factory.getSubjects().get(convergingBlockID).updateStringProperty("switchStateString");
-        factory.getSubjects().get(divergingBlockOneID).updateStringProperty("switchStateString");
-        factory.getSubjects().get(divergingBlockTwoID).updateStringProperty("switchStateString");
+        map.getSubject(convergingBlockID).updateStringProperty("switchStateString");
+        map.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
+        map.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
         if(divergingBlockOneID == blockID || divergingBlockTwoID == blockID) {
-            factory.getSubjects().get(convergingBlockID).setProperty("switchState", state);
+            map.getSubject(convergingBlockID).setProperty("switchState", state);
         }
     }
 
@@ -84,7 +84,7 @@ class CTCBlockInfo {
      * Returns a string representation of the switch state.
      */
     String getSwitchStateString() {
-        if(factory.getSubjects().get(getBlockID()) != null) {
+        if(map.getSubject(getBlockID()) != null) {
             if (convergingBlockID == 0 || divergingBlockOneID == 0 || divergingBlockTwoID == 0) {
                 return "";
             }
@@ -116,54 +116,54 @@ class CTCBlockInfo {
     /**
      * Updates the color of the light based on its state.
      */
-    void updateSwitchLightColor() {
-        if(factory.getSubjects().get(getBlockID()) != null) {
-            if (this.switchLightState) {
-                this.switchLightColor = javafx.scene.paint.Color.GREEN;
-            } else {
-                this.switchLightColor = javafx.scene.paint.Color.RED;
-            }
-        }
-    }
-
-    /**
-     * Returns the color of the Crossing light.
-     */
-    void updateCrossingLightColor() {
-        if (factory.getSubjects().get(getBlockID()) != null) {
-            if (this.crossingState) {
-                this.crossingLightColor = Color.RED;
-            } else {
-                this.crossingLightColor = Color.DARKGRAY;
-            }
-        }
-    }
-
-    /**
-     * Returns the color of the Maintenance light.
-     */
-    void updateMaintenanceLightColor() {
-        if (factory.getSubjects().get(getBlockID()) != null) {
-            if(this.underMaintenance) {
-                this.maintenanceLightColor = Color.RED;
-            } else {
-                this.maintenanceLightColor = Color.GREEN;
-            }
-        }
-    }
-
-    Paint getSwitchLightColor() {
-        updateSwitchLightColor();
-        return switchLightColor;
-    }
-    Paint getCrossingLightColor() {
-        updateCrossingLightColor();
-        return crossingLightColor;
-    }
-    Paint getMaintenanceLightColor() {
-        updateMaintenanceLightColor();
-        return maintenanceLightColor;
-    }
+//    void updateSwitchLightColor() {
+//        if(map.getSubject(getBlockID()) != null) {
+//            if (this.switchLightState) {
+//                this.switchLightColor = javafx.scene.paint.Color.GREEN;
+//            } else {
+//                this.switchLightColor = javafx.scene.paint.Color.RED;
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Returns the color of the Crossing light.
+//     */
+//    void updateCrossingLightColor() {
+//        if (map.getSubject(getBlockID()) != null) {
+//            if (this.crossingState) {
+//                this.crossingLightColor = Color.RED;
+//            } else {
+//                this.crossingLightColor = Color.DARKGRAY;
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Returns the color of the Maintenance light.
+//     */
+//    void updateMaintenanceLightColor() {
+//        if (map.getSubject(getBlockID()) != null) {
+//            if(this.underMaintenance) {
+//                this.maintenanceLightColor = Color.RED;
+//            } else {
+//                this.maintenanceLightColor = Color.GREEN;
+//            }
+//        }
+//    }
+//
+//    Paint getSwitchLightColor() {
+//        updateSwitchLightColor();
+//        return switchLightColor;
+//    }
+//    Paint getCrossingLightColor() {
+//        updateCrossingLightColor();
+//        return crossingLightColor;
+//    }
+//    Paint getMaintenanceLightColor() {
+//        updateMaintenanceLightColor();
+//        return maintenanceLightColor;
+//    }
 
     // Simple setters and getters
     int     getBlockID      () {
@@ -190,12 +190,10 @@ class CTCBlockInfo {
     }
     void    setUnderMaintenance (boolean underMaintenance) {
         this.underMaintenance = underMaintenance;
-        factory.getSubjects().get(blockID).updatePaintProperty("maintenanceLightColor");
     }
 
     void setSwitchLightState(boolean switchLightState) {
         this.switchLightState = switchLightState;
-        factory.getSubjects().get(blockID).updatePaintProperty("switchLightColor");
     }
     boolean getHasLight     () {
         return hasLight;
@@ -206,7 +204,6 @@ class CTCBlockInfo {
 
     void    setCrossingState(boolean crossingState) {
         this.crossingState = crossingState;
-        factory.getSubjects().get(blockID).updatePaintProperty("crossingLightColor");
     }
     boolean getHasCrossing  () {
         return hasCrossing;
