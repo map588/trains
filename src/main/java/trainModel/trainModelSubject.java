@@ -43,6 +43,7 @@ public class trainModelSubject implements AbstractSubject{
         properties.put(Properties.numCars_p, new SimpleIntegerProperty(model.getNumCars()));
         properties.put(Properties.mass_p, new SimpleDoubleProperty(model.getMass()));
         properties.put(Properties.distanceTraveled_p, new SimpleDoubleProperty(model.getDistanceTraveled()));
+        properties.put(Properties.beacon_p, new SimpleStringProperty(model.getBeacon()));
     }
 
     public trainModelSubject(TrainModel trainModel) {
@@ -61,6 +62,10 @@ public class trainModelSubject implements AbstractSubject{
 
     public IntegerProperty getIntegerProperty (String propertyName) {
         return (IntegerProperty) getProperty(propertyName);
+    }
+
+    public StringProperty getStringProperty (String propertyName) {
+        return (StringProperty) getProperty(propertyName);
     }
 
     public void runPhysics() {

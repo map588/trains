@@ -26,6 +26,9 @@ public interface TrainModel {
     void setExtLights(boolean lights);
     void setIntLights(boolean lights);
     void setTemperature(double temp);
+    void setBeacon(String beacon);
+    void setMass(double mass);
+    void setDistanceTraveled(double distanceTraveled);
 
 
     //Vital Getter Signals
@@ -72,4 +75,6 @@ public interface TrainModel {
     double getDistanceTraveled();
 
     double getMass();
+
+    String getBeacon();
 }

@@ -23,4 +23,5 @@ public class Properties {
     public static final String timeDelta_p = "timeDelta";
     public static final String mass_p = "mass";
     public static final String distanceTraveled_p = "distanceTraveled";
+    public static final String beacon_p = "beacon";
 }

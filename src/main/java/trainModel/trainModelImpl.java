@@ -17,6 +17,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     //Passed Variables
     private int authority;
     private double commandSpeed;
+    private String beacon;
 
     //Vital Variables
     private double speed, acceleration, power;
@@ -65,6 +66,7 @@ public class trainModelImpl implements TrainModel, Notifications {
         this.numPassengers = 1;
         this.crewCount = 2;
         this.distanceTraveled = 0;
+        this.beacon = "";
 
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
@@ -105,6 +107,7 @@ public class trainModelImpl implements TrainModel, Notifications {
     public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", acceleration); }
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
     public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", distance); }
+    public void setBeacon(String beacon) { this.beacon = beacon; notifyChange("beacon", beacon); }
 
     public void setValue(String propertyName, Object newValue){
         if(newValue == null)
@@ -132,6 +135,7 @@ public class trainModelImpl implements TrainModel, Notifications {
             case Properties.timeDelta_p -> setTimeDelta((int)newValue);
             case Properties.mass_p -> setMass((double)newValue);
             case Properties.distanceTraveled_p -> setDistanceTraveled((double)newValue);
+            case Properties.beacon_p -> setBeacon((String)newValue);
         }
     }
     //Getters
@@ -209,6 +213,10 @@ public class trainModelImpl implements TrainModel, Notifications {
     }
     public boolean getRightDoors() {
         return this.rightDoors;
+    }
+
+    public String getBeacon() {
+        return this.beacon;
     }
 
     //TEMP TIME DELTA SETTER/GETTER

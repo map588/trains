@@ -83,6 +83,22 @@ public class stubTrainModel implements TrainModel {
     public void setTemperature(double temp) {
 
     }
+
+    @Override
+    public void setBeacon(String beacon) {
+
+    }
+
+    @Override
+    public void setMass(double mass) {
+
+    }
+
+    @Override
+    public void setDistanceTraveled(double distanceTraveled) {
+
+    }
+
     public void setAcceleration(double acceleration) {
 
     }
@@ -200,6 +216,11 @@ public class stubTrainModel implements TrainModel {
     @Override
     public double getMass() {
         return 0;
+    }
+
+    @Override
+    public String getBeacon() {
+        return null;
     }
 
 
