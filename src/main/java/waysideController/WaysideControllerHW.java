@@ -4,10 +4,7 @@ import Utilities.CSVTokenizer;
 import Utilities.BasicBlockInfo;
 import com.fazecast.jSerialComm.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,17 +14,21 @@ public class WaysideControllerHW implements PLCRunner {
     private boolean maintenanceMode = false;
     private String trackLine;
     private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
-    protected final BufferedReader inputStream;
+    private final InputStream inputStream;
+    protected final BufferedReader bufferedReader;
     private final PrintStream outputStream;
+    private File plcFile;
     private PLCProgram plcProgram;
     public WaysideControllerHW(String comPort) {
         plcProgram = new PLCProgram(this);
+        plcFile = new File("PLC.plc");
 
         SerialPort port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
-        inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
+        inputStream = port.getInputStream();
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         outputStream = new PrintStream(port.getOutputStream(), true);
     }
 
@@ -85,6 +86,14 @@ public class WaysideControllerHW implements PLCRunner {
         String[] values = message.split("=", 2);
 
         switch (values[0]) {
+            case "uploadPLC" -> {
+                try (OutputStream out = new FileOutputStream(plcFile)) {
+                    inputStream.transferTo(out);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                plcProgram.loadPLC(plcFile.getAbsolutePath());
+            }
             case "setLine" -> {
                 trackLine = values[1];
             }
@@ -130,8 +139,8 @@ public class WaysideControllerHW implements PLCRunner {
         WaysideControllerHW controller = new WaysideControllerHW("/dev/ttyS0");
 
         while (true) {
-            if (controller.inputStream.ready()) {
-                controller.parseCOMMessage(controller.inputStream.readLine());
+            if (controller.bufferedReader.ready()) {
+                controller.parseCOMMessage(controller.bufferedReader.readLine());
             }
         }
     }

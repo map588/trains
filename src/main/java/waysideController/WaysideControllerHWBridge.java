@@ -12,7 +12,8 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 
     private final SerialPort port;
     private final BufferedReader inputStream;
-    private final PrintStream outputStream;
+    private final OutputStream outputStream;
+    private final PrintStream printStream;
 
     public WaysideControllerHWBridge(int id, String trackLine, int[] blockIDList, String comPort) {
         super(id, trackLine, blockIDList);
@@ -22,7 +23,8 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
 //        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
         inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
-        outputStream = new PrintStream(port.getOutputStream(), true);
+        outputStream = port.getOutputStream();
+        printStream = new PrintStream(outputStream, true);
 
         port.addDataListener(new SerialPortMessageListener() {
             @Override
@@ -41,61 +43,66 @@ public class WaysideControllerHWBridge extends WaysideControllerImpl {
             }
         });
 
-        outputStream.println("setLine="+trackLine);
-        outputStream.print("blockList=");
+        printStream.println("setLine="+trackLine);
+        printStream.print("blockList=");
         for(int i = 0; i < blockIDList.length-1; i++) {
-            outputStream.print(blockIDList[i]);
+            printStream.print(blockIDList[i]);
             if(i < blockIDList.length - 1) {
-                outputStream.print(",");
+                printStream.print(",");
             }
         }
-        outputStream.println(blockIDList[blockIDList.length-1]);
+        printStream.println(blockIDList[blockIDList.length-1]);
 
         System.out.println("Send: runPLC=true");
-        outputStream.println("runPLC=true");
-    }
-
-    @Override
-    public void loadPLC(File PLC) {
-        super.loadPLC(PLC);
+        printStream.println("runPLC=true");
     }
 
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
         super.setMaintenanceMode(maintenanceMode);
         System.out.println("Send: maintenanceMode="+maintenanceMode);
-        outputStream.println("maintenanceMode="+maintenanceMode);
+        printStream.println("maintenanceMode="+maintenanceMode);
     }
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         System.out.println("Send: switchState="+blockID+":"+switchState);
-        outputStream.println("switchState="+blockID+":"+switchState);
+        printStream.println("switchState="+blockID+":"+switchState);
     }
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
         System.out.println("Send: auth="+blockID+":"+auth);
-        outputStream.println("auth="+blockID+":"+auth);
+        printStream.println("auth="+blockID+":"+auth);
     }
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         super.trackModelSetOccupancy(blockID, occupied);
         System.out.println("Send: occupancy="+blockID+":"+occupied);
-        outputStream.println("occupancy="+blockID+":"+occupied);
+        printStream.println("occupancy="+blockID+":"+occupied);
     }
 
     @Override
     public void CTCRequestSwitchState(int blockID, boolean occupied) {
         super.CTCRequestSwitchState(blockID, occupied);
         System.out.println("Send: switchRequestedState="+blockID+":"+occupied);
-        outputStream.println("switchRequestedState="+blockID+":"+occupied);
+        printStream.println("switchRequestedState="+blockID+":"+occupied);
     }
 
     @Override
     public void runPLC() {
 
+    }
+
+    @Override
+    public void loadPLC(File PLC) {
+        printStream.println("uploadPLC");
+        try (InputStream in = new FileInputStream(PLC)) {
+            in.transferTo(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void parseCOMMessage(String message) {
