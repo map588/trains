@@ -9,12 +9,10 @@ import java.io.File;
 // This is the interface for the wayside controller, which is used to control the various track blocks
 public interface WaysideController {
 
-    // Accessor for PLC program file
-    public File getPLCFile();
-
     // Loads a new PLC program into the wayside controller from a given file
     public void loadPLC(File PLC);
 
+    // Runs the PLC program
     public void runPLC();
 
     // Returns whether the wayside controller is in maintenance mode
@@ -39,6 +37,7 @@ public interface WaysideController {
     // Manually sets a switch state in maintenance mode
     public void maintenanceSetSwitch(int blockID, boolean switchState);
 
+    // Manually sets a block authority in maintenance mode
     public void maintenanceSetAuthority(int blockID, boolean auth);
 
     // Manually sets a traffic light state in maintenance mode
@@ -53,6 +52,7 @@ public interface WaysideController {
     // Returns the subject attached to this controller
     public WaysideControllerSubject getSubject();
 
+    // Allows a subject to set local variables by name and value
     void setValue(String propertyName, Object newValue);
 }
 

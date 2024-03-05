@@ -50,11 +50,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     @Override
-    public File getPLCFile() {
-        return this.PLCFile;
-    }
-
-    @Override
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
         program.loadPLC(PLC.getAbsolutePath());
@@ -98,18 +93,28 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
-    // TODO: Update PLC program to account for block access state
+    // Sets the block access state for a block, updates simulated occupancy, and runs the PLC
     @Override
     public void CTCChangeBlockAccessState(int blockID, boolean accessState) {
-        blockMap.get(blockID).setBlockAccessState(accessState);
-        runPLC();
+        WaysideBlock block = blockMap.get(blockID);
+        boolean currentState = block.isOpen();
+
+        if(currentState != accessState) {
+            block.setBlockAccessState(accessState);
+            block.setOccupied(!accessState);
+
+            runPLC();
+        }
     }
 
     // This method is a convenience method not reflected in the diagrams
     @Override
     public void CTCEnableAllBlocks() {
         for(WaysideBlock block : blockMap.values()) {
-            block.setBlockAccessState(true);
+            if(!block.isOpen()) {
+                block.setBlockAccessState(true);
+                block.setOccupied(false);
+            }
         }
         runPLC();
     }
@@ -147,36 +152,36 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         return subject;
     }
 
-    /**
-     * @param blockID
-     * @param switchState
-     */
     @Override
     public void setSwitchPLC(int blockID, boolean switchState) {
-//        subject.blockListProperty().get(blockID-1).setSwitchState(switchState);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen())
+            block.setSwitchState(switchState);
     }
 
-    /**
-     * @param blockID
-     * @param lightState
-     */
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
-//        subject.blockListProperty().get(blockID-1).setLightState(lightState);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen())
+            block.setLightState(lightState);
     }
 
-    /**
-     * @param blockID
-     * @param crossingState
-     */
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
-//        subject.blockListProperty().get(blockID-1).setCrossingState(crossingState);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen())
+            block.setCrossingState(crossingState);
     }
 
     @Override
     public void setAuthorityPLC(int blockID, boolean auth) {
-//        subject.blockListProperty().get(blockID-1).setAuthority(auth);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen())
+            block.setAuthority(auth);
     }
 
     @Override
