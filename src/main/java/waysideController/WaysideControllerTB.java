@@ -1,13 +1,9 @@
 package waysideController;
 
-import Common.WaysideController;
 import com.fazecast.jSerialComm.SerialPort;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.StringConverter;
 
 import static waysideController.Properties.*;
 

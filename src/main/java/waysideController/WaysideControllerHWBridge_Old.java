@@ -1,61 +1,23 @@
 package waysideController;
 
-import Common.WaysideController;
-import Framework.Support.Notifications;
-import Utilities.BasicBlockInfo;
-import Utilities.CSVTokenizer;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static waysideController.Properties.PLCName_p;
-import static waysideController.Properties.maintenanceMode_p;
-
-public class WaysideControllerHWBridge implements WaysideController, Notifications {
-
-    // The ID of the wayside controller
-    private final int id;
-
-    // The name of the track line that the wayside controller is on
-    private final String trackLine;
-
-    // Whether the wayside controller is in maintenance mode
-    private boolean maintenanceMode = false;
-
-    // The map of blocks that the wayside controller controls
-    protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
-
-    // The PLC program that the wayside controller is running
-    private File PLCFile = null;
-    private PLCProgram plcProgram;
-
-    // The subject that the wayside controller is attached to for GUI updates
-    private final WaysideControllerSubject subject;
+public class WaysideControllerHWBridge_Old extends WaysideControllerImpl {
 
     private final SerialPort port;
     private final BufferedReader inputStream;
     private final PrintStream printStream;
 
-    public WaysideControllerHWBridge(int id, String trackLine, int[] blockIDList, String comPort) {
-        this.id = id;
-        this.trackLine = trackLine;
-
-        subject = new WaysideControllerSubject(this);
-
-        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
-        for(int blockID : blockIDList) {
-            WaysideBlock block = new WaysideBlock(fullBlockList.get(blockID));
-            blockMap.put(blockID, block);
-            subject.addBlock(new WaysideBlockSubject(block));
-        }
+    public WaysideControllerHWBridge_Old(int id, String trackLine, int[] blockIDList, String comPort) {
+        super(id, trackLine, blockIDList);
 
         port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
+//        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0); // block until bytes can be written
         port.openPort();
         inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
         printStream = new PrintStream(port.getOutputStream(), true);
@@ -93,93 +55,35 @@ public class WaysideControllerHWBridge implements WaysideController, Notificatio
 
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
-        this.maintenanceMode = maintenanceMode;
-        notifyChange(maintenanceMode_p, maintenanceMode);
-        subject.updateActivePLCProp();
-
+        super.setMaintenanceMode(maintenanceMode);
         System.out.println("Send: maintenanceMode="+maintenanceMode);
         printStream.println("maintenanceMode="+maintenanceMode);
     }
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-        blockMap.get(blockID).setSwitchState(switchState);
-
         System.out.println("Send: switchState="+blockID+":"+switchState);
         printStream.println("switchState="+blockID+":"+switchState);
     }
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        blockMap.get(blockID).setAuthority(auth);
-
         System.out.println("Send: auth="+blockID+":"+auth);
         printStream.println("auth="+blockID+":"+auth);
     }
 
     @Override
-    public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
-        blockMap.get(blockID).setLightState(lightState);
-    }
-
-    @Override
-    public void maintenanceSetCrossing(int blockID, boolean crossingState) {
-        blockMap.get(blockID).setCrossingState(crossingState);
-    }
-
-    @Override
-    public int getID() {
-        return this.id;
-    }
-
-    @Override
-    public WaysideControllerSubject getSubject() {
-        return subject;
-    }
-
-    @Override
-    public void setValue(String propertyName, Object newValue) {
-        switch(propertyName) {
-            case maintenanceMode_p -> setMaintenanceMode((boolean) newValue);
-            default -> System.err.println("Property " + propertyName + " not found");
-        }
-    }
-
-    @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
-        blockMap.get(blockID).setOccupied(occupied);
-
+        super.trackModelSetOccupancy(blockID, occupied);
         System.out.println("Send: occupancy="+blockID+":"+occupied);
         printStream.println("occupancy="+blockID+":"+occupied);
     }
 
     @Override
-    public void CTCRequestSwitchState(int blockID, boolean switchState) {
-        blockMap.get(blockID).setSwitchRequest(switchState);
-
-        System.out.println("Send: switchRequestedState="+blockID+":"+switchState);
-        printStream.println("switchRequestedState="+blockID+":"+switchState);
-    }
-
-    @Override
-    public void CTCChangeBlockAccessState(int blockID, boolean accessState) {
-        WaysideBlock block = blockMap.get(blockID);
-        boolean currentState = block.isOpen();
-
-        if(currentState != accessState) {
-            block.setBlockAccessState(accessState);
-            trackModelSetOccupancy(blockID, !accessState);
-        }
-    }
-
-    @Override
-    public void CTCEnableAllBlocks() {
-        for(WaysideBlock block : blockMap.values()) {
-            if(!block.isOpen()) {
-                block.setBlockAccessState(true);
-                trackModelSetOccupancy(block.getBlockID(), false);
-            }
-        }
+    public void CTCRequestSwitchState(int blockID, boolean occupied) {
+        super.CTCRequestSwitchState(blockID, occupied);
+        System.out.println("Send: switchRequestedState="+blockID+":"+occupied);
+        printStream.println("switchRequestedState="+blockID+":"+occupied);
     }
 
     @Override
@@ -188,17 +92,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notificatio
     }
 
     @Override
-    public boolean isMaintenanceMode() {
-        return maintenanceMode;
-    }
-
-    @Override
     public void loadPLC(File PLC) {
-        this.PLCFile = PLC;
-        plcProgram.loadPLC(PLC.getAbsolutePath());
-        notifyChange(PLCName_p, PLC.getName());
-        subject.updateActivePLCProp();
-
         printStream.println("uploadPLC");
         try (InputStream in = new FileInputStream(PLC)) {
             in.transferTo(printStream);
@@ -214,10 +108,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notificatio
 
         switch (values[0]) {
             case "maintenanceMode" -> {
-//                setMaintenanceMode(Boolean.parseBoolean(values[1]));
-                maintenanceMode = Boolean.parseBoolean(values[1]);
-                notifyChange(maintenanceMode_p, maintenanceMode);
-                subject.updateActivePLCProp();
+                super.setMaintenanceMode(Boolean.parseBoolean(values[1]));
             }
             case "switchState" -> {
                 String[] setValues = values[1].split(":");
@@ -248,12 +139,5 @@ public class WaysideControllerHWBridge implements WaysideController, Notificatio
 
     public String toString() {
         return "HW Wayside Controller #" + getID();
-    }
-
-    public void notifyChange(String propertyName, Object newValue) {
-        System.out.println("Variable: " + propertyName + " changed to " + newValue);
-        if(!subject.isGUIUpdate) {
-            subject.notifyChange(propertyName, newValue);
-        }
     }
 }

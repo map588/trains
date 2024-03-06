@@ -128,18 +128,7 @@ public class WaysideControllerSubject implements AbstractSubject, Notifications 
             getPaintProperty(activePLCColor_p).set(Color.GRAY);
     }
     public void addBlock(WaysideBlockSubject block) {
-        int blockID = block.getBlock().getBlockID();
         blockList.add(block);
-//        block.getBooleanProperty(occupied_p).addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(blockID, newValue));
-//        block.getBooleanProperty(switchState_p).addListener((observable, oldValue, newValue) -> controller.maintenanceSetSwitch(blockID, newValue));
-//        block.getBooleanProperty(lightState_p).addListener((observable, oldValue, newValue) -> controller.maintenanceSetTrafficLight(blockID, newValue));
-//        block.getBooleanProperty(crossingState_p).addListener((observable, oldValue, newValue) -> controller.maintenanceSetCrossing(blockID, newValue));
-//        block.getBooleanProperty(switchRequest_p).addListener((observable, oldValue, newValue) -> {
-////            block.isGUIUpdate = true;
-//            controller.CTCRequestSwitchState(blockID, newValue);
-////            block.isGUIUpdate = false;
-//        });
-//        block.getBooleanProperty(authority_p).addListener((observable, oldValue, newValue) -> controller.maintenanceSetAuthority(blockID, newValue));
     }
     public WaysideController getController() {
         return this.controller;

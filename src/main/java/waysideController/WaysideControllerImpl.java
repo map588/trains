@@ -17,17 +17,20 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // The ID of the wayside controller
     private final int id;
 
+    // The name of the track line that the wayside controller is on
     private final String trackLine;
 
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
 
+    // The map of blocks that the wayside controller controls
     protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
     private PLCProgram plcProgram;
 
+    // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
 
 
@@ -35,15 +38,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id, String lineName, int[] blockIDList) {
+    public WaysideControllerImpl(int id, String trackLine, int[] blockIDList) {
         this.id = id;
-        this.trackLine = lineName;
+        this.trackLine = trackLine;
 
         subject = new WaysideControllerSubject(this);
 
         List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
         for(int blockID : blockIDList) {
-            addBlock(new WaysideBlock(fullBlockList.get(blockID)));
+            WaysideBlock block = new WaysideBlock(fullBlockList.get(blockID));
+            blockMap.put(blockID, block);
+            subject.addBlock(new WaysideBlockSubject(block));
         }
 
         plcProgram = new PLCProgram(this);
@@ -76,14 +81,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
-    private void addBlock(WaysideBlock block) {
-        blockMap.put(block.getBlockID(), block);
-        subject.addBlock(new WaysideBlockSubject(block));
-    }
-
     @Override
-    public void trackModelSetOccupancy(int blockID, boolean isOccupied) {
-        blockMap.get(blockID).setOccupied(isOccupied);
+    public void trackModelSetOccupancy(int blockID, boolean occupied) {
+        blockMap.get(blockID).setOccupied(occupied);
         runPLC();
     }
 
