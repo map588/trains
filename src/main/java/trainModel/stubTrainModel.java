@@ -31,7 +31,6 @@ public class stubTrainModel implements TrainModel {
 
     }
 
-    @Override
     public void setActualSpeed(double speed) {
 
     }
@@ -89,12 +88,10 @@ public class stubTrainModel implements TrainModel {
 
     }
 
-    @Override
     public void setMass(double mass) {
 
     }
 
-    @Override
     public void setDistanceTraveled(double distanceTraveled) {
 
     }

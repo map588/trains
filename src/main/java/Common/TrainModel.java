@@ -7,13 +7,13 @@ public interface  TrainModel {
     void setServiceBrake(boolean brake);
     void setPower(double power);
     void setCommandSpeed(double speed);
-    void setActualSpeed(double speed);
+
     void setAuthority(int authority);
     void setNumCars(int numCars);
     void setNumPassengers(int numPassengers);
     void setCrewCount(int crewCount);
     void setGrade(double grade);
-    void setAcceleration(double acceleration);
+
 
     //Murphy Signals
     void setBrakeFailure(boolean failure);
@@ -27,8 +27,7 @@ public interface  TrainModel {
     void setIntLights(boolean lights);
     void setTemperature(double temp);
     void setBeacon(String beacon);
-    void setMass(double mass);
-    void setDistanceTraveled(double distanceTraveled);
+
 
 
     //Vital Getter Signals
