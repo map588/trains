@@ -117,7 +117,7 @@ public class TrackModelManager {
     private TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
 
     // test bench object
-    private TrackModelTB testBench;
+    private TrackModelTBManager testBench;
     private TrackLayoutInfo trackProperties;
 
     @FXML
@@ -326,7 +326,7 @@ public class TrackModelManager {
     }
 
 
-    private TrackModelTB launchTestBench() {
+    private TrackModelTBManager launchTestBench() {
         try {
             String tbFile = "/Framework/GUI/FXML/trackModel_TB.fxml";
             URL url = getClass().getResource(tbFile);

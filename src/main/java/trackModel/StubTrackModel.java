@@ -10,7 +10,7 @@ public class StubTrackModel implements TrackModel {
     TrackModelImpl trackModel;
 
     @Override
-    public void setLightState(int block, boolean state) {
+    public void setSignalState(int block, boolean state) {
     }
 
     @Override
@@ -34,7 +34,7 @@ public class StubTrackModel implements TrackModel {
     }
 
     @Override
-    public void setCommandedSpeed(int trainID, int commandedSpeed) {
+    public void setCommandedSpeed(int trainID, double commandedSpeed) {
     }
 
     @Override
@@ -59,12 +59,12 @@ public class StubTrackModel implements TrackModel {
     }
 
     @Override
-    public int getCommandedSpeed(int trainID) {
+    public double getCommandedSpeed(int trainID) {
         return 0;
     }
 
     @Override
-    public boolean getLightState(int block) {
+    public boolean getSignalState(int block) {
         return false;
     }
 
@@ -108,7 +108,6 @@ public class StubTrackModel implements TrackModel {
         return null;
     }
 
-    @Override
     public List<TrackLayoutInfo> getBlockInfo() {
         return null;
     }

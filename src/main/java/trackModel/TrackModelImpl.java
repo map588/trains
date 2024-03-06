@@ -144,7 +144,7 @@ public class TrackModelImpl implements TrackModel {
     }
 
     private HashMap<Integer, Integer> trainAuthorities;
-    private HashMap<Integer, Integer> trainCommandSpeeds;
+    private HashMap<Integer, Double> trainCommandSpeeds;
     private HashMap<Integer, Boolean> blockOccupied;
     private HashMap<Integer, Boolean> switchStateMap;
     private HashMap<Integer, Boolean> lightStateMap;
@@ -172,7 +172,7 @@ public class TrackModelImpl implements TrackModel {
         }
     }
 
-    public void setCommandedSpeed(int trainID, int commandedSpeed) {
+    public void setCommandedSpeed(int trainID, double commandedSpeed) {
         if (this.trainCommandSpeeds.containsKey(trainID)) {
             this.trainCommandSpeeds.replace(trainID, commandedSpeed);
         } else {
@@ -208,7 +208,7 @@ public class TrackModelImpl implements TrackModel {
         }
     }
 
-    public void setLightState(int block, boolean state) {
+    public void setSignalState(int block, boolean state) {
         if (this.lightStateMap.containsKey(block)) {
             this.lightStateMap.replace(block, state);
         } else {
@@ -272,7 +272,7 @@ public class TrackModelImpl implements TrackModel {
         return this.trainAuthorities.get(trainID);
     }
 
-    public int getCommandedSpeed(int trainID) {
+    public double getCommandedSpeed(int trainID) {
         return this.trainCommandSpeeds.get(trainID);
     }
 
@@ -288,7 +288,7 @@ public class TrackModelImpl implements TrackModel {
         return this.failureMap.get(block);
     }
 
-    public boolean getLightState(int block) {
+    public boolean getSignalState(int block) {
         if(this.lightStateMap.containsKey(block)){
             return this.lightStateMap.get(block);
         } else {

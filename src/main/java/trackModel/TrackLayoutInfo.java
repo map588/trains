@@ -341,9 +341,7 @@ public class TrackLayoutInfo {
         this.signalState.set(signalState);
     }
 
-    public String getCrossingState() {
-        return crossingState.get();
-    }
+    public String getCrossingState() { return crossingState.get(); }
 
     public StringProperty crossingStateProperty() {
         return crossingState;
@@ -405,9 +403,7 @@ public class TrackLayoutInfo {
         return nameOfStation.get();
     }
 
-    public StringProperty nameOfStationProperty() {
-        return nameOfStation;
-    }
+    public StringProperty nameOfStationProperty() { return nameOfStation; }
 
     public void setNameOfStation(String nameOfStation) {
         this.nameOfStation.set(nameOfStation);

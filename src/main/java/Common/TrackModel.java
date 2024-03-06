@@ -2,21 +2,21 @@ package Common;
 
 public interface TrackModel {
 
-    void setLightState(int block, boolean state);
+    void setSignalState(int block, boolean state);
     void setSwitchState(int block, boolean state);
     void setCrossing(int block, boolean state);
     void setBeacon(int block, String beacon);
     void setBlockOccupied(int block, boolean state);
     void setTrainAuthority(int trainID, int authority);
-    void setCommandedSpeed(int trainID, int commandedSpeed);
+    void setCommandedSpeed(int trainID, double commandedSpeed);
     void setTemperature(int temp);
     void setLine(String lines);
     void setFailure(int block, String failure);
     void setStation(int block, String station);
 
     int getTrainAuthority(int trainID);
-    int getCommandedSpeed(int trainID);
-    boolean getLightState(int block);
+    double getCommandedSpeed(int trainID);
+    boolean getSignalState(int block);
     boolean getSwitchState(int block);
     boolean getCrossingState(int block);
     String getBeacon(int block);
