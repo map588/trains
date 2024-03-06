@@ -32,7 +32,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notificatio
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
-    private PLCProgram plcProgram;
+    private PLCProgram plcProgramSW;
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
@@ -195,7 +195,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notificatio
     @Override
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
-        plcProgram.loadPLC(PLC.getAbsolutePath());
+        plcProgramSW.loadPLC(PLC.getAbsolutePath());
         notifyChange(PLCName_p, PLC.getName());
         subject.updateActivePLCProp();
 
