@@ -2,7 +2,6 @@ package Common;
 
 
 import Framework.Support.GUIModifiable;
-import Framework.Support.Notifications;
 import trainController.trainControllerSubject;
 
 public interface TrainController extends GUIModifiable {

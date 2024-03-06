@@ -4,13 +4,11 @@ package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Support.Notifications;
+import Framework.Support.Notifier;
 import Utilities.Constants;
 import trainController.stubTrainController;
-import trainController.trainControllerImpl;
-import trainModel.Properties;
 
-public class trainModelImpl implements TrainModel, Notifications {
+public class trainModelImpl implements TrainModel, Notifier {
 
     private trainModelSubject subject;
 
@@ -214,7 +212,6 @@ public class trainModelImpl implements TrainModel, Notifications {
     public boolean getRightDoors() {
         return this.rightDoors;
     }
-
     public String getBeacon() {
         return this.beacon;
     }

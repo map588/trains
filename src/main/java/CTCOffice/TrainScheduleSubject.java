@@ -5,14 +5,11 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
 
-
-import java.util.ArrayList;
-
-public class SingleTrainScheduleSubject implements AbstractSubject {
-    public final SingleTrainSchedule schedule;
+public class TrainScheduleSubject implements AbstractSubject {
+    public final TrainSchedule schedule;
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 
-    SingleTrainScheduleSubject(SingleTrainSchedule schedule) {
+    TrainScheduleSubject(TrainSchedule schedule) {
        properties.put(TRAIN_ID_PROPERTY, new SimpleIntegerProperty(this, TRAIN_ID_PROPERTY, schedule.getTrainID()));
         properties.put(TRAIN_LINE_PROPERTY, new SimpleStringProperty(this, TRAIN_LINE_PROPERTY, schedule.getLine()));
         properties.put(DISPATCH_TIME_PROPERTY, new SimpleIntegerProperty(this, DISPATCH_TIME_PROPERTY, schedule.getDispatchTime()));
@@ -93,7 +90,7 @@ public class SingleTrainScheduleSubject implements AbstractSubject {
         }
     }
 
-    public SingleTrainSchedule getSchedule(){
+    public TrainSchedule getSchedule(){
         return schedule;
     }
 

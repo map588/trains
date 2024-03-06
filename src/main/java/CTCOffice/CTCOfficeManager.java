@@ -14,7 +14,6 @@ import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,18 +34,18 @@ public class CTCOfficeManager {
     @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
     @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumn;
     @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumn;
-    @FXML private TableView<FullScheduleFileSubject> scheduleTable;
-    @FXML private TableColumn<FullScheduleFileSubject, String> scheduleNameColumn;
-    @FXML private TableColumn<FullScheduleFileSubject, String> scheduleDateModColumn;
+    @FXML private TableView<ScheduleFileSubject> scheduleTable;
+    @FXML private TableColumn<ScheduleFileSubject, String> scheduleNameColumn;
+    @FXML private TableColumn<ScheduleFileSubject, String> scheduleDateModColumn;
     @FXML private ComboBox<String> scheduleSelector;
     @FXML private Button selectScheduleButton;
-    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> dispatchTimeColumn;
-    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> stationBlockIDColumn;
-    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> arrivalTimeColumn;
-    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> departureTimeColumn;
-    @FXML private TableView<SingleTrainScheduleSubject> scheduleEditTable;
-    @FXML private TableColumn<SingleTrainScheduleSubject, String> lineColumn;
-    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> carNumberColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> dispatchTimeColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> stationBlockIDColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> arrivalTimeColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> departureTimeColumn;
+    @FXML private TableView<TrainScheduleSubject> scheduleEditTable;
+    @FXML private TableColumn<TrainScheduleSubject, String> lineColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> carNumberColumn;
     @FXML private ChoiceBox<String> lineStopSelector;
     @FXML private ChoiceBox<Integer> trainStopSelector;
     @FXML private Button AddStop;
@@ -57,7 +56,7 @@ public class CTCOfficeManager {
     @FXML private ChoiceBox<Integer> stationStopSelector;
     @FXML private Button saveScheduleButton;
     @FXML private Button saveStopButton;
-    @FXML private TableColumn<SingleTrainScheduleSubject, Integer> scheduledTrainColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
     @FXML private ChoiceBox<Integer> lineTrainSelector;
     @FXML private ChoiceBox<Integer> trainIDSelector;
     @FXML private Button AddTrain;
@@ -76,6 +75,12 @@ public class CTCOfficeManager {
 
     CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
+
+    /**
+     * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
+     * They reflect boolean properties of the CTCBlockSubject, and are updated by listeners.
+     * @see #setupMapChangeListener()
+     */
     Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> maintenanceColors = new ConcurrentHashMap<>();
@@ -150,7 +155,7 @@ public class CTCOfficeManager {
         scheduleSelector.getItems().addAll(scheduleLibrary.getSubjects().keySet());
 
         selectScheduleButton.setOnAction(event -> {
-            FullScheduleFileSubject selectedSchedule = scheduleLibrary.getSubject(scheduleSelector.getValue());
+            ScheduleFileSubject selectedSchedule = scheduleLibrary.getSubject(scheduleSelector.getValue());
             scheduleEditTable.getItems().clear();
             for(int i = 0; i < selectedSchedule.getSchedule().getTrainSchedule(1).getStops().size(); i++) {
                 scheduleEditTable.getItems().add(selectedSchedule.getSchedule().getTrainSchedule(1).getSubject());

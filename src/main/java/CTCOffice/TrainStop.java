@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // A path in between two stations, a schedule is mostly just a list of these.
-public class SubRoute { //SubRoute
+public class TrainStop { //SubRoute
     private int stationBlockID;
     private int arrivalTime;
     private int departureTime;
@@ -12,7 +12,7 @@ public class SubRoute { //SubRoute
     private List<Integer> routePath; //routePath
     private List<Integer> authorityList;
 
-    public SubRoute(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
+    public TrainStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
         this.stationBlockID = stationBlockID;
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;

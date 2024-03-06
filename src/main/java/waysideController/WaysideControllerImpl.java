@@ -1,7 +1,7 @@
 package waysideController;
 
 import Common.WaysideController;
-import Framework.Support.Notifications;
+import Framework.Support.Notifier;
 import Utilities.CSVTokenizer;
 import Utilities.BasicBlockInfo;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static waysideController.Properties.*;
 
-public class WaysideControllerImpl implements WaysideController, PLCRunner, Notifications {
+public class WaysideControllerImpl implements WaysideController, PLCRunner, Notifier {
 
     // The ID of the wayside controller
     private final int id;

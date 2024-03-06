@@ -3,23 +3,23 @@ package CTCOffice;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleTrainSchedule {
+public class TrainSchedule {
     private int trainID;
     private String line;
     private int dispatchTime;
     private int carCount;
     private int destination;
-    private List<SubRoute> stops  = new ArrayList<SubRoute>();
-    SingleTrainScheduleSubject subject;
+    private List<TrainStop> stops  = new ArrayList<TrainStop>();
+    TrainScheduleSubject subject;
 
-    SingleTrainSchedule(int trainID, String line, int dispatchTime, int carCount, List<SubRoute> stops) {
+    TrainSchedule(int trainID, String line, int dispatchTime, int carCount, List<TrainStop> stops) {
         this.trainID = trainID;
         this.line = line;
         this.dispatchTime = dispatchTime;
         this.carCount = carCount;
         this.stops = stops;
 
-        subject = new SingleTrainScheduleSubject(this);
+        subject = new TrainScheduleSubject(this);
 
     }
 
@@ -35,7 +35,7 @@ public class SingleTrainSchedule {
         return carCount;
     }
 
-    public List<SubRoute> getStops() {
+    public List<TrainStop> getStops() {
         return stops;
     }
 
@@ -51,11 +51,11 @@ public class SingleTrainSchedule {
         this.carCount = carCount;
     }
 
-    public void setStops(List<SubRoute> stops) {
+    public void setStops(List<TrainStop> stops) {
         this.stops = stops;
     }
 
-    public void addStop(SubRoute stop) {
+    public void addStop(TrainStop stop) {
         stops.add(stop);
     }
 
@@ -63,11 +63,11 @@ public class SingleTrainSchedule {
         stops.remove(index);
     }
 
-    public void updateStop(int index, SubRoute stop) {
+    public void updateStop(int index, TrainStop stop) {
         stops.set(index, stop);
     }
 
-    public SubRoute getStop(int index) {
+    public TrainStop getStop(int index) {
         return stops.get(index);
     }
 
@@ -80,7 +80,7 @@ public class SingleTrainSchedule {
     }
 
     public void printStops() {
-        for (SubRoute stop : stops) {
+        for (TrainStop stop : stops) {
             System.out.println("Block ID: " + stop.getStationBlockID());
         }
     }
@@ -115,7 +115,7 @@ public class SingleTrainSchedule {
     }
 
     public void addStop(int blockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> blockList, List<Integer> authorityList) {
-        stops.add(new SubRoute(blockID, arrivalTime, departureTime, speedList, blockList, authorityList));
+        stops.add(new TrainStop(blockID, arrivalTime, departureTime, speedList, blockList, authorityList));
     }
 
     public void setSpeed(int subRouteIndex, int blockID, int speed) {
@@ -142,7 +142,7 @@ public class SingleTrainSchedule {
         this.line = line;
     }
 
-    public  SingleTrainScheduleSubject getSubject() {
+    public TrainScheduleSubject getSubject() {
        return subject;
     }
 

@@ -1,5 +1,5 @@
 package Framework.Support;
 
-public interface Notifications {
+public interface Notifier {
     void notifyChange(String property, Object newValue);
 }

@@ -21,19 +21,18 @@ public record ParsedBlock(
         BlockType blockType, // Including the BlockType enum here
         Optional<Integer> alternativeBlock, // For switches; contains the alternative block ID or empty
         Optional<String> stationName, // For stations; contains the station name or empty
-        Optional<DoorSide> doorSide // For stations; indicates the door side or empty
+        Optional<Direction> direction // For stations; indicates the door side or empty
 ) {
     // Enum for door side at stations
-    public enum DoorSide {
-        LEFT,
-        RIGHT,
+    public enum Direction {
+        IN,
+        OUT,
         BOTH
     }
 
     public enum BlockType {
         REGULAR,
-        SWITCH_IN,
-        SWITCH_OUT,
+        SWITCH,
         STATION,
         CROSSING,
         YARD,
@@ -42,29 +41,21 @@ public record ParsedBlock(
 
     // Simplify object creation for different block types
     // Factory method for creating a switch block with an alternative switch position
-    public static ParsedBlock ofSwitchIn(String trackLine, char section, int blockNumber, int blockLength,
-                                            double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                            boolean isUnderground, int prevBlock, int nextBlock, int alternativeSwitchBlock) {
+    public static ParsedBlock ofSwitch(String trackLine, char section, int blockNumber, int blockLength,
+                                         double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
+                                         boolean isUnderground, int prevBlock, int nextBlock, int alternativeSwitchBlock) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH_IN, Optional.of(alternativeSwitchBlock),
-                Optional.empty(), Optional.empty());
-    }
-
-    public static ParsedBlock ofSwitchOut(String trackLine, char section, int blockNumber, int blockLength,
-                                             double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                             boolean isUnderground, int prevBlock, int nextBlock, int alternativeSwitchBlock) {
-        return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH_OUT, Optional.of(alternativeSwitchBlock),
+                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH, Optional.of(alternativeSwitchBlock),
                 Optional.empty(), Optional.empty());
     }
 
     // Factory method for creating a station block with a station name and door side
     public static ParsedBlock ofStation(String trackLine, char section, int blockNumber, int blockLength,
                                            double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                           boolean isUnderground, int prevBlock, int nextBlock, String stationName, DoorSide doorSide) {
+                                           boolean isUnderground, int prevBlock, int nextBlock, String stationName, Direction direction) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, BlockType.STATION, Optional.empty(),
-                Optional.of(stationName), Optional.of(doorSide));
+                Optional.of(stationName), Optional.of(direction));
     }
 
     // Factory method for creating a regular block

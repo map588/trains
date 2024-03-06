@@ -1,11 +1,11 @@
 package waysideController;
 
-import Framework.Support.Notifications;
+import Framework.Support.Notifier;
 import Utilities.BasicBlockInfo;
 
 import static waysideController.Properties.*;
 
-public class WaysideBlock implements Notifications {
+public class WaysideBlock implements Notifier {
     private final int blockID;
     private final boolean hasSwitch;
     private final boolean hasLight;

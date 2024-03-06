@@ -1,26 +1,24 @@
 package CTCOffice;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 
-public class FullScheduleFile {
-    private HashMap<Integer, SingleTrainSchedule> multipleTrainSchedules = new HashMap<>();
-    private HashMap<Integer, SingleTrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
-    private FullScheduleFileSubject subject;
+public class ScheduleFile {
+    private HashMap<Integer, TrainSchedule> multipleTrainSchedules = new HashMap<>();
+    private HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
+    private ScheduleFileSubject subject;
 
 
     private String scheduleFileName;
     private String lastModified;
 
-    public FullScheduleFile(String scheduleFileName, String lastModified) {
+    public ScheduleFile(String scheduleFileName, String lastModified) {
         this.scheduleFileName = scheduleFileName;
         this.lastModified = lastModified;
 
     }
 
-    public void putTrainSchedule(int trainID, SingleTrainSchedule schedule) {
+    public void putTrainSchedule(int trainID, TrainSchedule schedule) {
         multipleTrainSchedules.put(trainID, schedule);
         multipleTrainScheduleSubjects.put(trainID, schedule.getSubject());
     }
@@ -30,10 +28,10 @@ public class FullScheduleFile {
         multipleTrainScheduleSubjects.remove(index);
     }
 
-    public SingleTrainSchedule getTrainSchedule(int trainID) {
+    public TrainSchedule getTrainSchedule(int trainID) {
         return multipleTrainSchedules.get(trainID);
     }
-    public HashMap<Integer, SingleTrainSchedule> getMultipleTrainSchedules() {
+    public HashMap<Integer, TrainSchedule> getMultipleTrainSchedules() {
         return this.multipleTrainSchedules;
     }
 
@@ -53,7 +51,7 @@ public class FullScheduleFile {
         return this.lastModified;
     }
 
-    public HashMap<Integer, SingleTrainScheduleSubject> getMultipleTrainScheduleSubjects() {
+    public HashMap<Integer, TrainScheduleSubject> getMultipleTrainScheduleSubjects() {
         return this.multipleTrainScheduleSubjects;
     }
 }

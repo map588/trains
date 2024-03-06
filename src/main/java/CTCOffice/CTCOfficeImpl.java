@@ -6,7 +6,6 @@ import Common.TrainModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import Framework.Support.ObservableHashMap;
 
 import static Utilities.CSVTokenizer.blockList;
 import static Utilities.CSVTokenizer.lineNames;
@@ -48,11 +47,11 @@ public class CTCOfficeImpl implements CTCOffice {
             track.get(lineNames.get(0)).add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(i))));
         }
 
-        new FullScheduleFileSubject(new FullScheduleFile("Schedule1", "12/12/2019"));
-        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new SingleTrainSchedule(1, "BlueLine", 0, 2, new ArrayList<>() {{
-            add(new SubRoute(5, 5, 6, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-            add(new SubRoute(7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-            add(new SubRoute(10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
+        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, "BlueLine", 0, 2, new ArrayList<>() {{
+            add(new TrainStop(5, 5, 6, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add(new TrainStop(7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add(new TrainStop(10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
 
 

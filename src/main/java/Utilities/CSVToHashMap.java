@@ -1,15 +1,15 @@
 package Utilities;
 
-import Utilities.ParsedBlock;
-import Utilities.ParsedBlock.DoorSide;
-import Utilities.ParsedBlock.BlockType;
+import Utilities.ParsedBlock.Direction;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class CSVToHashMap {
 
@@ -27,6 +27,7 @@ public class CSVToHashMap {
             int blockGradeIndex = indexOf(headers, "Block Grade (%)");
             int speedLimitIndex = indexOf(headers, "Speed Limit (Km/Hr)");
             int infrastructureIndex = indexOf(headers, "Infrastructure");
+            int directionIndex = indexOf(headers, "Direction");
             int elevationIndex = indexOf(headers, "ELEVATION (M)");
             int cumulativeElevationIndex = indexOf(headers, "CUMALTIVE ELEVATION (M)");
 
@@ -42,6 +43,7 @@ public class CSVToHashMap {
                 double elevation = Double.parseDouble(values[elevationIndex]);
                 double cumulativeElevation = Double.parseDouble(values[cumulativeElevationIndex]);
                 boolean isUnderground = values[infrastructureIndex].toLowerCase().contains("underground");
+                Direction direction = Direction.valueOf(values[directionIndex].toUpperCase());
 
                 // Parse the Infrastructure column to determine the block type and additional data
                 String infrastructure = values[infrastructureIndex];
@@ -73,19 +75,33 @@ public class CSVToHashMap {
             return ParsedBlock.ofCrossing(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground, prevBlock, nextBlock);
-        } else if (infrastructure.contains("Switch")) {
+        } else if (infrastructure.contains("SWITCH")) {
             // Determine if it's SWITCH_IN or SWITCH_OUT based on specific logic
-            // This is simplified; actual parsing of the infrastructure string is needed to extract switch details
-            return ParsedBlock.ofSwitchIn(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground, prevBlock, nextBlock, -1); // Example, adjust alternativeSwitchBlock accordingly
+            String regex = "\\((-?\\d+)-(-?\\d+);\\s*(-?\\d+)-(-?\\d+)\\)";
+
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(infrastructure);
+
+            if (matcher.find()) {
+                int A1 = Integer.parseInt(matcher.group(1));
+                int A2 = Integer.parseInt(matcher.group(2));
+                int B1 = Integer.parseInt(matcher.group(3));
+                int B2 = Integer.parseInt(matcher.group(4));
+            }else{
+                System.out.println("No match found");
+            }
         } else if (infrastructure.contains("STATION;")) {
+            //TODO: This does not work in all cases
             String stationName = infrastructure.split(";")[1].trim();
             return ParsedBlock.ofStation(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground, prevBlock, nextBlock, stationName, DoorSide.BOTH); // Example, adjust doorSide accordingly
+                    isUnderground, prevBlock, nextBlock, stationName, Direction.BOTH); // Example, adjust doorSide accordingly
+        }else if(infrastructure.contains("YARD")){
+
+            return ParsedBlock.ofYard(trackLine, section, blockNumber, blockLength,
+                    blockGrade, speedLimit, elevation, cumulativeElevation,
+                    isUnderground, prevBlock, nextBlock);
         }
-        // Default to REGULAR if no specific type is matched
         return ParsedBlock.ofRegular(trackLine, section, blockNumber, blockLength,
                 blockGrade, speedLimit, elevation, cumulativeElevation,
                 isUnderground, prevBlock, nextBlock);
@@ -100,10 +116,5 @@ public class CSVToHashMap {
         return -1; // Header not found
     }
 
-    public static void main(String[] args) {
-        String filePath = "path/to/track_layout.csv";
-        HashMap<String, ArrayDeque<ParsedBlock>> trackLines = parseCSV(filePath);
-        // Further processing...
-    }
 }
 

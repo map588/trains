@@ -1,9 +1,8 @@
 package waysideController;
 
 import Framework.Support.AbstractSubject;
-import Framework.Support.Notifications;
+import Framework.Support.Notifier;
 import Framework.Support.ObservableHashMap;
-import Utilities.TrafficLightState;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
@@ -15,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static waysideController.Properties.*;
 
-public class WaysideBlockSubject implements AbstractSubject, Notifications {
+public class WaysideBlockSubject implements AbstractSubject, Notifier {
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();

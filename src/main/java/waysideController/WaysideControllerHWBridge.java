@@ -1,7 +1,7 @@
 package waysideController;
 
 import Common.WaysideController;
-import Framework.Support.Notifications;
+import Framework.Support.Notifier;
 import Utilities.BasicBlockInfo;
 import Utilities.CSVTokenizer;
 import com.fazecast.jSerialComm.SerialPort;
@@ -16,7 +16,7 @@ import java.util.Map;
 import static waysideController.Properties.PLCName_p;
 import static waysideController.Properties.maintenanceMode_p;
 
-public class WaysideControllerHWBridge implements WaysideController, Notifications {
+public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     // The ID of the wayside controller
     private final int id;

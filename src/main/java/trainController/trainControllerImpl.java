@@ -3,7 +3,6 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.GUIModifiable;
-import Framework.Support.Notifications;
 import Utilities.Constants;
 import trainModel.stubTrainModel;
 
@@ -101,115 +100,112 @@ public class trainControllerImpl implements TrainController, GUIModifiable {
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        subject.notifyChange(automaticMode_p, mode);
+        subject.notifyChange(AUTOMATIC_MODE_PROPERTY, mode);
     }
     public void setAuthority(int authority) {
         this.authority = authority;
-        subject.notifyChange(authority_p, authority);
+        subject.notifyChange(AUTHORITY_PROPERTY, authority);
     }
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        subject.notifyChange(overrideSpeed_p, speed);
+        subject.notifyChange(OVERRIDE_SPEED_PROPERTY, speed);
         //calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        subject.notifyChange(commandSpeed_p, speed);
+        subject.notifyChange(COMMAND_SPEED_PROPERTY, speed);
         //calculatePower();
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        subject.notifyChange(currentSpeed_p, speed);
+        subject.notifyChange(CURRENT_SPEED_PROPERTY, speed);
     }
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        subject.notifyChange(serviceBrake_p, brake);
+        subject.notifyChange(SERVICE_BRAKE_PROPERTY, brake);
     }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        subject.notifyChange(emergencyBrake_p, brake);
+        subject.notifyChange(EMERGENCY_BRAKE_PROPERTY, brake);
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
-        subject.notifyChange(Ki_p, Ki);
+        subject.notifyChange(KI_PROPERTY, Ki);
     }
     public void setKp(double Kp) {
         this.Kp = Kp;
-        subject.notifyChange(Kp_p, Kp);
+        subject.notifyChange(KP_PROPERTY, Kp);
     }
     public void setPower(double power) {
         this.power = power;
-        subject.notifyChange(power_p, power);
+        subject.notifyChange(POWER_PROPERTY, power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        subject.notifyChange(intLights_p, lights); // This might've been the issue interiorLights -> intLights
+        subject.notifyChange(INT_LIGHTS_PROPERTY, lights); // This might've been the issue interiorLights -> intLights
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
 
-        subject.notifyChange(extLights_p, lights); // This might've been the issue exteriorLights -> extLights
+        subject.notifyChange(EXT_LIGHTS_PROPERTY, lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        subject.notifyChange(leftDoors_p, doors);
+        subject.notifyChange(LEFT_DOORS_PROPERTY, doors);
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        subject.notifyChange(rightDoors_p, doors);
+        subject.notifyChange(RIGHT_DOORS_PROPERTY, doors);
     }
     public void setTemperature(double temp) {
         this.temperature = temp;
-        subject.notifyChange(temperature_p, temp);
+        subject.notifyChange(TEMPERATURE_PROPERTY, temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        subject.notifyChange(announcements_p, announcements);
+        subject.notifyChange(ANNOUNCEMENTS_PROPERTY, announcements);
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        subject.notifyChange(signalFailure_p, signalFailure);
+        subject.notifyChange(SIGNAL_FAILURE_PROPERTY, signalFailure);
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        subject.notifyChange(brakeFailure_p, brakeFailure);
+        subject.notifyChange(BRAKE_FAILURE_PROPERTY, brakeFailure);
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        subject.notifyChange(powerFailure_p, powerFailure);
+        subject.notifyChange(POWER_FAILURE_PROPERTY, powerFailure);
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
-        subject.notifyChange(inTunnel_p,tunnel);
+        subject.notifyChange(IN_TUNNEL_PROPERTY,tunnel);
     }
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
-        subject.notifyChange(leftPlatform_p,platform);
+        subject.notifyChange(LEFT_PLATFORM_PROPERTY,platform);
     }
     public void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
-        subject.notifyChange(rightPlatform_p,platform);
+        subject.notifyChange(RIGHT_PLATFORM_PROPERTY,platform);
     }
     public void setSamplingPeriod(int period){
         this.samplingPeriod = period;
-        subject.notifyChange(samplingPeriod_p,period);
+        subject.notifyChange(SAMPLING_PERIOD_PROPERTY,period);
     }
     public void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
-        subject.notifyChange(speedLimit_p,speedLimit);
+        subject.notifyChange(SPEED_LIMIT_PROPERTY,speedLimit);
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
-        subject.notifyChange(nextStationName_p,name);
+        subject.notifyChange(NEXT_STATION_PROPERTY,name);
     }
     public void setGrade(double newValue) {
         this.grade = newValue;
-        subject.notifyChange(grade_p,newValue);
+        subject.notifyChange(GRADE_PROPERTY,newValue);
     }
 
-    /**
-     * Why wouldn't we just put the setter in here?  Why have both?  Not sure.
-     */
     /**
      * This method is used to set the value of a property based on the property name.
      * It uses a switch statement to determine which property to set.
@@ -222,32 +218,32 @@ public class trainControllerImpl implements TrainController, GUIModifiable {
      */
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
-            case Properties.automaticMode_p -> this.automaticMode = (boolean) newValue;
-            case authority_p -> this.authority = (int) newValue;
-            case overrideSpeed_p -> this.overrideSpeed = (double) newValue;
-            case commandSpeed_p -> this.commandSpeed = (double) newValue;
-            case currentSpeed_p -> this.currentSpeed = (double) newValue;
-            case serviceBrake_p -> this.serviceBrake = (boolean) newValue;
-            case emergencyBrake_p -> this.emergencyBrake = (boolean) newValue;
-            case Ki_p -> this.Ki = (double) newValue;
-            case Kp_p -> this.Kp = (double) newValue;
-            case power_p -> this.power = (double) newValue;
-            case intLights_p -> this.internalLights = (boolean) newValue;
-            case extLights_p -> this.externalLights = (boolean) newValue;
-            case leftDoors_p -> this.leftDoors = (boolean) newValue;
-            case rightDoors_p -> this.rightDoors = (boolean) newValue;
-            case temperature_p -> this.temperature = (double) newValue;
-            case announcements_p -> this.announcements = (boolean) newValue;
-            case signalFailure_p -> this.signalFailure = (boolean) newValue;
-            case brakeFailure_p -> this.brakeFailure = (boolean) newValue;
-            case powerFailure_p -> this.powerFailure = (boolean) newValue;
-            case inTunnel_p -> this.inTunnel = (boolean) newValue;
-            case leftPlatform_p -> this.leftPlatform = (boolean) newValue;
-            case rightPlatform_p -> this.rightPlatform = (boolean) newValue;
-            case samplingPeriod_p -> this.samplingPeriod = (int) newValue;
-            case speedLimit_p -> this.speedLimit = (double) newValue;
-            case nextStationName_p -> this.nextStationName = (String) newValue;
-            case grade_p -> this.grade = (double) newValue;
+            case Properties.AUTOMATIC_MODE_PROPERTY -> this.automaticMode = (boolean) newValue;
+            case AUTHORITY_PROPERTY -> this.authority = (int) newValue;
+            case OVERRIDE_SPEED_PROPERTY -> this.overrideSpeed = (double) newValue;
+            case COMMAND_SPEED_PROPERTY -> this.commandSpeed = (double) newValue;
+            case CURRENT_SPEED_PROPERTY -> this.currentSpeed = (double) newValue;
+            case SERVICE_BRAKE_PROPERTY -> this.serviceBrake = (boolean) newValue;
+            case EMERGENCY_BRAKE_PROPERTY -> this.emergencyBrake = (boolean) newValue;
+            case KI_PROPERTY -> this.Ki = (double) newValue;
+            case KP_PROPERTY -> this.Kp = (double) newValue;
+            case POWER_PROPERTY -> this.power = (double) newValue;
+            case INT_LIGHTS_PROPERTY -> this.internalLights = (boolean) newValue;
+            case EXT_LIGHTS_PROPERTY -> this.externalLights = (boolean) newValue;
+            case LEFT_DOORS_PROPERTY -> this.leftDoors = (boolean) newValue;
+            case RIGHT_DOORS_PROPERTY -> this.rightDoors = (boolean) newValue;
+            case TEMPERATURE_PROPERTY -> this.temperature = (double) newValue;
+            case ANNOUNCEMENTS_PROPERTY -> this.announcements = (boolean) newValue;
+            case SIGNAL_FAILURE_PROPERTY -> this.signalFailure = (boolean) newValue;
+            case BRAKE_FAILURE_PROPERTY -> this.brakeFailure = (boolean) newValue;
+            case POWER_FAILURE_PROPERTY -> this.powerFailure = (boolean) newValue;
+            case IN_TUNNEL_PROPERTY -> this.inTunnel = (boolean) newValue;
+            case LEFT_PLATFORM_PROPERTY -> this.leftPlatform = (boolean) newValue;
+            case RIGHT_PLATFORM_PROPERTY -> this.rightPlatform = (boolean) newValue;
+            case SAMPLING_PERIOD_PROPERTY -> this.samplingPeriod = (int) newValue;
+            case SPEED_LIMIT_PROPERTY -> this.speedLimit = (double) newValue;
+            case NEXT_STATION_PROPERTY -> this.nextStationName = (String) newValue;
+            case GRADE_PROPERTY -> this.grade = (double) newValue;
             default -> System.err.println("Property " + propertyName + " not found");
         }
         //calculatePower();

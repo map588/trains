@@ -2,9 +2,8 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.AbstractSubject;
-import Framework.Support.Notifications;
+import Framework.Support.Notifier;
 import Framework.Support.ObservableHashMap;
-import Utilities.TrafficLightState;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import static waysideController.Properties.*;
 
-public class WaysideControllerSubject implements AbstractSubject, Notifications {
+public class WaysideControllerSubject implements AbstractSubject, Notifier {
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private WaysideController controller;

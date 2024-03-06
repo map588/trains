@@ -61,7 +61,6 @@ public class CTCBlockSubject implements AbstractSubject {
         switch (propertyName) {
             case SWITCH_STATE_STRING_PROPERTY -> updateProperty(getProperty(SWITCH_STATE_STRING_PROPERTY), blockInfo.getSwitchStateString());
             case LINE_PROPERTY -> updateProperty(getProperty(LINE_PROPERTY), blockInfo.getLine());
-
         }
     }
 
