@@ -1,7 +1,5 @@
 package trackModel;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -9,7 +7,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 
 
-public class TrackModelTB {
+public class TrackModelTBManager {
 
     @FXML
     private Label tbLogo;
