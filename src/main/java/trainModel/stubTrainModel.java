@@ -31,10 +31,6 @@ public class stubTrainModel implements TrainModel {
 
     }
 
-    public void setActualSpeed(double speed) {
-
-    }
-
     @Override
     public void setAuthority(int authority) {
 
@@ -85,18 +81,6 @@ public class stubTrainModel implements TrainModel {
 
     @Override
     public void setBeacon(String beacon) {
-
-    }
-
-    public void setMass(double mass) {
-
-    }
-
-    public void setDistanceTraveled(double distanceTraveled) {
-
-    }
-
-    public void setAcceleration(double acceleration) {
 
     }
 
