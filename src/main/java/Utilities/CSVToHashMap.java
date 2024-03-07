@@ -1,5 +1,6 @@
 package Utilities;
 
+import Utilities.Enums.Line;
 import Utilities.ParsedBlock.Direction;
 
 import java.nio.file.Files;
@@ -13,8 +14,8 @@ import java.util.regex.Matcher;
 
 public class CSVToHashMap {
 
-    public static HashMap<Constants.Line, ArrayDeque<ParsedBlock>> parseCSV(String filePath) {
-        HashMap<Constants.Line, ArrayDeque<ParsedBlock>> map = new HashMap<>();
+    public static HashMap<Line, ArrayDeque<ParsedBlock>> parseCSV(String filePath) {
+        HashMap<Line, ArrayDeque<ParsedBlock>> map = new HashMap<>();
 
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -43,15 +44,17 @@ public class CSVToHashMap {
                 double elevation = Double.parseDouble(values[elevationIndex]);
                 double cumulativeElevation = Double.parseDouble(values[cumulativeElevationIndex]);
                 boolean isUnderground = values[infrastructureIndex].toLowerCase().contains("underground");
-                Direction direction = Direction.valueOf(values[directionIndex].toUpperCase());
+                Direction direction = Direction.valueOf(values[directionIndex].toUpperCase().strip());
+                Line line = Line.valueOf(values[lineIndex].toUpperCase().strip());
 
                 // Parse the Infrastructure column to determine the block type and additional data
                 String infrastructure = values[infrastructureIndex];
+
                 ParsedBlock blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
                         isUnderground, infrastructure);
 
-                map.computeIfAbsent(trackLine, k -> new ArrayDeque<>()).add(blockInfo);
+                map.computeIfAbsent(line, k -> new ArrayDeque<>()).add(blockInfo);
             }
         } catch (Exception e) {
             e.printStackTrace();

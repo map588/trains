@@ -1,17 +1,12 @@
 package trainController;
 
 import Common.TrainController;
-import javafx.beans.property.Property;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import trainController.trainControllerSubject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 
 public class TrainControllerSubjectTest {
-    private trainControllerSubject subject;
+    private TrainControllerSubject subject;
     private TrainController controller;
 
 //    @BeforeEach

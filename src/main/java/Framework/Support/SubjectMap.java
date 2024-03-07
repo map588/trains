@@ -1,7 +1,5 @@
 package Framework.Support;
 
-import trainController.trainControllerSubjectMap;
-
 public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S>{
 
     protected final ObservableHashMap<K, S> subjects = new ObservableHashMap<>();

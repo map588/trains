@@ -8,12 +8,12 @@ public class HWTrainController implements TrainController {
 
     private int ID;
     TrainModel train;
-    trainControllerSubject subject;
+    TrainControllerSubject subject;
 
     public HWTrainController(int trainID) {
         this.ID = trainID;
         this.train = stubTrainModel.createstubTrainModel();
-        this.subject = trainControllerSubjectMap.getInstance().getSubject(trainID);
+        this.subject = TrainControllerSubjectMap.getInstance().getSubject(trainID);
     }
 
     public void assignTrainModel(TrainModel train) {
@@ -148,7 +148,7 @@ public class HWTrainController implements TrainController {
 
     }
 
-    public trainControllerSubject getSubject() {
+    public TrainControllerSubject getSubject() {
         return null;
     }
 

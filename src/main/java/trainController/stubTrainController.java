@@ -176,7 +176,7 @@ public class stubTrainController implements TrainController{
     }
 
     @Override
-    public trainControllerSubject getSubject() {
+    public TrainControllerSubject getSubject() {
         return null;
     }
 

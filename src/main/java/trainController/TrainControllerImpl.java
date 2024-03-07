@@ -30,9 +30,9 @@ import static trainController.Properties.*;
  * The rate is determined by the samplingPeriod property.
  *
  */
-public class trainControllerImpl implements TrainController, GUIModifiable {
+public class TrainControllerImpl implements TrainController, GUIModifiable {
     private final int trainID;
-    private final trainControllerSubject subject;
+    private final TrainControllerSubject subject;
     private TrainModel train;
 
 
@@ -62,9 +62,9 @@ public class trainControllerImpl implements TrainController, GUIModifiable {
      *
      * @param trainID  The ID of the train to be controlled by this trainControllerImpl object.
      */
-    public trainControllerImpl(int trainID) {
+    public TrainControllerImpl(int trainID) {
         this.trainID = trainID;
-        this.subject = new trainControllerSubject(this);
+        this.subject = new TrainControllerSubject(this);
         this.train = stubTrainModel.createstubTrainModel();
         this.nextStationName = "Yard";
         schedulePowerCalculation();
@@ -290,7 +290,7 @@ public class trainControllerImpl implements TrainController, GUIModifiable {
     public boolean getAutomaticMode() {
         return this.automaticMode;
     }
-    public trainControllerSubject getSubject() {
+    public TrainControllerSubject getSubject() {
         return this.subject;
     }
     public boolean getExtLights() {

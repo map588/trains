@@ -2,7 +2,6 @@ package trainModel;
 
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
-import Framework.Support.SubjectFactory;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -21,16 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import trainModel.trainModelImpl;
-import trainModel.trainModelSubject;
-import trainModel.trainModelTB;
-import trainModel.trainModelSubjectMap;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class trainModelManager {
+public class TrainModelManager {
 
     @FXML
     public Button eBrakeBtn;
@@ -47,17 +42,17 @@ public class trainModelManager {
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
-    private trainModelSubjectMap subjectMap;
+    private TrainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
-    private trainModelSubject subject;
-    private trainModelTB testBench;
+    private TrainModelSubject subject;
+    private TrainModelTB testBench;
 
     @FXML
     public void initialize() {
 
-        new trainModelImpl(0);
+        new TrainModelImpl(0);
 
-        subjectMap = trainModelSubjectMap.getInstance();
+        subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
         testBench = launchTestBench();
@@ -197,22 +192,22 @@ public class trainModelManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, trainModelSubject> subjects = subjectMap.getSubjects();
+        ObservableHashMap<Integer, TrainModelSubject> subjects = subjectMap.getSubjects();
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
-        ObservableHashMap.MapListener<Integer, trainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
+        ObservableHashMap.MapListener<Integer, TrainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
             @Override
-            public void onAdded(Integer key, trainModelSubject value) {
+            public void onAdded(Integer key, TrainModelSubject value) {
                 updateChoiceBoxItems();
             }
 
             @Override
-            public void onRemoved(Integer key, trainModelSubject value) {
+            public void onRemoved(Integer key, TrainModelSubject value) {
                 updateChoiceBoxItems();
             }
 
             @Override
-            public void onUpdated(Integer key, trainModelSubject oldValue, trainModelSubject newValue) {
+            public void onUpdated(Integer key, TrainModelSubject oldValue, TrainModelSubject newValue) {
                 updateChoiceBoxItems();
             }
         };
@@ -228,7 +223,7 @@ public class trainModelManager {
         });
     }
 
-    private trainModelTB launchTestBench() {
+    private TrainModelTB launchTestBench() {
         System.out.println(System.getProperty("Preparing to launch test bench"));
         try {
             String tbFile = "/Framework/GUI/FXML/trainModel_TB.fxml";

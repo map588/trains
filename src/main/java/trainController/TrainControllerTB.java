@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class trainControllerTB {
+public class TrainControllerTB {
     @FXML
     private Button trainControllerTB_AddTrain_Button;
     @FXML
@@ -64,8 +64,8 @@ public class trainControllerTB {
     @FXML
     private TextField trainControllerTB_trainNo_TextField;
 
-    private trainControllerSubjectMap subjectMap = trainControllerSubjectMap.getInstance();
-    private trainControllerSubject subject;
+    private TrainControllerSubjectMap subjectMap = TrainControllerSubjectMap.getInstance();
+    private TrainControllerSubject subject;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     @FXML
     private void initialize(){
@@ -125,7 +125,7 @@ public class trainControllerTB {
         }
         else {
             try {
-                new trainControllerImpl(trainID);
+                new TrainControllerImpl(trainID);
 
             } finally{
                 subject = subjectMap.getSubjects().get(trainID);

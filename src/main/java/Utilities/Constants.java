@@ -39,10 +39,5 @@ public class Constants {
     final public static double MAX_POWER = 480.0; // kW
     final public static double MAX_ENGINE_FORCE = 40000; //N
 
-
-    public enum Line {
-        BLUE,
-        RED,
-        GREEN
-    }
 }
+

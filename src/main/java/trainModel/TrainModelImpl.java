@@ -8,9 +8,10 @@ import Framework.Support.Notifier;
 import Utilities.Constants;
 import trainController.stubTrainController;
 
-public class trainModelImpl implements TrainModel, Notifier {
 
-    private trainModelSubject subject;
+public class TrainModelImpl implements TrainModel, Notifier {
+
+    private TrainModelSubject subject;
 
     //Passed Variables
     private int authority;
@@ -39,8 +40,7 @@ public class trainModelImpl implements TrainModel, Notifier {
   //  private final TrackModel track = new stubTrackModel();
     private TrainController controller;
 
-    public trainModelImpl(int trainID){
-
+    public TrainModelImpl(int trainID){
         this.authority = 0;
         this.commandSpeed = 0;
         this.speed = 0;
@@ -68,7 +68,7 @@ public class trainModelImpl implements TrainModel, Notifier {
         this.announcement = "";
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
-        this.subject = new trainModelSubject(this);
+        this.subject = new TrainModelSubject(this);
     }
 
 
@@ -111,33 +111,33 @@ public class trainModelImpl implements TrainModel, Notifier {
         if(newValue == null)
             return;
         switch(propertyName){
-            case Properties.authority_p -> this.authority = (int)newValue;
-            case Properties.commandSpeed_p -> this.commandSpeed = (double)newValue;
-            case Properties.actualSpeed_p -> this.speed = (double)newValue;
-            case Properties.acceleration_p -> this.acceleration = (double)newValue;
-            case Properties.power_p -> this.power = (double)newValue;
-            case Properties.grade_p -> this.grade = (double)newValue;
-            case Properties.serviceBrake_p -> this.serviceBrake = (boolean)newValue;
-            case Properties.emergencyBrake_p -> this.emergencyBrake = (boolean)newValue;
-            case Properties.brakeFailure_p -> this.brakeFailure = (boolean)newValue;
-            case Properties.powerFailure_p -> this.powerFailure = (boolean)newValue;
-            case Properties.signalFailure_p -> this.signalFailure = (boolean)newValue;
-            case Properties.temperature_p -> this.temperature = (double)newValue;
-            case Properties.extLights_p -> this.extLights = (boolean)newValue;
-            case Properties.intLights_p -> this.intLights = (boolean)newValue;
-            case Properties.leftDoors_p -> this.leftDoors = (boolean)newValue;
-            case Properties.rightDoors_p -> this.rightDoors = (boolean)newValue;
-            case Properties.numCars_p -> this.numCars = (int)newValue;
-            case Properties.numPassengers_p -> this.numPassengers = (int)newValue;
-            case Properties.crewCount_p -> this.crewCount = (int)newValue;
-            case Properties.timeDelta_p -> this.TIME_DELTA = (int)newValue;
-            case Properties.mass_p -> this.mass = (double)newValue;
-            case Properties.distanceTraveled_p -> this.distanceTraveled = (double)newValue;
-            case Properties.beacon_p -> this.beacon = (String)newValue;
+            case Properties.AUTHORITY_PROPERTY -> this.authority = (int)newValue;
+            case Properties.COMMANDSPEED_PROPERTY -> this.commandSpeed = (double)newValue;
+            case Properties.ACTUALSPEED_PROPERTY -> this.speed = (double)newValue;
+            case Properties.ACCELERATION_PROPERTY -> this.acceleration = (double)newValue;
+            case Properties.POWER_PROPERTY -> this.power = (double)newValue;
+            case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
+            case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
+            case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
+            case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
+            case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
+            case Properties.SIGNALFAILURE_PROPERTY -> this.signalFailure = (boolean)newValue;
+            case Properties.TEMPERATURE_PROPERTY -> this.temperature = (double)newValue;
+            case Properties.EXTLIGHTS_PROPERTY -> this.extLights = (boolean)newValue;
+            case Properties.INTLIGHTS_PROPERTY -> this.intLights = (boolean)newValue;
+            case Properties.LEFTDOORS_PROPERTY -> this.leftDoors = (boolean)newValue;
+            case Properties.RIGHTDOORS_PROPERTY -> this.rightDoors = (boolean)newValue;
+            case Properties.NUMCARS_PROPERTY -> this.numCars = (int)newValue;
+            case Properties.NUMPASSENGERS_PROPERTY -> this.numPassengers = (int)newValue;
+            case Properties.CREWCOUNT_PROPERTY -> this.crewCount = (int)newValue;
+            case Properties.TIMEDELTA_PROPERTY -> this.TIME_DELTA = (int)newValue;
+            case Properties.MASS_PROPERTY -> this.mass = (double)newValue;
+            case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = (double)newValue;
+            case Properties.BEACON_PROPERTY -> this.beacon = (String)newValue;
         }
     }
     //Getters
-    public trainModelSubject getSubject(){
+    public TrainModelSubject getSubject(){
         return this.subject;
     }
     //Vital Getters
@@ -287,5 +287,9 @@ public class trainModelImpl implements TrainModel, Notifier {
         if (this.speed < 0) { this.setActualSpeed(0); }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
         System.out.println("Speed: " + this.speed);
+    }
+
+    public String getAnnouncement() {
+        return this.announcement;
     }
 }

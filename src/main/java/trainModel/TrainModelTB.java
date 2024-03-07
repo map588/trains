@@ -16,7 +16,7 @@ import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class trainModelTB {
+public class TrainModelTB {
     @FXML
     public ToggleButton tbSBrake, tbIntLights, tbExtLights, tbLeftDoors, tbRightDoors;
     public Button tbTimeButton, tbEBrake;
@@ -24,13 +24,13 @@ public class trainModelTB {
     public TextField tbPower, tbSpeed, tbAuthority, tbGrade, tbTemp, tbTimeDelta;
     @FXML
     public Circle tbBrakeFailure, tbPowerFailure, tbSignalFailure;
-    private trainModelSubject subject;
-    private trainModelSubjectMap subjectMap;
+    private TrainModelSubject subject;
+    private TrainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        subjectMap = trainModelSubjectMap.getInstance();
+        subjectMap = TrainModelSubjectMap.getInstance();
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();

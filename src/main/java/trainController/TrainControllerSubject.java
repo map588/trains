@@ -9,7 +9,7 @@ import javafx.beans.property.*;
 
 import static trainController.Properties.*;
 
-public class trainControllerSubject implements AbstractSubject, Notifier {
+public class TrainControllerSubject implements AbstractSubject, Notifier {
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainController controller;
 
@@ -17,10 +17,10 @@ public class trainControllerSubject implements AbstractSubject, Notifier {
     private volatile boolean isLogicUpdateInProgress = false;
 
 
-    public trainControllerSubject(TrainController controller) {
+    public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
         initializeProperties();
-        trainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
+        TrainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
     }
 
     // Simplified property initialization
@@ -146,7 +146,7 @@ public class trainControllerSubject implements AbstractSubject, Notifier {
         controller.calculatePower();
     }
 
-    public trainControllerImpl getController() {
-        return (trainControllerImpl) controller;
+    public TrainControllerImpl getController() {
+        return (TrainControllerImpl) controller;
     }
 }

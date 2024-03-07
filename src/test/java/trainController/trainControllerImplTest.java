@@ -7,12 +7,12 @@ import static org.mockito.Mockito.*;
 
 class trainControllerImplTest {
 
-    private trainControllerImpl controller;
+    private TrainControllerImpl controller;
     private TrainModel mockModel;
 
     @BeforeEach
     void setUp() {
-        controller = new trainControllerImpl(1); // Assuming '1' is a valid trainID
+        controller = new TrainControllerImpl(1); // Assuming '1' is a valid trainID
         mockModel = mock(TrainModel.class); // Mocking TrainModel
         controller.assignTrainModel(mockModel);
     }

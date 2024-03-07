@@ -1,6 +1,6 @@
 package stubObjects;
 
-import trainController.trainControllerImpl;
+import trainController.TrainControllerImpl;
 
 public class trainControllerCopy {
     public int trainID;
@@ -20,9 +20,9 @@ public class trainControllerCopy {
 
     public String nextStationName;
 
-    private final trainControllerImpl controller;
+    private final TrainControllerImpl controller;
 
-    public trainControllerCopy(trainControllerImpl controller) {
+    public trainControllerCopy(TrainControllerImpl controller) {
         this.controller = controller;
         updateVars();
     }

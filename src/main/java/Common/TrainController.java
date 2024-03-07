@@ -2,7 +2,7 @@ package Common;
 
 
 import Framework.Support.GUIModifiable;
-import trainController.trainControllerSubject;
+import trainController.TrainControllerSubject;
 
 public interface TrainController extends GUIModifiable {
 
@@ -67,7 +67,7 @@ public interface TrainController extends GUIModifiable {
 
     void setTemperature(double newTemperature);
 
-    trainControllerSubject getSubject();
+    TrainControllerSubject getSubject();
 
     boolean getAnnouncements();
 

@@ -9,44 +9,45 @@ import javafx.beans.property.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import trainModel.Properties;
 
-public class trainModelSubject implements AbstractSubject{
+import static trainModel.Properties.*;
+
+public class TrainModelSubject implements AbstractSubject{
 
     public boolean isGUIUpdate;
     public boolean isLogicUpdate;
     private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
-    private TrainModel model;
+    private TrainModelImpl model;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    private final trainModelSubjectMap map = trainModelSubjectMap.getInstance();
+    private final TrainModelSubjectMap map = TrainModelSubjectMap.getInstance();
 
     public void intitializeValues() {
-        properties.put(Properties.authority_p, new SimpleIntegerProperty(model.getAuthority()));
-        properties.put(Properties.commandSpeed_p, new SimpleDoubleProperty(model.getCommandSpeed()));
-        properties.put(Properties.actualSpeed_p, new SimpleDoubleProperty(model.getSpeed()));
-        properties.put(Properties.grade_p, new SimpleDoubleProperty(model.getGrade()));
-        properties.put(Properties.power_p, new SimpleDoubleProperty(model.getPower()));
-        properties.put(Properties.temperature_p, new SimpleDoubleProperty(model.getTemperature()));
-        properties.put(Properties.leftDoors_p, new SimpleBooleanProperty(model.getLeftDoors()));
-        properties.put(Properties.rightDoors_p, new SimpleBooleanProperty(model.getRightDoors()));
-        properties.put(Properties.extLights_p, new SimpleBooleanProperty(model.getExtLights()));
-        properties.put(Properties.intLights_p, new SimpleBooleanProperty(model.getIntLights()));
-        properties.put(Properties.brakeFailure_p, new SimpleBooleanProperty(model.getBrakeFailure()));
-        properties.put(Properties.powerFailure_p, new SimpleBooleanProperty(model.getPowerFailure()));
-        properties.put(Properties.signalFailure_p, new SimpleBooleanProperty(model.getSignalFailure()));
-        properties.put(Properties.serviceBrake_p, new SimpleBooleanProperty(model.getServiceBrake()));
-        properties.put(Properties.emergencyBrake_p, new SimpleBooleanProperty(model.getEmergencyBrake()));
-        properties.put(Properties.timeDelta_p, new SimpleIntegerProperty(model.getTimeDelta()));
-        properties.put(Properties.acceleration_p, new SimpleDoubleProperty(model.getAcceleration()));
-        properties.put(Properties.crewCount_p, new SimpleIntegerProperty(model.getCrewCount()));
-        properties.put(Properties.numPassengers_p, new SimpleIntegerProperty(model.getNumPassengers()));
-        properties.put(Properties.numCars_p, new SimpleIntegerProperty(model.getNumCars()));
-        properties.put(Properties.mass_p, new SimpleDoubleProperty(model.getMass()));
-        properties.put(Properties.distanceTraveled_p, new SimpleDoubleProperty(model.getDistanceTraveled()));
-        properties.put(Properties.beacon_p, new SimpleStringProperty(model.getBeacon()));
+        properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(model.getAuthority()));
+        properties.put(COMMANDSPEED_PROPERTY, new SimpleDoubleProperty(model.getCommandSpeed()));
+        properties.put(ACTUALSPEED_PROPERTY, new SimpleDoubleProperty(model.getSpeed()));
+        properties.put(ACCELERATION_PROPERTY, new SimpleDoubleProperty(model.getAcceleration()));
+        properties.put(POWER_PROPERTY, new SimpleDoubleProperty(model.getPower()));
+        properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(model.getGrade()));
+        properties.put(SERVICEBRAKE_PROPERTY, new SimpleBooleanProperty(model.getServiceBrake()));
+        properties.put(EMERGENCYBRAKE_PROPERTY, new SimpleBooleanProperty(model.getEmergencyBrake()));
+        properties.put(BRAKEFAILURE_PROPERTY, new SimpleBooleanProperty(model.getBrakeFailure()));
+        properties.put(POWERFAILURE_PROPERTY, new SimpleBooleanProperty(model.getPowerFailure()));
+        properties.put(SIGNALFAILURE_PROPERTY, new SimpleBooleanProperty(model.getSignalFailure()));
+        properties.put(TEMPERATURE_PROPERTY, new SimpleDoubleProperty(model.getTemperature()));
+        properties.put(EXTLIGHTS_PROPERTY, new SimpleBooleanProperty(model.getExtLights()));
+        properties.put(INTLIGHTS_PROPERTY, new SimpleBooleanProperty(model.getIntLights()));
+        properties.put(LEFTDOORS_PROPERTY, new SimpleBooleanProperty(model.getLeftDoors()));
+        properties.put(RIGHTDOORS_PROPERTY, new SimpleBooleanProperty(model.getRightDoors()));
+        properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(model.getNumCars()));
+        properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(model.getNumPassengers()));
+        properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(model.getCrewCount()));
+        properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(model.getTimeDelta()));
+        properties.put(MASS_PROPERTY, new SimpleDoubleProperty(model.getMass()));
+        properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(model.getDistanceTraveled()));
+        properties.put(BEACON_PROPERTY, new SimpleStringProperty(model.getBeacon()));
+        properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(model.getAnnouncement()));
     }
-
-    public trainModelSubject(TrainModel trainModel) {
+    public TrainModelSubject(TrainModelImpl trainModel) {
         this.model = trainModel;
         intitializeValues();
         map.registerSubject(trainModel.getTrainNumber(),this);

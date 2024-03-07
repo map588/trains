@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import static trainController.Properties.*;
 
-public class trainControllerManager {
+public class TrainControllerManager {
     @FXML
     public Text controllerStatus;
     @FXML
@@ -48,17 +48,17 @@ public class trainControllerManager {
     @FXML
     private ChoiceBox<Integer> trainNoChoiceBox;
 
-    private trainControllerSubjectMap subjectMap;
-    private trainControllerSubject currentSubject;
+    private TrainControllerSubjectMap subjectMap;
+    private TrainControllerSubject currentSubject;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
 
-    private trainControllerTB testBench;
+    private TrainControllerTB testBench;
 
     @FXML
     public void initialize() {
-        new trainControllerImpl(1);
-        subjectMap = trainControllerSubjectMap.getInstance();
+        new TrainControllerImpl(1);
+        subjectMap = TrainControllerSubjectMap.getInstance();
         setupMapChangeListener();
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
@@ -75,17 +75,17 @@ public class trainControllerManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, trainControllerSubject> subjects = subjectMap.getSubjects();
+        ObservableHashMap<Integer, TrainControllerSubject> subjects = subjectMap.getSubjects();
 
         //Defining a generic listener for the map, overriding the methods to only update the choice box items
-        ObservableHashMap.MapListener<Integer, trainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
-            public void onAdded(Integer key, trainControllerSubject value) {
+        ObservableHashMap.MapListener<Integer, TrainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
+            public void onAdded(Integer key, TrainControllerSubject value) {
                 updateChoiceBoxItems();
             }
-            public void onRemoved(Integer key, trainControllerSubject value) {
+            public void onRemoved(Integer key, TrainControllerSubject value) {
                 updateChoiceBoxItems();
             }
-            public void onUpdated(Integer key, trainControllerSubject oldValue, trainControllerSubject newValue) {
+            public void onUpdated(Integer key, TrainControllerSubject oldValue, TrainControllerSubject newValue) {
                 updateChoiceBoxItems();
             }
         };
@@ -300,7 +300,7 @@ public class trainControllerManager {
     }
 
 
-    private trainControllerTB launchTestBench(){
+    private TrainControllerTB launchTestBench(){
         System.out.println(System.getProperty("Preparing to launch test bench"));
         try {
             String tbFile = "/Framework/GUI/FXML/trainController_TB.fxml";

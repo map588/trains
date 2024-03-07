@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -17,17 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
-import org.testfx.util.WaitForAsyncUtils;
-import trainController.trainControllerImpl;
-import trainController.trainControllerSubject;
-import trainController.trainControllerSubjectMap;
-
-
 
 public class TrainControllerManagerTest extends ApplicationTest {
 
-    trainControllerImpl controller;
-    trainControllerSubject currentSubject;
+    TrainControllerImpl controller;
+    TrainControllerSubject currentSubject;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -38,8 +31,8 @@ public class TrainControllerManagerTest extends ApplicationTest {
         stage.show();
         stage.toFront();
 
-        currentSubject = trainControllerSubjectMap.getInstance().getSubject(1);
-        controller = trainControllerSubjectMap.getInstance().getSubject(1).getController();
+        currentSubject = TrainControllerSubjectMap.getInstance().getSubject(1);
+        controller = TrainControllerSubjectMap.getInstance().getSubject(1).getController();
     }
 
     @Test
