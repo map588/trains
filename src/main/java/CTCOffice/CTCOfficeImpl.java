@@ -23,9 +23,6 @@ public class CTCOfficeImpl implements CTCOffice {
     private boolean maintenanceMode;
     private boolean autoMode;
 
-
-    public Map<Integer, TrainModel> trains = new HashMap<>();
-
     final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
 
     public static final ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
@@ -83,7 +80,7 @@ public class CTCOfficeImpl implements CTCOffice {
         return false;
     }
 
-    public void     setUnderMaintenance(boolean line, int blockID, boolean underMaintenance) {
+    void     setUnderMaintenance(boolean line, int blockID, boolean underMaintenance) {
 
     }
     public boolean  getUnderMaintenance(boolean line, int blockID) {

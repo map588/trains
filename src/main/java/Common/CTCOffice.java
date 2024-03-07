@@ -11,6 +11,4 @@ public interface CTCOffice{
     void setLightState(boolean line, int blockID, boolean lightState);
     void setSwitchState(boolean line, int blockID, boolean switchState);
     void setCrossingState(boolean line, int blockID, boolean crossingState);
-    void setUnderMaintenance(boolean line, int blockID, boolean underMaintenance);
-
 }

@@ -12,14 +12,9 @@ public class TrainScheduleSubject implements AbstractSubject {
     TrainScheduleSubject(TrainSchedule schedule) {
        properties.put(TRAIN_ID_PROPERTY, new SimpleIntegerProperty(this, TRAIN_ID_PROPERTY, schedule.getTrainID()));
         properties.put(TRAIN_LINE_PROPERTY, new SimpleStringProperty(this, TRAIN_LINE_PROPERTY, schedule.getLine()));
-        properties.put(DISPATCH_TIME_PROPERTY, new SimpleIntegerProperty(this, DISPATCH_TIME_PROPERTY, schedule.getDispatchTime()));
+    properties.put(DISPATCH_TIME_PROPERTY, new SimpleIntegerProperty(this, DISPATCH_TIME_PROPERTY, schedule.getDispatchTime()));
         properties.put(CAR_COUNT_PROPERTY, new SimpleIntegerProperty(this, CAR_COUNT_PROPERTY, schedule.getCarCount()));
-        for (int i = 0; i < schedule.getStops().size(); i++) {
-            properties.put(DESTINATION_PROPERTY + i, new SimpleIntegerProperty(this, DESTINATION_PROPERTY + i, schedule.getStops().get(i).getStationBlockID()));
-            properties.put(ARRIVAL_TIME_PROPERTY + i, new SimpleIntegerProperty(this, ARRIVAL_TIME_PROPERTY + i, schedule.getStops().get(i).getArrivalTime()));
-            properties.put(DEPARTURE_TIME_PROPERTY + i, new SimpleIntegerProperty(this, DEPARTURE_TIME_PROPERTY + i, schedule.getStops().get(i).getDepartureTime()));
-            System.out.println("declared : " + DESTINATION_PROPERTY + i  + " " + ARRIVAL_TIME_PROPERTY + i + " " + DEPARTURE_TIME_PROPERTY + i);
-        }
+
         this.schedule = schedule;
        // ScheduleLibrary.getInstance().registerSubject(schedule.
 

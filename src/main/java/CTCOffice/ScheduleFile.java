@@ -14,6 +14,7 @@ public class ScheduleFile {
     public ScheduleFile(String scheduleFileName, String lastModified) {
         this.scheduleFileName = scheduleFileName;
         this.lastModified = lastModified;
+        subject = new ScheduleFileSubject(this);
     }
 
     public void putTrainSchedule(int trainID, TrainSchedule schedule) {

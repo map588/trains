@@ -8,8 +8,7 @@ public class TrainSchedule {
     private String line;
     private int dispatchTime;
     private int carCount;
-    private int destination;
-    private List<TrainStop> stops  = new ArrayList<TrainStop>();
+    private List<TrainStop> stops;
     TrainScheduleSubject subject;
 
     TrainSchedule(int trainID, String line, int dispatchTime, int carCount, List<TrainStop> stops) {

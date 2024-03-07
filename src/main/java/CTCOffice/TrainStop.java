@@ -11,6 +11,7 @@ public class TrainStop { //SubRoute
     private List<Integer> speedList;
     private List<Integer> routePath; //routePath
     private List<Integer> authorityList;
+    private TrainStopSubject subject;
 
     public TrainStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
         this.stationBlockID = stationBlockID;
@@ -19,6 +20,7 @@ public class TrainStop { //SubRoute
         this.speedList = new ArrayList<Integer>(speedList);
         this.routePath = new ArrayList<Integer>(routePath);
         this.authorityList = new ArrayList<Integer>(authorityList);
+        subject = new TrainStopSubject(this);
     }
 
     public int getStationBlockID() {
@@ -81,4 +83,9 @@ public class TrainStop { //SubRoute
     public void updateAuthorityList(int index, int authority) {
         authorityList.set(index, authority);
     }
+
+    public TrainStopSubject getSubject() {
+        return subject;
+    }
+
 }
