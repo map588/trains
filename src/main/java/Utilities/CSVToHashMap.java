@@ -103,6 +103,9 @@ public class CSVToHashMap {
                 ParsedBlock.Direction switchDirection2 = parseDirection(matcher.group(5));
                 int switchBlock4 = Integer.parseInt(matcher.group(6));
 
+                if(switchBlock2 != switchBlock4) {
+                    throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
+                }
                 return ParsedBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
                         isUnderground,
