@@ -1,7 +1,6 @@
 package CTCOffice;
 
 import Framework.Support.ObservableHashMap;
-import Framework.Support.SubjectFactory;
 
 public class ScheduleSubjectFactory extends SubjectFactory<TrainScheduleSubject> {
     private static final ScheduleSubjectFactory INSTANCE = new ScheduleSubjectFactory();
