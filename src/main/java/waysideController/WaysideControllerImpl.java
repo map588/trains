@@ -30,7 +30,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
-    private PLCProgram plcProgram;
+    private PLCProgram[] plcPrograms;
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
@@ -55,13 +55,14 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             subject.addBlock(new WaysideBlockSubject(block));
         }
 
-        plcProgram = new PLCProgram(this);
+        plcPrograms = new PLCProgram[1];
+        plcPrograms[0] = new PLCProgram(this);
     }
 
     @Override
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
-        plcProgram.loadPLC(PLC.getAbsolutePath());
+        plcPrograms[0].loadPLC(PLC.getAbsolutePath());
         notifyChange(PLCName_p, PLC.getName());
         subject.updateActivePLCProp();
     }
@@ -69,7 +70,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void runPLC() {
         if(!maintenanceMode)
-            plcProgram.run();
+            plcPrograms[0].run();
     }
 
     @Override

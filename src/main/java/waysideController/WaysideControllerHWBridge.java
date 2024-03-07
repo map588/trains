@@ -32,7 +32,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
-    private PLCProgram plcProgramSW;
+    private PLCProgram[] plcProgramSW;
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;

@@ -17,9 +17,10 @@ public class WaysideControllerHW implements PLCRunner {
     protected final BufferedReader bufferedReader;
     private final PrintStream outputStream;
     private File plcFile;
-    private PLCProgram plcProgram;
+    private PLCProgram plcPrograms[];
     public WaysideControllerHW(String comPort) {
-        plcProgram = new PLCProgram(this);
+        plcPrograms = new PLCProgram[1];
+        plcPrograms[0] = new PLCProgram(this);
         plcFile = new File("PLC.plc");
 
         SerialPort port = SerialPort.getCommPort(comPort);
@@ -94,7 +95,7 @@ public class WaysideControllerHW implements PLCRunner {
                     e.printStackTrace();
                 }
                 System.out.println("PLC Uploaded");
-                plcProgram.loadPLC(plcFile.getAbsolutePath());
+                plcPrograms[0].loadPLC(plcFile.getAbsolutePath());
             }
             case "setLine" -> {
                 trackLine = values[1];
@@ -149,7 +150,7 @@ public class WaysideControllerHW implements PLCRunner {
         }
 
         if(!maintenanceMode && blockMap.size() > 0)
-            plcProgram.run();
+            plcPrograms[0].run();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
