@@ -330,20 +330,21 @@
          </children>
       </AnchorPane>
       <AnchorPane id="engineerInputPane" layoutX="36.0" layoutY="546.0" prefHeight="136.0" prefWidth="228.8">
-         <children>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutX="1.6" stroke="BLACK" strokeType="INSIDE" width="226.4" />
-            <Text layoutX="20.8" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status Message">
-               <font>
-                  <Font name="System Bold" size="19.2" />
-               </font>
-            </Text>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#2c3a47" height="77.6" layoutX="21.0" layoutY="44.0" stroke="BLACK" strokeType="INSIDE" width="188.0" />
-            <Text fill="WHITE" fontSmoothingType="LCD" layoutX="35.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Speed" textAlignment="CENTER" wrappingWidth="160.0">
-               <font>
-                  <Font name="Roboto Regular" size="19.0" />
-               </font>
-            </Text>
-         </children>
+         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutX="1.6" stroke="BLACK"
+                    strokeType="INSIDE" width="226.4"/>
+         <Text layoutX="20.8" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Controller Status">
+            <font>
+               <Font name="System Bold" size="19.2"/>
+            </font>
+         </Text>
+         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#2c3a47" height="77.6" layoutX="21.0" layoutY="44.0"
+                    stroke="BLACK" strokeType="INSIDE" width="188.0"/>
+         <Text  fx:id="controllerStatus" fill="WHITE" fontSmoothingType="LCD" layoutX="35.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0"
+               text="Set Speed" textAlignment="CENTER" wrappingWidth="160.0">
+            <font>
+               <Font name="Roboto Regular" size="19.0"/>
+            </font>
+         </Text>
       </AnchorPane>
 
    </children>

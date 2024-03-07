@@ -27,7 +27,8 @@ import java.util.function.Consumer;
 import static trainController.Properties.*;
 
 public class trainControllerManager {
-
+    @FXML
+    public Text controllerStatus;
     @FXML
     private Text nextStationText;
     @FXML
