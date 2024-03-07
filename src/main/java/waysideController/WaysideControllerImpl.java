@@ -1,5 +1,7 @@
 package waysideController;
 
+import Common.CTCOffice;
+import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Support.Notifier;
 import Utilities.CSVTokenizer;
@@ -32,6 +34,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
+    private TrackModel trackModel;
+    private CTCOffice ctcOffice;
 
 
     /**
@@ -84,6 +88,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         blockMap.get(blockID).setOccupied(occupied);
+//        ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
         runPLC();
     }
 
@@ -93,15 +98,25 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
+    @Override
+    public void CTCSendSpeedAuth(int blockID, double speed, int authority) {
+        blockMap.get(blockID).setSpeed(speed);
+        blockMap.get(blockID).setAuthority(authority);
+//        trackModel.setCommandedSpeed(blockID, speed);
+//        trackModel.setTrainAuthority(blockID, authority);
+        runPLC();
+    }
+
     // Sets the block access state for a block, updates simulated occupancy, and runs the PLC
     @Override
-    public void CTCChangeBlockAccessState(int blockID, boolean accessState) {
+    public void CTCChangeBlockMaintenanceState(int blockID, boolean maintenanceState) {
         WaysideBlock block = blockMap.get(blockID);
         boolean currentState = block.isOpen();
 
-        if(currentState != accessState) {
-            block.setBlockAccessState(accessState);
-            block.setOccupied(!accessState);
+        if(currentState != maintenanceState) {
+            block.setBlockmaintenanceStateState(maintenanceState);
+            block.setOccupied(!maintenanceState);
+//            ctcOffice.setBlockOccupancy(trackLine, blockID, !maintenanceState);
 
             runPLC();
         }
@@ -112,8 +127,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void CTCEnableAllBlocks() {
         for(WaysideBlock block : blockMap.values()) {
             if(!block.isOpen()) {
-                block.setBlockAccessState(true);
+                block.setBlockmaintenanceStateState(true);
                 block.setOccupied(false);
+//                ctcOffice.setBlockOccupancy(trackLine, block.getBlockID(), false);
             }
         }
         runPLC();
@@ -122,24 +138,31 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         blockMap.get(blockID).setSwitchState(switchState);
+//        trackModel.setSwitchState(blockID, switchState);
+//        ctcOffice.setSwitchState(trackLine, blockID, switchState);
         System.out.println("maintenanceSetSwitch: " + blockID + " " + switchState);
     }
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        blockMap.get(blockID).setAuthority(auth);
+        blockMap.get(blockID).setBooleanAuth(auth);
+//        trackModel.setTrainAuthority(blockID, auth);
         System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
     }
 
     @Override
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
         blockMap.get(blockID).setLightState(lightState);
+//        trackModel.setLightState(blockID, lightState);
+//        ctcOffice.setLightState(trackLine, blockID, lightState);
         System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
     }
 
     @Override
     public void maintenanceSetCrossing(int blockID, boolean crossingState) {
         blockMap.get(blockID).setCrossingState(crossingState);
+//        trackModel.setCrossing(blockID, crossingState);
+//        ctcOffice.setCrossingState(trackLine, blockID, crossingState);
         System.out.println("maintenanceSetCrossing: " + blockID + " " + crossingState);
     }
 
@@ -156,32 +179,43 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void setSwitchPLC(int blockID, boolean switchState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen())
+        if(block.isOpen()) {
             block.setSwitchState(switchState);
+//            trackModel.setSwitchState(blockID, switchState);
+//            ctcOffice.setSwitchState(trackLine, blockID, switchState);
+        }
     }
 
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen())
+        if(block.isOpen()) {
             block.setLightState(lightState);
+//            trackModel.setLightState(blockID, lightState);
+//            ctcOffice.setLightState(trackLine, blockID, lightState);
+        }
     }
 
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen())
+        if(block.isOpen()) {
             block.setCrossingState(crossingState);
+//            trackModel.setCrossing(blockID, crossingState);
+//            ctcOffice.setCrossingState(trackLine, blockID, crossingState);
+        }
     }
 
     @Override
     public void setAuthorityPLC(int blockID, boolean auth) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen())
-            block.setAuthority(auth);
+        if(block.isOpen()) {
+            block.setBooleanAuth(auth);
+//            trackModel.setTrainAuthority(blockID, auth);
+        }
     }
 
     @Override

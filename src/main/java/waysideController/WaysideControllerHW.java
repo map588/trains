@@ -110,6 +110,10 @@ public class WaysideControllerHW implements PLCRunner {
             case "maintenanceMode" -> {
                 maintenanceMode = Boolean.parseBoolean(values[1]);
             }
+            case "blockMaintenance" -> {
+                String[] setValues = values[1].split(":");
+                blockMap.get(Integer.parseInt(setValues[0])).setBlockmaintenanceStateState(Boolean.parseBoolean(setValues[1]));
+            }
             case "occupancy" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setOccupied(Boolean.parseBoolean(setValues[1]));
@@ -122,9 +126,25 @@ public class WaysideControllerHW implements PLCRunner {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setSwitchRequest(Boolean.parseBoolean(setValues[1]));
             }
+            case "crossing" -> {
+                String[] setValues = values[1].split(":");
+                blockMap.get(Integer.parseInt(setValues[0])).setCrossingState(Boolean.parseBoolean(setValues[1]));
+            }
+            case "trafficLight" -> {
+                String[] setValues = values[1].split(":");
+                blockMap.get(Integer.parseInt(setValues[0])).setLightState(Boolean.parseBoolean(setValues[1]));
+            }
+            case "speed" -> {
+                String[] setValues = values[1].split(":");
+                blockMap.get(Integer.parseInt(setValues[0])).setSpeed(Double.parseDouble(setValues[1]));
+            }
+            case "authInt" -> {
+                String[] setValues = values[1].split(":");
+                blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Integer.parseInt(setValues[1]));
+            }
             case "auth" -> {
                 String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Boolean.parseBoolean(setValues[1]));
+                blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
             }
         }
 

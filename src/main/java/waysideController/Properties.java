@@ -10,6 +10,7 @@ public class Properties {
     public static final String lightState_p = "lightState";
     public static final String crossingState_p = "crossingState";
     public static final String authority_p = "authority";
+    public static final String booleanAuth_p = "booleanAuth";
     public static final String speed_p = "speed";
     public static final String switchBlockMain_p = "switchBlockMain";
     public static final String switchBlockAlt_p = "switchBlockAlt";

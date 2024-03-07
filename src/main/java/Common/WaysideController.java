@@ -1,6 +1,5 @@
 package Common;
 
-import waysideController.WaysideBlock;
 import waysideController.WaysideControllerSubject;
 
 import java.io.File;
@@ -27,9 +26,11 @@ public interface WaysideController {
     // Allows CTC to request a switch change (works with automatic mode)
     public void CTCRequestSwitchState(int blockID, boolean switchState);
 
+    public void CTCSendSpeedAuth(int blockID, double speed, int authority);
+
     // Allows CTC to enable or disable a block (works with automatic mode)
     // Combined the two methods into one for simplicity
-    public void CTCChangeBlockAccessState(int blockID, boolean accessState);
+    public void CTCChangeBlockMaintenanceState(int blockID, boolean maintenanceState);
 
     // Allows CTC to enable all blocks (works with automatic mode)
     public void CTCEnableAllBlocks();

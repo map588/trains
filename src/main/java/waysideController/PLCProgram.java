@@ -1,19 +1,13 @@
 package waysideController;
 
-import org.antlr.runtime.ANTLRFileStream;
-import org.antlr.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 import waysideController.plc_parser.*;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-
-import static Utilities.Constants.*;
 
 public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVisitor<Value> {
 
@@ -58,7 +52,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     }
 
     private void setAuth(int blockID, boolean auth) {
-        blockMap.get(blockID).setAuthority(auth);
+        blockMap.get(blockID).setBooleanAuth(auth);
         controller.setAuthorityPLC(blockID, auth);
     }
 
@@ -215,7 +209,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             case "switch_request":
                 return new Value(blockMap.get(index).getSwitchRequest());
             case "authority":
-                return new Value(blockMap.get(index).getAuthority());
+                return new Value(blockMap.get(index).getBooleanAuth());
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
         }

@@ -128,7 +128,7 @@ public class WaysideControllerHWBridge_Old extends WaysideControllerImpl {
             case "auth" -> {
                 String[] setValues = values[1].split(":");
 //                super.setAuthorityPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
-                blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Boolean.parseBoolean(setValues[1]));
+                blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
             }
         }
     }

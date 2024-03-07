@@ -18,7 +18,8 @@ public class WaysideBlock implements Notifier {
     private boolean switchRequest;
     private boolean lightState;
     private boolean crossingState;
-    private boolean authority;
+    private int authority;
+    private boolean booleanAuth;
     private double speed;
     private boolean open;
 
@@ -53,9 +54,9 @@ public class WaysideBlock implements Notifier {
             case switchRequest_p -> setSwitchRequest((boolean) newValue);
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
-            case authority_p -> setAuthority((boolean) newValue);
+            case authority_p -> setBooleanAuth((boolean) newValue);
             case speed_p -> setSpeed((double) newValue);
-            case open_p -> setBlockAccessState((boolean) newValue);
+            case open_p -> setBlockmaintenanceStateState((boolean) newValue);
             default -> System.err.println("Property " + propertyName + " not found in WaysideBlock");
         }
     }
@@ -96,7 +97,7 @@ public class WaysideBlock implements Notifier {
             subject.notifyChange(occupied_p, occupied);
     }
 
-    public void setBlockAccessState(boolean open) {
+    public void setBlockmaintenanceStateState(boolean open) {
         System.out.println("Block Access State: " + open);
         this.open = open;
 
@@ -148,15 +149,26 @@ public class WaysideBlock implements Notifier {
             subject.notifyChange(crossingState_p, crossingState);
     }
 
-    public boolean getAuthority() {
+    public boolean getBooleanAuth() {
+        return booleanAuth;
+    }
+
+    public void setBooleanAuth(boolean booleanAuth) {
+        this.booleanAuth = booleanAuth;
+
+        if(subject != null)
+            subject.notifyChange(authority_p, booleanAuth);
+    }
+
+    public int getAuthority() {
         return authority;
     }
 
-    public void setAuthority(boolean authority) {
+    public void setAuthority(int authority) {
         this.authority = authority;
 
         if(subject != null)
-            subject.notifyChange(authority_p, authority);
+            subject.notifyChange(booleanAuth_p, booleanAuth);
     }
 
     public double getSpeed() {
@@ -178,9 +190,9 @@ public class WaysideBlock implements Notifier {
             case switchRequest_p -> setSwitchRequest((boolean) newValue);
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
-            case authority_p -> setAuthority((boolean) newValue);
+            case authority_p -> setBooleanAuth((boolean) newValue);
             case speed_p -> setSpeed((double) newValue);
-            case open_p -> setBlockAccessState((boolean) newValue);
+            case open_p -> setBlockmaintenanceStateState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
     }
