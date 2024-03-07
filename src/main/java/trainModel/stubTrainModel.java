@@ -84,6 +84,11 @@ public class stubTrainModel implements TrainModel {
 
     }
 
+    @Override
+    public void setAnnouncement(String announcement) {
+
+    }
+
     public int getAuthority() {
         return 0;
     }

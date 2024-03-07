@@ -50,7 +50,6 @@ public class trainModelManager {
     private trainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private trainModelSubject subject;
-
     private trainModelTB testBench;
 
     @FXML

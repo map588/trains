@@ -13,8 +13,8 @@ import java.util.regex.Matcher;
 
 public class CSVToHashMap {
 
-    public static HashMap<String, ArrayDeque<ParsedBlock>> parseCSV(String filePath) {
-        HashMap<String, ArrayDeque<ParsedBlock>> map = new HashMap<>();
+    public static HashMap<Constants.Line, ArrayDeque<ParsedBlock>> parseCSV(String filePath) {
+        HashMap<Constants.Line, ArrayDeque<ParsedBlock>> map = new HashMap<>();
 
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));

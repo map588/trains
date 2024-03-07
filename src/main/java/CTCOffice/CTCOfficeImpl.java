@@ -16,9 +16,9 @@ import static Utilities.CSVTokenizer.lineNames;
  */
 public class CTCOfficeImpl implements CTCOffice {
 
-    private int time;
-    private int ticketSales;
-    private int mode;
+    private int     time;
+    private int     ticketSales;
+    private int     mode;
     private boolean manualMode;
     private boolean maintenanceMode;
     private boolean autoMode;
@@ -29,9 +29,7 @@ public class CTCOfficeImpl implements CTCOffice {
     final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
 
     public static final ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
-
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
-
 
 
     /**

@@ -81,8 +81,8 @@ public class CTCOfficeManager {
      * They reflect boolean properties of the CTCBlockSubject, and are updated by listeners.
      * @see #setupMapChangeListener()
      */
-    Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors = new ConcurrentHashMap<>();
-    Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors = new ConcurrentHashMap<>();
+    Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors      = new ConcurrentHashMap<>();
+    Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors    = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> maintenanceColors = new ConcurrentHashMap<>();
 
     /**
