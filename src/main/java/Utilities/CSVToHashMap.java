@@ -81,6 +81,10 @@ public class CSVToHashMap {
         return map;
     }
 
+    public static HashMap<Line, ArrayDeque<ParsedBlock>> parseCSV() {
+        return parseCSV("src/main/resources/track_layout.csv");
+    }
+
         private static ParsedBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
                                                    double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
                                                    boolean isUnderground, String infrastructure, DoorSide doorSide) {
