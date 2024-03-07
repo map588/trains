@@ -21,12 +21,20 @@ public record ParsedBlock(
         BlockType blockType, // Including the BlockType enum here
         Optional<Integer> alternativeBlock, // For switches; contains the alternative block ID or empty
         Optional<String> stationName, // For stations; contains the station name or empty
-        Optional<Direction> direction // For stations; indicates the door side or empty
+        Optional<DoorSide> doorSide, // For stations; indicates the door side or empty
+        Optional<SwitchType> switchType // For stations; indicates the direction or empty
 ) {
     // Enum for door side at stations
-    public enum Direction {
+    public enum SwitchType {
         IN,
         OUT,
+        INOUT,
+        BIDIRECTIONAL
+    }
+
+    public enum DoorSide {
+        LEFT,
+        RIGHT,
         BOTH
     }
 
@@ -46,16 +54,16 @@ public record ParsedBlock(
                                          boolean isUnderground, int prevBlock, int nextBlock, int alternativeSwitchBlock) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, BlockType.SWITCH, Optional.of(alternativeSwitchBlock),
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     // Factory method for creating a station block with a station name and door side
     public static ParsedBlock ofStation(String trackLine, char section, int blockNumber, int blockLength,
                                            double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                           boolean isUnderground, int prevBlock, int nextBlock, String stationName, Direction direction) {
+                                           boolean isUnderground, int prevBlock, int nextBlock, String stationName, DoorSide doorSide) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, BlockType.STATION, Optional.empty(),
-                Optional.of(stationName), Optional.of(direction));
+                Optional.of(stationName), Optional.of(doorSide), Optional.empty());
     }
 
     // Factory method for creating a regular block
@@ -64,7 +72,7 @@ public record ParsedBlock(
                                            boolean isUnderground, int prevBlock, int nextBlock) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, BlockType.REGULAR, Optional.empty(),
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     // Factory method for creating a crossing block
@@ -73,7 +81,7 @@ public record ParsedBlock(
                                             boolean isUnderground, int prevBlock, int nextBlock) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, BlockType.CROSSING, Optional.empty(),
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     // Factory method for creating a yard block
@@ -82,7 +90,7 @@ public record ParsedBlock(
                                         boolean isUnderground, int prevBlock, int nextBlock) {
         return new ParsedBlock(trackLine, section, prevBlock, nextBlock, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, BlockType.YARD, Optional.empty(),
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
     }
 
 }

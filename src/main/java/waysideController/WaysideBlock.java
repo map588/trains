@@ -39,6 +39,8 @@ public class WaysideBlock implements Notifier {
         this.switchBlockAlt = switchBlockAlt;
     }
 
+    //TODO: Found the needle in the haystack vv
+    //BasicBlockInfo is deprecated, it will be replaced by what is currently named parsedBlock
     public WaysideBlock(BasicBlockInfo blockInfo) {
         this(blockInfo.blockNumber(), blockInfo.isSwitchConvergingBlock(), blockInfo.hasSwitchLight(), blockInfo.hasCrossing(), blockInfo.divergingBlockID_Main(), blockInfo.divergingBlockID_Alt());
     }
