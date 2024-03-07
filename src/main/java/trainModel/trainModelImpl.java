@@ -15,7 +15,7 @@ public class trainModelImpl implements TrainModel, Notifier {
     //Passed Variables
     private int authority;
     private double commandSpeed;
-    private String beacon;
+    private String beacon, announcement;
 
     //Vital Variables
     private double speed, acceleration, power;
@@ -65,10 +65,9 @@ public class trainModelImpl implements TrainModel, Notifier {
         this.crewCount = 2;
         this.distanceTraveled = 0;
         this.beacon = "";
-
+        this.announcement = "";
         this.controller = new stubTrainController(trainID);
         controller.assignTrainModel(this);
-
         this.subject = new trainModelSubject(this);
     }
 
@@ -106,34 +105,35 @@ public class trainModelImpl implements TrainModel, Notifier {
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
     public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", distance); }
     public void setBeacon(String beacon) { this.beacon = beacon; notifyChange("beacon", beacon); }
+    public void setAnnouncement(String announcement) {this.announcement = announcement;}
 
     public void setValue(String propertyName, Object newValue){
         if(newValue == null)
             return;
         switch(propertyName){
-            case Properties.authority_p -> setAuthority((int)newValue);
-            case Properties.commandSpeed_p -> setCommandSpeed((double)newValue);
-            case Properties.actualSpeed_p -> setActualSpeed((double)newValue);
-            case Properties.acceleration_p -> setAcceleration((double)newValue);
-            case Properties.power_p -> setPower((double)newValue);
-            case Properties.grade_p -> setGrade((double)newValue);
-            case Properties.serviceBrake_p -> setServiceBrake((boolean)newValue);
-            case Properties.emergencyBrake_p -> setEmergencyBrake((boolean)newValue);
-            case Properties.brakeFailure_p -> setBrakeFailure((boolean)newValue);
-            case Properties.powerFailure_p -> setPowerFailure((boolean)newValue);
-            case Properties.signalFailure_p -> setSignalFailure((boolean)newValue);
-            case Properties.temperature_p -> setTemperature((double)newValue);
-            case Properties.extLights_p -> setExtLights((boolean)newValue);
-            case Properties.intLights_p -> setIntLights((boolean)newValue);
-            case Properties.leftDoors_p -> setLeftDoors((boolean)newValue);
-            case Properties.rightDoors_p -> setRightDoors((boolean)newValue);
-            case Properties.numCars_p -> setNumCars((int)newValue);
-            case Properties.numPassengers_p -> setNumPassengers((int)newValue);
-            case Properties.crewCount_p -> setCrewCount((int)newValue);
-            case Properties.timeDelta_p -> setTimeDelta((int)newValue);
-            case Properties.mass_p -> setMass((double)newValue);
-            case Properties.distanceTraveled_p -> setDistanceTraveled((double)newValue);
-            case Properties.beacon_p -> setBeacon((String)newValue);
+            case Properties.authority_p -> this.authority = (int)newValue;
+            case Properties.commandSpeed_p -> this.commandSpeed = (double)newValue;
+            case Properties.actualSpeed_p -> this.speed = (double)newValue;
+            case Properties.acceleration_p -> this.acceleration = (double)newValue;
+            case Properties.power_p -> this.power = (double)newValue;
+            case Properties.grade_p -> this.grade = (double)newValue;
+            case Properties.serviceBrake_p -> this.serviceBrake = (boolean)newValue;
+            case Properties.emergencyBrake_p -> this.emergencyBrake = (boolean)newValue;
+            case Properties.brakeFailure_p -> this.brakeFailure = (boolean)newValue;
+            case Properties.powerFailure_p -> this.powerFailure = (boolean)newValue;
+            case Properties.signalFailure_p -> this.signalFailure = (boolean)newValue;
+            case Properties.temperature_p -> this.temperature = (double)newValue;
+            case Properties.extLights_p -> this.extLights = (boolean)newValue;
+            case Properties.intLights_p -> this.intLights = (boolean)newValue;
+            case Properties.leftDoors_p -> this.leftDoors = (boolean)newValue;
+            case Properties.rightDoors_p -> this.rightDoors = (boolean)newValue;
+            case Properties.numCars_p -> this.numCars = (int)newValue;
+            case Properties.numPassengers_p -> this.numPassengers = (int)newValue;
+            case Properties.crewCount_p -> this.crewCount = (int)newValue;
+            case Properties.timeDelta_p -> this.TIME_DELTA = (int)newValue;
+            case Properties.mass_p -> this.mass = (double)newValue;
+            case Properties.distanceTraveled_p -> this.distanceTraveled = (double)newValue;
+            case Properties.beacon_p -> this.beacon = (String)newValue;
         }
     }
     //Getters

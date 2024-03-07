@@ -8,14 +8,12 @@ public class ScheduleFile {
     private HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
     private ScheduleFileSubject subject;
 
-
     private String scheduleFileName;
     private String lastModified;
 
     public ScheduleFile(String scheduleFileName, String lastModified) {
         this.scheduleFileName = scheduleFileName;
         this.lastModified = lastModified;
-
     }
 
     public void putTrainSchedule(int trainID, TrainSchedule schedule) {
@@ -31,6 +29,7 @@ public class ScheduleFile {
     public TrainSchedule getTrainSchedule(int trainID) {
         return multipleTrainSchedules.get(trainID);
     }
+
     public HashMap<Integer, TrainSchedule> getMultipleTrainSchedules() {
         return this.multipleTrainSchedules;
     }

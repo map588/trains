@@ -13,7 +13,6 @@ public class ScheduleSubjectFactory extends SubjectFactory<TrainScheduleSubject>
     public ObservableHashMap<Integer, TrainScheduleSubject> getSubjects() {
         return subjects;
     }
-
     public void registerSubject(int ID, TrainScheduleSubject subject) {
         subjects.put(ID, subject);
     }

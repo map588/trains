@@ -27,6 +27,7 @@ public interface  TrainModel {
     void setIntLights(boolean lights);
     void setTemperature(double temp);
     void setBeacon(String beacon);
+    void setAnnouncement(String announcement);
 
 
 
