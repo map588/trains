@@ -104,13 +104,13 @@ public class BlockParser {
                 BasicBlock.Direction switchDirection2 = parseDirection(matcher.group(5));
                 int switchBlock4 = Integer.parseInt(matcher.group(6));
 
-                if(switchBlock2 != switchBlock4) {
+                if(switchBlock1 != switchBlock3) {
                     throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
                 }
                 return BasicBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
                         isUnderground,
-                        switchBlock1, switchDirection1, switchBlock3, switchDirection2);
+                        switchBlock2, switchDirection1, switchBlock4, switchDirection2);
 
             } else {
                 throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
