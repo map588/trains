@@ -1,15 +1,12 @@
 package Utilities;
 
 import Utilities.Enums.Line;
-import Utilities.ParsedBlock.Direction;
-import Utilities.ParsedBlock.DoorSide;
+import Utilities.BasicBlock.DoorSide;
 
 import java.io.IOException;
 import java.lang.Double;
-import java.lang.Exception;
 import java.lang.Integer;
 import java.lang.String;
-import java.lang.System;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
@@ -19,12 +16,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import static Utilities.ParsedBlock.DoorSide.*;
+import static Utilities.BasicBlock.DoorSide.*;
 
-public class CSVToHashMap {
+public class BlockParser {
 
-    public static HashMap<Line, ArrayDeque<ParsedBlock>> parseCSV(String filePath) {
-        HashMap<Line, ArrayDeque<ParsedBlock>> map = new HashMap<>();
+    public static HashMap<Line, ArrayDeque<BasicBlock>> parseCSV(String filePath) {
+        HashMap<Line, ArrayDeque<BasicBlock>> map = new HashMap<>();
 
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -68,7 +65,7 @@ public class CSVToHashMap {
                     doorDirection = BOTH;
                 }
 
-                ParsedBlock blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
+                BasicBlock blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
                         isUnderground, infrastructure, doorDirection);
 
@@ -81,36 +78,36 @@ public class CSVToHashMap {
         return map;
     }
 
-    public static HashMap<Line, ArrayDeque<ParsedBlock>> parseCSV() {
+    public static HashMap<Line, ArrayDeque<BasicBlock>> parseCSV() {
         return parseCSV("src/main/resources/track_layout.csv");
     }
 
-        private static ParsedBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
-                                                   double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                                   boolean isUnderground, String infrastructure, DoorSide doorSide) {
+        private static BasicBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
+                                                      double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
+                                                      boolean isUnderground, String infrastructure, DoorSide doorSide) {
 
         if (infrastructure == null || infrastructure.isEmpty()) {
-            return ParsedBlock.ofRegular(trackLine, section, blockNumber, blockLength,
+            return BasicBlock.ofRegular(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground);
         } else if (infrastructure.contains("RAILWAY CROSSING")) {
-            return ParsedBlock.ofCrossing(trackLine, section, blockNumber, blockLength,
+            return BasicBlock.ofCrossing(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground);
         } else if (infrastructure.contains("SWITCH")) {
             Matcher matcher = parseSwitchMatcher(infrastructure);
             if (matcher.find()) {
                 int switchBlock1 = Integer.parseInt(matcher.group(1));
-                ParsedBlock.Direction switchDirection1 = parseDirection(matcher.group(2));
+                BasicBlock.Direction switchDirection1 = parseDirection(matcher.group(2));
                 int switchBlock2 = Integer.parseInt(matcher.group(3));
                 int switchBlock3 = Integer.parseInt(matcher.group(4));
-                ParsedBlock.Direction switchDirection2 = parseDirection(matcher.group(5));
+                BasicBlock.Direction switchDirection2 = parseDirection(matcher.group(5));
                 int switchBlock4 = Integer.parseInt(matcher.group(6));
 
                 if(switchBlock2 != switchBlock4) {
                     throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
                 }
-                return ParsedBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
+                return BasicBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
                         isUnderground,
                         switchBlock1, switchDirection1, switchBlock3, switchDirection2);
@@ -121,16 +118,16 @@ public class CSVToHashMap {
         } else if (infrastructure.contains("STATION;")) {
             //TODO: This does not work in all cases
             String stationName = infrastructure.split(";")[1].trim();
-            return ParsedBlock.ofStation(trackLine, section, blockNumber, blockLength,
+            return BasicBlock.ofStation(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground, stationName, doorSide); // Example, adjust doorSide accordingly
         } else if (infrastructure.contains("YARD")) {
 
-            return ParsedBlock.ofYard(trackLine, section, blockNumber, blockLength,
+            return BasicBlock.ofYard(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground);
         }
-        return ParsedBlock.ofRegular(trackLine, section, blockNumber, blockLength,
+        return BasicBlock.ofRegular(trackLine, section, blockNumber, blockLength,
                 blockGrade, speedLimit, elevation, cumulativeElevation,
                 isUnderground);
     }
@@ -151,11 +148,11 @@ public class CSVToHashMap {
         return pattern.matcher(infrastructure);
     }
 
-    private static ParsedBlock.Direction parseDirection(String arrow) {
+    private static BasicBlock.Direction parseDirection(String arrow) {
         return switch (arrow) {
-            case "->" -> ParsedBlock.Direction.OUT;
-            case "<-" -> ParsedBlock.Direction.IN;
-            case "<->" -> ParsedBlock.Direction.BIDIRECTIONAL;
+            case "->" -> BasicBlock.Direction.OUT;
+            case "<-" -> BasicBlock.Direction.IN;
+            case "<->" -> BasicBlock.Direction.BIDIRECTIONAL;
             default -> throw new IllegalArgumentException("Invalid arrow: " + arrow);
         };
     }
