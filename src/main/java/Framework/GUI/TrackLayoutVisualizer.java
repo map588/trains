@@ -56,11 +56,12 @@ public class TrackLayoutVisualizer extends Application {
 
             // Draw edges for the current line
             BasicBlock prevBlock = null;
+            BasicBlock.Direction prevDirection = null;
             for (BasicBlock block : basicBlocks) {
-                if (prevBlock != null) {
+                if (prevBlock != null && prevDirection != null) {
                     Point2D startPosition = nodePositions.get(prevBlock.blockNumber());
                     Point2D endPosition = nodePositions.get(block.blockNumber());
-                    drawEdge(root, startPosition, endPosition, BasicBlock.Direction.TO_NODE);
+                    drawEdge(root, startPosition, endPosition, prevDirection);
                 }
 
                 if (block.nodeConnection().isPresent()) {
@@ -70,6 +71,7 @@ public class TrackLayoutVisualizer extends Application {
                     if (nodePositions.containsKey(connection.defChildID())) {
                         Point2D endPosition = nodePositions.get(connection.defChildID());
                         drawEdge(root, startPosition, endPosition, connection.defDirection());
+                        prevDirection = connection.defDirection();
                     } else {
                         System.err.println("Node position not found for block: " + connection.defChildID());
                     }
@@ -79,6 +81,7 @@ public class TrackLayoutVisualizer extends Application {
                         if (nodePositions.containsKey(altChildID)) {
                             Point2D endPosition = nodePositions.get(altChildID);
                             drawEdge(root, startPosition, endPosition, connection.altDirection().get());
+                            prevDirection = connection.altDirection().get();
                         } else {
                             System.err.println("Node position not found for block: " + altChildID);
                         }
