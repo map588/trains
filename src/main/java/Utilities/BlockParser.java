@@ -13,10 +13,14 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import static Utilities.BasicBlock.DoorSide.*;
+import static Utilities.BasicBlock.Direction.*;
+import static Utilities.BasicBlock.BlockType.*;
+import static Utilities.BasicBlock.NodeConnection;
 
 public class BlockParser {
 
@@ -52,11 +56,8 @@ public class BlockParser {
                 boolean isUnderground = values[infrastructureIndex].toLowerCase().contains("underground");
                 Line line = Line.valueOf(values[lineIndex].toUpperCase().strip());
                 // Parse the Infrastructure column to determine the block type and additional data
-                String infrastructure = values[infrastructureIndex];
                 String doorSide = values[doorDirectionIndex].toUpperCase().strip();
-
                 DoorSide doorDirection;
-
                 doorSide = doorSide.toUpperCase().strip();
 
                 if(!doorSide.isEmpty()) {
@@ -64,6 +65,8 @@ public class BlockParser {
                 } else {
                     doorDirection = BOTH;
                 }
+
+                String infrastructure = values[infrastructureIndex];
 
                 BasicBlock blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
                         blockGrade, speedLimit, elevation, cumulativeElevation,
@@ -78,58 +81,115 @@ public class BlockParser {
         return map;
     }
 
-    public static HashMap<Line, ArrayDeque<BasicBlock>> parseCSV() {
-        return parseCSV("src/main/resources/track_layout.csv");
-    }
-
-        private static BasicBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
-                                                      double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                                      boolean isUnderground, String infrastructure, DoorSide doorSide) {
-
-        if (infrastructure == null || infrastructure.isEmpty()) {
-            return BasicBlock.ofRegular(trackLine, section, blockNumber, blockLength,
+    private static BasicBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
+                                                  double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
+                                                  boolean isUnderground, String infrastructure, DoorSide doorSide) {
+        if (infrastructure.contains("SWITCH")) {
+            NodeConnection nodeConnection = parseSwitch(infrastructure, blockNumber);
+            return BasicBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground);
+                    isUnderground, Optional.empty(), Optional.empty(),
+                    nodeConnection.parentID(), nodeConnection.parentDirection(),
+                    nodeConnection.defChildID(), nodeConnection.defDirection(),
+                    nodeConnection.altChildID(), nodeConnection.altDirection());
+        } else if (infrastructure.contains("STATION")) {
+            String[] stationInfo = infrastructure.split(";");
+            String stationName = stationInfo[0].split(":")[1].trim();
+            NodeConnection nodeConnection = parseStation(stationInfo[1].trim());
+            return BasicBlock.ofStation(trackLine, section, blockNumber, blockLength,
+                    blockGrade, speedLimit, elevation, cumulativeElevation,
+                    isUnderground, stationName, doorSide,
+                    nodeConnection.parentID(), nodeConnection.parentDirection(),
+                    nodeConnection.defChildID(), nodeConnection.defDirection());
         } else if (infrastructure.contains("RAILWAY CROSSING")) {
             return BasicBlock.ofCrossing(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground);
-        } else if (infrastructure.contains("SWITCH")) {
-            Matcher matcher = parseSwitchMatcher(infrastructure);
-            if (matcher.find()) {
-                int switchBlock1 = Integer.parseInt(matcher.group(1));
-                BasicBlock.Direction switchDirection1 = parseDirection(matcher.group(2));
-                int switchBlock2 = Integer.parseInt(matcher.group(3));
-                int switchBlock3 = Integer.parseInt(matcher.group(4));
-                BasicBlock.Direction switchDirection2 = parseDirection(matcher.group(5));
-                int switchBlock4 = Integer.parseInt(matcher.group(6));
-
-                if(switchBlock1 != switchBlock3) {
-                    throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
-                }
-                return BasicBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
-                        blockGrade, speedLimit, elevation, cumulativeElevation,
-                        isUnderground,
-                        switchBlock2, switchDirection1, switchBlock4, switchDirection2);
-
-            } else {
-                throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
-            }
-        } else if (infrastructure.contains("STATION;")) {
-            //TODO: This does not work in all cases
-            String stationName = infrastructure.split(";")[1].trim();
-            return BasicBlock.ofStation(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground, stationName, doorSide); // Example, adjust doorSide accordingly
         } else if (infrastructure.contains("YARD")) {
-
             return BasicBlock.ofYard(trackLine, section, blockNumber, blockLength,
                     blockGrade, speedLimit, elevation, cumulativeElevation,
                     isUnderground);
+        } else {
+            return BasicBlock.ofRegular(trackLine, section, blockNumber, blockLength,
+                    blockGrade, speedLimit, elevation, cumulativeElevation,
+                    isUnderground);
         }
-        return BasicBlock.ofRegular(trackLine, section, blockNumber, blockLength,
-                blockGrade, speedLimit, elevation, cumulativeElevation,
-                isUnderground);
+    }
+
+    private static NodeConnection parseStation(String connectionInfo) {
+        String regex = "\\(\\s*(\\d+)\\s*(<->|->|<-)\\s*(\\d+)\\s*\\)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(connectionInfo);
+
+        if (matcher.find()) {
+            int parentID = Integer.parseInt(matcher.group(1));
+            BasicBlock.Direction parentDirection = parseDirection(matcher.group(2));
+            int defChildID = Integer.parseInt(matcher.group(3));
+            BasicBlock.Direction defDirection;
+                if(parentDirection == TO_NODE) {
+                    defDirection = FROM_NODE;
+                } else if(parentDirection == FROM_NODE) {
+                    defDirection = TO_NODE;
+                } else {
+                    defDirection = BIDIRECTIONAL;
+                }
+            
+
+            return new NodeConnection(parentID, parentDirection, defChildID, defDirection, Optional.empty(), Optional.empty());
+        } else {
+            throw new IllegalArgumentException("Invalid station format: " + connectionInfo);
+        }
+    }
+
+    private static NodeConnection parseSwitch(String infrastructure, int blockNumber) {
+        String regex = "SWITCH\\s*\\((\\d+)\\s*(<->|->|<-)\\s*(\\d+)\\s*;\\s*(\\d+)\\s*(<->|->|<-)\\s*(\\d+)\\)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(infrastructure);
+
+        if (matcher.find()) {
+            int defChildID1 = Integer.parseInt(matcher.group(1));
+            String defDirection1 = matcher.group(2);
+            int defChildID2 = Integer.parseInt(matcher.group(3));
+            int altChildID1 = Integer.parseInt(matcher.group(4));
+            String altDirection1 = matcher.group(5);
+            int altChildID2 = Integer.parseInt(matcher.group(6));
+
+            BasicBlock.Direction defDirection;
+            BasicBlock.Direction altDirection;
+
+            if (defChildID1 == blockNumber) {
+                defDirection = parseDirection(defDirection1);
+            } else {
+                defDirection = parseDirection(reverseDirection(defDirection1));
+            }
+
+            if (altChildID1 == blockNumber) {
+                altDirection = parseDirection(altDirection1);
+            } else {
+                altDirection = parseDirection(reverseDirection(altDirection1));
+            }
+
+            return new NodeConnection(0, BasicBlock.Direction.TO_NODE, defChildID2, defDirection, Optional.of(altChildID2), Optional.of(altDirection));
+        } else {
+            throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
+        }
+    }
+
+    private static String reverseDirection(String arrow) {
+        return switch (arrow) {
+            case "->" -> "<-";
+            case "<-" -> "->";
+            default -> arrow;
+        };
+    }
+
+    private static BasicBlock.Direction parseDirection(String arrow) {
+        return switch (arrow) {
+            case "->" -> TO_NODE;
+            case "<-" -> FROM_NODE;
+            case "<->" -> BIDIRECTIONAL;
+            default -> throw new IllegalArgumentException("Invalid arrow: " + arrow);
+        };
     }
 
 
@@ -140,21 +200,6 @@ public class BlockParser {
             }
         }
         return -1; // Header not found
-    }
-
-    private static Matcher parseSwitchMatcher(String infrastructure) {
-        String regex = "SWITCH\\s*\\((\\d+)(->|<->)(\\d+);\\s*(\\d+)(->|<->)(\\d+)\\)";
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(infrastructure);
-    }
-
-    private static BasicBlock.Direction parseDirection(String arrow) {
-        return switch (arrow) {
-            case "->" -> BasicBlock.Direction.OUT;
-            case "<-" -> BasicBlock.Direction.IN;
-            case "<->" -> BasicBlock.Direction.BIDIRECTIONAL;
-            default -> throw new IllegalArgumentException("Invalid arrow: " + arrow);
-        };
     }
 
 }

@@ -1,4 +1,3 @@
-
 package Utilities;
 
 import java.util.Optional;
@@ -13,18 +12,14 @@ public record BasicBlock(
         double elevation,
         double cumulativeElevation,
         boolean isUnderground,
-        BlockType blockType, // Including the BlockType enum here
-        Optional<String> stationName, // For stations; contains the station name or empty
-        Optional<DoorSide> doorSide, // For stations; indicates the door side or empty
-        Optional<Integer> defaultBlock, // New field for switch block 1
-        Optional<Direction> defaultDirection, // New field for switch direction 1
-        Optional<Integer> altBlock, // New field for switch block 2
-        Optional<Direction> altDirection // New field for switch direction 2
+        BlockType blockType,
+        Optional<String> stationName,
+        Optional<DoorSide> doorSide,
+        Optional<NodeConnection> nodeConnection
 ) {
-    // Enum for door side at stations
     public enum Direction {
-        IN,
-        OUT,
+        TO_NODE,
+        FROM_NODE,
         BIDIRECTIONAL
     }
 
@@ -39,61 +34,52 @@ public record BasicBlock(
         SWITCH,
         STATION,
         CROSSING,
-        YARD,
-        END
+        YARD
     }
 
-    // Simplify object creation for different block types
-    // Factory method for creating a switch block with an alternative switch position
     public static BasicBlock ofSwitch(String trackLine, char section, int blockNumber, int blockLength,
                                       double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                      boolean isUnderground, int defBlock, Direction defDirection, int altBlock, Direction altDirection) {
+                                      boolean isUnderground, Optional<String> stationName, Optional<DoorSide> doorSide,
+                                      int parentID, Direction parentDirection,
+                                      int defChildID, Direction defDirection,
+                                      Optional<Integer> altChildID, Optional<Direction> altDirection) {
+        NodeConnection nodeConnection = new NodeConnection(parentID, parentDirection, defChildID, defDirection, altChildID, altDirection);
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground,
-                BlockType.SWITCH, Optional.empty(), Optional.empty(),
-                Optional.of(defBlock), Optional.of(defDirection), Optional.of(altBlock), Optional.of(altDirection));
+                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH, stationName, doorSide, Optional.of(nodeConnection));
     }
 
-    // Factory method for creating a station block with a station name and door side
     public static BasicBlock ofStation(String trackLine, char section, int blockNumber, int blockLength,
                                        double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                       boolean isUnderground, String stationName, DoorSide doorSide) {
+                                       boolean isUnderground, String stationName, DoorSide doorSide,
+                                       int parentID, Direction parentDirection, int defChildID, Direction defDirection) {
+        NodeConnection nodeConnection = new NodeConnection(parentID, parentDirection, defChildID, defDirection, Optional.empty(), Optional.empty());
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground,
-                BlockType.STATION, Optional.of(stationName), Optional.of(doorSide),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                elevation, cumulativeElevation, isUnderground, BlockType.STATION, Optional.of(stationName), Optional.of(doorSide), Optional.of(nodeConnection));
     }
 
-    // Factory method for creating a regular block
     public static BasicBlock ofRegular(String trackLine, char section, int blockNumber, int blockLength,
                                        double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
                                        boolean isUnderground) {
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground,
-                BlockType.REGULAR, Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                elevation, cumulativeElevation, isUnderground, BlockType.REGULAR, Optional.empty(), Optional.empty(), Optional.empty());
     }
 
-    // Factory method for creating a crossing block
     public static BasicBlock ofCrossing(String trackLine, char section, int blockNumber, int blockLength,
                                         double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
                                         boolean isUnderground) {
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground,
-                BlockType.CROSSING, Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                elevation, cumulativeElevation, isUnderground, BlockType.CROSSING, Optional.empty(), Optional.empty(), Optional.empty());
     }
 
-    // Factory method for creating a yard block
     public static BasicBlock ofYard(String trackLine, char section, int blockNumber, int blockLength,
                                     double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
                                     boolean isUnderground) {
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground,
-                BlockType.YARD, Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                elevation, cumulativeElevation, isUnderground, BlockType.YARD, Optional.empty(), Optional.empty(), Optional.empty());
     }
 
+    public record NodeConnection(
+            int parentID, Direction parentDirection,
+            int defChildID, Direction defDirection,
+            Optional<Integer> altChildID, Optional<Direction> altDirection) {}
 }
-
-
