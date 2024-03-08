@@ -1,6 +1,6 @@
 package Utilities;
 
-import Utilities.Enums.Line;
+import Utilities.Enums.Lines;
 import Utilities.BasicBlock.DoorSide;
 
 import java.io.IOException;
@@ -19,13 +19,17 @@ import java.util.regex.Matcher;
 
 import static Utilities.BasicBlock.DoorSide.*;
 import static Utilities.BasicBlock.Direction.*;
-import static Utilities.BasicBlock.BlockType.*;
 import static Utilities.BasicBlock.NodeConnection;
 
 public class BlockParser {
 
-    public static HashMap<Line, ArrayDeque<BasicBlock>> parseCSV(String filePath) {
-        HashMap<Line, ArrayDeque<BasicBlock>> map = new HashMap<>();
+
+    private BlockParser() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static HashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(String filePath) {
+        HashMap<Lines, ArrayDeque<BasicBlock>> map = new HashMap<>();
 
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -54,15 +58,19 @@ public class BlockParser {
                 double elevation = Double.parseDouble(values[elevationIndex]);
                 double cumulativeElevation = Double.parseDouble(values[cumulativeElevationIndex]);
                 boolean isUnderground = values[infrastructureIndex].toLowerCase().contains("underground");
-                Line line = Line.valueOf(values[lineIndex].toUpperCase().strip());
+                Lines line = Lines.valueOf(values[lineIndex].toUpperCase().strip());
                 // Parse the Infrastructure column to determine the block type and additional data
                 String doorSide = values[doorDirectionIndex].toUpperCase().strip();
                 DoorSide doorDirection;
                 doorSide = doorSide.toUpperCase().strip();
 
+                if(doorSide.equals("LEFT/RIGHT")) {
+                    doorSide = "BOTH";
+                }
+
                 if(!doorSide.isEmpty()) {
                     doorDirection = DoorSide.valueOf(doorSide);
-                } else {
+                } else{
                     doorDirection = BOTH;
                 }
 
@@ -79,6 +87,10 @@ public class BlockParser {
             }
 
         return map;
+    }
+
+    public static HashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(){
+        return parseCSV("src/main/resources/Framework/experimental_track_layout.csv");
     }
 
     private static BasicBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,

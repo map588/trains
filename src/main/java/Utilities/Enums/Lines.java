@@ -1,6 +1,6 @@
 package Utilities.Enums;
 
-public enum Line {
+public enum Lines {
         BLUE,
         RED,
         GREEN
