@@ -1,19 +1,5 @@
 Line,Section,Block Number,Block Length (m),Block Grade (%),Speed Limit (Km/Hr),Infrastructure,Door Direction,ELEVATION (M),CUMALTIVE ELEVATION (M)
-Blue,A,1,50,0,50,,,0.00,0.00
-Blue,A,2,50,0,50,,,0.00,0.00
-Blue,A,3,50,0,50,RAILWAY CROSSING,,0.00,0.00
-Blue,A,4,50,0,50,,,0.00,0.00
-Blue,A,5,50,0,50,SWITCH (5 -> 6; 5 -> 11),,0.00,0.00
-Blue,B,6,50,0,50,,,0.00,0.00
-Blue,B,7,50,0,50,,,0.00,0.00
-Blue,B,8,50,0,50,,,0.00,0.00
-Blue,B,9,50,0,50,,,0.00,0.00
-Blue,B,10,50,0,50,STATION: B; (10 <-> 11),Left/Right,0.00,0.00
-Blue,C,11,50,0,50,,,0.00,0.00
-Blue,C,12,50,0,50,,,0.00,0.00
-Blue,C,13,50,0,50,,,0.00,0.00
-Blue,C,14,50,0,50,,,0.00,0.00
-Blue,C,15,50,0,50,STATION: C; (15 <-> 14),Left/Right,0.00,0.00
+Red,' ',0,50,0,40,YARD,Left/Right,0,0
 Red,A,1,50,0.5,40,,,0.25,0.25
 Red,A,2,50,1,40,,,0.50,0.75
 Red,A,3,50,1.5,40,,,0.75,1.50
@@ -90,6 +76,7 @@ Red,S,73,50,0,55,UNDERGROUND,,0.00,-1.24
 Red,S,74,50,0,55,UNDERGROUND,,0.00,-1.24
 Red,S,75,50,0,55,UNDERGROUND,,0.00,-1.24
 Red,T,76,50,0,55,UNDERGROUND,,0.00,-1.24
+Green,' ',0,50,0,40,YARD,Left/Right,0,0
 Green,A,1,100,0.5,45,,,0.5,0.5
 Green,A,2,100,1,45,STATION: PIONEER; (2 <- 3),Left,1,1.5
 Green,A,3,100,1.5,45,,,1.5,3

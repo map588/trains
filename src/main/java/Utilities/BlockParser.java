@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -28,8 +29,8 @@ public class BlockParser {
         throw new IllegalStateException("Utility class");
     }
 
-    public static HashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(String filePath) {
-        HashMap<Lines, ArrayDeque<BasicBlock>> map = new HashMap<>();
+    public static ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(String filePath) {
+        ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> map = new ConcurrentHashMap<>();
 
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -89,7 +90,7 @@ public class BlockParser {
         return map;
     }
 
-    public static HashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(){
+    public static ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(){
         return parseCSV("src/main/resources/Framework/experimental_track_layout.csv");
     }
 
