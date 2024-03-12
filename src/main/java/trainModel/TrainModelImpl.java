@@ -2,10 +2,14 @@ package trainModel;
 
 //import Common.TrackModel;
 
+import Common.TrackModel;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifier;
 import Utilities.Constants;
+import trackModel.TrackModelImpl;
+import trackModel.TrackPseudoCode;
+import trainController.TrainControllerImpl;
 import trainController.stubTrainController;
 
 
@@ -17,6 +21,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private int authority;
     private double commandSpeed;
     private String beacon, announcement;
+
+    private double relativeDistance, currentBlockLength;
+
 
     //Vital Variables
     private double speed, acceleration, power;
@@ -36,11 +43,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private double temperature;
     private int numCars, numPassengers, crewCount;
 
-    //Module Stubs
-  //  private final TrackModel track = new stubTrackModel();
-    private TrainController controller;
+    //Module References
+    private final TrainController controller;
+    private final TrackPseudoCode track;
 
-    public TrainModelImpl(int trainID){
+    public TrainModelImpl(int trainID, TrackPseudoCode track, int startBlock) {
         this.authority = 0;
         this.commandSpeed = 0;
         this.speed = 0;
@@ -66,9 +73,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.distanceTraveled = 0;
         this.beacon = "";
         this.announcement = "";
-        this.controller = new stubTrainController(trainID);
+        this.controller = new TrainControllerImpl(trainID);
+        this.track = track;
         controller.assignTrainModel(this);
         this.subject = new TrainModelSubject(this);
+        this.currentBlockLength = startBlock;
     }
 
 
@@ -82,7 +91,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
             subject.notifyChange(property, newValue);
         }
     }
-
     public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", speed); }
     public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", speed); }
     public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
@@ -144,11 +152,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public int getAuthority() {
         return this.authority;
     }
-
     public int getTrainNumber() {
         return controller.getID();
     }
-
     public double getCommandSpeed() {
         return this.commandSpeed;
     }
@@ -172,6 +178,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
     public double getGrade() { return grade; }
     public double getDistanceTraveled() { return distanceTraveled; }
+    public String getAnnouncement() {
+        return this.announcement;
+    }
 
     @Override
     public int getCrewCount() {
@@ -192,6 +201,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public double getMass() {
         return 0;
     }
+
 
     //Murphy Getters
     public boolean getBrakeFailure() { return this.brakeFailure; }
@@ -220,6 +230,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
     public int getTimeDelta() { return this.TIME_DELTA; }
 
+    public void enteredNextBlock() {
+       currentBlockLength = (double)track.updateTrainLocation(this);
+       relativeDistance = 0;
+    }
+
+
     public void trainModelPhysics() {
         //CALCULATE MASS
         this.setMass(Constants.EMPTY_TRAIN_MASS + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
@@ -233,6 +249,13 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
         if (brakeFailure) {
             this.setServiceBrake(false);
+        }
+        if (signalFailure) {
+            this.setServiceBrake(true);
+        }
+
+        if(currentBlockLength - relativeDistance < 0) {
+            enteredNextBlock();
         }
 
         //ACCELERATION PROGRESSION
@@ -289,7 +312,5 @@ public class TrainModelImpl implements TrainModel, Notifier {
         System.out.println("Speed: " + this.speed);
     }
 
-    public String getAnnouncement() {
-        return this.announcement;
-    }
+
 }
