@@ -266,6 +266,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         return false;
     }
 
+    @Override
+    public boolean waysideReleaseDirection(int blockID) {
+        return false;
+    }
+
     /**
      * This method is used to notify the change in the value of a property.
      * It prints the property name and the new value to the console and then notifies the subject of the change.

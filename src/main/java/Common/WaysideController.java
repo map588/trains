@@ -93,5 +93,13 @@ public interface WaysideController {
      * @return Whether the request was accepted
      */
     boolean waysideRequestDirection(int blockID, boolean direction);
+
+    /**
+     * Signals to a Wayside to release a direction from a bidirectional track, allowing the other Wayside to request a
+     * direction for that block.
+     * @param blockID The ID of the first block of bidirectional track under the target Wayside's domain
+     * @return Whether the release request was accepted.
+     */
+    boolean waysideReleaseDirection(int blockID);
 }
 
