@@ -151,6 +151,27 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         }
     }
 
+    // TODO: implement these functions
+    @Override
+    public void CTCDispatchTrain(int trainID) {
+
+    }
+
+    @Override
+    public void CTCSendSchedule(int trainID, int[] schedule) {
+
+    }
+
+    @Override
+    public void waysideIncomingTrain(int trainID, int blockID) {
+
+    }
+
+    @Override
+    public boolean waysideRequestDirection(int blockID, boolean direction) {
+        return false;
+    }
+
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         blockMap.get(blockID).setOccupied(occupied);

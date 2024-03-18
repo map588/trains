@@ -245,6 +245,27 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
     }
 
+    // TODO: implement these functions
+    @Override
+    public void CTCDispatchTrain(int trainID) {
+
+    }
+
+    @Override
+    public void CTCSendSchedule(int trainID, int[] schedule) {
+
+    }
+
+    @Override
+    public void waysideIncomingTrain(int trainID, int blockID) {
+
+    }
+
+    @Override
+    public boolean waysideRequestDirection(int blockID, boolean direction) {
+        return false;
+    }
+
     /**
      * This method is used to notify the change in the value of a property.
      * It prints the property name and the new value to the console and then notifies the subject of the change.
