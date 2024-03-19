@@ -62,11 +62,11 @@ public class TrackPseudoCode {
         return nextBlock.blockLength();
     }
 
-    private void handleTrainEntry(TrainModel segmentId, Integer blockID) {
+    private void handleTrainEntry(TrainModel train, Integer blockID) {
         // Logic to handle a train entering a segment
     }
 
-    private void handleTrainExit(TrainModel segmentId, Integer blockID) {
+    private void handleTrainExit(TrainModel train, Integer blockID) {
         // Logic to handle a train leaving a segment
     }
 
