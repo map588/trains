@@ -137,14 +137,14 @@
       <Label layoutX="29.0" layoutY="244.0" prefHeight="26.0" prefWidth="110.0" text="Mass:" />
       <Label fx:id="crewCountLabel" layoutX="783.0" layoutY="105.0" text="Label" />
       <Label fx:id="massLabel" layoutX="158.0" layoutY="249.0" text="Label" />
-      <Gauge fx:id="setTempDisp" layoutX="470.0" layoutY="316.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="47.0" prefWidth="51.0" skinType="LCD" />
-      <Text fill="#3f63b7" layoutX="468.0" layoutY="377.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Temp">
+      <Gauge fx:id="setTempDisp" layoutX="454.0" layoutY="302.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="64.0" prefWidth="75.0" skinType="LCD" />
+      <Text fill="#3f63b7" layoutX="454.0" layoutY="376.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Temp">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Text>
-      <Gauge fx:id="realTempDisp" layoutX="559.0" layoutY="316.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="47.0" prefWidth="51.0" skinType="LCD" />
-      <Text fill="#3f63b7" layoutX="555.0" layoutY="377.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Real Temp">
+      <Gauge fx:id="realTempDisp" layoutX="544.0" layoutY="302.0" lcdDesign="BLUE_LIGHTBLUE" lcdFont="STANDARD" prefHeight="64.0" prefWidth="75.0" skinType="LCD" />
+      <Text fill="#3f63b7" layoutX="544.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Real Temp">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
