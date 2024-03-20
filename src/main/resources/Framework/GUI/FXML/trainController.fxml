@@ -329,7 +329,7 @@
             </Text>
          </children>
       </AnchorPane>
-      <AnchorPane id="engineerInputPane" layoutX="36.0" layoutY="546.0" prefHeight="136.0" prefWidth="228.8">
+      <AnchorPane id="controllerStatusPane" layoutX="36.0" layoutY="546.0" prefHeight="136.0" prefWidth="228.8">
          <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutX="1.6" stroke="BLACK"
                     strokeType="INSIDE" width="226.4"/>
          <Text layoutX="20.8" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Controller Status">
