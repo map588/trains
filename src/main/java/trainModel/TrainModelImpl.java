@@ -17,6 +17,9 @@ import javax.swing.text.Utilities;
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
+
+    private volatile int samplingPeriod =10;
+
     private TrainModelSubject subject;
 
     //Passed Variables

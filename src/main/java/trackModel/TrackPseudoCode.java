@@ -30,7 +30,7 @@ public class TrackPseudoCode {
         trackOccupancyMap.put(train, startBlock);
     }
 
-    public int updateTrainLocation(TrainModel train) {
+    public synchronized int updateTrainLocation(TrainModel train) {
         int prevBlockID = trackOccupancyMap.get(train);
         BasicBlock prevBlock = trackLayout.get(prevBlockID);
 

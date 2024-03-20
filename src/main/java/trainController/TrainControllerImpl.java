@@ -35,12 +35,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     private final TrainControllerSubject subject;
     private TrainModel train;
 
+    private volatile int samplingPeriod = 10;
 
     private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
             speedLimit = 0.0, Ki = 1.0, Kp = 1.0, power = 0.0, grade = 0.0,
             temperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
 
-    private int blocksToNextStation, samplingPeriod = 10, authority = 0;
+    private int blocksToNextStation = 10, authority = 0;
 
     private boolean serviceBrake = false, emergencyBrake = false, automaticMode = false,
             internalLights = false, externalLights = false, leftDoors = false,
