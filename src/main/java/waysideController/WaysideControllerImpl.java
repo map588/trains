@@ -4,10 +4,14 @@ import Common.CTCOffice;
 import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Support.Notifier;
+import Utilities.BasicBlock;
+import Utilities.BlockParser;
 import Utilities.CSVTokenizer;
 import Utilities.BasicBlockInfo;
+import Utilities.Enums.Lines;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +52,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         subject = new WaysideControllerSubject(this);
 
-        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+//        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+//        for(int blockID : blockIDList) {
+//            WaysideBlock block = new WaysideBlock(fullBlockList.get(blockID));
+//            blockMap.put(blockID, block);
+//            subject.addBlock(new WaysideBlockSubject(block));
+//        }
+
+        ArrayDeque<BasicBlock> blockDeque = BlockParser.parseCSV().get(Lines.GREEN);
+        BasicBlock[] blockArray = blockDeque.toArray(new BasicBlock[0]);
         for(int blockID : blockIDList) {
-            WaysideBlock block = new WaysideBlock(fullBlockList.get(blockID));
+            WaysideBlock block = new WaysideBlock(blockArray[blockID]);
             blockMap.put(blockID, block);
             subject.addBlock(new WaysideBlockSubject(block));
         }

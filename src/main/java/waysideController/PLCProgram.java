@@ -95,6 +95,11 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     }
 
     @Override
+    public Value visitRequest_direction(PLCParser.Request_directionContext ctx) {
+        return null;
+    }
+
+    @Override
     public Value visitIf_statement(PLCParser.If_statementContext ctx) {
         boolean conditional = visit(ctx.getChild(1)).asBoolean();
 
@@ -206,10 +211,12 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
                 return new Value(blockMap.get(index).getLightState());
             case "switch":
                 return new Value(blockMap.get(index).getSwitchState());
-            case "switch_request":
-                return new Value(blockMap.get(index).getSwitchRequest());
             case "authority":
                 return new Value(blockMap.get(index).getBooleanAuth());
+            case "direction":
+                return new Value(blockMap.get(index).getDirection());
+            case "dir_assigned":
+                return new Value(blockMap.get(index).isDir_assigned());
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
         }

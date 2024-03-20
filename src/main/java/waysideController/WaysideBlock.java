@@ -1,6 +1,7 @@
 package waysideController;
 
 import Framework.Support.Notifier;
+import Utilities.BasicBlock;
 import Utilities.BasicBlockInfo;
 
 import static waysideController.Properties.*;
@@ -23,6 +24,9 @@ public class WaysideBlock implements Notifier {
     private double speed;
     private boolean open;
 
+    private boolean direction;
+    private boolean dir_assigned;
+
     private WaysideBlockSubject subject;
 
     public WaysideBlock(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
@@ -43,6 +47,19 @@ public class WaysideBlock implements Notifier {
     //BasicBlockInfo is deprecated, it will be replaced by what is currently named parsedBlock
     public WaysideBlock(BasicBlockInfo blockInfo) {
         this(blockInfo.blockNumber(), blockInfo.isSwitchConvergingBlock(), blockInfo.hasSwitchLight(), blockInfo.hasCrossing(), blockInfo.divergingBlockID_Main(), blockInfo.divergingBlockID_Alt());
+    }
+
+    public WaysideBlock(BasicBlock block) {
+        this.blockID = block.blockNumber();
+        this.hasSwitch = block.blockType() == BasicBlock.BlockType.SWITCH;
+        this.hasLight = block.blockType() == BasicBlock.BlockType.STATION;
+        this.hasCrossing = block.blockType() == BasicBlock.BlockType.CROSSING;
+        this.open = true;
+
+        if(this.hasSwitch && block.nodeConnection().isPresent()) {
+            this.switchBlockMain = block.nodeConnection().get().defChildID();
+            this.switchBlockAlt = block.nodeConnection().get().altChildID().orElse(-1);
+        }
     }
 
     public void setSubject(WaysideBlockSubject subject) {
@@ -182,6 +199,22 @@ public class WaysideBlock implements Notifier {
 
         if(subject != null)
             subject.notifyChange(speed_p, speed);
+    }
+
+    public boolean getDirection() {
+        return direction;
+    }
+
+    public void setDirection(boolean direction) {
+        this.direction = direction;
+    }
+
+    public boolean isDir_assigned() {
+        return dir_assigned;
+    }
+
+    public void setDir_assigned(boolean dir_assigned) {
+        this.dir_assigned = dir_assigned;
     }
 
     @Override
