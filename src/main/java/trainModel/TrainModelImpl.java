@@ -18,7 +18,7 @@ import javax.swing.text.Utilities;
 public class TrainModelImpl implements TrainModel, Notifier {
 
 
-    private volatile int samplingPeriod =10;
+    private volatile int samplingPeriod = 10;
 
     private TrainModelSubject subject;
 
@@ -287,10 +287,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
     public int getTimeDelta() { return this.TIME_DELTA; }
 
-//    public void enteredNextBlock() {
-//       currentBlockLength = (double)track.updateTrainLocation(this);
-//       relativeDistance = 0;
-//    }
+    public void enteredNextBlock() {
+       currentBlockLength = (double)track.updateTrainLocation(this);
+       relativeDistance = 0;
+    }
 
 
     public void trainModelPhysics() {
@@ -311,9 +311,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setServiceBrake(true);
         }
 
-//        if(currentBlockLength - relativeDistance < 0) {
-//            enteredNextBlock();
-//        }
+        if(currentBlockLength - relativeDistance < 0) {
+           enteredNextBlock();
+        }
 
         //ACCELERATION PROGRESSION
         this.previousAcceleration = this.acceleration;
