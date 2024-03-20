@@ -26,7 +26,7 @@ public class TrackPseudoCode {
 
 
     public void trainDispatch(int startBlock, int trainID) {
-        TrainModel train = new TrainModelImpl(trainID, this, startBlock);
+        TrainModel train = new TrainModelImpl(trainID, this);
         trackOccupancyMap.put(train, startBlock);
     }
 

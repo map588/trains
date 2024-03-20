@@ -50,7 +50,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //Module References
     private final TrainController controller;
 
-    //private TrackPseudoCode track;
+    private TrackPseudoCode track = null;
 
     //purely for temperature calculation
     private double elapsedTime = 0;
@@ -81,6 +81,38 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.distanceTraveled = 0;
         this.beacon = "";
         this.announcement = "";
+        this.controller = new TrainControllerImpl(trainID);
+        controller.assignTrainModel(this);
+        this.subject = new TrainModelSubject(this);
+    }
+
+    public TrainModelImpl(int trainID, TrackPseudoCode track) {
+        this.authority = 0;
+        this.commandSpeed = 0;
+        this.speed = 0;
+        this.acceleration = 0;
+        this.power = 0;
+        this.serviceBrake = false;
+        this.emergencyBrake = false;
+        this.grade = 0;
+        this.brakeFailure = false;
+        this.powerFailure = false;
+        this.signalFailure = false;
+        this.TIME_DELTA = 10;
+        this.realTemperature = 0;
+        this.setTemperature = 0;
+        this.extLights = false;
+        this.intLights = false;
+        this.leftDoors = false;
+        this.rightDoors = false;
+        this.numCars = 1;
+        this.numPassengers = 1;
+        this.crewCount = 2;
+        this.mass = (Constants.EMPTY_TRAIN_MASS * numCars) + (Constants.PASSENGER_MASS * (crewCount + numPassengers));
+        this.distanceTraveled = 0;
+        this.beacon = "";
+        this.announcement = "";
+        this.track = track;
         this.controller = new TrainControllerImpl(trainID);
         controller.assignTrainModel(this);
         this.subject = new TrainModelSubject(this);

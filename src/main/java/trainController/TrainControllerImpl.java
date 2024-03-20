@@ -90,7 +90,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         this.setExtLights(train.getExtLights());
         this.setLeftDoors(train.getLeftDoors());
         this.setRightDoors(train.getRightDoors());
-        this.setTemperature(train.getTemperature());
+        //this.setTemperature(train.getTemperature());
         this.setSignalFailure(train.getSignalFailure());
         this.setBrakeFailure(train.getBrakeFailure());
         this.setPowerFailure(train.getPowerFailure());
