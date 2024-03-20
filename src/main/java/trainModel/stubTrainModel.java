@@ -75,7 +75,7 @@ public class stubTrainModel implements TrainModel {
     public void setIntLights(boolean lights) {
     }
 
-    public void setTemperature(double temp) {
+    public void setSetTemperature(double temp) {
 
     }
 
@@ -137,7 +137,7 @@ public class stubTrainModel implements TrainModel {
         return true;
     }
 
-    public double getTemperature() {
+    public double getRealTemperature() {
         return 1.0;
     }
 
@@ -156,6 +156,12 @@ public class stubTrainModel implements TrainModel {
     public boolean getRightDoors() {
         return true;
     }
+
+    @Override
+    public double getlength() {
+        return 0;
+    }
+
     public void trainModelPhysics() {
     }
 
@@ -183,6 +189,8 @@ public class stubTrainModel implements TrainModel {
     public int getCrewCount() {
         return 0;
     }
+
+
 
     @Override
     public int getNumPassengers() {

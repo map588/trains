@@ -33,7 +33,8 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(BRAKEFAILURE_PROPERTY, new SimpleBooleanProperty(model.getBrakeFailure()));
         properties.put(POWERFAILURE_PROPERTY, new SimpleBooleanProperty(model.getPowerFailure()));
         properties.put(SIGNALFAILURE_PROPERTY, new SimpleBooleanProperty(model.getSignalFailure()));
-        properties.put(TEMPERATURE_PROPERTY, new SimpleDoubleProperty(model.getTemperature()));
+        properties.put(SETTEMPERATURE_PROPERTY, new SimpleDoubleProperty(model.getSetTemperature()));
+        properties.put(REALTEMPERATURE_PROPERTY, new SimpleDoubleProperty(model.getRealTemperature()));
         properties.put(EXTLIGHTS_PROPERTY, new SimpleBooleanProperty(model.getExtLights()));
         properties.put(INTLIGHTS_PROPERTY, new SimpleBooleanProperty(model.getIntLights()));
         properties.put(LEFTDOORS_PROPERTY, new SimpleBooleanProperty(model.getLeftDoors()));
@@ -44,6 +45,7 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(model.getTimeDelta()));
         properties.put(MASS_PROPERTY, new SimpleDoubleProperty(model.getMass()));
         properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(model.getDistanceTraveled()));
+        properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(model.getlength()));
         properties.put(BEACON_PROPERTY, new SimpleStringProperty(model.getBeacon()));
         properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(model.getAnnouncement()));
     }

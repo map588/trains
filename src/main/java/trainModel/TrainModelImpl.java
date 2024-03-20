@@ -12,6 +12,8 @@ import trackModel.TrackPseudoCode;
 import trainController.TrainControllerImpl;
 import trainController.stubTrainController;
 
+import javax.swing.text.Utilities;
+
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
@@ -31,6 +33,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private boolean serviceBrake, emergencyBrake;
     private double distanceTraveled;
 
+
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce, engineForce, gravityForce;
     private double netForce, currentAngle, previousAcceleration;
@@ -40,14 +43,14 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //NonVital Variables
     private boolean extLights, intLights, rightDoors, leftDoors;
-    private double temperature;
+    private double realTemperature, setTemperature;
     private int numCars, numPassengers, crewCount;
+    private double length = Constants.TRAIN_LENGTH * numCars;
 
     //Module References
     private final TrainController controller;
-    private final TrackPseudoCode track;
 
-    public TrainModelImpl(int trainID, TrackPseudoCode track, int startBlock) {
+    public TrainModelImpl(int trainID) {
         this.authority = 0;
         this.commandSpeed = 0;
         this.speed = 0;
@@ -55,14 +58,13 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.power = 0;
         this.serviceBrake = false;
         this.emergencyBrake = false;
-        //this.mass = (this.numCars + Constants.EMPTY_TRAIN_MASS) + (this.crewCount * Constants.PASSENGER_MASS);
-        this.mass = Constants.LOADED_TRAIN_MASS;
         this.grade = 0;
         this.brakeFailure = false;
         this.powerFailure = false;
         this.signalFailure = false;
         this.TIME_DELTA = 10;
-        this.temperature = 0;
+        this.realTemperature = 0;
+        this.setTemperature = 0;
         this.extLights = false;
         this.intLights = false;
         this.leftDoors = false;
@@ -70,14 +72,13 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.numCars = 1;
         this.numPassengers = 1;
         this.crewCount = 2;
+        this.mass = (Constants.EMPTY_TRAIN_MASS * numCars) + (Constants.PASSENGER_MASS * (crewCount + numPassengers));
         this.distanceTraveled = 0;
         this.beacon = "";
         this.announcement = "";
         this.controller = new TrainControllerImpl(trainID);
-        this.track = track;
         controller.assignTrainModel(this);
         this.subject = new TrainModelSubject(this);
-        this.currentBlockLength = startBlock;
     }
 
 
@@ -108,10 +109,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setRightDoors(boolean doors) { this.rightDoors = doors; notifyChange("rightDoors", doors); }
     public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
     public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
-    public void setTemperature(double temp) { this.temperature = temp; notifyChange("temperature", temp); }
+    public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
+    public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
     public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", acceleration); }
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
     public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", distance); }
+    public void setLength(double length) { this.length = length; notifyChange("length", length); }
     public void setBeacon(String beacon) { this.beacon = beacon; notifyChange("beacon", beacon); }
     public void setAnnouncement(String announcement) {this.announcement = announcement;}
 
@@ -130,7 +133,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
             case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
             case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
             case Properties.SIGNALFAILURE_PROPERTY -> this.signalFailure = (boolean)newValue;
-            case Properties.TEMPERATURE_PROPERTY -> this.temperature = (double)newValue;
+            case Properties.SETTEMPERATURE_PROPERTY -> this.setTemperature = (double)newValue;
+            case Properties.REALTEMPERATURE_PROPERTY -> this.realTemperature = (double)newValue;
             case Properties.EXTLIGHTS_PROPERTY -> this.extLights = (boolean)newValue;
             case Properties.INTLIGHTS_PROPERTY -> this.intLights = (boolean)newValue;
             case Properties.LEFTDOORS_PROPERTY -> this.leftDoors = (boolean)newValue;
@@ -142,6 +146,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             case Properties.MASS_PROPERTY -> this.mass = (double)newValue;
             case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = (double)newValue;
             case Properties.BEACON_PROPERTY -> this.beacon = (String)newValue;
+            case Properties.LENGTH_PROPERTY -> this.length = (double)newValue;
         }
     }
     //Getters
@@ -182,6 +187,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return this.announcement;
     }
 
+    public double getLength() {
+        return this.length;
+    }
+
     @Override
     public int getCrewCount() {
         return this.crewCount;
@@ -199,7 +208,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     @Override
     public double getMass() {
-        return 0;
+        return this.mass;
     }
 
 
@@ -209,8 +218,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public boolean getSignalFailure() { return this.signalFailure; }
 
     //NonVital Getters
-    public double getTemperature() {
-        return this.temperature;
+    public double getSetTemperature() {
+        return this.setTemperature;
+    }
+    public double getRealTemperature() {
+        return this.realTemperature;
     }
     public boolean getExtLights() {
         return this.extLights;
@@ -222,6 +234,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public boolean getRightDoors() {
         return this.rightDoors;
     }
+
+    @Override
+    public double getlength() {
+        return 0;
+    }
+
     public String getBeacon() {
         return this.beacon;
     }
@@ -230,15 +248,15 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
     public int getTimeDelta() { return this.TIME_DELTA; }
 
-    public void enteredNextBlock() {
-       currentBlockLength = (double)track.updateTrainLocation(this);
-       relativeDistance = 0;
-    }
+//    public void enteredNextBlock() {
+//       currentBlockLength = (double)track.updateTrainLocation(this);
+//       relativeDistance = 0;
+//    }
 
 
     public void trainModelPhysics() {
         //CALCULATE MASS
-        this.setMass(Constants.EMPTY_TRAIN_MASS + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
+        this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
         if (this.mass >= Constants.LOADED_TRAIN_MASS) {
             this.setMass(Constants.LOADED_TRAIN_MASS);
         }
@@ -254,9 +272,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setServiceBrake(true);
         }
 
-        if(currentBlockLength - relativeDistance < 0) {
-            enteredNextBlock();
-        }
+//        if(currentBlockLength - relativeDistance < 0) {
+//            enteredNextBlock();
+//        }
 
         //ACCELERATION PROGRESSION
         this.previousAcceleration = this.acceleration;

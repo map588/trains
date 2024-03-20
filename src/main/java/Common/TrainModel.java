@@ -25,7 +25,7 @@ public interface  TrainModel {
     void setRightDoors(boolean doors);
     void setExtLights(boolean lights);
     void setIntLights(boolean lights);
-    void setTemperature(double temp);
+    void setSetTemperature(double temp);
     void setBeacon(String beacon);
     void setAnnouncement(String announcement);
 
@@ -49,11 +49,12 @@ public interface  TrainModel {
 
 
     //Non-Vital Getter Signals
-    double  getTemperature();
+    double  getRealTemperature();
     boolean getExtLights();
     boolean getIntLights();
     boolean getLeftDoors();
     boolean getRightDoors();
+    double getlength();
 
     //Vital Functions for simulating the train physics
     void trainModelPhysics();

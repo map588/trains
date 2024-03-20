@@ -12,7 +12,8 @@ public class Properties {
     public static final String BRAKEFAILURE_PROPERTY = "brakeFailure";
     public static final String POWERFAILURE_PROPERTY = "powerFailure";
     public static final String SIGNALFAILURE_PROPERTY = "signalFailure";
-    public static final String TEMPERATURE_PROPERTY = "temperature";
+    public static final String SETTEMPERATURE_PROPERTY = "setTemperature";
+    public static final String REALTEMPERATURE_PROPERTY = "realTemperature";
     public static final String EXTLIGHTS_PROPERTY = "extLights";
     public static final String INTLIGHTS_PROPERTY = "intLights";
     public static final String LEFTDOORS_PROPERTY = "leftDoors";
@@ -25,4 +26,5 @@ public class Properties {
     public static final String DISTANCETRAVELED_PROPERTY = "distanceTraveled";
     public static final String BEACON_PROPERTY = "beacon";
     public static final String ANNOUNCEMENT_PROPERTY = "announcement";
+    public static final String LENGTH_PROPERTY = "length";
 }

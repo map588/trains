@@ -36,9 +36,9 @@ public class TrainModelManager {
     @FXML
     public Label gradeLabel, maxPowerLabel, medAccelerationLabel, maxVelocityLabel, trainLengthLabel, trainHeightLabel, trainWidthLabel, numCarsLabel;
     @FXML
-    public Label numPassengerLabel, crewCountLabel, emptyWeightLabel, loadedWeightLabel;
+    public Label numPassengerLabel, crewCountLabel, massLabel;
     @FXML
-    public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp, tempDisp;
+    public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp, setTempDisp, realTempDisp;
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
@@ -75,13 +75,11 @@ public class TrainModelManager {
         maxPowerLabel.setText("643.68");
         maxVelocityLabel.setText("43.48");
         medAccelerationLabel.setText("1.64");
-        trainLengthLabel.setText("105.74");
         trainHeightLabel.setText("11.22");
         trainWidthLabel.setText("8.69");
-        emptyWeightLabel.setText("40.9");
-        loadedWeightLabel.setText("56.7");
 
-
+        bindLabelToProperty("mass", massLabel);
+        bindLabelToProperty("length", trainLengthLabel);
         bindLabelToProperty("numCars", numCarsLabel);
         bindLabelToProperty("numPassengers", numPassengerLabel);
         bindLabelToProperty("crewCount", crewCountLabel);
@@ -108,7 +106,8 @@ public class TrainModelManager {
         actualAccelerationDisp.valueProperty().bind(subject.getDoubleProperty("acceleration"));
         cmdSpeedDisp.valueProperty().bind(subject.getDoubleProperty("commandSpeed"));
         authorityDisp.valueProperty().bind(subject.getIntegerProperty("authority"));
-        tempDisp.valueProperty().bind(subject.getDoubleProperty("temperature"));
+        setTempDisp.valueProperty().bind(subject.getDoubleProperty("setTemperature"));
+        realTempDisp.valueProperty().bind(subject.getDoubleProperty("realTemperature"));
     }
 
     private void bindIndicators() {
@@ -179,7 +178,8 @@ public class TrainModelManager {
         actualVelocityDisp.valueProperty().unbind();
         actualPowerDisp.valueProperty().unbind();
         actualAccelerationDisp.valueProperty().unbind();
-        tempDisp.valueProperty().unbind();
+        setTempDisp.valueProperty().unbind();
+        realTempDisp.valueProperty().unbind();
 
         brakeFailureBtn.selectedProperty().unbind();
         powerFailureBtn.selectedProperty().unbind();
