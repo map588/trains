@@ -3,44 +3,47 @@ package Framework.Simulation;
 import Common.TrackModel;
 import trackModel.TrackModelImpl;
 
-import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.*;
 
 public class Main {
 
+    private static final int NUM_THREADS = 3;
+
     private static final long TIMESTEP = 1000; // Timestep in milliseconds
-    private static final Object timestepLock = new Object();
-
-    private static TrackModelImpl trackModel;
-    private static WaysideSystem waysideController;
-    private static TrainSystem trainSystem;
-
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
+    private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
+        TrackModel trackModel = new TrackModelImpl();
+        WaysideSystem waysideController = new WaysideSystem();
+        TrainSystem trainSystem = new TrainSystem();
 
-        while (true) {
-            long startTime = System.currentTimeMillis();
+        // Initialize and start modules
+        // ...
 
-            // Update modules
-//            trackModel.update();
-//            waysideController.update();
-//            trainSystem.update();
+        // Schedule the time synchronization task
+        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackModel, waysideController, trainSystem),
+                0, TIMESTEP, TimeUnit.MILLISECONDS);
 
-            // Synchronize time
-            synchronized (timestepLock) {
-                long elapsedTime = System.currentTimeMillis() - startTime;
-                long sleepTime = TIMESTEP - elapsedTime;
-                if (sleepTime > 0) {
-                    try {
-                        timestepLock.wait(sleepTime);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+    }
+
+    private static class TimeSynchronizationTask implements Runnable {
+        private final TrackModel trackModel;
+        private final WaysideSystem waysideSystem;
+        private final TrainSystem trainSystem;
+
+        public TimeSynchronizationTask(TrackModel trackModel, WaysideSystem waysideController, TrainSystem trainSystem) {
+            this.trackModel = trackModel;
+            this.waysideSystem = waysideController;
+            this.trainSystem = trainSystem;
         }
 
-
-
-
+        @Override
+        public void run() {
+            // Submit tasks to the thread pool for each module
+//            executorService.submit(() -> trackModel.update());
+//            executorService.submit(() -> waysideSystem.update());
+//            executorService.submit(() -> trainSystem.update());
+        }
     }
 }
