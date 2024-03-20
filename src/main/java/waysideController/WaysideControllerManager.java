@@ -7,11 +7,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -115,6 +117,10 @@ public class WaysideControllerManager {
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
+        plcFileTable.setOnMousePressed(mouseEvent -> {
+            if(mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() >= 2)
+                uploadPLC();
+        });
 
 
         // Set cell factories for editable columns
@@ -136,6 +142,11 @@ public class WaysideControllerManager {
         // Create initial controller and update values
         createNewController();
         testBench.setController(currentSubject);
+
+        // Set default folder for PLC:
+        File dir = new File("src/main/antlr");
+        plcFolderTextField.setText(dir.getPath());
+        updatePLCTableView(dir);
 
         // Some testing of code triggered events:
 //        currentSubject.getController().setMaintenanceMode(true);
@@ -329,7 +340,7 @@ public class WaysideControllerManager {
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
             newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(),
                     "BlueLine",
-                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28});
+                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
         } else {
             newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(),
                     "BlueLine",

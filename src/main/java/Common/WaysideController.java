@@ -1,8 +1,10 @@
 package Common;
 
+import waysideController.WaysideBlock;
 import waysideController.WaysideControllerSubject;
 
 import java.io.File;
+import java.util.Map;
 
 
 // This is the interface for the wayside controller, which is used to control the various track blocks
@@ -49,6 +51,8 @@ public interface WaysideController {
 
     // Returns the ID of the controller
     int getID();
+
+    Map<Integer, WaysideBlock> getBlockMap();
 
     // Returns the subject attached to this controller
     WaysideControllerSubject getSubject();

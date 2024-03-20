@@ -1,8 +1,20 @@
-// Sections A, B, C, D, E, F blocks 1-27
+// Controls sections A, B, C, D, E blocks 1-20
+// Accesses occupancies from blocks 1-24
+
+// Assign direction for outgoing trains
+if not dir_assigned[20]
+    if occupied[1]
+        request_direction(20, OUTBOUND)
+    endif
+else
+    if not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and not occupied[1]
+        release_direction(20)
+    endif
+endif
 
 // Switch 1-13-12
-if not occupied[13] and dir_assigned[13]
-    switch[13] = direction[13] == OUTBOUND
+if not occupied[13] and dir_assigned[20]
+    switch[12] = direction[20] == OUTBOUND
 endif
 
 // General occupancies A
@@ -24,8 +36,8 @@ authority[11] = not occupied[10] and not occupied[9] and not occupied[8] and not
 authority[12] = not occupied[11] and not occupied[10] and not occupied[9] and not occupied[8]
 
 // General occupancies D,E,F
-if dir_assigned[28]
-    if direction[28] == INBOUND
+if dir_assigned[20]
+    if direction[20] == INBOUND
         authority[13] = not occupied[12] and not occupied[11] and not occupied[10] and not occupied[9] and not switch[12]
         authority[14] = not occupied[13] and not occupied[12] and not occupied[11] and not occupied[10] and not switch[12]
         authority[15] = not occupied[14] and not occupied[13] and not occupied[12] and not occupied[11] and not switch[12]
@@ -35,15 +47,6 @@ if dir_assigned[28]
         authority[18] = not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14]
         authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15]
         authority[20] = not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16]
-
-        authority[21] = not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17]
-        authority[22] = not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18]
-        authority[23] = not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19]
-        authority[24] = not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20]
-        authority[25] = not occupied[24] and not occupied[23] and not occupied[22] and not occupied[21]
-        authority[26] = not occupied[25] and not occupied[24] and not occupied[23] and not occupied[22]
-        authority[27] = not occupied[26] and not occupied[25] and not occupied[24] and not occupied[23]
-        authority[28] = not occupied[27] and not occupied[26] and not occupied[25] and not occupied[24]
     else
         authority[13] = not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17]
         authority[14] = not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18]
@@ -54,15 +57,6 @@ if dir_assigned[28]
         authority[18] = not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22]
         authority[19] = not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23]
         authority[20] = not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24]
-
-        authority[21] = not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25]
-        authority[22] = not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26]
-        authority[23] = not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27]
-        authority[24] = not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28]
-        authority[25] = not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29]
-        authority[26] = not occupied[27] and not occupied[28] and not occupied[29] and not occupied[30]
-        authority[27] = not occupied[28] and not occupied[29] and not occupied[30] and not occupied[31]
-        authority[28] = not occupied[29] and not occupied[30] and not occupied[31] and not occupied[32]
     endif
 else
     authority[13] = FALSE
@@ -73,14 +67,6 @@ else
     authority[18] = FALSE
     authority[19] = FALSE
     authority[20] = FALSE
-    authority[21] = FALSE
-    authority[22] = FALSE
-    authority[23] = FALSE
-    authority[24] = FALSE
-    authority[25] = FALSE
-    authority[26] = FALSE
-    authority[27] = FALSE
-    authority[28] = FALSE
 endif
 
 // Crossings

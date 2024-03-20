@@ -275,12 +275,19 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public boolean waysideRequestDirection(int blockID, boolean direction) {
-        return false;
+        if(blockMap.get(blockID).isDir_assigned())
+            return false;
+        else {
+            blockMap.get(blockID).setDir_assigned(true);
+            blockMap.get(blockID).setDirection(direction);
+            return true;
+        }
     }
 
     @Override
     public boolean waysideReleaseDirection(int blockID) {
-        return false;
+        blockMap.get(blockID).setDir_assigned(false);
+        return true;
     }
 
     /**
