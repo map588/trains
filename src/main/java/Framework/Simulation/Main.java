@@ -8,9 +8,10 @@ import java.util.concurrent.*;
 public class Main {
 
     private static final int NUM_THREADS = 3;
-
     private static final long TIMESTEP = 1000; // Timestep in milliseconds
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
+
+
+    private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
@@ -41,9 +42,9 @@ public class Main {
         @Override
         public void run() {
             // Submit tasks to the thread pool for each module
-//            executorService.submit(() -> trackModel.update());
-//            executorService.submit(() -> waysideSystem.update());
-//            executorService.submit(() -> trainSystem.update());
+//            synchronizationPool.submit(() -> trackModel.update());
+//            synchronizationPool.submit(() -> waysideSystem.update());
+//            synchronizationPool.submit(() -> trainSystem.update());
         }
     }
 }
