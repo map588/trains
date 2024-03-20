@@ -50,6 +50,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //Module References
     private final TrainController controller;
 
+    //purely for temperature calculation
+    private double elapsedTime = 0;
+
     public TrainModelImpl(int trainID) {
         this.authority = 0;
         this.commandSpeed = 0;
@@ -328,7 +331,16 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (this.speed < 0) { this.setActualSpeed(0); }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
         System.out.println("Speed: " + this.speed);
+
+        //TEMPERATURE CALCULATION
+        this.elapsedTime += this.TIME_DELTA;
+        if(this.elapsedTime >= 1 && (this.realTemperature < this.setTemperature)) {
+            this.setRealTemperature(this.realTemperature + 1);
+            this.elapsedTime = 0;
+        }
+        else if(this.elapsedTime >= 1 && (this.realTemperature > this.setTemperature)) {
+            this.setRealTemperature(this.realTemperature - 1);
+            this.elapsedTime = 0;
+        }
     }
-
-
 }
