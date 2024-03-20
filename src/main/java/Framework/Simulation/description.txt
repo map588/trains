@@ -2,4 +2,16 @@ This package will serve as the "Main" package for the project.
 It will contain the main method and will be the entry point for the application.
 
 In this package, we will run the global real-time simulation of the system.
-We should aim to implement the MVC design pattern to separate the simulation logic from the GUI.
+
+The main method will be responsible for:
+- Spawning the main thread for the simulation time step
+- Managing the repeated execution of the simulation time step
+- Managing the termination of the simulation
+
+System objects used in this class will implement an update method that will be called at each time step.
+
+The track model should probably communicate asynchronously with other modules, and the updated values will be
+used in the next time step.
+
+We should discuss which modules need to be a part of the time synchronization, but I think that to follow
+"the physical problem", we should avoid all forms of instantaneous communication between modules.
