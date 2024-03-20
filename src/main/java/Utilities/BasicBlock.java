@@ -45,7 +45,7 @@ public record BasicBlock(
                                       Optional<Integer> altChildID, Optional<Direction> altDirection) {
         NodeConnection nodeConnection = new NodeConnection(parentID, parentDirection, defChildID, defDirection, altChildID, altDirection);
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH, stationName, doorSide, Optional.of(nodeConnection));
+                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH,  stationName, doorSide, Optional.of(nodeConnection));
     }
 
     public static BasicBlock ofStation(String trackLine, char section, int blockNumber, int blockLength,
@@ -54,7 +54,7 @@ public record BasicBlock(
                                        int parentID, Direction parentDirection, int defChildID, Direction defDirection) {
         NodeConnection nodeConnection = new NodeConnection(parentID, parentDirection, defChildID, defDirection, Optional.empty(), Optional.empty());
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.STATION, Optional.of(stationName), Optional.of(doorSide), Optional.of(nodeConnection));
+                elevation, cumulativeElevation, isUnderground, BlockType.STATION,  Optional.of(stationName), Optional.of(doorSide), Optional.of(nodeConnection));
     }
 
     public static BasicBlock ofRegular(String trackLine, char section, int blockNumber, int blockLength,

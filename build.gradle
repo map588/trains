@@ -49,8 +49,9 @@ generateGrammarSource {
 
 
 application {
-    //mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.GUI.mainMenu'
-    mainClass = 'Framework.GUI.TrackLayoutVisualizer'
+    mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.GUI.mainMenu'
+    //mainClass = 'Framework.GUI.TrackLayoutVisualizer'
+
 }
 
 def getJavaFXLibPath() {

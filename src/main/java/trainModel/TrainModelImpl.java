@@ -50,6 +50,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //Module References
     private final TrainController controller;
 
+    //private TrackPseudoCode track;
+
     //purely for temperature calculation
     private double elapsedTime = 0;
 
@@ -83,7 +85,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.assignTrainModel(this);
         this.subject = new TrainModelSubject(this);
     }
-
 
     public void notifyChange(String property, Object newValue) {
 
