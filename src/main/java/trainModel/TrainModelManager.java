@@ -22,8 +22,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TrainModelManager {
 
@@ -68,7 +67,7 @@ public class TrainModelManager {
                 changeTrainView(newSelection);
             }
         });
-
+        setUpCircleColors();
     }
 
     private void bindLabels() {
@@ -240,6 +239,12 @@ public class TrainModelManager {
             e.printStackTrace();
             System.out.println("Failed to launch test bench");
             throw new RuntimeException(e);
+        }
+    }
+    private void setUpCircleColors() {
+        List<Circle> circleList =  Arrays.asList(extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn);
+        for (Circle c : circleList){
+            c.setFill(Color.GRAY);
         }
     }
 }
