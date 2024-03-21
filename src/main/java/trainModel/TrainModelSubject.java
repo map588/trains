@@ -16,8 +16,8 @@ public class TrainModelSubject implements AbstractSubject{
 
     public boolean isGUIUpdate;
     public boolean isLogicUpdate;
-    private ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
-    private TrainModelImpl model;
+    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
+    private final TrainModelImpl model;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final TrainModelSubjectMap map = TrainModelSubjectMap.getInstance();
 

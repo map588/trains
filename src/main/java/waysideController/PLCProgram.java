@@ -1,10 +1,14 @@
 package waysideController;
 
+import Common.WaysideController;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
-import waysideController.plc_parser.*;
+import waysideController.plc_parser.PLCLexer;
+import waysideController.plc_parser.PLCParser;
+import waysideController.plc_parser.PLCVisitor;
+import waysideController.plc_parser.Value;
 
 import java.io.IOException;
 import java.util.Map;
@@ -96,7 +100,31 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
     @Override
     public Value visitRequest_direction(PLCParser.Request_directionContext ctx) {
-        return null;
+        int blockID = visit(ctx.index()).asInteger();
+        WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(blockID);
+        boolean direction = visit(ctx.getChild(4)).asBoolean();
+        boolean result = controller.waysideRequestDirection(blockID, direction);
+
+        if(result) {
+
+        }
+
+        System.out.println("Requesting " + (direction ? "INBOUND" : "OUTBOUND") + " at block " + blockID + ": " + (result ? "accepted" : "rejected"));
+        return new Value(result);
+    }
+
+    @Override
+    public Value visitRelease_direction(PLCParser.Release_directionContext ctx) {
+        int blockID = visit(ctx.index()).asInteger();
+        WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(blockID);
+        boolean result = controller.waysideReleaseDirection(blockID);
+
+        if(result) {
+
+        }
+
+        System.out.println("Releasing direction at block " + blockID + ": " + (result ? "accepted" : "rejected"));
+        return new Value(result);
     }
 
     @Override
@@ -204,7 +232,13 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
         switch(listName) {
             case "occupied":
-                return new Value(blockMap.get(index).isOccupied());
+                WaysideBlock block = blockMap.get(index);
+                if(block != null)
+                    return new Value(block.isOccupied());
+                else {
+                    WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(index);
+                    return new Value(controller.getBlockMap().get(index).isOccupied());
+                }
             case "crossing":
                 return new Value(blockMap.get(index).getCrossingState());
             case "light":

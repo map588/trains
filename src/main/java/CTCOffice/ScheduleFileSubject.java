@@ -3,13 +3,17 @@ package CTCOffice;
 
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
-import javafx.beans.property.*;
-import static CTCOffice.Properties.ScheduleProperties.*;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import static CTCOffice.Properties.ScheduleProperties.LAST_MODIFIED_PROPERTY;
+import static CTCOffice.Properties.ScheduleProperties.SCHEDULE_FILE_NAME_PROPERTY;
 
 public class ScheduleFileSubject implements AbstractSubject {
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
-    private ScheduleFile schedule;
+    private final ScheduleFile schedule;
 
     public ScheduleFileSubject(ScheduleFile schedule) {
         properties.put(SCHEDULE_FILE_NAME_PROPERTY, new SimpleStringProperty(this, SCHEDULE_FILE_NAME_PROPERTY, schedule.getScheduleFileName()));

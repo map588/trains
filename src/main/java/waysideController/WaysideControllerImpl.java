@@ -6,17 +6,15 @@ import Common.WaysideController;
 import Framework.Support.Notifier;
 import Utilities.BasicBlock;
 import Utilities.BlockParser;
-import Utilities.CSVTokenizer;
-import Utilities.BasicBlockInfo;
 import Utilities.Enums.Lines;
 
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static waysideController.Properties.*;
+import static waysideController.Properties.PLCName_p;
+import static waysideController.Properties.maintenanceMode_p;
 
 public class WaysideControllerImpl implements WaysideController, PLCRunner, Notifier {
 
@@ -34,7 +32,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
-    private PLCProgram[] plcPrograms;
+    private final PLCProgram[] plcPrograms;
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
@@ -275,12 +273,19 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public boolean waysideRequestDirection(int blockID, boolean direction) {
-        return false;
+        if(blockMap.get(blockID).isDir_assigned())
+            return false;
+        else {
+            blockMap.get(blockID).setDir_assigned(true);
+            blockMap.get(blockID).setDirection(direction);
+            return true;
+        }
     }
 
     @Override
     public boolean waysideReleaseDirection(int blockID) {
-        return false;
+        blockMap.get(blockID).setDir_assigned(false);
+        return true;
     }
 
     /**

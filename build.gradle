@@ -3,12 +3,11 @@ plugins {
     id 'application'
     id 'antlr'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-
 }
+
 group = 'org.james'
 version = '1.0'
 java.sourceCompatibility = JavaVersion.VERSION_17
-
 
 repositories {
     mavenCentral()
@@ -16,7 +15,7 @@ repositories {
 
 javafx {
     version = "21.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml']
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 dependencies {
@@ -24,16 +23,16 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
-    testImplementation group: 'org.testfx', name: 'openjfx-monocle', version: '17.0.10'
+    testImplementation 'org.testfx:openjfx-monocle:17.0.10'
     testImplementation 'org.testfx:testfx-junit5:4.0.17'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     // Additional libraries
-    implementation group: 'eu.hansolo', name: 'medusa', version: '17.1.7'
-    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.2.0'
+    implementation 'eu.hansolo:medusa:17.1.7'
+    implementation 'org.controlsfx:controlsfx:11.2.0'
 
-    // PLC Lanaguage in ANTLR
+    // PLC Language in ANTLR
     implementation 'org.antlr:antlr4-runtime:4.9.2'
     antlr 'org.antlr:antlr4:4.9.2'
 
@@ -47,11 +46,8 @@ generateGrammarSource {
     outputDirectory = file("src/main/java/waysideController/plc_parser")
 }
 
-
 application {
     mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.GUI.mainMenu'
-    //mainClass = 'Framework.GUI.TrackLayoutVisualizer'
-
 }
 
 def getJavaFXLibPath() {
@@ -67,7 +63,7 @@ def getJavaFXLibPath() {
         } else {
             libPath += '-osx-x64'
         }
-    } else if (arch.startsWith("aarch64") || arch.startsWith("arm")){
+    } else if (arch.startsWith("aarch64") || arch.startsWith("arm")) {
         libPath += '-rpi'
     } else {
         throw new GradleException("Unsupported OS")
@@ -76,7 +72,6 @@ def getJavaFXLibPath() {
     // Append the standard lib directory of JavaFX SDK
     return "${project.rootDir}/${libPath}/lib"
 }
-
 
 sourceSets {
     main {
@@ -109,7 +104,7 @@ test {
     doFirst {
         def javafxLibPath = getJavaFXLibPath()
         jvmArgs = [
-                '--module-path',  javafxLibPath,
+                '--module-path', javafxLibPath,
                 '--add-modules', 'javafx.controls,javafx.fxml',
                 '--add-opens', 'javafx.graphics/javafx.scene=ALL-UNNAMED',
                 '--add-opens', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED',

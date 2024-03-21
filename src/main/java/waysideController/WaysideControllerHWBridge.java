@@ -139,6 +139,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     @Override
+    public Map<Integer, WaysideBlock> getBlockMap() {
+        return blockMap;
+    }
+
+    @Override
     public WaysideControllerSubject getSubject() {
         return subject;
     }

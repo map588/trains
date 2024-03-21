@@ -1,10 +1,8 @@
 package CTCOffice;
 
 import Framework.Support.AbstractSubject;
-import javafx.beans.property.*;
-import javafx.scene.paint.Paint;
 import Framework.Support.ObservableHashMap;
-
+import javafx.beans.property.*;
 
 import static CTCOffice.Properties.BlockProperties.*;
 

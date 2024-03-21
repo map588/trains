@@ -1,9 +1,10 @@
 package CTCOffice;
 
-import static CTCOffice.Properties.ScheduleProperties.*;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
+
+import static CTCOffice.Properties.ScheduleProperties.*;
 
 public class TrainScheduleSubject implements AbstractSubject {
     public final TrainSchedule schedule;

@@ -1,26 +1,20 @@
 package Utilities;
 
-import Utilities.Enums.Lines;
 import Utilities.BasicBlock.DoorSide;
+import Utilities.Enums.Lines;
 
 import java.io.IOException;
-import java.lang.Double;
-import java.lang.Integer;
-import java.lang.String;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.List;
-
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static Utilities.BasicBlock.DoorSide.*;
 import static Utilities.BasicBlock.Direction.*;
+import static Utilities.BasicBlock.DoorSide.BOTH;
 import static Utilities.BasicBlock.NodeConnection;
 
 public class BlockParser {

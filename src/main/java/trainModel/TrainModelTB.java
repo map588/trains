@@ -7,9 +7,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -89,7 +89,7 @@ public class TrainModelTB {
         tbSpeed.setOnAction(event -> subject.setProperty("commandSpeed", Double.parseDouble(tbSpeed.getText())));
         tbAuthority.setOnAction(event -> subject.setProperty("authority", Integer.parseInt(tbAuthority.getText())));
         tbGrade.setOnAction(event -> subject.setProperty("grade", Double.parseDouble(tbGrade.getText())));
-        tbTemp.setOnAction(event -> subject.setProperty("temperature", Double.parseDouble(tbTemp.getText())));
+        tbTemp.setOnAction(event -> subject.setProperty("setTemperature", Double.parseDouble(tbTemp.getText())));
         tbTimeDelta.setOnAction(event -> subject.setProperty("timeDelta", Integer.parseInt(tbTimeDelta.getText())));
         tbTimeButton.setOnAction(event -> subject.runPhysics());
 

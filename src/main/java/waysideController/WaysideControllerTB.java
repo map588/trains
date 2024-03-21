@@ -72,7 +72,6 @@ public class WaysideControllerTB {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject block = getTableView().getItems().get(getIndex());
                     CheckBox checkBox;
@@ -94,7 +93,6 @@ public class WaysideControllerTB {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject block = getTableView().getItems().get(getIndex());
                     CheckBox checkBox;

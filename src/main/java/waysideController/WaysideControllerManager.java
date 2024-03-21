@@ -115,6 +115,10 @@ public class WaysideControllerManager {
 
         plcFileNameColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(file.getValue().getName()));
         plcFileDateModifiedColumn.setCellValueFactory(file -> new ReadOnlyObjectWrapper<>(dateFormat.format(new Date(file.getValue().lastModified()))));
+        plcFileTable.setOnMousePressed(mouseEvent -> {
+            if(mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() >= 2)
+                uploadPLC();
+        });
 
 
         // Set cell factories for editable columns
@@ -137,6 +141,11 @@ public class WaysideControllerManager {
         createNewController();
         testBench.setController(currentSubject);
 
+        // Set default folder for PLC:
+        File dir = new File("src/main/antlr");
+        plcFolderTextField.setText(dir.getPath());
+        updatePLCTableView(dir);
+
         // Some testing of code triggered events:
 //        currentSubject.getController().setMaintenanceMode(true);
 //        currentSubject.getController().maintenanceSetAuthority(1, false);
@@ -150,8 +159,8 @@ public class WaysideControllerManager {
      */
     private void setupTableCellFactories() {
         blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Paint>() {
-            private BorderPane graphic;
-            private Circle circle;
+            private final BorderPane graphic;
+            private final Circle circle;
 
             {
                 graphic = new BorderPane();
@@ -180,7 +189,6 @@ public class WaysideControllerManager {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
                     if(blockInfo.getBlock().hasCrossing()) {
@@ -209,7 +217,6 @@ public class WaysideControllerManager {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject block = getTableView().getItems().get(getIndex());
                     CheckBox checkBox;
@@ -233,7 +240,6 @@ public class WaysideControllerManager {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject block = getTableView().getItems().get(getIndex());
                     CheckBox checkBox;
@@ -329,7 +335,7 @@ public class WaysideControllerManager {
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
             newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(),
                     "BlueLine",
-                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28});
+                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
         } else {
             newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(),
                     "BlueLine",

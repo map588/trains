@@ -3,7 +3,6 @@ package trackModel;
 
 import Common.TrackModel;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -143,15 +142,15 @@ public class TrackModelImpl implements TrackModel {
         this.lines = new ArrayList<>();
     }
 
-    private HashMap<Integer, Integer> trainAuthorities;
-    private HashMap<Integer, Double> trainCommandSpeeds;
-    private HashMap<Integer, Boolean> blockOccupied;
-    private HashMap<Integer, Boolean> switchStateMap;
-    private HashMap<Integer, Boolean> lightStateMap;
-    private HashMap<Integer, String> failureMap;
-    private HashMap<Integer, String> beaconMap;
-    private HashMap<Integer, String> stationMap;
-    private HashMap<Integer, Boolean> crossingMap;
+    private final HashMap<Integer, Integer> trainAuthorities;
+    private final HashMap<Integer, Double> trainCommandSpeeds;
+    private final HashMap<Integer, Boolean> blockOccupied;
+    private final HashMap<Integer, Boolean> switchStateMap;
+    private final HashMap<Integer, Boolean> lightStateMap;
+    private final HashMap<Integer, String> failureMap;
+    private final HashMap<Integer, String> beaconMap;
+    private final HashMap<Integer, String> stationMap;
+    private final HashMap<Integer, Boolean> crossingMap;
 
     //should lines just be a string?
     private ArrayList<String> lines = new ArrayList<>();
