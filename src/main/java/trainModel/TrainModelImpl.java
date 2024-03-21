@@ -9,6 +9,8 @@ import Utilities.Constants;
 import trackModel.TrackPseudoCode;
 import trainController.TrainControllerImpl;
 
+import java.util.Random;
+
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
@@ -66,8 +68,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.powerFailure = false;
         this.signalFailure = false;
         this.TIME_DELTA = 10;
-        this.realTemperature = 0;
-        this.setTemperature = 0;
+        this.realTemperature = 70;
+        this.setTemperature = 70;
         this.extLights = false;
         this.intLights = false;
         this.leftDoors = false;
@@ -287,6 +289,29 @@ public class TrainModelImpl implements TrainModel, Notifier {
        relativeDistance = 0;
     }
 
+    private int getRandomNumberInRange(int min, int max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
+    public int updatePassengers(int passengersEmbarked) {
+        int passengersDisembarked;
+        if(this.numPassengers <= 0) {
+            this.numPassengers = passengersEmbarked;
+            passengersDisembarked = 0;
+        }
+        else {
+            passengersDisembarked = (getRandomNumberInRange(0, numPassengers));
+            if ((passengersEmbarked - passengersDisembarked) > Constants.MAX_PASSENGERS) {
+                this.numPassengers = Constants.MAX_PASSENGERS;
+            } else this.numPassengers += passengersEmbarked - passengersDisembarked;
+        }
+        return passengersDisembarked;
+    }
 
     public void trainModelPhysics() {
         //CALCULATE MASS
