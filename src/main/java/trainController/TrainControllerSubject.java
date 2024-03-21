@@ -14,7 +14,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     private final TrainController controller;
 
     public  volatile boolean isGUIUpdateInProgress   = false;
-    private volatile boolean isLogicUpdateInProgress = false;
+    private final boolean isLogicUpdateInProgress = false;
 
 
     public TrainControllerSubject(TrainController controller) {

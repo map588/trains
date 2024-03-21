@@ -1,7 +1,7 @@
 package trainController;
 
-import Framework.Support.SubjectMap;
 import Framework.Support.ObservableHashMap;
+import Framework.Support.SubjectMap;
 
 public class TrainControllerSubjectMap extends SubjectMap<Integer, TrainControllerSubject> {
 

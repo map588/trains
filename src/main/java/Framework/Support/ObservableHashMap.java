@@ -8,13 +8,10 @@ public class ObservableHashMap<K, V> extends ConcurrentHashMap<K, V> {
 
     public interface MapListener<K, V> {
         default void onAdded(K key, V value) {
-            return;
         }
         default void onRemoved(K key, V value){
-            return;
         }
         default void onUpdated(K key, V oldValue, V newValue){
-            return;
         }
     }
 

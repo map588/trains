@@ -7,13 +7,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -161,8 +159,8 @@ public class WaysideControllerManager {
      */
     private void setupTableCellFactories() {
         blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Paint>() {
-            private BorderPane graphic;
-            private Circle circle;
+            private final BorderPane graphic;
+            private final Circle circle;
 
             {
                 graphic = new BorderPane();
@@ -191,7 +189,6 @@ public class WaysideControllerManager {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
                     if(blockInfo.getBlock().hasCrossing()) {
@@ -220,7 +217,6 @@ public class WaysideControllerManager {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject block = getTableView().getItems().get(getIndex());
                     CheckBox checkBox;
@@ -244,7 +240,6 @@ public class WaysideControllerManager {
 
                 if(empty || item == null) {
                     setGraphic(null);
-                    return;
                 } else {
                     WaysideBlockSubject block = getTableView().getItems().get(getIndex());
                     CheckBox checkBox;

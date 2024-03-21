@@ -6,7 +6,7 @@ import trainModel.stubTrainModel;
 
 public class HWTrainController implements TrainController {
 
-    private int ID;
+    private final int ID;
     TrainModel train;
     TrainControllerSubject subject;
 

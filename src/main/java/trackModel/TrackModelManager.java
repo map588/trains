@@ -112,9 +112,9 @@ public class TrackModelManager {
 
 
     // potential variables to assist with control
-    private TrackModelImpl currTrackModel = new TrackModelImpl();
+    private final TrackModelImpl currTrackModel = new TrackModelImpl();
     //subject
-    private TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
+    private final TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
 
     // test bench object
     private TrackModelTBManager testBench;

@@ -1,11 +1,14 @@
 package CTCOffice;
 
 import Framework.Support.AbstractSubject;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
 
 
 public class CTCOfficeSubject implements AbstractSubject{
-    private IntegerProperty time;
+    private final IntegerProperty time;
     private IntegerProperty ticketSales;
     private IntegerProperty mode;
     private BooleanProperty manualMode;

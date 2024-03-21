@@ -8,9 +8,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class TrafficLightState {
-    private BooleanProperty hasLight;
-    private BooleanProperty lightState;
-    private ObjectProperty<Paint> lightColor;
+    private final BooleanProperty hasLight;
+    private final BooleanProperty lightState;
+    private final ObjectProperty<Paint> lightColor;
 
     public TrafficLightState(boolean hasLight) {
         this.hasLight = new SimpleBooleanProperty(hasLight);

@@ -6,17 +6,15 @@ import Common.WaysideController;
 import Framework.Support.Notifier;
 import Utilities.BasicBlock;
 import Utilities.BlockParser;
-import Utilities.CSVTokenizer;
-import Utilities.BasicBlockInfo;
 import Utilities.Enums.Lines;
 
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static waysideController.Properties.*;
+import static waysideController.Properties.PLCName_p;
+import static waysideController.Properties.maintenanceMode_p;
 
 public class WaysideControllerImpl implements WaysideController, PLCRunner, Notifier {
 
@@ -34,7 +32,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The PLC program that the wayside controller is running
     private File PLCFile = null;
-    private PLCProgram[] plcPrograms;
+    private final PLCProgram[] plcPrograms;
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;

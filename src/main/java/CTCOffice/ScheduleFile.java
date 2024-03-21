@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 
 public class ScheduleFile {
-    private HashMap<Integer, TrainSchedule> multipleTrainSchedules = new HashMap<>();
-    private HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
-    private ScheduleFileSubject subject;
+    private final HashMap<Integer, TrainSchedule> multipleTrainSchedules = new HashMap<>();
+    private final HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
+    private final ScheduleFileSubject subject;
 
     private String scheduleFileName;
     private String lastModified;

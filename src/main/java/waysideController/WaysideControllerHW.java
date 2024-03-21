@@ -1,8 +1,8 @@
 package waysideController;
 
-import Utilities.CSVTokenizer;
 import Utilities.BasicBlockInfo;
-import com.fazecast.jSerialComm.*;
+import Utilities.CSVTokenizer;
+import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.*;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ public class WaysideControllerHW implements PLCRunner {
     private final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
     protected final BufferedReader bufferedReader;
     private final PrintStream outputStream;
-    private File plcFile;
-    private PLCProgram plcPrograms[];
+    private final File plcFile;
+    private final PLCProgram[] plcPrograms;
     public WaysideControllerHW(String comPort) {
         plcPrograms = new PLCProgram[1];
         plcPrograms[0] = new PLCProgram(this);

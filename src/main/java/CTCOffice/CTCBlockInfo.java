@@ -1,8 +1,6 @@
 package CTCOffice;
 
 import Utilities.BasicBlockInfo;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 /**
  * This class represents a block of the track in the Centralized Traffic Control (CTC) system.

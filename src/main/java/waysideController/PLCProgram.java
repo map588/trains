@@ -5,7 +5,10 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
-import waysideController.plc_parser.*;
+import waysideController.plc_parser.PLCLexer;
+import waysideController.plc_parser.PLCParser;
+import waysideController.plc_parser.PLCVisitor;
+import waysideController.plc_parser.Value;
 
 import java.io.IOException;
 import java.util.Map;

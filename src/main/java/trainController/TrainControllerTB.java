@@ -64,7 +64,7 @@ public class TrainControllerTB {
     @FXML
     private TextField trainControllerTB_trainNo_TextField;
 
-    private TrainControllerSubjectMap subjectMap = TrainControllerSubjectMap.getInstance();
+    private final TrainControllerSubjectMap subjectMap = TrainControllerSubjectMap.getInstance();
     private TrainControllerSubject subject;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     @FXML

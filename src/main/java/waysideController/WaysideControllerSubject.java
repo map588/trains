@@ -20,8 +20,8 @@ import static waysideController.Properties.*;
 public class WaysideControllerSubject implements AbstractSubject, Notifier {
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    private WaysideController controller;
-    private ObservableList<WaysideBlockSubject> blockList;
+    private final WaysideController controller;
+    private final ObservableList<WaysideBlockSubject> blockList;
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     public boolean isLogicUpdate = false;

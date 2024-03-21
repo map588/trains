@@ -2,25 +2,20 @@ package trainModel;
 
 //import Common.TrackModel;
 
-import Common.TrackModel;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifier;
 import Utilities.Constants;
-import trackModel.TrackModelImpl;
 import trackModel.TrackPseudoCode;
 import trainController.TrainControllerImpl;
-import trainController.stubTrainController;
-
-import javax.swing.text.Utilities;
 
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
 
-    private volatile int samplingPeriod = 10;
+    private final int samplingPeriod = 10;
 
-    private TrainModelSubject subject;
+    private final TrainModelSubject subject;
 
     //Passed Variables
     private int authority;
@@ -288,7 +283,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public int getTimeDelta() { return this.TIME_DELTA; }
 
     public void enteredNextBlock() {
-       currentBlockLength = (double)track.updateTrainLocation(this);
+       currentBlockLength = track.updateTrainLocation(this);
        relativeDistance = 0;
     }
 

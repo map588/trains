@@ -1,7 +1,6 @@
 package Utilities;
 
-import java.util.Optional;
-    public record BasicBlockInfo(
+public record BasicBlockInfo(
             String trackLine,
             char section,
             int blockNumber,

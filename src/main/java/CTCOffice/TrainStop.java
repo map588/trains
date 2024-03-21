@@ -11,7 +11,7 @@ public class TrainStop { //SubRoute
     private List<Integer> speedList;
     private List<Integer> routePath; //routePath
     private List<Integer> authorityList;
-    private TrainStopSubject subject;
+    private final TrainStopSubject subject;
 
     public TrainStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
         this.stationBlockID = stationBlockID;

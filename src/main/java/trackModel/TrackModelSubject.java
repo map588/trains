@@ -5,9 +5,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class TrackModelSubject {
-    private StringProperty tempProperty;
-    private StringProperty comSpeed;
-    private StringProperty trainAuthority;
+    private final StringProperty tempProperty;
+    private final StringProperty comSpeed;
+    private final StringProperty trainAuthority;
 
     public TrackModelSubject(TrackModel model)  {
         tempProperty = new SimpleStringProperty();

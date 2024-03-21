@@ -6,8 +6,8 @@ import Utilities.Enums.Lines;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -20,17 +20,15 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static javafx.application.Application.launch;
-
 public class TrackLayoutVisualizer extends Application {
     private static final double NODE_RADIUS = 20;
     private static final double NODE_OFFSET = 50;
     private static final double EDGE_OFFSET = 20;
     private static final double WINDOW_MARGIN = 100;
-    private Map<Integer, Point2D> nodePositions = new HashMap<>();
+    private final Map<Integer, Point2D> nodePositions = new HashMap<>();
 
 
-    private ConcurrentHashMap<Lines, ConcurrentLinkedQueue<BasicBlock>> trackLayout;
+    private final ConcurrentHashMap<Lines, ConcurrentLinkedQueue<BasicBlock>> trackLayout;
     private TabPane tabPane;
 
     public TrackLayoutVisualizer() {

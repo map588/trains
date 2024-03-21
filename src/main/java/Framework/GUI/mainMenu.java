@@ -1,7 +1,6 @@
 package Framework.GUI;
 
 import Utilities.CSVTokenizer;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
