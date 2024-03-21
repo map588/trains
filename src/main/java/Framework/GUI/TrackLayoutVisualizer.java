@@ -75,29 +75,10 @@ public class TrackLayoutVisualizer extends Application {
 
         double leftBoundary = 0;
         double topBoundary = 0;
-        double rightBoundary = linePane.getWidth();
-        double bottomBoundary = linePane.getHeight();
+        double rightBoundary = 1920;
+        double bottomBoundary = 1080;
         Set<Integer> placedBlocks = new HashSet<>();
-        Stack<BranchState> branchStates = new Stack<>();
-
-        branchStates.push(new BranchState(x, y, directionX, directionY, leftBoundary, topBoundary, rightBoundary, bottomBoundary));
-
-        while (!basicBlocks.isEmpty()) {
-            BranchState currentState = branchStates.peek();
-            drawSection(linePane, basicBlocks, placedBlocks, currentState, branchStates);
-        }
-    }
-
-    private void drawSection(Pane linePane, ConcurrentLinkedQueue<BasicBlock> basicBlocks, Set<Integer> placedBlocks,
-                             BranchState currentState, Stack<BranchState> branchStates) {
-        double x = currentState.x;
-        double y = currentState.y;
-        double directionX = currentState.directionX;
-        double directionY = currentState.directionY;
-        double leftBoundary = currentState.leftBoundary;
-        double topBoundary = currentState.topBoundary;
-        double rightBoundary = currentState.rightBoundary;
-        double bottomBoundary = currentState.bottomBoundary;
+        Queue<AlternateBranch> alternateBranches = new LinkedList<>();
 
         BasicBlock prevBlock = null;
 
@@ -112,7 +93,34 @@ public class TrackLayoutVisualizer extends Application {
 
                 if (prevBlock != null) {
                     Point2D prevPosition = new Point2D(x - directionX, y - directionY);
-                    drawEdge(linePane, prevPosition, position, BasicBlock.Direction.TO_NODE);
+
+                    boolean shouldTurnRight = directionX > 0 && x + NODE_OFFSET > rightBoundary - WINDOW_MARGIN;
+                    boolean shouldTurnLeft = directionX < 0 && x - NODE_OFFSET < leftBoundary + WINDOW_MARGIN;
+                    boolean shouldTurnDown = directionY > 0 && y + NODE_OFFSET > bottomBoundary - WINDOW_MARGIN;
+                    boolean shouldTurnUp = directionY < 0 && y - NODE_OFFSET < topBoundary + WINDOW_MARGIN;
+
+                    boolean shouldTurn = shouldTurnRight || shouldTurnLeft || shouldTurnDown || shouldTurnUp;
+
+                    if (shouldTurn) {
+                        double controlX = x;
+                        double controlY = y;
+                        drawCurvedEdge(linePane, prevPosition, position, new Point2D(controlX, controlY), BasicBlock.Direction.TO_NODE);
+                        double tempX = directionX;
+                        directionX = -directionY;
+                        directionY = tempX;
+
+                        if (directionX > 0) {
+                            leftBoundary = x;
+                        } else if (directionX < 0) {
+                            rightBoundary = x;
+                        } else if (directionY > 0) {
+                            topBoundary = y;
+                        } else if (directionY < 0) {
+                            bottomBoundary = y;
+                        }
+                    } else {
+                        drawEdge(linePane, prevPosition, position, BasicBlock.Direction.TO_NODE);
+                    }
                 }
 
                 if (block.blockType() == BasicBlock.BlockType.SWITCH) {
@@ -120,15 +128,9 @@ public class TrackLayoutVisualizer extends Application {
                     if (connection.altChildID().isPresent()) {
                         int altChildID = connection.altChildID().get();
                         BasicBlock altChildBlock = findBlockByNumber(altChildID, basicBlocks);
-                        if (altChildBlock != null && !placedBlocks.contains(altChildID)) {
-                            double altLeftBoundary = leftBoundary + NODE_OFFSET;
-                            double altTopBoundary = topBoundary + NODE_OFFSET;
-                            double altRightBoundary = rightBoundary - NODE_OFFSET;
-                            double altBottomBoundary = bottomBoundary - NODE_OFFSET;
-                            Point2D altPosition = calculateAlternatePosition(position, directionX, directionY);
-                            branchStates.push(new BranchState(altPosition.getX(), altPosition.getY(), directionX, directionY,
-                                    altLeftBoundary, altTopBoundary, altRightBoundary, altBottomBoundary));
-                            drawAlternateBranch(linePane, altChildBlock, altPosition, block, basicBlocks, placedBlocks, branchStates);
+                        if (altChildBlock != null) {
+                            Point2D altPosition = calculateAlternatePosition(position, altChildBlock);
+                            alternateBranches.add(new AlternateBranch(altChildBlock, altPosition, block));
                         }
                     }
                 }
@@ -138,133 +140,50 @@ public class TrackLayoutVisualizer extends Application {
             x += directionX;
             y += directionY;
 
-            boolean shouldTurnRight = directionX > 0 && x + NODE_OFFSET > rightBoundary - WINDOW_MARGIN;
-            boolean shouldTurnLeft = directionX < 0 && x - NODE_OFFSET < leftBoundary + WINDOW_MARGIN;
-            boolean shouldTurnDown = directionY > 0 && y + NODE_OFFSET > bottomBoundary - WINDOW_MARGIN;
-            boolean shouldTurnUp = directionY < 0 && y - NODE_OFFSET < topBoundary + WINDOW_MARGIN;
-
-            boolean shouldTurn = shouldTurnRight || shouldTurnLeft || shouldTurnDown || shouldTurnUp;
-
-            if (shouldTurn) {
-                double controlX = x;
-                double controlY = y;
-                Point2D position = new Point2D(x, y);
-                Point2D prevPosition = new Point2D(x - directionX, y - directionY);
-                drawCurvedEdge(linePane, prevPosition, position, new Point2D(controlX, controlY), BasicBlock.Direction.TO_NODE);
-                double tempX = directionX;
-                directionX = -directionY;
-                directionY = tempX;
-
-                if (directionX > 0) {
-                    leftBoundary = x;
-                } else if (directionX < 0) {
-                    rightBoundary = x;
-                } else if (directionY > 0) {
-                    topBoundary = y;
-                } else if (directionY < 0) {
-                    bottomBoundary = y;
-                }
-            }
-
             if (basicBlocks.isEmpty() || basicBlocks.peek().blockType() == BasicBlock.BlockType.SWITCH) {
-                break;
+                while (!alternateBranches.isEmpty()) {
+                    AlternateBranch branch = alternateBranches.poll();
+                    drawAlternateBranch(linePane, branch.block, branch.position, branch.parent, basicBlocks, placedBlocks);
+                }
             }
         }
     }
 
     private void drawAlternateBranch(Pane linePane, BasicBlock block, Point2D position, BasicBlock parent,
-                                     ConcurrentLinkedQueue<BasicBlock> basicBlocks, Set<Integer> placedBlocks,
-                                     Stack<BranchState> branchStates) {
-        double x = position.getX();
-        double y = position.getY();
-        double directionX = branchStates.peek().directionX;
-        double directionY = branchStates.peek().directionY;
-        double leftBoundary = branchStates.peek().leftBoundary;
-        double topBoundary = branchStates.peek().topBoundary;
-        double rightBoundary = branchStates.peek().rightBoundary;
-        double bottomBoundary = branchStates.peek().bottomBoundary;
+                                     ConcurrentLinkedQueue<BasicBlock> basicBlocks, Set<Integer> placedBlocks) {
+        if (!placedBlocks.contains(block.blockNumber())) {
+            drawNode(linePane, block, position);
+            placedBlocks.add(block.blockNumber());
+            nodePositions.put(block.blockNumber(), position);
 
-        BasicBlock prevBlock = null;
+            Point2D parentPosition = nodePositions.get(parent.blockNumber());
+            drawEdge(linePane, parentPosition, position, BasicBlock.Direction.TO_NODE);
 
-        while (!basicBlocks.isEmpty()) {
-            BasicBlock currentBlock = basicBlocks.peek();
-
-            if (!placedBlocks.contains(currentBlock.blockNumber())) {
-                Point2D currentPosition = new Point2D(x, y);
-                drawNode(linePane, currentBlock, currentPosition);
-                placedBlocks.add(currentBlock.blockNumber());
-                nodePositions.put(currentBlock.blockNumber(), currentPosition);
-
-                if (prevBlock != null) {
-                    Point2D prevPosition = new Point2D(x - directionX, y - directionY);
-                    drawEdge(linePane, prevPosition, currentPosition, BasicBlock.Direction.TO_NODE);
-                }
-
-                if (currentBlock.blockType() == BasicBlock.BlockType.SWITCH) {
-                    BasicBlock.NodeConnection connection = currentBlock.nodeConnection().get();
-                    if (connection.altChildID().isPresent()) {
-                        int altChildID = connection.altChildID().get();
-                        BasicBlock altChildBlock = findBlockByNumber(altChildID, basicBlocks);
-                        if (altChildBlock != null && !placedBlocks.contains(altChildID)) {
-                            double altLeftBoundary = leftBoundary + NODE_OFFSET;
-                            double altTopBoundary = topBoundary + NODE_OFFSET;
-                            double altRightBoundary = rightBoundary - NODE_OFFSET;
-                            double altBottomBoundary = bottomBoundary - NODE_OFFSET;
-                            Point2D altPosition = calculateAlternatePosition(currentPosition, directionX, directionY);
-                            branchStates.push(new BranchState(altPosition.getX(), altPosition.getY(), directionX, directionY,
-                                    altLeftBoundary, altTopBoundary, altRightBoundary, altBottomBoundary));
-                            drawAlternateBranch(linePane, altChildBlock, altPosition, currentBlock, basicBlocks, placedBlocks, branchStates);
-                        }
-                    }
-                }
-
-                prevBlock = currentBlock;
-                x += directionX;
-                y += directionY;
-
-                boolean shouldTurnRight = directionX > 0 && x + NODE_OFFSET > rightBoundary - WINDOW_MARGIN;
-                boolean shouldTurnLeft = directionX < 0 && x - NODE_OFFSET < leftBoundary + WINDOW_MARGIN;
-                boolean shouldTurnDown = directionY > 0 && y + NODE_OFFSET > bottomBoundary - WINDOW_MARGIN;
-                boolean shouldTurnUp = directionY < 0 && y - NODE_OFFSET < topBoundary + WINDOW_MARGIN;
-
-                boolean shouldTurn = shouldTurnRight || shouldTurnLeft || shouldTurnDown || shouldTurnUp;
-
-                if (shouldTurn) {
-                    double controlX = x;
-                    double controlY = y;
-                    Point2D currPosition = new Point2D(x, y);
-                    Point2D prevPosition = new Point2D(x - directionX, y - directionY);
-                    drawCurvedEdge(linePane, prevPosition, currPosition, new Point2D(controlX, controlY), BasicBlock.Direction.TO_NODE);
-                    double tempX = directionX;
-                    directionX = -directionY;
-                    directionY = tempX;
-
-                    if (directionX > 0) {
-                        leftBoundary = x;
-                    } else if (directionX < 0) {
-                        rightBoundary = x;
-                    } else if (directionY > 0) {
-                        topBoundary = y;
-                    } else if (directionY < 0) {
-                        bottomBoundary = y;
-                    }
-                }
-
-                basicBlocks.poll();
+            BasicBlock nextBlock = findNextBlock(block, basicBlocks);
+            if (nextBlock != null) {
+                Point2D nextPosition = calculateNextPosition(position, nextBlock);
+                drawAlternateBranch(linePane, nextBlock, nextPosition, block, basicBlocks, placedBlocks);
             } else {
-                break;
+                BasicBlock reconnectBlock = findReconnectBlock(block, basicBlocks);
+                if (reconnectBlock != null) {
+                    Point2D reconnectPosition = nodePositions.get(reconnectBlock.blockNumber());
+                    drawEdge(linePane, position, reconnectPosition, BasicBlock.Direction.TO_NODE);
+                }
             }
         }
-
-        branchStates.pop();
     }
 
-    private Point2D calculateAlternatePosition(Point2D currentPosition, double directionX, double directionY) {
-        double offsetX = currentPosition.getX() + directionY * NODE_OFFSET;
-        double offsetY = currentPosition.getY() - directionX * NODE_OFFSET;
-        return new Point2D(offsetX, offsetY);
+    private Point2D calculateAlternatePosition(Point2D currentPosition, BasicBlock alternateBlock) {
+        double x = currentPosition.getX() + NODE_OFFSET;
+        double y = currentPosition.getY() + NODE_OFFSET;
+        return new Point2D(x, y);
     }
 
+    private Point2D calculateNextPosition(Point2D currentPosition, BasicBlock nextBlock) {
+        double x = currentPosition.getX() + NODE_OFFSET;
+        double y = currentPosition.getY();
+        return new Point2D(x, y);
+    }
     class BranchState {
         double x;
         double y;
@@ -298,12 +217,6 @@ public class TrackLayoutVisualizer extends Application {
         curve.setStrokeWidth(2);
         curve.setFill(null);
         linePane.getChildren().add(curve);
-    }
-
-    private Point2D calculateNextPosition(Point2D currentPosition, BasicBlock nextBlock) {
-        double x = currentPosition.getX() + NODE_OFFSET;
-        double y = currentPosition.getY();
-        return new Point2D(x, y);
     }
 
     private BasicBlock findBlockByNumber(int blockNumber, ConcurrentLinkedQueue<BasicBlock> basicBlocks) {
