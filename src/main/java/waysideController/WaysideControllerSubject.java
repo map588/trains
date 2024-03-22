@@ -27,6 +27,10 @@ public class WaysideControllerSubject implements AbstractSubject, Notifier {
     public boolean isLogicUpdate = false;
     public boolean isGUIUpdate = false;
 
+    /**
+     * Constructor for the WaysideControllerSubject
+     * @param controller The wayside controller that this subject is observing
+     */
     public WaysideControllerSubject(WaysideController controller) {
         this.controller = controller;
         properties.put(maintenanceMode_p, new SimpleBooleanProperty(controller.isMaintenanceMode()));
@@ -127,8 +131,14 @@ public class WaysideControllerSubject implements AbstractSubject, Notifier {
             getPaintProperty(activePLCColor_p).set(Color.GRAY);
     }
     public void addBlock(WaysideBlockSubject block) {
+
         blockList.add(block);
     }
+
+    /**
+     * Get the wayside controller
+     * @return The wayside controller
+     */
     public WaysideController getController() {
         return this.controller;
     }

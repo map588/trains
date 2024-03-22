@@ -65,10 +65,16 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             subject.addBlock(new WaysideBlockSubject(block));
         }
 
+
         plcPrograms = new PLCProgram[1];
         plcPrograms[0] = new PLCProgram(this);
     }
 
+
+    /**
+     * Load a PLC program into the wayside controller
+     * @param PLC The PLC program to load
+     */
     @Override
     public void loadPLC(File PLC) {
         this.PLCFile = PLC;
@@ -77,17 +83,28 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         subject.updateActivePLCProp();
     }
 
+    /**
+     * Run the PLC program
+     */
     @Override
     public void runPLC() {
         if(!maintenanceMode)
             plcPrograms[0].run();
     }
 
+    /**
+     * Get the current state of the wayside controller
+     * @return The current state of the wayside controller
+     */
     @Override
     public boolean isMaintenanceMode() {
         return this.maintenanceMode;
     }
 
+    /**
+     * Set the maintenance mode of the wayside controller
+     * @param maintenanceMode The new maintenance mode of the wayside controller
+     */
     @Override
     public void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
@@ -96,6 +113,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
+    /**
+     * Set the maintenance mode of the wayside controller without updating the subject
+     * @param maintenanceMode The new maintenance mode of the wayside controller
+     */
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         blockMap.get(blockID).setOccupied(occupied);
@@ -109,6 +130,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
+    /**
+     * Get the track line that the wayside controller is controlling
+     * @return The track line that the wayside controller is controlling
+     */
     @Override
     public void CTCSendSpeedAuth(int blockID, double speed, int authority) {
         blockMap.get(blockID).setSpeed(speed);
@@ -145,6 +170,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
         runPLC();
     }
+
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
@@ -186,6 +212,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         return subject;
     }
 
+    /**
+     * Set the speed and authority of a train
+     * @param speedAuth The speed and authority of the train
+     */
     @Override
     public void setSwitchPLC(int blockID, boolean switchState) {
         WaysideBlock block = blockMap.get(blockID);
@@ -197,6 +227,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
     }
 
+    /**
+     * Set the switch state of a block
+     * @param blockID The ID of the block to set
+     * @param switchState The state to set the switch to
+     */
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
         WaysideBlock block = blockMap.get(blockID);
@@ -208,6 +243,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
     }
 
+    /**
+     * Set the switch state of a block
+     * @param blockID The ID of the block to set
+     * @param switchState The state to set the switch to
+     */
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
         WaysideBlock block = blockMap.get(blockID);
@@ -286,6 +326,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public boolean waysideReleaseDirection(int blockID) {
         blockMap.get(blockID).setDir_assigned(false);
         return true;
+
     }
 
     /**
