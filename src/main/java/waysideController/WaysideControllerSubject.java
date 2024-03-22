@@ -1,20 +1,31 @@
 package waysideController;
 
 import Common.WaysideController;
+import Framework.Support.AbstractSubject;
+import Framework.Support.Notifier;
+import Framework.Support.ObservableHashMap;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class WaysideControllerSubject {
-    private WaysideController controller;
-    private BooleanProperty maintenanceMode;
-    private StringProperty PLCName;
-    private ObjectProperty<Paint> activePLCColor;
-    private ObservableList<WaysideBlockInfo> blockList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-    private ObservableList<TrainSpeedAuth> speedAuthList;
+import static waysideController.Properties.*;
+
+public class WaysideControllerSubject implements AbstractSubject, Notifier {
+
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private final WaysideController controller;
+    private final ObservableList<WaysideBlockSubject> blockList;
+
+    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
+    public boolean isLogicUpdate = false;
+    public boolean isGUIUpdate = false;
 
     /**
      * Constructor for the WaysideControllerSubject
@@ -22,61 +33,106 @@ public class WaysideControllerSubject {
      */
     public WaysideControllerSubject(WaysideController controller) {
         this.controller = controller;
-        maintenanceMode = new SimpleBooleanProperty(controller.isMaintenanceMode());
-        PLCName = new SimpleStringProperty();
-        activePLCColor = new SimpleObjectProperty<>(Color.GRAY);
+        properties.put(maintenanceMode_p, new SimpleBooleanProperty(controller.isMaintenanceMode()));
+        properties.put(PLCName_p, new SimpleStringProperty());
+        properties.put(activePLCColor_p, new SimpleObjectProperty<>(Color.GRAY));
         blockList = FXCollections.observableArrayList();
-        speedAuthList = FXCollections.observableArrayList();
 
-        maintenanceMode.addListener((observableValue, oldValue, newVal) -> {
-            this.controller.setMaintenanceModeNoUpdate(newVal);
-            System.out.println("Setting maintenance mode to " + newVal);
-        });
+//        properties.get(maintenanceMode_p).addListener((observable, oldValue, newValue) -> controller.setMaintenanceMode((Boolean) newValue));
     }
 
-    /**
-     * Get the maintenance mode property
-     * @return The maintenance mode property
-     */
-    public BooleanProperty maintenanceModeProperty() {
-        return maintenanceMode;
+    public void notifyChange(String propertyName, Object newValue) {
+        // Update property from controller, Internal Logic takes precedence over GUI updates
+        if (!isGUIUpdate) {
+            updateFromLogic(() -> {
+                Property<?> property = properties.get(propertyName);
+                updateProperty(property, newValue);
+            });
+        }
     }
 
-    /**
-     * Get the PLC name property
-     * @return The PLC name property
-     */
-    public StringProperty PLCNameProperty() {
-        return PLCName;
+    public void setProperty(String propertyName, Object newValue) {
+        Runnable updateTask = () -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+            controller.setValue(propertyName, newValue);
+        };
+
+        if (isLogicUpdate) {
+            executorService.scheduleWithFixedDelay(() -> {
+                if (!isLogicUpdate) {
+                    System.out.println("Delayed setProperty from GUI");
+                    Platform.runLater(() -> updateFromGUI(updateTask));
+                }
+            }, 0, 10, TimeUnit.MILLISECONDS);
+        } else {
+            Platform.runLater(() -> updateFromGUI(updateTask));
+        }
     }
 
-    /**
-     * Get the active PLC color property
-     * @return The active PLC color property
-     */
-    public ObjectProperty<Paint> activePLCColorProperty() {
-        return activePLCColor;
+    public Property<?> getProperty(String propertyName) {
+        return properties.get(propertyName);
     }
 
-    /**
-     * Get the block list property
-     * @return The block list property
-     */
-    public ObservableList<WaysideBlockInfo> blockListProperty() {
+    // Directly accessing typed properties for GUI binding
+    public StringProperty getStringProperty(String propertyName){
+        Property<?> property = getProperty(propertyName);
+        try{
+            return (StringProperty) property;
+        }catch (ClassCastException e){
+            throw new IllegalArgumentException("Property " + propertyName + " is not a StringProperty");
+        }
+    }
+    public BooleanProperty getBooleanProperty(String propertyName) {
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (BooleanProperty) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not a BooleanProperty");
+        }
+    }
+    public ObjectProperty<Paint> getPaintProperty(String propertyName) {
+        Property<?> property = getProperty(propertyName);
+        try {
+            return (ObjectProperty<Paint>) property;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Property " + propertyName + " is not a BooleanProperty");
+        }
+    }
+
+    // Handling updates from the GUI
+    public void updateFromGUI(Runnable updateLogic) {
+        System.out.println("Called from updateFromGUI.");
+        isGUIUpdate = true;
+        try {
+            updateLogic.run();
+        } finally {
+            isGUIUpdate = false;
+        }
+    }
+
+    public void updateFromLogic(Runnable updateLogic) {
+        isLogicUpdate = true;
+        try {
+            updateLogic.run();
+        } finally {
+            isLogicUpdate = false;
+        }
+    }
+
+    public ObservableList<WaysideBlockSubject> blockListProperty() {
         return blockList;
     }
-    /**
-     * Adds a block to the wayside controller's block list
-     * @param block The block to add
-     */
-    public void addBlock(WaysideBlockInfo block) {
+
+    public void updateActivePLCProp() {
+        if(!getBooleanProperty(maintenanceMode_p).get() && getStringProperty(PLCName_p).get() != null)
+            getPaintProperty(activePLCColor_p).set(Color.BLUE);
+        else
+            getPaintProperty(activePLCColor_p).set(Color.GRAY);
+    }
+    public void addBlock(WaysideBlockSubject block) {
+
         blockList.add(block);
-        block.occupationProperty().addListener((observable, oldValue, newValue) -> controller.trackModelSetOccupancy(block.getBlockID(), newValue));
-        block.switchStateProperty().addListener((observable, oldValue, newValue) -> {
-            controller.maintenanceSetSwitch(block.getBlockID(), newValue);
-            System.out.println("Switch State Changed");
-        });
-        block.switchRequestedStateProperty().addListener((observable, oldValue, newValue) -> controller.CTCRequestSwitchState(block.getBlockID(), newValue));
     }
 
     /**
@@ -87,23 +143,4 @@ public class WaysideControllerSubject {
         return this.controller;
     }
 
-    /**
-     * Get the speed and authority of a train
-     * @return The speed and authority of the train
-     */
-    public ObservableList<TrainSpeedAuth> getSpeedAuthList() {
-        return speedAuthList;
-    }
-
-    /**
-     * Set the speed and authority of a train
-     * @param speedAuth The speed and authority of the train
-     */
-    public void setSpeedAuth(TrainSpeedAuth speedAuth) {
-        if(speedAuthList.contains(speedAuth)) {
-            speedAuthList.set(speedAuthList.indexOf(speedAuth), speedAuth);
-        } else {
-            speedAuthList.add(speedAuth);
-        }
-    }
 }

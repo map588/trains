@@ -2,6 +2,7 @@ package Framework.Support;
 
 import javafx.beans.property.*;
 
+//public interface AbstractSubject extends Notifications {
 public interface AbstractSubject {
 //     void updateProperty(BooleanProperty property, boolean newValue);
 //     void updateProperty(DoubleProperty property, double newValue);
@@ -21,11 +22,20 @@ public interface AbstractSubject {
             ((IntegerProperty) property).set(((Number) newValue).intValue());
         } else if (property instanceof BooleanProperty && newValue instanceof Boolean) {
             ((BooleanProperty) property).set((Boolean) newValue);
-        } else if(property instanceof StringProperty && newValue instanceof String){
+        } else if(property instanceof StringProperty && newValue instanceof String) {
             ((StringProperty) property).set((String) newValue);
+
+        } else if(property == null){
+            System.err.println("Attempted null property update with value " + newValue);
+            return;
+        } else if(newValue == null){
+            System.err.println("Null value for property" + property.getName());
+            return;
         } else{
             System.err.println("Mismatch in property type and value type for " + property.getName());
+            return;
         }
-        System.out.println("Property " + property.getName() + " updated to " + newValue + " in Subject");
+
+        System.out.println("Property " + property.getName() + " updated to " + newValue);
  }
 }

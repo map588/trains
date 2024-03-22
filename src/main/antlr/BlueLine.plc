@@ -1,0 +1,48 @@
+if switch[5] != switch_request[5]
+    if not occupied[5] and not occupied[6] and not occupied[7]
+        switch[5] = switch_request[5]
+    endif
+endif
+
+if not occupied[1] and not occupied[2] and not occupied[3] and not occupied[4] and not occupied[5]
+    if switch[5] == MAIN
+        light[6] = GREEN
+        light[11] = RED
+    else
+        light[6] = RED
+        light[11] = GREEN
+    endif
+else
+    light[6] = RED
+    light[11] = RED
+endif
+
+if occupied[2] or occupied[3] or occupied[4]
+    crossing[3] = CLOSED
+else
+    crossing[3] = OPEN
+endif
+
+authority[1] = not occupied[2] and not occupied[3]
+authority[2] = not occupied[3] and not occupied[4]
+authority[3] = not occupied[4] and not occupied[5]
+
+if switch[5] == MAIN
+    authority[4] = not occupied[5] and not occupied[6]
+    authority[5] = not occupied[6] and not occupied[7]
+else
+    authority[4] = not occupied[4] and not occupied[11]
+    authority[5] = not occupied[11] and not occupied[12]
+endif
+
+authority[6] = not occupied[7] and not occupied[8]
+authority[7] = not occupied[8] and not occupied[9]
+authority[8] = not occupied[9] and not occupied[10]
+authority[9] = not occupied[10]
+authority[10] = FALSE
+
+authority[11] = not occupied[12] and not occupied[13]
+authority[12] = not occupied[13] and not occupied[14]
+authority[13] = not occupied[14] and not occupied[15]
+authority[14] = not occupied[15]
+authority[15] = FALSE

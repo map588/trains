@@ -1,16 +1,18 @@
 package Framework.Support;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ObservableHashMap<K, V> extends HashMap<K, V> {
-    private Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
+public class ObservableHashMap<K, V> extends ConcurrentHashMap<K, V> {
+    private final Set<MapListener<K, V>> listeners = ConcurrentHashMap.newKeySet();
 
     public interface MapListener<K, V> {
-        void onAdded(K key, V value);
-        void onRemoved(K key, V value);
-        void onUpdated(K key, V oldValue, V newValue);
+        default void onAdded(K key, V value) {
+        }
+        default void onRemoved(K key, V value){
+        }
+        default void onUpdated(K key, V oldValue, V newValue){
+        }
     }
 
     public void addChangeListener(MapListener<K, V> listener) {
@@ -32,8 +34,7 @@ public class ObservableHashMap<K, V> extends HashMap<K, V> {
         return oldValue;
     }
 
-    @Override
-    public V remove(Object key) {
+    public V remove (Object key) {
         V oldValue = super.remove(key);
         if (oldValue != null) {
             notifyListenersRemoved((K) key, oldValue);

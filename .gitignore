@@ -2,6 +2,7 @@
 .gradle/workspace-id.txt.lock
 .gradle/
 !gradle/wrapper/gradle-wrapper.jar
+src/main/java/waysideController/plc_parser
 
 ### IntelliJ IDEA ###
 .idea/

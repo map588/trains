@@ -32,11 +32,6 @@ public class stubTrainModel implements TrainModel {
     }
 
     @Override
-    public void setActualSpeed(double speed) {
-
-    }
-
-    @Override
     public void setAuthority(int authority) {
 
     }
@@ -80,10 +75,17 @@ public class stubTrainModel implements TrainModel {
     public void setIntLights(boolean lights) {
     }
 
-    public void setTemperature(double temp) {
+    public void setSetTemperature(double temp) {
 
     }
-    public void setAcceleration(double acceleration) {
+
+    @Override
+    public void setBeacon(String beacon) {
+
+    }
+
+    @Override
+    public void setAnnouncement(String announcement) {
 
     }
 
@@ -135,7 +137,7 @@ public class stubTrainModel implements TrainModel {
         return true;
     }
 
-    public double getTemperature() {
+    public double getRealTemperature() {
         return 1.0;
     }
 
@@ -154,6 +156,12 @@ public class stubTrainModel implements TrainModel {
     public boolean getRightDoors() {
         return true;
     }
+
+    @Override
+    public double getlength() {
+        return 0;
+    }
+
     public void trainModelPhysics() {
     }
 
@@ -163,13 +171,50 @@ public class stubTrainModel implements TrainModel {
     }
 
     @Override
-    public void setTimeDelta(double v) {
+    public void setTimeDelta(int v) {
 
     }
 
     @Override
-    public double getTimeDelta() {
+    public int getTimeDelta() {
         return 0;
+    }
+
+    @Override
+    public double getGrade() {
+        return 0;
+    }
+
+    @Override
+    public int getCrewCount() {
+        return 0;
+    }
+
+
+
+    @Override
+    public int getNumPassengers() {
+        return 0;
+    }
+
+    @Override
+    public int getNumCars() {
+        return 0;
+    }
+
+    @Override
+    public double getDistanceTraveled() {
+        return 0;
+    }
+
+    @Override
+    public double getMass() {
+        return 0;
+    }
+
+    @Override
+    public String getBeacon() {
+        return null;
     }
 
 

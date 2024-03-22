@@ -1,5 +1,6 @@
 package Framework.GUI;
 
+import Utilities.CSVTokenizer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,6 +23,11 @@ public class mainMenu extends Application {
         TabPane tabPane = new TabPane();
         root.setCenter(tabPane);
 
+        CSVTokenizer csv = new CSVTokenizer();
+        csv.setCSVFile("src/main/java/Utilities/BlueLine.csv");
+        CSVTokenizer.parseCSVToTrueBlockInfo("BlueLine");
+        System.out.println((CSVTokenizer.blockList.get("BlueLine")).get(0).section());
+
         // ToolBar for module buttons, as a replacement for direct MenuBar usage for tabs
         ToolBar toolBar = new ToolBar();
 
@@ -30,18 +36,18 @@ public class mainMenu extends Application {
             Button tabButton = new Button(tabNames[i]);
             final int moduleId = i;
 
-            // Right-click menu for opening in a new window
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem openInNewWindow = new MenuItem("Open in new window");
-            openInNewWindow.setOnAction(e -> openInNewWindow(tabNames[moduleId]));
-            contextMenu.getItems().add(openInNewWindow);
+//            // Right-click menu for opening in a new window
+//          ContextMenu contextMenu = new ContextMenu();
+//          MenuItem openInTab = new MenuItem("Open in tab.");
+//          openInTab.setOnAction(e -> openModuleTab(tabPane, tabNames[moduleId]));
+//          contextMenu.getItems().add(openInTab);
 
             // Consolidate event handling for right and left clicks
             tabButton.setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.SECONDARY) {
-                    contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
+                    //contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
+                    openModuleTab(tabPane, tabNames[moduleId]);
                 } else if (e.getButton() == MouseButton.PRIMARY) {
-//                    openModuleTab(tabPane, tabNames[moduleId]);
                     openInNewWindow(tabNames[moduleId]);
                 }
             });
@@ -61,27 +67,29 @@ public class mainMenu extends Application {
         primaryStage.show();
     }
 
-    private void openInNewWindow(String moduleName) {
-        Stage newStage = new Stage();
-        Node content = createModuleContent(moduleName); // This now loads from FXML
-        Scene newScene;
-        if(moduleName == "CTC_Main_UI") {
-            newScene = new Scene(new VBox(content) , 800, 600);
-        }else {
-            newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
-        }
-        newStage.setScene(newScene);
-        newStage.setTitle(moduleName);
-        newStage.show();
-    }
-
-
     private void openModuleTab(TabPane tabPane, String moduleName) {
         Tab tab = new Tab(moduleName);
         Node content = createModuleContent(moduleName); // Get the complex UI for the module
         tab.setContent(content); // Set the complex UI as the content of the tab
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
+    }
+
+    private void openInNewWindow(String moduleName) {
+        Stage newStage = new Stage();
+        Node content = createModuleContent(moduleName); // This now loads from FXML
+        Scene newScene;
+        if(moduleName.equals("CTC_Main_UI")) {
+            newScene = new Scene(new VBox(content) , 900, 700);
+            newStage.setScene(newScene);
+            newStage.setMinWidth(780);
+            newStage.setMinHeight(700);
+        }else {
+            newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
+            newStage.setScene(newScene);
+        }
+        newStage.setTitle(moduleName);
+        newStage.show();
     }
 
     private Node createModuleContent(String moduleName) {
