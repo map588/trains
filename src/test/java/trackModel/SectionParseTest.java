@@ -4,30 +4,25 @@ import Utilities.BasicBlock;
 import Utilities.Enums.Lines;
 import Utilities.SwitchSection;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static Utilities.BlockParser.parseCSV;
-import static Utilities.SwitchSectionParser.parseSwitchSections;
+import static Utilities.SwitchSectionParser.parseSwitchSection;
 
 public class SectionParseTest {
 
-    private static ConcurrentHashMap<Lines, ArrayList<SwitchSection>> switchSections;
+    private final ConcurrentHashMap<Lines, ArrayList<SwitchSection>> switchSections = new ConcurrentHashMap<>();
 
-    @BeforeAll
-    static void setUp() {
-        switchSections = new ConcurrentHashMap<>();
-        ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> trackLines = new ConcurrentHashMap<>();
-        try {
-            trackLines = parseCSV();
-        }
-        finally {
-            for (Lines line : Lines.values()) {
-                ArrayDeque<BasicBlock> lineBlocks = trackLines.get(line);
-                switchSections.put(line, parseSwitchSections(lineBlocks));
-            }
+    @BeforeEach
+    public void setUp() {
+        ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> sectionBlocks = parseCSV();
+        for (Lines line : sectionBlocks.keySet()) {
+            ArrayList<SwitchSection> sections = parseSwitchSection(sectionBlocks.get(line));
+            switchSections.put(line, sections);
         }
     }
 
