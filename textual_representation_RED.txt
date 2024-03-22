@@ -1,0 +1,225 @@
+Track Layout Textual Representation:
+-------------------------------------
+Node: (50, 50), Radius: 20, Color: BLACK
+Text: (46, 80), Content: 0
+Node: (100, 50), Radius: 20, Color: GRAY
+Text: (97, 80), Content: 1
+Edge: (70, 50) -> (80, 50), Color: BLUE
+Node: (150, 50), Radius: 20, Color: GRAY
+Text: (146, 80), Content: 2
+Edge: (120, 50) -> (130, 50), Color: BLUE
+Node: (200, 50), Radius: 20, Color: GRAY
+Text: (196, 80), Content: 3
+Edge: (170, 50) -> (180, 50), Color: BLUE
+Node: (250, 50), Radius: 20, Color: GRAY
+Text: (246, 80), Content: 4
+Edge: (220, 50) -> (230, 50), Color: BLUE
+Node: (300, 50), Radius: 20, Color: GRAY
+Text: (296, 80), Content: 5
+Edge: (270, 50) -> (280, 50), Color: BLUE
+Node: (350, 50), Radius: 20, Color: GRAY
+Text: (346, 80), Content: 6
+Edge: (320, 50) -> (330, 50), Color: BLUE
+Node: (400, 50), Radius: 20, Color: ORANGE
+Text: (396, 80), Content: 7
+Edge: (370, 50) -> (380, 50), Color: BLUE
+Node: (450, 50), Radius: 20, Color: GRAY
+Text: (446, 80), Content: 8
+Edge: (420, 50) -> (430, 50), Color: BLUE
+Node: (500, 50), Radius: 20, Color: GREEN
+Text: (496, 80), Content: 9
+Edge: (470, 50) -> (480, 50), Color: BLUE
+Node: (550, 0), Radius: 20, Color: GRAY
+Text: (543, 30), Content: 10
+Node: (600, 50), Radius: 20, Color: YELLOW
+Text: (594, 80), Content: 11
+Edge: (570, 50) -> (580, 50), Color: BLUE
+Node: (650, 50), Radius: 20, Color: GRAY
+Text: (643, 80), Content: 12
+Edge: (620, 50) -> (630, 50), Color: BLUE
+Node: (700, 50), Radius: 20, Color: GRAY
+Text: (693, 80), Content: 13
+Edge: (670, 50) -> (680, 50), Color: BLUE
+Node: (750, 50), Radius: 20, Color: GRAY
+Text: (743, 80), Content: 14
+Edge: (720, 50) -> (730, 50), Color: BLUE
+Node: (800, 50), Radius: 20, Color: GREEN
+Text: (793, 80), Content: 15
+Edge: (770, 50) -> (780, 50), Color: BLUE
+Node: (850, 0), Radius: 20, Color: ORANGE
+Text: (843, 30), Content: 16
+Node: (900, 50), Radius: 20, Color: GRAY
+Text: (894, 80), Content: 17
+Edge: (870, 50) -> (880, 50), Color: BLUE
+Node: (950, 50), Radius: 20, Color: GRAY
+Text: (943, 80), Content: 18
+Edge: (920, 50) -> (930, 50), Color: BLUE
+Node: (1000, 50), Radius: 20, Color: GRAY
+Text: (993, 80), Content: 19
+Edge: (970, 50) -> (980, 50), Color: BLUE
+Node: (1050, 50), Radius: 20, Color: GRAY
+Text: (1042, 80), Content: 20
+Edge: (1020, 50) -> (1030, 50), Color: BLUE
+Node: (1100, 50), Radius: 20, Color: ORANGE
+Text: (1093, 80), Content: 21
+Edge: (1070, 50) -> (1080, 50), Color: BLUE
+Node: (1150, 50), Radius: 20, Color: GRAY
+Text: (1143, 80), Content: 22
+Edge: (1120, 50) -> (1130, 50), Color: BLUE
+Node: (1200, 50), Radius: 20, Color: GRAY
+Text: (1192, 80), Content: 23
+Edge: (1170, 50) -> (1180, 50), Color: BLUE
+Node: (1250, 50), Radius: 20, Color: GRAY
+Text: (1242, 80), Content: 24
+Edge: (1220, 50) -> (1230, 50), Color: BLUE
+Node: (1300, 50), Radius: 20, Color: ORANGE
+Text: (1293, 80), Content: 25
+Edge: (1270, 50) -> (1280, 50), Color: BLUE
+Node: (1350, 50), Radius: 20, Color: GRAY
+Text: (1342, 80), Content: 26
+Edge: (1320, 50) -> (1330, 50), Color: BLUE
+Node: (1400, 50), Radius: 20, Color: GREEN
+Text: (1393, 80), Content: 27
+Edge: (1370, 50) -> (1380, 50), Color: BLUE
+Node: (1450, 0), Radius: 20, Color: GRAY
+Text: (1442, 30), Content: 76
+Node: (1450, 50), Radius: 20, Color: GRAY
+Text: (1442, 80), Content: 28
+Edge: (1420, 50) -> (1430, 50), Color: BLUE
+Node: (1500, 50), Radius: 20, Color: GRAY
+Text: (1492, 80), Content: 29
+Edge: (1470, 50) -> (1480, 50), Color: BLUE
+Node: (1550, 50), Radius: 20, Color: GRAY
+Text: (1542, 80), Content: 30
+Edge: (1520, 50) -> (1530, 50), Color: BLUE
+Node: (1600, 50), Radius: 20, Color: GRAY
+Text: (1593, 80), Content: 31
+Edge: (1570, 50) -> (1580, 50), Color: BLUE
+Node: (1650, 50), Radius: 20, Color: GREEN
+Text: (1642, 80), Content: 32
+Edge: (1620, 50) -> (1630, 50), Color: BLUE
+Node: (1700, 0), Radius: 20, Color: GRAY
+Text: (1693, 30), Content: 72
+Node: (1700, 50), Radius: 20, Color: GRAY
+Text: (1692, 80), Content: 33
+Edge: (1670, 50) -> (1680, 50), Color: BLUE
+Node: (1750, 50), Radius: 20, Color: GRAY
+Text: (1742, 80), Content: 34
+Edge: (1720, 50) -> (1730, 50), Color: BLUE
+Node: (1800, 50), Radius: 20, Color: ORANGE
+Text: (1792, 80), Content: 35
+Edge: (1770, 50) -> (1780, 50), Color: BLUE
+Node: (1850, 50), Radius: 20, Color: GRAY
+Text: (1842, 80), Content: 36
+Edge: (1820, 50) -> (1830, 50), Color: BLUE
+Node: (1900, 50), Radius: 20, Color: GRAY
+Text: (1893, 80), Content: 37
+Edge: (1900, 80) -> (1900, 70), Color: BLUE
+Node: (1900, 0), Radius: 20, Color: GREEN
+Text: (1892, 30), Content: 38
+Edge: (1930, 0) -> (1920, 0), Color: BLUE
+Node: (1850, 50), Radius: 20, Color: GRAY
+Text: (1844, 80), Content: 71
+Node: (1850, 0), Radius: 20, Color: GRAY
+Text: (1842, 30), Content: 39
+Edge: (1850, -30) -> (1850, -20), Color: BLUE
+Node: (1850, 50), Radius: 20, Color: GRAY
+Text: (1842, 80), Content: 40
+Edge: (1850, 20) -> (1850, 30), Color: BLUE
+Node: (1850, 100), Radius: 20, Color: GRAY
+Text: (1843, 130), Content: 41
+Edge: (1820, 100) -> (1830, 100), Color: BLUE
+Node: (1900, 100), Radius: 20, Color: GRAY
+Text: (1892, 130), Content: 42
+Edge: (1900, 130) -> (1900, 120), Color: BLUE
+Node: (1900, 50), Radius: 20, Color: GREEN
+Text: (1892, 80), Content: 43
+Edge: (1900, 80) -> (1900, 70), Color: BLUE
+Node: (1850, 0), Radius: 20, Color: GRAY
+Text: (1842, 30), Content: 67
+Node: (1900, 0), Radius: 20, Color: GRAY
+Text: (1892, 30), Content: 44
+Edge: (1900, 30) -> (1900, 20), Color: BLUE
+Node: (1900, -50), Radius: 20, Color: ORANGE
+Text: (1892, -20), Content: 45
+Edge: (1930, -50) -> (1920, -50), Color: BLUE
+Node: (1850, -50), Radius: 20, Color: GRAY
+Text: (1842, -20), Content: 46
+Edge: (1850, -80) -> (1850, -70), Color: BLUE
+Node: (1850, 0), Radius: 20, Color: YELLOW
+Text: (1843, 30), Content: 47
+Edge: (1850, -30) -> (1850, -20), Color: BLUE
+Node: (1850, 50), Radius: 20, Color: ORANGE
+Text: (1842, 80), Content: 48
+Edge: (1850, 20) -> (1850, 30), Color: BLUE
+Node: (1850, 100), Radius: 20, Color: GRAY
+Text: (1842, 130), Content: 49
+Edge: (1850, 70) -> (1850, 80), Color: BLUE
+Node: (1850, 150), Radius: 20, Color: GRAY
+Text: (1842, 180), Content: 50
+Edge: (1820, 150) -> (1830, 150), Color: BLUE
+Node: (1900, 150), Radius: 20, Color: GRAY
+Text: (1893, 180), Content: 51
+Edge: (1900, 180) -> (1900, 170), Color: BLUE
+Node: (1900, 100), Radius: 20, Color: GREEN
+Text: (1893, 130), Content: 52
+Edge: (1900, 130) -> (1900, 120), Color: BLUE
+Node: (1850, 50), Radius: 20, Color: GRAY
+Text: (1842, 80), Content: 66
+Node: (1900, 50), Radius: 20, Color: GRAY
+Text: (1892, 80), Content: 53
+Edge: (1900, 80) -> (1900, 70), Color: BLUE
+Node: (1900, 0), Radius: 20, Color: GRAY
+Text: (1892, 30), Content: 54
+Edge: (1900, 30) -> (1900, 20), Color: BLUE
+Node: (1900, -50), Radius: 20, Color: GRAY
+Text: (1892, -20), Content: 55
+Edge: (1900, -20) -> (1900, -30), Color: BLUE
+Node: (1900, -100), Radius: 20, Color: GRAY
+Text: (1892, -70), Content: 56
+Edge: (1930, -100) -> (1920, -100), Color: BLUE
+Node: (1850, -100), Radius: 20, Color: GRAY
+Text: (1843, -70), Content: 57
+Edge: (1850, -130) -> (1850, -120), Color: BLUE
+Node: (1850, -50), Radius: 20, Color: GRAY
+Text: (1842, -20), Content: 58
+Edge: (1850, -80) -> (1850, -70), Color: BLUE
+Node: (1850, 0), Radius: 20, Color: GRAY
+Text: (1842, 30), Content: 59
+Edge: (1850, -30) -> (1850, -20), Color: BLUE
+Node: (1850, 50), Radius: 20, Color: ORANGE
+Text: (1842, 80), Content: 60
+Edge: (1850, 20) -> (1850, 30), Color: BLUE
+Node: (1850, 100), Radius: 20, Color: GRAY
+Text: (1843, 130), Content: 61
+Edge: (1850, 70) -> (1850, 80), Color: BLUE
+Node: (1850, 150), Radius: 20, Color: GRAY
+Text: (1842, 180), Content: 62
+Edge: (1850, 120) -> (1850, 130), Color: BLUE
+Node: (1850, 200), Radius: 20, Color: GRAY
+Text: (1842, 230), Content: 63
+Edge: (1820, 200) -> (1830, 200), Color: BLUE
+Node: (1900, 200), Radius: 20, Color: GRAY
+Text: (1892, 230), Content: 64
+Edge: (1900, 230) -> (1900, 220), Color: BLUE
+Node: (1900, 150), Radius: 20, Color: GRAY
+Text: (1892, 180), Content: 65
+Edge: (1900, 180) -> (1900, 170), Color: BLUE
+Node: (1900, 0), Radius: 20, Color: GRAY
+Text: (1892, 30), Content: 68
+Edge: (1900, 30) -> (1900, 20), Color: BLUE
+Node: (1900, -50), Radius: 20, Color: GRAY
+Text: (1892, -20), Content: 69
+Edge: (1900, -20) -> (1900, -30), Color: BLUE
+Node: (1900, -100), Radius: 20, Color: GRAY
+Text: (1893, -70), Content: 70
+Edge: (1900, -70) -> (1900, -80), Color: BLUE
+Node: (1850, -100), Radius: 20, Color: GRAY
+Text: (1843, -70), Content: 73
+Edge: (1850, -130) -> (1850, -120), Color: BLUE
+Node: (1850, -50), Radius: 20, Color: GRAY
+Text: (1843, -20), Content: 74
+Edge: (1850, -80) -> (1850, -70), Color: BLUE
+Node: (1850, 0), Radius: 20, Color: GRAY
+Text: (1843, 30), Content: 75
+Edge: (1850, -30) -> (1850, -20), Color: BLUE

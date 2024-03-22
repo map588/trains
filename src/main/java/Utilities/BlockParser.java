@@ -135,10 +135,10 @@ public class BlockParser {
             BasicBlock.Direction parentDirection = parseDirection(matcher.group(2));
             int defChildID = Integer.parseInt(matcher.group(3));
             BasicBlock.Direction defDirection;
-                if(parentDirection == TO_NODE) {
-                    defDirection = FROM_NODE;
-                } else if(parentDirection == FROM_NODE) {
-                    defDirection = TO_NODE;
+                if(parentDirection == TO_SWITCH) {
+                    defDirection = FROM_SWITCH;
+                } else if(parentDirection == FROM_SWITCH) {
+                    defDirection = TO_SWITCH;
                 } else {
                     defDirection = BIDIRECTIONAL;
                 }
@@ -178,7 +178,7 @@ public class BlockParser {
                 altDirection = parseDirection(reverseDirection(altDirection1));
             }
 
-            return new NodeConnection(0, BasicBlock.Direction.TO_NODE, defChildID2, defDirection, Optional.of(altChildID2), Optional.of(altDirection));
+            return new NodeConnection(0, BasicBlock.Direction.TO_SWITCH, defChildID2, defDirection, Optional.of(altChildID2), Optional.of(altDirection));
         } else {
             throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
         }
@@ -194,8 +194,8 @@ public class BlockParser {
 
     private static BasicBlock.Direction parseDirection(String arrow) {
         return switch (arrow) {
-            case "->" -> TO_NODE;
-            case "<-" -> FROM_NODE;
+            case "->" -> TO_SWITCH;
+            case "<-" -> FROM_SWITCH;
             case "<->" -> BIDIRECTIONAL;
             default -> throw new IllegalArgumentException("Invalid arrow: " + arrow);
         };

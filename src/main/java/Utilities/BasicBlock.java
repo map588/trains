@@ -18,8 +18,8 @@ public record BasicBlock(
         Optional<NodeConnection> nodeConnection
 ) {
     public enum Direction {
-        TO_NODE,
-        FROM_NODE,
+        TO_SWITCH,
+        FROM_SWITCH,
         BIDIRECTIONAL
     }
 
