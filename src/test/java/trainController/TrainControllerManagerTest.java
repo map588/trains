@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
 
-public class TrainControllerManagerTest extends ApplicationTest {
+class TrainControllerManagerTest extends ApplicationTest {
 
     TrainControllerImpl controller;
     TrainControllerSubject currentSubject;
@@ -36,7 +36,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testEmergencyBrakeButtonToggle() {
+    void testEmergencyBrakeButtonToggle() {
         Circle eBrakeStatus = lookup("#eBrakeStatus").queryAs(Circle.class);
         Color initialColor = (Color) eBrakeStatus.getFill();
 
@@ -54,7 +54,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testServiceBrakeToggle() {
+    void testServiceBrakeToggle() {
         CheckBox toggleServiceBrakeCheckBox = lookup("#toggleServiceBrakeCheckBox").queryAs(CheckBox.class);
         boolean initialState = toggleServiceBrakeCheckBox.isSelected();
 
@@ -69,7 +69,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
 
 
     @Test
-    public void testAutomaticModeCheckBox() {
+    void testAutomaticModeCheckBox() {
         // Initial state check
         CheckBox autoModeCheckBox = lookup("#autoModeCheckBox").queryAs(CheckBox.class);
         boolean initialState = autoModeCheckBox.isSelected();
@@ -84,7 +84,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testSetSpeedSlider() {
+    void testSetSpeedSlider() {
         // Assuming the slider's initial value is 0 for simplicity
         double newValue = 50.0;
         Slider setSpeedSlider = lookup("#setSpeedSlider").queryAs(Slider.class);
@@ -98,7 +98,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testLightToggle() {
+    void testLightToggle() {
         // Toggle internal light checkbox
         CheckBox intLightCheckBox = lookup("#intLightCheckBox").queryAs(CheckBox.class);
         clickOn(intLightCheckBox);
@@ -113,7 +113,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testDoorOperations() {
+    void testDoorOperations() {
         // Toggle open left door checkbox
         CheckBox openDoorLeftCheckBox = lookup("#openDoorLeftCheckBox").queryAs(CheckBox.class);
         clickOn(openDoorLeftCheckBox);
@@ -130,14 +130,14 @@ public class TrainControllerManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void directTestSetTemperature() {
+    void directTestSetTemperature() {
         double newTemperature = 25.5;
         controller.setTemperature(newTemperature); // Assuming such a setter exists
         assertEquals(newTemperature, controller.getTemperature(), "The temperature should match the newly set value.");
     }
 
     @Test
-    public void testSetTemperatureTextField() {
+    void testSetTemperatureTextField() {
         String newTemperature = "25.5";
         TextField setTemperatureTextField = lookup("#setTemperatureTextField").queryAs(TextField.class);
 
