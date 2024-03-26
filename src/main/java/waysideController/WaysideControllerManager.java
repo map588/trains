@@ -2,6 +2,7 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.ListenerReference;
+import Utilities.Enums.Lines;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -334,8 +335,9 @@ public class WaysideControllerManager {
         WaysideController newController;
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
             newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(),
-                    "BlueLine",
-                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+                    Lines.GREEN,
+                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
+                    null, null);
         } else {
             newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(),
                     "BlueLine",

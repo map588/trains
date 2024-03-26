@@ -22,7 +22,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final int id;
 
     // The name of the track line that the wayside controller is on
-    private final String trackLine;
+    private final Lines trackLine;
 
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
@@ -36,15 +36,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
-    private TrackModel trackModel;
-    private CTCOffice ctcOffice;
+    private final TrackModel trackModel;
+    private final CTCOffice ctcOffice;
 
 
     /**
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id, String trackLine, int[] blockIDList) {
+    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, TrackModel trackModel, CTCOffice ctcOffice) {
+        this.trackModel = trackModel;
+        this.ctcOffice = ctcOffice;
         this.id = id;
         this.trackLine = trackLine;
 
