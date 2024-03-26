@@ -6,10 +6,20 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifier;
 import Utilities.Constants;
+import Utilities.Conversion;
 import trackModel.TrackPseudoCode;
 import trainController.TrainControllerImpl;
 
 import java.util.Random;
+
+import static Utilities.Conversion.accelerationUnit.FPS2;
+import static Utilities.Conversion.accelerationUnit.MPS2;
+import static Utilities.Conversion.distanceUnit.FEET;
+import static Utilities.Conversion.distanceUnit.METERS;
+import static Utilities.Conversion.powerUnits.HORSEPOWER;
+import static Utilities.Conversion.powerUnits.WATTS;
+import static Utilities.Conversion.velocityUnit.MPH;
+import static Utilities.Conversion.velocityUnit.MPS;
 
 
 public class TrainModelImpl implements TrainModel, Notifier {
@@ -128,12 +138,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
             subject.notifyChange(property, newValue);
         }
     }
-    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", speed); }
-    public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", speed); }
+    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
+    public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
     public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
     public void setEmergencyBrake(boolean brake) { this.emergencyBrake = brake; notifyChange("emergencyBrake", brake); }
     public void setServiceBrake(boolean brake) { this.serviceBrake = brake; notifyChange("serviceBrake", brake); }
-    public void setPower(double power) { this.power = power; notifyChange("power", power); }
+    public void setPower(double power) { this.power = power; notifyChange("power", Conversion.convertPower(power, WATTS, HORSEPOWER)); }
     public void setGrade(double grade) { this.grade = grade; notifyChange("grade", grade); }
     public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange("brakeFailure", failure); }
     public void setPowerFailure(boolean failure) { this.powerFailure = failure; notifyChange("powerFailure", failure); }
@@ -147,10 +157,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
     public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
     public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
-    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", acceleration); }
+    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
-    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", distance); }
-    public void setLength(double length) { this.length = length; notifyChange("length", length); }
+    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", Conversion.convertDistance(distance, METERS, FEET)); }
+    public void setLength(double length) { this.length = length; notifyChange("length", Conversion.convertDistance(length, METERS, FEET)); }
     public void setBeacon(String beacon) { this.beacon = beacon; notifyChange("beacon", beacon); }
     public void setAnnouncement(String announcement) {this.announcement = announcement;}
 
