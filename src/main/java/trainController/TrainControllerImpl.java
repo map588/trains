@@ -402,6 +402,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
 
         this.setSpeed(convertVelocity(currSpeed, MPS, MPH));
         this.setPower(convertPower(pow, WATTS, HORSEPOWER));
+        return setSpeed;
     }
 
 }
