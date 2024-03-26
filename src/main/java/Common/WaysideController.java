@@ -25,10 +25,7 @@ public interface WaysideController {
     // Allows Track Model to set train occupancy for a specific block
     void trackModelSetOccupancy(int blockID, boolean isOccupied);
 
-    // Allows CTC to request a switch change (works with automatic mode)
-    void CTCRequestSwitchState(int blockID, boolean switchState);
-
-    void CTCSendSpeedAuth(int blockID, double speed, int authority);
+    void CTCSendSpeed(int blockID, double speed);
 
     // Allows CTC to enable or disable a block (works with automatic mode)
     // Combined the two methods into one for simplicity
@@ -61,8 +58,6 @@ public interface WaysideController {
     void setValue(String propertyName, Object newValue);
 
 
-
-    // New stuff after Design Review
 
     /**
      * Signals to the Wayside connected to the yard to expect a train of a specific ID to appear after the yard.

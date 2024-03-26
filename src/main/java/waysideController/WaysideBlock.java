@@ -16,7 +16,6 @@ public class WaysideBlock implements Notifier {
 
     private boolean occupied;
     private boolean switchState;
-    private boolean switchRequest;
     private boolean lightState;
     private boolean crossingState;
     private int authority;
@@ -70,7 +69,6 @@ public class WaysideBlock implements Notifier {
         switch (propertyName) {
             case occupied_p -> setOccupied((boolean) newValue);
             case switchState_p -> setSwitchState((boolean) newValue);
-            case switchRequest_p -> setSwitchRequest((boolean) newValue);
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
@@ -133,17 +131,6 @@ public class WaysideBlock implements Notifier {
 
         if(subject != null)
             subject.notifyChange(switchState_p, switchState);
-    }
-
-    public boolean getSwitchRequest() {
-        return switchRequest;
-    }
-
-    public void setSwitchRequest(boolean switchRequest) {
-        this.switchRequest = switchRequest;
-
-        if(subject != null)
-            subject.notifyChange(switchRequest_p, switchRequest);
     }
 
     public boolean getLightState() {
@@ -222,7 +209,6 @@ public class WaysideBlock implements Notifier {
         switch (property) {
             case occupied_p -> setOccupied((boolean) newValue);
             case switchState_p -> setSwitchState((boolean) newValue);
-            case switchRequest_p -> setSwitchRequest((boolean) newValue);
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);

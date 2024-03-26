@@ -43,7 +43,6 @@ public class WaysideControllerTB {
 
         tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
-        tbSTEnable.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchRequest_p));
 
         // Set up cell factories for table views
         setupTableCellFactories();
@@ -100,7 +99,7 @@ public class WaysideControllerTB {
                         checkBox = new CheckBox();
                         checkBox.setSelected(item);
                         checkBox.setOnAction(event -> {
-                            currentSubject.getController().CTCRequestSwitchState(block.getBlock().getBlockID(), checkBox.isSelected());
+//                            currentSubject.getController().CTCRequestSwitchState(block.getBlock().getBlockID(), checkBox.isSelected());
                         });
                     }
                     setGraphic(checkBox);
