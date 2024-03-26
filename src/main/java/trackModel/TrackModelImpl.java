@@ -311,11 +311,11 @@ public class TrackModelImpl implements TrackModel {
     }
 
     public int ticketSales(){
-        return (int) Math.round(Math.random());
+        return (int) Math.round(Math.random()) * 100;
     }
 
     public int passengers(int disembarked){
-        return (int) Math.round(Math.random());
+        return (int) Math.round(Math.random()) * 100;
     }
 
     public void csvParser(String file) {
