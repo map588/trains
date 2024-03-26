@@ -69,12 +69,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         this.subject = new TrainControllerSubject(this);
         this.train = stubTrainModel.createstubTrainModel();
         this.nextStationName = "Yard";
-        schedulePowerCalculation();
-    }
-
-    private void schedulePowerCalculation() {
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(this::calculatePower, 0, samplingPeriod, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -355,7 +349,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      * If the current speed is less than 0, it is set to 0.
      * Finally, the speed and power of the train are updated.
      */
-    public void calculatePower(){
+    public double calculatePower(double currentSpeed){
         // Convert Units
         double setSpeed, currSpeed, pow, accel;
 
