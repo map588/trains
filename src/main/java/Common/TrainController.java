@@ -89,7 +89,7 @@ public interface TrainController extends GUIModifiable {
     boolean getInTunnel();
     void setInTunnel(boolean inTunnel);
 
-    void calculatePower();
+    double calculatePower(double currentVelocity);
 
     double getGrade();
 }
