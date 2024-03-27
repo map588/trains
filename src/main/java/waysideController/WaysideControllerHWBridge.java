@@ -191,23 +191,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     @Override
-    public void CTCRequestSwitchState(int blockID, boolean switchState) {
-        blockMap.get(blockID).setSwitchRequest(switchState);
-
-        System.out.println("Send: switchRequestedState="+blockID+":"+switchState);
-        printStream.println("switchRequestedState="+blockID+":"+switchState);
-    }
-
-    @Override
-    public void CTCSendSpeedAuth(int blockID, double speed, int authority) {
+    public void CTCSendSpeed(int blockID, double speed) {
         blockMap.get(blockID).setSpeed(speed);
-        blockMap.get(blockID).setAuthority(authority);
 
         System.out.println("Send: speed="+blockID+":"+speed);
         printStream.println("speed="+blockID+":"+speed);
-
-        System.out.println("Send: authInt="+blockID+":"+authority);
-        printStream.println("authInt="+blockID+":"+authority);
     }
 
     @Override

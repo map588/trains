@@ -6,7 +6,6 @@ public class Properties {
     public static final String activePLCColor_p = "activePLCColor";
     public static final String occupied_p = "occupied";
     public static final String switchState_p = "switchState";
-    public static final String switchRequest_p = "switchRequest";
     public static final String lightState_p = "lightState";
     public static final String crossingState_p = "crossingState";
     public static final String authority_p = "authority";

@@ -22,7 +22,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final int id;
 
     // The name of the track line that the wayside controller is on
-    private final String trackLine;
+    private final Lines trackLine;
 
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
@@ -31,32 +31,27 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
-    private File PLCFile = null;
     private final PLCProgram[] plcPrograms;
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
-    private TrackModel trackModel;
-    private CTCOffice ctcOffice;
+    private final TrackModel trackModel;
+    private final CTCOffice ctcOffice;
 
 
     /**
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id, String trackLine, int[] blockIDList) {
+    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, TrackModel trackModel, CTCOffice ctcOffice) {
+        this.trackModel = trackModel;
+        this.ctcOffice = ctcOffice;
         this.id = id;
         this.trackLine = trackLine;
 
         subject = new WaysideControllerSubject(this);
 
-//        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
-//        for(int blockID : blockIDList) {
-//            WaysideBlock block = new WaysideBlock(fullBlockList.get(blockID));
-//            blockMap.put(blockID, block);
-//            subject.addBlock(new WaysideBlockSubject(block));
-//        }
-
+        // Parse the CSV file to get the blocks that the wayside controls
         ArrayDeque<BasicBlock> blockDeque = BlockParser.parseCSV().get(Lines.GREEN);
         BasicBlock[] blockArray = blockDeque.toArray(new BasicBlock[0]);
         for(int blockID : blockIDList) {
@@ -64,6 +59,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             blockMap.put(blockID, block);
             subject.addBlock(new WaysideBlockSubject(block));
         }
+
+        //TODO: Register this wayside with the track model and CTC office
 
 
         plcPrograms = new PLCProgram[1];
@@ -77,7 +74,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      */
     @Override
     public void loadPLC(File PLC) {
-        this.PLCFile = PLC;
         plcPrograms[0].loadPLC(PLC.getAbsolutePath());
         notifyChange(PLCName_p, PLC.getName());
         subject.updateActivePLCProp();
@@ -113,10 +109,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         runPLC();
     }
 
-    /**
-     * Set the maintenance mode of the wayside controller without updating the subject
-     * @param maintenanceMode The new maintenance mode of the wayside controller
-     */
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         blockMap.get(blockID).setOccupied(occupied);
@@ -125,21 +117,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     @Override
-    public void CTCRequestSwitchState(int blockID, boolean switchState) {
-        blockMap.get(blockID).setSwitchRequest(switchState);
-        runPLC();
-    }
-
-    /**
-     * Get the track line that the wayside controller is controlling
-     * @return The track line that the wayside controller is controlling
-     */
-    @Override
-    public void CTCSendSpeedAuth(int blockID, double speed, int authority) {
+    public void CTCSendSpeed(int blockID, double speed) {
         blockMap.get(blockID).setSpeed(speed);
-        blockMap.get(blockID).setAuthority(authority);
 //        trackModel.setCommandedSpeed(blockID, speed);
-//        trackModel.setTrainAuthority(blockID, authority);
         runPLC();
     }
 
@@ -212,10 +192,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         return subject;
     }
 
-    /**
-     * Set the speed and authority of a train
-     * @param speedAuth The speed and authority of the train
-     */
     @Override
     public void setSwitchPLC(int blockID, boolean switchState) {
         WaysideBlock block = blockMap.get(blockID);
@@ -227,11 +203,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
     }
 
-    /**
-     * Set the switch state of a block
-     * @param blockID The ID of the block to set
-     * @param switchState The state to set the switch to
-     */
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
         WaysideBlock block = blockMap.get(blockID);
@@ -243,11 +214,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
     }
 
-    /**
-     * Set the switch state of a block
-     * @param blockID The ID of the block to set
-     * @param switchState The state to set the switch to
-     */
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
         WaysideBlock block = blockMap.get(blockID);

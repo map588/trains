@@ -123,10 +123,6 @@ public class WaysideControllerHW implements PLCRunner {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setSwitchState(Boolean.parseBoolean(setValues[1]));
             }
-            case "switchRequestedState" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setSwitchRequest(Boolean.parseBoolean(setValues[1]));
-            }
             case "crossing" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setCrossingState(Boolean.parseBoolean(setValues[1]));
