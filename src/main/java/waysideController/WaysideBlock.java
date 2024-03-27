@@ -11,10 +11,13 @@ public class WaysideBlock implements Notifier {
     private final boolean hasSwitch;
     private final boolean hasLight;
     private final boolean hasCrossing;
-    private int switchBlockMain;
+
+    private int switchBlockParent;
+    private int switchBlockDef;
     private int switchBlockAlt;
 
     private boolean occupied;
+    private int trainID;
     private boolean switchState;
     private boolean lightState;
     private boolean crossingState;
@@ -34,11 +37,12 @@ public class WaysideBlock implements Notifier {
         this.hasLight = hasLight;
         this.hasCrossing = hasCrossing;
         this.open = true;
+        this.trainID = -1;
     }
 
     public WaysideBlock(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
         this(blockID, hasSwitch, hasLight, hasCrossing);
-        this.switchBlockMain = switchBlockMain;
+        this.switchBlockDef = switchBlockMain;
         this.switchBlockAlt = switchBlockAlt;
     }
 
@@ -54,10 +58,14 @@ public class WaysideBlock implements Notifier {
         this.hasLight = block.blockType() == BasicBlock.BlockType.STATION;
         this.hasCrossing = block.blockType() == BasicBlock.BlockType.CROSSING;
         this.open = true;
+        this.trainID = -1;
 
         if(this.hasSwitch && block.nodeConnection().isPresent()) {
-            this.switchBlockMain = block.nodeConnection().get().defChildID();
+            this.switchBlockParent = block.nodeConnection().get().parentID();
+            this.switchBlockDef = block.nodeConnection().get().defChildID();
             this.switchBlockAlt = block.nodeConnection().get().altChildID().orElse(-1);
+
+            System.out.println("Switch block found: Parent = " + switchBlockParent);
         }
     }
 
@@ -94,8 +102,12 @@ public class WaysideBlock implements Notifier {
         return hasCrossing;
     }
 
-    public int getSwitchBlockMain() {
-        return switchBlockMain;
+    public int getSwitchBlockParent() {
+        return switchBlockParent;
+    }
+
+    public int getSwitchBlockDef() {
+        return switchBlockDef;
     }
 
     public int getSwitchBlockAlt() {
@@ -216,6 +228,22 @@ public class WaysideBlock implements Notifier {
             case open_p -> setBlockmaintenanceStateState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
+    }
+
+    public int getTrainID() {
+        return trainID;
+    }
+
+    public void setTrainID(int trainID) {
+        this.trainID = trainID;
+    }
+
+    public void removeTrainID() {
+        this.trainID = -1;
+    }
+
+    public boolean hasTrain() {
+        return trainID != -1;
     }
 }
 

@@ -11,7 +11,8 @@ public class Properties {
     public static final String authority_p = "authority";
     public static final String booleanAuth_p = "booleanAuth";
     public static final String speed_p = "speed";
-    public static final String switchBlockMain_p = "switchBlockMain";
+    public static final String switchBlockParent_p = "switchBlockParent";
+    public static final String switchBlockDef_p = "switchBlockDef";
     public static final String switchBlockAlt_p = "switchBlockAlt";
     public static final String switchedBlockID_p = "switchedBlockID";
     public static final String blockID_p = "blockID";

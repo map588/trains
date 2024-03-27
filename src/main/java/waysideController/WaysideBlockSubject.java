@@ -43,11 +43,12 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
         updateLightColor();
         properties.get(lightState_p).addListener((observable, oldValue, newValue) -> updateLightColor());
 
-        properties.put(switchBlockMain_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockMain()));
+        properties.put(switchBlockParent_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockParent()));
+        properties.put(switchBlockDef_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockDef()));
         properties.put(switchBlockAlt_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockAlt()));
-        properties.put(switchedBlockID_p, new SimpleIntegerProperty(block.getSwitchBlockMain()));
+        properties.put(switchedBlockID_p, new SimpleIntegerProperty(block.getSwitchBlockDef()));
         getBooleanProperty(switchState_p).addListener((observable, oldValue, newValue) ->
-                getIntegerProperty(switchedBlockID_p).set(newValue ? block.getSwitchBlockAlt() : block.getSwitchBlockMain())
+                getIntegerProperty(switchedBlockID_p).set(newValue ? block.getSwitchBlockAlt() : block.getSwitchBlockDef())
         );
     }
 

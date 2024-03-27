@@ -11,6 +11,7 @@ import Utilities.Enums.Lines;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static waysideController.Properties.PLCName_p;
@@ -29,6 +30,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The map of blocks that the wayside controller controls
     protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
+
+    private final Map<Integer, List<Integer>> trainMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
     private final PLCProgram[] plcPrograms;
@@ -111,16 +114,37 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
-        blockMap.get(blockID).setOccupied(occupied);
-//        ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
-        runPLC();
+
+        if(blockMap.get(blockID).isOpen() && blockMap.get(blockID).isOccupied() != occupied) {
+            blockMap.get(blockID).setOccupied(occupied);
+//             ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
+
+            // Update train ID if the block is occupied
+            if (occupied) {
+                if (blockMap.get(blockID - 1).hasTrain()) {
+                    blockMap.get(blockID).setTrainID(blockMap.get(blockID - 1).getTrainID());
+                } else if (blockMap.get(blockID + 1).hasTrain()) {
+                    blockMap.get(blockID).setTrainID(blockMap.get(blockID + 1).getTrainID());
+                }
+            }
+            // Clear train ID if the block is not occupied
+            else {
+                blockMap.get(blockID).removeTrainID();
+            }
+            runPLC();
+        }
     }
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
         blockMap.get(blockID).setSpeed(speed);
-//        trackModel.setCommandedSpeed(blockID, speed);
-        runPLC();
+
+        if(blockMap.get(blockID).getBooleanAuth()) {
+            trackModel.setCommandedSpeed(blockID, speed);
+        }
+        else {
+            trackModel.setCommandedSpeed(blockID, 0);
+        }
     }
 
     // Sets the block access state for a block, updates simulated occupancy, and runs the PLC
@@ -220,7 +244,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen()) {
             block.setCrossingState(crossingState);
-//            trackModel.setCrossing(blockID, crossingState);
+            trackModel.setCrossing(blockID, crossingState);
 //            ctcOffice.setCrossingState(trackLine, blockID, crossingState);
         }
     }
@@ -230,8 +254,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
 
         if(block.isOpen()) {
-            block.setBooleanAuth(auth);
-//            trackModel.setTrainAuthority(blockID, auth);
+            if(block.getBooleanAuth() != auth) {
+                block.setBooleanAuth(auth);
+//              trackModel.setTrainAuthority(blockID, auth);
+
+                if(blockMap.get(blockID).getBooleanAuth()) {
+                    trackModel.setCommandedSpeed(blockID, block.getSpeed());
+                }
+                else {
+                    trackModel.setCommandedSpeed(blockID, 0);
+                }
+            }
         }
     }
 
@@ -264,7 +297,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // TODO: implement these functions
     @Override
     public void CTCDispatchTrain(int trainID) {
-
+        blockMap.get(0).setTrainID(trainID);
     }
 
     @Override
@@ -274,7 +307,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void waysideIncomingTrain(int trainID, int blockID) {
-
+        blockMap.get(blockID).setTrainID(trainID);
     }
 
     @Override

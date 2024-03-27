@@ -110,7 +110,7 @@ public class WaysideControllerManager {
         blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
         blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
 
-        switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
+        switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchBlockParent_p).asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
         switchTableStateColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(switchState_p));
 
