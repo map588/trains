@@ -7,8 +7,8 @@ public interface TrackModel {
     void setCrossing(int block, boolean state);
     void setBeacon(int block, String beacon);
     void setBlockOccupied(int block, boolean state);
-    void setTrainAuthority(int trainID, int authority);
-    void setCommandedSpeed(int trainID, double commandedSpeed);
+    void setTrainAuthority(int blockID, int authority);
+    void setCommandedSpeed(int blockID, double commandedSpeed);
     void setTemperature(int temp);
     void setLine(String lines);
     void setFailure(int block, String failure);
@@ -27,6 +27,4 @@ public interface TrackModel {
     String getLine();
     int ticketSales();
     int passengers(int disembarked);
-    void csvParser(String file);
-
 }

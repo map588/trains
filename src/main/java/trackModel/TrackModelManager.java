@@ -86,27 +86,27 @@ public class TrackModelManager {
 
     //table
     @FXML
-    private TableView<TrackLayoutInfo> lineTable;
+    private TableView<TrackModelSubject> lineTable;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> sectionsColumn;
+    private TableColumn<TrackModelSubject, String> sectionsColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> blockColumn;
+    private TableColumn<TrackModelSubject, String> blockColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> occupiedColumn;
+    private TableColumn<TrackModelSubject, Boolean> occupiedColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> sizeColumn;
+    private TableColumn<TrackModelSubject, Integer> sizeColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Double> gradeColumn;
+    private TableColumn<TrackModelSubject, Double> gradeColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> stationColumn;
+    private TableColumn<TrackModelSubject, Boolean> stationColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> signalColumn;
+    private TableColumn<TrackModelSubject, Boolean> signalColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> switchColumn;
+    private TableColumn<TrackModelSubject, Boolean> switchColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Integer> speedLimitColumn;
+    private TableColumn<TrackModelSubject, Integer> speedLimitColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> failureColumn;
+    private TableColumn<TrackModelSubject, Boolean> failureColumn;
 
     //current layout
 
@@ -118,7 +118,7 @@ public class TrackModelManager {
 
     // test bench object
     private TrackModelTBManager testBench;
-    private TrackLayoutInfo trackProperties;
+    private TrackModelSubject trackProperties;
 
     @FXML
     public void initialize(){
@@ -174,7 +174,7 @@ public class TrackModelManager {
 
     }
 
-    public void selectBlock(TrackLayoutInfo newProperties){
+    public void selectBlock(TrackModelSubject newProperties){
         System.out.println("Selected block");
         if(trackProperties != null) {
             // Unbind stuff here

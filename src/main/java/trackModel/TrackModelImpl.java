@@ -2,6 +2,8 @@ package trackModel;
 
 
 import Common.TrackModel;
+import trackModel.TrackModelSubject;
+import Utilities.BasicBlock;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,125 +22,7 @@ public class TrackModelImpl implements TrackModel {
         this.failureMap = new HashMap<>();
         this.stationMap = new HashMap<>();
         this.crossingMap = new HashMap<>();
-
         this.temperature = 0;
-
-        this.blockInfo = new List<TrackLayoutInfo>() {
-              @Override
-                public int size() {
-                    return 0;
-                }
-
-                @Override
-                public boolean isEmpty() {
-                    return false;
-                }
-
-                @Override
-                public boolean contains(Object o) {
-                    return false;
-                }
-
-                @Override
-                public Iterator<TrackLayoutInfo> iterator() {
-                    return null;
-                }
-
-                @Override
-                public Object[] toArray() {
-                    return new Object[0];
-                }
-
-                @Override
-                public <T> T[] toArray(T[] a) {
-                    return null;
-                }
-
-                @Override
-                public boolean add(TrackLayoutInfo trackLayoutInfo) {
-                    return false;
-                }
-
-                @Override
-                public boolean remove(Object o) {
-                    return false;
-                }
-
-                @Override
-                public boolean containsAll(Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(Collection<? extends TrackLayoutInfo> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(int index, Collection<? extends TrackLayoutInfo> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean removeAll(Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean retainAll(Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public void clear() {
-
-                }
-
-                @Override
-                public TrackLayoutInfo get(int index) {
-                    return null;
-                }
-
-                @Override
-                public TrackLayoutInfo set(int index, TrackLayoutInfo element) {
-                    return null;
-                }
-
-                @Override
-                public void add(int index, TrackLayoutInfo element) {
-
-                }
-
-                @Override
-                public TrackLayoutInfo remove(int index) {
-                    return null;
-                }
-
-                @Override
-                public int indexOf(Object o) {
-                    return 0;
-                }
-
-                @Override
-                public int lastIndexOf(Object o) {
-                    return 0;
-                }
-
-                @Override
-                public ListIterator<TrackLayoutInfo> listIterator() {
-                    return null;
-                }
-
-                @Override
-                public ListIterator<TrackLayoutInfo> listIterator(int index) {
-                    return null;
-                }
-
-                @Override
-                public List<TrackLayoutInfo> subList(int fromIndex, int toIndex) {
-                    return null;
-                }
-        };
         this.lines = new ArrayList<>();
     }
 
@@ -154,10 +38,7 @@ public class TrackModelImpl implements TrackModel {
 
     //should lines just be a string?
     private ArrayList<String> lines = new ArrayList<>();
-    private final int temperature;
-
-    private List<TrackLayoutInfo> blockInfo = new ArrayList<>();
-
+    private int temperature;
 
     public void setLine(String lines) {
         this.lines.add(lines);
@@ -197,14 +78,7 @@ public class TrackModelImpl implements TrackModel {
 
     @Override
     public void setTemperature(int temp) {
-        System.out.println("Setting Track Heaters: " + temp);
-        for (TrackLayoutInfo trackProperties : blockInfo) {
-            if (temp < 40) {
-                trackProperties.trackHeaterProperty().set("STATUS - ON");
-            } else {
-                trackProperties.trackHeaterProperty().set("STATUS - OFF");
-            }
-        }
+        this.temperature = temp;
     }
 
     public void setSignalState(int block, boolean state) {
@@ -318,137 +192,6 @@ public class TrackModelImpl implements TrackModel {
         return (int) Math.round(Math.random()) * 100;
     }
 
-    public void csvParser(String file) {
-        try(BufferedReader br = new BufferedReader(new FileReader(file)))
-        {
-            String line = "";
-            String lineName = "";
-            String infrastructure = "";
-            this.setLine(br.readLine());
-            while((line = br.readLine()) != null){
-                String[] values = line.split(",");
-                TrackLayoutInfo block = new TrackLayoutInfo();
-                lineName = values[0];
-                block.setSection(values[1]);
-                block.setBlockNumber(values[2]);
-                block.setBlockLength(Integer.parseInt(values[3]));
-                block.setBlockGrade(Integer.parseInt(values[4]));
-                block.setSpeedLimit(Integer.parseInt(values[5]));
-
-                //interpret the infrastructure
-                infrastructure = values[6];
-
-                block.setIsCrossing(infrastructure.equals("RAILWAY CROSSING"));
-
-                if(infrastructure.contains("STATION")){
-                    block.setIsStation(true);
-                    block.setNameOfStation(infrastructure);
-                }
-                else{
-                    block.setIsStation(false);
-                    block.setNameOfStation("No Station Present");
-                }
-
-                if(infrastructure.contains("SWITCH")){
-                    block.setIsSwitch(true);
-                    block.setSwitchBlockID(infrastructure);
-                }
-                else{
-                    block.setIsSwitch(false);
-                    block.setSwitchBlockID("No Switch Present");
-                }
-
-                block.setIsUnderground(infrastructure.contains("UNDERGROUND"));
-
-                this.blockInfo.add(block);
-
-                //figure out what to do with station side, elevation
-                //and traversal time back to yard for green line
-            }
-
-            this.setLine(lineName);
-
-
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
 
 }
 
-
-
-//    public List<TrackLayoutInfo> getTrackInfo() {
-//
-//        trackInfo.clear();
-//
-//        for(int i = 0; i <= 15; i++){
-//            TrackLayoutInfo block = new TrackLayoutInfo();
-//            block.setHasFailure(failures.contains(i));
-//            block.setIsOccupied(blockOccupied.contains(i));
-//            block.setBlockNumber("" + i);
-//
-//            if(i < 6){
-//                block.setSection("A");
-//            }
-//            else if(i < 11){
-//                block.setSection("B");
-//            }
-//            else{
-//                block.setSection("C");
-//            }
-//
-//            block.setBlockLength(50);
-//            block.setBlockGrade(0);
-//            block.setSpeedLimit(50);
-//            block.setIsCrossing(i == 3);
-//
-//            if(i == 3){
-//                block.setIsCrossing(true);
-//                block.setCrossingState("TRUE");
-//            }
-//
-//            block.setIsSignal(i == 6 || i == 11);
-//            block.setIsSwitch(i == 5 || i == 6 || i == 11);
-//            block.setIsUnderground(false);
-//            block.setIsStation(i == 10 || i == 15);
-//            block.setIsBeacon(i == 9 || i == 14);
-//            if(i == 5){
-//                block.setSwitchMain("6");
-//                block.setSwitchAlt("11");
-//                block.setSwitchBlockID("5");
-//            }
-//
-//            if(i == 9){
-//                beacons.add(9);
-//            }
-//
-//            if (i == 14){
-//                beacons.add(14);
-//            }
-//
-//            if(i == 6){
-//                block.setSignalID("6");
-//            }
-//
-//            if(i == 11){
-//                block.setSignalID("11");
-//            }
-//
-//            if(i == 10) {
-//                block.setNameOfStation("Station B");
-//            }
-//            if(i == 15) {
-//                block.setNameOfStation("Station C");
-//            }
-//
-//
-//
-//            this.trackInfo.add(block);
-//        }
-//
-//        return this.trackInfo;
-//    }
-//}

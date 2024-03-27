@@ -19,7 +19,6 @@ public class TrackPseudoCode {
     //maps blocks to block numbers
     ConcurrentSkipListMap<Integer, BasicBlock> trackLayout;
 
-
     public TrackPseudoCode() {
         setupListeners();
     }

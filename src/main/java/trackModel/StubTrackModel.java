@@ -107,10 +107,6 @@ public class StubTrackModel implements TrackModel {
         return null;
     }
 
-    public List<TrackLayoutInfo> getBlockInfo() {
-        return null;
-    }
-
     @Override
     public int ticketSales() {
         return 0;
@@ -119,10 +115,6 @@ public class StubTrackModel implements TrackModel {
     @Override
     public int passengers(int disembarked) {
         return 0;
-    }
-
-    @Override
-    public void csvParser(String file) {
     }
 
  // potential unit tests

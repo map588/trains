@@ -22,17 +22,17 @@ public class TrackModelTBManager {
     @FXML
     private TextField tbTicketSalesInput;
     @FXML
-    private TableView<TrackLayoutInfo> tbTable;
+    private TableView<TrackModelSubject> tbTable;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSectionColumn;
+    private TableColumn<TrackModelSubject, String> tbSectionColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbBlockColumn;
+    private TableColumn<TrackModelSubject, String> tbBlockColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSwitchColumn;
+    private TableColumn<TrackModelSubject, String> tbSwitchColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, String> tbSignalColumn;
+    private TableColumn<TrackModelSubject, String> tbSignalColumn;
     @FXML
-    private TableColumn<TrackLayoutInfo, Boolean> tbOccupiedColumn;
+    private TableColumn<TrackModelSubject, Boolean> tbOccupiedColumn;
 
     @FXML
     private Label comSpeedOutput;
@@ -47,7 +47,7 @@ public class TrackModelTBManager {
     @FXML
     private ComboBox<String> tbBeaconComboBox;
 
-    private TrackLayoutInfo trackProperties = new TrackLayoutInfo();
+    private TrackModelSubject trackProperties = new TrackModelSubject();
     private TrackModelImpl trackModel;
     private TrackModelSubject trackModelSubject;
     private TrackModelManager trackModelManager;
@@ -121,7 +121,7 @@ public class TrackModelTBManager {
         trackProperties.setPassDisembarked(tbPassDisembarkedInput.getText());
     }
 
-    public void selectBlock(TrackLayoutInfo newProperties){
+    public void selectBlock(TrackModelSubject newProperties){
         if(trackProperties != null) {
             // Unbind stuff here
 
