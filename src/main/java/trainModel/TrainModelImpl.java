@@ -141,8 +141,24 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
     public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
     public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
-    public void setEmergencyBrake(boolean brake) { this.emergencyBrake = brake; notifyChange("emergencyBrake", brake); }
-    public void setServiceBrake(boolean brake) { this.serviceBrake = brake; notifyChange("serviceBrake", brake); }
+    public void setEmergencyBrake(boolean brake) {
+        if (this.brakeFailure) {
+            this.emergencyBrake = false;
+            notifyChange("emergencyBrake", false);
+        } else {
+            this.emergencyBrake = brake;
+            notifyChange("emergencyBrake", brake);
+        }
+    }
+    public void setServiceBrake(boolean brake) {
+        if (this.brakeFailure) {
+            this.serviceBrake = false;
+            notifyChange("serviceBrake", false);
+        } else {
+            this.serviceBrake = brake;
+            notifyChange("serviceBrake", brake);
+        }
+    }
     public void setPower(double power) { this.power = power; notifyChange("power", Conversion.convertPower(power, WATTS, HORSEPOWER)); }
     public void setGrade(double grade) { this.grade = grade; notifyChange("grade", grade); }
     public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange("brakeFailure", failure); }
@@ -336,9 +352,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
         if (brakeFailure) {
             this.setServiceBrake(false);
+            this.setEmergencyBrake(false);
         }
         if (signalFailure) {
-            this.setServiceBrake(true);
+            this.setCommandSpeed(-1);
+            this.setAuthority(-1);
         }
 
         if(currentBlockLength - relativeDistance < 0) {
@@ -355,6 +373,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
         if (this.emergencyBrake) {
             this.brakeForce = Constants.EMERGENCY_BRAKE_FORCE;
+            this.setPower(0);
+        }
+        if (this.brakeFailure) {
             this.setPower(0);
         }
         if (!this.serviceBrake && !this.emergencyBrake) {
