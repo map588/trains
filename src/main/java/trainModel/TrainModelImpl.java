@@ -408,5 +408,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setRealTemperature(this.realTemperature - 1);
             this.elapsedTime = 0;
         }
+
+        this.setPower(controller.calculatePower(this.speed));
     }
 }

@@ -241,8 +241,8 @@ public class stubTrainController implements TrainController{
     }
 
     @Override
-    public void calculatePower() {
-
+    public double calculatePower(double currentSpeed) {
+        return 0;
     }
 
     @Override

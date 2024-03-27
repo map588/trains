@@ -200,9 +200,7 @@ public class HWTrainController implements TrainController {
 
     }
 
-    public void calculatePower() {
-
-    }
+    public double calculatePower(double currentSpeed) { return 0; }
 
     public double getGrade() {
         return 0;

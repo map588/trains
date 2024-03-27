@@ -143,7 +143,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     }
 
     public void calculatePower(){
-        controller.calculatePower();
+        //controller.calculatePower();
     }
 
     public TrainControllerImpl getController() {
