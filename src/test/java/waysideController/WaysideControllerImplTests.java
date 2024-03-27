@@ -65,6 +65,7 @@ public class WaysideControllerImplTests {
         assertFalse(controller.getBlockMap().get(12).getLightState());
         controller.maintenanceSetTrafficLight(12, true);
         assertTrue(controller.getBlockMap().get(12).getLightState());
+        verify(trackModel).setSignalState(12, true);
 
         assertFalse(controller.getBlockMap().get(12).getCrossingState());
         controller.maintenanceSetCrossing(12, true);

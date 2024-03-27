@@ -200,7 +200,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
         if(maintenanceMode) {
             blockMap.get(blockID).setLightState(lightState);
-    //        trackModel.setLightState(blockID, lightState);
+            trackModel.setSignalState(blockID, lightState);
     //        ctcOffice.setLightState(trackLine, blockID, lightState);
             System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
         }
@@ -242,7 +242,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen() && block.getLightState() != lightState) {
             block.setLightState(lightState);
-//            trackModel.setLightState(blockID, lightState);
+            trackModel.setSignalState(blockID, lightState);
 //            ctcOffice.setLightState(trackLine, blockID, lightState);
         }
     }
