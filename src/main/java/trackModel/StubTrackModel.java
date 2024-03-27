@@ -107,7 +107,7 @@ public class StubTrackModel implements TrackModel {
         return null;
     }
 
-    public List<TrackModelSubject> getBlockInfo() {
+    public List<TrackLayoutInfo> getBlockInfo() {
         return null;
     }
 
