@@ -179,33 +179,41 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-        blockMap.get(blockID).setSwitchState(switchState);
-//        trackModel.setSwitchState(blockID, switchState);
+        if(maintenanceMode) {
+            blockMap.get(blockID).setSwitchState(switchState);
+            trackModel.setSwitchState(blockID, switchState);
 //        ctcOffice.setSwitchState(trackLine, blockID, switchState);
-        System.out.println("maintenanceSetSwitch: " + blockID + " " + switchState);
+            System.out.println("maintenanceSetSwitch: " + blockID + " " + switchState);
+        }
     }
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        blockMap.get(blockID).setBooleanAuth(auth);
-//        trackModel.setTrainAuthority(blockID, auth);
-        System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
+        if(maintenanceMode) {
+            blockMap.get(blockID).setBooleanAuth(auth);
+//            trackModel.setTrainAuthority(blockID, auth);
+            System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
+        }
     }
 
     @Override
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
-        blockMap.get(blockID).setLightState(lightState);
-//        trackModel.setLightState(blockID, lightState);
-//        ctcOffice.setLightState(trackLine, blockID, lightState);
-        System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
+        if(maintenanceMode) {
+            blockMap.get(blockID).setLightState(lightState);
+    //        trackModel.setLightState(blockID, lightState);
+    //        ctcOffice.setLightState(trackLine, blockID, lightState);
+            System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
+        }
     }
 
     @Override
     public void maintenanceSetCrossing(int blockID, boolean crossingState) {
-        blockMap.get(blockID).setCrossingState(crossingState);
-//        trackModel.setCrossing(blockID, crossingState);
-//        ctcOffice.setCrossingState(trackLine, blockID, crossingState);
-        System.out.println("maintenanceSetCrossing: " + blockID + " " + crossingState);
+        if(maintenanceMode) {
+            blockMap.get(blockID).setCrossingState(crossingState);
+            trackModel.setCrossing(blockID, crossingState);
+    //        ctcOffice.setCrossingState(trackLine, blockID, crossingState);
+            System.out.println("maintenanceSetCrossing: " + blockID + " " + crossingState);
+        }
     }
 
     @Override
