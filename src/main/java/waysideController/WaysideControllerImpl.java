@@ -137,6 +137,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
+        speed = Math.min(speed, blockMap.get(blockID).getSpeed());
         blockMap.get(blockID).setSpeed(speed);
 
         if(blockMap.get(blockID).getBooleanAuth()) {
@@ -220,9 +221,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void setSwitchPLC(int blockID, boolean switchState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen()) {
+        if(block.isOpen() && block.getSwitchState() != switchState) {
             block.setSwitchState(switchState);
-//            trackModel.setSwitchState(blockID, switchState);
+            trackModel.setSwitchState(blockID, switchState);
 //            ctcOffice.setSwitchState(trackLine, blockID, switchState);
         }
     }
@@ -231,7 +232,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void setTrafficLightPLC(int blockID, boolean lightState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen()) {
+        if(block.isOpen() && block.getLightState() != lightState) {
             block.setLightState(lightState);
 //            trackModel.setLightState(blockID, lightState);
 //            ctcOffice.setLightState(trackLine, blockID, lightState);
@@ -242,7 +243,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void setCrossingPLC(int blockID, boolean crossingState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen()) {
+        if(block.isOpen() && block.getCrossingState() != crossingState) {
             block.setCrossingState(crossingState);
             trackModel.setCrossing(blockID, crossingState);
 //            ctcOffice.setCrossingState(trackLine, blockID, crossingState);
@@ -253,17 +254,15 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void setAuthorityPLC(int blockID, boolean auth) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen()) {
-            if(block.getBooleanAuth() != auth) {
-                block.setBooleanAuth(auth);
+        if(block.isOpen() && block.getBooleanAuth() != auth) {
+            block.setBooleanAuth(auth);
 //              trackModel.setTrainAuthority(blockID, auth);
 
-                if(blockMap.get(blockID).getBooleanAuth()) {
-                    trackModel.setCommandedSpeed(blockID, block.getSpeed());
-                }
-                else {
-                    trackModel.setCommandedSpeed(blockID, 0);
-                }
+            if(blockMap.get(blockID).getBooleanAuth()) {
+                trackModel.setCommandedSpeed(blockID, block.getSpeed());
+            }
+            else {
+                trackModel.setCommandedSpeed(blockID, 0);
             }
         }
     }

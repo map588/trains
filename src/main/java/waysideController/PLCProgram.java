@@ -41,22 +41,22 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     }
 
     private void setSwitch(int blockID, boolean switchState) {
-        blockMap.get(blockID).setSwitchState(switchState);
+//        blockMap.get(blockID).setSwitchState(switchState);
         controller.setSwitchPLC(blockID, switchState);
     }
 
     private void setLight(int blockID, boolean lightState) {
-        blockMap.get(blockID).setLightState(lightState);
+//        blockMap.get(blockID).setLightState(lightState);
         controller.setTrafficLightPLC(blockID, lightState);
     }
 
     private void setCrossing(int blockID, boolean crossingState) {
-        blockMap.get(blockID).setCrossingState(crossingState);
+//        blockMap.get(blockID).setCrossingState(crossingState);
         controller.setCrossingPLC(blockID, crossingState);
     }
 
     private void setAuth(int blockID, boolean auth) {
-        blockMap.get(blockID).setBooleanAuth(auth);
+//        blockMap.get(blockID).setBooleanAuth(auth);
         controller.setAuthorityPLC(blockID, auth);
     }
 

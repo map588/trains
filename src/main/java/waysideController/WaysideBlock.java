@@ -24,6 +24,7 @@ public class WaysideBlock implements Notifier {
     private int authority;
     private boolean booleanAuth;
     private double speed;
+    private double speedLimit;
     private boolean open;
 
     private boolean direction;
@@ -57,6 +58,7 @@ public class WaysideBlock implements Notifier {
         this.hasSwitch = block.blockType() == BasicBlock.BlockType.SWITCH;
         this.hasLight = block.blockType() == BasicBlock.BlockType.STATION;
         this.hasCrossing = block.blockType() == BasicBlock.BlockType.CROSSING;
+        this.speedLimit = block.speedLimit();
         this.open = true;
         this.trainID = -1;
 
@@ -187,6 +189,10 @@ public class WaysideBlock implements Notifier {
 
         if(subject != null)
             subject.notifyChange(booleanAuth_p, booleanAuth);
+    }
+
+    public double getSpeedLimit() {
+        return speedLimit;
     }
 
     public double getSpeed() {
