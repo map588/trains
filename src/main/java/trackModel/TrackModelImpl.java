@@ -21,9 +21,18 @@ public class TrackModelImpl implements TrackModel {
         this.stationMap = new HashMap<>();
         this.crossingMap = new HashMap<>();
 
+        /**
+         * First make a parser for the BasicBlock Object which formats it into a Map or list of your own
+         * dynamic block type.  The dynamic blocks can hold the boolean state of many of the above maps.
+         *
+         * The pseudoCode has an occupancy map, which is an observable map that calls the functions for when a specific train
+         * has entered, or has exited, a block.  This submits it to the threads, so there is not much to worry about other than\
+         * minding data hazards.
+         */
+
         this.temperature = 0;
 
-        this.blockInfo = new List<TrackLayoutInfo>() {
+        this.blockInfo = new List<TrackModelSubject>() {
               @Override
                 public int size() {
                     return 0;
@@ -40,7 +49,7 @@ public class TrackModelImpl implements TrackModel {
                 }
 
                 @Override
-                public Iterator<TrackLayoutInfo> iterator() {
+                public Iterator<TrackModelSubject> iterator() {
                     return null;
                 }
 
@@ -55,7 +64,7 @@ public class TrackModelImpl implements TrackModel {
                 }
 
                 @Override
-                public boolean add(TrackLayoutInfo trackLayoutInfo) {
+                public boolean add(TrackModelSubject trackModelSubject) {
                     return false;
                 }
 
@@ -70,12 +79,12 @@ public class TrackModelImpl implements TrackModel {
                 }
 
                 @Override
-                public boolean addAll(Collection<? extends TrackLayoutInfo> c) {
+                public boolean addAll(Collection<? extends TrackModelSubject> c) {
                     return false;
                 }
 
                 @Override
-                public boolean addAll(int index, Collection<? extends TrackLayoutInfo> c) {
+                public boolean addAll(int index, Collection<? extends TrackModelSubject> c) {
                     return false;
                 }
 
@@ -95,22 +104,22 @@ public class TrackModelImpl implements TrackModel {
                 }
 
                 @Override
-                public TrackLayoutInfo get(int index) {
+                public TrackModelSubject get(int index) {
                     return null;
                 }
 
                 @Override
-                public TrackLayoutInfo set(int index, TrackLayoutInfo element) {
+                public TrackModelSubject set(int index, TrackModelSubject element) {
                     return null;
                 }
 
                 @Override
-                public void add(int index, TrackLayoutInfo element) {
+                public void add(int index, TrackModelSubject element) {
 
                 }
 
                 @Override
-                public TrackLayoutInfo remove(int index) {
+                public TrackModelSubject remove(int index) {
                     return null;
                 }
 
@@ -125,17 +134,17 @@ public class TrackModelImpl implements TrackModel {
                 }
 
                 @Override
-                public ListIterator<TrackLayoutInfo> listIterator() {
+                public ListIterator<TrackModelSubject> listIterator() {
                     return null;
                 }
 
                 @Override
-                public ListIterator<TrackLayoutInfo> listIterator(int index) {
+                public ListIterator<TrackModelSubject> listIterator(int index) {
                     return null;
                 }
 
                 @Override
-                public List<TrackLayoutInfo> subList(int fromIndex, int toIndex) {
+                public List<TrackModelSubject> subList(int fromIndex, int toIndex) {
                     return null;
                 }
         };
@@ -155,27 +164,26 @@ public class TrackModelImpl implements TrackModel {
     //should lines just be a string?
     private ArrayList<String> lines = new ArrayList<>();
     private final int temperature;
-
-    private List<TrackLayoutInfo> blockInfo = new ArrayList<>();
+    private List<TrackModelSubject> blockInfo = new ArrayList<>();
 
 
     public void setLine(String lines) {
         this.lines.add(lines);
     }
 
-    public void setTrainAuthority(int trainID, int authority) {
-        if (this.trainAuthorities.containsKey(trainID)) {
-            this.trainAuthorities.replace(trainID, authority);
+    public void setTrainAuthority(int blockID, int authority) {
+        if (this.trainAuthorities.containsKey(blockID)) {
+            this.trainAuthorities.replace(blockID, authority);
         } else {
-            this.trainAuthorities.put(trainID, authority);
+            this.trainAuthorities.put(blockID, authority);
         }
     }
 
-    public void setCommandedSpeed(int trainID, double commandedSpeed) {
-        if (this.trainCommandSpeeds.containsKey(trainID)) {
-            this.trainCommandSpeeds.replace(trainID, commandedSpeed);
+    public void setCommandedSpeed(int blockID, double commandedSpeed) {
+        if (this.trainCommandSpeeds.containsKey(blockID)) {
+            this.trainCommandSpeeds.replace(blockID, commandedSpeed);
         } else {
-            this.trainCommandSpeeds.put(trainID, commandedSpeed);
+            this.trainCommandSpeeds.put(blockID, commandedSpeed);
         }
     }
 
@@ -198,7 +206,7 @@ public class TrackModelImpl implements TrackModel {
     @Override
     public void setTemperature(int temp) {
         System.out.println("Setting Track Heaters: " + temp);
-        for (TrackLayoutInfo trackProperties : blockInfo) {
+        for (TrackModelSubject trackProperties : blockInfo) {
             if (temp < 40) {
                 trackProperties.trackHeaterProperty().set("STATUS - ON");
             } else {
@@ -327,7 +335,7 @@ public class TrackModelImpl implements TrackModel {
             this.setLine(br.readLine());
             while((line = br.readLine()) != null){
                 String[] values = line.split(",");
-                TrackLayoutInfo block = new TrackLayoutInfo();
+                TrackModelSubject block = new TrackModelSubject();
                 lineName = values[0];
                 block.setSection(values[1]);
                 block.setBlockNumber(values[2]);
