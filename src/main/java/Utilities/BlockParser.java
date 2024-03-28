@@ -1,206 +1,65 @@
 package Utilities;
 
-import Utilities.BasicBlock.DoorSide;
-import Utilities.Enums.Lines;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static Utilities.BasicBlock.Direction.*;
-import static Utilities.BasicBlock.DoorSide.BOTH;
-import static Utilities.BasicBlock.NodeConnection;
-
-public class BlockParser {
-
-
-    private BlockParser() {
-        throw new IllegalStateException("Utility class");
+public record BasicBlock(
+        String trackLine,
+        String section,
+        int blockNumber,
+        double blockLength,
+        double blockGrade,
+        double speedLimit,
+        double elevation,
+        double cumulativeElevation,
+        boolean isUnderground,
+        boolean isSwitch,
+        BlockType blockType,
+        Optional<String> stationName,
+        Optional<String> doorDirection,
+        NextBlock nextBlock
+) {
+    public enum BlockType {
+        REGULAR,
+        STATION,
+        CROSSING,
+        YARD
     }
 
+    public static BasicBlock fromCsv(String[] values, String[] headers) {
+        String trackLine = values[indexOf(headers, "Line")];
+        String section = values[indexOf(headers, "Section")];
+        int blockNumber = Integer.parseInt(values[indexOf(headers, "Block Number")]);
+        double blockLength = Double.parseDouble(values[indexOf(headers, "Block Length (m)")]);
+        double blockGrade = Double.parseDouble(values[indexOf(headers, "Block Grade (%)")]);
+        double speedLimit = Double.parseDouble(values[indexOf(headers, "Speed Limit (Km/Hr)")]);
+        String infrastructure = values[indexOf(headers, "Infrastructure")];
+        Optional<String> doorDirection = Optional.ofNullable(values[indexOf(headers, "Door Direction")]);
+        double elevation = Double.parseDouble(values[indexOf(headers, "ELEVATION (M)")]);
+        double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMALTIVE ELEVATION (M)")]);
 
-    public static ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(String filePath) {
-        ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> map = new ConcurrentHashMap<>();
+        boolean isUnderground = infrastructure.contains("UNDERGROUND");
+        boolean isSwitch = infrastructure.contains("SWITCH");
 
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(filePath));
-            // Extracting header to determine column indices
-            String[] headers = lines.get(0).split(",");
-            int lineIndex = indexOf(headers, "Line");
-            int sectionIndex = indexOf(headers, "Section");
-            int blockNumberIndex = indexOf(headers, "Block Number");
-            int blockLengthIndex = indexOf(headers, "Block Length (m)");
-            int blockGradeIndex = indexOf(headers, "Block Grade (%)");
-            int speedLimitIndex = indexOf(headers, "Speed Limit (Km/Hr)");
-            int infrastructureIndex = indexOf(headers, "Infrastructure");
-            int doorDirectionIndex = indexOf(headers, "Door Direction");
-            int elevationIndex = indexOf(headers, "ELEVATION (M)");
-            int cumulativeElevationIndex = indexOf(headers, "CUMALTIVE ELEVATION (M)");
+        NextBlock nextBlock = parseNextBlock(isSwitch, values[indexOf(headers, "North Bound")], values[indexOf(headers, "South Bound")]);
 
-            // Processing each row starting from index 1 to skip header
-            for (int i = 1; i < lines.size(); i++) {
-                String[] values = lines.get(i).split(",");
-                String trackLine = values[lineIndex];
-                char section = values[sectionIndex].charAt(0);
-                int blockNumber = Integer.parseInt(values[blockNumberIndex]);
-                int blockLength = (int) Double.parseDouble(values[blockLengthIndex]);
-                double blockGrade = Double.parseDouble(values[blockGradeIndex]);
-                int speedLimit = Integer.parseInt(values[speedLimitIndex]);
-                double elevation = Double.parseDouble(values[elevationIndex]);
-                double cumulativeElevation = Double.parseDouble(values[cumulativeElevationIndex]);
-                boolean isUnderground = values[infrastructureIndex].toLowerCase().contains("underground");
-                Lines line = Lines.valueOf(values[lineIndex].toUpperCase().strip());
-                // Parse the Infrastructure column to determine the block type and additional data
-                String doorSide = values[doorDirectionIndex].toUpperCase().strip();
-                DoorSide doorDirection;
-                doorSide = doorSide.toUpperCase().strip();
+        BlockType blockType = parseBlockType(infrastructure);
+        String stationName = parseStationName(infrastructure);
 
-                if(doorSide.equals("LEFT/RIGHT")) {
-                    doorSide = "BOTH";
-                }
+        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
+                elevation, cumulativeElevation, isUnderground, isSwitch, blockType, Optional.ofNullable(stationName),
+                doorDirection, nextBlock);
+    }
 
-                if(!doorSide.isEmpty()) {
-                    doorDirection = DoorSide.valueOf(doorSide);
-                } else{
-                    doorDirection = BOTH;
-                }
-
-                String infrastructure = values[infrastructureIndex];
-
-                BasicBlock blockInfo = parseInfrastructure(trackLine, section, blockNumber, blockLength,
-                        blockGrade, speedLimit, elevation, cumulativeElevation,
-                        isUnderground, infrastructure, doorDirection);
-
-                map.computeIfAbsent(line, k -> new ArrayDeque<>()).add(blockInfo);
+    private static String parseStationName(String infrastructure) {
+        if (infrastructure.contains("STATION")) {
+            int startIndex = infrastructure.indexOf("STATION") + "STATION".length();
+            int endIndex = infrastructure.indexOf(";", startIndex);
+            if (endIndex != -1) {
+                return infrastructure.substring(startIndex, endIndex).trim().replace(":", "");
             }
-        } catch (IOException e){
-                throw new RuntimeException(e);
-            }
-
-        return map;
-    }
-
-    public static ConcurrentHashMap<Lines, ArrayDeque<BasicBlock>> parseCSV(){
-        return parseCSV("src/main/resources/Framework/experimental_track_layout.csv");
-    }
-
-    private static BasicBlock parseInfrastructure(String trackLine, char section, int blockNumber, int blockLength,
-                                                  double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                                  boolean isUnderground, String infrastructure, DoorSide doorSide) {
-        if (infrastructure.contains("SWITCH")) {
-            NodeConnection nodeConnection = parseSwitch(infrastructure, blockNumber);
-            return BasicBlock.ofSwitch(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground, Optional.empty(), Optional.empty(),
-                    nodeConnection.parentID(), nodeConnection.parentDirection(),
-                    nodeConnection.defChildID(), nodeConnection.defDirection(),
-                    nodeConnection.altChildID(), nodeConnection.altDirection());
-        } else if (infrastructure.contains("STATION")) {
-            String[] stationInfo = infrastructure.split(";");
-            String stationName = stationInfo[0].split(":")[1].trim();
-            NodeConnection nodeConnection = parseStation(stationInfo[1].trim());
-            return BasicBlock.ofStation(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground, stationName, doorSide,
-                    nodeConnection.parentID(), nodeConnection.parentDirection(),
-                    nodeConnection.defChildID(), nodeConnection.defDirection());
-        } else if (infrastructure.contains("RAILWAY CROSSING")) {
-            return BasicBlock.ofCrossing(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground);
-        } else if (infrastructure.contains("YARD")) {
-            return BasicBlock.ofYard(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground);
-        } else {
-            return BasicBlock.ofRegular(trackLine, section, blockNumber, blockLength,
-                    blockGrade, speedLimit, elevation, cumulativeElevation,
-                    isUnderground);
         }
+        return null;
     }
-
-    private static NodeConnection parseStation(String connectionInfo) {
-        String regex = "\\(\\s*(\\d+)\\s*(<->|->|<-)\\s*(\\d+)\\s*\\)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(connectionInfo);
-
-        if (matcher.find()) {
-            int parentID = Integer.parseInt(matcher.group(1));
-            BasicBlock.Direction parentDirection = parseDirection(matcher.group(2));
-            int defChildID = Integer.parseInt(matcher.group(3));
-            BasicBlock.Direction defDirection;
-                if(parentDirection == TO_SWITCH) {
-                    defDirection = FROM_SWITCH;
-                } else if(parentDirection == FROM_SWITCH) {
-                    defDirection = TO_SWITCH;
-                } else {
-                    defDirection = BIDIRECTIONAL;
-                }
-            
-
-            return new NodeConnection(parentID, parentDirection, defChildID, defDirection, Optional.empty(), Optional.empty());
-        } else {
-            throw new IllegalArgumentException("Invalid station format: " + connectionInfo);
-        }
-    }
-
-    private static NodeConnection parseSwitch(String infrastructure, int blockNumber) {
-        String regex = "SWITCH\\s*\\((\\d+)\\s*(<->|->|<-)\\s*(\\d+)\\s*;\\s*(\\d+)\\s*(<->|->|<-)\\s*(\\d+)\\)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(infrastructure);
-
-        if (matcher.find()) {
-            int defChildID1 = Integer.parseInt(matcher.group(1));
-            String defDirection1 = matcher.group(2);
-            int defChildID2 = Integer.parseInt(matcher.group(3));
-            int altChildID1 = Integer.parseInt(matcher.group(4));
-            String altDirection1 = matcher.group(5);
-            int altChildID2 = Integer.parseInt(matcher.group(6));
-
-            BasicBlock.Direction defDirection;
-            BasicBlock.Direction altDirection;
-
-            if (defChildID1 == blockNumber) {
-                defDirection = parseDirection(defDirection1);
-            } else {
-                defDirection = parseDirection(reverseDirection(defDirection1));
-            }
-
-            if (altChildID1 == blockNumber) {
-                altDirection = parseDirection(altDirection1);
-            } else {
-                altDirection = parseDirection(reverseDirection(altDirection1));
-            }
-
-            return new NodeConnection(0, BasicBlock.Direction.TO_SWITCH, defChildID2, defDirection, Optional.of(altChildID2), Optional.of(altDirection));
-        } else {
-            throw new IllegalArgumentException("Invalid switch format: " + infrastructure);
-        }
-    }
-
-    private static String reverseDirection(String arrow) {
-        return switch (arrow) {
-            case "->" -> "<-";
-            case "<-" -> "->";
-            default -> arrow;
-        };
-    }
-
-    private static BasicBlock.Direction parseDirection(String arrow) {
-        return switch (arrow) {
-            case "->" -> TO_SWITCH;
-            case "<-" -> FROM_SWITCH;
-            case "<->" -> BIDIRECTIONAL;
-            default -> throw new IllegalArgumentException("Invalid arrow: " + arrow);
-        };
-    }
-
 
     private static int indexOf(String[] headers, String header) {
         for (int i = 0; i < headers.length; i++) {
@@ -208,8 +67,89 @@ public class BlockParser {
                 return i;
             }
         }
-        return -1; // Header not found
+        throw new IllegalArgumentException("Header not found: " + header);
     }
 
-}
+    private static BlockType parseBlockType(String infrastructure) {
+        if (infrastructure.contains("STATION")) {
+            return BlockType.STATION;
+        } else if (infrastructure.contains("CROSSING")) {
+            return BlockType.CROSSING;
+        } else if (infrastructure.contains("YARD")) {
+            return BlockType.YARD;
+        } else {
+            return BlockType.REGULAR;
+        }
+    }
 
+    private static NextBlock parseNextBlock(boolean isSwitch, String northBoundString, String southBoundString) {
+        Connection north = null;
+        Connection south = null;
+        Connection northDefault = null;
+        Connection northAlternate = null;
+        Connection southDefault = null;
+        Connection southAlternate = null;
+
+        if (isSwitch) {
+            if(northBoundString.contains("/") && southBoundString.contains("/")){
+                String[] northParts = northBoundString.split("/");
+                String[] southParts = southBoundString.split("/");
+                northDefault = parseConnection(northParts[0]);
+                northAlternate = parseConnection(northParts[1]);
+                southDefault = parseConnection(southParts[0]);
+                southAlternate = parseConnection(southParts[1]);
+
+            } else if (northBoundString.contains("/")) {
+                String[] northParts = northBoundString.split("/");
+                northDefault = parseConnection(northParts[0]);
+                northAlternate = parseConnection(northParts[1]);
+                southDefault = parseConnection(southBoundString);
+                southAlternate = new Connection(-1, false);
+
+            } else if (southBoundString.contains("/")) {
+                String[] southParts = southBoundString.split("/");
+                southDefault = parseConnection(southParts[0]);
+                southAlternate = parseConnection(southParts[1]);
+                northDefault = parseConnection(northBoundString);
+                northAlternate = new Connection(-1, false);
+
+            } else {
+                north = parseConnection(northBoundString);
+                south = parseConnection(southBoundString);
+            }
+
+        }else {
+            north = parseConnection(northBoundString);
+            south = parseConnection(southBoundString);
+        }
+
+        return new NextBlock(north, south, northDefault, northAlternate, southDefault, southAlternate);
+    }
+
+    private static Connection parseConnection(String connectionString) {
+        if (connectionString == null || connectionString.isEmpty() || connectionString.equals("~")) {
+            return new Connection(-1, false);
+        }
+
+        boolean switchDirection = connectionString.endsWith("<->");
+        int blockNumber = Integer.parseInt(connectionString.replace("<->", ""));
+
+        return new Connection(blockNumber, switchDirection);
+    }
+
+    public record NextBlock(
+            Connection north,
+            Connection south,
+            Connection northDefault,
+            Connection northAlternate,
+            Connection southDefault,
+            Connection southAlternate
+    ) {
+    }
+
+    public record Connection(
+            int blockNumber,
+            boolean flipDirection
+    ) {
+    }
+}
