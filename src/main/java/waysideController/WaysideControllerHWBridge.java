@@ -163,12 +163,12 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     @Override
-    public void CTCSendSchedule(int trainID, int[] schedule) {
+    public void CTCSendAuthority(int trainID, int blockID) {
 
     }
 
     @Override
-    public void waysideIncomingTrain(int trainID, int blockID) {
+    public void waysideIncomingTrain(int trainID, int blockID, int authBlockID) {
 
     }
 
@@ -204,7 +204,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         boolean currentState = block.isOpen();
 
         if(currentState != maintenanceState) {
-            block.setBlockmaintenanceStateState(maintenanceState);
+            block.setBlockMaintenanceState(maintenanceState);
             trackModelSetOccupancy(blockID, !maintenanceState);
 
             System.out.println("Send: blockMaintenance="+blockID+":"+maintenanceState);
@@ -216,7 +216,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     public void CTCEnableAllBlocks() {
         for(WaysideBlock block : blockMap.values()) {
             if(!block.isOpen()) {
-                block.setBlockmaintenanceStateState(true);
+                block.setBlockMaintenanceState(true);
                 trackModelSetOccupancy(block.getBlockID(), false);
             }
         }

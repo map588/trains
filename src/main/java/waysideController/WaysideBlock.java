@@ -8,6 +8,10 @@ import static waysideController.Properties.*;
 
 public class WaysideBlock implements Notifier {
     private final int blockID;
+    private int nextBlockIDNorth;
+    private int nextBlockIDSouth;
+    private boolean nextDirectionNorth;
+    private boolean nextDirectionSouth;
     private final boolean hasSwitch;
     private final boolean hasLight;
     private final boolean hasCrossing;
@@ -66,9 +70,9 @@ public class WaysideBlock implements Notifier {
             this.switchBlockParent = block.nodeConnection().get().parentID();
             this.switchBlockDef = block.nodeConnection().get().defChildID();
             this.switchBlockAlt = block.nodeConnection().get().altChildID().orElse(-1);
-
-            System.out.println("Switch block found: Parent = " + switchBlockParent);
         }
+
+        // TODO: Determine next block and direction and save to variables
     }
 
     public void setSubject(WaysideBlockSubject subject) {
@@ -83,7 +87,7 @@ public class WaysideBlock implements Notifier {
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
             case speed_p -> setSpeed((double) newValue);
-            case open_p -> setBlockmaintenanceStateState((boolean) newValue);
+            case open_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + propertyName + " not found in WaysideBlock");
         }
     }
@@ -128,7 +132,7 @@ public class WaysideBlock implements Notifier {
             subject.notifyChange(occupied_p, occupied);
     }
 
-    public void setBlockmaintenanceStateState(boolean open) {
+    public void setBlockMaintenanceState(boolean open) {
         System.out.println("Block Access State: " + open);
         this.open = open;
 
@@ -142,6 +146,8 @@ public class WaysideBlock implements Notifier {
     public void setSwitchState(boolean switchState) {
         System.out.println("Switch State: " + switchState);
         this.switchState = switchState;
+
+        // TODO: Update next block and direction based on switch state
 
         if(subject != null)
             subject.notifyChange(switchState_p, switchState);
@@ -231,7 +237,7 @@ public class WaysideBlock implements Notifier {
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
             case speed_p -> setSpeed((double) newValue);
-            case open_p -> setBlockmaintenanceStateState((boolean) newValue);
+            case open_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
     }
@@ -250,6 +256,14 @@ public class WaysideBlock implements Notifier {
 
     public boolean hasTrain() {
         return trainID != -1;
+    }
+
+    public int nextBlock() {
+        return direction ? nextBlockIDNorth : nextBlockIDSouth;
+    }
+
+    public boolean nextDirection() {
+        return direction ? nextDirectionNorth : nextDirectionSouth;
     }
 }
 

@@ -66,21 +66,22 @@ public interface WaysideController {
     void CTCDispatchTrain(int trainID);
 
     /**
-     * Sends the schedule of a train to the Wayside.
+     * Sends the authority for a train to the Wayside.
+     * The authority is simply the block ID that the train is allowed to travel to.
      * This allows the Wayside to stop a train at a specific block or station.
      * @param trainID The ID of the train
-     * @param schedule (currently a placeholder value) An array of block IDs that the train will stop at
-     *                 This will likely be changed to include suggested speeds, this is just a placeholder for now
+     * @param blockID The ID of the block the train is allowed to travel to
      */
-    void CTCSendSchedule(int trainID, int[] schedule);
+    void CTCSendAuthority(int trainID, int blockID);
 
     /**
      * Signals to the Wayside that a train is entering a block of its domain.
      * This is used to transfer the trainID between Waysides as a train moves between the domain of the Waysides.
      * @param trainID The ID of the train entering the block
      * @param blockID The ID of the block the train is entering
+     * @param authBlockID The ID of the block the train is allowed to travel to
      */
-    void waysideIncomingTrain(int trainID, int blockID);
+    void waysideIncomingTrain(int trainID, int blockID, int authBlockID);
 
     /**
      * Signals to a Wayside to request a bidirectional track be assigned a traveling direction.

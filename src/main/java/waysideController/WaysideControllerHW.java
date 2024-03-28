@@ -113,7 +113,7 @@ public class WaysideControllerHW implements PLCRunner {
             }
             case "blockMaintenance" -> {
                 String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setBlockmaintenanceStateState(Boolean.parseBoolean(setValues[1]));
+                blockMap.get(Integer.parseInt(setValues[0])).setBlockMaintenanceState(Boolean.parseBoolean(setValues[1]));
             }
             case "occupancy" -> {
                 String[] setValues = values[1].split(":");
