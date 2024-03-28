@@ -13,6 +13,7 @@ public class WaysideBlock implements Notifier {
     private boolean nextDirectionNorth;
     private boolean nextDirectionSouth;
     private final boolean hasSwitch;
+    private boolean switchBranchDir;
     private final boolean hasLight;
     private final boolean hasCrossing;
 
@@ -67,18 +68,33 @@ public class WaysideBlock implements Notifier {
         this.trainID = -1;
 
         if(this.hasSwitch) {
+            System.out.println("North: " + block.nextBlock().north());
+            System.out.println("South: " + block.nextBlock().south());
+            System.out.println("NorthDef: " + block.nextBlock().northDefault());
+            System.out.println("NorthAlt: " + block.nextBlock().northAlternate());
+            System.out.println("SouthDef: " + block.nextBlock().southDefault());
+            System.out.println("SouthAlt: " + block.nextBlock().southAlternate());
+
             this.switchBlockParent = this.blockID;
-            if(block.nextBlock().northDefault().blockNumber() != -1) {
+
+            switchBranchDir = block.nextBlock().northDefault().blockNumber() != -1 && block.nextBlock().northAlternate().blockNumber() != -1;
+            if(switchBranchDir) {
                 this.switchBlockDef = block.nextBlock().northDefault().blockNumber();
                 this.switchBlockAlt = block.nextBlock().northAlternate().blockNumber();
+
+                nextBlockIDNorth = block.nextBlock().northDefault().blockNumber();
+                nextDirectionNorth = !block.nextBlock().northDefault().flipDirection();
+                nextBlockIDSouth = block.nextBlock().southDefault().blockNumber();
             }
             else {
                 this.switchBlockDef = block.nextBlock().southDefault().blockNumber();
                 this.switchBlockAlt = block.nextBlock().southAlternate().blockNumber();
+
+                nextBlockIDSouth = block.nextBlock().southDefault().blockNumber();
+                nextDirectionSouth = block.nextBlock().southDefault().flipDirection();
+                nextBlockIDNorth = block.nextBlock().northDefault().blockNumber();
             }
         }
-
-        // TODO: Determine next block and direction and save to variables
     }
 
     public void setSubject(WaysideBlockSubject subject) {
@@ -153,7 +169,12 @@ public class WaysideBlock implements Notifier {
         System.out.println("Switch State: " + switchState);
         this.switchState = switchState;
 
-        // TODO: Update next block and direction based on switch state
+        if(switchBranchDir) {
+            nextBlockIDNorth = switchState ? switchBlockAlt : switchBlockDef;
+        }
+        else {
+            nextBlockIDSouth = switchState ? switchBlockAlt : switchBlockDef;
+        }
 
         if(subject != null)
             subject.notifyChange(switchState_p, switchState);
