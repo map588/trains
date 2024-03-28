@@ -2,6 +2,7 @@ package waysideController;
 
 import Framework.Support.Notifier;
 import Utilities.BasicBlock;
+import Utilities.Enums.Direction;
 
 import static Utilities.Enums.BlockType.CROSSING;
 import static Utilities.Enums.BlockType.STATION;
@@ -57,7 +58,7 @@ public class WaysideBlock implements Notifier {
 
             this.switchBlockParent = this.blockID;
 
-            switchBranchDir = block.nextBlock().northDefault().blockNumber() != -1 && block.nextBlock().northAlternate().blockNumber() != -1;
+            switchBranchDir = block.nextBlock().primarySwitchDirection() == Direction.NORTH;
             if(switchBranchDir) {
                 this.switchBlockDef = block.nextBlock().northDefault().blockNumber();
                 this.switchBlockAlt = block.nextBlock().northAlternate().blockNumber();

@@ -119,10 +119,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
         if(block.isOpen() && block.isOccupied() != occupied) {
             block.setOccupied(occupied);
-             ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, occupied);
+
+            if(ctcOffice != null)
+                ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, occupied);
 
             // Update train ID if the block is occupied
-            if (occupied) {
+            if (occupied && trainNextBlockMap.containsKey(blockID)) {
                 int trainID = trainNextBlockMap.get(blockID);
                 block.setTrainID(trainID);
 
@@ -150,11 +152,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         speed = Math.min(speed, blockMap.get(blockID).getSpeed());
         blockMap.get(blockID).setSpeed(speed);
 
-        if(blockMap.get(blockID).getBooleanAuth()) {
-            trackModel.setCommandedSpeed(blockID, speed);
-        }
-        else {
-            trackModel.setCommandedSpeed(blockID, 0);
+        if(trackModel != null) {
+            if (blockMap.get(blockID).getBooleanAuth()) {
+                trackModel.setCommandedSpeed(blockID, speed);
+            } else {
+                trackModel.setCommandedSpeed(blockID, 0);
+            }
         }
     }
 
@@ -167,7 +170,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(currentState != maintenanceState) {
             block.setBlockMaintenanceState(maintenanceState);
             block.setOccupied(!maintenanceState);
-            ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, !maintenanceState);
+            if(ctcOffice != null)
+                ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, !maintenanceState);
 
             runPLC();
         }
@@ -180,7 +184,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(!block.isOpen()) {
                 block.setBlockMaintenanceState(true);
                 block.setOccupied(false);
-                ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, block.getBlockID(), false);
+                if(ctcOffice != null)
+                    ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, block.getBlockID(), false);
             }
         }
         runPLC();
@@ -191,8 +196,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         if(maintenanceMode) {
             blockMap.get(blockID).setSwitchState(switchState);
-            trackModel.setSwitchState(blockID, switchState);
-            ctcOffice.setSwitchState(trackLine==Lines.GREEN, blockID, switchState);
+            if(trackModel != null)
+                trackModel.setSwitchState(blockID, switchState);
+            if(ctcOffice != null)
+                ctcOffice.setSwitchState(trackLine==Lines.GREEN, blockID, switchState);
             System.out.println("maintenanceSetSwitch: " + blockID + " " + switchState);
         }
     }
@@ -210,8 +217,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
         if(maintenanceMode) {
             blockMap.get(blockID).setLightState(lightState);
-            trackModel.setSignalState(blockID, lightState);
-            ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
+            if(trackModel != null)
+                trackModel.setSignalState(blockID, lightState);
+            if(ctcOffice != null)
+                ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
             System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
         }
     }
@@ -220,8 +229,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void maintenanceSetCrossing(int blockID, boolean crossingState) {
         if(maintenanceMode) {
             blockMap.get(blockID).setCrossingState(crossingState);
-            trackModel.setCrossing(blockID, crossingState);
-            ctcOffice.setCrossingState(trackLine==Lines.GREEN, blockID, crossingState);
+            if(trackModel != null)
+                trackModel.setCrossing(blockID, crossingState);
+            if(ctcOffice != null)
+                ctcOffice.setCrossingState(trackLine==Lines.GREEN, blockID, crossingState);
             System.out.println("maintenanceSetCrossing: " + blockID + " " + crossingState);
         }
     }
@@ -241,8 +252,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen() && block.getSwitchState() != switchState) {
             block.setSwitchState(switchState);
-            trackModel.setSwitchState(blockID, switchState);
-            ctcOffice.setSwitchState(trackLine==Lines.GREEN, blockID, switchState);
+            if(trackModel != null)
+                trackModel.setSwitchState(blockID, switchState);
+            if(ctcOffice != null)
+                ctcOffice.setSwitchState(trackLine==Lines.GREEN, blockID, switchState);
         }
     }
 
@@ -252,8 +265,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen() && block.getLightState() != lightState) {
             block.setLightState(lightState);
-            trackModel.setSignalState(blockID, lightState);
-            ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
+            if(trackModel != null)
+                trackModel.setSignalState(blockID, lightState);
+            if(ctcOffice != null)
+                ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
         }
     }
 
@@ -263,8 +278,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen() && block.getCrossingState() != crossingState) {
             block.setCrossingState(crossingState);
-            trackModel.setCrossing(blockID, crossingState);
-            ctcOffice.setCrossingState(trackLine==Lines.GREEN, blockID, crossingState);
+            if(trackModel != null)
+                trackModel.setCrossing(blockID, crossingState);
+            if(ctcOffice != null)
+                ctcOffice.setCrossingState(trackLine==Lines.GREEN, blockID, crossingState);
         }
     }
 
@@ -276,11 +293,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             block.setBooleanAuth(auth);
 //              trackModel.setTrainAuthority(blockID, auth);
 
-            if(blockMap.get(blockID).getBooleanAuth()) {
-                trackModel.setCommandedSpeed(blockID, block.getSpeed());
-            }
-            else {
-                trackModel.setCommandedSpeed(blockID, 0);
+            if(trackModel != null) {
+                if (blockMap.get(blockID).getBooleanAuth()) {
+                    trackModel.setCommandedSpeed(blockID, block.getSpeed());
+                } else {
+                    trackModel.setCommandedSpeed(blockID, 0);
+                }
             }
         }
     }
