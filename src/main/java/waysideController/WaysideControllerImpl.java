@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static waysideController.Properties.PLCName_p;
 import static waysideController.Properties.maintenanceMode_p;
@@ -57,10 +58,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         subject = new WaysideControllerSubject(this);
 
         // Parse the CSV file to get the blocks that the wayside controls
-        ArrayDeque<BasicBlock> blockDeque = BlockParser.parseCSV().get(Lines.GREEN);
-        BasicBlock[] blockArray = blockDeque.toArray(new BasicBlock[0]);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(Lines.GREEN);
         for(int blockID : blockIDList) {
-            WaysideBlock block = new WaysideBlock(blockArray[blockID]);
+            WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);
             subject.addBlock(new WaysideBlockSubject(block));
         }

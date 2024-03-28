@@ -29,7 +29,7 @@ public class TrackPseudoCode {
         trackOccupancyMap.put(train, startBlock);
     }
 
-    public synchronized int updateTrainLocation(TrainModel train) {
+    public synchronized double updateTrainLocation(TrainModel train) {
         int prevBlockID = trackOccupancyMap.get(train);
         BasicBlock prevBlock = trackLayout.get(prevBlockID);
 
@@ -41,8 +41,9 @@ public class TrackPseudoCode {
                 newBlockID =  nextFromRegularBlock(train, prevBlock);
             case STATION:
                 newBlockID =  nextFromStationBlock(train, prevBlock);
-            case SWITCH:
-                newBlockID =  nextFromSwitchBlock(train, prevBlock);
+                // TODO: Removed this to make it compile since switch is no longer an instance of BlockType
+//            case SWITCH:
+//                newBlockID =  nextFromSwitchBlock(train, prevBlock);
             case CROSSING:
                 newBlockID =  nextFromCrossingBlock(train, prevBlock);
             case YARD:

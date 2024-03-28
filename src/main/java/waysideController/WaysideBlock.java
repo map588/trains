@@ -59,17 +59,17 @@ public class WaysideBlock implements Notifier {
 
     public WaysideBlock(BasicBlock block) {
         this.blockID = block.blockNumber();
-        this.hasSwitch = block.blockType() == BasicBlock.BlockType.SWITCH;
+        this.hasSwitch = block.isSwitch();
         this.hasLight = block.blockType() == BasicBlock.BlockType.STATION;
         this.hasCrossing = block.blockType() == BasicBlock.BlockType.CROSSING;
         this.speedLimit = block.speedLimit();
         this.open = true;
         this.trainID = -1;
 
-        if(this.hasSwitch && block.nodeConnection().isPresent()) {
-            this.switchBlockParent = block.nodeConnection().get().parentID();
-            this.switchBlockDef = block.nodeConnection().get().defChildID();
-            this.switchBlockAlt = block.nodeConnection().get().altChildID().orElse(-1);
+        if(this.hasSwitch) {
+//            this.switchBlockParent = this.blockID;
+//            this.switchBlockDef = block.nodeConnection().get().defChildID();
+//            this.switchBlockAlt = block.nodeConnection().get().altChildID().orElse(-1);
         }
 
         // TODO: Determine next block and direction and save to variables
