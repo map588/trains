@@ -3,13 +3,16 @@ package trackModel;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
 import Utilities.BasicBlock;
+import Utilities.Enums.Lines;
 import trainModel.TrainModelImpl;
 
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TrackPseudoCode {
+public class TrackLine {
+
+    Lines line;
 
     ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
 
@@ -19,38 +22,42 @@ public class TrackPseudoCode {
     //maps blocks to block numbers
     ConcurrentSkipListMap<Integer, BasicBlock> trackLayout;
 
-    public TrackPseudoCode() {
+    public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> trackLayout) {
+        this.line = line;
+        this.trackLayout = trackLayout;
         setupListeners();
     }
 
 
-    public void trainDispatch(int startBlock, int trainID) {
+    public void trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(trainID, this);
-        trackOccupancyMap.put(train, startBlock);
+        trackOccupancyMap.put(train, 0);
     }
+
+
+    private void handleTrainEntry(TrainModel train, Integer blockID) {
+        BasicBlock block = trackLayout.get(blockID);
+        //...
+    }
+
+    private void handleTrainExit(TrainModel train, Integer blockID) {
+        BasicBlock block = trackLayout.get(blockID);
+        //...
+    }
+
+    /**
+     * Updates the location of a train on the track
+     *
+     * @param train
+     * @return the length of the block the train is now on (for the purpose of the train model)
+     */
 
     public synchronized double updateTrainLocation(TrainModel train) {
         int prevBlockID = trackOccupancyMap.get(train);
+
         BasicBlock prevBlock = trackLayout.get(prevBlockID);
 
-        Integer newBlockID;
-
-        //Figure out the next block based on the previous block type
-        switch (prevBlock.blockType()) {
-            case REGULAR:
-                newBlockID =  nextFromRegularBlock(train, prevBlock);
-            case STATION:
-                newBlockID =  nextFromStationBlock(train, prevBlock);
-                // TODO: Removed this to make it compile since switch is no longer an instance of BlockType
-//            case SWITCH:
-//                newBlockID =  nextFromSwitchBlock(train, prevBlock);
-            case CROSSING:
-                newBlockID =  nextFromCrossingBlock(train, prevBlock);
-            case YARD:
-                newBlockID =  nextFromYardBlock(train, prevBlock);
-            default:
-                newBlockID = prevBlockID++;
-        }
+        Integer newBlockID = lookupNextBlock(train, prevBlock);
 
         BasicBlock nextBlock = trackLayout.get(newBlockID);
 
@@ -58,42 +65,8 @@ public class TrackPseudoCode {
         trackOccupancyMap.remove(train);
         trackOccupancyMap.put(train, nextBlock.blockNumber());
 
-
         return nextBlock.blockLength();
     }
-
-    private void handleTrainEntry(TrainModel train, Integer blockID) {
-        // Logic to handle a train entering a segment
-    }
-
-    private void handleTrainExit(TrainModel train, Integer blockID) {
-        // Logic to handle a train leaving a segment
-    }
-
-
-    /*
-     * The following methods perform the logic to determine the next block for a train
-     */
-    private Integer nextFromRegularBlock(TrainModel train, BasicBlock prevBlock) {
-        return 0;
-    }
-
-    private Integer nextFromStationBlock(TrainModel train, BasicBlock prevBlock) {
-        return 0;
-    }
-
-    private Integer nextFromSwitchBlock(TrainModel train, BasicBlock prevBlock) {
-        return 0;
-    }
-
-    private Integer nextFromCrossingBlock(TrainModel train, BasicBlock prevBlock) {
-        return 0;
-    }
-
-    private Integer nextFromYardBlock(TrainModel train, BasicBlock prevBlock) {
-        return 0;
-    }
-
 
 
     // Used to add a task to the work queue
@@ -126,4 +99,26 @@ public class TrackPseudoCode {
 
         trackOccupancyMap.addChangeListener(trackListener);
     }
+
+    private synchronized Integer lookupNextBlock(TrainModel train, BasicBlock prevBlock) {
+
+        Integer newBlockID = 0;
+
+        //Figure out the next block based on the previous block type
+//        switch (prevBlock.blockType()) {
+//            case SWITCH:
+//                //newBlockID =  nextFromSwitchBlock(train, prevBlock);
+//            case YARD:
+//                //newBlockID =  nextFromYardBlock(train, prevBlock);
+//            case STATION:
+//                //newBlockID =  nextFromStationBlock(train, prevBlock);
+//            default:
+//                //newBlockID = nextFromRegularBlock(train, prevBlock);
+//        }
+
+        //This is wrong, it will need to be determined within the function whether the ascending or decending block is the next block,
+        // or the switch case.
+        return newBlockID;
+    }
+
 }

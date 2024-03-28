@@ -2,13 +2,16 @@ package trackModel;
 
 
 import Common.TrackModel;
-import trackModel.TrackModelSubject;
 import Utilities.BasicBlock;
+import Utilities.BlockParser;
+import Utilities.Enums.Lines;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 
 public class TrackModelImpl implements TrackModel {
@@ -195,3 +198,77 @@ public class TrackModelImpl implements TrackModel {
 
 }
 
+
+
+//    public List<TrackLayoutInfo> getTrackInfo() {
+//
+//        trackInfo.clear();
+//
+//        for(int i = 0; i <= 15; i++){
+//            TrackLayoutInfo block = new TrackLayoutInfo();
+//            block.setHasFailure(failures.contains(i));
+//            block.setIsOccupied(blockOccupied.contains(i));
+//            block.setBlockNumber("" + i);
+//
+//            if(i < 6){
+//                block.setSection("A");
+//            }
+//            else if(i < 11){
+//                block.setSection("B");
+//            }
+//            else{
+//                block.setSection("C");
+//            }
+//
+//            block.setBlockLength(50);
+//            block.setBlockGrade(0);
+//            block.setSpeedLimit(50);
+//            block.setIsCrossing(i == 3);
+//
+//            if(i == 3){
+//                block.setIsCrossing(true);
+//                block.setCrossingState("TRUE");
+//            }
+//
+//            block.setIsSignal(i == 6 || i == 11);
+//            block.setIsSwitch(i == 5 || i == 6 || i == 11);
+//            block.setIsUnderground(false);
+//            block.setIsStation(i == 10 || i == 15);
+//            block.setIsBeacon(i == 9 || i == 14);
+//            if(i == 5){
+//                block.setSwitchMain("6");
+//                block.setSwitchAlt("11");
+//                block.setSwitchBlockID("5");
+//            }
+//
+//            if(i == 9){
+//                beacons.add(9);
+//            }
+//
+//            if (i == 14){
+//                beacons.add(14);
+//            }
+//
+//            if(i == 6){
+//                block.setSignalID("6");
+//            }
+//
+//            if(i == 11){
+//                block.setSignalID("11");
+//            }
+//
+//            if(i == 10) {
+//                block.setNameOfStation("Station B");
+//            }
+//            if(i == 15) {
+//                block.setNameOfStation("Station C");
+//            }
+//
+//
+//
+//            this.trackInfo.add(block);
+//        }
+//
+//        return this.trackInfo;
+//    }
+//}

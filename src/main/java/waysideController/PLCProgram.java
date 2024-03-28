@@ -162,6 +162,23 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
         return new Value(conditional);
     }
 
+
+    public Value visitFor_statement(PLCParser.For_statementContext ctx) {
+        int startIndex = visit(ctx.INDEX(0)).asInteger();
+        int endIndex = visit(ctx.INDEX(1)).asInteger();
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            WaysideBlock block = blockMap.get(i);
+            if (block != null && block.isOccupied()) {
+                for (PLCParser.StatementContext statementCtx : ctx.statement()) {
+                    visit(statementCtx);
+                }
+            }
+        }
+
+        return Value.VOID;
+    }
+
     @Override
     public Value visitEquality_check(PLCParser.Equality_checkContext ctx) {
         return visitChildren(ctx);

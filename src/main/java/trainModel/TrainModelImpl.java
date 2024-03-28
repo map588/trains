@@ -7,7 +7,7 @@ import Common.TrainModel;
 import Framework.Support.Notifier;
 import Utilities.Constants;
 import Utilities.Conversion;
-import trackModel.TrackPseudoCode;
+import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 
 import java.util.Random;
@@ -60,7 +60,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //Module References
     private final TrainController controller;
 
-    private TrackPseudoCode track = null;
+    private TrackLine track = null;
 
     //purely for temperature calculation
     private double elapsedTime = 0;
@@ -96,7 +96,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.subject = new TrainModelSubject(this);
     }
 
-    public TrainModelImpl(int trainID, TrackPseudoCode track) {
+    public TrainModelImpl(int trainID, TrackLine track) {
         this.authority = 0;
         this.commandSpeed = 0;
         this.speed = 0;

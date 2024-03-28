@@ -18,6 +18,12 @@ if_else_statement
     NEWLINE (statement | statement NEWLINE | NEWLINE)+
     NEWLINE ENDIF ;
 
+for_statement
+    : FOR '(' INDEX ':' INDEX ')' NEWLINE
+    (statement | statement NEWLINE | NEWLINE)+
+    NEWLINE ENDFOR ;
+
+
 equality_check : equals_statement | not_equals_statement ;
 equals_statement : compound_value '==' (compound_value | value_false | value_true) ;
 not_equals_statement : compound_value '!=' (compound_value | value_false | value_true) ;
@@ -40,6 +46,8 @@ NOT : 'not' | 'NOT' ;
 IF : 'if' | 'IF' ;
 ELSE : 'else' | 'ELSE' ;
 ENDIF : 'endif' | 'ENDIF' ;
+FOR : 'for' | 'FOR' ;
+ENDFOR : 'endfor' | 'ENDFOR' ;
 COMMENT : '//' ~( '\r' | '\n' )* NEWLINE ;
 REQUEST_DIRECTION : 'request_direction' ;
 RELEASE_DIRECTION : 'release_direction' ;

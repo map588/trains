@@ -3,43 +3,45 @@ package trackModel;
 import Common.TrackModel;
 import javafx.beans.property.*;
 
+import java.util.List;
+
 public class TrackModelSubject {
 
-    private  StringProperty section;
-    private  StringProperty blockNumber;
-    private  IntegerProperty blockLength;
-    private  DoubleProperty blockGrade;
-    private  IntegerProperty speedLimit;
+    private StringProperty section;
+    private StringProperty blockNumber;
+    private IntegerProperty blockLength;
+    private DoubleProperty blockGrade;
+    private IntegerProperty speedLimit;
 
     // boolean properties
-    private  BooleanProperty isCrossing;
-    private  BooleanProperty isUnderground;
-    private  BooleanProperty isSignal;
-    private  BooleanProperty isSwitch;
-    private  BooleanProperty isStation;
-    private  BooleanProperty isBeacon;
-    private  BooleanProperty hasFailure;
-    private  BooleanProperty isOccupied;
+    private BooleanProperty isCrossing;
+    private BooleanProperty isUnderground;
+    private BooleanProperty isSignal;
+    private BooleanProperty isSwitch;
+    private BooleanProperty isStation;
+    private BooleanProperty isBeacon;
+    private BooleanProperty hasFailure;
+    private BooleanProperty isOccupied;
 
     //labels
-    private  StringProperty passEmbarked;
-    private  StringProperty passDisembarked;
-    private  StringProperty ticketSales;
-    private  StringProperty status;
-    private  StringProperty switchBlockID;
-    private  StringProperty switchMain;
-    private  StringProperty switchAlt;
-    private  StringProperty switchState;
-    private  StringProperty signalID;
-    private  StringProperty signalState;
-    private  StringProperty crossingState;
-    private  StringProperty tempDisplay;
-    private  StringProperty setBeacon;
-    private  StringProperty nameOfStation;
-    private  StringProperty trackHeater;
-    private  StringProperty tempProperty;
-    private  StringProperty comSpeed;
-    private  StringProperty trainAuthority;
+    private StringProperty passEmbarked;
+    private StringProperty passDisembarked;
+    private StringProperty ticketSales;
+    private StringProperty status;
+    private StringProperty switchBlockID;
+    private StringProperty switchMain;
+    private StringProperty switchAlt;
+    private StringProperty switchState;
+    private StringProperty signalID;
+    private StringProperty signalState;
+    private StringProperty crossingState;
+    private StringProperty tempDisplay;
+    private StringProperty setBeacon;
+    private StringProperty nameOfStation;
+    private StringProperty trackHeater;
+    private StringProperty tempProperty;
+    private StringProperty comSpeed;
+    private StringProperty trainAuthority;
 
     private TrackModel model;
 
@@ -72,25 +74,22 @@ public class TrackModelSubject {
         switchAlt = new SimpleStringProperty();
         nameOfStation = new SimpleStringProperty();
         trackHeater = new SimpleStringProperty("STATUS - OFF");
-        tempProperty = new SimpleStringProperty();
-        comSpeed = new SimpleStringProperty();
-        trainAuthority = new SimpleStringProperty();
-
     }
 
-    public TrackModelSubject(){
+
+    public TrackModelSubject() {
         initializeValues();
         initializeListeners();
     }
 
-    public TrackModelSubject(TrackModel model){
+    public TrackModelSubject(TrackModel model) {
         this.model = model;
         initializeValues();
         initializeListeners();
     }
 
 
-    private void initializeListeners(){
+    private void initializeListeners() {
 
         switchState.addListener((observableValue, oldValue, newVal) -> setSwitchState(newVal));
         signalState.addListener((observableValue, oldValue, newVal) -> setSignalState(newVal));
@@ -107,8 +106,8 @@ public class TrackModelSubject {
                     model.setTemperature(Integer.parseInt(newValue));
                 }
         );
-
     }
+
 
     public String getSection() {
         return section.get();
@@ -371,7 +370,9 @@ public class TrackModelSubject {
         this.signalState.set(signalState);
     }
 
-    public String getCrossingState() { return crossingState.get(); }
+    public String getCrossingState() {
+        return crossingState.get();
+    }
 
     public StringProperty crossingStateProperty() {
         return crossingState;
@@ -433,7 +434,9 @@ public class TrackModelSubject {
         return nameOfStation.get();
     }
 
-    public StringProperty nameOfStationProperty() { return nameOfStation; }
+    public StringProperty nameOfStationProperty() {
+        return nameOfStation;
+    }
 
     public void setNameOfStation(String nameOfStation) {
         this.nameOfStation.set(nameOfStation);
@@ -478,5 +481,4 @@ public class TrackModelSubject {
     public void setTrainAuthority(String trainAuthority) {
         this.trainAuthority.set(trainAuthority);
     }
-
 }

@@ -91,6 +91,7 @@ public record BasicBlock(
         Connection southAlternate = null;
 
         if (isSwitch) {
+
             if(northBoundString.contains("/") && southBoundString.contains("/")){
                 String[] northParts = northBoundString.split("/");
                 String[] southParts = southBoundString.split("/");

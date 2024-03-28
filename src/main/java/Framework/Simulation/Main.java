@@ -18,7 +18,7 @@ public class Main {
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
-        TrackModel trackModel = new TrackModelImpl();
+        TrackSystem trackLines = new TrackSystem();
         WaysideSystem waysideController = new WaysideSystem();
         TrainSystem trainSystem = new TrainSystem();
 
@@ -26,18 +26,18 @@ public class Main {
         // ...
 
         // Schedule the time synchronization task
-        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackModel, waysideController, trainSystem),
+        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackLines, waysideController, trainSystem),
                 0, TIMESTEP, TimeUnit.MILLISECONDS);
 
     }
 
     private static class TimeSynchronizationTask implements Runnable {
-        private final TrackModel trackModel;
+        private final TrackSystem trackLines;
         private final WaysideSystem waysideSystem;
         private final TrainSystem trainSystem;
 
-        public TimeSynchronizationTask(TrackModel trackModel, WaysideSystem waysideController, TrainSystem trainSystem) {
-            this.trackModel = trackModel;
+        public TimeSynchronizationTask(TrackSystem trackLines, WaysideSystem waysideController, TrainSystem trainSystem) {
+            this.trackLines = trackLines;
             this.waysideSystem = waysideController;
             this.trainSystem = trainSystem;
         }

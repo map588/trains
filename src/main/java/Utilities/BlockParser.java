@@ -17,6 +17,7 @@ public class BlockParser {
 
     public static ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> parseCSV(String filePath) {
         ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = new ConcurrentHashMap<>();
+
         String line = "";
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -32,19 +33,17 @@ public class BlockParser {
                 for(int j = 0; j < values.length; j++) {
                     correctedValues[j] = values[j];
                 }
-
-                if(values.length != headers.length) {
+                if(values.length != headers.length){
                     int diff = headers.length - values.length;
                     for(int j = values.length; j < diff; j++) {
                         correctedValues[j] = "";
+                        }
                     }
-                }
                 BasicBlock block = BasicBlock.fromCsv(correctedValues, headers);
                 map.computeIfAbsent(Lines.valueOf(block.trackLine().toUpperCase()), k -> new ConcurrentSkipListMap<>())
                         .put(block.blockNumber(), block);
             }
         } catch (IOException e) {
-            System.out.println("Error reading line: \n" + line);
             throw new RuntimeException(e);
         }
 
