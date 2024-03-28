@@ -1,13 +1,17 @@
 package CTCOffice;
 
 import Common.CTCOffice;
+import Utilities.Enums.Lines;
+import  Utilities.BasicBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
-import static Utilities.CSVTokenizer.blockList;
-import static Utilities.CSVTokenizer.lineNames;
+import static Utilities.BlockParser.parseCSV;
+
 
 /**
  * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).
@@ -34,11 +38,14 @@ public class CTCOfficeImpl implements CTCOffice {
      */
     private CTCOfficeImpl() {
 
-        track.put(lineNames.get(0), new ArrayList<>() {{
-            add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(0))));
-        }});
-        for(int i = 1; i < blockList.get(lineNames.get(0)).size(); i++) {
-            track.get(lineNames.get(0)).add(new CTCBlockSubject(new CTCBlockInfo(blockList.get(lineNames.get(0)).get(i))));
+        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLineBlocks = parseCSV();
+
+        for(Lines line : trackLineBlocks.keySet()) {
+            ArrayList<CTCBlockSubject> blockSubjects = new ArrayList<>();
+            for(BasicBlock block : trackLineBlocks.get(line).values()) {
+                blockSubjects.add(new CTCBlockSubject(new CTCBlockInfo(block)));
+            }
+            track.put(line.toString(), blockSubjects);
         }
 
         new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
@@ -47,8 +54,6 @@ public class CTCOfficeImpl implements CTCOffice {
             add(new TrainStop(7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add(new TrainStop(10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
-
-
     }
 
     public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {

@@ -2,7 +2,6 @@ package waysideController;
 
 import Utilities.BasicBlock;
 import Utilities.BlockParser;
-import Utilities.CSVTokenizer;
 import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
 
@@ -154,9 +153,6 @@ public class WaysideControllerHW implements PLCRunner {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        CSVTokenizer csv = new CSVTokenizer();
-        csv.setCSVFile("src/main/java/Utilities/BlueLine.csv");
-        CSVTokenizer.parseCSVToTrueBlockInfo("BlueLine");
 
         System.out.println("Starting Wayside Controller");
         WaysideControllerHW controller = new WaysideControllerHW("/dev/ttyS0");

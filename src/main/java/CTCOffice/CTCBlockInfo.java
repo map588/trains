@@ -1,6 +1,10 @@
 package CTCOffice;
 
-import Utilities.BasicBlockInfo;
+import Utilities.BasicBlock;
+
+import static Utilities.Enums.BlockType.*;
+import static Utilities.Enums.Direction.NORTH;
+import static Utilities.Enums.Direction.SOUTH;
 
 /**
  * This class represents a block of the track in the Centralized Traffic Control (CTC) system.
@@ -8,10 +12,12 @@ import Utilities.BasicBlockInfo;
  * their states, speed limit, block length, IDs of converging and diverging blocks, and the state of the switch.
  */
 class CTCBlockInfo {
-    private final int blockID, blockLength, speedLimit;
+    private final int blockID;
+    private final double speedLimit, blockLength;
     private final String line;
     private boolean occupied, underMaintenance;
-    private final boolean hasLight, hasSwitchCon, hasSwitchDiv, hasCrossing;
+    private final boolean hasLight, hasCrossing, hasSwitch;
+    private final boolean hasSwitchCon, hasSwitchDiv;
     private boolean switchLightState, crossingState, switchState;
     private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
     //private javafx.scene.paint.Paint switchLightColor, crossingLightColor, maintenanceLightColor;
@@ -21,27 +27,25 @@ class CTCBlockInfo {
      * Constructor for the CTCBlockInfo class.
      * Initializes the block properties and registers the block with the CTCBlockSubjectFactory.
      */
-    CTCBlockInfo(int blockID, String line, boolean occupied, boolean hasLight, boolean hasSwitchCon,
-                 boolean hasSwitchDiv, boolean hasCrossing, boolean switchLightState, boolean crossingState, int speedLimit,
-                 int blockLength, int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID,
-                 boolean switchState, boolean underMaintenance) {
+    CTCBlockInfo(BasicBlock block) {
 
-        this.blockID = blockID;
-        this.line = line;
-        this.occupied = occupied;
-        this.hasLight = hasLight;
-        this.hasSwitchCon = hasSwitchCon;
-        this.hasSwitchDiv = hasSwitchDiv;
-        this.hasCrossing = hasCrossing;
-        this.switchLightState = switchLightState;
-        this.crossingState = crossingState;
-        this.speedLimit = speedLimit;
-        this.blockLength = blockLength;
-        this.convergingBlockID = convergingBlockID;
-        this.divergingBlockOneID = divergingBlockOneID;
-        this.divergingBlockTwoID = divergingBlockTwoID;
-        this.switchState = switchState;
-        this.underMaintenance = underMaintenance;
+        this.blockID = block.blockNumber();
+        this.line = block.trackLine();
+        this.occupied = false;
+        this.hasLight = false;//tbd
+        this.hasSwitch = block.isSwitch();
+        this.hasSwitchCon = block.nextBlock().primarySwitchDirection() == NORTH;
+        this.hasSwitchDiv = block.nextBlock().primarySwitchDirection() == SOUTH;
+        this.hasCrossing = (block.blockType() == CROSSING);
+        this.switchLightState = false;
+        this.crossingState = false;
+        this.speedLimit = block.speedLimit();
+        this.blockLength = block.blockLength();
+        this.convergingBlockID = block.blockNumber();
+        this.divergingBlockOneID = block.nextBlock().northDefault().blockNumber();
+        this.divergingBlockTwoID = block.nextBlock().northAlternate().blockNumber();
+        this.switchState = false;
+        this.underMaintenance = false;
 //        updateSwitchLightColor();
 //        updateCrossingLightColor();
 //        updateMaintenanceLightColor();
@@ -49,12 +53,12 @@ class CTCBlockInfo {
        map.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
-    CTCBlockInfo(BasicBlockInfo block) {
-        this(block.blockNumber(), block.trackLine(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
-                block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
-                block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),
-                block.underMaintenance());
-    }
+//    CTCBlockInfo(BasicBlock block) {
+//        this(block.blockNumber(), block.trackLine(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
+//                block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
+//                block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),
+//                block.underMaintenance());
+//    }
                  // Complex setters and getters
 
                  /**
@@ -170,10 +174,10 @@ class CTCBlockInfo {
     String getLine         () {
         return line;
     }
-    int     getSpeedLimit   () {
+    double     getSpeedLimit   () {
         return speedLimit;
     }
-    int     getBlockLength  () {
+    double     getBlockLength  () {
         return blockLength;
     }
 

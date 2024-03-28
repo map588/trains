@@ -2,6 +2,9 @@ package Utilities;
 
 import java.util.Optional;
 import Utilities.Enums.BlockType;
+import Utilities.Enums.Direction;
+
+import static Utilities.Enums.Direction.*;
 
 public record BasicBlock(
         String trackLine,
@@ -84,23 +87,27 @@ public record BasicBlock(
         Connection northAlternate = null;
         Connection southDefault = null;
         Connection southAlternate = null;
+        Direction  primarySwitchDirection = null;
 
         if (isSwitch) {
 
-            if(northBoundString.contains("/") && southBoundString.contains("/")){
-                String[] northParts = northBoundString.split("/");
-                String[] southParts = southBoundString.split("/");
-                northDefault = parseConnection(northParts[0]);
-                northAlternate = parseConnection(northParts[1]);
-                southDefault = parseConnection(southParts[0]);
-                southAlternate = parseConnection(southParts[1]);
-
-            } else if (northBoundString.contains("/")) {
+//            if(northBoundString.contains("/") && southBoundString.contains("/")){
+//                String[] northParts = northBoundString.split("/");
+//                String[] southParts = southBoundString.split("/");
+//                northDefault = parseConnection(northParts[0]);
+//                northAlternate = parseConnection(northParts[1]);
+//                southDefault = parseConnection(southParts[0]);
+//                southAlternate = parseConnection(southParts[1]);
+//
+//            } else
+                if (northBoundString.contains("/")) {
                 String[] northParts = northBoundString.split("/");
                 northDefault = parseConnection(northParts[0]);
                 northAlternate = parseConnection(northParts[1]);
                 southDefault = parseConnection(southBoundString);
                 southAlternate = new Connection(-1, false);
+
+                primarySwitchDirection = NORTH;
 
             } else if (southBoundString.contains("/")) {
                 String[] southParts = southBoundString.split("/");
@@ -109,9 +116,13 @@ public record BasicBlock(
                 northDefault = parseConnection(northBoundString);
                 northAlternate = new Connection(-1, false);
 
+                primarySwitchDirection = SOUTH;
+
             } else {
                 north = parseConnection(northBoundString);
                 south = parseConnection(southBoundString);
+
+                primarySwitchDirection = EITHER;
             }
 
         }else {
@@ -119,7 +130,7 @@ public record BasicBlock(
             south = parseConnection(southBoundString);
         }
 
-        return new NextBlock(north, south, northDefault, northAlternate, southDefault, southAlternate);
+        return new NextBlock(north, south, northDefault, northAlternate, southDefault, southAlternate, primarySwitchDirection);
     }
 
     private static Connection parseConnection(String connectionString) {
@@ -139,7 +150,8 @@ public record BasicBlock(
             Connection northDefault,
             Connection northAlternate,
             Connection southDefault,
-            Connection southAlternate
+            Connection southAlternate,
+            Direction primarySwitchDirection
     ) {
     }
 

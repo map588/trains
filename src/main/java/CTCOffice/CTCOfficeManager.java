@@ -1,7 +1,6 @@
 package CTCOffice;
 
 import Framework.Support.ObservableHashMap;
-import Utilities.CSVTokenizer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -131,7 +130,6 @@ public class CTCOfficeManager {
 
         //Table editing bar
         blockSelection.getItems().addAll(blockMap.getSubjects().keySet());
-        lineSelection.getItems().addAll(CSVTokenizer.lineNames);
 
         switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
         switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
