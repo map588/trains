@@ -3,6 +3,7 @@
 .gradle/
 !gradle/wrapper/gradle-wrapper.jar
 src/main/java/waysideController/plc_parser
+/src/main/java/Framework/Simulation/csvs/
 
 ### IntelliJ IDEA ###
 .idea/
@@ -43,3 +44,4 @@ build/*
 
 ### Mac OS ###
 .DS_Store
+

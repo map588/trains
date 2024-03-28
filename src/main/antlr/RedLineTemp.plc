@@ -1,0 +1,70 @@
+// Controls sections A to T blocks 1-76
+// Accesses occupancies from blocks 1-76
+
+// Assign direction for outgoing trains
+if not dir_assigned[76]
+    if occupied[1]
+        request_direction(76, OUTBOUND)
+    endif
+else
+    if not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71] and not occupied[70] and not occupied[69] and not occupied[68] and not occupied[1]
+        release_direction(76)
+    endif
+endif
+
+// Switch 1-9-10
+if not occupied[9] and dir_assigned[76]
+    switch[10] = direction[76] == OUTBOUND
+endif
+
+// General occupancies A
+authority[1] = not occupied[9] and not occupied[10] and not occupied[11] and not occupied[12] and switch[10]
+authority[2] = not occupied[1] and not occupied[9] and not occupied[10] and not occupied[11] and switch[10]
+authority[3] = not occupied[2] and not occupied[1] and not occupied[9] and not occupied[10] and switch[10]
+
+// General occupancies B
+authority[4] = not occupied[3] and not occupied[2] and not occupied[1] and not occupied[9] and switch[10]
+authority[5] = not occupied[4] and not occupied[3] and not occupied[2] and not occupied[1]
+authority[6] = not occupied[5] and not occupied[4] and not occupied[3] and not occupied[2]
+
+// General occupancies C
+authority[7] = not occupied[6] and not occupied[5] and not occupied[4] and not occupied[3]
+authority[8] = not occupied[7] and not occupied[6] and not occupied[5] and not occupied[4]
+authority[9] = not occupied[8] and not occupied[7] and not occupied[6] and not occupied[5]
+authority[10] = not occupied[9] and not occupied[8] and not occupied[7] and not occupied[6]
+authority[11] = not occupied[10] and not occupied[9] and not occupied[8] and not occupied[7]
+authority[12] = not occupied[11] and not occupied[10] and not occupied[9] and not occupied[8]
+
+// General occupancies D,E,F
+if dir_assigned[76]
+    if direction[76] == INBOUND
+        authority[13] = not occupied[12] and not occupied[11] and not occupied[10] and not occupied[9] and not switch[10]
+        authority[14] = not occupied[13] and not occupied[12] and not occupied[11] and not occupied[10] and not switch[10]
+        authority[15] = not occupied[14] and not occupied[13] and not occupied[12] and not occupied[11] and not switch[10]
+        authority[16] = not occupied[15] and not occupied[14] and not occupied[13] and not occupied[12] and not switch[10]
+
+        authority[17] = not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13]
+        authority[18] = not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14]
+        authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15]
+    else
+        authority[13] = not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17]
+        authority[14] = not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18]
+        authority[15] = not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19]
+        authority[16] = not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20]
+
+        authority[17] = not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21]
+        authority[18] = not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22]
+        authority[19] = not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23]
+    endif
+else
+    authority[13] = FALSE
+    authority[14] = FALSE
+    authority[15] = FALSE
+    authority[16] = FALSE
+    authority[17] = FALSE
+    authority[18] = FALSE
+    authority[19] = FALSE
+endif
+
+// Crossings
+crossing[47] = not occupied[46] and not occupied[47] and not occupied[48]
