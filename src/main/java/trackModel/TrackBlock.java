@@ -12,29 +12,29 @@ class TrackBlock {
 
 
     //Block Information
-    private final int blockID;
-    private final boolean isUnderground;
-    private final boolean isSwitch;
-    private final BlockType blockType;
-    private final Lines line;
+    final int blockID;
+    final boolean isUnderground;
+    final boolean isSwitch;
+    final BlockType blockType;
+    final Lines line;
 
-    private final Integer northID;
-    private final Integer southID;
+    final Integer northID;
+    final Integer southID;
 
     //Physical properties
-    private final double grade;
-    private final double elevation;
-    private final double cumulativeElevation;
-    private final double speedLimit;
-    private final double length;
+    final double grade;
+    final double elevation;
+    final double cumulativeElevation;
+    final double speedLimit;
+    final double length;
 
     //Specific Block Information
-    private SwitchState switchInfo;
-    private CrossingState crossingInfo;
-    private StationInfo stationInfo;
+    SwitchState switchInfo;
+    CrossingState crossingInfo;
+    StationInfo stationInfo;
 
 
-     TrackBlock(BasicBlock blockInfo) {
+    TrackBlock(BasicBlock blockInfo) {
         this.blockID = blockInfo.blockNumber();
         this.isUnderground = blockInfo.isUnderground();
         this.isSwitch = blockInfo.isSwitch();
@@ -78,7 +78,7 @@ class TrackBlock {
     }
 
 
-    public Integer getNextBlock(Direction direction) {
+     Integer getNextBlock(Direction direction) {
         if(!isSwitch) {
             if (direction == Direction.NORTH)
                 return northID;
@@ -149,8 +149,8 @@ class TrackBlock {
     }
 
      static class StationInfo{
-        private final String stationName;
-        private final String doorDirection;
+        final String stationName;
+        final String doorDirection;
 
         //Null constructor
         StationInfo(){
@@ -167,7 +167,7 @@ class TrackBlock {
     }
 
      static class CrossingState{
-        private Boolean crossingState;
+        Boolean crossingState;
 
         //Null constructor
         CrossingState(){
