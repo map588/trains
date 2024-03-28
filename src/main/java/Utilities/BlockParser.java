@@ -1,155 +1,57 @@
 package Utilities;
 
-import java.util.Optional;
+import Utilities.Enums.Lines;
 
-public record BasicBlock(
-        String trackLine,
-        String section,
-        int blockNumber,
-        double blockLength,
-        double blockGrade,
-        double speedLimit,
-        double elevation,
-        double cumulativeElevation,
-        boolean isUnderground,
-        boolean isSwitch,
-        BlockType blockType,
-        Optional<String> stationName,
-        Optional<String> doorDirection,
-        NextBlock nextBlock
-) {
-    public enum BlockType {
-        REGULAR,
-        STATION,
-        CROSSING,
-        YARD
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class BlockParser {
+
+    private BlockParser() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public static BasicBlock fromCsv(String[] values, String[] headers) {
-        String trackLine = values[indexOf(headers, "Line")];
-        String section = values[indexOf(headers, "Section")];
-        int blockNumber = Integer.parseInt(values[indexOf(headers, "Block Number")]);
-        double blockLength = Double.parseDouble(values[indexOf(headers, "Block Length (m)")]);
-        double blockGrade = Double.parseDouble(values[indexOf(headers, "Block Grade (%)")]);
-        double speedLimit = Double.parseDouble(values[indexOf(headers, "Speed Limit (Km/Hr)")]);
-        String infrastructure = values[indexOf(headers, "Infrastructure")];
-        Optional<String> doorDirection = Optional.ofNullable(values[indexOf(headers, "Door Direction")]);
-        double elevation = Double.parseDouble(values[indexOf(headers, "ELEVATION (M)")]);
-        double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMALTIVE ELEVATION (M)")]);
+    public static ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> parseCSV(String filePath) {
+        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = new ConcurrentHashMap<>();
+        String line = "";
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(filePath));
+            String[] headers = lines.get(0).split(",");
 
-        boolean isUnderground = infrastructure.contains("UNDERGROUND");
-        boolean isSwitch = infrastructure.contains("SWITCH");
+            for (int i = 1; i < lines.size(); i++) {
+                //initialize values array to size of headers, fill with values from csv
+                String[] correctedValues = new String[headers.length];
+                String[] values = lines.get(i).split(",");
+                line = lines.get(i);
+                //if the values array is not the same size as the headers array, fill in the missing values with empty strings
 
-        NextBlock nextBlock = parseNextBlock(isSwitch, values[indexOf(headers, "North Bound")], values[indexOf(headers, "South Bound")]);
+                for(int j = 0; j < values.length; j++) {
+                    correctedValues[j] = values[j];
+                }
 
-        BlockType blockType = parseBlockType(infrastructure);
-        String stationName = parseStationName(infrastructure);
-
-        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, isSwitch, blockType, Optional.ofNullable(stationName),
-                doorDirection, nextBlock);
-    }
-
-    private static String parseStationName(String infrastructure) {
-        if (infrastructure.contains("STATION")) {
-            int startIndex = infrastructure.indexOf("STATION") + "STATION".length();
-            int endIndex = infrastructure.indexOf(";", startIndex);
-            if (endIndex != -1) {
-                return infrastructure.substring(startIndex, endIndex).trim().replace(":", "");
+                if(values.length != headers.length) {
+                    int diff = headers.length - values.length;
+                    for(int j = values.length; j < diff; j++) {
+                        correctedValues[j] = "";
+                    }
+                }
+                BasicBlock block = BasicBlock.fromCsv(correctedValues, headers);
+                map.computeIfAbsent(Lines.valueOf(block.trackLine().toUpperCase()), k -> new ConcurrentSkipListMap<>())
+                        .put(block.blockNumber(), block);
             }
-        }
-        return null;
-    }
-
-    private static int indexOf(String[] headers, String header) {
-        for (int i = 0; i < headers.length; i++) {
-            if (headers[i].equalsIgnoreCase(header)) {
-                return i;
-            }
-        }
-        throw new IllegalArgumentException("Header not found: " + header);
-    }
-
-    private static BlockType parseBlockType(String infrastructure) {
-        if (infrastructure.contains("STATION")) {
-            return BlockType.STATION;
-        } else if (infrastructure.contains("CROSSING")) {
-            return BlockType.CROSSING;
-        } else if (infrastructure.contains("YARD")) {
-            return BlockType.YARD;
-        } else {
-            return BlockType.REGULAR;
-        }
-    }
-
-    private static NextBlock parseNextBlock(boolean isSwitch, String northBoundString, String southBoundString) {
-        Connection north = null;
-        Connection south = null;
-        Connection northDefault = null;
-        Connection northAlternate = null;
-        Connection southDefault = null;
-        Connection southAlternate = null;
-
-        if (isSwitch) {
-            if(northBoundString.contains("/") && southBoundString.contains("/")){
-                String[] northParts = northBoundString.split("/");
-                String[] southParts = southBoundString.split("/");
-                northDefault = parseConnection(northParts[0]);
-                northAlternate = parseConnection(northParts[1]);
-                southDefault = parseConnection(southParts[0]);
-                southAlternate = parseConnection(southParts[1]);
-
-            } else if (northBoundString.contains("/")) {
-                String[] northParts = northBoundString.split("/");
-                northDefault = parseConnection(northParts[0]);
-                northAlternate = parseConnection(northParts[1]);
-                southDefault = parseConnection(southBoundString);
-                southAlternate = new Connection(-1, false);
-
-            } else if (southBoundString.contains("/")) {
-                String[] southParts = southBoundString.split("/");
-                southDefault = parseConnection(southParts[0]);
-                southAlternate = parseConnection(southParts[1]);
-                northDefault = parseConnection(northBoundString);
-                northAlternate = new Connection(-1, false);
-
-            } else {
-                north = parseConnection(northBoundString);
-                south = parseConnection(southBoundString);
-            }
-
-        }else {
-            north = parseConnection(northBoundString);
-            south = parseConnection(southBoundString);
+        } catch (IOException e) {
+            System.out.println("Error reading line: \n" + line);
+            throw new RuntimeException(e);
         }
 
-        return new NextBlock(north, south, northDefault, northAlternate, southDefault, southAlternate);
+        return map;
     }
 
-    private static Connection parseConnection(String connectionString) {
-        if (connectionString == null || connectionString.isEmpty() || connectionString.equals("~")) {
-            return new Connection(-1, false);
-        }
-
-        boolean switchDirection = connectionString.endsWith("<->");
-        int blockNumber = Integer.parseInt(connectionString.replace("<->", ""));
-
-        return new Connection(blockNumber, switchDirection);
-    }
-
-    public record NextBlock(
-            Connection north,
-            Connection south,
-            Connection northDefault,
-            Connection northAlternate,
-            Connection southDefault,
-            Connection southAlternate
-    ) {
-    }
-
-    public record Connection(
-            int blockNumber,
-            boolean flipDirection
-    ) {
+    public static ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> parseCSV(){
+        return parseCSV("src/main/resources/Framework/experimental_track_layout.csv");
     }
 }
