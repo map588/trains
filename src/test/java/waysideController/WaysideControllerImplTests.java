@@ -6,6 +6,7 @@ import Utilities.Enums.Lines;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +23,9 @@ public class WaysideControllerImplTests {
         trackModel = mock(TrackModel.class); // Mocking TrackModel
         ctcOffice = mock(CTCOffice.class); // Mocking CTCOffice
         controller = new WaysideControllerImpl(1, Lines.GREEN, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24}, trackModel, ctcOffice);
+
+        File plcFile = new File("src/main/antlr/GreenLine1.plc");
+        controller.loadPLC(plcFile);
     }
 
     @Test
@@ -97,5 +101,46 @@ public class WaysideControllerImplTests {
         assertEquals(block.nextBlock(), 14);
 
         verify(trackModel).setSwitchState(13, true);
+    }
+
+    @Test
+    void testGreenLine1() {
+        Map<Integer, WaysideBlock> blockMap = controller.getBlockMap();
+        assertTrue(controller.waysideRequestDirection(20, true));
+        assertTrue(blockMap.get(20).getBooleanAuth());
+
+        controller.waysideIncomingTrain(1, 20, 0);
+        assertFalse(blockMap.get(20).hasTrain());
+        assertTrue(blockMap.get(20).getBooleanAuth());
+
+        controller.trackModelSetOccupancy(20, true);
+        assertEquals(1, blockMap.get(20).getTrainID());
+        assertTrue(blockMap.get(20).getBooleanAuth());
+
+        for(int i = 19; i >= 14; i--) {
+            controller.trackModelSetOccupancy(i, true);
+            assertEquals(1, blockMap.get(i).getTrainID());
+            assertTrue(blockMap.get(i).getBooleanAuth());
+
+            controller.trackModelSetOccupancy(i+1, false);
+            assertFalse(blockMap.get(i+1).hasTrain());
+        }
+
+        controller.trackModelSetOccupancy(13, true);
+        assertEquals(1, blockMap.get(13).getTrainID());
+        assertTrue(blockMap.get(13).getBooleanAuth());
+        assertFalse(blockMap.get(13).getSwitchState());
+
+        controller.trackModelSetOccupancy(14, false);
+        assertFalse(blockMap.get(14).hasTrain());
+
+        for(int i = 12; i >= 5; i--) {
+            controller.trackModelSetOccupancy(i, true);
+            assertEquals(1, blockMap.get(i).getTrainID());
+            assertTrue(blockMap.get(i).getBooleanAuth());
+
+            controller.trackModelSetOccupancy(i+1, false);
+            assertFalse(blockMap.get(i+1).hasTrain());
+        }
     }
 }

@@ -117,14 +117,20 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     public Value visitRelease_direction(PLCParser.Release_directionContext ctx) {
         int blockID = visit(ctx.index()).asInteger();
         WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(blockID);
-        boolean result = controller.waysideReleaseDirection(blockID);
 
-        if(result) {
+        if(controller != null) {
+            boolean result = controller.waysideReleaseDirection(blockID);
 
+            if (result) {
+
+            }
+
+            System.out.println("Releasing direction at block " + blockID + ": " + (result ? "accepted" : "rejected"));
+            return new Value(result);
         }
-
-        System.out.println("Releasing direction at block " + blockID + ": " + (result ? "accepted" : "rejected"));
-        return new Value(result);
+        else {
+            return new Value(false);
+        }
     }
 
     @Override

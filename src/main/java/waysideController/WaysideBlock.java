@@ -81,6 +81,13 @@ public class WaysideBlock implements Notifier {
             this.nextBlockIDSouth = block.nextBlock().south().blockNumber();
             this.nextDirectionNorth = !block.nextBlock().north().flipDirection();
             this.nextDirectionSouth = block.nextBlock().south().flipDirection();
+
+            if(nextBlockIDNorth == -1) {
+                direction = false;
+            }
+            else if(nextBlockIDSouth == -1) {
+                direction = true;
+            }
         }
     }
 

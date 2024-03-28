@@ -342,7 +342,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void waysideIncomingTrain(int trainID, int blockID, int authBlockID) {
-        blockMap.get(blockID).setTrainID(trainID);
+//        blockMap.get(blockID).setTrainID(trainID);
         trainNextBlockMap.put(blockID, trainID);
         trainAuthMap.put(trainID, authBlockID);
     }
@@ -352,8 +352,15 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(blockMap.get(blockID).isDir_assigned())
             return false;
         else {
-            blockMap.get(blockID).setDir_assigned(true);
-            blockMap.get(blockID).setDirection(direction);
+            int block = blockID;
+            for(; !blockMap.get(block).hasSwitch(); block = blockMap.get(block).nextBlock()) {
+                blockMap.get(block).setDir_assigned(true);
+                blockMap.get(block).setDirection(direction);
+            }
+            blockMap.get(block).setDir_assigned(true);
+            blockMap.get(block).setDirection(direction);
+
+            runPLC();
             return true;
         }
     }
