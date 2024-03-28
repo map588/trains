@@ -67,9 +67,15 @@ public class WaysideBlock implements Notifier {
         this.trainID = -1;
 
         if(this.hasSwitch) {
-//            this.switchBlockParent = this.blockID;
-//            this.switchBlockDef = block.nodeConnection().get().defChildID();
-//            this.switchBlockAlt = block.nodeConnection().get().altChildID().orElse(-1);
+            this.switchBlockParent = this.blockID;
+            if(block.nextBlock().northDefault().blockNumber() != -1) {
+                this.switchBlockDef = block.nextBlock().northDefault().blockNumber();
+                this.switchBlockAlt = block.nextBlock().northAlternate().blockNumber();
+            }
+            else {
+                this.switchBlockDef = block.nextBlock().southDefault().blockNumber();
+                this.switchBlockAlt = block.nextBlock().southAlternate().blockNumber();
+            }
         }
 
         // TODO: Determine next block and direction and save to variables
