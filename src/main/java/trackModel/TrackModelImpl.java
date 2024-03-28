@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 public class TrackModelImpl implements TrackModel {
     public TrackModelImpl() {
-        this.trainAuthorities = new HashMap<>();
-        this.trainCommandSpeeds = new HashMap<>();
+        //this.trainAuthorities = new HashMap<>();
+        //this.trainCommandSpeeds = new HashMap<>();
         this.beaconMap = new HashMap<>();
         this.switchStateMap = new HashMap<>();
         this.lightStateMap = new HashMap<>();
@@ -29,8 +29,8 @@ public class TrackModelImpl implements TrackModel {
         this.lines = new ArrayList<>();
     }
 
-    private final HashMap<Integer, Integer> trainAuthorities;
-    private final HashMap<Integer, Double> trainCommandSpeeds;
+    //private final HashMap<Integer, Integer> trainAuthorities;
+    //private final HashMap<Integer, Double> trainCommandSpeeds;
     private final HashMap<Integer, Boolean> blockOccupied;
     private final HashMap<Integer, Boolean> switchStateMap;
     private final HashMap<Integer, Boolean> lightStateMap;

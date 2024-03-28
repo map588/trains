@@ -1,6 +1,7 @@
 package Utilities;
 
 import java.util.Optional;
+import Utilities.Enums.BlockType;
 
 public record BasicBlock(
         String trackLine,
@@ -18,12 +19,6 @@ public record BasicBlock(
         Optional<String> doorDirection,
         NextBlock nextBlock
 ) {
-    public enum BlockType {
-        REGULAR,
-        STATION,
-        CROSSING,
-        YARD
-    }
 
     public static BasicBlock fromCsv(String[] values, String[] headers) {
         String trackLine = values[indexOf(headers, "Line")];

@@ -55,6 +55,9 @@ public class TrackLine {
     public synchronized double updateTrainLocation(TrainModel train) {
         int prevBlockID = trackOccupancyMap.get(train);
 
+        //Direction dir = train.getDirection();  //This will be NORTH or SOUTH
+        //Switches have north default and alt, and the track state determines which is the next block
+
         BasicBlock prevBlock = trackLayout.get(prevBlockID);
 
         Integer newBlockID = lookupNextBlock(train, prevBlock);
@@ -104,17 +107,18 @@ public class TrackLine {
 
         Integer newBlockID = 0;
 
-        //Figure out the next block based on the previous block type
-//        switch (prevBlock.blockType()) {
-//            case SWITCH:
-//                //newBlockID =  nextFromSwitchBlock(train, prevBlock);
-//            case YARD:
-//                //newBlockID =  nextFromYardBlock(train, prevBlock);
-//            case STATION:
-//                //newBlockID =  nextFromStationBlock(train, prevBlock);
-//            default:
-//                //newBlockID = nextFromRegularBlock(train, prevBlock);
-//        }
+        if(prevBlock.isSwitch()){
+
+        }
+
+        switch (prevBlock.blockType()) {
+            case YARD:
+                //newBlockID =  nextFromYardBlock(train, prevBlock);
+            case STATION:
+                //newBlockID =  nextFromStationBlock(train, prevBlock);
+            default:
+                //newBlockID = nextFromRegularBlock(train, prevBlock);
+        }
 
         //This is wrong, it will need to be determined within the function whether the ascending or decending block is the next block,
         // or the switch case.
