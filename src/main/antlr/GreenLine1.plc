@@ -3,7 +3,7 @@
 
 // Assign direction for outgoing trains
 if not dir_assigned[20]
-    if occupied[1]
+        if occupied[1]
         request_direction(20, OUTBOUND)
     endif
 else
