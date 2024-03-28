@@ -4,82 +4,152 @@ import java.util.Optional;
 
 public record BasicBlock(
         String trackLine,
-        char section,
+        String section,
         int blockNumber,
-        int blockLength,
+        double blockLength,
         double blockGrade,
-        int speedLimit,
+        double speedLimit,
         double elevation,
         double cumulativeElevation,
         boolean isUnderground,
+        boolean isSwitch,
         BlockType blockType,
         Optional<String> stationName,
-        Optional<DoorSide> doorSide,
-        Optional<NodeConnection> nodeConnection
+        Optional<String> doorDirection,
+        NextBlock nextBlock
 ) {
-    public enum Direction {
-        TO_SWITCH,
-        FROM_SWITCH,
-        BIDIRECTIONAL
-    }
-
-    public enum DoorSide {
-        LEFT,
-        RIGHT,
-        BOTH
-    }
-
     public enum BlockType {
         REGULAR,
-        SWITCH,
         STATION,
         CROSSING,
         YARD
     }
 
-    public static BasicBlock ofSwitch(String trackLine, char section, int blockNumber, int blockLength,
-                                      double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                      boolean isUnderground, Optional<String> stationName, Optional<DoorSide> doorSide,
-                                      int parentID, Direction parentDirection,
-                                      int defChildID, Direction defDirection,
-                                      Optional<Integer> altChildID, Optional<Direction> altDirection) {
-        NodeConnection nodeConnection = new NodeConnection(parentID, parentDirection, defChildID, defDirection, altChildID, altDirection);
+    public static BasicBlock fromCsv(String[] values, String[] headers) {
+        String trackLine = values[indexOf(headers, "Line")];
+        String section = values[indexOf(headers, "Section")];
+        int blockNumber = Integer.parseInt(values[indexOf(headers, "Block Number")]);
+        double blockLength = Double.parseDouble(values[indexOf(headers, "Block Length (m)")]);
+        double blockGrade = Double.parseDouble(values[indexOf(headers, "Block Grade (%)")]);
+        double speedLimit = Double.parseDouble(values[indexOf(headers, "Speed Limit (Km/Hr)")]);
+        String infrastructure = values[indexOf(headers, "Infrastructure")];
+        Optional<String> doorDirection = Optional.ofNullable(values[indexOf(headers, "Door Direction")]);
+        double elevation = Double.parseDouble(values[indexOf(headers, "ELEVATION (M)")]);
+        double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMALTIVE ELEVATION (M)")]);
+
+        boolean isUnderground = infrastructure.contains("UNDERGROUND");
+        boolean isSwitch = infrastructure.contains("SWITCH");
+
+        NextBlock nextBlock = parseNextBlock(isSwitch, values[indexOf(headers, "North Bound")], values[indexOf(headers, "South Bound")]);
+
+        BlockType blockType = parseBlockType(infrastructure);
+        String stationName = parseStationName(infrastructure);
+
         return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.SWITCH,  stationName, doorSide, Optional.of(nodeConnection));
+                elevation, cumulativeElevation, isUnderground, isSwitch, blockType, Optional.ofNullable(stationName),
+                doorDirection, nextBlock);
     }
 
-    public static BasicBlock ofStation(String trackLine, char section, int blockNumber, int blockLength,
-                                       double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                       boolean isUnderground, String stationName, DoorSide doorSide,
-                                       int parentID, Direction parentDirection, int defChildID, Direction defDirection) {
-        NodeConnection nodeConnection = new NodeConnection(parentID, parentDirection, defChildID, defDirection, Optional.empty(), Optional.empty());
-        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.STATION,  Optional.of(stationName), Optional.of(doorSide), Optional.of(nodeConnection));
+    private static String parseStationName(String infrastructure) {
+        if (infrastructure.contains("STATION")) {
+            int startIndex = infrastructure.indexOf("STATION") + "STATION".length();
+            int endIndex = infrastructure.indexOf(";", startIndex);
+            if (endIndex != -1) {
+                return infrastructure.substring(startIndex, endIndex).trim().replace(":", "");
+            }
+        }
+        return null;
     }
 
-    public static BasicBlock ofRegular(String trackLine, char section, int blockNumber, int blockLength,
-                                       double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                       boolean isUnderground) {
-        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.REGULAR, Optional.empty(), Optional.empty(), Optional.empty());
+    private static int indexOf(String[] headers, String header) {
+        for (int i = 0; i < headers.length; i++) {
+            if (headers[i].equalsIgnoreCase(header)) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("Header not found: " + header);
     }
 
-    public static BasicBlock ofCrossing(String trackLine, char section, int blockNumber, int blockLength,
-                                        double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                        boolean isUnderground) {
-        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.CROSSING, Optional.empty(), Optional.empty(), Optional.empty());
+    private static BlockType parseBlockType(String infrastructure) {
+        if (infrastructure.contains("STATION")) {
+            return BlockType.STATION;
+        } else if (infrastructure.contains("CROSSING")) {
+            return BlockType.CROSSING;
+        } else if (infrastructure.contains("YARD")) {
+            return BlockType.YARD;
+        } else {
+            return BlockType.REGULAR;
+        }
     }
 
-    public static BasicBlock ofYard(String trackLine, char section, int blockNumber, int blockLength,
-                                    double blockGrade, int speedLimit, double elevation, double cumulativeElevation,
-                                    boolean isUnderground) {
-        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, BlockType.YARD, Optional.empty(), Optional.empty(), Optional.empty());
+    private static NextBlock parseNextBlock(boolean isSwitch, String northBoundString, String southBoundString) {
+        Connection north = null;
+        Connection south = null;
+        Connection northDefault = null;
+        Connection northAlternate = null;
+        Connection southDefault = null;
+        Connection southAlternate = null;
+
+        if (isSwitch) {
+            if(northBoundString.contains("/") && southBoundString.contains("/")){
+                String[] northParts = northBoundString.split("/");
+                String[] southParts = southBoundString.split("/");
+                northDefault = parseConnection(northParts[0]);
+                northAlternate = parseConnection(northParts[1]);
+                southDefault = parseConnection(southParts[0]);
+                southAlternate = parseConnection(southParts[1]);
+
+            } else if (northBoundString.contains("/")) {
+                String[] northParts = northBoundString.split("/");
+                northDefault = parseConnection(northParts[0]);
+                northAlternate = parseConnection(northParts[1]);
+                southDefault = parseConnection(southBoundString);
+                southAlternate = new Connection(-1, false);
+
+            } else if (southBoundString.contains("/")) {
+                String[] southParts = southBoundString.split("/");
+                southDefault = parseConnection(southParts[0]);
+                southAlternate = parseConnection(southParts[1]);
+                northDefault = parseConnection(northBoundString);
+                northAlternate = new Connection(-1, false);
+
+            } else {
+                north = parseConnection(northBoundString);
+                south = parseConnection(southBoundString);
+            }
+
+        }else {
+            north = parseConnection(northBoundString);
+            south = parseConnection(southBoundString);
+        }
+
+        return new NextBlock(north, south, northDefault, northAlternate, southDefault, southAlternate);
     }
 
-    public record NodeConnection(
-            int parentID, Direction parentDirection,
-            int defChildID, Direction defDirection,
-            Optional<Integer> altChildID, Optional<Direction> altDirection) {}
+    private static Connection parseConnection(String connectionString) {
+        if (connectionString == null || connectionString.isEmpty() || connectionString.equals("~")) {
+            return new Connection(-1, false);
+        }
+
+        boolean switchDirection = connectionString.endsWith("<->");
+        int blockNumber = Integer.parseInt(connectionString.replace("<->", ""));
+
+        return new Connection(blockNumber, switchDirection);
+    }
+
+    public record NextBlock(
+            Connection north,
+            Connection south,
+            Connection northDefault,
+            Connection northAlternate,
+            Connection southDefault,
+            Connection southAlternate
+    ) {
+    }
+
+    public record Connection(
+            int blockNumber,
+            boolean flipDirection
+    ) {
+    }
 }
