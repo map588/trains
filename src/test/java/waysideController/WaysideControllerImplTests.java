@@ -40,36 +40,59 @@ public class WaysideControllerImplTests {
         assertFalse(controller.isMaintenanceMode());
 
         // Test that maintenance functions do nothing outside of maintenance mode
-        assertFalse(controller.getBlockMap().get(12).getSwitchState());
-        controller.maintenanceSetSwitch(12, true);
-        assertFalse(controller.getBlockMap().get(12).getSwitchState());
+        assertFalse(controller.getBlockMap().get(13).getSwitchState());
+        controller.maintenanceSetSwitch(13, true);
+        assertFalse(controller.getBlockMap().get(13).getSwitchState());
 
-        assertFalse(controller.getBlockMap().get(12).getLightState());
-        controller.maintenanceSetTrafficLight(12, true);
-        assertFalse(controller.getBlockMap().get(12).getLightState());
+        assertFalse(controller.getBlockMap().get(13).getLightState());
+        controller.maintenanceSetTrafficLight(13, true);
+        assertFalse(controller.getBlockMap().get(13).getLightState());
 
-        assertFalse(controller.getBlockMap().get(12).getCrossingState());
-        controller.maintenanceSetCrossing(12, true);
-        assertFalse(controller.getBlockMap().get(12).getCrossingState());
+        assertFalse(controller.getBlockMap().get(13).getCrossingState());
+        controller.maintenanceSetCrossing(13, true);
+        assertFalse(controller.getBlockMap().get(13).getCrossingState());
 
         // Enable maintenance mode
         controller.setMaintenanceMode(true);
         assertTrue(controller.isMaintenanceMode());
 
         // Test that maintenance mode functions work
-        assertFalse(controller.getBlockMap().get(12).getSwitchState());
-        controller.maintenanceSetSwitch(12, true);
-        assertTrue(controller.getBlockMap().get(12).getSwitchState());
-        verify(trackModel).setSwitchState(12, true);
+        assertFalse(controller.getBlockMap().get(13).getSwitchState());
+        controller.maintenanceSetSwitch(13, true);
+        assertTrue(controller.getBlockMap().get(13).getSwitchState());
+        verify(trackModel).setSwitchState(13, true);
 
-        assertFalse(controller.getBlockMap().get(12).getLightState());
-        controller.maintenanceSetTrafficLight(12, true);
-        assertTrue(controller.getBlockMap().get(12).getLightState());
-        verify(trackModel).setSignalState(12, true);
+        assertFalse(controller.getBlockMap().get(13).getLightState());
+        controller.maintenanceSetTrafficLight(13, true);
+        assertTrue(controller.getBlockMap().get(13).getLightState());
+        verify(trackModel).setSignalState(13, true);
 
-        assertFalse(controller.getBlockMap().get(12).getCrossingState());
-        controller.maintenanceSetCrossing(12, true);
-        assertTrue(controller.getBlockMap().get(12).getCrossingState());
-        verify(trackModel).setCrossing(12, true);
+        assertFalse(controller.getBlockMap().get(13).getCrossingState());
+        controller.maintenanceSetCrossing(13, true);
+        assertTrue(controller.getBlockMap().get(13).getCrossingState());
+        verify(trackModel).setCrossing(13, true);
+    }
+
+    @Test
+    void testSwitchBlocks() {
+        WaysideBlock block = controller.getBlockMap().get(13);
+        assertFalse(block.getSwitchState());
+        assertEquals(block.getSwitchBlockParent(), 13);
+        assertEquals(block.getSwitchBlockDef(), 12);
+        assertEquals(block.getSwitchBlockAlt(), 1);
+        block.setDirection(true);
+        assertEquals(block.nextBlock(), 12);
+        block.setDirection(false);
+        assertEquals(block.nextBlock(), 14);
+
+        controller.setMaintenanceMode(true);
+        controller.maintenanceSetSwitch(13, true);
+        assertTrue(block.getSwitchState());
+        block.setDirection(true);
+        assertEquals(block.nextBlock(), 1);
+        block.setDirection(false);
+        assertEquals(block.nextBlock(), 14);
+
+        verify(trackModel).setSwitchState(13, true);
     }
 }
