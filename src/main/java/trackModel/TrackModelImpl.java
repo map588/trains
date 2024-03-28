@@ -29,8 +29,8 @@ public class TrackModelImpl implements TrackModel {
         this.lines = new ArrayList<>();
     }
 
-    //private final HashMap<Integer, Integer> trainAuthorities;
-    //private final HashMap<Integer, Double> trainCommandSpeeds;
+    private  HashMap<Integer, Integer> trainAuthorities;
+    private  HashMap<Integer, Double> trainCommandSpeeds;
     private final HashMap<Integer, Boolean> blockOccupied;
     private final HashMap<Integer, Boolean> switchStateMap;
     private final HashMap<Integer, Boolean> lightStateMap;

@@ -4,6 +4,8 @@ import Framework.Support.Notifier;
 import Utilities.BasicBlock;
 import Utilities.BasicBlockInfo;
 
+import static Utilities.Enums.BlockType.CROSSING;
+import static Utilities.Enums.BlockType.STATION;
 import static waysideController.Properties.*;
 
 public class WaysideBlock implements Notifier {
@@ -61,8 +63,8 @@ public class WaysideBlock implements Notifier {
     public WaysideBlock(BasicBlock block) {
         this.blockID = block.blockNumber();
         this.hasSwitch = block.isSwitch();
-        this.hasLight = block.blockType() == BasicBlock.BlockType.STATION;
-        this.hasCrossing = block.blockType() == BasicBlock.BlockType.CROSSING;
+        this.hasLight = block.blockType() == STATION;
+        this.hasCrossing = block.blockType() == CROSSING;
         this.speedLimit = block.speedLimit();
         this.open = true;
         this.trainID = -1;
