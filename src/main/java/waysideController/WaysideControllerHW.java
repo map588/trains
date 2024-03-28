@@ -1,13 +1,15 @@
 package waysideController;
 
-import Utilities.BasicBlockInfo;
+import Utilities.BasicBlock;
+import Utilities.BlockParser;
 import Utilities.CSVTokenizer;
+import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class WaysideControllerHW implements PLCRunner {
 
@@ -74,9 +76,11 @@ public class WaysideControllerHW implements PLCRunner {
 
     private void setupBlocks(int[] blockIDList) {
         blockMap.clear();
-        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+        // Parse the CSV file to get the blocks that the wayside controls
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(Lines.GREEN);
         for(int blockID : blockIDList) {
-            blockMap.put(blockID, new WaysideBlock(fullBlockList.get(blockID)));
+            WaysideBlock block = new WaysideBlock(blockList.get(blockID));
+            blockMap.put(blockID, block);
         }
     }
 

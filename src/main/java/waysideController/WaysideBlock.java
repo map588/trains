@@ -2,7 +2,6 @@ package waysideController;
 
 import Framework.Support.Notifier;
 import Utilities.BasicBlock;
-import Utilities.BasicBlockInfo;
 
 import static Utilities.Enums.BlockType.CROSSING;
 import static Utilities.Enums.BlockType.STATION;
@@ -31,34 +30,13 @@ public class WaysideBlock implements Notifier {
     private int authority;
     private boolean booleanAuth;
     private double speed;
-    private double speedLimit;
+    private final double speedLimit;
     private boolean open;
 
     private boolean direction;
     private boolean dir_assigned;
 
     private WaysideBlockSubject subject;
-
-    public WaysideBlock(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing) {
-        this.blockID = blockID;
-        this.hasSwitch = hasSwitch;
-        this.hasLight = hasLight;
-        this.hasCrossing = hasCrossing;
-        this.open = true;
-        this.trainID = -1;
-    }
-
-    public WaysideBlock(int blockID, boolean hasSwitch, boolean hasLight, boolean hasCrossing, int switchBlockMain, int switchBlockAlt) {
-        this(blockID, hasSwitch, hasLight, hasCrossing);
-        this.switchBlockDef = switchBlockMain;
-        this.switchBlockAlt = switchBlockAlt;
-    }
-
-    //TODO: Found the needle in the haystack vv
-    //BasicBlockInfo is deprecated, it will be replaced by what is currently named parsedBlock
-    public WaysideBlock(BasicBlockInfo blockInfo) {
-        this(blockInfo.blockNumber(), blockInfo.isSwitchConvergingBlock(), blockInfo.hasSwitchLight(), blockInfo.hasCrossing(), blockInfo.divergingBlockID_Main(), blockInfo.divergingBlockID_Alt());
-    }
 
     public WaysideBlock(BasicBlock block) {
         this.blockID = block.blockNumber();
@@ -96,6 +74,12 @@ public class WaysideBlock implements Notifier {
                 nextDirectionSouth = block.nextBlock().southDefault().flipDirection();
                 nextBlockIDNorth = block.nextBlock().northDefault().blockNumber();
             }
+        }
+        else {
+            this.nextBlockIDNorth = block.nextBlock().north().blockNumber();
+            this.nextBlockIDSouth = block.nextBlock().south().blockNumber();
+            this.nextDirectionNorth = !block.nextBlock().north().flipDirection();
+            this.nextDirectionSouth = block.nextBlock().south().flipDirection();
         }
     }
 
@@ -171,6 +155,7 @@ public class WaysideBlock implements Notifier {
         System.out.println("Switch State: " + switchState);
         this.switchState = switchState;
 
+        // TODO: fix switches to also change direction swapping based on switch state
         if(switchBranchDir) {
             nextBlockIDNorth = switchState ? switchBlockAlt : switchBlockDef;
         }

@@ -2,16 +2,17 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.Notifier;
-import Utilities.BasicBlockInfo;
-import Utilities.CSVTokenizer;
+import Utilities.BasicBlock;
+import Utilities.BlockParser;
+import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static waysideController.Properties.PLCName_p;
 import static waysideController.Properties.maintenanceMode_p;
@@ -47,9 +48,10 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         subject = new WaysideControllerSubject(this);
 
-        List<BasicBlockInfo> fullBlockList = CSVTokenizer.blockList.get(trackLine);
+        // Parse the CSV file to get the blocks that the wayside controls
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(Lines.GREEN);
         for(int blockID : blockIDList) {
-            WaysideBlock block = new WaysideBlock(fullBlockList.get(blockID));
+            WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);
             subject.addBlock(new WaysideBlockSubject(block));
         }
