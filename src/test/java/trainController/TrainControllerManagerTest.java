@@ -155,4 +155,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     private void setSliderValue(Slider slider, double value) {
         interact(() -> slider.setValue(value));
     }
+
+
+
 }

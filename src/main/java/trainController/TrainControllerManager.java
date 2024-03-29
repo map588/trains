@@ -10,10 +10,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -28,6 +29,7 @@ import java.util.function.Consumer;
 import static trainController.Properties.*;
 
 public class TrainControllerManager {
+    @FXML AnchorPane masterTrainControllerPane;
     @FXML
     public Text controllerStatus;
     @FXML
@@ -71,7 +73,7 @@ public class TrainControllerManager {
             }
         });
         currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
-        //testBench = launchTestBench();
+        testBench = launchTestBench();
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
 
@@ -121,7 +123,7 @@ public class TrainControllerManager {
         appendListener(currentSubject.getBooleanProperty(SIGNAL_FAILURE_PROPERTY),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, signalFailureStatus, newVal)));
         appendListener(currentSubject.getBooleanProperty(BRAKE_FAILURE_PROPERTY),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, brakeFailureStatus, newVal)));
         appendListener(currentSubject.getBooleanProperty(POWER_FAILURE_PROPERTY),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, powerFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(IN_TUNNEL_PROPERTY),(obs, oldVal, newVal) ->     Platform.runLater(() -> updateIndicator(Color.YELLOW, inTunnelStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(IN_TUNNEL_PROPERTY),(obs, oldVal, newVal) ->     Platform.runLater(() -> {updateIndicator(Color.YELLOW, inTunnelStatus, newVal); inTunnelUpdates();}));
         appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM_PROPERTY),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal)));
         appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM_PROPERTY),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal)));
         bindStringText(nextStationText, NEXT_STATION_PROPERTY);
@@ -300,6 +302,22 @@ public class TrainControllerManager {
 
     }
 
+    // Calls when the inTunnelStatus is updated, it checks off the intLights and extLights
+    private void inTunnelUpdates(){
+
+        if (autoModeCheckBox.isSelected()){ // Runs in Auto Mode
+
+            boolean inTunnel = inTunnelStatus.getFill().equals(Color.YELLOW); // Get tunnel state
+
+            // Set the Light states according to in tunnel status
+            intLightCheckBox.setSelected(inTunnel);
+            extLightCheckBox.setSelected(inTunnel);
+
+            // Set the Color of the Background
+            String colorFormat = inTunnel ? "-fx-background-color: #000033;" : "-fx-background-color: #FFFFFF;";
+            masterTrainControllerPane.setStyle(colorFormat);
+        }
+    }
 
     private TrainControllerTB launchTestBench(){
         System.out.println(System.getProperty("Preparing to launch test bench"));
