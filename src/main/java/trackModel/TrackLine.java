@@ -6,9 +6,13 @@ import Utilities.BasicBlock;
 import Utilities.Enums.Lines;
 import trainModel.TrainModelImpl;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static Utilities.Enums.BlockType.STATION;
+import static Utilities.Enums.BlockType.YARD;
 
 public class TrackLine {
 
@@ -20,11 +24,18 @@ public class TrackLine {
     final ObservableHashMap<TrainModel, Integer> trackOccupancyMap = new ObservableHashMap<>();
 
     //maps blocks to block numbers
-    ConcurrentSkipListMap<Integer, BasicBlock> trackLayout;
+    ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
 
-    public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> trackLayout) {
+    public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout) {
+
+        ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
+
+        for (Integer blockIndex : blockIndices) {
+            TrackBlock block = new TrackBlock(basicTrackLayout.get(blockIndex));
+            trackLayout.put(block.blockID, block);
+        }
+
         this.line = line;
-        this.trackLayout = trackLayout;
         setupListeners();
     }
 
@@ -36,12 +47,12 @@ public class TrackLine {
 
 
     private void handleTrainEntry(TrainModel train, Integer blockID) {
-        BasicBlock block = trackLayout.get(blockID);
+        TrackBlock block = trackLayout.get(blockID);
         //...
     }
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
-        BasicBlock block = trackLayout.get(blockID);
+        TrackBlock block = trackLayout.get(blockID);
         //...
     }
 
@@ -55,20 +66,15 @@ public class TrackLine {
     public synchronized double updateTrainLocation(TrainModel train) {
         int prevBlockID = trackOccupancyMap.get(train);
 
-        //Direction dir = train.getDirection();  //This will be NORTH or SOUTH
-        //Switches have north default and alt, and the track state determines which is the next block
 
-        BasicBlock prevBlock = trackLayout.get(prevBlockID);
+        TrackBlock prevBlock = trackLayout.get(prevBlockID);
+        Integer newBlockID = prevBlock.getNextBlock(train.getDirection());
+        TrackBlock nextBlock = trackLayout.get(newBlockID);
 
-        Integer newBlockID = lookupNextBlock(train, prevBlock);
-
-        BasicBlock nextBlock = trackLayout.get(newBlockID);
-
-        // Both of these modifications call the listeners
         trackOccupancyMap.remove(train);
-        trackOccupancyMap.put(train, nextBlock.blockNumber());
+        trackOccupancyMap.put(train, newBlockID);
 
-        return nextBlock.blockLength();
+        return nextBlock.length;
     }
 
 
@@ -101,28 +107,6 @@ public class TrackLine {
         };
 
         trackOccupancyMap.addChangeListener(trackListener);
-    }
-
-    private synchronized Integer lookupNextBlock(TrainModel train, BasicBlock prevBlock) {
-
-        Integer newBlockID = 0;
-
-        if(prevBlock.isSwitch()){
-
-        }
-
-        switch (prevBlock.blockType()) {
-            case YARD:
-                //newBlockID =  nextFromYardBlock(train, prevBlock);
-            case STATION:
-                //newBlockID =  nextFromStationBlock(train, prevBlock);
-            default:
-                //newBlockID = nextFromRegularBlock(train, prevBlock);
-        }
-
-        //This is wrong, it will need to be determined within the function whether the ascending or decending block is the next block,
-        // or the switch case.
-        return newBlockID;
     }
 
 }

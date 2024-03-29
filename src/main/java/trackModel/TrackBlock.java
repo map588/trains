@@ -7,6 +7,8 @@ import Utilities.Enums.Lines;
 
 import java.util.Optional;
 
+import static Utilities.Enums.Direction.NORTH;
+
 
 class TrackBlock {
 
@@ -29,9 +31,12 @@ class TrackBlock {
     final double length;
 
     //Specific Block Information
-    SwitchState switchInfo;
-    CrossingState crossingInfo;
-    StationInfo stationInfo;
+    public SwitchState switchInfo;
+    public CrossingState crossingInfo;
+    public StationInfo stationInfo;
+    public FailureInfo failureInfo;
+
+    public boolean maintenanceMode;
 
 
     TrackBlock(BasicBlock blockInfo) {
@@ -75,23 +80,25 @@ class TrackBlock {
             this.northID = blockInfo.nextBlock().north().blockNumber();
             this.southID = blockInfo.nextBlock().south().blockNumber();
         }
+
+        FailureInfo failureInfo = new FailureInfo();
     }
 
 
      Integer getNextBlock(Direction direction) {
         if(!isSwitch) {
-            if (direction == Direction.NORTH)
+            if (direction == NORTH)
                 return northID;
             else
                 return southID;
         }else{
             if(switchInfo.switchState){
-                if (direction == Direction.NORTH)
+                if (direction == NORTH)
                     return switchInfo.northDefault;
                 else
                     return switchInfo.southDefault;
             }else{
-                if (direction == Direction.NORTH)
+                if (direction == NORTH)
                     return switchInfo.northAlt;
                 else
                     return switchInfo.southAlt;
@@ -120,8 +127,25 @@ class TrackBlock {
             throw new IllegalArgumentException("Block is not a crossing");
     }
 
+    public void setPowerFailure(Boolean state) {
+        failureInfo.powerFailure = state;
+    }
 
-     static class SwitchState{
+    public void setTrackCircuitFailure(Boolean state) {
+        failureInfo.trackCircuitFailure = state;
+    }
+
+    public void setBrokenRail(Boolean state) {
+        failureInfo.brokenRail = state;
+    }
+
+    public void setUnderMaintenance(Boolean state) {
+        maintenanceMode = state;
+    }
+
+
+
+     public static class SwitchState{
         private final Integer northDefault;
         private final Integer southDefault;
 
@@ -148,7 +172,7 @@ class TrackBlock {
 
     }
 
-     static class StationInfo{
+     public static class StationInfo{
         final String stationName;
         final String doorDirection;
 
@@ -166,7 +190,7 @@ class TrackBlock {
 
     }
 
-     static class CrossingState{
+     public static class CrossingState{
         Boolean crossingState;
 
         //Null constructor
@@ -179,5 +203,19 @@ class TrackBlock {
         }
 
 
+    }
+
+    public static class FailureInfo{
+        boolean hasFailure;
+        boolean brokenRail;
+        boolean trackCircuitFailure;
+        boolean powerFailure;
+
+        FailureInfo(){
+            this.hasFailure = false;
+            this.brokenRail = false;
+            this.trackCircuitFailure = false;
+            this.powerFailure = false;
+        }
     }
 }
