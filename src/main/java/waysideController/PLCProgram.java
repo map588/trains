@@ -99,41 +99,6 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     }
 
     @Override
-    public Value visitRequest_direction(PLCParser.Request_directionContext ctx) {
-        int blockID = visit(ctx.index()).asInteger();
-        WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(blockID);
-        boolean direction = visit(ctx.getChild(4)).asBoolean();
-        boolean result = controller.waysideRequestDirection(blockID, direction);
-
-        if(result) {
-
-        }
-
-        System.out.println("Requesting " + (direction ? "INBOUND" : "OUTBOUND") + " at block " + blockID + ": " + (result ? "accepted" : "rejected"));
-        return new Value(result);
-    }
-
-    @Override
-    public Value visitRelease_direction(PLCParser.Release_directionContext ctx) {
-        int blockID = visit(ctx.index()).asInteger();
-        WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(blockID);
-
-        if(controller != null) {
-            boolean result = controller.waysideReleaseDirection(blockID);
-
-            if (result) {
-
-            }
-
-            System.out.println("Releasing direction at block " + blockID + ": " + (result ? "accepted" : "rejected"));
-            return new Value(result);
-        }
-        else {
-            return new Value(false);
-        }
-    }
-
-    @Override
     public Value visitIf_statement(PLCParser.If_statementContext ctx) {
         boolean conditional = visit(ctx.getChild(1)).asBoolean();
 

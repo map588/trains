@@ -66,24 +66,5 @@ public interface WaysideController {
      * @param blockCount The number of blocks the train is allowed to travel
      */
     void CTCSendAuthority(int blockID, int blockCount);
-
-    /**
-     * Signals to a Wayside to request a bidirectional track be assigned a traveling direction.
-     * Any section of track that is bidirectional must have a direction assigned to it, as trains cannot travel in both
-     * directions at once without crashing or deadlocking. Before sending a train into a bidirectional section of track,
-     * the Wayside must request a direction be assigned to the track and verify the request was accepted.
-     * @param blockID The ID of the first block of bidirectional track under the target Wayside's domain
-     * @param direction Whether the direction is assigned into (true) or out of (false) the target Wayside's domain
-     * @return Whether the request was accepted
-     */
-    boolean waysideRequestDirection(int blockID, boolean direction);
-
-    /**
-     * Signals to a Wayside to release a direction from a bidirectional track, allowing the other Wayside to request a
-     * direction for that block.
-     * @param blockID The ID of the first block of bidirectional track under the target Wayside's domain
-     * @return Whether the release request was accepted.
-     */
-    boolean waysideReleaseDirection(int blockID);
 }
 

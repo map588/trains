@@ -2,15 +2,15 @@
 // Accesses occupancies from blocks 1-24
 
 // Assign direction for outgoing trains
-if not dir_assigned[20]
-        if occupied[4]
-        request_direction(20, OUTBOUND)
-    endif
-else
-    if not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and not occupied[1]
-        release_direction(20)
-    endif
-endif
+//if not dir_assigned[20]
+//    if occupied[4]
+//        //request_direction(20, OUTBOUND)
+//    endif
+//else
+//    if not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and not occupied[1]
+//        //release_direction(20)
+//    endif
+//endif
 
 // Switch 1-13-12
 if not occupied[13] and dir_assigned[20]

@@ -1,11 +1,9 @@
 grammar PLC;
 
 program : (statement | statement NEWLINE | NEWLINE)+;
-statement : set_list_value | request_direction | release_direction | if_statement | if_else_statement | COMMENT ;
+statement : set_list_value | if_statement | if_else_statement | COMMENT ;
 
 set_list_value : list_name '[' index ']' '=' (equality_check | compound_value | value_false | value_true) ;
-request_direction : REQUEST_DIRECTION '(' index ',' (value_false | value_true) ')' ;
-release_direction : RELEASE_DIRECTION '(' index ')' ;
 
 if_statement
     : IF (compound_value | equality_check)
@@ -49,8 +47,6 @@ ENDIF : 'endif' | 'ENDIF' ;
 FOR : 'for' | 'FOR' ;
 ENDFOR : 'endfor' | 'ENDFOR' ;
 COMMENT : '//' ~( '\r' | '\n' )* NEWLINE ;
-REQUEST_DIRECTION : 'request_direction' ;
-RELEASE_DIRECTION : 'release_direction' ;
 
 OCCUPANCY : 'occupied' ;
 SWITCH : 'switch' ;

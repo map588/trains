@@ -166,16 +166,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     @Override
-    public boolean waysideRequestDirection(int blockID, boolean direction) {
-        return false;
-    }
-
-    @Override
-    public boolean waysideReleaseDirection(int blockID) {
-        return false;
-    }
-
-    @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         blockMap.get(blockID).setOccupied(occupied);
 

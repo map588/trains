@@ -311,26 +311,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     }
 
-    @Override
-    public boolean waysideRequestDirection(int blockID, boolean direction) {
-        if(blockMap.get(blockID).isDir_assigned())
-            return false;
-        else {
-            blockMap.get(blockID).setDir_assigned(true);
-            blockMap.get(blockID).setDirection(direction);
-
-            runPLC();
-            return true;
-        }
-    }
-
-    @Override
-    public boolean waysideReleaseDirection(int blockID) {
-        blockMap.get(blockID).setDir_assigned(false);
-        return true;
-
-    }
-
     /**
      * This method is used to notify the change in the value of a property.
      * It prints the property name and the new value to the console and then notifies the subject of the change.

@@ -98,7 +98,6 @@ public class WaysideControllerImplTests {
     @Test
     void testGreenLine1() {
         Map<Integer, WaysideBlock> blockMap = controller.getBlockMap();
-        assertTrue(controller.waysideRequestDirection(20, true));
         assertTrue(blockMap.get(20).getBooleanAuth());
 
         controller.trackModelSetOccupancy(20, true);
