@@ -10,12 +10,7 @@ import static waysideController.Properties.*;
 
 public class WaysideBlock implements Notifier {
     private final int blockID;
-    private int nextBlockIDNorth;
-    private int nextBlockIDSouth;
-    private boolean nextDirectionNorth;
-    private boolean nextDirectionSouth;
     private final boolean hasSwitch;
-    private boolean switchBranchDir;
     private final boolean hasLight;
     private final boolean hasCrossing;
 
@@ -24,7 +19,6 @@ public class WaysideBlock implements Notifier {
     private int switchBlockAlt;
 
     private boolean occupied;
-    private int trainID;
     private boolean switchState;
     private boolean lightState;
     private boolean crossingState;
@@ -46,7 +40,6 @@ public class WaysideBlock implements Notifier {
         this.hasCrossing = block.blockType() == CROSSING;
         this.speedLimit = block.speedLimit();
         this.open = true;
-        this.trainID = -1;
 
         if(this.hasSwitch) {
             System.out.println("North: " + block.nextBlock().north());
@@ -58,35 +51,13 @@ public class WaysideBlock implements Notifier {
 
             this.switchBlockParent = this.blockID;
 
-            switchBranchDir = block.nextBlock().primarySwitchDirection() == Direction.NORTH;
-            if(switchBranchDir) {
+            if(block.nextBlock().primarySwitchDirection() == Direction.NORTH) {
                 this.switchBlockDef = block.nextBlock().northDefault().blockNumber();
                 this.switchBlockAlt = block.nextBlock().northAlternate().blockNumber();
-
-                nextBlockIDNorth = block.nextBlock().northDefault().blockNumber();
-                nextDirectionNorth = !block.nextBlock().northDefault().flipDirection();
-                nextBlockIDSouth = block.nextBlock().southDefault().blockNumber();
             }
             else {
                 this.switchBlockDef = block.nextBlock().southDefault().blockNumber();
                 this.switchBlockAlt = block.nextBlock().southAlternate().blockNumber();
-
-                nextBlockIDSouth = block.nextBlock().southDefault().blockNumber();
-                nextDirectionSouth = block.nextBlock().southDefault().flipDirection();
-                nextBlockIDNorth = block.nextBlock().northDefault().blockNumber();
-            }
-        }
-        else {
-            this.nextBlockIDNorth = block.nextBlock().north().blockNumber();
-            this.nextBlockIDSouth = block.nextBlock().south().blockNumber();
-            this.nextDirectionNorth = !block.nextBlock().north().flipDirection();
-            this.nextDirectionSouth = block.nextBlock().south().flipDirection();
-
-            if(nextBlockIDNorth == -1) {
-                direction = false;
-            }
-            else if(nextBlockIDSouth == -1) {
-                direction = true;
             }
         }
     }
@@ -162,14 +133,6 @@ public class WaysideBlock implements Notifier {
     public void setSwitchState(boolean switchState) {
         System.out.println("Switch State: " + switchState);
         this.switchState = switchState;
-
-        // TODO: fix switches to also change direction swapping based on switch state
-        if(switchBranchDir) {
-            nextBlockIDNorth = switchState ? switchBlockAlt : switchBlockDef;
-        }
-        else {
-            nextBlockIDSouth = switchState ? switchBlockAlt : switchBlockDef;
-        }
 
         if(subject != null)
             subject.notifyChange(switchState_p, switchState);
@@ -262,30 +225,6 @@ public class WaysideBlock implements Notifier {
             case open_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
-    }
-
-    public int getTrainID() {
-        return trainID;
-    }
-
-    public void setTrainID(int trainID) {
-        this.trainID = trainID;
-    }
-
-    public void removeTrainID() {
-        this.trainID = -1;
-    }
-
-    public boolean hasTrain() {
-        return trainID != -1;
-    }
-
-    public int nextBlock() {
-        return direction ? nextBlockIDNorth : nextBlockIDSouth;
-    }
-
-    public boolean nextDirection() {
-        return direction ? nextDirectionNorth : nextDirectionSouth;
     }
 }
 

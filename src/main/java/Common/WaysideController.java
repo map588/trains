@@ -58,30 +58,14 @@ public interface WaysideController {
     void setValue(String propertyName, Object newValue);
 
 
-
-    /**
-     * Signals to the Wayside connected to the yard to expect a train of a specific ID to appear after the yard.
-     * @param trainID The ID of the train to expect
-     */
-    void CTCDispatchTrain(int trainID);
-
     /**
      * Sends the authority for a train to the Wayside.
      * The authority is simply the block ID that the train is allowed to travel to.
      * This allows the Wayside to stop a train at a specific block or station.
-     * @param trainID The ID of the train
-     * @param blockID The ID of the block the train is allowed to travel to
+     * @param blockID The ID of the block the train is located in
+     * @param blockCount The number of blocks the train is allowed to travel
      */
-    void CTCSendAuthority(int trainID, int blockID);
-
-    /**
-     * Signals to the Wayside that a train is entering a block of its domain.
-     * This is used to transfer the trainID between Waysides as a train moves between the domain of the Waysides.
-     * @param trainID The ID of the train entering the block
-     * @param blockID The ID of the block the train is entering
-     * @param authBlockID The ID of the block the train is allowed to travel to
-     */
-    void waysideIncomingTrain(int trainID, int blockID, int authBlockID);
+    void CTCSendAuthority(int blockID, int blockCount);
 
     /**
      * Signals to a Wayside to request a bidirectional track be assigned a traveling direction.

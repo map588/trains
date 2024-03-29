@@ -30,10 +30,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // The map of blocks that the wayside controller controls
     protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
-    // For each trainID (key), stores the blockID (value) that the train is authorized to move to
-    private final Map<Integer, Integer> trainAuthMap = new HashMap<>();
-    // For each
-    private final Map<Integer, Integer> trainNextBlockMap = new HashMap<>();
 
     // The PLC program that the wayside controller is running
     private final PLCProgram[] plcPrograms;
@@ -123,26 +119,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(ctcOffice != null)
                 ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, occupied);
 
-            // Update train ID if the block is occupied
-            if (occupied && trainNextBlockMap.containsKey(blockID)) {
-                int trainID = trainNextBlockMap.get(blockID);
-                block.setTrainID(trainID);
-
-                // Update the next block for the train
-                trainNextBlockMap.remove(blockID);
-                int nextBlock = block.nextBlock();
-                if(blockMap.containsKey(nextBlock)) {
-                    trainNextBlockMap.put(nextBlock, trainID);
-                }
-                else {
-                    WaysideController controller = WaysideControllerSubjectFactory.getControllerMap().get(nextBlock);
-                    controller.waysideIncomingTrain(trainID, nextBlock, trainAuthMap.get(trainID));
-                }
-            }
-            // Clear train ID if the block is not occupied
-            else {
-                block.removeTrainID();
-            }
             runPLC();
         }
     }
@@ -331,20 +307,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // TODO: implement these functions
     @Override
-    public void CTCDispatchTrain(int trainID) {
-        blockMap.get(0).setTrainID(trainID);
-    }
+    public void CTCSendAuthority(int blockID, int blockCount) {
 
-    @Override
-    public void CTCSendAuthority(int trainID, int blockID) {
-        trainAuthMap.put(trainID, blockID);
-    }
-
-    @Override
-    public void waysideIncomingTrain(int trainID, int blockID, int authBlockID) {
-//        blockMap.get(blockID).setTrainID(trainID);
-        trainNextBlockMap.put(blockID, trainID);
-        trainAuthMap.put(trainID, authBlockID);
     }
 
     @Override
@@ -352,13 +316,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(blockMap.get(blockID).isDir_assigned())
             return false;
         else {
-            int block = blockID;
-            for(; !blockMap.get(block).hasSwitch(); block = blockMap.get(block).nextBlock()) {
-                blockMap.get(block).setDir_assigned(true);
-                blockMap.get(block).setDirection(direction);
-            }
-            blockMap.get(block).setDir_assigned(true);
-            blockMap.get(block).setDirection(direction);
+            blockMap.get(blockID).setDir_assigned(true);
+            blockMap.get(blockID).setDirection(direction);
 
             runPLC();
             return true;

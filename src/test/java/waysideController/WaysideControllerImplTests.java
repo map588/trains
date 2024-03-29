@@ -87,18 +87,10 @@ public class WaysideControllerImplTests {
         assertEquals(block.getSwitchBlockParent(), 13);
         assertEquals(block.getSwitchBlockDef(), 12);
         assertEquals(block.getSwitchBlockAlt(), 1);
-        block.setDirection(true);
-        assertEquals(block.nextBlock(), 12);
-        block.setDirection(false);
-        assertEquals(block.nextBlock(), 14);
 
         controller.setMaintenanceMode(true);
         controller.maintenanceSetSwitch(13, true);
         assertTrue(block.getSwitchState());
-        block.setDirection(true);
-        assertEquals(block.nextBlock(), 1);
-        block.setDirection(false);
-        assertEquals(block.nextBlock(), 14);
 
         verify(trackModel).setSwitchState(13, true);
     }
@@ -109,38 +101,27 @@ public class WaysideControllerImplTests {
         assertTrue(controller.waysideRequestDirection(20, true));
         assertTrue(blockMap.get(20).getBooleanAuth());
 
-        controller.waysideIncomingTrain(1, 20, 0);
-        assertFalse(blockMap.get(20).hasTrain());
-        assertTrue(blockMap.get(20).getBooleanAuth());
-
         controller.trackModelSetOccupancy(20, true);
-        assertEquals(1, blockMap.get(20).getTrainID());
         assertTrue(blockMap.get(20).getBooleanAuth());
 
         for(int i = 19; i >= 14; i--) {
             controller.trackModelSetOccupancy(i, true);
-            assertEquals(1, blockMap.get(i).getTrainID());
             assertTrue(blockMap.get(i).getBooleanAuth());
 
             controller.trackModelSetOccupancy(i+1, false);
-            assertFalse(blockMap.get(i+1).hasTrain());
         }
 
         controller.trackModelSetOccupancy(13, true);
-        assertEquals(1, blockMap.get(13).getTrainID());
         assertTrue(blockMap.get(13).getBooleanAuth());
         assertFalse(blockMap.get(13).getSwitchState());
 
         controller.trackModelSetOccupancy(14, false);
-        assertFalse(blockMap.get(14).hasTrain());
 
         for(int i = 12; i >= 5; i--) {
             controller.trackModelSetOccupancy(i, true);
-            assertEquals(1, blockMap.get(i).getTrainID());
             assertTrue(blockMap.get(i).getBooleanAuth());
 
             controller.trackModelSetOccupancy(i+1, false);
-            assertFalse(blockMap.get(i+1).hasTrain());
         }
     }
 }

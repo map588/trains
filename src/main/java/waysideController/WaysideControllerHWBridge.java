@@ -159,18 +159,9 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     // TODO: implement these functions
-    @Override
-    public void CTCDispatchTrain(int trainID) {
-
-    }
 
     @Override
-    public void CTCSendAuthority(int trainID, int blockID) {
-
-    }
-
-    @Override
-    public void waysideIncomingTrain(int trainID, int blockID, int authBlockID) {
+    public void CTCSendAuthority(int blockID, int blockCount) {
 
     }
 
