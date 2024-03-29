@@ -1,5 +1,7 @@
 package Common;
 
+import Utilities.Enums.Direction;
+
 public interface  TrainModel {
 
     //----Vital Setter Signals----
@@ -55,6 +57,8 @@ public interface  TrainModel {
     boolean getLeftDoors();
     boolean getRightDoors();
     double getlength();
+
+    Direction getDirection();
 
     //Vital Functions for simulating the train physics
     void trainModelPhysics();
