@@ -59,6 +59,7 @@ public interface  TrainModel {
     double getlength();
 
     Direction getDirection();
+    void setDirection(Direction direction);
 
     //Vital Functions for simulating the train physics
     void trainModelPhysics();
