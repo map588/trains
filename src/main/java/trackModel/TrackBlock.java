@@ -67,7 +67,6 @@ class TrackBlock {
                 break;
 
             default :
-                this.switchInfo = new SwitchState();
                 this.stationInfo = new StationInfo();
                 this.crossingInfo = new CrossingState();
                 break;
@@ -77,6 +76,7 @@ class TrackBlock {
             this.northID = -1;
             this.southID = -1;
         }else{
+            this.switchInfo = new SwitchState();
             this.northID = blockInfo.nextBlock().north().blockNumber();
             this.southID = blockInfo.nextBlock().south().blockNumber();
         }
@@ -146,28 +146,28 @@ class TrackBlock {
 
 
      public static class SwitchState{
-        private final Integer northDefault;
-        private final Integer southDefault;
 
-        private final Integer northAlt;
-        private final Integer southAlt;
+        private final BasicBlock.Connection northDef;
+        private final BasicBlock.Connection southDef;
+        private final BasicBlock.Connection northAlt;
+        private final BasicBlock.Connection southAlt;
 
         private Boolean switchState = false;
         private Boolean switchStateAuto = false;
 
         //Null constructor
         SwitchState(){
-            this.northDefault = -1;
-            this.southDefault = -1;
-            this.northAlt = -1;
-            this.southAlt = -1;
+            this.northDef = new BasicBlock.Connection(-1, false);
+            this.southDef = new BasicBlock.Connection(-1, false);
+            this.northAlt = new BasicBlock.Connection(-1, false);
+            this.southAlt = new BasicBlock.Connection(-1, false);
         }
 
         SwitchState(BasicBlock.NextBlock nextBlock){
-            this.northDefault = nextBlock.northDefault().blockNumber();
-            this.southDefault = nextBlock.southDefault().blockNumber();
-            this.northAlt = nextBlock.northAlternate().blockNumber();
-            this.southAlt = nextBlock.southAlternate().blockNumber();
+            this.northDef = nextBlock.northDefault();
+            this.southDef = nextBlock.southDefault();
+            this.northAlt = nextBlock.northAlternate();
+            this.southAlt = nextBlock.southAlternate();
         }
 
     }
