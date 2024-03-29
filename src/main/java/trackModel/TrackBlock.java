@@ -1,6 +1,7 @@
 package trackModel;
 
 import Utilities.BasicBlock;
+import Utilities.BasicBlock.Connection;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
@@ -8,38 +9,43 @@ import Utilities.Enums.Lines;
 import java.util.Optional;
 
 import static Utilities.Enums.Direction.NORTH;
-
+import static Utilities.Enums.Direction.SOUTH;
 
 class TrackBlock {
+    // Block Information
+     final int blockID;
+     final boolean isUnderground;
+     final boolean isSwitch;
+     final BlockType blockType;
+     final Lines line;
 
+     final Connection northID;
+     final Connection southID;
 
-    //Block Information
-    final int blockID;
-    final boolean isUnderground;
-    final boolean isSwitch;
-    final BlockType blockType;
-    final Lines line;
+    // Physical properties
+     final double grade;
+     final double elevation;
+     final double cumulativeElevation;
+     final double speedLimit;
+     final double length;
 
-    final Integer northID;
-    final Integer southID;
+    // Specific Block Information
+     final Optional<SwitchState> switchInfo;
+     final Optional<CrossingState> crossingInfo;
+     final Optional<StationInfo> stationInfo;
+     final FailureInfo failureInfo;
 
-    //Physical properties
-    final double grade;
-    final double elevation;
-    final double cumulativeElevation;
-    final double speedLimit;
-    final double length;
+     boolean maintenanceMode;
 
-    //Specific Block Information
-    public SwitchState switchInfo;
-    public CrossingState crossingInfo;
-    public StationInfo stationInfo;
-    public FailureInfo failureInfo;
-
-    public boolean maintenanceMode;
-
-
+    /**
+     * Constructs a new TrackBlock object based on the provided BasicBlock information.
+     *
+     * @param blockInfo the BasicBlock object containing the block information
+     * @throws IllegalArgumentException if the provided block information is invalid
+     */
     TrackBlock(BasicBlock blockInfo) {
+        validateBlockInfo(blockInfo);
+
         this.blockID = blockInfo.blockNumber();
         this.isUnderground = blockInfo.isUnderground();
         this.isSwitch = blockInfo.isSwitch();
@@ -51,171 +57,242 @@ class TrackBlock {
         this.length = blockInfo.blockLength();
         this.line = Lines.valueOf(blockInfo.trackLine());
 
-        switch (blockType){
+        this.switchInfo = blockInfo.isSwitch() ? Optional.of(new SwitchState(blockInfo.nextBlock())) : Optional.empty();
+        this.crossingInfo = blockInfo.blockType() == BlockType.CROSSING ? Optional.of(new CrossingState(false)) : Optional.empty();
+        this.stationInfo = blockInfo.blockType() == BlockType.STATION ? Optional.of(new StationInfo(blockInfo.stationName().get(), blockInfo.doorDirection().get())) : Optional.empty();
 
-            case STATION :
-                if(blockInfo.stationName().equals(Optional.empty()) || blockInfo.doorDirection().equals(Optional.empty()))
-                    throw new IllegalArgumentException("Station block must have a station name and door direction");
-
-                this.stationInfo = new StationInfo(blockInfo.stationName().get(), blockInfo.doorDirection().get());
-                this.crossingInfo = new CrossingState();
-                break;
-
-            case CROSSING :
-                this.crossingInfo = new CrossingState(false);
-                this.stationInfo = new StationInfo();
-                break;
-
-            default :
-                this.stationInfo = new StationInfo();
-                this.crossingInfo = new CrossingState();
-                break;
-        }
-        if(isSwitch){
-            this.switchInfo = new SwitchState(blockInfo.nextBlock());
-            this.northID = -1;
-            this.southID = -1;
-        }else{
-            this.switchInfo = new SwitchState();
-            this.northID = blockInfo.nextBlock().north().blockNumber();
-            this.southID = blockInfo.nextBlock().south().blockNumber();
+        if (isSwitch) {
+            this.northID = new Connection(-1, false);
+            this.southID = new Connection(-1, false);
+        } else {
+            this.northID = blockInfo.nextBlock().north();
+            this.southID = blockInfo.nextBlock().south();
         }
 
-        FailureInfo failureInfo = new FailureInfo();
+        this.failureInfo = new FailureInfo();
     }
 
-
-     Integer getNextBlock(Direction direction) {
-        if(!isSwitch) {
-            if (direction == NORTH)
-                return northID;
-            else
-                return southID;
-        }else{
-            if(switchInfo.switchState){
-                if (direction == NORTH)
-                    return switchInfo.northDefault;
-                else
-                    return switchInfo.southDefault;
-            }else{
-                if (direction == NORTH)
-                    return switchInfo.northAlt;
-                else
-                    return switchInfo.southAlt;
+    /**
+     * Validates the provided BasicBlock object to ensure it contains valid data.
+     *
+     * @param blockInfo the BasicBlock object to validate
+     * @throws IllegalArgumentException if the block information is invalid
+     */
+    private void validateBlockInfo(BasicBlock blockInfo) {
+        if (blockInfo.blockType() == BlockType.STATION) {
+            if (blockInfo.stationName().isEmpty() || blockInfo.doorDirection().isEmpty()) {
+                throw new IllegalArgumentException("Station block must have a station name and door direction");
+            }
+        }else if(blockInfo.isSwitch()){
+            if(blockInfo.nextBlock().northDefault() == null || blockInfo.nextBlock().southDefault() == null){
+                throw new IllegalArgumentException("Switch block must have a default connection for both directions");
             }
         }
     }
 
-    public void setSwitchState(Boolean state){
-        if(isSwitch)
-            switchInfo.switchState = state;
-        else
-            throw new IllegalArgumentException("Block is not a switch");
+    /**
+     * Returns the next block connection based on the provided direction.
+     *
+     * @param direction the direction of the next block
+     * @return the Connection object representing the next block
+     */
+    public Connection getNextBlock(Direction direction) {
+        if (!isSwitch) {
+            return direction == NORTH ? northID : southID;
+        } else {
+            return switchInfo.map(info -> {
+                if (info.isSwitchState()) {
+                    return direction == NORTH ? info.getNorthAlt().orElse(null) : info.getSouthAlt().orElse(null);
+                } else {
+                    return direction == NORTH ? info.getNorthDef() : info.getSouthDef();
+                }
+            }).orElse(null);
+        }
     }
 
-    public void setSwitchStateAuto(Boolean state){
-        if(isSwitch)
-            switchInfo.switchStateAuto = state;
-        else
-            throw new IllegalArgumentException("Block is not a switch");
+    /**
+     * Sets the state of the switch.
+     *
+     * @param state the new state of the switch
+     * @throws IllegalArgumentException if the block is not a switch
+     */
+    public void setSwitchState(boolean state) {
+        switchInfo.ifPresent(info -> info.setSwitchState(state));
     }
 
-    public void setCrossingState(Boolean state){
-        if(blockType == BlockType.CROSSING)
-            crossingInfo.crossingState = state;
-        else
-            throw new IllegalArgumentException("Block is not a crossing");
+    /**
+     * Sets the automatic state of the switch.
+     *
+     * @param state the new automatic state of the switch
+     * @throws IllegalArgumentException if the block is not a switch
+     */
+    public void setSwitchStateAuto(boolean state) {
+        switchInfo.ifPresent(info -> info.setSwitchStateAuto(state));
     }
 
-    public void setPowerFailure(Boolean state) {
-        failureInfo.powerFailure = state;
+    /**
+     * Sets the state of the crossing.
+     *
+     * @param state the new state of the crossing
+     * @throws IllegalArgumentException if the block is not a crossing
+     */
+    public void setCrossingState(boolean state) {
+        crossingInfo.ifPresent(info -> info.setCrossingState(state));
     }
 
-    public void setTrackCircuitFailure(Boolean state) {
-        failureInfo.trackCircuitFailure = state;
+    /**
+     * Sets the power failure state of the block.
+     *
+     * @param state the new power failure state
+     */
+    public void setPowerFailure(boolean state) {
+        failureInfo.setPowerFailure(state);
     }
 
-    public void setBrokenRail(Boolean state) {
-        failureInfo.brokenRail = state;
+    /**
+     * Sets the track circuit failure state of the block.
+     *
+     * @param state the new track circuit failure state
+     */
+    public void setTrackCircuitFailure(boolean state) {
+        failureInfo.setTrackCircuitFailure(state);
     }
 
-    public void setUnderMaintenance(Boolean state) {
+    /**
+     * Sets the broken rail state of the block.
+     *
+     * @param state the new broken rail state
+     */
+    public void setBrokenRail(boolean state) {
+        failureInfo.setBrokenRail(state);
+    }
+
+    /**
+     * Sets the maintenance mode of the block.
+     *
+     * @param state the new maintenance mode state
+     */
+    public void setUnderMaintenance(boolean state) {
         maintenanceMode = state;
     }
 
+    // Inner classes for specific block information
 
+    public static class SwitchState {
+        private final Connection northDef;
+        private final Connection southDef;
+        private final Optional<Connection> northAlt;
+        private final Optional<Connection> southAlt;
 
-     public static class SwitchState{
+        private boolean switchState;
+        private boolean switchStateAuto;
 
-        private final BasicBlock.Connection northDef;
-        private final BasicBlock.Connection southDef;
-        private final BasicBlock.Connection northAlt;
-        private final BasicBlock.Connection southAlt;
-
-        private Boolean switchState = false;
-        private Boolean switchStateAuto = false;
-
-        //Null constructor
-        SwitchState(){
-            this.northDef = new BasicBlock.Connection(-1, false);
-            this.southDef = new BasicBlock.Connection(-1, false);
-            this.northAlt = new BasicBlock.Connection(-1, false);
-            this.southAlt = new BasicBlock.Connection(-1, false);
-        }
-
-        SwitchState(BasicBlock.NextBlock nextBlock){
+        SwitchState(BasicBlock.NextBlock nextBlock) {
             this.northDef = nextBlock.northDefault();
             this.southDef = nextBlock.southDefault();
-            this.northAlt = nextBlock.northAlternate();
-            this.southAlt = nextBlock.southAlternate();
+            this.northAlt = Optional.ofNullable(nextBlock.northAlternate().blockNumber() != -1 ? nextBlock.northAlternate() : null);
+            this.southAlt = Optional.ofNullable(nextBlock.southAlternate().blockNumber() != -1 ? nextBlock.southAlternate() : null);
         }
 
+        public Connection getNorthDef() {
+            return northDef;
+        }
+
+        public Connection getSouthDef() {
+            return southDef;
+        }
+
+        public Optional<Connection> getNorthAlt() {
+            return northAlt;
+        }
+
+        public Optional<Connection> getSouthAlt() {
+            return southAlt;
+        }
+
+        public boolean isSwitchState() {
+            return switchState;
+        }
+
+        public void setSwitchState(boolean switchState) {
+            this.switchState = switchState;
+        }
+
+        public boolean isSwitchStateAuto() {
+            return switchStateAuto;
+        }
+
+        public void setSwitchStateAuto(boolean switchStateAuto) {
+            this.switchStateAuto = switchStateAuto;
+        }
     }
 
-     public static class StationInfo{
-        final String stationName;
-        final String doorDirection;
+    public static class StationInfo {
+        private final String stationName;
+        private final String doorDirection;
 
-        //Null constructor
-        StationInfo(){
-            this.stationName = "";
-            this.doorDirection = "";
-        }
-
-        StationInfo(String stationName, String doorDirection){
+        StationInfo(String stationName, String doorDirection) {
             this.stationName = stationName;
             this.doorDirection = doorDirection;
         }
 
-
-    }
-
-     public static class CrossingState{
-        Boolean crossingState;
-
-        //Null constructor
-        CrossingState(){
-            this.crossingState = false;
+        public String getStationName() {
+            return stationName;
         }
 
-        CrossingState(Boolean crossingState){
+        public String getDoorDirection() {
+            return doorDirection;
+        }
+    }
+
+    public static class CrossingState {
+        private boolean crossingState;
+
+        CrossingState(boolean crossingState) {
             this.crossingState = crossingState;
         }
 
+        public boolean isCrossingState() {
+            return crossingState;
+        }
 
+        public void setCrossingState(boolean crossingState) {
+            this.crossingState = crossingState;
+        }
     }
 
-    public static class FailureInfo{
-        boolean hasFailure;
-        boolean brokenRail;
-        boolean trackCircuitFailure;
-        boolean powerFailure;
+    public static class FailureInfo {
+        private boolean hasFailure;
+        private boolean brokenRail;
+        private boolean trackCircuitFailure;
+        private boolean powerFailure;
 
-        FailureInfo(){
-            this.hasFailure = false;
-            this.brokenRail = false;
-            this.trackCircuitFailure = false;
-            this.powerFailure = false;
+        public boolean hasFailure() {
+            return brokenRail || trackCircuitFailure || powerFailure;
+        }
+
+        public boolean isBrokenRail() {
+            return brokenRail;
+        }
+
+        public void setBrokenRail(boolean brokenRail) {
+            this.brokenRail = brokenRail;
+        }
+
+        public boolean isTrackCircuitFailure() {
+            return trackCircuitFailure;
+        }
+
+        public void setTrackCircuitFailure(boolean trackCircuitFailure) {
+            this.trackCircuitFailure = trackCircuitFailure;
+        }
+
+        public boolean isPowerFailure() {
+            return powerFailure;
+        }
+
+        public void setPowerFailure(boolean powerFailure) {
+            this.powerFailure = powerFailure;
         }
     }
 }

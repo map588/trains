@@ -1,8 +1,10 @@
 package trackModel;
 
 import Common.TrainModel;
-import Framework.Support.ObservableHashMap;
+import Framework.Support.ConncurrentHashMap;
 import Utilities.BasicBlock;
+import Utilities.BasicBlock.Connection;
+import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import trainModel.TrainModelImpl;
 
@@ -11,9 +13,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Utilities.Enums.BlockType.STATION;
-import static Utilities.Enums.BlockType.YARD;
-
 public class TrackLine {
 
     Lines line;
@@ -21,7 +20,7 @@ public class TrackLine {
     ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
 
     //calls all listeners when a train enters or exits a block
-    final ObservableHashMap<TrainModel, Integer> trackOccupancyMap = new ObservableHashMap<>();
+    final ConncurrentHashMap<TrainModel, Integer> trackOccupancyMap = new ConncurrentHashMap<>();
 
     //maps blocks to block numbers
     ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
@@ -66,9 +65,18 @@ public class TrackLine {
     public synchronized double updateTrainLocation(TrainModel train) {
         int prevBlockID = trackOccupancyMap.get(train);
 
-
         TrackBlock prevBlock = trackLayout.get(prevBlockID);
-        Integer newBlockID = prevBlock.getNextBlock(train.getDirection());
+        Direction trainDirection = train.getDirection();
+
+        Connection newBlockConnection = prevBlock.getNextBlock(trainDirection);
+
+        Integer newBlockID = newBlockConnection.blockNumber();
+        boolean flipDirection = newBlockConnection.flipDirection();
+
+        if(flipDirection) {
+            train.setDirection((trainDirection == Direction.NORTH) ? Direction.SOUTH : Direction.NORTH);
+        }
+
         TrackBlock nextBlock = trackLayout.get(newBlockID);
 
         trackOccupancyMap.remove(train);
@@ -85,7 +93,7 @@ public class TrackLine {
 
     private void setupListeners() {
 
-        ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
+        ConncurrentHashMap.MapListener<TrainModel, Integer> trackListener = new ConncurrentHashMap.MapListener<>() {
 
             public void onAdded(TrainModel train, Integer blockID) {
                 // A train enters a new block
