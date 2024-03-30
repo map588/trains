@@ -66,25 +66,26 @@ public class TrackLine {
      * @return the length of the block the train is now on (for the purpose of the train model)
      */
 
-    public synchronized double updateTrainLocation(TrainModel train) {
-
-        if(!trackOccupancyMap.containsKey(train)) {
+    public double updateTrainLocation(TrainModel train) {
+        if (!trackOccupancyMap.containsKey(train)) {
             throw new IllegalArgumentException("Train is not on the track");
         }
-        Connection newConnection = trackLayout.get(trackOccupancyMap.get(train)).getNextBlock(train.getDirection());
 
-        if(newConnection.directionChange()) {
+        int currentBlockId = trackOccupancyMap.get(train);
+        TrackBlock currentBlock = trackLayout.get(currentBlockId);
+        Connection newConnection = currentBlock.getNextBlock(train.getDirection());
+
+        if (newConnection.directionChange()) {
             train.changeDirection();
         }
 
         TrackBlock nextBlock = trackLayout.get(newConnection.blockNumber());
 
-        trackOccupancyMap.remove(train);
+        trackOccupancyMap.remove(train, currentBlockId);
         trackOccupancyMap.put(train, newConnection.blockNumber());
 
         return nextBlock.length;
     }
-
 
     // Used to add a task to the work queue
     private void executeTrackUpdate(Runnable task) {
