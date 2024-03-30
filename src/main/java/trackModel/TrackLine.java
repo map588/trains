@@ -28,6 +28,10 @@ public class TrackLine {
     //maps blocks to block numbers
     ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
 
+    int outsideTemperature = 0;
+
+    TrackModelSubject subject;
+
     public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout) {
 
         ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
@@ -41,6 +45,10 @@ public class TrackLine {
         setupListeners();
     }
 
+
+    public void setSubject(TrackModelSubject subject) {
+        this.subject = subject;
+    }
 
     public void trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(trainID, this);
