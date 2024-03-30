@@ -3,6 +3,7 @@ package trainModel;
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Constants;
+import Utilities.Enums.Direction;
 
 public class stubTrainModel implements TrainModel {
     private TrainController controller;
@@ -48,6 +49,16 @@ public class stubTrainModel implements TrainModel {
 
     @Override
     public void setGrade(double grade) {
+
+    }
+
+    @Override
+    public void setDirection(Direction direction) {
+
+    }
+
+    @Override
+    public void changeDirection() {
 
     }
 
@@ -123,6 +134,11 @@ public class stubTrainModel implements TrainModel {
 
     public double getWeightKG() {
         return Constants.LOADED_TRAIN_MASS;
+    }
+
+    @Override
+    public Direction getDirection() {
+        return null;
     }
 
     public boolean getBrakeFailure() {

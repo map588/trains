@@ -314,6 +314,15 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.direction = direction;
     }
 
+    @Override
+    public void changeDirection() {
+        if (this.direction == Direction.NORTH) {
+            this.direction = Direction.SOUTH;
+        } else {
+            this.direction = Direction.NORTH;
+        }
+    }
+
     public String getBeacon() {
         return this.beacon;
     }

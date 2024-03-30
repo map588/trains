@@ -15,6 +15,8 @@ public interface  TrainModel {
     void setNumPassengers(int numPassengers);
     void setCrewCount(int crewCount);
     void setGrade(double grade);
+    void setDirection(Direction direction);
+    void changeDirection();
 
 
     //Murphy Signals
@@ -43,6 +45,7 @@ public interface  TrainModel {
     boolean getServiceBrake();
     boolean getEmergencyBrake();
     double  getWeightKG();
+    Direction getDirection();
 
     //Murphy Getter Signals
     boolean getBrakeFailure();
@@ -58,8 +61,7 @@ public interface  TrainModel {
     boolean getRightDoors();
     double getlength();
 
-    Direction getDirection();
-    void setDirection(Direction direction);
+
 
     //Vital Functions for simulating the train physics
     void trainModelPhysics();

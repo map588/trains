@@ -13,6 +13,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static Utilities.Enums.Direction.NORTH;
+import static Utilities.Enums.Direction.SOUTH;
+
 public class TrackLine {
 
     Lines line;
@@ -50,6 +53,7 @@ public class TrackLine {
         //...
     }
 
+
     private void handleTrainExit(TrainModel train, Integer blockID) {
         TrackBlock block = trackLayout.get(blockID);
         //...
@@ -63,24 +67,20 @@ public class TrackLine {
      */
 
     public synchronized double updateTrainLocation(TrainModel train) {
-        int prevBlockID = trackOccupancyMap.get(train);
 
-        TrackBlock prevBlock = trackLayout.get(prevBlockID);
-        Direction trainDirection = train.getDirection();
+        if(!trackOccupancyMap.containsKey(train)) {
+            throw new IllegalArgumentException("Train is not on the track");
+        }
+        Connection newConnection = trackLayout.get(trackOccupancyMap.get(train)).getNextBlock(train.getDirection());
 
-        Connection newBlockConnection = prevBlock.getNextBlock(trainDirection);
-
-        Integer newBlockID = newBlockConnection.blockNumber();
-        boolean flipDirection = newBlockConnection.flipDirection();
-
-        if(flipDirection) {
-            train.setDirection((trainDirection == Direction.NORTH) ? Direction.SOUTH : Direction.NORTH);
+        if(newConnection.directionChange()) {
+            train.changeDirection();
         }
 
-        TrackBlock nextBlock = trackLayout.get(newBlockID);
+        TrackBlock nextBlock = trackLayout.get(newConnection.blockNumber());
 
         trackOccupancyMap.remove(train);
-        trackOccupancyMap.put(train, newBlockID);
+        trackOccupancyMap.put(train, newConnection.blockNumber());
 
         return nextBlock.length;
     }

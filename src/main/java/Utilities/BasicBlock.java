@@ -157,7 +157,7 @@ public record BasicBlock(
 
     public record Connection(
             int blockNumber,
-            boolean flipDirection
+            boolean directionChange
     ) {
     }
 }
