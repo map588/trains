@@ -53,7 +53,6 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         properties.put(NEXT_STATION_PROPERTY, new SimpleStringProperty(controller.getStationName()));
         properties.put(TRAIN_ID_PROPERTY, new SimpleIntegerProperty(controller.getID()));
         properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(controller.getGrade()));
-
     }
 
     //Change coming from the logic side

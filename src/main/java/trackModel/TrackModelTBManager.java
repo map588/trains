@@ -22,17 +22,17 @@ public class TrackModelTBManager {
     @FXML
     private TextField tbTicketSalesInput;
     @FXML
-    private TableView<TrackModelSubject> tbTable;
+    private TableView<TrackLineSubject> tbTable;
     @FXML
-    private TableColumn<TrackModelSubject, String> tbSectionColumn;
+    private TableColumn<TrackLineSubject, String> tbSectionColumn;
     @FXML
-    private TableColumn<TrackModelSubject, String> tbBlockColumn;
+    private TableColumn<TrackLineSubject, String> tbBlockColumn;
     @FXML
-    private TableColumn<TrackModelSubject, String> tbSwitchColumn;
+    private TableColumn<TrackLineSubject, String> tbSwitchColumn;
     @FXML
-    private TableColumn<TrackModelSubject, String> tbSignalColumn;
+    private TableColumn<TrackLineSubject, String> tbSignalColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Boolean> tbOccupiedColumn;
+    private TableColumn<TrackLineSubject, Boolean> tbOccupiedColumn;
 
     @FXML
     private Label comSpeedOutput;
@@ -47,9 +47,9 @@ public class TrackModelTBManager {
     @FXML
     private ComboBox<String> tbBeaconComboBox;
 
-    private TrackModelSubject trackProperties = new TrackModelSubject();
+    private TrackLineSubject trackProperties = new TrackLineSubject();
     private TrackModelImpl trackModel;
-    private TrackModelSubject trackModelSubject;
+    private TrackLineSubject trackModelSubject;
     private TrackModelManager trackModelManager;
 
     public int getTempInput(){
@@ -64,7 +64,7 @@ public class TrackModelTBManager {
     public void initialize() {
         System.out.println("LAUNCHED TESTBENCH");
 
-        trackModelSubject = new TrackModelSubject(trackModel);
+        trackModelSubject = new TrackLineSubject(trackModel);
         StringConverter<Integer> intConverter = new StringConverter<Integer>() {
             @Override
             public String toString(Integer integer) {
@@ -121,7 +121,7 @@ public class TrackModelTBManager {
         trackProperties.setPassDisembarked(tbPassDisembarkedInput.getText());
     }
 
-    public void selectBlock(TrackModelSubject newProperties){
+    public void selectBlock(TrackLineSubject newProperties){
         if(trackProperties != null) {
             // Unbind stuff here
 
@@ -191,7 +191,7 @@ public class TrackModelTBManager {
     public void setTrackModelManager(TrackModelManager trackModelManager) {
         this.trackModelManager = trackModelManager;
     }
-    public void setTrackModelSubject(TrackModelSubject trackModelSubject){
+    public void setTrackModelSubject(TrackLineSubject trackModelSubject){
         this.trackModelSubject = trackModelSubject;
         tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
         comSpeedInput.textProperty().bindBidirectional(trackModelSubject.comSpeedProperty());

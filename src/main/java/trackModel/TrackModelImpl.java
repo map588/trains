@@ -3,6 +3,7 @@ package trackModel;
 
 import Common.TrackModel;
 import Utilities.BasicBlock;
+import Utilities.Beacon;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 
@@ -34,11 +35,12 @@ public class TrackModelImpl implements TrackModel {
     private final HashMap<Integer, Boolean> blockOccupied;
     private final HashMap<Integer, Boolean> switchStateMap;
     private final HashMap<Integer, Boolean> lightStateMap;
-    private final HashMap<Integer, String> failureMap;
-    private final HashMap<Integer, String> beaconMap;
-    private final HashMap<Integer, String> stationMap;
     private final HashMap<Integer, Boolean> crossingMap;
 
+    private final HashMap<Integer, String> failureMap;
+    private final HashMap<Integer, String> stationMap;
+
+    private final HashMap<Integer, Beacon> beaconMap;
     //should lines just be a string?
     private ArrayList<String> lines = new ArrayList<>();
     private int temperature;
@@ -108,13 +110,16 @@ public class TrackModelImpl implements TrackModel {
         }
     }
 
-    public void setBeacon(int block, String beacon) {
+    @Override
+    public void setBeacon(int block, Beacon beacon) {
+        Beacon newBeacon = beacon;
         if (this.beaconMap.containsKey(block)) {
-            this.beaconMap.replace(block, beacon);
+            this.beaconMap.replace(block, newBeacon);
         } else {
-            this.beaconMap.put(block, beacon);
+            this.beaconMap.put(block, newBeacon);
         }
     }
+
 
     public void setBlockOccupied(int block, boolean state) {
         if (this.blockOccupied.containsKey(block)) {
@@ -136,7 +141,7 @@ public class TrackModelImpl implements TrackModel {
         return this.temperature;
     }
 
-    public String getBeacon(int block) {
+    public Beacon getBeacon(int block) {
         return this.beaconMap.get(block);
     }
 
@@ -197,78 +202,3 @@ public class TrackModelImpl implements TrackModel {
 
 
 }
-
-
-
-//    public List<TrackLayoutInfo> getTrackInfo() {
-//
-//        trackInfo.clear();
-//
-//        for(int i = 0; i <= 15; i++){
-//            TrackLayoutInfo block = new TrackLayoutInfo();
-//            block.setHasFailure(failures.contains(i));
-//            block.setIsOccupied(blockOccupied.contains(i));
-//            block.setBlockNumber("" + i);
-//
-//            if(i < 6){
-//                block.setSection("A");
-//            }
-//            else if(i < 11){
-//                block.setSection("B");
-//            }
-//            else{
-//                block.setSection("C");
-//            }
-//
-//            block.setBlockLength(50);
-//            block.setBlockGrade(0);
-//            block.setSpeedLimit(50);
-//            block.setIsCrossing(i == 3);
-//
-//            if(i == 3){
-//                block.setIsCrossing(true);
-//                block.setCrossingState("TRUE");
-//            }
-//
-//            block.setIsSignal(i == 6 || i == 11);
-//            block.setIsSwitch(i == 5 || i == 6 || i == 11);
-//            block.setIsUnderground(false);
-//            block.setIsStation(i == 10 || i == 15);
-//            block.setIsBeacon(i == 9 || i == 14);
-//            if(i == 5){
-//                block.setSwitchMain("6");
-//                block.setSwitchAlt("11");
-//                block.setSwitchBlockID("5");
-//            }
-//
-//            if(i == 9){
-//                beacons.add(9);
-//            }
-//
-//            if (i == 14){
-//                beacons.add(14);
-//            }
-//
-//            if(i == 6){
-//                block.setSignalID("6");
-//            }
-//
-//            if(i == 11){
-//                block.setSignalID("11");
-//            }
-//
-//            if(i == 10) {
-//                block.setNameOfStation("Station B");
-//            }
-//            if(i == 15) {
-//                block.setNameOfStation("Station C");
-//            }
-//
-//
-//
-//            this.trackInfo.add(block);
-//        }
-//
-//        return this.trackInfo;
-//    }
-//}

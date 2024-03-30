@@ -1,5 +1,6 @@
 package Common;
 
+import Utilities.Beacon;
 import Utilities.Enums.Direction;
 
 public interface  TrainModel {
@@ -30,7 +31,7 @@ public interface  TrainModel {
     void setExtLights(boolean lights);
     void setIntLights(boolean lights);
     void setSetTemperature(double temp);
-    void setBeacon(String beacon);
+    void setBeacon(Beacon beacon);
     void setAnnouncement(String announcement);
 
 

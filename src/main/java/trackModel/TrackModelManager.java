@@ -86,39 +86,38 @@ public class TrackModelManager {
 
     //table
     @FXML
-    private TableView<TrackModelSubject> lineTable;
+    private TableView<TrackLineSubject> lineTable;
     @FXML
-    private TableColumn<TrackModelSubject, String> sectionsColumn;
+    private TableColumn<TrackLineSubject, String> sectionsColumn;
     @FXML
-    private TableColumn<TrackModelSubject, String> blockColumn;
+    private TableColumn<TrackLineSubject, String> blockColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Boolean> occupiedColumn;
+    private TableColumn<TrackLineSubject, Boolean> occupiedColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Integer> sizeColumn;
+    private TableColumn<TrackLineSubject, Integer> sizeColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Double> gradeColumn;
+    private TableColumn<TrackLineSubject, Double> gradeColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Boolean> stationColumn;
+    private TableColumn<TrackLineSubject, Boolean> stationColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Boolean> signalColumn;
+    private TableColumn<TrackLineSubject, Boolean> signalColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Boolean> switchColumn;
+    private TableColumn<TrackLineSubject, Boolean> switchColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Integer> speedLimitColumn;
+    private TableColumn<TrackLineSubject, Integer> speedLimitColumn;
     @FXML
-    private TableColumn<TrackModelSubject, Boolean> failureColumn;
+    private TableColumn<TrackLineSubject, Boolean> failureColumn;
 
     //current layout
 
 
     // potential variables to assist with control
-    private final TrackModelImpl currTrackModel = new TrackModelImpl();
     //subject
-    private final TrackModelSubject trackModelSubject = new TrackModelSubject(currTrackModel);
+    private ArrayList <TrackLineSubject> trackModelSubject = new ArrayList<>();
 
     // test bench object
     private TrackModelTBManager testBench;
-    private TrackModelSubject subject;
+    private TrackLineSubject subject;
 
     @FXML
     public void initialize(){
@@ -174,7 +173,7 @@ public class TrackModelManager {
 
     }
 
-    public void selectBlock(TrackModelSubject newProperties){
+    public void selectBlock(TrackLineSubject newProperties){
         System.out.println("Selected block");
         if(subject != null) {
             // Unbind stuff here

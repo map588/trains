@@ -1,11 +1,13 @@
 package Common;
 
+import Utilities.Beacon;
+
 public interface TrackModel {
 
     void setSignalState(int block, boolean state);
     void setSwitchState(int block, boolean state);
     void setCrossing(int block, boolean state);
-    void setBeacon(int block, String beacon);
+    void setBeacon(int block, Beacon beacon);
     void setBlockOccupied(int block, boolean state);
     void setTrainAuthority(int blockID, int authority);
     void setCommandedSpeed(int blockID, double commandedSpeed);
@@ -19,7 +21,7 @@ public interface TrackModel {
     boolean getSignalState(int block);
     boolean getSwitchState(int block);
     boolean getCrossingState(int block);
-    String getBeacon(int block);
+    Beacon getBeacon(int block);
     boolean getBlockOccupied(int block);
     String getFailures(int block);
     int getTemperature();

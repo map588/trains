@@ -4,7 +4,6 @@ import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
 import Utilities.BasicBlock;
 import Utilities.BasicBlock.Connection;
-import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import trainModel.TrainModelImpl;
 
@@ -12,9 +11,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static Utilities.Enums.Direction.NORTH;
-import static Utilities.Enums.Direction.SOUTH;
 
 public class TrackLine {
 
@@ -30,7 +26,7 @@ public class TrackLine {
 
     int outsideTemperature = 0;
 
-    TrackModelSubject subject;
+    TrackLineSubject subject;
 
     public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout) {
         trackLayout = new ConcurrentSkipListMap<>();
@@ -47,7 +43,7 @@ public class TrackLine {
     }
 
 
-    public void setSubject(TrackModelSubject subject) {
+    public void setSubject(TrackLineSubject subject) {
         this.subject = subject;
     }
 
@@ -127,4 +123,6 @@ public class TrackLine {
         trackOccupancyMap.addChangeListener(trackListener);
     }
 
+    public void setTemperature(int i) {
+    }
 }

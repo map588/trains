@@ -3,9 +3,7 @@ package trackModel;
 import Common.TrackModel;
 import javafx.beans.property.*;
 
-import java.util.List;
-
-public class TrackModelSubject {
+public class TrackLineSubject {
 
     private StringProperty section;
     private StringProperty blockNumber;
@@ -43,7 +41,6 @@ public class TrackModelSubject {
     private StringProperty comSpeed;
     private StringProperty trainAuthority;
 
-    private TrackModel model;
 
     private void initializeValues() {
         blockNumber = new SimpleStringProperty();
@@ -76,18 +73,18 @@ public class TrackModelSubject {
         trackHeater = new SimpleStringProperty("STATUS - OFF");
     }
 
+    private TrackLine trackLine;
 
-    public TrackModelSubject() {
+    public TrackLineSubject() {
         initializeValues();
         initializeListeners();
     }
 
-    public TrackModelSubject(TrackModel model) {
-        this.model = model;
+    public TrackLineSubject(TrackLine line) {
+        this.trackLine = line;
         initializeValues();
         initializeListeners();
     }
-
 
     private void initializeListeners() {
 
@@ -103,7 +100,7 @@ public class TrackModelSubject {
 
         tempProperty.addListener((observable, oldValue, newValue) -> {
                     System.out.println("Temp change detected");
-                    model.setTemperature(Integer.parseInt(newValue));
+                    trackLine.setTemperature(Integer.parseInt(newValue));
                 }
         );
     }
