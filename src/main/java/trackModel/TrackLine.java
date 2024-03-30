@@ -26,13 +26,14 @@ public class TrackLine {
     final ObservableHashMap<TrainModel, Integer> trackOccupancyMap = new ObservableHashMap<>();
 
     //maps blocks to block numbers
-    ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
+    final ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
 
     int outsideTemperature = 0;
 
     TrackModelSubject subject;
 
     public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout) {
+        trackLayout = new ConcurrentSkipListMap<>();
 
         ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
 

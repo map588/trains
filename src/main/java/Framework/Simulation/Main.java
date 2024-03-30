@@ -18,7 +18,7 @@ public class Main {
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
-        TrackSystem trackLines = new TrackSystem();
+        TrackSystem trackSystem = new TrackSystem();
         WaysideSystem waysideController = new WaysideSystem();
         TrainSystem trainSystem = new TrainSystem();
 
@@ -26,18 +26,18 @@ public class Main {
         // ...
 
         // Schedule the time synchronization task
-        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackLines, waysideController, trainSystem),
+        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackSystem, waysideController, trainSystem),
                 0, TIMESTEP, TimeUnit.MILLISECONDS);
 
     }
 
     private static class TimeSynchronizationTask implements Runnable {
-        private final TrackSystem trackLines;
+        private final TrackSystem trackSystem;
         private final WaysideSystem waysideSystem;
         private final TrainSystem trainSystem;
 
-        public TimeSynchronizationTask(TrackSystem trackLines, WaysideSystem waysideController, TrainSystem trainSystem) {
-            this.trackLines = trackLines;
+        public TimeSynchronizationTask(TrackSystem trackSystem, WaysideSystem waysideController, TrainSystem trainSystem) {
+            this.trackSystem = trackSystem;
             this.waysideSystem = waysideController;
             this.trainSystem = trainSystem;
         }
@@ -45,9 +45,9 @@ public class Main {
         @Override
         public void run() {
             // Submit tasks to the thread pool for each module
-//            synchronizationPool.submit(() -> trackModel.update());
-//            synchronizationPool.submit(() -> waysideSystem.update());
-//            synchronizationPool.submit(() -> trainSystem.update());
+            synchronizationPool.submit(() -> trackSystem.update());
+            synchronizationPool.submit(() -> waysideSystem.update());
+            synchronizationPool.submit(() -> trainSystem.update());
         }
     }
 }

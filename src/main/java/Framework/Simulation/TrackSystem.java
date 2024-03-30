@@ -5,8 +5,7 @@ import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 import trackModel.TrackLine;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.*;
 
 public class TrackSystem {
 
@@ -17,10 +16,11 @@ public class TrackSystem {
      */
 
     ConcurrentHashMap<Lines, TrackLine> TrackLines = new ConcurrentHashMap<>();
+    ExecutorService trackLineExecutor;
 
     public TrackSystem() {
         ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> track = BlockParser.parseCSV();
-
+        trackLineExecutor = Executors.newFixedThreadPool(track.size());
         for (Lines line : Lines.values()) {
             TrackLines.put(line, new TrackLine(line, track.get(line)));
         }
@@ -30,4 +30,6 @@ public class TrackSystem {
         TrackLines.get(line).trainDispatch(trainID);
     }
 
+    public void update() {
+    }
 }

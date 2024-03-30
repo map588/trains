@@ -11,4 +11,6 @@ public class TrainSystem {
     ConcurrentHashMap<Integer, TrainController> controllerMap;
 
 
+    public void update() {
+    }
 }

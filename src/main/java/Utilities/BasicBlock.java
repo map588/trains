@@ -34,7 +34,6 @@ public record BasicBlock(
         Optional<String> doorDirection = Optional.ofNullable(values[indexOf(headers, "Door Direction")]);
         double elevation = Double.parseDouble(values[indexOf(headers, "ELEVATION (M)")]);
         double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMUALTIVE ELEVATION (M)")]);
-
         boolean isUnderground = infrastructure.contains("UNDERGROUND");
         boolean isSwitch = infrastructure.contains("SWITCH");
 
