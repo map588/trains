@@ -7,6 +7,7 @@ import Common.TrainModel;
 import Framework.Support.Notifier;
 import Utilities.Constants;
 import Utilities.Conversion;
+import Utilities.Enums.Direction;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 
@@ -61,6 +62,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private final TrainController controller;
 
     private TrackLine track = null;
+    private Direction direction;
 
     //purely for temperature calculation
     private double elapsedTime = 0;
@@ -300,6 +302,16 @@ public class TrainModelImpl implements TrainModel, Notifier {
     @Override
     public double getlength() {
         return 0;
+    }
+
+    @Override
+    public Direction getDirection() {
+        return this.direction;
+    }
+
+    @Override
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public String getBeacon() {

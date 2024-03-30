@@ -1,7 +1,7 @@
 package trackModel;
 
 import Common.TrainModel;
-import Framework.Support.ConncurrentHashMap;
+import Framework.Support.ObservableHashMap;
 import Utilities.BasicBlock;
 import Utilities.BasicBlock.Connection;
 import Utilities.Enums.Direction;
@@ -20,7 +20,7 @@ public class TrackLine {
     ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
 
     //calls all listeners when a train enters or exits a block
-    final ConncurrentHashMap<TrainModel, Integer> trackOccupancyMap = new ConncurrentHashMap<>();
+    final ObservableHashMap<TrainModel, Integer> trackOccupancyMap = new ObservableHashMap<>();
 
     //maps blocks to block numbers
     ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
@@ -93,7 +93,7 @@ public class TrackLine {
 
     private void setupListeners() {
 
-        ConncurrentHashMap.MapListener<TrainModel, Integer> trackListener = new ConncurrentHashMap.MapListener<>() {
+        ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
 
             public void onAdded(TrainModel train, Integer blockID) {
                 // A train enters a new block
