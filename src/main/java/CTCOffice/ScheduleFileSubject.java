@@ -1,4 +1,4 @@
-package CTCOffice.ScheduleObjects;
+package CTCOffice;
 
 
 import Framework.Support.AbstractSubject;

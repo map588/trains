@@ -1,6 +1,5 @@
 package CTCOffice;
 
-import CTCOffice.ScheduleObjects.*;
 import Common.CTCOffice;
 import Utilities.Enums.Lines;
 import  Utilities.BasicBlock;

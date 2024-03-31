@@ -1,4 +1,4 @@
-package CTCOffice.ScheduleObjects;
+package CTCOffice;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class TrainSchedule {
     private List<TrainStop> stops;
     TrainScheduleSubject subject;
 
-    public TrainSchedule(int trainID, String line, int dispatchTime, int carCount, List<TrainStop> stops) {
+    TrainSchedule(int trainID, String line, int dispatchTime, int carCount, List<TrainStop> stops) {
         this.trainID = trainID;
         this.line = line;
         this.dispatchTime = dispatchTime;

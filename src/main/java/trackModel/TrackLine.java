@@ -187,8 +187,6 @@ public class TrackLine implements TrackModel {
         train.setCommandSpeed(commandedSpeed);
     }
 
-
-
     @Override
     public boolean getLightState(int block) {
         return trackLayout.get(block).lightState;
@@ -210,22 +208,6 @@ public class TrackLine implements TrackModel {
             throw new IllegalArgumentException("Block: " + block + " is not a crossing");
         }
     }
-
-    @Override
-    public boolean getBrokenRail(Integer blockID) {
-        return this.trackLayout.get(blockID).failureInfo.isBrokenRail();
-    }
-
-    @Override
-    public boolean getPowerFailure(Integer blockID) {
-        return this.trackLayout.get(blockID).failureInfo.isPowerFailure();
-    }
-
-    @Override
-    public boolean getTrackCircuitFailure(Integer blockID) {
-        return this.trackLayout.get(blockID).failureInfo.isTrackCircuitFailure();
-    }
-
 
     @Override
     public void setBrokenRail(Integer blockID, boolean state) {
@@ -263,6 +245,20 @@ public class TrackLine implements TrackModel {
         });
     }
 
+    @Override
+    public boolean getBrokenRail(Integer blockID) {
+        return this.trackLayout.get(blockID).failureInfo.isBrokenRail();
+    }
+
+    @Override
+    public boolean getPowerFailure(Integer blockID) {
+        return this.trackLayout.get(blockID).failureInfo.isPowerFailure();
+    }
+
+    @Override
+    public boolean getTrackCircuitFailure(Integer blockID) {
+        return this.trackLayout.get(blockID).failureInfo.isTrackCircuitFailure();
+    }
 
     @Override
     public void setPassengersDisembarked(TrainModel train, int disembarked) {
