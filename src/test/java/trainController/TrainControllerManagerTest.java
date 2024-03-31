@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
+
 /**
  * This class contains unit tests for the TrainControllerManager.
  * It extends ApplicationTest from the TestFX library to enable GUI testing.
@@ -46,7 +47,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the emergency brake button toggles the emergency brake status.
      */
     @Test
-    public void testEmergencyBrakeButtonToggle() {
+    void testEmergencyBrakeButtonToggle() {
         Circle eBrakeStatus = lookup("#eBrakeStatus").queryAs(Circle.class);
         Color initialColor = (Color) eBrakeStatus.getFill();
 
@@ -67,7 +68,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the service brake checkbox toggles the service brake status.
      */
     @Test
-    public void testServiceBrakeToggle() {
+    void testServiceBrakeToggle() {
         CheckBox toggleServiceBrakeCheckBox = lookup("#toggleServiceBrakeCheckBox").queryAs(CheckBox.class);
         boolean initialState = toggleServiceBrakeCheckBox.isSelected();
 
@@ -84,7 +85,9 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the automatic mode checkbox toggles the automatic mode status.
      */
     @Test
+
     public void testAutomaticModeCheckBox() {
+
         CheckBox autoModeCheckBox = lookup("#autoModeCheckBox").queryAs(CheckBox.class);
         boolean initialState = autoModeCheckBox.isSelected();
 
@@ -102,6 +105,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      */
     @Test
     public void testSetSpeedSlider() {
+
         double newValue = 50.0;
         Slider setSpeedSlider = lookup("#setSpeedSlider").queryAs(Slider.class);
 
@@ -118,6 +122,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      */
     @Test
     public void testLightToggle() {
+
         CheckBox intLightCheckBox = lookup("#intLightCheckBox").queryAs(CheckBox.class);
         clickOn(intLightCheckBox);
 
@@ -134,6 +139,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      */
     @Test
     public void testDoorOperations() {
+
         CheckBox openDoorLeftCheckBox = lookup("#openDoorLeftCheckBox").queryAs(CheckBox.class);
         clickOn(openDoorLeftCheckBox);
 
@@ -151,7 +157,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test directly sets the temperature in the controller and verifies that it has been set correctly.
      */
     @Test
-    public void directTestSetTemperature() {
+    void directTestSetTemperature() {
         double newTemperature = 25.5;
         controller.setTemperature(newTemperature); // Assuming such a setter exists
         assertEquals(newTemperature, controller.getTemperature(), "The temperature should match the newly set value.");
@@ -161,7 +167,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test sets the temperature via the text field and verifies that it has been set correctly in the controller.
      */
     @Test
-    public void testSetTemperatureTextField() {
+    void testSetTemperatureTextField() {
         String newTemperature = "25.5";
         TextField setTemperatureTextField = lookup("#setTemperatureTextField").queryAs(TextField.class);
 
