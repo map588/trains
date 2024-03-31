@@ -16,15 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
-
+/**
+ * This class contains unit tests for the TrainControllerManager.
+ * It extends ApplicationTest from the TestFX library to enable GUI testing.
+ */
 public class TrainControllerManagerTest extends ApplicationTest {
 
     TrainControllerImpl controller;
     TrainControllerSubject currentSubject;
 
+    /**
+     * This method sets up the testing environment.
+     * It loads the trainController.fxml file and displays it in a new Stage.
+     * It also initializes the controller and currentSubject variables.
+     */
     @Override
     public void start(Stage stage) throws Exception {
-        // Assuming trainControllerSubjectMap is a singleton class managing subjects
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Framework/GUI/FXML/trainController.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
@@ -35,6 +42,9 @@ public class TrainControllerManagerTest extends ApplicationTest {
         controller = TrainControllerSubjectMap.getInstance().getSubject(1).getController();
     }
 
+    /**
+     * This test verifies that the emergency brake button toggles the emergency brake status.
+     */
     @Test
     public void testEmergencyBrakeButtonToggle() {
         Circle eBrakeStatus = lookup("#eBrakeStatus").queryAs(Circle.class);
@@ -53,6 +63,9 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertTrue(controller.getEmergencyBrake() != initialColor.equals(Color.RED));
     }
 
+    /**
+     * This test verifies that the service brake checkbox toggles the service brake status.
+     */
     @Test
     public void testServiceBrakeToggle() {
         CheckBox toggleServiceBrakeCheckBox = lookup("#toggleServiceBrakeCheckBox").queryAs(CheckBox.class);
@@ -67,10 +80,11 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertEquals(!initialState, controller.getServiceBrake());
     }
 
-
+    /**
+     * This test verifies that the automatic mode checkbox toggles the automatic mode status.
+     */
     @Test
     public void testAutomaticModeCheckBox() {
-        // Initial state check
         CheckBox autoModeCheckBox = lookup("#autoModeCheckBox").queryAs(CheckBox.class);
         boolean initialState = autoModeCheckBox.isSelected();
 
@@ -83,9 +97,11 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertEquals(!initialState, controller.getAutomaticMode());
     }
 
+    /**
+     * This test verifies that the speed slider correctly sets the override speed in the controller.
+     */
     @Test
     public void testSetSpeedSlider() {
-        // Assuming the slider's initial value is 0 for simplicity
         double newValue = 50.0;
         Slider setSpeedSlider = lookup("#setSpeedSlider").queryAs(Slider.class);
 
@@ -97,31 +113,33 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertEquals(newValue, controller.getOverrideSpeed());
     }
 
+    /**
+     * This test verifies that the internal and external light checkboxes toggle the light status in the controller.
+     */
     @Test
     public void testLightToggle() {
-        // Toggle internal light checkbox
         CheckBox intLightCheckBox = lookup("#intLightCheckBox").queryAs(CheckBox.class);
         clickOn(intLightCheckBox);
 
         // Verify internal light status change
         assertEquals(intLightCheckBox.isSelected(), controller.getIntLights());
 
-        // Toggle external light checkbox
         CheckBox extLightCheckBox = lookup("#extLightCheckBox").queryAs(CheckBox.class);
         clickOn(extLightCheckBox);
         assertEquals(extLightCheckBox.isSelected(), controller.getExtLights());
     }
 
+    /**
+     * This test verifies that the open door checkboxes toggle the door status in the controller.
+     */
     @Test
     public void testDoorOperations() {
-        // Toggle open left door checkbox
         CheckBox openDoorLeftCheckBox = lookup("#openDoorLeftCheckBox").queryAs(CheckBox.class);
         clickOn(openDoorLeftCheckBox);
 
         // Verify left door status change
         assertEquals(openDoorLeftCheckBox.isSelected(), controller.getLeftDoors());
 
-        // Toggle open right door checkbox
         CheckBox openDoorRightCheckBox = lookup("#openDoorRightCheckBox").queryAs(CheckBox.class);
         clickOn(openDoorRightCheckBox);
 
@@ -129,6 +147,9 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertEquals(openDoorRightCheckBox.isSelected(), controller.getRightDoors());
     }
 
+    /**
+     * This test directly sets the temperature in the controller and verifies that it has been set correctly.
+     */
     @Test
     public void directTestSetTemperature() {
         double newTemperature = 25.5;
@@ -136,6 +157,9 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertEquals(newTemperature, controller.getTemperature(), "The temperature should match the newly set value.");
     }
 
+    /**
+     * This test sets the temperature via the text field and verifies that it has been set correctly in the controller.
+     */
     @Test
     public void testSetTemperatureTextField() {
         String newTemperature = "25.5";
@@ -151,11 +175,10 @@ public class TrainControllerManagerTest extends ApplicationTest {
         assertEquals(Double.parseDouble(newTemperature), controller.getTemperature(), "Temperature should be updated based on TextField input.");
     }
 
-
+    /**
+     * This helper method sets the value of a slider in a JavaFX application.
+     */
     private void setSliderValue(Slider slider, double value) {
         interact(() -> slider.setValue(value));
     }
-
-
-
 }
