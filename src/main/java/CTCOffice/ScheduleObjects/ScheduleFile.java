@@ -1,4 +1,4 @@
-package CTCOffice;
+package CTCOffice.ScheduleObjects;
 
 import java.util.HashMap;
 

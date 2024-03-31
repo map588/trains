@@ -1,5 +1,8 @@
 package CTCOffice;
 
+import CTCOffice.ScheduleObjects.ScheduleFileSubject;
+import CTCOffice.ScheduleObjects.ScheduleLibrary;
+import CTCOffice.ScheduleObjects.TrainScheduleSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;

@@ -12,15 +12,16 @@ import static Utilities.Enums.Direction.SOUTH;
  * their states, speed limit, block length, IDs of converging and diverging blocks, and the state of the switch.
  */
 class CTCBlockInfo {
-    private final int blockID;
     private final double speedLimit, blockLength;
     private final String line;
-    private boolean occupied, underMaintenance;
     private final boolean hasLight, hasCrossing, hasSwitch;
     private final boolean hasSwitchCon, hasSwitchDiv;
-    private boolean switchLightState, crossingState, switchState;
+    private final int blockID;
     private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
-    //private javafx.scene.paint.Paint switchLightColor, crossingLightColor, maintenanceLightColor;
+
+
+    private boolean occupied, underMaintenance;
+    private boolean switchLightState, crossingState, switchState;
     CTCBlockSubjectMap map = CTCBlockSubjectMap.getInstance();
 
     /**
@@ -46,22 +47,12 @@ class CTCBlockInfo {
         this.divergingBlockTwoID = block.nextBlock().northAlternate().blockNumber();
         this.switchState = false;
         this.underMaintenance = false;
-//        updateSwitchLightColor();
-//        updateCrossingLightColor();
-//        updateMaintenanceLightColor();
 
        map.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
-//    CTCBlockInfo(BasicBlock block) {
-//        this(block.blockNumber(), block.trackLine(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
-//                block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
-//                block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),
-//                block.underMaintenance());
-//    }
-                 // Complex setters and getters
 
-                 /**
+    /**
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean state) {
@@ -115,57 +106,6 @@ class CTCBlockInfo {
         }
     }
 
-    /**
-     * Updates the color of the light based on its state.
-     */
-//    void updateSwitchLightColor() {
-//        if(map.getSubject(getBlockID()) != null) {
-//            if (this.switchLightState) {
-//                this.switchLightColor = javafx.scene.paint.Color.GREEN;
-//            } else {
-//                this.switchLightColor = javafx.scene.paint.Color.RED;
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Returns the color of the Crossing light.
-//     */
-//    void updateCrossingLightColor() {
-//        if (map.getSubject(getBlockID()) != null) {
-//            if (this.crossingState) {
-//                this.crossingLightColor = Color.RED;
-//            } else {
-//                this.crossingLightColor = Color.DARKGRAY;
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Returns the color of the Maintenance light.
-//     */
-//    void updateMaintenanceLightColor() {
-//        if (map.getSubject(getBlockID()) != null) {
-//            if(this.underMaintenance) {
-//                this.maintenanceLightColor = Color.RED;
-//            } else {
-//                this.maintenanceLightColor = Color.GREEN;
-//            }
-//        }
-//    }
-//
-//    Paint getSwitchLightColor() {
-//        updateSwitchLightColor();
-//        return switchLightColor;
-//    }
-//    Paint getCrossingLightColor() {
-//        updateCrossingLightColor();
-//        return crossingLightColor;
-//    }
-//    Paint getMaintenanceLightColor() {
-//        updateMaintenanceLightColor();
-//        return maintenanceLightColor;
-//    }
 
     // Simple setters and getters
     int     getBlockID      () {
