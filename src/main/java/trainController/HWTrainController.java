@@ -2,6 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Utilities.Beacon;
 import trainModel.stubTrainModel;
 
 public class HWTrainController implements TrainController {
@@ -204,6 +205,11 @@ public class HWTrainController implements TrainController {
 
     public double getGrade() {
         return 0;
+    }
+
+    @Override
+    public void setBeacon(Beacon beacon) {
+
     }
 
     public void notifyChange(String property, Object newValue) {

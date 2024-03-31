@@ -2,6 +2,7 @@ package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Utilities.Beacon;
 import Utilities.Constants;
 import Utilities.Enums.Direction;
 
@@ -62,6 +63,11 @@ public class stubTrainModel implements TrainModel {
 
     }
 
+    @Override
+    public void passBeacon(Beacon beacon) {
+
+    }
+
     public void setBrakeFailure(boolean failure) {
     }
 
@@ -87,11 +93,6 @@ public class stubTrainModel implements TrainModel {
     }
 
     public void setSetTemperature(double temp) {
-
-    }
-
-    @Override
-    public void setBeacon(String beacon) {
 
     }
 

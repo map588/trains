@@ -48,7 +48,7 @@ public class TrackModelTBManager {
     private ComboBox<String> tbBeaconComboBox;
 
     private TrackLineSubject trackProperties = new TrackLineSubject();
-    private TrackModelImpl trackModel;
+    private TrackLine trackModel;
     private TrackLineSubject trackModelSubject;
     private TrackModelManager trackModelManager;
 
@@ -184,7 +184,7 @@ public class TrackModelTBManager {
         tbChooseLine.setValue(line);
     }
 
-    public void setTrackModel(TrackModelImpl trackModel) {
+    public void setTrackModel(TrackLine trackModel) {
         this.trackModel = trackModel;
     }
 

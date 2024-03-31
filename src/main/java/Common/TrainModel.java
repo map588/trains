@@ -18,6 +18,7 @@ public interface  TrainModel {
     void setGrade(double grade);
     void setDirection(Direction direction);
     void changeDirection();
+    void passBeacon(Beacon beacon);
 
 
     //Murphy Signals
@@ -31,7 +32,6 @@ public interface  TrainModel {
     void setExtLights(boolean lights);
     void setIntLights(boolean lights);
     void setSetTemperature(double temp);
-    void setBeacon(Beacon beacon);
     void setAnnouncement(String announcement);
 
 

@@ -126,7 +126,6 @@ public class TrackModelManager {
         testBench = launchTestBench();
         System.out.println(testBench);
 
-        testBench.setTrackModel(currTrackModel);
         testBench.setTrackModelSubject(subject);
         testBench.setTrackModelManager(this);
 
@@ -209,7 +208,7 @@ public class TrackModelManager {
 
 
             statusLabel.textProperty().unbindBidirectional(subject.trackHeaterProperty());
-            tempValueLabel.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
+            //tempValueLabel.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
 
             //occupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
 
@@ -235,7 +234,7 @@ public class TrackModelManager {
         }
 
         statusLabel.textProperty().bindBidirectional(subject.trackHeaterProperty());
-        tempValueLabel.textProperty().bindBidirectional(trackModelSubject.tempProperty());
+        //tempValueLabel.textProperty().bindBidirectional(trackModelSubject.tempProperty());
 
         //occupiedColumn.textProperty().bindBidirectional(trackProperties.isOccupiedProperty());
 
@@ -294,7 +293,7 @@ public class TrackModelManager {
         String failure = chooseFailureMode.getValue();
 
         //send the failure to the track model
-        currTrackModel.setFailure(Integer.parseInt(blockSelect), failure);
+        //currTrackModel.setFailure(Integer.parseInt(blockSelect), failure);
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
         subject.setHasFailure(!chooseFailureMode.getValue().equals("Fix Track Failure"));
 

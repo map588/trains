@@ -5,6 +5,7 @@ package trainModel;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifier;
+import Utilities.Beacon;
 import Utilities.Constants;
 import Utilities.Conversion;
 import Utilities.Enums.Direction;
@@ -174,6 +175,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
     public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
     public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
+
+
     public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
     public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
@@ -321,6 +324,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         } else {
             this.direction = Direction.NORTH;
         }
+    }
+
+    @Override
+    public void passBeacon(Beacon beacon) {
+        controller.setBeacon(beacon);
     }
 
     public String getBeacon() {

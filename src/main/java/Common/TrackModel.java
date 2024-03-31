@@ -5,12 +5,12 @@ import Utilities.Beacon;
 public interface TrackModel {
 
     //Vital Setters
-    void setSignalState(int block, boolean state);
+    void setLightState(int block, boolean state);
     void setSwitchState(int block, boolean state);
     void setCrossing(int block, boolean state);
     void setBeacon(int block, Beacon beacon);
-    void setTrainAuthority(int blockID, int authority);
-    void setCommandedSpeed(int blockID, double commandedSpeed);
+    void setTrainAuthority(TrainModel train, int authority);
+    void setCommandedSpeed(TrainModel train, double commandedSpeed);
 
     //Vital Getters
     boolean getLightState(int block);
@@ -32,6 +32,6 @@ public interface TrackModel {
     void setPassengersDisembarked(TrainModel train, int disembarked);
 
     int getTicketSales();
-    int getPassengersEmbarked(TrainModel train, int embarked);
+    int getPassengersEmbarked(TrainModel train);
 
 }

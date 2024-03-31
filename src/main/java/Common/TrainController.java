@@ -2,6 +2,7 @@ package Common;
 
 
 import Framework.Support.GUIModifiable;
+import Utilities.Beacon;
 import trainController.TrainControllerSubject;
 
 public interface TrainController extends GUIModifiable {
@@ -92,4 +93,6 @@ public interface TrainController extends GUIModifiable {
     double calculatePower(double currentVelocity);
 
     double getGrade();
+
+    void setBeacon(Beacon beacon);
 }

@@ -36,6 +36,7 @@ class TrackBlock {
      final FailureInfo failureInfo;
 
      boolean maintenanceMode;
+     boolean lightState;
 
     /**
      * Constructs a new TrackBlock object based on the provided BasicBlock information.
@@ -78,7 +79,7 @@ class TrackBlock {
      * @param blockInfo the BasicBlock object to validate
      * @throws IllegalArgumentException if the block information is invalid
      */
-    private void validateBlockInfo(BasicBlock blockInfo) {
+     void validateBlockInfo(BasicBlock blockInfo) {
         if (blockInfo.blockType() == BlockType.STATION) {
             if (blockInfo.stationName().isEmpty() || blockInfo.doorDirection().isEmpty()) {
                 throw new IllegalArgumentException("Station block must have a station name and door direction");
@@ -96,7 +97,7 @@ class TrackBlock {
      * @param direction the direction of the next block
      * @return the Connection object representing the next block
      */
-    public Connection getNextBlock(Direction direction) {
+     Connection getNextBlock(Direction direction) {
         if (!isSwitch) {
             return direction == NORTH ? northID : southID;
         } else {
@@ -110,13 +111,19 @@ class TrackBlock {
         }
     }
 
+     void setMaintenanceMode(boolean maintenanceMode) {
+        this.maintenanceMode = maintenanceMode;
+    }
+
+
+
     /**
      * Sets the state of the switch.
      *
      * @param state the new state of the switch
      * @throws IllegalArgumentException if the block is not a switch
      */
-    public void setSwitchState(boolean state) {
+    void setSwitchState(boolean state) {
         switchInfo.ifPresent(info -> info.setSwitchState(state));
     }
 
@@ -126,7 +133,7 @@ class TrackBlock {
      * @param state the new automatic state of the switch
      * @throws IllegalArgumentException if the block is not a switch
      */
-    public void setSwitchStateAuto(boolean state) {
+     void setSwitchStateAuto(boolean state) {
         switchInfo.ifPresent(info -> info.setSwitchStateAuto(state));
     }
 
@@ -136,7 +143,7 @@ class TrackBlock {
      * @param state the new state of the crossing
      * @throws IllegalArgumentException if the block is not a crossing
      */
-    public void setCrossingState(boolean state) {
+     void setCrossingState(boolean state) {
         crossingInfo.ifPresent(info -> info.setCrossingState(state));
     }
 
@@ -145,7 +152,7 @@ class TrackBlock {
      *
      * @param state the new power failure state
      */
-    public void setPowerFailure(boolean state) {
+     void setPowerFailure(boolean state) {
         failureInfo.setPowerFailure(state);
     }
 
@@ -154,7 +161,7 @@ class TrackBlock {
      *
      * @param state the new track circuit failure state
      */
-    public void setTrackCircuitFailure(boolean state) {
+     void setTrackCircuitFailure(boolean state) {
         failureInfo.setTrackCircuitFailure(state);
     }
 
@@ -163,7 +170,7 @@ class TrackBlock {
      *
      * @param state the new broken rail state
      */
-    public void setBrokenRail(boolean state) {
+     void setBrokenRail(boolean state) {
         failureInfo.setBrokenRail(state);
     }
 
@@ -172,13 +179,13 @@ class TrackBlock {
      *
      * @param state the new maintenance mode state
      */
-    public void setUnderMaintenance(boolean state) {
+     void setUnderMaintenance(boolean state) {
         maintenanceMode = state;
     }
 
     // Inner classes for specific block information
 
-    public static class SwitchState {
+    static class SwitchState {
         private final Connection northDef;
         private final Connection southDef;
         private final Optional<Connection> northAlt;
@@ -194,104 +201,134 @@ class TrackBlock {
             this.southAlt = Optional.ofNullable(nextBlock.southAlternate().blockNumber() != -1 ? nextBlock.southAlternate() : null);
         }
 
-        public Connection getNorthDef() {
+         Connection getNorthDef() {
             return northDef;
         }
 
-        public Connection getSouthDef() {
+         Connection getSouthDef() {
             return southDef;
         }
 
-        public Optional<Connection> getNorthAlt() {
+         Optional<Connection> getNorthAlt() {
             return northAlt;
         }
 
-        public Optional<Connection> getSouthAlt() {
+         Optional<Connection> getSouthAlt() {
             return southAlt;
         }
 
-        public boolean isSwitchState() {
+         boolean isSwitchState() {
             return switchState;
         }
 
-        public void setSwitchState(boolean switchState) {
+         void setSwitchState(boolean switchState) {
             this.switchState = switchState;
         }
 
-        public boolean isSwitchStateAuto() {
+         boolean isSwitchStateAuto() {
             return switchStateAuto;
         }
 
-        public void setSwitchStateAuto(boolean switchStateAuto) {
+         void setSwitchStateAuto(boolean switchStateAuto) {
             this.switchStateAuto = switchStateAuto;
         }
     }
 
-    public static class StationInfo {
+     static class StationInfo {
         private final String stationName;
         private final String doorDirection;
+
+        int passengersWaiting;
+        int passengersEmbarked;
+        int passengersDisembarked;
+
 
         StationInfo(String stationName, String doorDirection) {
             this.stationName = stationName;
             this.doorDirection = doorDirection;
         }
 
-        public String getStationName() {
+        String getStationName() {
             return stationName;
         }
 
-        public String getDoorDirection() {
+        String getDoorDirection() {
             return doorDirection;
+        }
+
+        int getPassengersWaiting() {
+            return passengersWaiting;
+        }
+
+        void setPassengersWaiting(int passengersWaiting) {
+            this.passengersWaiting = passengersWaiting;
+        }
+
+
+        int getPassengersEmbarked() {
+            return passengersEmbarked;
+        }
+
+        void setPassengersEmbarked(int passengersEmbarked) {
+            this.passengersEmbarked = passengersEmbarked;
+        }
+
+        int getPassengersDisembarked() {
+            return passengersDisembarked;
+        }
+
+        void setPassengersDisembarked(int passengersDisembarked) {
+            this.passengersDisembarked = passengersDisembarked;
         }
     }
 
-    public static class CrossingState {
+     static class CrossingState {
         private boolean crossingState;
 
         CrossingState(boolean crossingState) {
             this.crossingState = crossingState;
         }
 
-        public boolean isCrossingState() {
+        boolean isCrossingState() {
             return crossingState;
         }
 
-        public void setCrossingState(boolean crossingState) {
+        void setCrossingState(boolean crossingState) {
             this.crossingState = crossingState;
         }
     }
 
-    public static class FailureInfo {
+     static class FailureInfo {
         private boolean hasFailure;
         private boolean brokenRail;
         private boolean trackCircuitFailure;
         private boolean powerFailure;
 
-        public boolean hasFailure() {
+         boolean hasFailure() {
             return brokenRail || trackCircuitFailure || powerFailure;
         }
 
-        public boolean isBrokenRail() {
+         boolean isBrokenRail() {
             return brokenRail;
         }
 
-        public void setBrokenRail(boolean brokenRail) {
+         void setBrokenRail(boolean brokenRail) {
             this.brokenRail = brokenRail;
         }
 
-        public boolean isTrackCircuitFailure() {
+         boolean isTrackCircuitFailure() {
             return trackCircuitFailure;
         }
 
-        public void setTrackCircuitFailure(boolean trackCircuitFailure) {
+         void setTrackCircuitFailure(boolean trackCircuitFailure) {
             this.trackCircuitFailure = trackCircuitFailure;
         }
 
-        public boolean isPowerFailure() {
+         boolean isPowerFailure() {
             return powerFailure;
         }
 
-        public void setPowerFailure(boolean powerFailure) {
+         void setPowerFailure(boolean powerFailure) {
             this.powerFailure = powerFailure;
         }
     }

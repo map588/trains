@@ -130,9 +130,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(trackModel != null) {
             if (blockMap.get(blockID).getBooleanAuth()) {
-                trackModel.setCommandedSpeed(blockID, speed);
+                //trackModel.setCommandedSpeed(blockID, speed);
             } else {
-                trackModel.setCommandedSpeed(blockID, 0);
+                //trackModel.setCommandedSpeed(blockID, 0);
             }
         }
     }
@@ -194,7 +194,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(maintenanceMode) {
             blockMap.get(blockID).setLightState(lightState);
             if(trackModel != null)
-                trackModel.setSignalState(blockID, lightState);
+                trackModel.setLightState(blockID, lightState);
             if(ctcOffice != null)
                 ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
             System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
@@ -242,7 +242,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(block.isOpen() && block.getLightState() != lightState) {
             block.setLightState(lightState);
             if(trackModel != null)
-                trackModel.setSignalState(blockID, lightState);
+                trackModel.setLightState(blockID, lightState);
             if(ctcOffice != null)
                 ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
         }
@@ -271,9 +271,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
             if(trackModel != null) {
                 if (blockMap.get(blockID).getBooleanAuth()) {
-                    trackModel.setCommandedSpeed(blockID, block.getSpeed());
+                    //trackModel.setCommandedSpeed(blockID, block.getSpeed());
                 } else {
-                    trackModel.setCommandedSpeed(blockID, 0);
+                    //trackModel.setCommandedSpeed(blockID, 0);
                 }
             }
         }

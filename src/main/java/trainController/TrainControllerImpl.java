@@ -3,6 +3,7 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.GUIModifiable;
+import Utilities.Beacon;
 import Utilities.Constants;
 import trainModel.stubTrainModel;
 
@@ -212,6 +213,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      * @param propertyName  The name of the property to be set.
      * @param newValue      The new value to be set for the property.
      */
+
     public void setValue(String propertyName, Object newValue) {
         switch (propertyName) {
             case Properties.AUTOMATIC_MODE_PROPERTY -> this.automaticMode = (boolean) newValue;
@@ -326,6 +328,12 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     public boolean getRightPlatform(){return this.rightPlatform;}
     public boolean getInTunnel(){return this.inTunnel;}
     public double  getGrade(){return this.grade;}
+
+    //TODO: Implement this method
+    @Override
+    public void setBeacon(Beacon beacon) {
+
+    }
 
     /**
      * Profetta Notes:
