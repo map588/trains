@@ -295,9 +295,7 @@ public class TrackLine implements TrackModel {
                 }
                 return embarked;
             }).get();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
