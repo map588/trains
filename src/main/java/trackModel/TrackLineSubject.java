@@ -71,6 +71,7 @@ public class TrackLineSubject {
         switchAlt = new SimpleStringProperty();
         nameOfStation = new SimpleStringProperty();
         trackHeater = new SimpleStringProperty("STATUS - OFF");
+        tempProperty = new SimpleStringProperty();
     }
 
     private TrackLine trackLine;
