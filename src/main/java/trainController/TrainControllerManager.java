@@ -197,6 +197,8 @@ public class TrainControllerManager {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;}
             consumer.accept(newVal.doubleValue());
             textField.setText(String.format("%.1f", newVal.doubleValue()));
+            String statusNotification = "Set speed to " + String.format("%.1f",newVal.doubleValue())+ " MPH";
+            setNotification(statusNotification);
         });
         Runnable textFieldUpdate = () -> {
             try {
@@ -205,10 +207,15 @@ public class TrainControllerManager {
                     throw new NumberFormatException();
                 }
                 slider.setValue(newValue);
+                String statusNotification = "Set speed to " + String.format("%.1f",newValue) + " MPH";
+                setNotification(statusNotification);
             } catch (NumberFormatException e) {
                 textField.setText(String.format("%.1f", slider.getValue()));
+                String statusNotification = "Set speed to " + String.format("%.1f",slider.getValue()) + " MPH";
+                setNotification(statusNotification);
             }
         };
+
        textField.setOnAction(event -> textFieldUpdate.run());
     }
 
@@ -317,6 +324,11 @@ public class TrainControllerManager {
             String colorFormat = inTunnel ? "-fx-background-color: #000033;" : "-fx-background-color: #FFFFFF;";
             masterTrainControllerPane.setStyle(colorFormat);
         }
+    }
+
+    // Set the current action
+    private void setNotification(String statusNotification){
+        controllerStatus.setText(statusNotification);
     }
 
     private TrainControllerTB launchTestBench(){
