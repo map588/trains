@@ -8,6 +8,7 @@ import Utilities.BasicBlock.Connection;
 import Utilities.Beacon;
 import Utilities.Enums.Lines;
 import trainModel.TrainModelImpl;
+import Framework.GUI.TrackVisualizer;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -17,12 +18,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 import static Utilities.Constants.MAX_PASSENGERS;
 
 public class TrackLine implements TrackModel {
 
-    Lines line;
-    
+    public Lines line;
+    private TrackVisualizer trackVisualizer;
+
     ExecutorService blockUpdateExecutor = Executors.newSingleThreadExecutor();
     ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
 
@@ -54,6 +57,24 @@ public class TrackLine implements TrackModel {
         setupListeners();
     }
 
+    public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout, TrackVisualizer trackVisualizer) {
+        this.subject = new TrackLineSubject(this);
+
+        trackLayout = new ConcurrentSkipListMap<>();
+        trackOccupancyMap = new ObservableHashMap<>();
+
+        ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
+
+        for (Integer blockIndex : blockIndices) {
+            TrackBlock block = new TrackBlock(basicTrackLayout.get(blockIndex));
+            trackLayout.put(block.blockID, block);
+        }
+
+        this.trackVisualizer = trackVisualizer;
+        this.line = line;
+        setupListeners();
+    }
+
 
     public void trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(trainID, this);
@@ -64,6 +85,8 @@ public class TrackLine implements TrackModel {
     private void handleTrainEntry(TrainModel train, Integer blockID) {
         TrackBlock block = trackLayout.get(blockID);
         //...
+
+        trackVisualizer.updateTrainPosition(train, blockID,(int) Math.round(train.getRelativePosition()));
     }
 
 

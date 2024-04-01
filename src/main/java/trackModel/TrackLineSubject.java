@@ -37,7 +37,7 @@ public class TrackLineSubject {
     private StringProperty setBeacon;
     private StringProperty nameOfStation;
     private StringProperty trackHeater;
-    private StringProperty tempProperty;
+    //private StringProperty tempProperty;
     private StringProperty comSpeed;
     private StringProperty trainAuthority;
 
@@ -98,11 +98,11 @@ public class TrackLineSubject {
             }
         });
 
-        tempProperty.addListener((observable, oldValue, newValue) -> {
-                    System.out.println("Temp change detected");
-                    trackLine.setTemperature(Integer.parseInt(newValue));
-                }
-        );
+//        tempProperty.addListener((observable, oldValue, newValue) -> {
+//                    System.out.println("Temp change detected");
+//                    trackLine.setTemperature(Integer.parseInt(newValue));
+//                }
+//        );
     }
 
 
@@ -451,9 +451,9 @@ public class TrackLineSubject {
         this.trackHeater.set(trackHeater);
     }
 
-    public StringProperty tempProperty() {
-        return tempProperty;
-    }
+//    public StringProperty tempProperty() {
+//        return tempProperty;
+//    }
 
     public String getComSpeed() {
         return comSpeed.get();

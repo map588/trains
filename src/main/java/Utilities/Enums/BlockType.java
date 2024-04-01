@@ -4,5 +4,5 @@ public enum BlockType {
     REGULAR,
     STATION,
     CROSSING,
-    YARD
+    SWITCH, YARD
 }

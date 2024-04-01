@@ -17,7 +17,8 @@ import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class mainMenu extends Application {
+
+public class mainMenuTrackView extends Application {
 
     String[] tabNames = {"CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
 

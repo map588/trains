@@ -9,6 +9,7 @@ import Utilities.Beacon;
 import Utilities.Constants;
 import Utilities.Conversion;
 import Utilities.Enums.Direction;
+import Utilities.Enums.Lines;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 
@@ -303,6 +304,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     @Override
+    public double getRelativePosition() {
+        return this.relativeDistance;
+    }
+
+    @Override
     public double getlength() {
         return 0;
     }
@@ -333,6 +339,15 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     public String getBeacon() {
         return this.beacon;
+    }
+
+    @Override
+    public String getTrackLine() {
+        if(track.line == Lines.GREEN) {
+            return "GREEN";
+        } else {
+            return "RED";
+        }
     }
 
     //TEMP TIME DELTA SETTER/GETTER

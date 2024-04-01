@@ -62,7 +62,9 @@ public interface  TrainModel {
     boolean getRightDoors();
     double getlength();
 
-
+    String getBeacon();
+    String getTrackLine();
+    double getRelativePosition();
 
     //Vital Functions for simulating the train physics
     void trainModelPhysics();
@@ -85,5 +87,5 @@ public interface  TrainModel {
 
     double getMass();
 
-    String getBeacon();
+
 }

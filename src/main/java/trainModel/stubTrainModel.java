@@ -234,5 +234,15 @@ public class stubTrainModel implements TrainModel {
         return null;
     }
 
+    @Override
+    public String getTrackLine() {
+        return null;
+    }
+
+    @Override
+    public double getRelativePosition() {
+        return 0;
+    }
+
 
 }
