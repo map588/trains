@@ -1,6 +1,33 @@
 // Controls sections A, B, C, D, E, F, G, H, X, Y, Z blocks 1-35, 144-150
 // Accesses occupancies from blocks 1-39, 144-150
 
+if dir_assigned[13]
+    if not occupied[1] and not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and not occupied[150]
+
+        if direction[13] and not occupied[149] and not occupied[148] and not occupied[147] and not occupied[146] and not occupied[145] and not occupied[144] or not direction[13] and not occupied[2] and not occupied[3] and not occupied[4] and not occupied[5] and not occupied[6] and not occupied[7]
+            dir_assigned[13] = FALSE
+            switch[13] = MAIN
+            switch[28] = MAIN
+            authority[13] = FALSE
+            authority[14] = FALSE
+            authority[15] = FALSE
+            authority[16] = FALSE
+            authority[17] = FALSE
+            authority[18] = FALSE
+            authority[19] = FALSE
+            authority[20] = FALSE
+            authority[21] = FALSE
+            authority[22] = FALSE
+            authority[23] = FALSE
+            authority[24] = FALSE
+            authority[25] = FALSE
+            authority[26] = FALSE
+            authority[27] = FALSE
+            authority[28] = FALSE
+        endif
+    endif
+endif
+
 if not dir_assigned[13]
     if occupied[7] or occupied[6] or occupied[5] or occupied[4]
         if not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28]
@@ -18,28 +45,6 @@ if not dir_assigned[13]
                 switch[28] = ALT
             endif
         endif
-    endif
-else
-    if not occupied[1] and not occupied[2] and not occupied[3] and not occupied[4] and not occupied[5] and not occupied[6] and not occupied[7] and not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28] and not occupied[144] and not occupied[145] and not occupied[146] and not occupied[147] and not occupied[148] and not occupied[149] and not occupied[150]
-        dir_assigned[13] = FALSE
-        switch[13] = MAIN
-        switch[28] = MAIN
-        authority[13] = FALSE
-        authority[14] = FALSE
-        authority[15] = FALSE
-        authority[16] = FALSE
-        authority[17] = FALSE
-        authority[18] = FALSE
-        authority[19] = FALSE
-        authority[20] = FALSE
-        authority[21] = FALSE
-        authority[22] = FALSE
-        authority[23] = FALSE
-        authority[24] = FALSE
-        authority[25] = FALSE
-        authority[26] = FALSE
-        authority[27] = FALSE
-        authority[28] = FALSE
     endif
 endif
 

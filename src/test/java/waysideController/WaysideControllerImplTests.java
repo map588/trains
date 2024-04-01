@@ -136,7 +136,7 @@ public class WaysideControllerImplTests {
         controller.trackModelSetOccupancy(150, false);
 
         // Run train through sections F-D
-        for(int i = 27; i >= 12; i--) {
+        for(int i = 27; i >= 11; i--) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
             assertTrue(blockMap.get(i).getBooleanAuth());
@@ -149,7 +149,7 @@ public class WaysideControllerImplTests {
         assertFalse(blockMap.get(13).getSwitchState());
 
         // Run train through section C
-        for(int i = 11; i >= 7; i--) {
+        for(int i = 10; i >= 7; i--) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
             assertTrue(blockMap.get(i).getBooleanAuth());
@@ -177,7 +177,7 @@ public class WaysideControllerImplTests {
         controller.trackModelSetOccupancy(1, false);
 
         // Run train through sections D-F
-        for(int i = 14; i <= 29; i++) {
+        for(int i = 14; i <= 30; i++) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
             assertTrue(blockMap.get(i).getBooleanAuth());
@@ -190,7 +190,7 @@ public class WaysideControllerImplTests {
         assertFalse(blockMap.get(13).getSwitchState());
 
         // Run train through sections G-H
-        for(int i = 30; i <= 35; i++) {
+        for(int i = 31; i <= 35; i++) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
             assertTrue(blockMap.get(i).getBooleanAuth());
