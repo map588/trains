@@ -17,6 +17,33 @@ import java.util.ArrayList;
 public class TrackModelManager {
 
 
+    public Label ticketSalesLabel;
+    public Label locationLabel;
+    public Label passDisembarkLabel;
+    public Label passEmbarkedLabel;
+    public TabPane sssTabs;
+    public Tab stationTab;
+    public TitledPane sssSec;
+    public TitledPane trackHeaterSec;
+    public Label tempLabel;
+    public TitledPane murphySec;
+    public Label uploadLayoutLabel;
+    public Label pathLabel;
+    public Label simSpeedLabel;
+    public TitledPane simulationInformationSec;
+    public Tab layoutTab;
+    public Label switchBlockNumbersLabel;
+    public Tab switchTab;
+    public Label switchStateLabel;
+    public Tab signalTab;
+    public Label signalBlockNumberLabel;
+    public Label signalStateLabel;
+    public Label crossingLabel;
+    public TitledPane beaconInfoSec;
+    public Label beaconInfoLabel;
+    public Label lineInfoLabel;
+    public Label degF;
+    public Label sectionsLabel;
 
     //simulation information
     @FXML
@@ -113,21 +140,14 @@ public class TrackModelManager {
 
     // potential variables to assist with control
     //subject
-    private ArrayList <TrackLineSubject> trackModelSubject = new ArrayList<>();
+    private ArrayList <TrackLineSubject> trackLineSubject = new ArrayList<>();
 
     // test bench object
-    private TrackModelTBManager testBench;
     private TrackLineSubject subject;
 
     @FXML
     public void initialize(){
         //initialize buttons and user inputs
-
-        testBench = launchTestBench();
-        System.out.println(testBench);
-
-        testBench.setTrackModelSubject(subject);
-        testBench.setTrackModelManager(this);
 
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
@@ -155,7 +175,7 @@ public class TrackModelManager {
         switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
-//        occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
+        occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
 
         crossingState.setText("false");
@@ -166,7 +186,7 @@ public class TrackModelManager {
         //labels
         lineTable.getSelectionModel().selectedItemProperty().addListener(event -> {
             selectBlock(lineTable.getSelectionModel().getSelectedItem());
-            testBench.selectBlock(lineTable.getSelectionModel().getSelectedItem());
+
         });
 
 
@@ -302,7 +322,7 @@ public class TrackModelManager {
     private void addLineName(String text) {
         pickLine.getItems().add(text);
         murphyLine.getItems().add(text);
-        testBench.setLine(text);
+
     }
 
     private void uploadTrack() {
@@ -318,27 +338,6 @@ public class TrackModelManager {
         File dir = dirChooser.showDialog(chooseFile.getScene().getWindow());
 
         if(dir != null){ trackFilePath.setText(dir.getPath()); }
-    }
-
-
-    private TrackModelTBManager launchTestBench() {
-        try {
-            String tbFile = "/Framework/GUI/FXML/trackModel_TB.fxml";
-            URL url = getClass().getResource(tbFile);
-            FXMLLoader loader = new FXMLLoader(url);
-            Node content = loader.load();
-            Stage newStage = new Stage();
-            Scene newScene = new Scene(new VBox(content));
-            newStage.setScene(newScene);
-            newStage.setTitle("Track Model Test Bench");
-            newStage.show();
-            System.out.println("Test bench launched");
-            return loader.getController();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Failed to launch test bench");
-            throw new RuntimeException(e);
-        }
     }
 
 }
