@@ -22,7 +22,20 @@ public class WaysideControllerImplTests {
     void setUp() {
         trackModel = mock(TrackModel.class); // Mocking TrackModel
         ctcOffice = mock(CTCOffice.class); // Mocking CTCOffice
-        controller = new WaysideControllerImpl(1, Lines.GREEN, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24}, trackModel, ctcOffice);
+        controller = new WaysideControllerImpl(1, Lines.GREEN, new int[]{
+                1, 2, 3,
+                4, 5, 6,
+                7, 8, 9, 10, 11, 12,
+                13, 14, 15, 16,
+                17, 18, 19, 20,
+                21, 22, 23, 24, 25, 26, 27, 28,
+                29, 30, 31, 32,
+                33, 34, 35,
+                36, 37, 38, 39,
+                144, 145, 146,
+                147, 148, 149,
+                150},
+                trackModel, ctcOffice);
 
         File plcFile = new File("src/main/antlr/GreenLine1.plc");
         controller.loadPLC(plcFile);
@@ -31,7 +44,7 @@ public class WaysideControllerImplTests {
     @Test
     void testBlockMapCreation() {
         Map<Integer, WaysideBlock> blockMap = controller.getBlockMap();
-        assertEquals(blockMap.size(), 24);
+        assertEquals(blockMap.size(), 46);
 
         for (int i = 1; i <= 24; i++) {
             assertTrue(blockMap.containsKey(i));
@@ -98,28 +111,89 @@ public class WaysideControllerImplTests {
     @Test
     void testGreenLine1() {
         Map<Integer, WaysideBlock> blockMap = controller.getBlockMap();
-        assertTrue(blockMap.get(20).getBooleanAuth());
+        assertTrue(blockMap.get(144).getBooleanAuth());
 
-        controller.trackModelSetOccupancy(20, true);
-        assertTrue(blockMap.get(20).getBooleanAuth());
+        // Start train at block 144, check that direction and switches are assigned correctly
+        controller.trackModelSetOccupancy(144, true);
+        assertTrue(blockMap.get(144).getBooleanAuth());
+        assertTrue(blockMap.get(13).isDir_assigned());
+        assertTrue(blockMap.get(13).getDirection());
+        assertTrue(blockMap.get(28).getSwitchState());
+        assertFalse(blockMap.get(13).getSwitchState());
 
-        for(int i = 19; i >= 14; i--) {
+        // Run train through sections X-Z
+        for(int i = 145; i <= 150; i++) {
+            System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
             assertTrue(blockMap.get(i).getBooleanAuth());
+            controller.trackModelSetOccupancy(i-1, false);
+        }
 
+        // Run train across switch at 28
+        System.out.println(28);
+        controller.trackModelSetOccupancy(28, true);
+        assertTrue(blockMap.get(28).getBooleanAuth());
+        controller.trackModelSetOccupancy(150, false);
+
+        // Run train through sections F-D
+        for(int i = 27; i >= 12; i--) {
+            System.out.println(i);
+            controller.trackModelSetOccupancy(i, true);
+            assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i+1, false);
         }
 
-        controller.trackModelSetOccupancy(13, true);
-        assertTrue(blockMap.get(13).getBooleanAuth());
+        // Ensure direction is properly deallocated and switches moved back
+        assertFalse(blockMap.get(13).isDir_assigned());
+        assertFalse(blockMap.get(28).getSwitchState());
         assertFalse(blockMap.get(13).getSwitchState());
 
-        controller.trackModelSetOccupancy(14, false);
-
-        for(int i = 12; i >= 5; i--) {
+        // Run train through section C
+        for(int i = 11; i >= 7; i--) {
+            System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
             assertTrue(blockMap.get(i).getBooleanAuth());
+            controller.trackModelSetOccupancy(i+1, false);
+        }
 
+        // Ensure direction is properly allocated and switches moved
+        assertTrue(blockMap.get(13).isDir_assigned());
+        assertFalse(blockMap.get(13).getDirection());
+        assertFalse(blockMap.get(28).getSwitchState());
+        assertTrue(blockMap.get(13).getSwitchState());
+
+        // Run train through sections B-A
+        for(int i = 6; i >= 1; i--) {
+            System.out.println(i);
+            controller.trackModelSetOccupancy(i, true);
+            assertTrue(blockMap.get(i).getBooleanAuth());
+            controller.trackModelSetOccupancy(i+1, false);
+        }
+
+        // Run train across switch at 13
+        System.out.println(13);
+        controller.trackModelSetOccupancy(13, true);
+        assertTrue(blockMap.get(13).getBooleanAuth());
+        controller.trackModelSetOccupancy(1, false);
+
+        // Run train through sections D-F
+        for(int i = 14; i <= 29; i++) {
+            System.out.println(i);
+            controller.trackModelSetOccupancy(i, true);
+            assertTrue(blockMap.get(i).getBooleanAuth());
+            controller.trackModelSetOccupancy(i-1, false);
+        }
+
+        // Ensure direction is properly deallocated and switches moved back
+        assertFalse(blockMap.get(13).isDir_assigned());
+        assertFalse(blockMap.get(28).getSwitchState());
+        assertFalse(blockMap.get(13).getSwitchState());
+
+        // Run train through sections G-H
+        for(int i = 30; i <= 35; i++) {
+            System.out.println(i);
+            controller.trackModelSetOccupancy(i, true);
+            assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i+1, false);
         }
     }

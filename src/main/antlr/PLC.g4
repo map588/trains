@@ -35,8 +35,8 @@ not_operator : NOT list_value ;
 list_value : list_name '[' index ']' ;
 index : INDEX ;
 list_name : (OCCUPANCY | SWITCH | LIGHT | CROSSING | AUTHORITY | DIRECTION | DIR_ASSIGNED) ;
-value_false : FALSE | RED | MAIN | CLOSED | OUTBOUND ;
-value_true : TRUE | GREEN | ALT | OPEN | INBOUND ;
+value_false : FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;
+value_true : TRUE | GREEN | ALT | OPEN | NORTHBOUND ;
 
 AND : 'and' | 'AND' ;
 OR : 'or' | 'OR' ;
@@ -64,8 +64,8 @@ MAIN : 'MAIN' ;
 ALT : 'ALT' ;
 OPEN : 'OPEN' ;
 CLOSED : 'CLOSED' ;
-INBOUND : 'INBOUND' ;
-OUTBOUND : 'OUTBOUND' ;
+NORTHBOUND : 'NORTHBOUND' ;
+SOUTHBOUND : 'SOUTHBOUND' ;
 
 INDEX : [0-9]+ ;
 NEWLINE : ('\r'? '\n' | '\r')+ ;

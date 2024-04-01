@@ -60,6 +60,14 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
         controller.setAuthorityPLC(blockID, auth);
     }
 
+    private void setDirection(int blockID, boolean dir) {
+        blockMap.get(blockID).setDirection(dir);
+    }
+
+    private void setDirAssigned(int blockID, boolean assigned) {
+        blockMap.get(blockID).setDir_assigned(assigned);
+    }
+
     @Override
     public Value visitProgram(PLCParser.ProgramContext ctx) {
         return visitChildren(ctx);
@@ -90,6 +98,12 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
                 break;
             case "authority":
                 setAuth(index, value);
+                break;
+            case "direction":
+                setDirection(index, value);
+                break;
+            case "dir_assigned":
+                setDirAssigned(index, value);
                 break;
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
