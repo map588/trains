@@ -75,7 +75,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      *
      * @param train  The TrainModel object to be assigned to the trainControllerImpl.
      */
-    private void assignTrainModel(TrainModel train) {
+    void assignTrainModel(TrainModel train) {
         this.train = train;
         this.setServiceBrake(train.getServiceBrake());
         this.setEmergencyBrake(train.getEmergencyBrake());

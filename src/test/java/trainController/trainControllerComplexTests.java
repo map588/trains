@@ -1,13 +1,12 @@
 package trainController;
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -17,6 +16,8 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class trainControllerComplexTests extends ApplicationTest{
     TrainControllerImpl controller;
     TrainControllerSubject currentSubject;
+
+
 
     @Override
     public void start(Stage stage) throws Exception{
@@ -37,7 +38,6 @@ public class trainControllerComplexTests extends ApplicationTest{
     @Test public void testInsideTunnel(){
         // Get the inTunnelStatus indicator
         Circle inTunnelStatus = lookup("#inTunnelStatus").queryAs(Circle.class);
-
 
 
         // Get the initial state of the inTunnelStatus, intLights, and extLights

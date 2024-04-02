@@ -1,8 +1,14 @@
 package trainController;
 
 import Common.TrainModel;
+import javafx.application.Platform;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.internal.MockedConstructionImpl;
+
 import static org.mockito.Mockito.*;
 
 class trainControllerImplTest {
@@ -10,10 +16,12 @@ class trainControllerImplTest {
     private TrainControllerImpl controller;
     private TrainModel mockModel;
 
+
+
     @BeforeEach
     void setUp() {
-        controller = new TrainControllerImpl(1); // Assuming '1' is a valid trainID
         mockModel = mock(TrainModel.class); // Mocking TrainModel
+        controller = new TrainControllerImpl(mockModel, 1); // Assuming '1' is a valid trainID
         controller.assignTrainModel(mockModel);
     }
 

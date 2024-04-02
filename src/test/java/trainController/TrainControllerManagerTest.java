@@ -1,5 +1,6 @@
 package trainController;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,6 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -25,6 +28,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
 
     TrainControllerImpl controller;
     TrainControllerSubject currentSubject;
+
 
     /**
      * This method sets up the testing environment.

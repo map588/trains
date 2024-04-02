@@ -57,7 +57,7 @@ public class TrackBlock {
         this.cumulativeElevation = blockInfo.cumulativeElevation();
         this.speedLimit = blockInfo.speedLimit();
         this.length = blockInfo.blockLength();
-        this.line = Lines.valueOf(blockInfo.trackLine());
+        this.line = Lines.valueOf(blockInfo.trackLine().toUpperCase());
 
         this.switchInfo = blockInfo.isSwitch() ? Optional.of(new SwitchState(blockInfo.nextBlock())) : Optional.empty();
         this.crossingInfo = blockInfo.blockType() == BlockType.CROSSING ? Optional.of(new CrossingState(false)) : Optional.empty();

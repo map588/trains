@@ -1,14 +1,23 @@
 package trackModel;
 
 import Common.TrainModel;
+import Utilities.BlockParser;
 import Utilities.Records.BasicBlock;
 import Utilities.Enums.Lines;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import trainModel.TrainModelImpl;
 
+
+import javafx.application.Platform;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+
+
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,10 +55,21 @@ public class TrackLineTest {
     private TrackLine trackLine;
     private TrainModel trainModel;
     private ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout;
+    private ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines;
+
+    @BeforeAll
+    public static void init() {
+        if(Platform.isFxApplicationThread()) {
+            return;
+        }
+        Platform.startup(() -> {
+        });
+    }
 
     @BeforeEach
     public void setup() {
-        basicTrackLayout = new ConcurrentSkipListMap<>();
+        trackLines = BlockParser.parseCSV();
+        basicTrackLayout = trackLines.get(Lines.GREEN);
         trackLine = new TrackLine(Lines.GREEN, basicTrackLayout);
         trainModel = mock(TrainModelImpl.class);
     }
@@ -64,7 +84,7 @@ public class TrackLineTest {
     @Test
     public void updateTrainLocationChangesTrainBlock() {
         trackLine.trainDispatch(1);
-        double length = trackLine.updateTrainLocation(trainModel);
+        double length = trackLine.updateTrainLocation(trainModel).getLength();
         assertEquals(0, length);
     }
 
