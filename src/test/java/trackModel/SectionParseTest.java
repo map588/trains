@@ -7,33 +7,34 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import Utilities.Records.TrackSegment;
+
 
 import static Utilities.BlockParser.parseCSV;
-import static Utilities.SwitchSectionParser.parseSwitchSections;
-import static Utilities.SwitchSectionParser.SwitchSection;
+import static Utilities.TrackSegmentParser.parseTrackSegments;
 
 public class SectionParseTest {
 
-    private final ConcurrentHashMap<Lines, ArrayList<SwitchSection>> switchSections = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Lines, ArrayList<TrackSegment>> TrackSegments = new ConcurrentHashMap<>();
 
     @BeforeEach
     public void setUp() {
         ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> sectionBlocks = parseCSV("src/main/resources/Framework/working_track_layout.csv");
         for (Lines line : sectionBlocks.keySet()) {
-            ArrayList<SwitchSection> sections = parseSwitchSections(sectionBlocks.get(line));
-            switchSections.put(line, sections);
+            ArrayList<TrackSegment> sections = parseTrackSegments(sectionBlocks.get(line));
+            TrackSegments.put(line, sections);
         }
     }
 
     @Test
-    void testParseSwitchSections() {
+    void testParseTrackSegments() {
         for (Lines line : Lines.values()) {
             System.out.println("Line: " + line);
-            ArrayList<SwitchSection> sections = switchSections.get(line);
+            ArrayList<TrackSegment> sections = TrackSegments.get(line);
             int previousSwitch = 0;
             if (sections != null) {
                 System.out.println("Number of Switch Sections: " + sections.size());
-                for (SwitchSection section : sections) {
+                for (TrackSegment section : sections) {
                     System.out.println("Switch Section: " + previousSwitch);
                     for (BasicBlock block : section.blocks()) {
                         if (block.isSwitch()) {
@@ -55,7 +56,7 @@ public class SectionParseTest {
         }
     }
 
-    private int indexOf(ArrayList<SwitchSection> sections, SwitchSection section) {
+    private int indexOf(ArrayList<TrackSegment> sections, TrackSegment section) {
         for (int i = 0; i < sections.size(); i++) {
             if (sections.get(i).equals(section)) {
                 return i;
