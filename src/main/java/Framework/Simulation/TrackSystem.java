@@ -1,7 +1,7 @@
 package Framework.Simulation;
 
-import Utilities.Records.BasicBlock;
-import Utilities.BlockParser;
+import Utilities.BasicLineMap;
+import Utilities.ParsedBasicBlocks;
 import Utilities.Enums.Lines;
 import trackModel.TrackLine;
 
@@ -14,15 +14,15 @@ public class TrackSystem {
      * GREEN -> {TrackLine}
      * ....
      */
-
-    ConcurrentHashMap<Lines, TrackLine> TrackLines = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Lines, TrackLine> TrackLines = new ConcurrentHashMap<>();
     ExecutorService trackLineExecutor;
+    ParsedBasicBlocks parsedBasicBlocks = ParsedBasicBlocks.getInstance();
 
     public TrackSystem() {
-        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> track = BlockParser.parseCSV();
-        trackLineExecutor = Executors.newFixedThreadPool(track.size());
+        BasicLineMap basicLines = new BasicLineMap(parsedBasicBlocks.getAllBasicLines());
+        trackLineExecutor = Executors.newFixedThreadPool(basicLines.size());
         for (Lines line : Lines.values()) {
-            TrackLines.put(line, new TrackLine(line, track.get(line)));
+            TrackLines.put(line, new TrackLine(line, basicLines.get(line)));
         }
     }
 

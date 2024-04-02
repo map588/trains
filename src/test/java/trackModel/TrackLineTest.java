@@ -1,25 +1,20 @@
 package trackModel;
 
 import Common.TrainModel;
-import Utilities.BlockParser;
 import Utilities.Enums.BlockType;
-import Utilities.Records.BasicBlock;
 import Utilities.Enums.Lines;
-
-
+import Utilities.ParsedBasicBlocks;
+import Utilities.Records.BasicBlock;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import stubs.trainStub;
 
-
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class TrackLineTest {
@@ -60,8 +55,7 @@ public class TrackLineTest {
     public static void setUpAll() {
         Platform.startup(() -> {
         });
-        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines = BlockParser.parseCSV();
-        basicBlockSkipList = trackLines.get(Lines.GREEN);
+        basicBlockSkipList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.GREEN);
     }
 
     @BeforeEach

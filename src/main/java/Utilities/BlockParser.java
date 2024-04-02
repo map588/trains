@@ -4,7 +4,6 @@ import Utilities.Enums.BlockType;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
-import Utilities.Records.TrackSegment;
 
 import java.io.IOException;
 import java.nio.file.Files;
