@@ -157,7 +157,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
     public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
 
-
     public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
     public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
@@ -195,7 +194,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
             case Properties.LENGTH_PROPERTY -> this.length = (double)newValue;
         }
     }
-
 
     //Vital Getters
     public int getAuthority() {
@@ -361,8 +359,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
 
         //How many loaded trains? I think you need to multiply by the number of cars
-        if (this.mass >= Constants.LOADED_TRAIN_MASS) {
-            this.setMass(Constants.LOADED_TRAIN_MASS);
+        if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
+            this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
         }
 
         //FAILURE STATES
