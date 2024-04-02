@@ -1,6 +1,7 @@
 package waysideController;
 
 import Common.WaysideController;
+import Framework.Simulation.WaysideSystem;
 import Framework.Support.ListenerReference;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -136,7 +137,7 @@ public class WaysideControllerManager {
 
 
         // Setup controller combo box
-        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideControllerSubjectFactory.getControllerList());
+        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideSystem.getControllerList());
 
         // Create initial controller and update values
         createNewController();
@@ -334,7 +335,7 @@ public class WaysideControllerManager {
     private void createNewController() {
         WaysideController newController;
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
-            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(),
+            newController = new WaysideControllerImpl(WaysideSystem.size(),
                     Lines.GREEN,
                     new int[]{
                             1, 2, 3,
@@ -351,7 +352,7 @@ public class WaysideControllerManager {
                             150},
                     null, null);
         } else {
-            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(),
+            newController = new WaysideControllerHWBridge(WaysideSystem.size(),
                     "BlueLine",
                     new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
                     testBench.tbHWPortComboBox.getValue());
@@ -359,7 +360,7 @@ public class WaysideControllerManager {
 
         newController.runPLC();
 
-        WaysideControllerSubjectFactory.addController(newController);
+        WaysideSystem.addController(newController);
         changeActiveController(newController);
     }
 
