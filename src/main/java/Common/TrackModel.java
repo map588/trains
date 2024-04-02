@@ -1,7 +1,6 @@
 package Common;
 
 import Utilities.Records.Beacon;
-import trackModel.TrackBlock;
 
 public interface TrackModel {
 
@@ -31,7 +30,6 @@ public interface TrackModel {
 
     //Non-Vitals
     void setPassengersDisembarked(TrainModel train, int disembarked);
-
     int getTicketSales();
     int getPassengersEmbarked(TrainModel train);
 

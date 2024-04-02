@@ -31,5 +31,10 @@ public class TrackSystem {
     }
 
     public void update() {
+        trackLineExecutor.submit(() -> {
+            for (TrackLine line : TrackLines.values()) {
+                line.update();
+            }
+        });
     }
 }

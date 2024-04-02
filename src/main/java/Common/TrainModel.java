@@ -3,6 +3,7 @@ package Common;
 import Utilities.Enums.Direction;
 import Utilities.Records.Beacon;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public interface  TrainModel {
@@ -64,6 +65,8 @@ public interface  TrainModel {
     boolean getLeftDoors();
     boolean getRightDoors();
     double getlength();
+    int getPassengerCount();
+
 
 
 
@@ -76,6 +79,6 @@ public interface  TrainModel {
 
     TrainController getController();
 
-    void trainModelPhysics(Future<Double> power);
-    void trainModelPhysics();
+    void trainModelPhysics(Future<Double> power) throws ExecutionException, InterruptedException;
+    void trainModelPhysics() throws ExecutionException, InterruptedException;
 }

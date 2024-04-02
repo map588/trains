@@ -135,23 +135,18 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
     }
 
-    public void trainModelPhysics() {
-
+    public void trainModelPhysics(){
         physics();
-
         this.setPower(controller.calculatePower(speed));
     }
 
-    private void physics(){
-
+    private void physics() {
         //MASS CALCULATION (some reduncancy here the empty train mass is final, and the crewcount is final)
         this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
-
         //How many loaded trains? I think you need to multiply by the number of cars
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
             this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
         }
-
         //FAILURE STATES
         if (powerFailure) {
             this.setPower(0);
@@ -164,11 +159,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setCommandSpeed(-1);
             this.setAuthority(-1);
         }
-
         if(currentBlockLength - relativeDistance < 0) {
             enteredNextBlock();
         }
-
         //ACCELERATION PROGRESSION
         double previousAcceleration = this.acceleration;
         System.out.println("Previous Acceleration: " + previousAcceleration);
@@ -401,6 +394,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
     @Override
     public double getlength() {
         return this.length;
+    }
+
+    @Override
+    public int getPassengerCount() {
+        return this.numPassengers;
     }
 
     @Override

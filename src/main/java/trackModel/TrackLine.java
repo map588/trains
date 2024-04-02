@@ -19,7 +19,7 @@ public class TrackLine implements TrackModel {
     Lines line;
     
     ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
-    ThreadLocalRandom random = ThreadLocalRandom.current();
+
 
     //calls all listeners when a train enters or exits a block
     private final ObservableHashMap<TrainModel, Integer> trackOccupancyMap;
@@ -28,6 +28,7 @@ public class TrackLine implements TrackModel {
     private final ConcurrentSkipListMap<Integer, TrackBlock> trackBlocks;
 
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
+
     private int outsideTemperature = 70;
     private int ticketSales = 0;
 
@@ -60,7 +61,9 @@ public class TrackLine implements TrackModel {
 
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
-        trackOccupancyMap.put(train, 0);
+        syncTrackUpdate(() -> {
+            trackOccupancyMap.put(train, 0);
+        });
     }
 
 
@@ -76,69 +79,93 @@ public class TrackLine implements TrackModel {
         //...
     }
 
-    /**
-     * Updates the location of a train on the track
-     *
-     * @param train
-     * @return the length of the block the train is now on (for the purpose of the train model)
-     */
-
-    public TrackBlock updateTrainLocation(TrainModel train) {
-        Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
-
-        System.out.println("Train: " + train.getTrainNumber() + " is on block: " + currentBlockID);
-
-        if (currentBlockID == -1) {
-            throw new IllegalArgumentException("Train: " + train.getTrainNumber() + " is not on the track");
-        }
-
-        Connection next = trackBlocks.get(currentBlockID).getNextBlock(train.getDirection());
-
-        trackOccupancyMap.remove(train, currentBlockID);
-        trackOccupancyMap.put(train, next.blockNumber());
-
-        if (next.directionChange()) {
-            train.changeDirection();
-        }
-
-        Integer nextBlockID = next.blockNumber();
-
-        System.out.println("Train: " + train.getTrainNumber() + " is moving to block: " + nextBlockID);
-
-        return trackBlocks.get(nextBlockID);
-    }
+    private ConcurrentLinkedQueue<Callable<Void>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
     // Used to add a task to the work queue
-    private void executeTrackUpdate(Runnable task) {
+    private void asyncTrackUpdate(Runnable task) {
         trackUpdateExecutor.submit(task);
     }
 
-    private void setupListeners() {
+    private void syncTrackUpdate(Runnable task) {
+        Callable<Void> updateTask = new TrackUpdateTask(task);
+        trackUpdateQueue.add(updateTask);
+    }
 
+    public void update() {
+        while (!trackUpdateQueue.isEmpty()) {
+            try {
+                trackUpdateExecutor.invokeAll(trackUpdateQueue);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e + " in TrackLine update()");
+            }
+        }
+    }
+
+    /**
+     * Updates the location of a train on the track
+     * @param train
+     * @return the block the train is moving to
+     */
+    public TrackBlock updateTrainLocation(TrainModel train) {
+        CompletableFuture<TrackBlock> futureBlock = CompletableFuture.supplyAsync(() -> {
+            Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
+
+            System.out.println("Train: " + train.getTrainNumber() + " is on block: " + currentBlockID);
+
+            if (currentBlockID == -1) {
+                throw new IllegalArgumentException("Train: " + train.getTrainNumber() + " is not on the track");
+            }
+
+            Connection next = trackBlocks.get(currentBlockID).getNextBlock(train.getDirection());
+
+            if (next.directionChange()) {
+                train.changeDirection();
+            }
+            Integer nextBlockID = next.blockNumber();
+
+            System.out.println("Train: " + train.getTrainNumber() + " is moving to block: " + nextBlockID);
+
+            syncTrackUpdate(() -> {
+                trackOccupancyMap.remove(train, currentBlockID);
+                trackOccupancyMap.put(train, next.blockNumber());
+            });
+
+            return trackBlocks.get(nextBlockID);
+        }, trackUpdateExecutor);
+
+        return futureBlock.join();
+    }
+
+
+    private record TrackUpdateTask(Runnable task) implements Callable<Void> {
+        @Override
+        public Void call() {
+            task.run();
+            return null;
+        }
+    }
+
+
+    private void setupListeners() {
         ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
 
             public void onAdded(TrainModel train, Integer blockID) {
                 // A train enters a new block
-                executeTrackUpdate(() -> handleTrainEntry(train, blockID));
+                handleTrainEntry(train, blockID);
             }
-
             public void onRemoved(TrainModel train, Integer blockID) {
                 // A train leaves a block
-                executeTrackUpdate(() -> handleTrainExit(train, blockID));
+                handleTrainExit(train, blockID);
             }
-
             // Assuming up dates are less common, but you could implement it as needed
             public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
-                executeTrackUpdate(() -> {
-                    handleTrainExit(train, oldBlockID);
-                    handleTrainEntry(train, newBlockID);
-                });
+               handleTrainExit(train, oldBlockID);
+               handleTrainEntry(train, newBlockID);
             }
         };
 
         trackOccupancyMap.addChangeListener(trackListener);
     }
-
 
     public void setTemperature(int i) {
         outsideTemperature = i;
@@ -151,40 +178,50 @@ public class TrackLine implements TrackModel {
     //TODO: We don't have light states figured out yet
     @Override
     public void setLightState(int block, boolean state) {
+        syncTrackUpdate( () -> {
             trackBlocks.get(block).lightState = state;
+        });
     }
 
     @Override
     public void setSwitchState(int block, boolean state) {
-        if(!trackBlocks.get(block).isSwitch){
-            throw new IllegalArgumentException("Block: " + block + " is not a switch");
-        }
-        trackBlocks.get(block).setSwitchState(state);
+        syncTrackUpdate( () -> {
+            if(!trackBlocks.get(block).isSwitch){
+                throw new IllegalArgumentException("Block: " + block + " is not a switch");
+            }
+            trackBlocks.get(block).setSwitchState(state);
+        });
     }
 
     @Override
     public void setCrossing(int block, boolean state) {
+        syncTrackUpdate( () -> {
             if (trackBlocks.get(block).feature.isCrossing()) {
                 trackBlocks.get(block).setCrossingState(state);
             } else {
                 throw new IllegalArgumentException("Block: " + block + " is not a crossing");
             }
+        });
     }
 
     //TODO: We don't know how beacons will work yet
     @Override
     public void setBeacon(int block, Beacon beacon){
-
+        beaconBlocks.put(block, beacon);
     }
 
     @Override
     public void setTrainAuthority(Integer blockID, int authority) {
-        trackBlocks.get(blockID).setAuthority(authority);
+        syncTrackUpdate( () -> {
+            trackBlocks.get(blockID).setAuthority(authority);
+        });
     }
 
     @Override
     public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
-        trackBlocks.get(blockID).setCommandSpeed(commandedSpeed);
+        syncTrackUpdate( () -> {
+            trackBlocks.get(blockID).setCommandSpeed(commandedSpeed);
+        });
     }
 
     @Override
@@ -270,6 +307,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public int getPassengersEmbarked(TrainModel train) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         if(trackOccupancyMap.containsKey(train)){
             TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
             if (block.feature.isStation()) {
@@ -306,5 +344,8 @@ public class TrackLine implements TrackModel {
         }
         trackOccupancyMap.put(train, blockID);
     }
+
+
+
 
 }
