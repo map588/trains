@@ -8,22 +8,9 @@ if dir_assigned[13]
             dir_assigned[13] = FALSE
             switch[13] = MAIN
             switch[28] = MAIN
-            authority[13] = FALSE
-            authority[14] = FALSE
-            authority[15] = FALSE
-            authority[16] = FALSE
-            authority[17] = FALSE
-            authority[18] = FALSE
-            authority[19] = FALSE
-            authority[20] = FALSE
-            authority[21] = FALSE
-            authority[22] = FALSE
-            authority[23] = FALSE
-            authority[24] = FALSE
-            authority[25] = FALSE
-            authority[26] = FALSE
-            authority[27] = FALSE
-            authority[28] = FALSE
+            for i = 13 to 28 do
+                authority[i] = FALSE
+            endfor
         endif
     endif
 endif
@@ -64,88 +51,45 @@ authority[5] = not occupied[4] and not occupied[3] and not occupied[2] and not o
 authority[6] = not occupied[5] and not occupied[4] and not occupied[3] and not occupied[2]
 
 // General occupancies C
-authority[7] = not occupied[6] and not occupied[5] and not occupied[4] and not occupied[3]
-authority[8] = not occupied[7] and not occupied[6] and not occupied[5] and not occupied[4]
-authority[9] = not occupied[8] and not occupied[7] and not occupied[6] and not occupied[5]
-authority[10] = not occupied[9] and not occupied[8] and not occupied[7] and not occupied[6]
-authority[11] = not occupied[10] and not occupied[9] and not occupied[8] and not occupied[7]
-authority[12] = not occupied[11] and not occupied[10] and not occupied[9] and not occupied[8]
+for i = 7 to 12 do
+    authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
+endfor
 
 // General occupancies D,E,F
 if dir_assigned[13]
     if direction[13] == NORTHBOUND
-        authority[13] = not occupied[12] and not occupied[11] and not occupied[10] and not occupied[9] and not switch[13]
-        authority[14] = not occupied[13] and not occupied[12] and not occupied[11] and not occupied[10] and not switch[13]
-        authority[15] = not occupied[14] and not occupied[13] and not occupied[12] and not occupied[11] and not switch[13]
-        authority[16] = not occupied[15] and not occupied[14] and not occupied[13] and not occupied[12] and not switch[13]
+        for i = 13 to 16 do
+            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4] and not switch[13]
+        endfor
 
-        authority[17] = not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13]
-        authority[18] = not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14]
-        authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15]
-        authority[20] = not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16]
-
-        authority[21] = not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17]
-        authority[22] = not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18]
-        authority[23] = not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19]
-        authority[24] = not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20]
-        authority[25] = not occupied[24] and not occupied[23] and not occupied[22] and not occupied[21]
-        authority[26] = not occupied[25] and not occupied[24] and not occupied[23] and not occupied[22]
-        authority[27] = not occupied[26] and not occupied[25] and not occupied[24] and not occupied[23]
-        authority[28] = not occupied[27] and not occupied[26] and not occupied[25] and not occupied[24]
+        for i = 17 to 28 do
+            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
+        endfor
     else
-        authority[13] = not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17]
-        authority[14] = not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18]
-        authority[15] = not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19]
-        authority[16] = not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20]
+        for i = 13 to 24 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+        endfor
 
-        authority[17] = not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21]
-        authority[18] = not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22]
-        authority[19] = not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23]
-        authority[20] = not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24]
+        for i = 25 to 28 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and not switch[28]
+        endfor
 
-        authority[21] = not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25]
-        authority[22] = not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26]
-        authority[23] = not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27]
-        authority[24] = not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28]
-        authority[25] = not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and not switch[28]
-        authority[26] = not occupied[27] and not occupied[28] and not occupied[29] and not occupied[30] and not switch[28]
-        authority[27] = not occupied[28] and not occupied[29] and not occupied[30] and not occupied[31] and not switch[28]
-        authority[28] = not occupied[29] and not occupied[30] and not occupied[31] and not occupied[32] and not switch[28]
     endif
 else
-    authority[13] = FALSE
-    authority[14] = FALSE
-    authority[15] = FALSE
-    authority[16] = FALSE
-    authority[17] = FALSE
-    authority[18] = FALSE
-    authority[19] = FALSE
-    authority[20] = FALSE
-    authority[21] = FALSE
-    authority[22] = FALSE
-    authority[23] = FALSE
-    authority[24] = FALSE
-    authority[25] = FALSE
-    authority[26] = FALSE
-    authority[27] = FALSE
-    authority[28] = FALSE
+    for i = 13 to 28 do
+        authority[i] = FALSE
+    endfor
 endif
 
-// General occupancies G
-authority[29] = not occupied[30] and not occupied[31] and not occupied[32] and not occupied[33]
-authority[30] = not occupied[31] and not occupied[32] and not occupied[33] and not occupied[34]
-authority[31] = not occupied[32] and not occupied[33] and not occupied[34] and not occupied[35]
-authority[32] = not occupied[33] and not occupied[34] and not occupied[35] and not occupied[36]
-
-// General occupancies H
-authority[33] = not occupied[34] and not occupied[35] and not occupied[36] and not occupied[37]
-authority[34] = not occupied[35] and not occupied[36] and not occupied[37] and not occupied[38]
-authority[35] = not occupied[36] and not occupied[37] and not occupied[38] and not occupied[39]
+// General occupancies G-H
+for i = 29 to 35 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
 
 // General occupancies X
-authority[144] = not occupied[145] and not occupied[146] and not occupied[147] and not occupied[148]
-authority[145] = not occupied[146] and not occupied[147] and not occupied[148] and not occupied[149]
-authority[146] = not occupied[147] and not occupied[148] and not occupied[149] and not occupied[150]
+for i = 144 to 146 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
 
 // General occupancies Y
 authority[147] = not occupied[148] and not occupied[149] and not occupied[150] and not occupied[28] and switch[28]

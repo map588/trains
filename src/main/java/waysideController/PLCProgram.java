@@ -12,6 +12,7 @@ import waysideController.plc_parser.PLCVisitor;
 import waysideController.plc_parser.Value;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVisitor<Value> {
@@ -19,10 +20,13 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     private final Map<Integer, WaysideBlock> blockMap;
     private final PLCRunner controller;
     private ParseTree PLCTree;
+    private Map<String, Integer> intVarMap;
 
     public PLCProgram(PLCRunner controller) {
         this.controller = controller;
         this.blockMap = controller.getBlockMap();
+
+        intVarMap = new HashMap<>();
     }
 
     public void loadPLC(String filename) {
@@ -150,18 +154,21 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
 
     public Value visitFor_statement(PLCParser.For_statementContext ctx) {
-        int startIndex = visit(ctx.INDEX(0)).asInteger();
-        int endIndex = visit(ctx.INDEX(1)).asInteger();
+        int startIndex = visit(ctx.index(0)).asInteger();
+        int endIndex = visit(ctx.index(1)).asInteger();
+        String varName = ctx.VARIABLE().getText();
+
+        System.out.println("For loop: " + varName + " = " + startIndex + " to " + endIndex);
 
         for (int i = startIndex; i <= endIndex; i++) {
-            WaysideBlock block = blockMap.get(i);
-            if (block != null && block.isOccupied()) {
-                for (PLCParser.StatementContext statementCtx : ctx.statement()) {
-                    visit(statementCtx);
-                }
+            intVarMap.put(varName, i);
+            for (PLCParser.StatementContext statementCtx : ctx.statement()) {
+                System.out.println("Executing statement: " + statementCtx.getText());
+                visit(statementCtx);
             }
         }
 
+        intVarMap.remove(varName);
         return Value.VOID;
     }
 
@@ -261,7 +268,36 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
     @Override
     public Value visitIndex(PLCParser.IndexContext ctx) {
+        return visit(ctx.getChild(0));
+    }
+
+    @Override
+    public Value visitArith_expression(PLCParser.Arith_expressionContext ctx) {
+        int left = visit(ctx.getChild(0)).asInteger();
+        int right = visit(ctx.getChild(2)).asInteger();
+
+        if(ctx.getChild(1).getText().equals("+")) {
+            return new Value(left + right);
+        }
+        else {
+            return new Value(left - right);
+        }
+    }
+
+    @Override
+    public Value visitInt_val(PLCParser.Int_valContext ctx) {
         return new Value(Integer.parseInt(ctx.getText()));
+    }
+
+    @Override
+    public Value visitInt_variable(PLCParser.Int_variableContext ctx) {
+        String varName = ctx.getText();
+        if(intVarMap.containsKey(varName)) {
+            return new Value(intVarMap.get(varName));
+        }
+        else {
+            throw new RuntimeException("Variable " + varName + " not found");
+        }
     }
 
     @Override

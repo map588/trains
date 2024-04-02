@@ -129,11 +129,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         blockMap.get(blockID).setSpeed(speed);
 
         if(trackModel != null) {
-            if (blockMap.get(blockID).getBooleanAuth()) {
-                //trackModel.setCommandedSpeed(blockID, speed);
-            } else {
-                //trackModel.setCommandedSpeed(blockID, 0);
-            }
+//            trackModel.setCommandedSpeed(blockID, speed);
         }
     }
 
@@ -267,15 +263,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen() && block.getBooleanAuth() != auth) {
             block.setBooleanAuth(auth);
-//              trackModel.setTrainAuthority(blockID, auth);
 
-            if(trackModel != null) {
-                if (blockMap.get(blockID).getBooleanAuth()) {
-                    //trackModel.setCommandedSpeed(blockID, block.getSpeed());
-                } else {
-                    //trackModel.setCommandedSpeed(blockID, 0);
-                }
-            }
+//            if(block.isOccupied())
+//                trackModel.setTrainAuthority(blockID, auth);
         }
     }
 

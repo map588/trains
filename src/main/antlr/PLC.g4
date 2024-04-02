@@ -1,7 +1,7 @@
 grammar PLC;
 
 program : (statement | statement NEWLINE | NEWLINE)+;
-statement : set_list_value | if_statement | if_else_statement | COMMENT ;
+statement : set_list_value | if_statement | if_else_statement | for_statement | COMMENT ;
 
 set_list_value : list_name '[' index ']' '=' (equality_check | compound_value | value_false | value_true) ;
 
@@ -33,8 +33,10 @@ and_operator: (single_val | ('(' compound_value ')')) (AND (single_val | ('(' co
 single_val : not_operator | list_value ;
 not_operator : NOT list_value ;
 list_value : list_name '[' index ']' ;
-index : INDEX | VARIABLE | arith_expression ;
-arith_expression : (INDEX | VARIABLE) ARITH_OP (INDEX | VARIABLE) ;
+index : int_val | int_variable | arith_expression ;
+arith_expression : (int_val | int_variable) ARITH_OP (int_val | int_variable) ;
+int_val : INT_VAL ;
+int_variable : VARIABLE ;
 list_name : (OCCUPANCY | SWITCH | LIGHT | CROSSING | AUTHORITY | DIRECTION | DIR_ASSIGNED) ;
 value_false : FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;
 value_true : TRUE | GREEN | ALT | OPEN | NORTHBOUND ;
@@ -76,5 +78,5 @@ ARITH_OP : ('+' | '-') ;
 NEWLINE : ('\r'? '\n' | '\r')+ ;
 WS : (' ' | '\t') -> skip ;
 
-INDEX : [0-9]+ ;
+INT_VAL : [0-9]+ ;
 VARIABLE : [a-zA-Z]+ | [a-zA-Z0-9]+ ;
