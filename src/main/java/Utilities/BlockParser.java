@@ -71,6 +71,11 @@ public class BlockParser {
         double speedLimit = Double.parseDouble(values[indexOf(headers, "Speed Limit (Km/Hr)")]);
         String infrastructure = values[indexOf(headers, "Infrastructure")];
         Optional<String> doorDirection = Optional.ofNullable(values[indexOf(headers, "Door Direction")]);
+        if(doorDirection.isPresent() && doorDirection.get().isEmpty()){
+            doorDirection = Optional.empty();
+        }else{
+            doorDirection = Optional.of(doorDirection.get().toUpperCase());
+        }
         double elevation = Double.parseDouble(values[indexOf(headers, "ELEVATION (M)")]);
         double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMUALTIVE ELEVATION (M)")]);
         boolean isUnderground = infrastructure.contains("UNDERGROUND");

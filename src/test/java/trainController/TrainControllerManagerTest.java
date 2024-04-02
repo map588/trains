@@ -29,12 +29,13 @@ public class TrainControllerManagerTest extends ApplicationTest {
     TrainControllerImpl controller;
     TrainControllerSubject currentSubject;
 
-
     /**
      * This method sets up the testing environment.
      * It loads the trainController.fxml file and displays it in a new Stage.
      * It also initializes the controller and currentSubject variables.
      */
+
+
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Framework/GUI/FXML/trainController.fxml"));
@@ -184,6 +185,47 @@ public class TrainControllerManagerTest extends ApplicationTest {
         // Verify the temperature's new value in the controller
         assertEquals(Double.parseDouble(newTemperature), controller.getTemperature(), "Temperature should be updated based on TextField input.");
     }
+
+//    @Test public void testInsideTunnel(){
+//        // Get the inTunnelStatus indicator
+//        Circle inTunnelStatus = lookup("#inTunnelStatus").queryAs(Circle.class);
+//
+//
+//        // Get the initial state of the inTunnelStatus, intLights, and extLights
+//        Color initialTunnelStatusColor = (Color) inTunnelStatus.getFill();
+//        boolean initialIntLightsState = controller.getIntLights();
+//        boolean initialExtLightsState = controller.getExtLights();
+//
+//        // Verify that train controller in tunnel status is gray outside of the tunnel
+//        verifyThat(inTunnelStatus, (Circle circle) -> circle.getFill().equals(initialTunnelStatusColor));
+//        System.out.println("Int Light: " + controller.getIntLights());
+//        // Verify that the intLights and extLights are off
+//        //assertFalse(controller.getIntLights());
+//        //assertFalse(controller.getExtLights());
+//
+//        // Simulate the train entering the tunnel
+//        controller.setInTunnel(true);
+//        System.out.println("Int Light: " + controller.getIntLights());
+//        // Verify that the inTunnelStatus indicator turns yellow
+//        verifyThat(inTunnelStatus, (Circle circle) -> circle.getFill().equals(Color.YELLOW));
+//
+//        // Verify that the intLights and extLights turn on
+//        assertTrue(controller.getIntLights());
+//        assertTrue(controller.getExtLights());
+//
+//        // OPTIONAL: Verify that the train slows down (if applicable)
+//        // You can check the train's speed or any related properties here
+//
+//        // Simulate the train exiting the tunnel
+//        controller.setInTunnel(false);
+//
+//        // Verify that the inTunnelStatus indicator turns back to the initial color
+//        verifyThat(inTunnelStatus, (Circle circle) -> circle.getFill().equals(initialTunnelStatusColor));
+//
+//        // Verify that the intLights and extLights return to their initial states
+//        assertEquals(initialIntLightsState, controller.getIntLights());
+//        assertEquals(initialExtLightsState, controller.getExtLights());
+//    }
 
     /**
      * This helper method sets the value of a slider in a JavaFX application.

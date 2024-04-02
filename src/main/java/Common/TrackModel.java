@@ -1,6 +1,7 @@
 package Common;
 
 import Utilities.Records.Beacon;
+import trackModel.TrackBlock;
 
 public interface TrackModel {
 
@@ -9,8 +10,8 @@ public interface TrackModel {
     void setSwitchState(int block, boolean state);
     void setCrossing(int block, boolean state);
     void setBeacon(int block, Beacon beacon);
-    void setTrainAuthority(TrainModel train, int authority);
-    void setCommandedSpeed(TrainModel train, double commandedSpeed);
+    void setTrainAuthority(Integer blockID, int authority);
+    void setCommandedSpeed(Integer blockID, double commandedSpeed);
 
     //Vital Getters
     boolean getLightState(int block);

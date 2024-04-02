@@ -31,6 +31,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     private final int trainID;
     private final TrainControllerSubject subject;
     private TrainModel train;
+    private Beacon beacon;
 
     private volatile int samplingPeriod = 10;
 

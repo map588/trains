@@ -14,8 +14,8 @@ import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 
 import java.util.concurrent.*;
-import java.util.random.RandomGenerator;
 
+import static Utilities.Constants.YARD_OUT_DIRECTION;
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
 import static Utilities.Conversion.distanceUnit.FEET;
@@ -106,6 +106,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.numCars = 1;
         this.numPassengers = 1;
         this.crewCount = 2;
+        this.direction = YARD_OUT_DIRECTION;
         this.mass = (Constants.EMPTY_TRAIN_MASS * numCars) + (Constants.PASSENGER_MASS * (crewCount + numPassengers));
         this.distanceTraveled = 0;
         this.announcement = "";

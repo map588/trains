@@ -2,17 +2,15 @@ package trackModel;
 
 import Common.TrainModel;
 import Utilities.BlockParser;
+import Utilities.Enums.BlockType;
 import Utilities.Records.BasicBlock;
 import Utilities.Enums.Lines;
-import trainModel.TrainModelImpl;
 
 
 import javafx.application.Platform;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +18,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 
 public class TrackLineTest {
@@ -52,26 +50,24 @@ public class TrackLineTest {
 
 
 
-    private TrackLine trackLine;
-    private TrainModel trainModel;
-    private ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout;
-    private ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines;
+    private static TrackLine trackLine;
+    private  TrainModel trainModel;
+    private static ConcurrentSkipListMap<Integer, BasicBlock> basicBlockSkipList;
+    private static int i = 10;
 
     @BeforeAll
-    public static void init() {
-        if(Platform.isFxApplicationThread()) {
-            return;
-        }
+    public static void setUpAll() {
         Platform.startup(() -> {
         });
+        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines = BlockParser.parseCSV();
+        basicBlockSkipList = trackLines.get(Lines.GREEN);
     }
 
     @BeforeEach
     public void setup() {
-        trackLines = BlockParser.parseCSV();
-        basicTrackLayout = trackLines.get(Lines.GREEN);
-        trackLine = new TrackLine(Lines.GREEN, basicTrackLayout);
-        trainModel = mock(TrainModelImpl.class);
+        trackLine = new TrackLine(Lines.GREEN, basicBlockSkipList);
+        trainModel = trackLine.trainDispatch(i);
+        i++;
     }
 
 //    @Test
@@ -83,7 +79,6 @@ public class TrackLineTest {
 
     @Test
     public void updateTrainLocationChangesTrainBlock() {
-        trackLine.trainDispatch(1);
         double length = trackLine.updateTrainLocation(trainModel).getLength();
         assertEquals(0, length);
     }
@@ -102,15 +97,23 @@ public class TrackLineTest {
     }
 
     @Test
-    public void setSwitchStateChangesSwitchState() {
-        trackLine.setSwitchState(1, true);
-        assertTrue(trackLine.getSwitchState(1));
+    public void setSwitchTrueChangesSwitch() {
+        for(BasicBlock block : basicBlockSkipList.values()) {
+            if(block.isSwitch()) {
+                trackLine.setSwitchState(block.blockNumber(), true);
+                assertTrue(trackLine.getSwitchState(block.blockNumber()));
+            }
+        }
     }
 
     @Test
     public void setCrossingChangesCrossingState() {
-        trackLine.setCrossing(1, true);
-        assertTrue(trackLine.getCrossingState(1));
+        for(BasicBlock block : basicBlockSkipList.values()) {
+            if (block.blockType().equals(BlockType.CROSSING)) {
+                trackLine.setCrossing(block.blockNumber(), true);
+                assertTrue(trackLine.getCrossingState(block.blockNumber()));
+            }
+        }
     }
 
     @Test

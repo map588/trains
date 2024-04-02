@@ -1,5 +1,7 @@
 package trainController;
 
+import Common.TrainController;
+import Common.TrainModel;
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
@@ -20,6 +22,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import trainModel.TrainModelImpl;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,7 +62,8 @@ public class TrainControllerManager {
 
     @FXML
     public void initialize() {
-        //new TrainControllerImpl(1);
+        TrainModel train = new TrainModelImpl(1);
+        TrainController controller = train.getController();
         subjectMap = TrainControllerSubjectMap.getInstance();
         setupMapChangeListener();
         if (!subjectMap.getSubjects().isEmpty()) {

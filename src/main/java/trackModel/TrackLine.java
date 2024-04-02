@@ -19,14 +19,15 @@ public class TrackLine implements TrackModel {
     Lines line;
     
     ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
+    ThreadLocalRandom random = ThreadLocalRandom.current();
 
     //calls all listeners when a train enters or exits a block
     private final ObservableHashMap<TrainModel, Integer> trackOccupancyMap;
 
     //maps blocks to block numbers
-    private final ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
+    private final ConcurrentSkipListMap<Integer, TrackBlock> trackBlocks;
 
-    private final ConcurrentHashMap<Integer, Beacon> beaconLayout;
+    private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
     private int outsideTemperature = 70;
     private int ticketSales = 0;
 
@@ -35,15 +36,15 @@ public class TrackLine implements TrackModel {
     public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout) {
         this.subject = new TrackLineSubject(this);
 
-        trackLayout = new ConcurrentSkipListMap<>();
-        beaconLayout = new ConcurrentHashMap<>();
+        trackBlocks = new ConcurrentSkipListMap<>();
+        beaconBlocks = new ConcurrentHashMap<>();
         trackOccupancyMap = new ObservableHashMap<>();
 
         ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
 
         for (Integer blockIndex : blockIndices) {
             TrackBlock block = new TrackBlock(basicTrackLayout.get(blockIndex));
-            trackLayout.put(block.blockID, block);
+            trackBlocks.put(block.blockID, block);
         }
 
         this.line = line;
@@ -51,20 +52,27 @@ public class TrackLine implements TrackModel {
     }
 
 
-    public void trainDispatch(int trainID) {
+    public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(trainID, this);
+        trackOccupancyMap.put(train, 0);
+        return train;
+    }
+
+    //Note: Train could be on different Line
+    public void trainDispatch(TrainModel train) {
         trackOccupancyMap.put(train, 0);
     }
 
 
+
     private void handleTrainEntry(TrainModel train, Integer blockID) {
-        TrackBlock block = trackLayout.get(blockID);
+        TrackBlock block = trackBlocks.get(blockID);
         //...
     }
 
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
-        TrackBlock block = trackLayout.get(blockID);
+        TrackBlock block = trackBlocks.get(blockID);
         //...
     }
 
@@ -76,24 +84,22 @@ public class TrackLine implements TrackModel {
      */
 
     public TrackBlock updateTrainLocation(TrainModel train) {
-        if (!trackOccupancyMap.containsKey(train)) {
-            throw new IllegalArgumentException("Train is not on the track");
+        Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
+
+        if (currentBlockID == -1) {
+            throw new IllegalArgumentException("Train: " + train.getTrainNumber() + " is not on the track");
         }
 
-        int currentBlockId = trackOccupancyMap.get(train);
-        TrackBlock currentBlock = trackLayout.get(currentBlockId);
+        Connection next = trackBlocks.get(currentBlockID).getNextBlock(train.getDirection());
 
-        Connection nextBlockConnection = currentBlock.getNextBlock(train.getDirection());
-        TrackBlock nextBlock = trackLayout.get(nextBlockConnection.blockNumber());
+        trackOccupancyMap.remove(train, currentBlockID);
+        trackOccupancyMap.put(train, next.blockNumber());
 
-        trackOccupancyMap.remove(train, currentBlockId);
-        trackOccupancyMap.put(train, nextBlock.blockID);
-
-        if (nextBlockConnection.directionChange()) {
+        if (next.directionChange()) {
             train.changeDirection();
         }
 
-        return nextBlock;
+        return trackBlocks.get(next.blockNumber());
     }
 
     // Used to add a task to the work queue
@@ -139,21 +145,21 @@ public class TrackLine implements TrackModel {
     //TODO: We don't have light states figured out yet
     @Override
     public void setLightState(int block, boolean state) {
-            trackLayout.get(block).lightState = state;
+            trackBlocks.get(block).lightState = state;
     }
 
     @Override
     public void setSwitchState(int block, boolean state) {
-        if(!trackLayout.get(block).isSwitch){
+        if(!trackBlocks.get(block).isSwitch){
             throw new IllegalArgumentException("Block: " + block + " is not a switch");
         }
-        trackLayout.get(block).setSwitchState(state);
+        trackBlocks.get(block).setSwitchState(state);
     }
 
     @Override
     public void setCrossing(int block, boolean state) {
-            if (trackLayout.get(block).crossingInfo.isPresent()) {
-                trackLayout.get(block).setCrossingState(state);
+            if (trackBlocks.get(block).feature.isCrossing()) {
+                trackBlocks.get(block).setCrossingState(state);
             } else {
                 throw new IllegalArgumentException("Block: " + block + " is not a crossing");
             }
@@ -166,33 +172,32 @@ public class TrackLine implements TrackModel {
     }
 
     @Override
-    public void setTrainAuthority(TrainModel train, int authority) {
-
+    public void setTrainAuthority(Integer blockID, int authority) {
+        trackBlocks.get(blockID).setAuthority(authority);
     }
 
     @Override
-    public void setCommandedSpeed(TrainModel train, double commandedSpeed) {
-        train.setCommandSpeed(commandedSpeed);
+    public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
+        trackBlocks.get(blockID).setCommandSpeed(commandedSpeed);
     }
-
 
     @Override
     public boolean getLightState(int block) {
-        return trackLayout.get(block).lightState;
+        return trackBlocks.get(block).lightState;
     }
 
     @Override
     public boolean getSwitchState(int block) {
-        if(!trackLayout.get(block).isSwitch){
+        if(!trackBlocks.get(block).isSwitch){
             throw new IllegalArgumentException("Block: " + block + " is not a switch");
         }
-        return trackLayout.get(block).isSwitch;
+        return trackBlocks.get(block).getSwitchState();
     }
 
     @Override
     public boolean getCrossingState(int block) {
-        if (trackLayout.get(block).crossingInfo.isPresent()) {
-            return trackLayout.get(block).isSwitch;
+        if (trackBlocks.get(block).feature.isCrossing()) {
+            return trackBlocks.get(block).getCrossingState();
         } else {
             throw new IllegalArgumentException("Block: " + block + " is not a crossing");
         }
@@ -200,7 +205,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setBrokenRail(Integer blockID, boolean state) {
-            TrackBlock brokenBlock = this.trackLayout.get(blockID);
+            TrackBlock brokenBlock = this.trackBlocks.get(blockID);
             if (brokenBlock != null) {
                 brokenBlock.setBrokenRail(state);
             } else {
@@ -210,7 +215,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setPowerFailure(Integer blockID, boolean state) {
-            TrackBlock failedBlock = this.trackLayout.get(blockID);
+            TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setPowerFailure(state);
             } else {
@@ -220,7 +225,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setTrackCircuitFailure(Integer blockID, boolean state) {
-            TrackBlock failedBlock = this.trackLayout.get(blockID);
+            TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setTrackCircuitFailure(state);
             } else {
@@ -230,48 +235,58 @@ public class TrackLine implements TrackModel {
 
     @Override
     public boolean getBrokenRail(Integer blockID) {
-        return this.trackLayout.get(blockID).failureInfo.isBrokenRail();
+        return this.trackBlocks.get(blockID).isBrokenRail();
     }
 
     @Override
     public boolean getPowerFailure(Integer blockID) {
-        return this.trackLayout.get(blockID).failureInfo.isPowerFailure();
+        return this.trackBlocks.get(blockID).isPowerFailure();
     }
 
     @Override
     public boolean getTrackCircuitFailure(Integer blockID) {
-        return this.trackLayout.get(blockID).failureInfo.isTrackCircuitFailure();
+        return this.trackBlocks.get(blockID).isTrackCircuitFailure();
     }
 
     @Override
     public void setPassengersDisembarked(TrainModel train, int disembarked) {
-            if (trackOccupancyMap.containsKey(train)) {
-                TrackBlock block = trackLayout.get(trackOccupancyMap.get(train));
-                block.stationInfo.ifPresent(stationInfo -> stationInfo.setPassengersDisembarked(disembarked));
+        if (trackOccupancyMap.containsKey(train)){
+            TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
+            if (block.feature.isStation()) {
+                block.feature.setPassengersDisembarked(disembarked);
             } else {
                 throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on a station block");
             }
+        } else {
+            throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on the track");
+        }
     }
+
+    @Override
+    public int getPassengersEmbarked(TrainModel train) {
+        if(trackOccupancyMap.containsKey(train)){
+            TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
+            if (block.feature.isStation()) {
+                int embarked = (random.nextInt(0, MAX_PASSENGERS));
+                block.feature.setPassengersEmbarked(embarked);
+                this.ticketSales += embarked;
+                return embarked;
+            } else {
+                throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on a station block");
+            }
+        } else {
+            throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on the track");
+        }
+    }
+
 
     @Override
     public int getTicketSales() {
         return this.ticketSales;
     }
 
-    @Override
-    public int getPassengersEmbarked(TrainModel train) {
-        int embarked = (int) (Math.round(Math.random() * MAX_PASSENGERS));
-        if (trackOccupancyMap.containsKey(train)) {
-            TrackBlock block = trackLayout.get(trackOccupancyMap.get(train));
-            block.stationInfo.ifPresent(stationInfo -> stationInfo.setPassengersEmbarked(embarked));
-            this.ticketSales += embarked;
-        } else {
-            throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on a station block");
-        }
-        return embarked;
-    }
-
     public void resetTicketSales() {
         this.ticketSales = 0;
     }
+
 }
