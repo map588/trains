@@ -3,6 +3,10 @@ package Common;
 import Utilities.Enums.Direction;
 import Utilities.Records.Beacon;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+
 public interface  TrainModel {
 
     //----Vital Setter Signals----
@@ -65,25 +69,20 @@ public interface  TrainModel {
 
 
     //Vital Functions for simulating the train physics
-    void trainModelPhysics();
-
     void setValue(String propertyName, Object newValue);
 
-    void setTimeDelta(int v);
-
-    int getTimeDelta();
-
-    double getGrade();
+    void changeTimeDelta(int v);
 
     int getCrewCount();
-
-    int getNumPassengers();
-
+    int getPassengerCount();
     int getNumCars();
 
     double getDistanceTraveled();
 
     double getMass();
 
-    String getBeacon();
+    TrainController getController();
+
+    void trainModelPhysics(Future<Double> power);
+    void trainModelPhysics();
 }

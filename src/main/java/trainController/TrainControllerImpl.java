@@ -5,6 +5,7 @@ import Common.TrainModel;
 import Framework.Support.GUIModifiable;
 import Utilities.Constants;
 import Utilities.Records.Beacon;
+import trainModel.TrainModelImpl;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
@@ -58,12 +59,12 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      * The constructor also schedules the calculatePower method to be called at fixed rate intervals.
      * The rate is determined by the samplingPeriod property.
      *
-     * @param trainID  The ID of the train to be controlled by this trainControllerImpl object.
+     * @param train  The train to be controlled by this trainControllerImpl object.
      */
-    public TrainControllerImpl(int trainID) {
+    public TrainControllerImpl(TrainModel train, int trainID) {
         this.trainID = trainID;
         this.subject = new TrainControllerSubject(this);
-        this.train = stubTrainModel.createstubTrainModel();
+        assignTrainModel(train);
         this.nextStationName = "Yard";
     }
 
@@ -74,7 +75,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      *
      * @param train  The TrainModel object to be assigned to the trainControllerImpl.
      */
-    public void assignTrainModel(TrainModel train) {
+    private void assignTrainModel(TrainModel train) {
         this.train = train;
         this.setServiceBrake(train.getServiceBrake());
         this.setEmergencyBrake(train.getEmergencyBrake());
@@ -82,7 +83,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         this.setExtLights(train.getExtLights());
         this.setLeftDoors(train.getLeftDoors());
         this.setRightDoors(train.getRightDoors());
-        //this.setTemperature(train.getTemperature());
         this.setSignalFailure(train.getSignalFailure());
         this.setBrakeFailure(train.getBrakeFailure());
         this.setPowerFailure(train.getPowerFailure());

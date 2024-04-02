@@ -7,9 +7,6 @@ import trainController.TrainControllerSubject;
 
 public interface TrainController extends GUIModifiable {
 
-    //Called at train initialization
-    void assignTrainModel(TrainModel train);
-
     //Called by the GUI
     void setAutomaticMode(boolean mode);
 
@@ -93,6 +90,5 @@ public interface TrainController extends GUIModifiable {
     double calculatePower(double currentVelocity);
 
     double getGrade();
-
     void updateBeacon(Beacon beacon);
 }

@@ -12,7 +12,6 @@ public class HWTrainController implements TrainController {
 
     public HWTrainController(int trainID) {
         this.ID = trainID;
-        this.train = stubTrainModel.createstubTrainModel();
         this.subject = TrainControllerSubjectMap.getInstance().getSubject(trainID);
     }
 

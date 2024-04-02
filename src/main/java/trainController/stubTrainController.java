@@ -7,7 +7,6 @@ import Utilities.Records.Beacon;
 public class stubTrainController implements TrainController{
     TrainModel train;
     int trainID;
-    @Override
     public void assignTrainModel(TrainModel train) {
         this.train = train;
     }

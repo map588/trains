@@ -76,7 +76,7 @@ public class TrackLine implements TrackModel {
      * @return the length of the block the train is now on (for the purpose of the train model)
      */
 
-    public double updateTrainLocation(TrainModel train) {
+    public TrackBlock updateTrainLocation(TrainModel train) {
         if (!trackOccupancyMap.containsKey(train)) {
             throw new IllegalArgumentException("Train is not on the track");
         }
@@ -87,14 +87,14 @@ public class TrackLine implements TrackModel {
         Connection nextBlockConnection = currentBlock.getNextBlock(train.getDirection());
         TrackBlock nextBlock = trackLayout.get(nextBlockConnection.blockNumber());
 
+        trackOccupancyMap.remove(train, currentBlockId);
+        trackOccupancyMap.put(train, nextBlock.blockID);
+
         if (nextBlockConnection.directionChange()) {
             train.changeDirection();
         }
 
-        trackOccupancyMap.remove(train, currentBlockId);
-        trackOccupancyMap.put(train, nextBlock.blockID);
-
-        return nextBlock.length;
+        return nextBlock;
     }
 
     // Used to add a task to the work queue
@@ -174,7 +174,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setTrainAuthority(TrainModel train, int authority) {
-            train.setAuthority(authority);
+
     }
 
     @Override
@@ -182,10 +182,6 @@ public class TrackLine implements TrackModel {
         train.setCommandSpeed(commandedSpeed);
     }
 
-    @Override
-    public Beacon readBeacon(int block) {
-        return new Beacon(0, 0, null);
-    }
 
     @Override
     public boolean getLightState(int block) {

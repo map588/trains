@@ -1,4 +1,4 @@
-package CTCOffice;
+package CTCOffice.ScheduleInfo;
 
 import java.util.ArrayList;
 import java.util.List;

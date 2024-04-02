@@ -9,10 +9,12 @@ import Utilities.Constants;
 import Utilities.Conversion;
 import Utilities.Enums.Direction;
 import Utilities.Records.Beacon;
+import trackModel.TrackBlock;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 
-import java.util.Random;
+import java.util.concurrent.*;
+import java.util.random.RandomGenerator;
 
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
@@ -26,15 +28,13 @@ import static Utilities.Conversion.velocityUnit.MPS;
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
-
-    private final int samplingPeriod = 10;
-
     private final TrainModelSubject subject;
+
 
     //Passed Variables
     private int authority;
     private double commandSpeed;
-    private String beacon, announcement;
+    private String announcement;
 
     private double relativeDistance, currentBlockLength;
 
@@ -47,8 +47,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
     //physics variables (no setters or getters, only to be used within train model
-    private double brakeForce, engineForce, gravityForce;
-    private double netForce, currentAngle, previousAcceleration;
+    private double brakeForce;
     private int TIME_DELTA;
     //Murphy Variables
     private boolean brakeFailure, powerFailure, signalFailure;
@@ -62,44 +61,30 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //Module References
     private final TrainController controller;
 
-    private TrackLine track = null;
+    private TrackLine track;
     private Direction direction;
+    private TrackBlock currentBlock;
 
     //purely for temperature calculation
     private double elapsedTime = 0;
 
+    private final ThreadLocalRandom r = ThreadLocalRandom.current();
+
     public TrainModelImpl(int trainID) {
-        this.authority = 0;
-        this.commandSpeed = 0;
-        this.speed = 0;
-        this.acceleration = 0;
-        this.power = 0;
-        this.serviceBrake = false;
-        this.emergencyBrake = false;
-        this.grade = 0;
-        this.brakeFailure = false;
-        this.powerFailure = false;
-        this.signalFailure = false;
-        this.TIME_DELTA = 10;
-        this.realTemperature = 70;
-        this.setTemperature = 70;
-        this.extLights = false;
-        this.intLights = false;
-        this.leftDoors = false;
-        this.rightDoors = false;
-        this.numCars = 1;
-        this.numPassengers = 1;
-        this.crewCount = 2;
-        this.mass = (Constants.EMPTY_TRAIN_MASS * numCars) + (Constants.PASSENGER_MASS * (crewCount + numPassengers));
-        this.distanceTraveled = 0;
-        this.beacon = "";
-        this.announcement = "";
-        this.controller = new TrainControllerImpl(trainID);
-        controller.assignTrainModel(this);
+        initializeValues();
+        this.controller = new TrainControllerImpl(this, trainID);
         this.subject = new TrainModelSubject(this);
     }
 
     public TrainModelImpl(int trainID, TrackLine track) {
+        initializeValues();
+        this.track = track;
+        this.controller = new TrainControllerImpl(this, trainID);
+        this.subject = new TrainModelSubject(this);
+    }
+
+
+    private void initializeValues() {
         this.authority = 0;
         this.commandSpeed = 0;
         this.speed = 0;
@@ -123,12 +108,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.crewCount = 2;
         this.mass = (Constants.EMPTY_TRAIN_MASS * numCars) + (Constants.PASSENGER_MASS * (crewCount + numPassengers));
         this.distanceTraveled = 0;
-        this.beacon = "";
         this.announcement = "";
-        this.track = track;
-        this.controller = new TrainControllerImpl(trainID);
-        controller.assignTrainModel(this);
-        this.subject = new TrainModelSubject(this);
     }
 
     public void notifyChange(String property, Object newValue) {
@@ -182,7 +162,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
     public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", Conversion.convertDistance(distance, METERS, FEET)); }
     public void setLength(double length) { this.length = length; notifyChange("length", Conversion.convertDistance(length, METERS, FEET)); }
-    public void setBeacon(String beacon) { this.beacon = beacon; notifyChange("beacon", beacon); }
     public void setAnnouncement(String announcement) {this.announcement = announcement;}
 
     public void setValue(String propertyName, Object newValue){
@@ -212,14 +191,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
             case Properties.TIMEDELTA_PROPERTY -> this.TIME_DELTA = (int)newValue;
             case Properties.MASS_PROPERTY -> this.mass = (double)newValue;
             case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = (double)newValue;
-            case Properties.BEACON_PROPERTY -> this.beacon = (String)newValue;
             case Properties.LENGTH_PROPERTY -> this.length = (double)newValue;
         }
     }
-    //Getters
-    public TrainModelSubject getSubject(){
-        return this.subject;
-    }
+
+
     //Vital Getters
     public int getAuthority() {
         return this.authority;
@@ -253,7 +229,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public String getAnnouncement() {
         return this.announcement;
     }
-
     public double getLength() {
         return this.length;
     }
@@ -264,7 +239,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     @Override
-    public int getNumPassengers() {
+    public int getPassengerCount() {
         return this.numPassengers;
     }
 
@@ -278,6 +253,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return this.mass;
     }
 
+    @Override
+    public TrainController getController() {
+        return this.controller;
+    }
 
     //Murphy Getters
     public boolean getBrakeFailure() { return this.brakeFailure; }
@@ -304,7 +283,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     @Override
     public double getlength() {
-        return 0;
+        return this.length;
     }
 
     @Override
@@ -331,36 +310,24 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.updateBeacon(beacon);
     }
 
-    public String getBeacon() {
-        return this.beacon;
-    }
-
     //TEMP TIME DELTA SETTER/GETTER
-    public void setTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
+    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
     public int getTimeDelta() { return this.TIME_DELTA; }
 
     public void enteredNextBlock() {
-       currentBlockLength = track.updateTrainLocation(this);
+       currentBlockLength = track.updateTrainLocation(this).getLength();
        relativeDistance = 0;
     }
 
-    private int getRandomNumberInRange(int min, int max) {
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
 
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-
-    public int updatePassengers(int passengersEmbarked) {
+     public int updatePassengers(int passengersEmbarked) {
         int passengersDisembarked;
         if(this.numPassengers <= 0) {
             this.numPassengers = passengersEmbarked;
             passengersDisembarked = 0;
         }
         else {
-            passengersDisembarked = (getRandomNumberInRange(0, numPassengers));
+            passengersDisembarked = ( r.nextInt(0, this.numPassengers) );
             if ((passengersEmbarked - passengersDisembarked) > Constants.MAX_PASSENGERS) {
                 this.numPassengers = Constants.MAX_PASSENGERS;
             } else this.numPassengers += passengersEmbarked - passengersDisembarked;
@@ -368,9 +335,31 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return passengersDisembarked;
     }
 
+    public void trainModelPhysics(Future<Double> powerFuture) {
+
+        physics();
+
+        try {
+            double calculatedPower = powerFuture.get();
+            this.setPower(calculatedPower);
+        } catch (Exception e) {
+            throw new RuntimeException("Power calculation failed");
+        }
+    }
+
     public void trainModelPhysics() {
-        //CALCULATE MASS
+
+        physics();
+
+        this.setPower(controller.calculatePower(speed));
+    }
+
+    private void physics(){
+
+        //MASS CALCULATION (some reduncancy here the empty train mass is final, and the crewcount is final)
         this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
+
+        //How many loaded trains? I think you need to multiply by the number of cars
         if (this.mass >= Constants.LOADED_TRAIN_MASS) {
             this.setMass(Constants.LOADED_TRAIN_MASS);
         }
@@ -389,12 +378,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
 
         if(currentBlockLength - relativeDistance < 0) {
-           enteredNextBlock();
+            enteredNextBlock();
         }
 
         //ACCELERATION PROGRESSION
-        this.previousAcceleration = this.acceleration;
-        System.out.println("Previous Acceleration: " + this.previousAcceleration);
+        double previousAcceleration = this.acceleration;
+        System.out.println("Previous Acceleration: " + previousAcceleration);
 
         //BRAKE FORCES
         if (this.serviceBrake && !this.emergencyBrake) {
@@ -412,36 +401,37 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
 
         //ENGINE FORCE
+        double engineForce;
         if (this.power > 0 && this.speed == 0) {
             this.setActualSpeed(0.1); //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
-            this.engineForce = this.power / 0.1;
+            engineForce = this.power / 0.1;
         }
         else if(this.speed == 0 && this.emergencyBrake) {
-            this.engineForce = 0;
+            engineForce = 0;
         }
         else {
-            this.engineForce = this.power / this.speed;
+            engineForce = this.power / this.speed;
         }
-        System.out.println("Engine Force: " + this.engineForce);
+        System.out.println("Engine Force: " + engineForce);
 
         //SLOPE FORCE
-        this.currentAngle = Math.atan(this.grade / 100);
-        this.gravityForce = this.mass * Constants.GRAVITY * Math.sin(this.currentAngle);
+        double currentAngle = Math.atan(this.grade / 100);
+        double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
 
         //NET FORCE
-        this.netForce = this.engineForce - this.gravityForce - this.brakeForce;
-        if (this.netForce > Constants.MAX_ENGINE_FORCE){
-            this.netForce = Constants.MAX_ENGINE_FORCE;
+        double netForce = engineForce - gravityForce - this.brakeForce;
+        if (netForce > Constants.MAX_ENGINE_FORCE){
+            netForce = Constants.MAX_ENGINE_FORCE;
         }
-        System.out.println("Net Force: " + this.netForce);
+        System.out.println("Net Force: " + netForce);
 
         //ACCELERATION CALCULATION
-        this.setAcceleration(this.netForce / this.mass);
+        this.setAcceleration(netForce / this.mass);
         System.out.println("Acceleration: " + this.acceleration);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
-            this.setActualSpeed(this.speed + (this.TIME_DELTA / 2) * (this.acceleration + this.previousAcceleration));
+            this.setActualSpeed(this.speed + ((double) this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
         }
 
         if (this.speed < 0) { this.setActualSpeed(0); }
@@ -458,7 +448,5 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setRealTemperature(this.realTemperature - 1);
             this.elapsedTime = 0;
         }
-
-        this.setPower(controller.calculatePower(this.speed));
     }
 }

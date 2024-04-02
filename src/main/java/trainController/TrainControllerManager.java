@@ -56,11 +56,10 @@ public class TrainControllerManager {
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
 
-    private TrainControllerTB testBench;
 
     @FXML
     public void initialize() {
-        new TrainControllerImpl(1);
+        //new TrainControllerImpl(1);
         subjectMap = TrainControllerSubjectMap.getInstance();
         setupMapChangeListener();
         if (!subjectMap.getSubjects().isEmpty()) {
@@ -73,7 +72,6 @@ public class TrainControllerManager {
             }
         });
         currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
-        testBench = launchTestBench();
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
 
@@ -329,25 +327,5 @@ public class TrainControllerManager {
     // Set the current action
     private void setNotification(String statusNotification){
         controllerStatus.setText(statusNotification);
-    }
-
-    private TrainControllerTB launchTestBench(){
-        System.out.println(System.getProperty("Preparing to launch test bench"));
-        try {
-            String tbFile = "/Framework/GUI/FXML/trainController_TB.fxml";
-            URL url = getClass().getResource(tbFile);
-            FXMLLoader loader = new FXMLLoader(url);
-            Node content = loader.load();
-            Stage newStage = new Stage();
-            Scene newScene = new Scene(new VBox(content));
-            newStage.setScene(newScene);
-            newStage.setTitle("Train Controller Test Bench");
-            newStage.show();
-            return loader.getController();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Failed to launch test bench");
-            throw new RuntimeException(e);
-        }
     }
 }

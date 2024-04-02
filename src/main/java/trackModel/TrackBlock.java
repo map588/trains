@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static Utilities.Enums.Direction.NORTH;
 
-class TrackBlock {
+public class TrackBlock {
     // Block Information
      final int blockID;
      final boolean isUnderground;
@@ -36,6 +36,8 @@ class TrackBlock {
 
      boolean maintenanceMode;
      boolean lightState;
+     int     authority;
+     double  commandSpeed;
 
     /**
      * Constructs a new TrackBlock object based on the provided BasicBlock information.
@@ -110,11 +112,21 @@ class TrackBlock {
         }
     }
 
+    public double getLength() {
+        return length;
+    }
+
      void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
     }
 
+    void setAuthority(int authority) {
+        this.authority = authority;
+    }
 
+    void setCommandSpeed(double commandSpeed) {
+        this.commandSpeed = commandSpeed;
+    }
 
     /**
      * Sets the state of the switch.
