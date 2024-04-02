@@ -34,7 +34,7 @@ import static trainController.Properties.*;
 public class TrainControllerManager {
     @FXML AnchorPane masterTrainControllerPane;
     @FXML
-    public Text controllerStatus;
+    public TextArea statusLog;
     @FXML
     private Text nextStationText;
     @FXML
@@ -159,6 +159,7 @@ public class TrainControllerManager {
     private void bindCheckBox(CheckBox checkBox, String propertyName) {
         appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
                 currentSubject.setProperty(propertyName, newVal);
+                setNotification(propertyName,String.valueOf(checkBox.isSelected()));
         });
     }
 
@@ -166,22 +167,26 @@ public class TrainControllerManager {
         Runnable textFieldUpdate = () -> {
             try {
                 currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText()));
+                setNotification(propertyName,textField.getText());
             } catch (NumberFormatException e) {
                 textField.setText("");
             }
         };
         textField.setOnAction(event -> textFieldUpdate.run());
+
     }
 
     private void setupButtonActions() {
         emergencyBrakeButton.setOnAction(event -> {
             BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE_PROPERTY);
             currentSubject.setProperty(EMERGENCY_BRAKE_PROPERTY, !eBrakeProp.get());
+            setNotification(EMERGENCY_BRAKE_PROPERTY,"");
         });
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS_PROPERTY);
             currentSubject.setProperty(ANNOUNCEMENTS_PROPERTY, !announceProp.get());
 
+            setNotification(ANNOUNCEMENTS_PROPERTY,"");
             if (!nextStationText.getText().contains("yard") && !nextStationText.getText().contains("Yard")) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Arrival");
@@ -199,8 +204,7 @@ public class TrainControllerManager {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;}
             consumer.accept(newVal.doubleValue());
             textField.setText(String.format("%.1f", newVal.doubleValue()));
-            String statusNotification = "Set speed to " + String.format("%.1f",newVal.doubleValue())+ " MPH";
-            setNotification(statusNotification);
+            setNotification(OVERRIDE_SPEED_PROPERTY,String.format("%.1f",newVal.doubleValue()));
         });
         Runnable textFieldUpdate = () -> {
             try {
@@ -209,12 +213,10 @@ public class TrainControllerManager {
                     throw new NumberFormatException();
                 }
                 slider.setValue(newValue);
-                String statusNotification = "Set speed to " + String.format("%.1f",newValue) + " MPH";
-                setNotification(statusNotification);
+                setNotification(OVERRIDE_SPEED_PROPERTY,String.format("%.1f",newValue));
             } catch (NumberFormatException e) {
                 textField.setText(String.format("%.1f", slider.getValue()));
-                String statusNotification = "Set speed to " + String.format("%.1f",slider.getValue()) + " MPH";
-                setNotification(statusNotification);
+                setNotification(OVERRIDE_SPEED_PROPERTY,String.format("%.1f",slider.getValue()));
             }
         };
 
@@ -231,6 +233,8 @@ public class TrainControllerManager {
     private void changeTrainView(Integer trainID) {
         currentSubject = subjectMap.getSubject(trainID);
         if(currentSubject != null) {
+            statusLog.clear();
+            statusLog.setText("\n Train is running");
             unbindControls();
             updateAll();
             bindControls();
@@ -329,7 +333,54 @@ public class TrainControllerManager {
     }
 
     // Set the current action
-    private void setNotification(String statusNotification){
-        controllerStatus.setText(statusNotification);
+    private void setNotification(String propertyName, String value){
+        String statusNotification = "";
+
+        switch(propertyName){
+            case OVERRIDE_SPEED_PROPERTY:
+                statusNotification += ("\nSet Speed to \n" + value + " MPH");
+                break;
+            case SERVICE_BRAKE_PROPERTY:
+                statusNotification = ("\nService Brake \n" + (value.equals("true") ? "Engaged" : "Disengaged"));
+                break;
+            case EMERGENCY_BRAKE_PROPERTY:
+                value = eBrakeStatus.getFill().equals(Color.GRAY)?"Engaged":"Disengaged"; // Color of indicator as you turn on / off the button
+                statusNotification = ("\nEmergency Brake \n" + value);
+                break;
+            case LEFT_DOORS_PROPERTY:
+                statusNotification = ("\nLeft Doors \n" + (value.equals("true") ? "Opened" : "Closed"));
+                break;
+            case RIGHT_DOORS_PROPERTY:
+                statusNotification = ("\nRight Doors \n" + (value.equals("true") ? "Opened" : "Closed"));
+                break;
+            case INT_LIGHTS_PROPERTY:
+                statusNotification = ("\nInterior Lights \n" + (value.equals("true") ? "On" : "Off"));
+                break;
+            case EXT_LIGHTS_PROPERTY:
+                statusNotification = ("\nExterior Lights \n" + (value.equals("true") ? "On" : "Off"));
+                break;
+            case TEMPERATURE_PROPERTY:
+                statusNotification = ("\nTemperature set to \n" + value + "°F");
+                break;
+            case KI_PROPERTY:
+                statusNotification = ("\nKi set to \n" + value);
+                break;
+            case KP_PROPERTY:
+                statusNotification = ("\nKp set to \n" + value);
+                break;
+            case ANNOUNCEMENTS_PROPERTY:
+                statusNotification = ("\nAnnouncements Created\n");
+                    break;
+            case AUTOMATIC_MODE_PROPERTY:
+                statusNotification = ("\nAutomatic Mode \n" + (value.equals("true") ? "On" : "Off"));
+                break;
+            default:
+                statusNotification = "\nTrain is running";
+                break;
+        }
+
+        statusLog.setText(statusNotification);
+
+        statusLog.setWrapText(true);
     }
 }
