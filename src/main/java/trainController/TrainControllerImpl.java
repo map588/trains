@@ -5,7 +5,6 @@ import Common.TrainModel;
 import Framework.Support.GUIModifiable;
 import Utilities.Constants;
 import Utilities.Records.Beacon;
-import trainModel.TrainModelImpl;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;

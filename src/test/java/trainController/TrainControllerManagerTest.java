@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import trainModel.TrainModelImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,11 +37,15 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * It loads the trainController.fxml file and displays it in a new Stage.
      * It also initializes the controller and currentSubject variables.
      */
-
+    @BeforeAll
+    static void setUp() {
+        Platform.startup(() -> {
+        });
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
-        TrainModel mockModel = mock(TrainModel.class); // Mocking TrainModel
+        TrainModel mockModel = new TrainModelImpl(0, )
         controller = new TrainControllerImpl(mockModel, 1); // Assuming '1' is a valid trainID
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Framework/GUI/FXML/trainController.fxml"));
         Scene scene = new Scene(loader.load());
