@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -337,12 +338,7 @@
                <Font name="System Bold" size="19.2" />
             </font>
          </Text>
-         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#2c3a47" height="77.6" layoutX="21.0" layoutY="44.0" stroke="BLACK" strokeType="INSIDE" width="188.0" />
-         <Text fx:id="controllerStatus" fill="WHITE" fontSmoothingType="LCD" layoutX="35.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Speed" textAlignment="CENTER" wrappingWidth="160.0">
-            <font>
-               <Font name="Roboto Regular" size="19.0" />
-            </font>
-         </Text>
+         <TextArea fx:id="statusLog" layoutX="14.0" layoutY="37.0" prefHeight="88.0" prefWidth="200.0" stylesheets="@../../../Framework.GUI.Fonts/led-style.css" />
       </AnchorPane>
       <AnchorPane prefHeight="56.0" prefWidth="1024.0">
          <children>
