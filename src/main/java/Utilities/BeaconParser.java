@@ -6,10 +6,7 @@ import Utilities.Records.Beacon;
 import Utilities.Records.BeaconEntry;
 import Utilities.Records.TrackSegment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -31,7 +28,7 @@ public class BeaconParser {
         Map<Integer, Beacon> beacons = new HashMap<>();
 
         for (TrackSegment segment : trackSegments) {
-            List<BeaconEntry> beaconEntries = new ArrayList<>();
+            ArrayDeque<BeaconEntry> beaconEntries = new ArrayDeque<>();
             int startId = segment.blocks().getFirst().blockNumber();
             int endId = segment.blocks().getLast().blockNumber();
 

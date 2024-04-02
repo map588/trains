@@ -11,6 +11,7 @@ public interface TrackModel {
     void setBeacon(int block, Beacon beacon);
     void setTrainAuthority(TrainModel train, int authority);
     void setCommandedSpeed(TrainModel train, double commandedSpeed);
+    Beacon readBeacon(int block);
 
     //Vital Getters
     boolean getLightState(int block);

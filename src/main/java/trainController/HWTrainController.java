@@ -3,7 +3,6 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
-import trainModel.stubTrainModel;
 
 public class HWTrainController implements TrainController {
 

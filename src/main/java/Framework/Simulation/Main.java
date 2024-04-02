@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     private static final int NUM_THREADS = 3;
-    private static final long TIMESTEP = 1000; // Timestep in milliseconds
+    private static final long TIMESTEP = 10; // Timestep in milliseconds
 
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);

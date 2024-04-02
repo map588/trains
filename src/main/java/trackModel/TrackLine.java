@@ -10,10 +10,7 @@ import Utilities.Records.Beacon;
 import trainModel.TrainModelImpl;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static Utilities.Constants.MAX_PASSENGERS;
 
@@ -30,6 +27,7 @@ public class TrackLine implements TrackModel {
     //maps blocks to block numbers
     private final ConcurrentSkipListMap<Integer, TrackBlock> trackLayout;
 
+    private final ConcurrentHashMap<Integer, Beacon> beaconLayout;
     private int outsideTemperature = 70;
     private int ticketSales = 0;
 
@@ -39,6 +37,7 @@ public class TrackLine implements TrackModel {
         this.subject = new TrackLineSubject(this);
 
         trackLayout = new ConcurrentSkipListMap<>();
+        beaconLayout = new ConcurrentHashMap<>();
         trackOccupancyMap = new ObservableHashMap<>();
 
         ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
@@ -84,16 +83,16 @@ public class TrackLine implements TrackModel {
 
         int currentBlockId = trackOccupancyMap.get(train);
         TrackBlock currentBlock = trackLayout.get(currentBlockId);
-        Connection newConnection = currentBlock.getNextBlock(train.getDirection());
 
-        if (newConnection.directionChange()) {
+        Connection nextBlockConnection = currentBlock.getNextBlock(train.getDirection());
+        TrackBlock nextBlock = trackLayout.get(nextBlockConnection.blockNumber());
+
+        if (nextBlockConnection.directionChange()) {
             train.changeDirection();
         }
 
-        TrackBlock nextBlock = trackLayout.get(newConnection.blockNumber());
-
         trackOccupancyMap.remove(train, currentBlockId);
-        trackOccupancyMap.put(train, newConnection.blockNumber());
+        trackOccupancyMap.put(train, nextBlock.blockID);
 
         return nextBlock.length;
     }
@@ -101,9 +100,6 @@ public class TrackLine implements TrackModel {
     // Used to add a task to the work queue
     private void executeTrackUpdate(Runnable task) {
         trackUpdateExecutor.submit(task);
-    }
-    private void executeBlockUpdate(Runnable task) {
-        blockUpdateExecutor.submit(task);
     }
 
     private void setupListeners() {
@@ -184,6 +180,11 @@ public class TrackLine implements TrackModel {
     @Override
     public void setCommandedSpeed(TrainModel train, double commandedSpeed) {
         train.setCommandSpeed(commandedSpeed);
+    }
+
+    @Override
+    public Beacon readBeacon(int block) {
+        return new Beacon(0, 0, null);
     }
 
     @Override

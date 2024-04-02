@@ -1,9 +1,10 @@
 package Utilities.Records;
 
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public record Beacon(int startId,
                      int endId,
-                     List<BeaconEntry> beaconEntries
+                     ArrayDeque<BeaconEntry> beaconEntries
 )
 { }
