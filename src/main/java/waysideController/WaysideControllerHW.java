@@ -88,6 +88,14 @@ public class WaysideControllerHW implements PLCRunner {
         }
     }
 
+    // TODO: Fix this implementation
+    @Override
+    public boolean getOutsideOccupancy(int blockID) {
+//        System.out.println("Send: outsideOccupancy=" + blockID);
+//        outputStream.println("outsideOccupancy=" + blockID);
+        return false;
+    }
+
     @Override
     public Map<Integer, WaysideBlock> getBlockMap() {
         return blockMap;

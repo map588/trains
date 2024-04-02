@@ -3,10 +3,12 @@ package waysideController;
 import Common.CTCOffice;
 import Common.TrackModel;
 import Common.WaysideController;
+import Framework.Simulation.WaysideSystem;
 import Framework.Support.Notifier;
 import Utilities.Records.BasicBlock;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
+import waysideController.plc_parser.Value;
 
 import java.io.File;
 import java.util.HashMap;
@@ -267,6 +269,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 //            if(block.isOccupied())
 //                trackModel.setTrainAuthority(blockID, auth);
         }
+    }
+
+    @Override
+    public boolean getOutsideOccupancy(int blockID) {
+        WaysideController controller = WaysideSystem.getController(blockID);
+        return controller.getBlockMap().get(blockID).isOccupied();
     }
 
     @Override

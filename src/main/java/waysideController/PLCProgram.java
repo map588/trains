@@ -247,8 +247,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
                 if(block != null)
                     return new Value(block.isOccupied());
                 else {
-                    WaysideController controller = WaysideSystem.getController(index);
-                    return new Value(controller.getBlockMap().get(index).isOccupied());
+                    return new Value(controller.getOutsideOccupancy(index));
                 }
             case "crossing":
                 return new Value(blockMap.get(index).getCrossingState());

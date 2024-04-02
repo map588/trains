@@ -77,6 +77,5 @@ ARITH_OP : ('+' | '-') ;
 NEWLINE : ('\r'? '\n' | '\r')+ ;
 WS : (' ' | '\t') -> skip ;
 
-INDEX : [0-9]+ ;
 INT_VAL : [0-9]+ ;
 VARIABLE : [a-zA-Z]+ | [a-zA-Z0-9]+ ;
