@@ -49,7 +49,7 @@ public interface  TrainModel {
     double  getPower();
     boolean getServiceBrake();
     boolean getEmergencyBrake();
-    double  getWeightKG();
+
     Direction getDirection();
 
     //Murphy Getter Signals
@@ -70,16 +70,10 @@ public interface  TrainModel {
 
     //Vital Functions for simulating the train physics
     void setValue(String propertyName, Object newValue);
-
     void changeTimeDelta(int v);
-
-    int getCrewCount();
-    int getPassengerCount();
-    int getNumCars();
-
     double getDistanceTraveled();
 
-    double getMass();
+
 
     TrainController getController();
 

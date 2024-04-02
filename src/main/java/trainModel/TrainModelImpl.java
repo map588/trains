@@ -122,217 +122,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
             subject.notifyChange(property, newValue);
         }
     }
-    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
-    public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
-    public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
-    public void setEmergencyBrake(boolean brake) {
-        if (this.brakeFailure) {
-            this.emergencyBrake = false;
-            notifyChange("emergencyBrake", false);
-        } else {
-            this.emergencyBrake = brake;
-            notifyChange("emergencyBrake", brake);
-        }
-    }
-    public void setServiceBrake(boolean brake) {
-        if (this.brakeFailure) {
-            this.serviceBrake = false;
-            notifyChange("serviceBrake", false);
-        } else {
-            this.serviceBrake = brake;
-            notifyChange("serviceBrake", brake);
-        }
-    }
-    public void setPower(double power) { this.power = power; notifyChange("power", Conversion.convertPower(power, WATTS, HORSEPOWER)); }
-    public void setGrade(double grade) { this.grade = grade; notifyChange("grade", grade); }
-    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange("brakeFailure", failure); }
-    public void setPowerFailure(boolean failure) { this.powerFailure = failure; notifyChange("powerFailure", failure); }
-    public void setSignalFailure(boolean failure) { this.signalFailure = failure; notifyChange("signalFailure", failure); }
-    public void setNumCars(int numCars) { this.numCars = numCars; notifyChange("numCars", numCars); }
-    public void setNumPassengers(int numPassengers) { this.numPassengers = numPassengers; notifyChange("numPassengers", numPassengers); }
-    public void setCrewCount(int crewCount) { this.crewCount = crewCount; notifyChange("crewCount", crewCount); }
-    public void setLeftDoors(boolean doors) { this.leftDoors = doors; notifyChange("leftDoors", doors); }
-    public void setRightDoors(boolean doors) { this.rightDoors = doors; notifyChange("rightDoors", doors); }
-    public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
-    public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
-    public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
-
-    public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
-    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
-    public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
-    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", Conversion.convertDistance(distance, METERS, FEET)); }
-    public void setLength(double length) { this.length = length; notifyChange("length", Conversion.convertDistance(length, METERS, FEET)); }
-    public void setAnnouncement(String announcement) {this.announcement = announcement;}
-
-    public void setValue(String propertyName, Object newValue){
-        if(newValue == null)
-            return;
-        switch(propertyName){
-            case Properties.AUTHORITY_PROPERTY -> this.authority = (int)newValue;
-            case Properties.COMMANDSPEED_PROPERTY -> this.commandSpeed = (double)newValue;
-            case Properties.ACTUALSPEED_PROPERTY -> this.speed = (double)newValue;
-            case Properties.ACCELERATION_PROPERTY -> this.acceleration = (double)newValue;
-            case Properties.POWER_PROPERTY -> this.power = (double)newValue;
-            case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
-            case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
-            case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
-            case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
-            case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
-            case Properties.SIGNALFAILURE_PROPERTY -> this.signalFailure = (boolean)newValue;
-            case Properties.SETTEMPERATURE_PROPERTY -> this.setTemperature = (double)newValue;
-            case Properties.REALTEMPERATURE_PROPERTY -> this.realTemperature = (double)newValue;
-            case Properties.EXTLIGHTS_PROPERTY -> this.extLights = (boolean)newValue;
-            case Properties.INTLIGHTS_PROPERTY -> this.intLights = (boolean)newValue;
-            case Properties.LEFTDOORS_PROPERTY -> this.leftDoors = (boolean)newValue;
-            case Properties.RIGHTDOORS_PROPERTY -> this.rightDoors = (boolean)newValue;
-            case Properties.NUMCARS_PROPERTY -> this.numCars = (int)newValue;
-            case Properties.NUMPASSENGERS_PROPERTY -> this.numPassengers = (int)newValue;
-            case Properties.CREWCOUNT_PROPERTY -> this.crewCount = (int)newValue;
-            case Properties.TIMEDELTA_PROPERTY -> this.TIME_DELTA = (int)newValue;
-            case Properties.MASS_PROPERTY -> this.mass = (double)newValue;
-            case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = (double)newValue;
-            case Properties.LENGTH_PROPERTY -> this.length = (double)newValue;
-        }
-    }
-
-    //Vital Getters
-    public int getAuthority() {
-        return this.authority;
-    }
-    public int getTrainNumber() {
-        return controller.getID();
-    }
-    public double getCommandSpeed() {
-        return this.commandSpeed;
-    }
-    public double getSpeed() {
-        return this.speed;
-    }
-    public double getAcceleration() {
-        return this.acceleration;
-    }
-    public double getPower() {
-        return this.power;
-    }
-    public boolean getServiceBrake() {
-        return this.serviceBrake;
-    }
-    public boolean getEmergencyBrake() {
-        return this.emergencyBrake;
-    }
-    public double getWeightKG() {
-        return 0;
-    }
-    public double getGrade() { return grade; }
-    public double getDistanceTraveled() { return distanceTraveled; }
-    public String getAnnouncement() {
-        return this.announcement;
-    }
-    public double getLength() {
-        return this.length;
-    }
-
-    @Override
-    public int getCrewCount() {
-        return this.crewCount;
-    }
-
-    @Override
-    public int getPassengerCount() {
-        return this.numPassengers;
-    }
-
-    @Override
-    public int getNumCars() {
-        return this.numCars;
-    }
-
-    @Override
-    public double getMass() {
-        return this.mass;
-    }
-
-    @Override
-    public TrainController getController() {
-        return this.controller;
-    }
-
-    //Murphy Getters
-    public boolean getBrakeFailure() { return this.brakeFailure; }
-    public boolean getPowerFailure() { return this.powerFailure; }
-    public boolean getSignalFailure() { return this.signalFailure; }
-
-    //NonVital Getters
-    public double getSetTemperature() {
-        return this.setTemperature;
-    }
-    public double getRealTemperature() {
-        return this.realTemperature;
-    }
-    public boolean getExtLights() {
-        return this.extLights;
-    }
-    public boolean getIntLights() { return this.intLights; }
-    public boolean getLeftDoors() {
-        return this.leftDoors;
-    }
-    public boolean getRightDoors() {
-        return this.rightDoors;
-    }
-
-    @Override
-    public double getlength() {
-        return this.length;
-    }
-
-    @Override
-    public Direction getDirection() {
-        return this.direction;
-    }
-
-    @Override
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    @Override
-    public void changeDirection() {
-        if (this.direction == Direction.NORTH) {
-            this.direction = Direction.SOUTH;
-        } else {
-            this.direction = Direction.NORTH;
-        }
-    }
-
-    @Override
-    public void passBeacon(Beacon beacon) {
-        controller.updateBeacon(beacon);
-    }
-
-    //TEMP TIME DELTA SETTER/GETTER
-    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
-    public int getTimeDelta() { return this.TIME_DELTA; }
-
-    public void enteredNextBlock() {
-       currentBlockLength = track.updateTrainLocation(this).getLength();
-       relativeDistance = 0;
-    }
-
-
-     public int updatePassengers(int passengersEmbarked) {
-        int passengersDisembarked;
-        if(this.numPassengers <= 0) {
-            this.numPassengers = passengersEmbarked;
-            passengersDisembarked = 0;
-        }
-        else {
-            passengersDisembarked = ( r.nextInt(0, this.numPassengers) );
-            if ((passengersEmbarked - passengersDisembarked) > Constants.MAX_PASSENGERS) {
-                this.numPassengers = Constants.MAX_PASSENGERS;
-            } else this.numPassengers += passengersEmbarked - passengersDisembarked;
-        }
-        return passengersDisembarked;
-    }
 
     public void trainModelPhysics(Future<Double> powerFuture) {
 
@@ -448,4 +237,194 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.elapsedTime = 0;
         }
     }
+
+    public void enteredNextBlock() {
+        currentBlockLength = track.updateTrainLocation(this).getLength();
+        relativeDistance = 0;
+    }
+
+    public int updatePassengers(int passengersEmbarked) {
+        int passengersDisembarked;
+        if(this.numPassengers <= 0) {
+            this.numPassengers = passengersEmbarked;
+            passengersDisembarked = 0;
+        }
+        else {
+            passengersDisembarked = ( r.nextInt(0, this.numPassengers) );
+            if ((passengersEmbarked - passengersDisembarked) > Constants.MAX_PASSENGERS) {
+                this.numPassengers = Constants.MAX_PASSENGERS;
+            } else this.numPassengers += passengersEmbarked - passengersDisembarked;
+        }
+        return passengersDisembarked;
+    }
+
+    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
+    public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
+    public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
+    public void setEmergencyBrake(boolean brake) {
+        if (this.brakeFailure) {
+            this.emergencyBrake = false;
+            notifyChange("emergencyBrake", false);
+        } else {
+            this.emergencyBrake = brake;
+            notifyChange("emergencyBrake", brake);
+        }
+    }
+    public void setServiceBrake(boolean brake) {
+        if (this.brakeFailure) {
+            this.serviceBrake = false;
+            notifyChange("serviceBrake", false);
+        } else {
+            this.serviceBrake = brake;
+            notifyChange("serviceBrake", brake);
+        }
+    }
+    public void setPower(double power) { this.power = power; notifyChange("power", Conversion.convertPower(power, WATTS, HORSEPOWER)); }
+    public void setGrade(double grade) { this.grade = grade; notifyChange("grade", grade); }
+    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange("brakeFailure", failure); }
+    public void setPowerFailure(boolean failure) { this.powerFailure = failure; notifyChange("powerFailure", failure); }
+    public void setSignalFailure(boolean failure) { this.signalFailure = failure; notifyChange("signalFailure", failure); }
+    public void setNumCars(int numCars) { this.numCars = numCars; notifyChange("numCars", numCars); }
+    public void setNumPassengers(int numPassengers) { this.numPassengers = numPassengers; notifyChange("numPassengers", numPassengers); }
+    public void setCrewCount(int crewCount) { this.crewCount = crewCount; notifyChange("crewCount", crewCount); }
+    public void setLeftDoors(boolean doors) { this.leftDoors = doors; notifyChange("leftDoors", doors); }
+    public void setRightDoors(boolean doors) { this.rightDoors = doors; notifyChange("rightDoors", doors); }
+    public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
+    public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
+    public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
+
+    public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
+    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
+    public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
+    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", Conversion.convertDistance(distance, METERS, FEET)); }
+    public void setLength(double length) { this.length = length; notifyChange("length", Conversion.convertDistance(length, METERS, FEET)); }
+    public void setAnnouncement(String announcement) {this.announcement = announcement;}
+
+    public void setValue(String propertyName, Object newValue){
+        if(newValue == null)
+            return;
+        switch(propertyName){
+            case Properties.AUTHORITY_PROPERTY -> this.authority = (int)newValue;
+            case Properties.COMMANDSPEED_PROPERTY -> this.commandSpeed = (double)newValue;
+            case Properties.ACTUALSPEED_PROPERTY -> this.speed = (double)newValue;
+            case Properties.ACCELERATION_PROPERTY -> this.acceleration = (double)newValue;
+            case Properties.POWER_PROPERTY -> this.power = (double)newValue;
+            case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
+            case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
+            case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
+            case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
+            case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
+            case Properties.SIGNALFAILURE_PROPERTY -> this.signalFailure = (boolean)newValue;
+            case Properties.SETTEMPERATURE_PROPERTY -> this.setTemperature = (double)newValue;
+            case Properties.REALTEMPERATURE_PROPERTY -> this.realTemperature = (double)newValue;
+            case Properties.EXTLIGHTS_PROPERTY -> this.extLights = (boolean)newValue;
+            case Properties.INTLIGHTS_PROPERTY -> this.intLights = (boolean)newValue;
+            case Properties.LEFTDOORS_PROPERTY -> this.leftDoors = (boolean)newValue;
+            case Properties.RIGHTDOORS_PROPERTY -> this.rightDoors = (boolean)newValue;
+            case Properties.NUMCARS_PROPERTY -> this.numCars = (int)newValue;
+            case Properties.NUMPASSENGERS_PROPERTY -> this.numPassengers = (int)newValue;
+            case Properties.CREWCOUNT_PROPERTY -> this.crewCount = (int)newValue;
+            case Properties.TIMEDELTA_PROPERTY -> this.TIME_DELTA = (int)newValue;
+            case Properties.MASS_PROPERTY -> this.mass = (double)newValue;
+            case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = (double)newValue;
+            case Properties.LENGTH_PROPERTY -> this.length = (double)newValue;
+        }
+    }
+
+    //Vital Getters
+    public int getAuthority() {
+        return this.authority;
+    }
+    public int getTrainNumber() {
+        return controller.getID();
+    }
+    public double getCommandSpeed() {
+        return this.commandSpeed;
+    }
+    public double getSpeed() {
+        return this.speed;
+    }
+    public double getAcceleration() {
+        return this.acceleration;
+    }
+    public double getPower() {
+        return this.power;
+    }
+    public boolean getServiceBrake() {
+        return this.serviceBrake;
+    }
+    public boolean getEmergencyBrake() {
+        return this.emergencyBrake;
+    }
+    public double getDistanceTraveled() { return distanceTraveled; }
+    public String getAnnouncement() {
+        return this.announcement;
+    }
+    public double getLength() {
+        return this.length;
+    }
+
+    @Override
+    public TrainController getController() {
+        return this.controller;
+    }
+
+    //Murphy Getters
+    public boolean getBrakeFailure() { return this.brakeFailure; }
+    public boolean getPowerFailure() { return this.powerFailure; }
+    public boolean getSignalFailure() { return this.signalFailure; }
+
+    //NonVital Getters
+    public double getSetTemperature() {
+        return this.setTemperature;
+    }
+    public double getRealTemperature() {
+        return this.realTemperature;
+    }
+    public boolean getExtLights() {
+        return this.extLights;
+    }
+    public boolean getIntLights() { return this.intLights; }
+    public boolean getLeftDoors() {
+        return this.leftDoors;
+    }
+    public boolean getRightDoors() {
+        return this.rightDoors;
+    }
+
+    @Override
+    public double getlength() {
+        return this.length;
+    }
+
+    @Override
+    public Direction getDirection() {
+        return this.direction;
+    }
+
+    @Override
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    @Override
+    public void changeDirection() {
+        if (this.direction == Direction.NORTH) {
+            this.direction = Direction.SOUTH;
+        } else {
+            this.direction = Direction.NORTH;
+        }
+    }
+
+    @Override
+    public void passBeacon(Beacon beacon) {
+        controller.updateBeacon(beacon);
+    }
+
+    //TEMP TIME DELTA SETTER/GETTER
+    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
+    public int getTimeDelta() { return this.TIME_DELTA; }
+
+
+
 }
