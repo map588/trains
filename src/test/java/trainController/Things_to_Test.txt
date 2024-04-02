@@ -1,0 +1,17 @@
+Things to Test
+
+// Basic Functionality Tests:
+    - Failure Indicators Lights Up
+
+
+// Relatively Complex Actions
+    - Failure Avoidance << I dont think we discussed vitality yet?
+        - Status Lights indicating,
+
+    - Approaching a station
+        - Slow down
+        - Open doors
+        - Wait 1 minute
+        - Close doors
+        - Speed up to commanded
+    -
