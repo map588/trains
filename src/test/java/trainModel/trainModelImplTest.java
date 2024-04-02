@@ -40,15 +40,25 @@ public class trainModelImplTest {
     @Test
     void testSetFailStates() {
         model.setPowerFailure(true);
+        model.setSignalFailure(true);
+        model.setBrakeFailure(true);
+
+        model.setServiceBrake(true);
+        model.setEmergencyBrake(true);
+        model.setPower(100);
+        model.setAuthority(10);
+        model.setCommandSpeed(50);
+
+        model.trainModelPhysics();
+
         assertTrue(model.getPowerFailure());
         assertEquals(0, model.getPower());
 
-        model.setSignalFailure(true);
         assertTrue(model.getSignalFailure());
-        assertEquals(0, model.getAuthority());
-        assertEquals(0, model.getCommandSpeed());
+        assertEquals(-1, model.getAuthority());
+        assertEquals(-1, model.getCommandSpeed());
 
-        model.setBrakeFailure(true);
+
         assertTrue(model.getBrakeFailure());
         assertFalse(model.getEmergencyBrake());
         assertFalse(model.getServiceBrake());
@@ -74,5 +84,19 @@ public class trainModelImplTest {
 
         model.setCommandSpeed(50);
         assertEquals(50, model.getCommandSpeed());
+    }
+
+    @Test
+    void testPhysics() {
+        model.setPower(100);
+        model.setAuthority(10);
+        model.setCommandSpeed(50);
+
+        model.trainModelPhysics();
+
+        assertEquals(100, model.getPower());
+        assertEquals(10, model.getAuthority());
+        assertEquals(50, model.getCommandSpeed());
+        assertEquals(50, model.getSpeed());
     }
 }
