@@ -234,7 +234,7 @@ public class TrainControllerManager {
         currentSubject = subjectMap.getSubject(trainID);
         if(currentSubject != null) {
             statusLog.clear();
-            statusLog.setText("Train is running");
+            statusLog.setText("\n Train is running");
             unbindControls();
             updateAll();
             bindControls();
