@@ -35,10 +35,7 @@ public class WaysideControllerImplTests {
                 144, 145, 146,
                 147, 148, 149,
                 150},
-                trackModel, ctcOffice);
-
-        File plcFile = new File("src/main/antlr/GreenLine1.plc");
-        controller.loadPLC(plcFile);
+                trackModel, ctcOffice, "src/main/antlr/GreenLine1.plc");
     }
 
     @Test
@@ -115,6 +112,7 @@ public class WaysideControllerImplTests {
 
         // Start train at block 144, check that direction and switches are assigned correctly
         controller.trackModelSetOccupancy(144, true);
+        controller.runPLC();
         assertTrue(blockMap.get(144).getBooleanAuth());
         assertTrue(blockMap.get(13).isDir_assigned());
         assertTrue(blockMap.get(13).getDirection());
@@ -125,22 +123,28 @@ public class WaysideControllerImplTests {
         for(int i = 145; i <= 150; i++) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
+            controller.runPLC();
             assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i-1, false);
+            controller.runPLC();
         }
 
         // Run train across switch at 28
         System.out.println(28);
         controller.trackModelSetOccupancy(28, true);
+        controller.runPLC();
         assertTrue(blockMap.get(28).getBooleanAuth());
         controller.trackModelSetOccupancy(150, false);
+        controller.runPLC();
 
         // Run train through sections F-D
         for(int i = 27; i >= 11; i--) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
+            controller.runPLC();
             assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i+1, false);
+            controller.runPLC();
         }
 
         // Ensure direction is properly deallocated and switches moved back
@@ -152,8 +156,10 @@ public class WaysideControllerImplTests {
         for(int i = 10; i >= 7; i--) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
+            controller.runPLC();
             assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i+1, false);
+            controller.runPLC();
         }
 
         // Ensure direction is properly allocated and switches moved
@@ -166,22 +172,28 @@ public class WaysideControllerImplTests {
         for(int i = 6; i >= 1; i--) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
+            controller.runPLC();
             assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i+1, false);
+            controller.runPLC();
         }
 
         // Run train across switch at 13
         System.out.println(13);
         controller.trackModelSetOccupancy(13, true);
+        controller.runPLC();
         assertTrue(blockMap.get(13).getBooleanAuth());
         controller.trackModelSetOccupancy(1, false);
+        controller.runPLC();
 
         // Run train through sections D-F
         for(int i = 14; i <= 30; i++) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
+            controller.runPLC();
             assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i-1, false);
+            controller.runPLC();
         }
 
         // Ensure direction is properly deallocated and switches moved back
@@ -193,8 +205,10 @@ public class WaysideControllerImplTests {
         for(int i = 31; i <= 35; i++) {
             System.out.println(i);
             controller.trackModelSetOccupancy(i, true);
+            controller.runPLC();
             assertTrue(blockMap.get(i).getBooleanAuth());
             controller.trackModelSetOccupancy(i+1, false);
+            controller.runPLC();
         }
     }
 }

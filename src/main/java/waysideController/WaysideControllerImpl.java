@@ -69,6 +69,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         plcPrograms[0] = new PLCProgram(this);
     }
 
+    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
+        this(id, trackLine, blockIDList, trackModel, ctcOffice);
+        File plcFile = new File(plcPath);
+        this.loadPLC(plcFile);
+    }
+
 
     /**
      * Load a PLC program into the wayside controller
@@ -108,7 +114,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         this.maintenanceMode = maintenanceMode;
         notifyChange(maintenanceMode_p, maintenanceMode);
         subject.updateActivePLCProp();
-        runPLC();
+//        runPLC();
     }
 
     @Override
@@ -121,7 +127,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(ctcOffice != null)
                 ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, occupied);
 
-            runPLC();
+//            runPLC();
         }
     }
 
@@ -147,7 +153,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(ctcOffice != null)
                 ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, !maintenanceState);
 
-            runPLC();
+//            runPLC();
         }
     }
 
@@ -162,7 +168,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                     ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, block.getBlockID(), false);
             }
         }
-        runPLC();
+//        runPLC();
     }
 
 
