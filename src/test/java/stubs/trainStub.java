@@ -192,97 +192,97 @@ public class trainStub implements TrainModel {
 
     @Override
     public int getAuthority() {
-        return 0;
+        return authority;
     }
 
     @Override
     public int getTrainNumber() {
-        return 0;
+        return trainID;
     }
 
     @Override
     public double getCommandSpeed() {
-        return 0;
+        return commandedSpeed;
     }
 
     @Override
     public double getSpeed() {
-        return 0;
+        return speed;
     }
 
     @Override
     public double getAcceleration() {
-        return 0;
+        return acceleration;
     }
 
     @Override
     public double getPower() {
-        return 0;
+        return power;
     }
 
     @Override
     public boolean getServiceBrake() {
-        return false;
+        return serviceBrake;
     }
 
     @Override
     public boolean getEmergencyBrake() {
-        return false;
+        return emergencyBrake;
     }
 
     @Override
     public double getWeightKG() {
-        return 0;
+        return weightKG;
     }
 
     @Override
     public Direction getDirection() {
-        return null;
+        return direction;
     }
 
     @Override
     public boolean getBrakeFailure() {
-        return false;
+        return brakeFailure;
     }
 
     @Override
     public boolean getPowerFailure() {
-        return false;
+        return powerFailure;
     }
 
     @Override
     public boolean getSignalFailure() {
-        return false;
+        return signalFailure;
     }
 
     @Override
     public double getRealTemperature() {
-        return 0;
+        return realTemperature;
     }
 
     @Override
     public boolean getExtLights() {
-        return false;
+        return extLights;
     }
 
     @Override
     public boolean getIntLights() {
-        return false;
+        return intLights;
     }
 
     @Override
     public boolean getLeftDoors() {
-        return false;
+        return leftDoors;
     }
 
     @Override
     public boolean getRightDoors() {
-        return false;
+        return rightDoors;
     }
 
     @Override
     public double getlength() {
-        return 0;
+        return length;
     }
 
     @Override
@@ -297,27 +297,27 @@ public class trainStub implements TrainModel {
 
     @Override
     public int getCrewCount() {
-        return 0;
+        return crewCount;
     }
 
     @Override
     public int getPassengerCount() {
-        return 0;
+        return passengerCount;
     }
 
     @Override
     public int getNumCars() {
-        return 0;
+        return numCars;
     }
 
     @Override
     public double getDistanceTraveled() {
-        return 0;
+        return distanceTraveled;
     }
 
     @Override
     public double getMass() {
-        return 0;
+        return mass;
     }
 
     @Override

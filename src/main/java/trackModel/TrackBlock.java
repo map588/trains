@@ -146,6 +146,10 @@ public class TrackBlock {
         return length;
     }
 
+    public Integer getBlockID() {
+        return blockID;
+    }
+
     void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
     }

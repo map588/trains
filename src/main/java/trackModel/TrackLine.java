@@ -86,6 +86,8 @@ public class TrackLine implements TrackModel {
     public TrackBlock updateTrainLocation(TrainModel train) {
         Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
 
+        System.out.println("Train: " + train.getTrainNumber() + " is on block: " + currentBlockID);
+
         if (currentBlockID == -1) {
             throw new IllegalArgumentException("Train: " + train.getTrainNumber() + " is not on the track");
         }
@@ -99,7 +101,11 @@ public class TrackLine implements TrackModel {
             train.changeDirection();
         }
 
-        return trackBlocks.get(next.blockNumber());
+        Integer nextBlockID = next.blockNumber();
+
+        System.out.println("Train: " + train.getTrainNumber() + " is moving to block: " + nextBlockID);
+
+        return trackBlocks.get(nextBlockID);
     }
 
     // Used to add a task to the work queue
@@ -267,7 +273,7 @@ public class TrackLine implements TrackModel {
         if(trackOccupancyMap.containsKey(train)){
             TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
             if (block.feature.isStation()) {
-                int embarked = (random.nextInt(0, MAX_PASSENGERS));
+                int embarked = (random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount()));
                 block.feature.setPassengersEmbarked(embarked);
                 this.ticketSales += embarked;
                 return embarked;
@@ -287,6 +293,18 @@ public class TrackLine implements TrackModel {
 
     public void resetTicketSales() {
         this.ticketSales = 0;
+    }
+
+
+    //Testing purposes
+    public TrackBlock getBlock(int blockID) {
+        return trackBlocks.get(blockID);
+    }
+    public void moveTrain(TrainModel train, int blockID) {
+        if(trackOccupancyMap.containsKey(train)){
+            trackOccupancyMap.remove(train);
+        }
+        trackOccupancyMap.put(train, blockID);
     }
 
 }

@@ -1,5 +1,6 @@
 package trainController;
 
+import Common.TrainModel;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.testfx.api.FxAssert.verifyThat;
 
 
@@ -38,6 +40,8 @@ public class TrainControllerManagerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        TrainModel mockModel = mock(TrainModel.class); // Mocking TrainModel
+        controller = new TrainControllerImpl(mockModel, 1); // Assuming '1' is a valid trainID
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Framework/GUI/FXML/trainController.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);

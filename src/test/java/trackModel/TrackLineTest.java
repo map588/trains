@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import stubs.trainStub;
 
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +52,7 @@ public class TrackLineTest {
 
 
     private static TrackLine trackLine;
-    private  TrainModel trainModel;
+    private TrainModel trainModel;
     private static ConcurrentSkipListMap<Integer, BasicBlock> basicBlockSkipList;
     private static int i = 10;
 
@@ -79,8 +80,9 @@ public class TrackLineTest {
 
     @Test
     public void updateTrainLocationChangesTrainBlock() {
-        double length = trackLine.updateTrainLocation(trainModel).getLength();
-        assertEquals(0, length);
+        TrackBlock newBlock = trackLine.updateTrainLocation(trainModel);
+        assertEquals(100.0, newBlock.getLength());
+        assertEquals(63, newBlock.getBlockID());
     }
 
 //    @Test
@@ -136,8 +138,18 @@ public class TrackLineTest {
 
     @Test
     public void setPassengersDisembarkedChangesPassengerCount() {
-        trackLine.setPassengersDisembarked(trainModel, 10);
-        assertEquals(10, trackLine.getPassengersEmbarked(trainModel));
+        trainStub stub = new trainStub(trackLine, 34);
+        trackLine.trainDispatch(stub);
+        for(BasicBlock block : basicBlockSkipList.values()) {
+            if(block.blockType() == BlockType.STATION) {
+                stub.setTrackBlock(trackLine.getBlock(block.blockNumber()));
+                trackLine.moveTrain(stub, block.blockNumber());
+                break;
+            }
+        }
+
+        trackLine.setPassengersDisembarked(stub, 10);
+        assertEquals(10, trackLine.getPassengersEmbarked(stub));
     }
 
     @Test
