@@ -8,5 +8,6 @@ public interface PLCRunner {
     void setTrafficLightPLC(int blockID, boolean lightState);
     void setCrossingPLC(int blockID, boolean crossingState);
     void setAuthorityPLC(int blockID, boolean auth);
+    boolean getOutsideOccupancy(int blockID);
     Map<Integer, WaysideBlock> getBlockMap();
 }

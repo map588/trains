@@ -3,10 +3,12 @@ package waysideController;
 import Common.CTCOffice;
 import Common.TrackModel;
 import Common.WaysideController;
+import Framework.Simulation.WaysideSystem;
 import Framework.Support.Notifier;
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
+import waysideController.plc_parser.Value;
 
 import java.io.File;
 import java.util.HashMap;
@@ -129,11 +131,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         blockMap.get(blockID).setSpeed(speed);
 
         if(trackModel != null) {
-            if (blockMap.get(blockID).getBooleanAuth()) {
-                //trackModel.setCommandedSpeed(blockID, speed);
-            } else {
-                //trackModel.setCommandedSpeed(blockID, 0);
-            }
+//            trackModel.setCommandedSpeed(blockID, speed);
         }
     }
 
@@ -267,16 +265,16 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(block.isOpen() && block.getBooleanAuth() != auth) {
             block.setBooleanAuth(auth);
-//              trackModel.setTrainAuthority(blockID, auth);
 
-            if(trackModel != null) {
-                if (blockMap.get(blockID).getBooleanAuth()) {
-                    //trackModel.setCommandedSpeed(blockID, block.getSpeed());
-                } else {
-                    //trackModel.setCommandedSpeed(blockID, 0);
-                }
-            }
+//            if(block.isOccupied())
+//                trackModel.setTrainAuthority(blockID, auth);
         }
+    }
+
+    @Override
+    public boolean getOutsideOccupancy(int blockID) {
+        WaysideController controller = WaysideSystem.getController(blockID);
+        return controller.getBlockMap().get(blockID).isOccupied();
     }
 
     @Override

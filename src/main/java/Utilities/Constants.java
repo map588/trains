@@ -1,5 +1,7 @@
 package Utilities;
 
+import Utilities.Enums.Direction;
+
 public class Constants {
 
     // Constants for representing states on the track
@@ -19,6 +21,8 @@ public class Constants {
 
     final public static boolean RED_LINE = false;
     final public static boolean GREEN_LINE = true;
+
+    final public static Direction YARD_OUT_DIRECTION = Direction.NORTH;
 
 
     //Physics Constants

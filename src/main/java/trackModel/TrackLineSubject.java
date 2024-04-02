@@ -19,6 +19,9 @@ public class TrackLineSubject {
     private BooleanProperty isStation;
     private BooleanProperty isBeacon;
     private BooleanProperty hasFailure;
+    private BooleanProperty trackCircuitFailure;
+    private BooleanProperty powerFailure;
+    private BooleanProperty brokenRail;
     private BooleanProperty isOccupied;
 
     //labels
@@ -72,6 +75,9 @@ public class TrackLineSubject {
         nameOfStation = new SimpleStringProperty();
         trackHeater = new SimpleStringProperty("STATUS - OFF");
         tempProperty = new SimpleStringProperty();
+        trackCircuitFailure = new SimpleBooleanProperty();
+        powerFailure = new SimpleBooleanProperty();
+        brokenRail = new SimpleBooleanProperty();
     }
 
     private TrackLine trackLine;
@@ -478,5 +484,41 @@ public class TrackLineSubject {
 
     public void setTrainAuthority(String trainAuthority) {
         this.trainAuthority.set(trainAuthority);
+    }
+
+    public boolean isTrackCircuitFailure() {
+        return trackCircuitFailure.get();
+    }
+
+    public BooleanProperty trackCircuitFailureProperty() {
+        return trackCircuitFailure;
+    }
+
+    public void setTrackCircuitFailure(boolean trackCircuitFailure) {
+        this.trackCircuitFailure.set(trackCircuitFailure);
+    }
+
+    public boolean isPowerFailure() {
+        return powerFailure.get();
+    }
+
+    public BooleanProperty powerFailureProperty() {
+        return powerFailure;
+    }
+
+    public void setPowerFailure(boolean powerFailure) {
+        this.powerFailure.set(powerFailure);
+    }
+
+    public boolean isBrokenRail() {
+        return brokenRail.get();
+    }
+
+    public BooleanProperty brokenRailProperty() {
+        return brokenRail;
+    }
+
+    public void setBrokenRail(boolean brokenRail) {
+        this.brokenRail.set(brokenRail);
     }
 }

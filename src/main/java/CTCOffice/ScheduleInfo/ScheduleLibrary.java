@@ -1,4 +1,4 @@
-package CTCOffice;
+package CTCOffice.ScheduleInfo;
 
 import Framework.Support.ObservableHashMap;
 import Framework.Support.SubjectMap;

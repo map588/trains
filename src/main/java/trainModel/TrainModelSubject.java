@@ -40,13 +40,13 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(LEFTDOORS_PROPERTY, new SimpleBooleanProperty(model.getLeftDoors()));
         properties.put(RIGHTDOORS_PROPERTY, new SimpleBooleanProperty(model.getRightDoors()));
         properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(model.getNumCars()));
-        properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(model.getNumPassengers()));
+        properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(model.getPassengerCount()));
         properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(model.getCrewCount()));
         properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(model.getTimeDelta()));
         properties.put(MASS_PROPERTY, new SimpleDoubleProperty(model.getMass()));
         properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(model.getDistanceTraveled()));
         properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(model.getlength()));
-        properties.put(BEACON_PROPERTY, new SimpleStringProperty(model.getBeacon()));
+//        properties.put(BEACON_PROPERTY, new SimpleStringProperty(model.getBeacon()));
         properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(model.getAnnouncement()));
     }
     public TrainModelSubject(TrainModelImpl trainModel) {
@@ -71,10 +71,6 @@ public class TrainModelSubject implements AbstractSubject{
         return (StringProperty) getProperty(propertyName);
     }
 
-    public void runPhysics() {
-        System.out.println("Called runPhysics() from trainModelSubject.");
-        updateFromLogic(() -> model.trainModelPhysics());
-    }
 
     public void setProperty(String propertyName, Object newValue) {
         Runnable updateTask = () -> {
@@ -83,26 +79,18 @@ public class TrainModelSubject implements AbstractSubject{
             updateProperty(property, newValue);
             model.setValue(propertyName, newValue);
         };
-
-        if (isLogicUpdate) {
-            executorService.scheduleWithFixedDelay(() -> {
-                if (!isLogicUpdate) {
-                    System.out.println("Delayed setProperty from GUI");
-                    Platform.runLater(() -> updateFromGUI(updateTask));
-                }
-            }, 0, 10, TimeUnit.MILLISECONDS);
-        } else {
+        if(!isLogicUpdate){
             Platform.runLater(() -> updateFromGUI(updateTask));
+        }else{
+            throw new IllegalStateException("Cannot call setProperty from logic update, or perform GUI update during logic update.");
         }
     }
 
     public void notifyChange(String propertyName, Object newValue){
-        Platform.runLater(() ->
-                updateFromLogic(() -> {
-                    Property<?> property = properties.get(propertyName);
-                    updateProperty(property, newValue);
-                })
-        );
+        updateFromLogic(() -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+        });
     }
 
     public TrainModel getModel() {

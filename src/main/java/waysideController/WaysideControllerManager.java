@@ -1,6 +1,7 @@
 package waysideController;
 
 import Common.WaysideController;
+import Framework.Simulation.WaysideSystem;
 import Framework.Support.ListenerReference;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -136,7 +137,7 @@ public class WaysideControllerManager {
 
 
         // Setup controller combo box
-        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideControllerSubjectFactory.getControllerList());
+        changeControllerComboBox.itemsProperty().bindBidirectional(WaysideSystem.getControllerList());
 
         // Create initial controller and update values
         createNewController();
@@ -334,7 +335,7 @@ public class WaysideControllerManager {
     private void createNewController() {
         WaysideController newController;
         if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
-            newController = new WaysideControllerImpl(WaysideControllerSubjectFactory.size(),
+            newController = new WaysideControllerImpl(WaysideSystem.size(),
                     Lines.GREEN,
                     new int[]{
                             1, 2, 3,
@@ -351,15 +352,27 @@ public class WaysideControllerManager {
                             150},
                     null, null);
         } else {
-            newController = new WaysideControllerHWBridge(WaysideControllerSubjectFactory.size(),
-                    "BlueLine",
-                    new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
+            newController = new WaysideControllerHWBridge(WaysideSystem.size(),
+                    "Green",
+                    new int[]{
+                            1, 2, 3,
+                            4, 5, 6,
+                            7, 8, 9, 10, 11, 12,
+                            13, 14, 15, 16,
+                            17, 18, 19, 20,
+                            21, 22, 23, 24, 25, 26, 27, 28,
+                            29, 30, 31, 32,
+                            33, 34, 35,
+                            36, 37, 38, 39,
+                            144, 145, 146,
+                            147, 148, 149,
+                            150},
                     testBench.tbHWPortComboBox.getValue());
         }
 
         newController.runPLC();
 
-        WaysideControllerSubjectFactory.addController(newController);
+        WaysideSystem.addController(newController);
         changeActiveController(newController);
     }
 

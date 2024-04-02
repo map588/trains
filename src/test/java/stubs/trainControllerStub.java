@@ -1,18 +1,21 @@
-package trainController;
+package stubs;
 
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
+import trainController.TrainControllerSubject;
 
-public class stubTrainController implements TrainController{
-    TrainModel train;
-    int trainID;
-    public void assignTrainModel(TrainModel train) {
-        this.train = train;
-    }
+public class trainControllerStub implements TrainController {
 
-    public stubTrainController(int trainID){
-        this.trainID = trainID;
+    private final TrainModel train;
+    private int trainID;
+
+    private double speed;
+    private double targetSpeed;
+
+
+ public trainControllerStub(TrainModel train, int trainID) {
+            this.train = train;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class stubTrainController implements TrainController{
 
     @Override
     public int getID() {
-        return this.trainID;
+        return 0;
     }
 
     @Override
@@ -236,12 +239,7 @@ public class stubTrainController implements TrainController{
     }
 
     @Override
-    public void setValue(String propertyName, Object newValue) {
-
-    }
-
-    @Override
-    public double calculatePower(double currentSpeed) {
+    public double calculatePower(double currentVelocity) {
         return 0;
     }
 
@@ -255,4 +253,8 @@ public class stubTrainController implements TrainController{
 
     }
 
+    @Override
+    public void setValue(String propertyName, Object newValue) {
+
+    }
 }

@@ -1,17 +1,13 @@
 package trackModel;
 
-import Utilities.BasicBlock;
-import Utilities.BasicBlock.Connection;
+import Utilities.Records.BasicBlock;
+import Utilities.Records.BasicBlock.Connection;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
+import trackModel.BlockTypes.*;
 
-import java.util.Optional;
-
-import static Utilities.Enums.Direction.NORTH;
-import static Utilities.Enums.Direction.SOUTH;
-
-class TrackBlock {
+public class TrackBlock {
     // Block Information
      final int blockID;
      final boolean isUnderground;
@@ -19,8 +15,8 @@ class TrackBlock {
      final BlockType blockType;
      final Lines line;
 
-     final Connection northID;
-     final Connection southID;
+     final Connection northConnect;
+     final Connection southConnect;
 
     // Physical properties
      final double grade;
@@ -29,14 +25,16 @@ class TrackBlock {
      final double speedLimit;
      final double length;
 
-    // Specific Block Information
-     final Optional<SwitchState> switchInfo;
-     final Optional<CrossingState> crossingInfo;
-     final Optional<StationInfo> stationInfo;
-     final FailureInfo failureInfo;
-
      boolean maintenanceMode;
      boolean lightState;
+     int     authority;
+     double  commandSpeed;
+     boolean hasFailure;
+     boolean brokenRail;
+     boolean trackCircuitFailure;
+     boolean powerFailure;
+
+     BlockFeature feature;
 
     /**
      * Constructs a new TrackBlock object based on the provided BasicBlock information.
@@ -56,21 +54,63 @@ class TrackBlock {
         this.cumulativeElevation = blockInfo.cumulativeElevation();
         this.speedLimit = blockInfo.speedLimit();
         this.length = blockInfo.blockLength();
-        this.line = Lines.valueOf(blockInfo.trackLine());
+        this.line = Lines.valueOf(blockInfo.trackLine().toUpperCase());
 
-        this.switchInfo = blockInfo.isSwitch() ? Optional.of(new SwitchState(blockInfo.nextBlock())) : Optional.empty();
-        this.crossingInfo = blockInfo.blockType() == BlockType.CROSSING ? Optional.of(new CrossingState(false)) : Optional.empty();
-        this.stationInfo = blockInfo.blockType() == BlockType.STATION ? Optional.of(new StationInfo(blockInfo.stationName().get(), blockInfo.doorDirection().get())) : Optional.empty();
 
-        if (isSwitch) {
-            this.northID = new Connection(-1, false);
-            this.southID = new Connection(-1, false);
-        } else {
-            this.northID = blockInfo.nextBlock().north();
-            this.southID = blockInfo.nextBlock().south();
+        if (isSwitch && blockType == BlockType.STATION) {
+            this.northConnect = null;
+            this.southConnect = null;
+            this.feature = new SwitchStationBlock(blockInfo.stationName().get(), blockInfo.doorDirection().get(), blockInfo.nextBlock());
+        } else if(isSwitch) {
+            this.northConnect = null;
+            this.southConnect = null;
+            this.feature = new SwitchBlock(blockInfo.nextBlock());
+        }else if(blockType == BlockType.STATION) {
+            this.northConnect = blockInfo.nextBlock().north();
+            this.southConnect = blockInfo.nextBlock().south();
+            this.feature = new StationBlock(blockInfo.stationName().get(), blockInfo.doorDirection().get());
+        }else if(blockType == BlockType.CROSSING){
+            this.northConnect = blockInfo.nextBlock().north();
+            this.southConnect = blockInfo.nextBlock().south();
+            this.feature = new CrossingBlock(false);
+        }else{
+            this.northConnect = blockInfo.nextBlock().north();
+            this.southConnect = blockInfo.nextBlock().south();
+            this.feature = new StandardBlock();
         }
 
-        this.failureInfo = new FailureInfo();
+        this.hasFailure = false;
+        this.brokenRail = false;
+        this.trackCircuitFailure = false;
+        this.powerFailure = false;
+    }
+
+    boolean hasFailure() {
+        return brokenRail || trackCircuitFailure || powerFailure;
+    }
+
+    boolean isBrokenRail() {
+        return brokenRail;
+    }
+
+    void setBrokenRail(boolean brokenRail) {
+        this.brokenRail = brokenRail;
+    }
+
+    boolean isTrackCircuitFailure() {
+        return trackCircuitFailure;
+    }
+
+    void setTrackCircuitFailure(boolean trackCircuitFailure) {
+        this.trackCircuitFailure = trackCircuitFailure;
+    }
+
+    boolean isPowerFailure() {
+        return powerFailure;
+    }
+
+    void setPowerFailure(boolean powerFailure) {
+        this.powerFailure = powerFailure;
     }
 
     /**
@@ -82,254 +122,159 @@ class TrackBlock {
      void validateBlockInfo(BasicBlock blockInfo) {
         if (blockInfo.blockType() == BlockType.STATION) {
             if (blockInfo.stationName().isEmpty() || blockInfo.doorDirection().isEmpty()) {
-                throw new IllegalArgumentException("Station block must have a station name and door direction");
+                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Station block must have a station name and door direction");
             }
         }else if(blockInfo.isSwitch()){
-            if(blockInfo.nextBlock().northDefault() == null || blockInfo.nextBlock().southDefault() == null){
-                throw new IllegalArgumentException("Switch block must have a default connection for both directions");
+            if(blockInfo.nextBlock().northDefault() == null || blockInfo.nextBlock().southDefault() == null) {
+                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Switch block must have a default connection for both directions.");
+            }
+            if(blockInfo.nextBlock().northAlternate() == null && blockInfo.nextBlock().southAlternate() == null){
+                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Switch block must have an alternate connection for at least one direction.");
             }
         }
     }
 
-    /**
-     * Returns the next block connection based on the provided direction.
-     *
-     * @param direction the direction of the next block
-     * @return the Connection object representing the next block
-     */
      Connection getNextBlock(Direction direction) {
-        if (!isSwitch) {
-            return direction == NORTH ? northID : southID;
+        if (isSwitch) {
+            return feature.getNextBlock(direction);
         } else {
-            return switchInfo.map(info -> {
-                if (info.isSwitchState()) {
-                    return direction == NORTH ? info.getNorthAlt().orElse(null) : info.getSouthAlt().orElse(null);
-                } else {
-                    return direction == NORTH ? info.getNorthDef() : info.getSouthDef();
-                }
-            }).orElse(null);
+            return (direction == Direction.NORTH) ? northConnect : southConnect;
         }
     }
 
-     void setMaintenanceMode(boolean maintenanceMode) {
+    public double getLength() {
+        return length;
+    }
+
+    public Integer getBlockID() {
+        return blockID;
+    }
+
+    void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
     }
 
-
-
-    /**
-     * Sets the state of the switch.
-     *
-     * @param state the new state of the switch
-     * @throws IllegalArgumentException if the block is not a switch
-     */
-    void setSwitchState(boolean state) {
-        switchInfo.ifPresent(info -> info.setSwitchState(state));
+    void setAuthority(int authority) {
+        this.authority = authority;
     }
 
-    /**
-     * Sets the automatic state of the switch.
-     *
-     * @param state the new automatic state of the switch
-     * @throws IllegalArgumentException if the block is not a switch
-     */
-     void setSwitchStateAuto(boolean state) {
-        switchInfo.ifPresent(info -> info.setSwitchStateAuto(state));
+    void setCommandSpeed(double commandSpeed) {
+        this.commandSpeed = commandSpeed;
     }
 
-    /**
-     * Sets the state of the crossing.
-     *
-     * @param state the new state of the crossing
-     * @throws IllegalArgumentException if the block is not a crossing
-     */
-     void setCrossingState(boolean state) {
-        crossingInfo.ifPresent(info -> info.setCrossingState(state));
-    }
-
-    /**
-     * Sets the power failure state of the block.
-     *
-     * @param state the new power failure state
-     */
-     void setPowerFailure(boolean state) {
-        failureInfo.setPowerFailure(state);
-    }
-
-    /**
-     * Sets the track circuit failure state of the block.
-     *
-     * @param state the new track circuit failure state
-     */
-     void setTrackCircuitFailure(boolean state) {
-        failureInfo.setTrackCircuitFailure(state);
-    }
-
-    /**
-     * Sets the broken rail state of the block.
-     *
-     * @param state the new broken rail state
-     */
-     void setBrokenRail(boolean state) {
-        failureInfo.setBrokenRail(state);
-    }
-
-    /**
-     * Sets the maintenance mode of the block.
-     *
-     * @param state the new maintenance mode state
-     */
-     void setUnderMaintenance(boolean state) {
+    void setUnderMaintenance (boolean state){
         maintenanceMode = state;
     }
 
-    // Inner classes for specific block information
-
-    static class SwitchState {
-        private final Connection northDef;
-        private final Connection southDef;
-        private final Optional<Connection> northAlt;
-        private final Optional<Connection> southAlt;
-
-        private boolean switchState;
-        private boolean switchStateAuto;
-
-        SwitchState(BasicBlock.NextBlock nextBlock) {
-            this.northDef = nextBlock.northDefault();
-            this.southDef = nextBlock.southDefault();
-            this.northAlt = Optional.ofNullable(nextBlock.northAlternate().blockNumber() != -1 ? nextBlock.northAlternate() : null);
-            this.southAlt = Optional.ofNullable(nextBlock.southAlternate().blockNumber() != -1 ? nextBlock.southAlternate() : null);
-        }
-
-         Connection getNorthDef() {
-            return northDef;
-        }
-
-         Connection getSouthDef() {
-            return southDef;
-        }
-
-         Optional<Connection> getNorthAlt() {
-            return northAlt;
-        }
-
-         Optional<Connection> getSouthAlt() {
-            return southAlt;
-        }
-
-         boolean isSwitchState() {
-            return switchState;
-        }
-
-         void setSwitchState(boolean switchState) {
-            this.switchState = switchState;
-        }
-
-         boolean isSwitchStateAuto() {
-            return switchStateAuto;
-        }
-
-         void setSwitchStateAuto(boolean switchStateAuto) {
-            this.switchStateAuto = switchStateAuto;
+    String getStationName() {
+        if (feature.isStation()) {
+            return feature.getStationName();
+        }else{
+            throw new UnsupportedOperationException("getStationName called on Block: " + this.blockID + ", which is not a station block");
         }
     }
 
-     static class StationInfo {
-        private final String stationName;
-        private final String doorDirection;
-
-        int passengersWaiting;
-        int passengersEmbarked;
-        int passengersDisembarked;
-
-
-        StationInfo(String stationName, String doorDirection) {
-            this.stationName = stationName;
-            this.doorDirection = doorDirection;
-        }
-
-        String getStationName() {
-            return stationName;
-        }
-
-        String getDoorDirection() {
-            return doorDirection;
-        }
-
-        int getPassengersWaiting() {
-            return passengersWaiting;
-        }
-
-        void setPassengersWaiting(int passengersWaiting) {
-            this.passengersWaiting = passengersWaiting;
-        }
-
-
-        int getPassengersEmbarked() {
-            return passengersEmbarked;
-        }
-
-        void setPassengersEmbarked(int passengersEmbarked) {
-            this.passengersEmbarked = passengersEmbarked;
-        }
-
-        int getPassengersDisembarked() {
-            return passengersDisembarked;
-        }
-
-        void setPassengersDisembarked(int passengersDisembarked) {
-            this.passengersDisembarked = passengersDisembarked;
+    String getDoorDirection() {
+        if (feature.isStation()) {
+            return feature.getDoorDirection();
+        }else{
+            throw new UnsupportedOperationException("getDoorDirection called on Block: " + this.blockID + ", which is not a station block");
         }
     }
 
-     static class CrossingState {
-        private boolean crossingState;
-
-        CrossingState(boolean crossingState) {
-            this.crossingState = crossingState;
-        }
-
-        boolean isCrossingState() {
-            return crossingState;
-        }
-
-        void setCrossingState(boolean crossingState) {
-            this.crossingState = crossingState;
+    public int getPassengersWaiting() {
+        if (feature.isStation()) {
+            return feature.getPassengersWaiting();
+        }else{
+            throw new UnsupportedOperationException("getPassengersWaiting called on Block: " + this.blockID + ", which is not a station block");
         }
     }
 
-     static class FailureInfo {
-        private boolean hasFailure;
-        private boolean brokenRail;
-        private boolean trackCircuitFailure;
-        private boolean powerFailure;
-
-         boolean hasFailure() {
-            return brokenRail || trackCircuitFailure || powerFailure;
-        }
-
-         boolean isBrokenRail() {
-            return brokenRail;
-        }
-
-         void setBrokenRail(boolean brokenRail) {
-            this.brokenRail = brokenRail;
-        }
-
-         boolean isTrackCircuitFailure() {
-            return trackCircuitFailure;
-        }
-
-         void setTrackCircuitFailure(boolean trackCircuitFailure) {
-            this.trackCircuitFailure = trackCircuitFailure;
-        }
-
-         boolean isPowerFailure() {
-            return powerFailure;
-        }
-
-         void setPowerFailure(boolean powerFailure) {
-            this.powerFailure = powerFailure;
+    public void setPassengersWaiting(int passengersWaiting) {
+        if (feature.isStation()) {
+            feature.setPassengersWaiting(passengersWaiting);
+        }else{
+            throw new UnsupportedOperationException("setPassengersWaiting called on Block: " + this.blockID + ", which is not a station block");
         }
     }
+
+    public int getPassengersEmbarked() {
+        if (feature.isStation()) {
+            return feature.getPassengersEmbarked();
+        }else{
+            throw new UnsupportedOperationException("getPassengersEmbarked called on Block: " + this.blockID + ", which is not a station block");
+        }
+    }
+
+    public void setPassengersEmbarked(int passengersEmbarked) {
+        if (feature.isStation()) {
+            feature.setPassengersEmbarked(passengersEmbarked);
+        }else{
+            throw new UnsupportedOperationException("setPassengersEmbarked called on Block: " + this.blockID + ", which is not a station block");
+        }
+    }
+
+    public int getPassengersDisembarked() {
+        if (feature.isStation()) {
+            return feature.getPassengersDisembarked();
+        }else{
+            throw new UnsupportedOperationException("getPassengersDisembarked called on Block: " + this.blockID + ", which is not a station block");
+        }
+    }
+
+    public void setPassengersDisembarked(int passengersDisembarked) {
+        if (feature.isStation()) {
+            feature.setPassengersDisembarked(passengersDisembarked);
+        }else{
+            throw new UnsupportedOperationException("setPassengersDisembarked called on Block: " + this.blockID + ", which is not a station block");
+        }
+    }
+
+    void setSwitchState(boolean state) {
+        if (feature.isSwitch()) {
+            feature.setSwitchState(state);
+        }else{
+            throw new UnsupportedOperationException("setSwitchState called on Block: " + this.blockID + ", which is not a switch block");
+        }
+    }
+
+    public boolean getSwitchState() {
+        if (feature.isSwitch()) {
+            return feature.getSwitchState();
+        }else{
+            throw new UnsupportedOperationException("getSwitchState called on Block: " + this.blockID + ", which is not a switch block");
+        }
+    }
+
+    boolean getSwitchStateAuto() {
+        if (feature.isSwitch()) {
+            return feature.getAutoState();
+        }else{
+            throw new UnsupportedOperationException("getSwitchStateAuto called on Block: " + this.blockID + ", which is not a switch block");
+        }
+    }
+
+    void setSwitchStateAuto (boolean state){
+        if (feature.isSwitch()) {
+            feature.setSwitchStateAuto(state);
+        }else
+            throw new UnsupportedOperationException("setSwitchStateAuto called on Block: " + this.blockID + ", which is not a switch block");
+    }
+
+
+    void setCrossingState ( boolean state){
+        if (feature.isCrossing()) {
+            feature.setCrossingState(state);
+        }else
+            throw new UnsupportedOperationException("setCrossingState called on Block: " + this.blockID + ", which is not a crossing block");
+    }
+
+    public boolean getCrossingState() {
+        if (feature.isCrossing()) {
+            return feature.getCrossingState();
+        }else{
+            throw new UnsupportedOperationException("getCrossingState called on Block: " + this.blockID + ", which is not a crossing block");
+        }
+    }
+
 }

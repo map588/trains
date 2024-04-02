@@ -45,8 +45,8 @@ public class trainModelImplTest {
 
         model.setSignalFailure(true);
         assertTrue(model.getSignalFailure());
-        assertEquals(-1, model.getAuthority());
-        assertEquals(-1, model.getCommandSpeed());
+        assertEquals(0, model.getAuthority());
+        assertEquals(0, model.getCommandSpeed());
 
         model.setBrakeFailure(true);
         assertTrue(model.getBrakeFailure());

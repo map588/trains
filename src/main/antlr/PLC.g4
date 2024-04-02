@@ -1,7 +1,7 @@
 grammar PLC;
 
 program : (statement | statement NEWLINE | NEWLINE)+;
-statement : set_list_value | if_statement | if_else_statement | COMMENT ;
+statement : set_list_value | if_statement | if_else_statement | for_statement | COMMENT ;
 
 set_list_value : list_name '[' index ']' '=' (equality_check | compound_value | value_false | value_true) ;
 
@@ -17,8 +17,8 @@ if_else_statement
     NEWLINE ENDIF ;
 
 for_statement
-    : FOR '(' INDEX ':' INDEX ')' NEWLINE
-    (statement | statement NEWLINE | NEWLINE)+
+    : FOR VARIABLE '=' index TO index DO
+    NEWLINE (statement | statement NEWLINE | NEWLINE)+
     NEWLINE ENDFOR ;
 
 
@@ -33,7 +33,10 @@ and_operator: (single_val | ('(' compound_value ')')) (AND (single_val | ('(' co
 single_val : not_operator | list_value ;
 not_operator : NOT list_value ;
 list_value : list_name '[' index ']' ;
-index : INDEX ;
+index : int_val | int_variable | arith_expression ;
+arith_expression : (int_val | int_variable) ARITH_OP (int_val | int_variable) ;
+int_val : INT_VAL ;
+int_variable : VARIABLE ;
 list_name : (OCCUPANCY | SWITCH | LIGHT | CROSSING | AUTHORITY | DIRECTION | DIR_ASSIGNED) ;
 value_false : FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;
 value_true : TRUE | GREEN | ALT | OPEN | NORTHBOUND ;
@@ -47,6 +50,9 @@ ENDIF : 'endif' | 'ENDIF' ;
 FOR : 'for' | 'FOR' ;
 ENDFOR : 'endfor' | 'ENDFOR' ;
 COMMENT : '//' ~( '\r' | '\n' )* NEWLINE ;
+TO : 'to' | 'TO' ;
+DO : 'do' | 'DO' ;
+END : 'end' | 'END' ;
 
 OCCUPANCY : 'occupied' ;
 SWITCH : 'switch' ;
@@ -67,6 +73,9 @@ CLOSED : 'CLOSED' ;
 NORTHBOUND : 'NORTHBOUND' ;
 SOUTHBOUND : 'SOUTHBOUND' ;
 
-INDEX : [0-9]+ ;
+ARITH_OP : ('+' | '-') ;
 NEWLINE : ('\r'? '\n' | '\r')+ ;
 WS : (' ' | '\t') -> skip ;
+
+INT_VAL : [0-9]+ ;
+VARIABLE : [a-zA-Z]+ | [a-zA-Z0-9]+ ;

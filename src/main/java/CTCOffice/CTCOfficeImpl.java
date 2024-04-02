@@ -1,8 +1,9 @@
 package CTCOffice;
 
+import CTCOffice.ScheduleInfo.*;
 import Common.CTCOffice;
 import Utilities.Enums.Lines;
-import  Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;

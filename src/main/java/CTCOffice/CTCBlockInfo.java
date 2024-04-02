@@ -1,6 +1,6 @@
 package CTCOffice;
 
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 
 import static Utilities.Enums.BlockType.*;
 import static Utilities.Enums.Direction.NORTH;

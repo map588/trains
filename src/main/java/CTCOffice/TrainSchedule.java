@@ -1,5 +1,7 @@
 package CTCOffice;
 
+import CTCOffice.ScheduleInfo.TrainStop;
+
 import java.util.List;
 
 public class TrainSchedule {

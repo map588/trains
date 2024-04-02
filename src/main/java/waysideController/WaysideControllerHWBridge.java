@@ -2,7 +2,7 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.Notifier;
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;

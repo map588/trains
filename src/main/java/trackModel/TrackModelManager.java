@@ -45,7 +45,6 @@ public class TrackModelManager {
     public Label lineInfoLabel;
     public Label degF;
     public Label sectionsLabel;
-
     //simulation information
     @FXML
     private Label logo;
@@ -143,7 +142,6 @@ public class TrackModelManager {
     //subject
     private ArrayList <TrackLineSubject> trackLineSubject = new ArrayList<>();
 
-    // test bench object
     private TrackLineSubject subject;
 
     @FXML
@@ -309,6 +307,10 @@ public class TrackModelManager {
 
     private void murphyEnter() {
         //get the line and block
+        subject.setBrokenRail(false);
+        subject.setTrackCircuitFailure(false);
+        subject.setPowerFailure(false);
+
         String lineSelect = murphyLine.getValue();
         String blockSelect = murphyBlockInput.getText();
         String failure = chooseFailureMode.getValue();
@@ -316,7 +318,19 @@ public class TrackModelManager {
         //send the failure to the track model
         //currTrackModel.setFailure(Integer.parseInt(blockSelect), failure);
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
-        subject.setHasFailure(!chooseFailureMode.getValue().equals("Fix Track Failure"));
+
+        switch(failure) {
+            case "Broken Rail" :
+                subject.setBrokenRail(true);
+                break;
+            case "Track Circuit Failure" :
+                subject.setTrackCircuitFailure(true);
+                break;
+            case "Power Failure" :
+                subject.setPowerFailure(true);
+                break;
+
+        }
 
     }
 
