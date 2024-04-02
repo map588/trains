@@ -393,7 +393,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
                 accel = -1 * SERVICE_BRAKE_DECELERATION;
             }
         } else{
-            double mass = train.getWeightKG();
+            double mass = train.getMass();
             if(mass <= 0){
                 mass = 1;
             }

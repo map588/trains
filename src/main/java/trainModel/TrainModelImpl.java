@@ -356,6 +356,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public boolean getEmergencyBrake() {
         return this.emergencyBrake;
     }
+
+    @Override
+    public double getMass() {
+        return this.mass;
+    }
+
     public double getDistanceTraveled() { return distanceTraveled; }
     public String getAnnouncement() {
         return this.announcement;

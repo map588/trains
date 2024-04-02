@@ -3,8 +3,6 @@ package Common;
 import Utilities.Enums.Direction;
 import Utilities.Records.Beacon;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public interface  TrainModel {
@@ -49,6 +47,7 @@ public interface  TrainModel {
     double  getPower();
     boolean getServiceBrake();
     boolean getEmergencyBrake();
+    double  getMass();
 
     Direction getDirection();
 
