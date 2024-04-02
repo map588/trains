@@ -1,6 +1,6 @@
 package Common;
 
-import Utilities.Beacon;
+import Utilities.Records.Beacon;
 
 public interface TrackModel {
 

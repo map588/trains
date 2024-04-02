@@ -1,7 +1,7 @@
 package trackModel;
 
-import Utilities.BasicBlock;
-import Utilities.BasicBlock.Connection;
+import Utilities.Records.BasicBlock;
+import Utilities.Records.BasicBlock.Connection;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
@@ -9,7 +9,6 @@ import Utilities.Enums.Lines;
 import java.util.Optional;
 
 import static Utilities.Enums.Direction.NORTH;
-import static Utilities.Enums.Direction.SOUTH;
 
 class TrackBlock {
     // Block Information

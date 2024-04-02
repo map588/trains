@@ -3,13 +3,9 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.GUIModifiable;
-import Utilities.Beacon;
 import Utilities.Constants;
+import Utilities.Records.Beacon;
 import trainModel.stubTrainModel;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
@@ -331,9 +327,11 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
 
     //TODO: Implement this method
     @Override
-    public void setBeacon(Beacon beacon) {
+    public void updateBeacon(Beacon beacon) {
 
     }
+
+
 
     /**
      * Profetta Notes:

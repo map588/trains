@@ -1,6 +1,6 @@
 package trackModel;
 
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 import Utilities.Enums.Lines;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

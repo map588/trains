@@ -1,7 +1,7 @@
 package waysideController;
 
 import Framework.Support.Notifier;
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 import Utilities.Enums.Direction;
 
 import static Utilities.Enums.BlockType.CROSSING;

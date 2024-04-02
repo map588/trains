@@ -2,7 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Utilities.Beacon;
+import Utilities.Records.Beacon;
 
 public class stubTrainController implements TrainController{
     TrainModel train;
@@ -252,7 +252,7 @@ public class stubTrainController implements TrainController{
     }
 
     @Override
-    public void setBeacon(Beacon beacon) {
+    public void updateBeacon(Beacon beacon) {
 
     }
 

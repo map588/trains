@@ -1,7 +1,7 @@
 package Common;
 
-import Utilities.Beacon;
 import Utilities.Enums.Direction;
+import Utilities.Records.Beacon;
 
 public interface  TrainModel {
 

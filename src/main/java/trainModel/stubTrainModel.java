@@ -2,9 +2,9 @@ package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Utilities.Beacon;
 import Utilities.Constants;
 import Utilities.Enums.Direction;
+import Utilities.Records.Beacon;
 
 public class stubTrainModel implements TrainModel {
     private TrainController controller;

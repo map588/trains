@@ -3,15 +3,13 @@ package trackModel;
 import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
-import Utilities.BasicBlock;
-import Utilities.BasicBlock.Connection;
-import Utilities.Beacon;
+import Utilities.Records.BasicBlock;
+import Utilities.Records.BasicBlock.Connection;
 import Utilities.Enums.Lines;
+import Utilities.Records.Beacon;
 import trainModel.TrainModelImpl;
 
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -174,7 +172,8 @@ public class TrackLine implements TrackModel {
 
     //TODO: We don't know how beacons will work yet
     @Override
-    public void setBeacon(int block, Beacon beacon) {
+    public void setBeacon(int block, Beacon beacon){
+
     }
 
     @Override

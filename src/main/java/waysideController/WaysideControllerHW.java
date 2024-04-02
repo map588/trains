@@ -1,6 +1,6 @@
 package waysideController;
 
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;

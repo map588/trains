@@ -5,10 +5,10 @@ package trainModel;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.Notifier;
-import Utilities.Beacon;
 import Utilities.Constants;
 import Utilities.Conversion;
 import Utilities.Enums.Direction;
+import Utilities.Records.Beacon;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 
@@ -328,7 +328,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     @Override
     public void passBeacon(Beacon beacon) {
-        controller.setBeacon(beacon);
+        controller.updateBeacon(beacon);
     }
 
     public String getBeacon() {

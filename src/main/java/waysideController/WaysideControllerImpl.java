@@ -4,7 +4,7 @@ import Common.CTCOffice;
 import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Support.Notifier;
-import Utilities.BasicBlock;
+import Utilities.Records.BasicBlock;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 
