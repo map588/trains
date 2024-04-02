@@ -370,7 +370,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
 
 
         error = setSpeed - currSpeed;
-        rollingError += (float)samplingPeriod/2000 * (error + prevError);
+        rollingError += (double)samplingPeriod/2000 * (error + prevError);
         prevError = error;
 
         pow = Kp * error + Ki * rollingError;
@@ -400,7 +400,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             accel = pow / mass;
         }
 
-        currSpeed += accel * (float)samplingPeriod/1000;
+        currSpeed += accel * (double)samplingPeriod/1000;
         if(currSpeed < 0){
             currSpeed = 0;
         }
