@@ -38,8 +38,13 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setSwitchPLC(int blockID, boolean switchState) {
-        System.out.println("Send: switchState="+blockID+":"+switchState);
-        outputStream.println("switchState="+blockID+":"+switchState);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen() && block.getSwitchState() != switchState) {
+            block.setSwitchState(switchState);
+            System.out.println("Send: switchState="+blockID+":"+switchState);
+            outputStream.println("switchState="+blockID+":"+switchState);
+        }
     }
 
     /**
@@ -48,8 +53,13 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setTrafficLightPLC(int blockID, boolean lightState) {
-        System.out.println("Send: trafficLight="+blockID+":"+lightState);
-        outputStream.println("trafficLight="+blockID+":"+lightState);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen() && block.getSwitchState() != lightState) {
+            block.setSwitchState(lightState);
+            System.out.println("Send: trafficLight=" + blockID + ":" + lightState);
+            outputStream.println("trafficLight=" + blockID + ":" + lightState);
+        }
     }
 
     /**
@@ -58,14 +68,24 @@ public class WaysideControllerHW implements PLCRunner {
      */
     @Override
     public void setCrossingPLC(int blockID, boolean crossingState) {
-        System.out.println("Send: crossing="+blockID+":"+crossingState);
-        outputStream.println("crossing="+blockID+":"+crossingState);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen() && block.getSwitchState() != crossingState) {
+            block.setSwitchState(crossingState);
+            System.out.println("Send: crossing=" + blockID + ":" + crossingState);
+            outputStream.println("crossing=" + blockID + ":" + crossingState);
+        }
     }
 
     @Override
     public void setAuthorityPLC(int blockID, boolean auth) {
-        System.out.println("Send: auth="+blockID+":"+auth);
-        outputStream.println("auth="+blockID+":"+auth);
+        WaysideBlock block = blockMap.get(blockID);
+
+        if(block.isOpen() && block.getSwitchState() != auth) {
+            block.setSwitchState(auth);
+            System.out.println("Send: auth=" + blockID + ":" + auth);
+            outputStream.println("auth=" + blockID + ":" + auth);
+        }
     }
 
     @Override
@@ -73,10 +93,10 @@ public class WaysideControllerHW implements PLCRunner {
         return blockMap;
     }
 
-    private void setupBlocks(int[] blockIDList) {
+    private void setupBlocks(int[] blockIDList, String trackLine) {
         blockMap.clear();
         // Parse the CSV file to get the blocks that the wayside controls
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(Lines.GREEN);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(trackLine.equals("Green") ? Lines.GREEN : Lines.RED);
         for(int blockID : blockIDList) {
             WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);
@@ -109,7 +129,7 @@ public class WaysideControllerHW implements PLCRunner {
                 for (int i = 0; i < blockListStrings.length; i++) {
                     blockList[i] = Integer.parseInt(blockListStrings[i]);
                 }
-                setupBlocks(blockList);
+                setupBlocks(blockList, trackLine);
             }
             case "maintenanceMode" -> {
                 maintenanceMode = Boolean.parseBoolean(values[1]);
@@ -138,17 +158,13 @@ public class WaysideControllerHW implements PLCRunner {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setSpeed(Double.parseDouble(setValues[1]));
             }
-            case "authInt" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setAuthority(Integer.parseInt(setValues[1]));
-            }
             case "auth" -> {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
             }
         }
 
-        if(!maintenanceMode && blockMap.size() > 0)
+        if(!maintenanceMode && !blockMap.isEmpty() && plcPrograms[0] != null)
             plcPrograms[0].run();
     }
 
