@@ -24,6 +24,7 @@ import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
+import static trainModel.Properties.*;
 
 
 public class TrainModelImpl implements TrainModel, Notifier {
@@ -251,53 +252,53 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return passengersDisembarked;
     }
 
-    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange("commandSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
-    public void setActualSpeed(double speed) { this.speed = speed; notifyChange("actualSpeed", Conversion.convertVelocity(speed, MPS, MPH)); }
-    public void setAuthority(int authority) { this.authority = authority; notifyChange("authority", authority); }
+    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH)); }
+    public void setActualSpeed(double speed) { this.speed = speed; notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH)); }
+    public void setAuthority(int authority) { this.authority = authority; notifyChange(AUTHORITY_PROPERTY, authority); }
     public void setEmergencyBrake(boolean brake) {
         if (this.brakeFailure) {
             this.emergencyBrake = false;
-            notifyChange("emergencyBrake", false);
+            notifyChange(EMERGENCYBRAKE_PROPERTY, false);
         } else {
             this.emergencyBrake = brake;
-            notifyChange("emergencyBrake", brake);
+            notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
         }
     }
     public void setServiceBrake(boolean brake) {
         if (this.brakeFailure) {
             this.serviceBrake = false;
-            notifyChange("serviceBrake", false);
+            notifyChange(SERVICEBRAKE_PROPERTY, false);
         } else {
             this.serviceBrake = brake;
-            notifyChange("serviceBrake", brake);
+            notifyChange(SERVICEBRAKE_PROPERTY, brake);
         }
     }
-    public void setPower(double power) { this.power = power; notifyChange("power", Conversion.convertPower(power, WATTS, HORSEPOWER)); }
-    public void setGrade(double grade) { this.grade = grade; notifyChange("grade", grade); }
-    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange("brakeFailure", failure); }
-    public void setPowerFailure(boolean failure) { this.powerFailure = failure; notifyChange("powerFailure", failure); }
-    public void setSignalFailure(boolean failure) { this.signalFailure = failure; notifyChange("signalFailure", failure); }
-    public void setNumCars(int numCars) { this.numCars = numCars; notifyChange("numCars", numCars); }
-    public void setNumPassengers(int numPassengers) { this.numPassengers = numPassengers; notifyChange("numPassengers", numPassengers); }
-    public void setCrewCount(int crewCount) { this.crewCount = crewCount; notifyChange("crewCount", crewCount); }
-    public void setLeftDoors(boolean doors) { this.leftDoors = doors; notifyChange("leftDoors", doors); }
-    public void setRightDoors(boolean doors) { this.rightDoors = doors; notifyChange("rightDoors", doors); }
-    public void setExtLights(boolean lights) { this.extLights = lights; notifyChange("extLights", lights); }
-    public void setIntLights(boolean lights) { this.intLights = lights; notifyChange("intLights", lights); }
-    public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange("SetTemperature", temp); }
+    public void setPower(double power) { this.power = power; notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER)); }
+    public void setGrade(double grade) { this.grade = grade; notifyChange(GRADE_PROPERTY, grade); }
+    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange(BRAKEFAILURE_PROPERTY, failure); }
+    public void setPowerFailure(boolean failure) { this.powerFailure = failure; notifyChange(POWERFAILURE_PROPERTY, failure); }
+    public void setSignalFailure(boolean failure) { this.signalFailure = failure; notifyChange(SIGNALFAILURE_PROPERTY, failure); }
+    public void setNumCars(int numCars) { this.numCars = numCars; notifyChange(NUMCARS_PROPERTY, numCars); }
+    public void setNumPassengers(int numPassengers) { this.numPassengers = numPassengers; notifyChange(NUMPASSENGERS_PROPERTY, numPassengers); }
+    public void setCrewCount(int crewCount) { this.crewCount = crewCount; notifyChange(CREWCOUNT_PROPERTY, crewCount); }
+    public void setLeftDoors(boolean doors) { this.leftDoors = doors; notifyChange(LEFTDOORS_PROPERTY, doors); }
+    public void setRightDoors(boolean doors) { this.rightDoors = doors; notifyChange(RIGHTDOORS_PROPERTY, doors); }
+    public void setExtLights(boolean lights) { this.extLights = lights; notifyChange(EXTLIGHTS_PROPERTY, lights); }
+    public void setIntLights(boolean lights) { this.intLights = lights; notifyChange(INTLIGHTS_PROPERTY, lights); }
+    public void setSetTemperature(double temp) { this.setTemperature = temp; notifyChange(SETTEMPERATURE_PROPERTY, temp); }
 
-    public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange("realTemperature", temp); }
-    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange("acceleration", Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
-    public void setMass(double mass) { this.mass = mass; notifyChange("mass", mass); }
-    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange("distanceTraveled", Conversion.convertDistance(distance, METERS, FEET)); }
-    public void setLength(double length) { this.length = length; notifyChange("length", Conversion.convertDistance(length, METERS, FEET)); }
+    public void setRealTemperature(double temp) { this.realTemperature = temp; notifyChange(REALTEMPERATURE_PROPERTY, temp); }
+    public void setAcceleration(double acceleration) { this.acceleration = acceleration; notifyChange(ACCELERATION_PROPERTY, Conversion.convertAcceleration(acceleration, MPS2, FPS2)); }
+    public void setMass(double mass) { this.mass = mass; notifyChange(MASS_PROPERTY, mass); }
+    public void setDistanceTraveled(double distance) { this.distanceTraveled = distance; notifyChange(DISTANCETRAVELED_PROPERTY, Conversion.convertDistance(distance, METERS, FEET)); }
+    public void setLength(double length) { this.length = length; notifyChange(LENGTH_PROPERTY, Conversion.convertDistance(length, METERS, FEET)); }
     public void setAnnouncement(String announcement) {this.announcement = announcement;}
 
     public void setValue(String propertyName, Object newValue){
         if(newValue == null)
             return;
         switch(propertyName){
-            case Properties.AUTHORITY_PROPERTY -> this.authority = (int)newValue;
+            case AUTHORITY_PROPERTY -> this.authority = (int)newValue;
             case Properties.COMMANDSPEED_PROPERTY -> this.commandSpeed = (double)newValue;
             case Properties.ACTUALSPEED_PROPERTY -> this.speed = (double)newValue;
             case Properties.ACCELERATION_PROPERTY -> this.acceleration = (double)newValue;
@@ -426,7 +427,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     //TEMP TIME DELTA SETTER/GETTER
-    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange("timeDelta", timeDelta); }
+    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange(TIMEDELTA_PROPERTY, timeDelta); }
     public int getTimeDelta() { return this.TIME_DELTA; }
 
 
