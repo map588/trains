@@ -34,7 +34,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             PLCLexer lexer = new PLCLexer(CharStreams.fromFileName(filename));
             PLCParser parser = new PLCParser(new CommonTokenStream(lexer));
             PLCTree = parser.program();
-            run();
+//            run();
         } catch (IOException e) {
             e.printStackTrace();
         }

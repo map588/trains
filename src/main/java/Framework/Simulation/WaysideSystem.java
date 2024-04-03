@@ -1,5 +1,6 @@
 package Framework.Simulation;
 
+import Common.TrackModel;
 import Common.WaysideController;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
@@ -7,7 +8,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import waysideController.WaysideControllerImpl;
-import waysideController.WaysideControllerSubject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,20 +41,21 @@ public class WaysideSystem {
 
     ExecutorService waysideExecutor;
 
-    public WaysideSystem() {
+    public WaysideSystem(TrackSystem trackSystem) {
+        TrackModel greenLine = trackSystem.getTrackLine(Lines.GREEN);
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
-                        1, 2, 3,
-                        4, 5, 6,
-                        7, 8, 9, 10, 11, 12,
-                        13, 14, 15, 16,
-                        17, 18, 19, 20,
-                        21, 22, 23, 24, 25, 26, 27, 28,
-                        29, 30, 31, 32,
-                        33, 34, 35,
-                        144, 145, 146,
-                        147, 148, 149,
-                        150},
-                null, null,
+                1, 2, 3,
+                4, 5, 6,
+                7, 8, 9, 10, 11, 12,
+                13, 14, 15, 16,
+                17, 18, 19, 20,
+                21, 22, 23, 24, 25, 26, 27, 28,
+                29, 30, 31, 32,
+                33, 34, 35,
+                144, 145, 146,
+                147, 148, 149,
+                150},
+                greenLine, null,
                 "src/main/antlr/GreenLine1.plc"));
 
         addController(new WaysideControllerImpl(2, Lines.GREEN, new int[]{
@@ -67,7 +68,7 @@ public class WaysideSystem {
                 101,
                 102, 103, 104,
                 105, 106, 107, 108, 109},
-                null, null,
+                greenLine, null,
                 "src/main/antlr/GreenLine2.plc"));
 
         addController(new WaysideControllerImpl(3, Lines.GREEN, new int[]{
@@ -77,7 +78,7 @@ public class WaysideSystem {
                 110, 111, 112, 113, 114, 115, 116,
                 117, 118, 119, 120, 121,
                 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143},
-                null, null,
+                greenLine, null,
                 "src/main/antlr/GreenLine3.plc"));
 
         waysideExecutor = Executors.newFixedThreadPool(size());

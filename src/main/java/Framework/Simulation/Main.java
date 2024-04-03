@@ -19,8 +19,9 @@ public class Main {
     private static TrainSystem trainSystem;
 
     public static void main(String[] args) {
+        System.out.println("Starting simulation...");
          trackSystem = new TrackSystem();
-         waysideController = new WaysideSystem();
+         waysideController = new WaysideSystem(trackSystem);
          trainSystem = new TrainSystem();
 
         // Initialize and start modules
