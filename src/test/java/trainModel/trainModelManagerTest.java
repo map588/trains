@@ -2,7 +2,6 @@ package trainModel;
 
 
 import javafx.scene.control.Button;
-import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -25,14 +24,17 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        trainModel = new TrainModelImpl(0);
         trainModelManager = new TrainModelManager();
         trainModelManager.initialize();
     }
 
-//    @BeforeEach
-    public void setUp() {
-        Platform.startup(() -> {
-        });
+
+
+    @BeforeEach
+    public void setup() {
+        trainModel = new TrainModelImpl(1);
+
     }
 
     @AfterEach
