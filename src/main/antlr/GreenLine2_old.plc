@@ -1,0 +1,63 @@
+// Controls Sections N, O, P, Q blocks 77 - 100
+// Accesses occupancies of blocks 73 - 104
+
+// Assign Directions for Outgoing trains
+
+// Occupancies O
+authority[86] = not occupied[87] and not occupied[88] and not occupied[89] and not occupied[90]
+authority[87] = not occupied[88] and not occupied[89] and not occupied[90] and not occupied[91]
+authority[88] = not occupied[89] and not occupied[90] and not occupied[91] and not occupied[92]
+
+// Occupancies P
+authority[89] = not occupied[90] and not occupied[91] and not occupied[92] and not occupied[93]
+authority[90] = not occupied[91] and not occupied[92] and not occupied[93] and not occupied[94]
+authority[91] = not occupied[92] and not occupied[93] and not occupied[94] and not occupied[95]
+authority[92] = not occupied[93] and not occupied[94] and not occupied[95] and not occupied[96]
+authority[93] = not occupied[94] and not occupied[95] and not occupied[96] and not occupied[97]
+authority[94] = not occupied[95] and not occupied[96] and not occupied[97] and not occupied[98]
+authority[95] = not occupied[96] and not occupied[97] and not occupied[98] and not occupied[99]
+authority[96] = not occupied[97] and not occupied[98] and not occupied[99] and not occupied[100]
+authority[97] = not occupied[98] and not occupied[99] and not occupied[100] and not occupied[101]
+
+// Occupancies Q
+authority[98] = not occupied[99] and not occupied[100] and not occupied[101] and not occupied[102] and switch[77] == ALT
+authority[99] = not occupied[100] and not occupied[101] and not occupied[102] and not occupied[103] and switch[77] == ALT
+authority[100] = not occupied[101] and not occupied[102] and not occupied[103] and not occupied[104] and switch[77] == ALT
+
+// Occupancies N
+if dir_assigned[77]
+    if direction[77] == INBOUND
+        authority[77] = not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81]
+        authority[78] = not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82]
+        authority[79] = not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83]
+        authority[80] = not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84]
+        authority[81] = not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
+        authority[82] = not occupied[83] and not occupied[84] and not occupied[85] and not occupied[86]
+        authority[83] = not occupied[84] and not occupied[85] and not occupied[86] and not occupied[87]
+        authority[84] = not occupied[85] and not occupied[86] and not occupied[87] and not occupied[88]
+        authority[85] = not occupied[86] and not occupied[87] and not occupied[88] and not occupied[89]
+    else
+        authority[77] = not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and switch[77] == MAIN
+        authority[78] = not occupied[77] and not occupied[76] and not occupied[75] and not occupied[74] and switch[77] == MAIN
+        authority[79] = not occupied[78] and not occupied[77] and not occupied[76] and not occupied[75] and switch[77] == MAIN
+        authority[80] = not occupied[79] and not occupied[78] and not occupied[77] and not occupied[76] and switch[77] == MAIN
+        authority[81] = not occupied[80] and not occupied[79] and not occupied[78] and not occupied[77] and switch[77] == MAIN
+        authority[82] = not occupied[81] and not occupied[80] and not occupied[79] and not occupied[78] and switch[77] == MAIN
+        authority[83] = not occupied[82] and not occupied[81] and not occupied[80] and not occupied[79] and switch[77] == MAIN
+        authority[84] = not occupied[83] and not occupied[82] and not occupied[81] and not occupied[80] and switch[77] == MAIN
+        authority[85] = not occupied[84] and not occupied[83] and not occupied[82] and not occupied[81] and switch[77] == MAIN
+    endif
+else
+    authority[77] = FALSE
+    authority[78] = FALSE
+    authority[79] = FALSE
+    authority[80] = FALSE
+    authority[81] = FALSE
+    authority[82] = FALSE
+    authority[83] = FALSE
+    authority[84] = FALSE
+    authority[85] = FALSE
+endif
+
+// No crossings
+
