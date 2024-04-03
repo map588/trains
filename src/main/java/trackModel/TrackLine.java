@@ -157,7 +157,7 @@ public class TrackLine implements TrackModel {
                 // A train leaves a block
                 handleTrainExit(train, blockID);
             }
-            // Assuming up dates are less common, but you could implement it as needed
+            // Assuming updates are less common, but you could implement it as needed
             public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
                handleTrainExit(train, oldBlockID);
                handleTrainEntry(train, newBlockID);
@@ -207,7 +207,14 @@ public class TrackLine implements TrackModel {
     //TODO: We don't know how beacons will work yet
 //    @Override
     public void setBeacon(int block, Beacon beacon){
-        beaconBlocks.put(block, beacon);
+        syncTrackUpdate( () -> {
+            if(beaconBlocks.containsKey(block)){
+                beaconBlocks.remove(block);
+            }
+            beaconBlocks.put(block, beacon);
+            //trackBlocks.get(block).setBeacon(beacon);
+
+        });
     }
 
     @Override
@@ -249,32 +256,38 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setBrokenRail(Integer blockID, boolean state) {
+        syncTrackUpdate( () -> {
             TrackBlock brokenBlock = this.trackBlocks.get(blockID);
             if (brokenBlock != null) {
                 brokenBlock.setBrokenRail(state);
             } else {
                 throw new IllegalArgumentException("Block: " + blockID + " does not exist");
             }
+        });
     }
 
     @Override
     public void setPowerFailure(Integer blockID, boolean state) {
+        syncTrackUpdate( () -> {;
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setPowerFailure(state);
             } else {
                 throw new IllegalArgumentException("Block: " + blockID + " does not exist");
             }
+        });
     }
 
     @Override
     public void setTrackCircuitFailure(Integer blockID, boolean state) {
+        syncTrackUpdate( () -> {;
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setTrackCircuitFailure(state);
             } else {
                 throw new IllegalArgumentException("Block: " + blockID + " does not exist");
             }
+        });
     }
 
     @Override
@@ -294,16 +307,18 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setPassengersDisembarked(TrainModel train, int disembarked) {
-        if (trackOccupancyMap.containsKey(train)){
-            TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
-            if (block.feature.isStation()) {
-                block.feature.setPassengersDisembarked(disembarked);
+        syncTrackUpdate( () -> {
+            if(trackOccupancyMap.containsKey(train)){
+                TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
+                if (block.feature.isStation()) {
+                    block.feature.setPassengersDisembarked(disembarked);
+                } else {
+                    throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on a station block");
+                }
             } else {
-                throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on a station block");
+                throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on the track");
             }
-        } else {
-            throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on the track");
-        }
+        });
     }
 
     @Override
@@ -339,23 +354,10 @@ public class TrackLine implements TrackModel {
     public TrackBlock getBlock(int blockID) {
         return trackBlocks.get(blockID);
     }
-
     public void moveTrain(TrainModel train, int blockID) {
         if(trackOccupancyMap.containsKey(train)){
             trackOccupancyMap.remove(train);
         }
         trackOccupancyMap.put(train, blockID);
     }
-
-    public Integer findNearestStation(int blockID) {
-        while (true) {
-            if (trackBlocks.get(blockID).feature.isStation()) {
-                return blockID;
-            }
-            blockID++;
-        }
-    }
-
-
-
 }

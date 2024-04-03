@@ -69,9 +69,8 @@ public class TrackModelManager {
     @FXML
     private Button murphyEnter;
 
-    //track heater
-//    @FXML
-//    private Label statusLabel;
+    //TODO: track heater
+
     @FXML
     private TextField tempDisplay;
     @FXML
@@ -104,7 +103,6 @@ public class TrackModelManager {
     //switch information
     @FXML
     private Label switchStateDisplay;
-
     @FXML
     private Label switchBlockNumbersDisplay;
     @FXML
@@ -135,14 +133,10 @@ public class TrackModelManager {
     @FXML
     private TableColumn<TrackLineSubject, Boolean> failureColumn;
 
-    //current layout
-
-
-    // potential variables to assist with control
     //subject
-    private ArrayList <TrackLineSubject> trackLineSubject = new ArrayList<>();
-
     private TrackLineSubject subject;
+
+    //TODO: get TrackBlocks into table in the UI
 
     @FXML
     public void initialize(){
@@ -162,8 +156,6 @@ public class TrackModelManager {
         pickLine.setOnAction(event -> updateTable());
         switchStateDisplay.setText("No Switch Present");
 
-        occupiedColumn.setEditable(true);
-
         //set up cell factories
         sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
@@ -176,11 +168,7 @@ public class TrackModelManager {
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
         occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
-
         crossingState.setText("false");
-
-
-        //set track heater
 
         //labels
         lineTable.getSelectionModel().selectedItemProperty().addListener(event -> {
@@ -216,7 +204,6 @@ public class TrackModelManager {
             }
 
             if(subject.isIsCrossing()){
-
                 crossingState.textProperty().unbindBidirectional(subject.crossingStateProperty());
             }
 
@@ -224,13 +211,6 @@ public class TrackModelManager {
                 displayBeaconInfo.textProperty().unbindBidirectional(subject.setBeaconProperty());
                 beaconBlockNumber.textProperty().unbindBidirectional(subject.blockNumberProperty());
             }
-
-
-            statusLabel.textProperty().unbindBidirectional(subject.trackHeaterProperty());
-            //tempValueLabel.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
-
-            //occupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
-
         }
 
         subject = newProperties;
@@ -253,9 +233,7 @@ public class TrackModelManager {
         }
 
         statusLabel.textProperty().bindBidirectional(subject.trackHeaterProperty());
-        //tempValueLabel.textProperty().bindBidirectional(trackModelSubject.tempProperty());
-
-        //occupiedColumn.textProperty().bindBidirectional(trackProperties.isOccupiedProperty());
+        tempValueLabel.textProperty().bindBidirectional(subject.tempProperty());
 
         if(subject.isIsSwitch()){
             switchBlockNumbersDisplay.textProperty().bindBidirectional(subject.switchBlockIDProperty());
@@ -329,7 +307,8 @@ public class TrackModelManager {
             case "Power Failure" :
                 subject.setPowerFailure(true);
                 break;
-
+            default:
+                break;
         }
 
     }
@@ -337,7 +316,6 @@ public class TrackModelManager {
     private void addLineName(String text) {
         pickLine.getItems().add(text);
         murphyLine.getItems().add(text);
-
     }
 
     private void uploadTrack() {
@@ -351,8 +329,6 @@ public class TrackModelManager {
     private void chooseFolder() {
         DirectoryChooser dirChooser = new DirectoryChooser();
         File dir = dirChooser.showDialog(chooseFile.getScene().getWindow());
-
         if(dir != null){ trackFilePath.setText(dir.getPath()); }
     }
-
 }
