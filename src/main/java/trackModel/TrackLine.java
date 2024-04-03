@@ -226,7 +226,8 @@ public class TrackLine implements TrackModel {
 
     @Override
     public boolean getLightState(int block) {
-        return trackBlocks.get(block).lightState;
+        CompletableFuture<Boolean> futureLightState = CompletableFuture.supplyAsync(() -> trackBlocks.get(block).lightState, trackUpdateExecutor);
+        return futureLightState.join();
     }
 
     @Override
