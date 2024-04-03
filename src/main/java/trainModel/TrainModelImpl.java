@@ -165,7 +165,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
         //ACCELERATION PROGRESSION
         double previousAcceleration = this.acceleration;
-        System.out.println("Previous Acceleration: " + previousAcceleration);
+//        System.out.println("Previous Acceleration: " + previousAcceleration);
 
         //BRAKE FORCES
         if (this.serviceBrake && !this.emergencyBrake) {
@@ -194,7 +194,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         else {
             engineForce = this.power / this.speed;
         }
-        System.out.println("Engine Force: " + engineForce);
+//        System.out.println("Engine Force: " + engineForce);
 
         //SLOPE FORCE
         double currentAngle = Math.atan(this.grade / 100);
@@ -205,11 +205,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (netForce > Constants.MAX_ENGINE_FORCE){
             netForce = Constants.MAX_ENGINE_FORCE;
         }
-        System.out.println("Net Force: " + netForce);
+//        System.out.println("Net Force: " + netForce);
 
         //ACCELERATION CALCULATION
         this.setAcceleration(netForce / this.mass);
-        System.out.println("Acceleration: " + this.acceleration);
+//        System.out.println("Acceleration: " + this.acceleration);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
@@ -218,7 +218,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         if (this.speed < 0) { this.setActualSpeed(0); }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
-        System.out.println("Speed: " + this.speed);
+//        System.out.println("Speed: " + this.speed);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -419,6 +419,21 @@ public class TrainModelImpl implements TrainModel, Notifier {
         } else {
             this.direction = Direction.NORTH;
         }
+    }
+
+    @Override
+    public double getGrade() {
+        return this.grade;
+    }
+
+    @Override
+    public int getNumCars() {
+        return this.numCars;
+    }
+
+    @Override
+    public int getCrewCount() {
+        return this.crewCount;
     }
 
     @Override

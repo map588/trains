@@ -37,6 +37,7 @@ public class trainStub implements TrainModel {
     int numCars;
     double distanceTraveled;
     double mass;
+    double grade;
     double temperature;
     String announcement;
 
@@ -310,6 +311,8 @@ public class trainStub implements TrainModel {
     public int getNumCars() {
         return numCars;
     }
+
+    public double getGrade() { return grade; }
 
     @Override
     public double getDistanceTraveled() {

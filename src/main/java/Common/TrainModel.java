@@ -66,6 +66,9 @@ public interface  TrainModel {
     boolean getRightDoors();
     double getlength();
     int getPassengerCount();
+    int getCrewCount();
+    double getGrade();
+    int getNumCars();
 
 
 

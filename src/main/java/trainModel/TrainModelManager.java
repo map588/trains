@@ -41,13 +41,14 @@ public class TrainModelManager {
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
-    private TrainModelSubjectMap subjectMap;
+    TrainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private TrainModelSubject subject;
     private TrainModelTB testBench;
 
     @FXML
     public void initialize() {
+        System.out.println("Started TrainModelManager initialize");
 
         new TrainModelImpl(0);
 
@@ -68,6 +69,8 @@ public class TrainModelManager {
             }
         });
         setUpCircleColors();
+
+        System.out.println("Finished TrainModelManager initialize");
     }
 
     private void bindLabels() {
