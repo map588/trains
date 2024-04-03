@@ -1,14 +1,13 @@
 package Common;
 
-import Utilities.Records.Beacon;
-
 public interface TrackModel {
 
     //Vital Setters
     void setLightState(int block, boolean state);
     void setSwitchState(int block, boolean state);
     void setCrossing(int block, boolean state);
-    void setBeacon(int block, Beacon beacon);
+
+    //Train Commands
     void setTrainAuthority(Integer blockID, int authority);
     void setCommandedSpeed(Integer blockID, double commandedSpeed);
 
@@ -30,7 +29,7 @@ public interface TrackModel {
 
     //Non-Vitals
     void setPassengersDisembarked(TrainModel train, int disembarked);
-    int getTicketSales();
     int getPassengersEmbarked(TrainModel train);
+    int getTicketSales();
 
 }

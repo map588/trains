@@ -24,6 +24,7 @@ public class Constants {
 
     final public static Direction YARD_OUT_DIRECTION = Direction.NORTH;
 
+    final public static int YARD_OUT_BLOCK = 0;
 
     //Physics Constants
     final public static double GRAVITY = 9.81; // m/s^2

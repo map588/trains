@@ -112,7 +112,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         this.currentSpeed = speed;
         subject.notifyChange(CURRENT_SPEED_PROPERTY, speed);
     }
-    public void setServiceBrake(boolean brake) {
+    private void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
         subject.notifyChange(SERVICE_BRAKE_PROPERTY, brake);
     }
@@ -138,7 +138,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
-
         subject.notifyChange(EXT_LIGHTS_PROPERTY, lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {

@@ -27,9 +27,9 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available
         properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(controller.getAuthority()));
-        properties.put(SAMPLING_PERIOD_PROPERTY, new SimpleIntegerProperty(controller.getSamplingPeriod()));
+        properties.put(SAMPLING_PERIOD_PROPERTY, new SimpleIntegerProperty());
         properties.put(COMMAND_SPEED_PROPERTY, new SimpleDoubleProperty(controller.getCommandSpeed()));
-        properties.put(CURRENT_SPEED_PROPERTY, new SimpleDoubleProperty(controller.getSpeed()));
+        properties.put(CURRENT_SPEED_PROPERTY, new SimpleDoubleProperty(0.0));
         properties.put(OVERRIDE_SPEED_PROPERTY, new SimpleDoubleProperty(controller.getOverrideSpeed()));
         properties.put(SPEED_LIMIT_PROPERTY, new SimpleDoubleProperty(controller.getSpeedLimit()));
         properties.put(KI_PROPERTY, new SimpleDoubleProperty(controller.getKi()));
@@ -47,10 +47,10 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         properties.put(TEMPERATURE_PROPERTY, new SimpleDoubleProperty(controller.getTemperature()));
         properties.put(LEFT_DOORS_PROPERTY, new SimpleBooleanProperty(controller.getLeftDoors()));
         properties.put(RIGHT_DOORS_PROPERTY, new SimpleBooleanProperty(controller.getRightDoors()));
-        properties.put(IN_TUNNEL_PROPERTY, new SimpleBooleanProperty(controller.getInTunnel()));
-        properties.put(LEFT_PLATFORM_PROPERTY, new SimpleBooleanProperty(controller.getLeftPlatform()));
-        properties.put(RIGHT_PLATFORM_PROPERTY, new SimpleBooleanProperty(controller.getRightPlatform()));
-        properties.put(NEXT_STATION_PROPERTY, new SimpleStringProperty(controller.getStationName()));
+        properties.put(IN_TUNNEL_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(LEFT_PLATFORM_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(RIGHT_PLATFORM_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(NEXT_STATION_PROPERTY, new SimpleStringProperty("N/A"));
         properties.put(TRAIN_ID_PROPERTY, new SimpleIntegerProperty(controller.getID()));
         properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(controller.getGrade()));
     }
