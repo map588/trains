@@ -5,6 +5,7 @@ import Common.TrainModel;
 import Framework.Support.GUIModifiable;
 import Utilities.Constants;
 import Utilities.Records.Beacon;
+import javafx.scene.control.Alert;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
@@ -423,11 +424,29 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      */
     public void onTick(){
 
+        // Power might go here
+
+        // Get new Temperature
+        this.currentTemperature = train.getRealTemperature();
+        if(this.currentTemperature != this.setTemperature) train.setSetTemperature(this.setTemperature);
+
+        // Redundancy Check
+        this.checkBrakeFailure();
+        this.checkBrakeFailure();
+        this.checkPowerFailure();
+        this.checkPowerFailure();
+        this.checkSignalFailure();
+        this.checkSignalFailure();
+
+        // Authority Stopping
     }
     /**
      *  onBlock()
      */
     public void onBlock(){
+
+        checkTunnel();
+
 
     }
     /**
@@ -435,16 +454,88 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      */
     public void onStation(){
 
+        // Get Block info
+
+
+        //TODO: Stopping train in middle of a block
+
+
+        //This will eventually go inside a check to see if we are stopped at a station.
+        if (train.getSpeed() == 0){                             // Check if train is stopped
+
+            // Hopefully wont affect make announcment implementation in manager
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Arrival");
+            alert.setHeaderText(null);
+            alert.setContentText("Arriving at " + nextStationName); // Note that nextStationName will be updated at some point
+            alert.showAndWait();
+
+            if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
+            if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
+
+            //wait(60000);
+
+            this.setLeftDoors(false);
+            this.setRightDoors(false);
+        }
+
+
+
+
     }
 
 
     // Implement Crossing tunnel
     public void checkTunnel(){
+        // Get block information somehow
 
+        if(inTunnel) {
+            setIntLights(true);
+            setExtLights(true);
+
+            train.setIntLights(true);
+            train.setExtLights(true);
+        }
+        else{
+            setIntLights(false);
+            setExtLights(false);
+
+            train.setIntLights(false);
+            train.setExtLights(false);
+        }
     }
 
     // Failure Management with Steven He
-    public void checkBrakeFailure(){
+    public boolean checkBrakeFailure(){
 
+        // Failures occur when the brake states in the train controller do not match with brake states in the train model
+        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
+        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
+
+        // If true, pick a god and pray
+
+        return brakeFailure;
+    }
+    public boolean checkSignalFailure(){
+        // Failure occur when the commanded speed or commanded authority is -1
+        this.setCommandSpeed(train.getCommandSpeed());
+        this.setAuthority(train.getAuthority());
+
+        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
+
+        //If true, activate emergency brake
+        if (signalFailure) this.setEmergencyBrake(true);
+
+        return signalFailure;
+    }
+    public boolean checkPowerFailure(){
+        // Failure occurs when train model's set power equals 0 but we are outputting power
+
+        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
+
+        // If true, activate emergency brake
+        if (this.powerFailure) this.setEmergencyBrake(true);
+
+        return this.powerFailure;
     }
 }
