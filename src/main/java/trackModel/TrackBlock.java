@@ -54,7 +54,7 @@ public class TrackBlock {
         this.cumulativeElevation = blockInfo.cumulativeElevation();
         this.speedLimit = blockInfo.speedLimit();
         this.length = blockInfo.blockLength();
-        this.line = Lines.valueOf(blockInfo.trackLine().toUpperCase());
+        this.line =blockInfo.trackLine();
 
 
         if (isSwitch && blockType == BlockType.STATION) {

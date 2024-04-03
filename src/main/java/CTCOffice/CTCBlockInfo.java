@@ -30,7 +30,7 @@ class CTCBlockInfo {
     CTCBlockInfo(BasicBlock block) {
 
         this.blockID = block.blockNumber();
-        this.line = block.trackLine();
+        this.line = block.trackLine().toString();
         this.occupied = false;
         this.hasLight = false;//tbd
         this.hasSwitch = block.isSwitch();

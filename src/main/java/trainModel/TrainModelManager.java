@@ -44,7 +44,7 @@ public class TrainModelManager {
     TrainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private TrainModelSubject subject;
-    private TrainModelTB testBench;
+    //private TrainModelTB testBench;
 
     @FXML
     public void initialize() {
@@ -169,7 +169,7 @@ public class TrainModelManager {
             bindGauges();
             bindIndicators();
             bindLabels();
-            testBench.changeModels(subject.getModel());
+            //testBench.changeModels(subject.getModel());
         }
     }
 

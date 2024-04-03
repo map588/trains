@@ -1,17 +1,18 @@
 package CTCOffice;
 
-import CTCOffice.ScheduleInfo.*;
+import CTCOffice.ScheduleInfo.ScheduleFile;
+import CTCOffice.ScheduleInfo.ScheduleFileSubject;
+import CTCOffice.ScheduleInfo.ScheduleLibrary;
+import CTCOffice.ScheduleInfo.TrainStop;
 import Common.CTCOffice;
+import Utilities.BasicLineMap;
 import Utilities.Enums.Lines;
+import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-
-import static Utilities.BlockParser.parseCSV;
 
 
 /**
@@ -39,7 +40,7 @@ public class CTCOfficeImpl implements CTCOffice {
      */
     private CTCOfficeImpl() {
 
-        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLineBlocks = parseCSV();
+        BasicLineMap trackLineBlocks = ParsedBasicBlocks.getInstance().getAllBasicLines();
 
         for(Lines line : trackLineBlocks.keySet()) {
             ArrayList<CTCBlockSubject> blockSubjects = new ArrayList<>();
