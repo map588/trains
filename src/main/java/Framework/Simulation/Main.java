@@ -1,5 +1,8 @@
 package Framework.Simulation;
 
+import Framework.GUI.mainMenu;
+import javafx.application.Application;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,6 +33,8 @@ public class Main {
         // Schedule the time synchronization task
         scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackSystem, waysideController, trainSystem),
                 0, TIMESTEP, TimeUnit.MILLISECONDS);
+
+        Application.launch(mainMenu.class, args);
     }
 
     public void changeScheduledExecutionInterval(long newIntervalMs) {

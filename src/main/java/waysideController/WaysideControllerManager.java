@@ -140,7 +140,8 @@ public class WaysideControllerManager {
         changeControllerComboBox.itemsProperty().bindBidirectional(WaysideSystem.getControllerList());
 
         // Create initial controller and update values
-        createNewController();
+//        createNewController();
+        changeActiveController(WaysideSystem.getController(1));
         testBench.setController(currentSubject);
 
         // Set default folder for PLC:
