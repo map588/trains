@@ -49,7 +49,7 @@ ELSE : 'else' | 'ELSE' ;
 ENDIF : 'endif' | 'ENDIF' ;
 FOR : 'for' | 'FOR' ;
 ENDFOR : 'endfor' | 'ENDFOR' ;
-COMMENT : '//' ~( '\r' | '\n' )* -> skip ;
+COMMENT : '//' ~( '\r' | '\n' )* NEWLINE -> skip ;
 TO : 'to' | 'TO' ;
 DO : 'do' | 'DO' ;
 END : 'end' | 'END' ;

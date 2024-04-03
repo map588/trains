@@ -353,7 +353,7 @@ public class WaysideControllerManager {
                     null, null);
         } else {
             newController = new WaysideControllerHWBridge(WaysideSystem.size(),
-                    "Green",
+                    Lines.GREEN,
                     new int[]{
                             1, 2, 3,
                             4, 5, 6,

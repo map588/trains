@@ -23,7 +23,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     private final int id;
 
     // The name of the track line that the wayside controller is on
-    private final String trackLine;
+    private final Lines trackLine;
 
     // Whether the wayside controller is in maintenance mode
     private boolean maintenanceMode = false;
@@ -37,7 +37,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     private final SerialPort port;
     private final PrintStream printStream;
 
-    public WaysideControllerHWBridge(int id, String trackLine, int[] blockIDList, String comPort) {
+    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort) {
         this.id = id;
         this.trackLine = trackLine;
 
@@ -85,6 +85,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         System.out.println("Send: runPLC");
         printStream.println("runPLC");
+    }
+
+    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, String plcPath) {
+        this(id, trackLine, blockIDList, comPort);
+        loadPLC(new File(plcPath));
     }
 
     @Override
