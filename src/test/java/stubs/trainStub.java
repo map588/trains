@@ -230,7 +230,7 @@ public class trainStub implements TrainModel {
         return emergencyBrake;
     }
 
-    @Override
+//    @Override
     public double getWeightKG() {
         return weightKG;
     }
@@ -295,7 +295,7 @@ public class trainStub implements TrainModel {
 
     }
 
-    @Override
+//    @Override
     public int getCrewCount() {
         return crewCount;
     }
@@ -305,7 +305,7 @@ public class trainStub implements TrainModel {
         return passengerCount;
     }
 
-    @Override
+//    @Override
     public int getNumCars() {
         return numCars;
     }

@@ -19,7 +19,7 @@ public class TrackSystem {
     ParsedBasicBlocks parsedBasicBlocks = ParsedBasicBlocks.getInstance();
 
     public TrackSystem() {
-        BasicLineMap basicLines = new BasicLineMap(parsedBasicBlocks.getAllBasicLines());
+        BasicLineMap basicLines = parsedBasicBlocks.getAllBasicLines();
         trackLineExecutor = Executors.newFixedThreadPool(basicLines.size());
         for (Lines line : Lines.values()) {
             TrackLines.put(line, new TrackLine(line, basicLines.get(line)));

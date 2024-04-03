@@ -27,7 +27,7 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(ACTUALSPEED_PROPERTY, new SimpleDoubleProperty(model.getSpeed()));
         properties.put(ACCELERATION_PROPERTY, new SimpleDoubleProperty(model.getAcceleration()));
         properties.put(POWER_PROPERTY, new SimpleDoubleProperty(model.getPower()));
-        properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(model.getGrade()));
+//        properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(model.getGrade()));
         properties.put(SERVICEBRAKE_PROPERTY, new SimpleBooleanProperty(model.getServiceBrake()));
         properties.put(EMERGENCYBRAKE_PROPERTY, new SimpleBooleanProperty(model.getEmergencyBrake()));
         properties.put(BRAKEFAILURE_PROPERTY, new SimpleBooleanProperty(model.getBrakeFailure()));
@@ -39,9 +39,9 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(INTLIGHTS_PROPERTY, new SimpleBooleanProperty(model.getIntLights()));
         properties.put(LEFTDOORS_PROPERTY, new SimpleBooleanProperty(model.getLeftDoors()));
         properties.put(RIGHTDOORS_PROPERTY, new SimpleBooleanProperty(model.getRightDoors()));
-        properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(model.getNumCars()));
+//        properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(model.getNumCars()));
         properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(model.getPassengerCount()));
-        properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(model.getCrewCount()));
+//        properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(model.getCrewCount()));
         properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(model.getTimeDelta()));
         properties.put(MASS_PROPERTY, new SimpleDoubleProperty(model.getMass()));
         properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(model.getDistanceTraveled()));

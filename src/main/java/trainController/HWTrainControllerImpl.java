@@ -47,7 +47,7 @@ public class HWTrainControllerImpl implements TrainController {
 
     double powerOutput;
 
-    @Override
+//    @Override
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
         sendCommand("setAutomaticMode:" + mode);
@@ -58,7 +58,7 @@ public class HWTrainControllerImpl implements TrainController {
         sendCommand("setAuthority:" + authority);
     }
 
-    @Override
+//    @Override
     public void setOverrideSpeed(double speed) {
         sendCommand("setOverrideSpeed:" + speed);
     }
@@ -68,7 +68,7 @@ public class HWTrainControllerImpl implements TrainController {
         sendCommand("setCommandSpeed:" + speed);
     }
 
-    @Override
+//    @Override
     public void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
         sendCommand("setServiceBrake:" + brake);
@@ -80,35 +80,35 @@ public class HWTrainControllerImpl implements TrainController {
         sendCommand("setEmergencyBrake:" + brake);
     }
 
-    @Override
+//    @Override
     public void setKi(double Ki) {
         sendCommand("setKi:" + Ki);
     }
 
-    @Override
+//    @Override
     public void setKp(double Kp) {
         sendCommand("setKp:" + Kp);
     }
 
-    @Override
+//    @Override
     public void setIntLights(boolean intLights) {
         this.intLights = intLights;
         sendCommand("setIntLights:" + intLights);
     }
 
-    @Override
+//    @Override
     public void setExtLights(boolean extLights) {
         this.extLights = extLights;
         sendCommand("setExtLights:" + extLights);
     }
 
-    @Override
+//    @Override
     public void setLeftDoors(boolean leftDoors) {
         this.leftDoors = leftDoors;
         sendCommand("setLeftDoors:" + leftDoors);
     }
 
-    @Override
+//    @Override
     public void setRightDoors(boolean rightDoors) {
         this.rightDoors = rightDoors;
         sendCommand("setRightDoors:" + rightDoors);
@@ -119,7 +119,7 @@ public class HWTrainControllerImpl implements TrainController {
         return this.ID;
     }
 
-    @Override
+//    @Override
     public double getAcceleration() {
         return 0;
     }
@@ -184,7 +184,7 @@ public class HWTrainControllerImpl implements TrainController {
         return false;
     }
 
-    @Override
+//    @Override
     public int getSamplingPeriod() {
         return 0;
     }
@@ -234,37 +234,37 @@ public class HWTrainControllerImpl implements TrainController {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean getLeftPlatform() {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean getRightPlatform() {
         return false;
     }
 
-    @Override
+//    @Override
     public String getStationName() {
         return null;
     }
 
-    @Override
+//    @Override
     public void setLeftPlatform(boolean leftPlatform) {
 
     }
 
-    @Override
+//    @Override
     public void setRightPlatform(boolean rightPlatform) {
 
     }
 
-    @Override
+//    @Override
     public boolean getInTunnel() {
         return false;
     }
 
-    @Override
+//    @Override
     public void setInTunnel(boolean inTunnel) {
 
     }

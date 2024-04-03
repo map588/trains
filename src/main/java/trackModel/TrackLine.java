@@ -205,7 +205,7 @@ public class TrackLine implements TrackModel {
     }
 
     //TODO: We don't know how beacons will work yet
-    @Override
+//    @Override
     public void setBeacon(int block, Beacon beacon){
         beaconBlocks.put(block, beacon);
     }

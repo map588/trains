@@ -45,7 +45,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        TrainModel mockModel = new TrainModelImpl(0, )
+        TrainModel mockModel = new TrainModelImpl(0, null);
         controller = new TrainControllerImpl(mockModel, 1); // Assuming '1' is a valid trainID
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Framework/GUI/FXML/trainController.fxml"));
         Scene scene = new Scene(loader.load());

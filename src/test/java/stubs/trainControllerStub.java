@@ -18,7 +18,7 @@ public class trainControllerStub implements TrainController {
             this.train = train;
     }
 
-    @Override
+//    @Override
     public void setAutomaticMode(boolean mode) {
 
     }
@@ -28,7 +28,7 @@ public class trainControllerStub implements TrainController {
 
     }
 
-    @Override
+//    @Override
     public void setOverrideSpeed(double speed) {
 
     }
@@ -38,7 +38,7 @@ public class trainControllerStub implements TrainController {
 
     }
 
-    @Override
+//    @Override
     public void setServiceBrake(boolean brake) {
 
     }
@@ -48,32 +48,32 @@ public class trainControllerStub implements TrainController {
 
     }
 
-    @Override
+//    @Override
     public void setKi(double Ki) {
 
     }
 
-    @Override
+//    @Override
     public void setKp(double Kp) {
 
     }
 
-    @Override
+//    @Override
     public void setIntLights(boolean intLights) {
 
     }
 
-    @Override
+//    @Override
     public void setExtLights(boolean extLights) {
 
     }
 
-    @Override
+//    @Override
     public void setLeftDoors(boolean leftDoors) {
 
     }
 
-    @Override
+//    @Override
     public void setRightDoors(boolean rightDoors) {
 
     }
@@ -83,12 +83,12 @@ public class trainControllerStub implements TrainController {
         return 0;
     }
 
-    @Override
+//    @Override
     public double getSpeed() {
         return 0;
     }
 
-    @Override
+//    @Override
     public double getAcceleration() {
         return 0;
     }
@@ -153,7 +153,7 @@ public class trainControllerStub implements TrainController {
         return false;
     }
 
-    @Override
+//    @Override
     public int getSamplingPeriod() {
         return 0;
     }
@@ -203,37 +203,37 @@ public class trainControllerStub implements TrainController {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean getLeftPlatform() {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean getRightPlatform() {
         return false;
     }
 
-    @Override
+//    @Override
     public String getStationName() {
         return null;
     }
 
-    @Override
+//    @Override
     public void setLeftPlatform(boolean leftPlatform) {
 
     }
 
-    @Override
+//    @Override
     public void setRightPlatform(boolean rightPlatform) {
 
     }
 
-    @Override
+//    @Override
     public boolean getInTunnel() {
         return false;
     }
 
-    @Override
+//    @Override
     public void setInTunnel(boolean inTunnel) {
 
     }
