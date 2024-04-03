@@ -60,17 +60,26 @@ public class TrainControllerManager {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
             currentSubject = subjectMap.getSubject(firstKey);
+
+            currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
         }else{
             statusLog.setText("No Trains Available");
         }
+
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            System.out.println("Inside trainNoChoiceBox");
             if (newSelection != null) {
+                System.out.println("Inside trainNoChoiceBox, inside if");
                 changeTrainView(newSelection);
             }
         });
 
-        currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
+        // Error Occurs Here: currentSubject is Null here. Moved to line 64
+        // currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
+
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
+
+        System.out.println("End of initialization");
     }
 
     private void setupMapChangeListener() {
