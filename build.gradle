@@ -53,7 +53,7 @@ generateGrammarSource {
 }
 
 application {
-    mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.GUI.mainMenu'
+    mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.Simulation.Main'
     //mainClass = 'Framework.GUI.TrackLayoutVisualizer'
 }
 
