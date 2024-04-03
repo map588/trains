@@ -1,7 +1,7 @@
 package waysideController;
 
+import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
-import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
 
@@ -104,7 +104,7 @@ public class WaysideControllerHW implements PLCRunner {
     private void setupBlocks(int[] blockIDList, String trackLine) {
         blockMap.clear();
         // Parse the CSV file to get the blocks that the wayside controls
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(trackLine.equals("Green") ? Lines.GREEN : Lines.RED);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.valueOf(trackLine));
         for(int blockID : blockIDList) {
             WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);
