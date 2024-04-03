@@ -2,6 +2,7 @@ package waysideController;
 
 import Common.WaysideController;
 import Framework.Support.Notifier;
+import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
@@ -44,7 +45,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         subject = new WaysideControllerSubject(this);
 
         // Parse the CSV file to get the blocks that the wayside controls
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(Lines.GREEN);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = ParsedBasicBlocks.getInstance().getBasicLine(trackLine);
         for(int blockID : blockIDList) {
             WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);
