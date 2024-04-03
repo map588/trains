@@ -41,7 +41,7 @@ public class TrainControllerManager {
     @FXML
     private Slider setSpeedSlider;
     @FXML
-    private Gauge currentSpeedGauge, speedLimitGauge, commandedSpeedGauge, authorityGauge, powerOutputGauge;
+    private Gauge currentSpeedGauge, speedLimitGauge, commandedSpeedGauge, authorityGauge, powerOutputGauge, currentTemperatureGauge;
     @FXML
     private Circle eBrakeStatus, signalFailureStatus, brakeFailureStatus, powerFailureStatus, stationSideLeftStatus, stationSideRightStatus, inTunnelStatus;
     @FXML
@@ -117,6 +117,7 @@ public class TrainControllerManager {
         commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(COMMAND_SPEED_PROPERTY));
         speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty(SPEED_LIMIT_PROPERTY));
         authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty(AUTHORITY_PROPERTY));
+        currentTemperatureGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_TEMPERATURE_PROPERTY));
         appendListener(currentSubject.getDoubleProperty(POWER_PROPERTY), (obs, oldVal, newVal) -> {
             double p = currentSubject.getDoubleProperty(POWER_PROPERTY).get();
             powerOutputGauge.setValue(p);
@@ -154,7 +155,7 @@ public class TrainControllerManager {
         bindCheckBox(openDoorRightCheckBox, RIGHT_DOORS_PROPERTY);
         bindCheckBox(toggleServiceBrakeCheckBox, SERVICE_BRAKE_PROPERTY);
         bindCheckBox(autoModeCheckBox, AUTOMATIC_MODE_PROPERTY);
-        bindDoubleTextField(setTemperatureTextField, TEMPERATURE_PROPERTY);
+        bindDoubleTextField(setTemperatureTextField, SET_TEMPERATURE_PROPERTY);
         bindDoubleTextField(setKiTextField, KI_PROPERTY);
         bindDoubleTextField(setKpTextField, KP_PROPERTY);
         setupButtonActions();
@@ -316,7 +317,7 @@ public class TrainControllerManager {
             autoModeCheckBox.setSelected(currentSubject.getBooleanProperty(AUTOMATIC_MODE_PROPERTY).get());
 
             // Update text fields
-            setTemperatureTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(TEMPERATURE_PROPERTY).get()));
+            setTemperatureTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(SET_TEMPERATURE_PROPERTY).get()));
             setKiTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(KI_PROPERTY).get()));
             setKpTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(KP_PROPERTY).get()));
             setSpeedTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(OVERRIDE_SPEED_PROPERTY).get()));
@@ -355,7 +356,7 @@ public class TrainControllerManager {
                     EXT_LIGHTS_PROPERTY, AUTOMATIC_MODE_PROPERTY ->
                     "\n" + getPropertyLabel(propertyName) + "\n" + (Boolean.parseBoolean(value) ? getOnLabel(propertyName) : getOffLabel(propertyName));
             case EMERGENCY_BRAKE_PROPERTY -> "\nEmergency Brake \n" + value;
-            case TEMPERATURE_PROPERTY -> "\nTemperature set to \n" + value + "°F";
+            case SET_TEMPERATURE_PROPERTY -> "\nTemperature set to \n" + value + "°F";
             case KI_PROPERTY -> "\nKi set to \n" + value;
             case KP_PROPERTY -> "\nKp set to \n" + value;
             case ANNOUNCEMENTS_PROPERTY -> "\nAnnouncements Created\n";

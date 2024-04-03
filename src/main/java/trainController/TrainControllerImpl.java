@@ -36,7 +36,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
 
     private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
             speedLimit = 0.0, Ki = 1.0, Kp = 1.0, power = 0.0, grade = 0.0,
-            temperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
+            setTemperature = 0.0, currentTemperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
 
     private int authority = 0;
 
@@ -146,9 +146,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         this.rightDoors = doors;
         subject.notifyChange(RIGHT_DOORS_PROPERTY, doors);
     }
-    public void setTemperature(double temp) {
-        this.temperature = temp;
-        subject.notifyChange(TEMPERATURE_PROPERTY, temp);
+    public void setSetTemperature(double temp) {
+        this.setTemperature = temp;
+        subject.notifyChange(SET_TEMPERATURE_PROPERTY, temp);
+    }
+    public void setCurrentTemperature(double temp){
+        this.currentTemperature = temp;
+        subject.notifyChange(CURRENT_TEMPERATURE_PROPERTY,temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
@@ -223,7 +227,8 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             case EXT_LIGHTS_PROPERTY -> this.externalLights = (boolean) newValue;
             case LEFT_DOORS_PROPERTY -> this.leftDoors = (boolean) newValue;
             case RIGHT_DOORS_PROPERTY -> this.rightDoors = (boolean) newValue;
-            case TEMPERATURE_PROPERTY -> this.temperature = (double) newValue;
+            case SET_TEMPERATURE_PROPERTY -> this.setTemperature = (double) newValue;
+            case CURRENT_TEMPERATURE_PROPERTY ->  this.currentTemperature = (double) newValue;
             case ANNOUNCEMENTS_PROPERTY -> this.announcements = (boolean) newValue;
             case SIGNAL_FAILURE_PROPERTY -> this.signalFailure = (boolean) newValue;
             case BRAKE_FAILURE_PROPERTY -> this.brakeFailure = (boolean) newValue;
@@ -312,8 +317,11 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     public boolean getRightDoors() {
         return this.rightDoors;
     }
-    public double  getTemperature() {
-        return this.temperature;
+    public double  getSetTemperature() {
+        return this.setTemperature;
+    }
+    public double  getCurrentTemperature() {
+        return this.currentTemperature;
     }
     public String  getStationName(){
         return this.nextStationName;
@@ -409,4 +417,34 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         return setSpeed;
     }
 
+    /**
+     *  onTick()
+     *  Get current values and then run related flags
+     */
+    public void onTick(){
+
+    }
+    /**
+     *  onBlock()
+     */
+    public void onBlock(){
+
+    }
+    /**
+     * onStation()
+     */
+    public void onStation(){
+
+    }
+
+
+    // Implement Crossing tunnel
+    public void checkTunnel(){
+
+    }
+
+    // Failure Management with Steven He
+    public void checkBrakeFailure(){
+
+    }
 }

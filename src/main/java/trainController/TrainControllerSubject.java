@@ -47,7 +47,8 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         properties.put(SIGNAL_FAILURE_PROPERTY, new SimpleBooleanProperty(controller.getSignalFailure()));
         properties.put(BRAKE_FAILURE_PROPERTY, new SimpleBooleanProperty(controller.getBrakeFailure()));
         properties.put(POWER_FAILURE_PROPERTY, new SimpleBooleanProperty(controller.getPowerFailure()));
-        properties.put(TEMPERATURE_PROPERTY, new SimpleDoubleProperty(controller.getTemperature()));
+        properties.put(SET_TEMPERATURE_PROPERTY, new SimpleDoubleProperty(controller.getSetTemperature()));
+        properties.put(CURRENT_TEMPERATURE_PROPERTY, new SimpleDoubleProperty(controller.getCurrentTemperature()));
         properties.put(LEFT_DOORS_PROPERTY, new SimpleBooleanProperty(controller.getLeftDoors()));
         properties.put(RIGHT_DOORS_PROPERTY, new SimpleBooleanProperty(controller.getRightDoors()));
         properties.put(IN_TUNNEL_PROPERTY, new SimpleBooleanProperty(false));
