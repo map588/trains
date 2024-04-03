@@ -87,7 +87,7 @@ public class TrainModelTB {
 
         tbPower.setOnAction(event -> subject.setProperty("power", Double.parseDouble(tbPower.getText())));
         tbSpeed.setOnAction(event -> subject.setProperty("commandSpeed", Double.parseDouble(tbSpeed.getText())));
-        tbAuthority.setOnAction(event -> subject.setProperty("authority", Integer.parseInt(tbAuthority.getText())));
+        tbAuthority.setOnAction(event -> subject.setProperty(Properties.AUTHORITY_PROPERTY, Integer.parseInt(tbAuthority.getText())));
         tbGrade.setOnAction(event -> subject.setProperty("grade", Double.parseDouble(tbGrade.getText())));
         tbTemp.setOnAction(event -> subject.setProperty("setTemperature", Double.parseDouble(tbTemp.getText())));
         tbTimeDelta.setOnAction(event -> subject.setProperty("timeDelta", Integer.parseInt(tbTimeDelta.getText())));

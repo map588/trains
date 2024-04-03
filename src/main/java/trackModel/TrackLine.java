@@ -339,6 +339,7 @@ public class TrackLine implements TrackModel {
     public TrackBlock getBlock(int blockID) {
         return trackBlocks.get(blockID);
     }
+
     public void moveTrain(TrainModel train, int blockID) {
         if(trackOccupancyMap.containsKey(train)){
             trackOccupancyMap.remove(train);
@@ -346,6 +347,14 @@ public class TrackLine implements TrackModel {
         trackOccupancyMap.put(train, blockID);
     }
 
+    public Integer findNearestStation(int blockID) {
+        while (true) {
+            if (trackBlocks.get(blockID).feature.isStation()) {
+                return blockID;
+            }
+            blockID++;
+        }
+    }
 
 
 
