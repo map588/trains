@@ -232,10 +232,6 @@ public class trainStub implements TrainModel {
         return emergencyBrake;
     }
 
-//    @Override
-    public double getWeightKG() {
-        return weightKG;
-    }
 
     @Override
     public Direction getDirection() {
@@ -296,23 +292,22 @@ public class trainStub implements TrainModel {
     public void changeTimeDelta(int v) {
 
     }
-
-//    @Override
-    public int getCrewCount() {
-        return crewCount;
-    }
-
     @Override
     public int getPassengerCount() {
         return passengerCount;
     }
 
-//    @Override
-    public int getNumCars() {
-        return numCars;
+    @Override
+    public int getCrewCount() {
+        return crewCount;
     }
 
     public double getGrade() { return grade; }
+
+    @Override
+    public int getNumCars() {
+        return numCars;
+    }
 
     @Override
     public double getDistanceTraveled() {

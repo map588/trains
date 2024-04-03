@@ -4,8 +4,6 @@ import Framework.Simulation.TrainSystem;
 import Utilities.BlockParser;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
-import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import trackModel.TrackLine;
@@ -21,10 +19,6 @@ public class TrainModelAndController {
     private final ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines = BlockParser.parseCSV();
     private  TrackLine trackLine;
 
-    @BeforeAll
-    public static void setUpAll() {
-        Platform.startup(() -> {});
-    }
 
     @BeforeEach
     void setUp() {

@@ -1,13 +1,14 @@
 package Utilities.Records;
 
-import java.util.List;
-import java.util.Optional;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Direction;
+import Utilities.Enums.Lines;
+
+import java.util.Optional;
 
 
 public record BasicBlock(
-        String trackLine,
+        Lines trackLine,
         String section,
         int blockNumber,
         double blockLength,

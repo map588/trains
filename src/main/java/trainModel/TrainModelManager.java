@@ -50,12 +50,14 @@ public class TrainModelManager {
     public void initialize() {
         System.out.println("Started TrainModelManager initialize");
 
-        new TrainModelImpl(0);
+
 
         subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
-        testBench = launchTestBench();
+        new TrainModelImpl(0);
+
+        //testBench = launchTestBench();
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);

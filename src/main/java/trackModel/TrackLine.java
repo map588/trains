@@ -3,9 +3,9 @@ package trackModel;
 import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
-import Utilities.Records.BasicBlock;
-import Utilities.Records.BasicBlock.Connection;
+import Utilities.BasicBlockLine;
 import Utilities.Enums.Lines;
+import Utilities.Records.BasicBlock.Connection;
 import Utilities.Records.Beacon;
 import trainModel.TrainModelImpl;
 
@@ -34,7 +34,7 @@ public class TrackLine implements TrackModel {
 
     private final TrackLineSubject subject;
 
-    public TrackLine(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> basicTrackLayout) {
+    public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
         this.subject = new TrackLineSubject(this);
 
         trackBlocks = new ConcurrentSkipListMap<>();
@@ -65,7 +65,6 @@ public class TrackLine implements TrackModel {
             trackOccupancyMap.put(train, 0);
         });
     }
-
 
 
     private void handleTrainEntry(TrainModel train, Integer blockID) {
@@ -268,7 +267,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setPowerFailure(Integer blockID, boolean state) {
-        syncTrackUpdate( () -> {;
+        syncTrackUpdate( () -> {
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setPowerFailure(state);
@@ -280,7 +279,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setTrackCircuitFailure(Integer blockID, boolean state) {
-        syncTrackUpdate( () -> {;
+        syncTrackUpdate( () -> {
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setTrackCircuitFailure(state);

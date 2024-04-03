@@ -1,25 +1,18 @@
 package trainModel;
-import Common.TrainController;
-import Common.TrackModel;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 public class trainModelImplTest {
 
-    private TrainModelImpl model;
-    private TrainController mockController;
-    private TrackModel mockTrackModel;
+    private static TrainModelImpl model;
 
-    @BeforeEach
-    void setUp() {
-        model = new TrainModelImpl(1); // Assuming '1' is a valid trainID
-        mockController = mock(TrainController.class); // Mocking TrainController
-        mockTrackModel = mock(TrackModel.class); // Mocking TrackModel
+
+    @BeforeAll
+    static void setUp() {
+        model = new TrainModelImpl(1, null); // Assuming '1' is a valid trainID
     }
 
     @Test

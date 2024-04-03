@@ -144,9 +144,9 @@ public class TrackLineTest {
                 break;
             }
         }
-
+        int passengers = stub.getPassengerCount();
         trackLine.setPassengersDisembarked(stub, 10);
-        assertEquals(10, trackLine.getPassengersEmbarked(stub));
+        assertEquals(passengers - 10, stub.getPassengerCount());
     }
 
     @Test

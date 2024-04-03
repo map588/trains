@@ -14,12 +14,13 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     private final TrainController controller;
 
     public  volatile boolean isGUIUpdateInProgress   = false;
-    private final boolean isLogicUpdateInProgress = false;
+    private final boolean isLogicUpdateInProgress    = false;
 
 
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
         initializeProperties();
+        System.out.println("Registering subject for controller " + controller.getID());
         TrainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
     }
 
@@ -59,6 +60,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     public void notifyChange(String propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
+           // executeUpdate(() -> updateProperty(property, newValue), true);
             executeUpdate(() -> updateProperty(property, newValue), !isLogicUpdateInProgress);
         }
     }
@@ -71,6 +73,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
             isGUIUpdateInProgress = true;
             try {
                 executeUpdate(() -> {
+                    System.out.println("Setting property " + propertyName + " to " + newValue);
                     updateProperty(property, newValue);
                     controller.setValue(propertyName, newValue);
                 }, false);
@@ -90,7 +93,6 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
 
     // Update property safely with the correct type
     public <T> void updateProperty(Property<T> property, Object newValue) {
-        Runnable updateAction = () -> {
             if (newValue == null) {
                 System.err.println("Null value for property " + property.getName());
                 return;
@@ -108,13 +110,6 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
             } catch (ClassCastException e) {
                 System.err.println("Type mismatch for property " + property.getName() + ": " + e.getMessage());
             }
-        };
-
-        if (Platform.isFxApplicationThread()) {
-            updateAction.run();
-        } else {
-            Platform.runLater(updateAction);
-        }
     }
 
     public Property<?> getProperty(String propertyName) {
@@ -141,11 +136,8 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         return (IntegerProperty) property;
     }
 
-    public void calculatePower(){
-        //controller.calculatePower();
-    }
 
     public TrainControllerImpl getController() {
-        return (TrainControllerImpl) controller;
+        return  (TrainControllerImpl) controller;
     }
 }

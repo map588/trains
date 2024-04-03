@@ -1,6 +1,8 @@
 package trainController;
 
 import Common.TrainModel;
+import Utilities.Enums.Lines;
+import Utilities.ParsedBasicBlocks;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import trackModel.TrackLine;
 import trainModel.TrainModelImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,12 +36,13 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * It loads the trainController.fxml file and displays it in a new Stage.
      * It also initializes the controller and currentSubject variables.
      */
-
+    ParsedBasicBlocks parsedBlocks = ParsedBasicBlocks.getInstance();
 
     @Override
     public void start(Stage stage) throws Exception {
-        TrainModel mockModel = new TrainModelImpl(0, null);
-        controller = new TrainControllerImpl(mockModel, 1); // Assuming '1' is a valid trainID
+        TrackLine track = new TrackLine(Lines.GREEN, parsedBlocks.getBasicLine(Lines.GREEN));
+        TrainModel mockModel = new TrainModelImpl(0, track);
+        controller = new TrainControllerImpl(mockModel, mockModel.getTrainNumber()); // Assuming '1' is a valid trainID
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Framework/GUI/FXML/trainController.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
@@ -127,11 +131,11 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the internal and external light checkboxes toggle the light status in the controller.
      */
     @Test
-    public void testLightToggle() {
+    public void testLightToggle() throws InterruptedException {
 
         CheckBox intLightCheckBox = lookup("#intLightCheckBox").queryAs(CheckBox.class);
         clickOn(intLightCheckBox);
-
+        Thread.sleep(100);
         // Verify internal light status change
         assertEquals(intLightCheckBox.isSelected(), controller.getIntLights());
 

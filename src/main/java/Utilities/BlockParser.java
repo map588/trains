@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static Utilities.Enums.Direction.*;
 import static Utilities.Records.BasicBlock.*;
 
-public class BlockParser {
+class BlockParser {
 
     private BlockParser() {
         throw new IllegalStateException("Utility class");
@@ -47,7 +47,7 @@ public class BlockParser {
                         }
                     }
                 BasicBlock block = fromCsv(correctedValues, headers);
-                map.computeIfAbsent(Lines.valueOf(block.trackLine().toUpperCase()), k -> new ConcurrentSkipListMap<>())
+                map.computeIfAbsent(block.trackLine(), k -> new ConcurrentSkipListMap<>())
                         .put(block.blockNumber(), block);
             }
         } catch (IOException e) {
@@ -62,7 +62,7 @@ public class BlockParser {
     }
 
     public static BasicBlock fromCsv(String[] values, String[] headers) {
-        String trackLine = values[indexOf(headers, "Line")];
+        String trackLineString = values[indexOf(headers, "Line")];
         String section = values[indexOf(headers, "Section")];
         int blockNumber = Integer.parseInt(values[indexOf(headers, "Block Number")]);
         double blockLength = Double.parseDouble(values[indexOf(headers, "Block Length (m)")]);
@@ -85,7 +85,9 @@ public class BlockParser {
         BlockType blockType = parseBlockType(infrastructure);
         String stationName = parseStationName(infrastructure);
 
-        return new BasicBlock(trackLine, section, blockNumber, blockLength, blockGrade, speedLimit,
+        Lines line = Lines.valueOf(trackLineString.toUpperCase());
+
+        return new BasicBlock(line, section, blockNumber, blockLength, blockGrade, speedLimit,
                 elevation, cumulativeElevation, isUnderground, isSwitch, blockType, Optional.ofNullable(stationName),
                 doorDirection, nextBlock);
     }

@@ -123,6 +123,7 @@ public class TrainControllerManager {
         appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM_PROPERTY),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal)));
         bindStringText(nextStationText, NEXT_STATION_PROPERTY);
     }
+
     private void bindStringText(Text text, String propertyName){
         appendListener(currentSubject.getProperty(propertyName),(obs,oldVal,newVal) -> {
             Platform.runLater(()-> text.setText((String)newVal));
@@ -166,7 +167,6 @@ public class TrainControllerManager {
             }
         };
         textField.setOnAction(event -> textFieldUpdate.run());
-
     }
 
     private void setupButtonActions() {
@@ -327,53 +327,57 @@ public class TrainControllerManager {
 
     // Set the current action
     private void setNotification(String propertyName, String value){
-        String statusNotification = "";
+        final String finalValue = value;
+        Runnable notification = () -> {
+            String statusNotification = "";
 
-        switch(propertyName){
-            case OVERRIDE_SPEED_PROPERTY:
-                statusNotification += ("\nSet Speed to \n" + value + " MPH");
-                break;
-            case SERVICE_BRAKE_PROPERTY:
-                statusNotification = ("\nService Brake \n" + (value.equals("true") ? "Engaged" : "Disengaged"));
-                break;
-            case EMERGENCY_BRAKE_PROPERTY:
-                value = eBrakeStatus.getFill().equals(Color.GRAY)?"Engaged":"Disengaged"; // Color of indicator as you turn on / off the button
-                statusNotification = ("\nEmergency Brake \n" + value);
-                break;
-            case LEFT_DOORS_PROPERTY:
-                statusNotification = ("\nLeft Doors \n" + (value.equals("true") ? "Opened" : "Closed"));
-                break;
-            case RIGHT_DOORS_PROPERTY:
-                statusNotification = ("\nRight Doors \n" + (value.equals("true") ? "Opened" : "Closed"));
-                break;
-            case INT_LIGHTS_PROPERTY:
-                statusNotification = ("\nInterior Lights \n" + (value.equals("true") ? "On" : "Off"));
-                break;
-            case EXT_LIGHTS_PROPERTY:
-                statusNotification = ("\nExterior Lights \n" + (value.equals("true") ? "On" : "Off"));
-                break;
-            case TEMPERATURE_PROPERTY:
-                statusNotification = ("\nTemperature set to \n" + value + "°F");
-                break;
-            case KI_PROPERTY:
-                statusNotification = ("\nKi set to \n" + value);
-                break;
-            case KP_PROPERTY:
-                statusNotification = ("\nKp set to \n" + value);
-                break;
-            case ANNOUNCEMENTS_PROPERTY:
-                statusNotification = ("\nAnnouncements Created\n");
+            switch (propertyName) {
+                case OVERRIDE_SPEED_PROPERTY:
+                    statusNotification += ("\nSet Speed to \n" + finalValue + " MPH");
                     break;
-            case AUTOMATIC_MODE_PROPERTY:
-                statusNotification = ("\nAutomatic Mode \n" + (value.equals("true") ? "On" : "Off"));
-                break;
-            default:
-                statusNotification = "\nTrain is running";
-                break;
-        }
+                case SERVICE_BRAKE_PROPERTY:
+                    statusNotification = ("\nService Brake \n" + (finalValue.equals("true") ? "Engaged" : "Disengaged"));
+                    break;
+                case EMERGENCY_BRAKE_PROPERTY:
+                     // = eBrakeStatus.getFill().equals(Color.GRAY) ? "Engaged" : "Disengaged"; // Color of indicator as you turn on / off the button
+                    statusNotification = ("\nEmergency Brake \n" + finalValue);
+                    break;
+                case LEFT_DOORS_PROPERTY:
+                    statusNotification = ("\nLeft Doors \n" + (finalValue.equals("true") ? "Opened" : "Closed"));
+                    break;
+                case RIGHT_DOORS_PROPERTY:
+                    statusNotification = ("\nRight Doors \n" + (finalValue.equals("true") ? "Opened" : "Closed"));
+                    break;
+                case INT_LIGHTS_PROPERTY:
+                    statusNotification = ("\nInterior Lights \n" + (finalValue.equals("true") ? "On" : "Off"));
+                    break;
+                case EXT_LIGHTS_PROPERTY:
+                    statusNotification = ("\nExterior Lights \n" + (finalValue.equals("true") ? "On" : "Off"));
+                    break;
+                case TEMPERATURE_PROPERTY:
+                    statusNotification = ("\nTemperature set to \n" + finalValue + "°F");
+                    break;
+                case KI_PROPERTY:
+                    statusNotification = ("\nKi set to \n" + finalValue);
+                    break;
+                case KP_PROPERTY:
+                    statusNotification = ("\nKp set to \n" + finalValue);
+                    break;
+                case ANNOUNCEMENTS_PROPERTY:
+                    statusNotification = ("\nAnnouncements Created\n");
+                    break;
+                case AUTOMATIC_MODE_PROPERTY:
+                    statusNotification = ("\nAutomatic Mode \n" + (finalValue.equals("true") ? "On" : "Off"));
+                    break;
+                default:
+                    statusNotification = "\nTrain is running";
+                    break;
+            }
 
-        statusLog.setText(statusNotification);
+            statusLog.setText(statusNotification);
 
-        statusLog.setWrapText(true);
+            statusLog.setWrapText(true);
+        };
+        Platform.runLater(notification);
     }
 }

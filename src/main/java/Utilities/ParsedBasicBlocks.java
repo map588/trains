@@ -17,12 +17,14 @@ public class ParsedBasicBlocks{
         map.forEach(this::addLines);
     }
 
-    public static ParsedBasicBlocks getInstance() {
-        return INSTANCE;
-    }
-
     private void addLines(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> blocks) {
         basicBlocks.put(line, blocks);
+    }
+
+
+
+    public static ParsedBasicBlocks getInstance() {
+        return INSTANCE;
     }
 
     public BasicBlockLine getBasicLine(Lines line) {
@@ -33,4 +35,9 @@ public class ParsedBasicBlocks{
         return new BasicLineMap(basicBlocks);
     }
 
+    public void updateFile(String filePath) {
+        basicBlocks.clear();
+        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = BlockParser.parseCSV(filePath);
+        map.forEach(this::addLines);
+    }
 }

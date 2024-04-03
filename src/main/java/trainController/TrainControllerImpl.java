@@ -236,6 +236,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             case GRADE_PROPERTY -> this.grade = (double) newValue;
             default -> System.err.println("Property " + propertyName + " not found");
         }
+        System.out.println("Value " + propertyName + " set to " + newValue);
     }
 
 
