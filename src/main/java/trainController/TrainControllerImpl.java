@@ -29,7 +29,7 @@ import static trainController.Properties.*;
 public class TrainControllerImpl implements TrainController, GUIModifiable {
     private final int trainID;
     private final TrainControllerSubject subject;
-    private TrainModel train;
+    private final TrainModel train;
     private Beacon beacon;
 
     private volatile int samplingPeriod = 10;
@@ -38,7 +38,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             speedLimit = 0.0, Ki = 1.0, Kp = 1.0, power = 0.0, grade = 0.0,
             temperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
 
-    private final int blocksToNextStation = 10;
     private int authority = 0;
 
     private boolean serviceBrake = false, emergencyBrake = false, automaticMode = false,
@@ -48,7 +47,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             rightPlatform = false, inTunnel = false;
 
     private String nextStationName;
-
 
     /**
      * This is the constructor for the trainControllerImpl class.
@@ -63,8 +61,9 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      */
     public TrainControllerImpl(TrainModel train, int trainID) {
         this.trainID = trainID;
+        this.train = train;
         this.subject = new TrainControllerSubject(this);
-        assignTrainModel(train);
+        populateTrainValues(train);
         this.nextStationName = "Yard";
     }
 
@@ -75,8 +74,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      *
      * @param train  The TrainModel object to be assigned to the trainControllerImpl.
      */
-    void assignTrainModel(TrainModel train) {
-        this.train = train;
+    void populateTrainValues(TrainModel train) {
         this.setServiceBrake(train.getServiceBrake());
         this.setEmergencyBrake(train.getEmergencyBrake());
         this.setIntLights(train.getIntLights());
