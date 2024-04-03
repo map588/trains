@@ -25,12 +25,12 @@ public class ParsedBasicBlocks{
         basicBlocks.put(line, blocks);
     }
 
-    public ConcurrentSkipListMap<Integer, BasicBlock> getBasicLine(Lines line) {
-        return basicBlocks.get(line);
+    public BasicBlockLine getBasicLine(Lines line) {
+        return new BasicBlockLine(basicBlocks.get(line));
     }
 
-    public ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> getAllBasicLines() {
-        return basicBlocks;
+    public BasicLineMap getAllBasicLines() {
+        return new BasicLineMap(basicBlocks);
     }
 
 }
