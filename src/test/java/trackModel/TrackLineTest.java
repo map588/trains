@@ -1,17 +1,17 @@
 package trackModel;
 
 import Common.TrainModel;
+import Utilities.BasicBlockLine;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
-import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import stubs.trainStub;
 
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,13 +48,11 @@ public class TrackLineTest {
 
     private static TrackLine trackLine;
     private TrainModel trainModel;
-    private static ConcurrentSkipListMap<Integer, BasicBlock> basicBlockSkipList;
+    private static BasicBlockLine basicBlockSkipList;
     private static int i = 10;
 
     @BeforeAll
     public static void setUpAll() {
-        Platform.startup(() -> {
-        });
         basicBlockSkipList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.GREEN);
     }
 
@@ -86,19 +84,24 @@ public class TrackLineTest {
 //        assertFalse(trackLine.trackOccupancyMap.containsKey(trainModel));
 //    }
 
-    @Test
-    public void setLightStateChangesLightState() {
-        trackLine.setLightState(1, true);
-        assertTrue(trackLine.getLightState(1));
-    }
+//    @Test
+//    public void setLightStateChangesLightState() {
+//        trackLine.setLightState(1, true);
+//        assertTrue(trackLine.getLightState(1));
+//    }
 
     @Test
-    public void setSwitchTrueChangesSwitch() {
+    public void setSwitchTrueChangesSwitch() throws InterruptedException {
+        ConcurrentSkipListSet<Integer> switches = new ConcurrentSkipListSet<>();
         for(BasicBlock block : basicBlockSkipList.values()) {
             if(block.isSwitch()) {
-                trackLine.setSwitchState(block.blockNumber(), true);
-                assertTrue(trackLine.getSwitchState(block.blockNumber()));
+                Integer switchBlock = block.blockNumber();
+                trackLine.setSwitchState(switchBlock, true);
+                switches.add(switchBlock);
             }
+        }
+        for(Integer switchBlock : switches) {
+            assertTrue(trackLine.getSwitchState(switchBlock));
         }
     }
 

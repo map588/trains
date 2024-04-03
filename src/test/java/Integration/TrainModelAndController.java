@@ -2,18 +2,18 @@ package Integration;
 
 import Framework.Simulation.TrainSystem;
 import Utilities.BlockParser;
+import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
+import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import trackModel.TrackLine;
-import Utilities.Enums.Lines;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-import static Utilities.Enums.Lines.*;
-import static org.mockito.Mockito.verify;
+import static Utilities.Enums.Lines.GREEN;
 
 public class TrainModelAndController {
 
@@ -21,6 +21,10 @@ public class TrainModelAndController {
     private final ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines = BlockParser.parseCSV();
     private  TrackLine trackLine;
 
+    @BeforeAll
+    public static void setUpAll() {
+        Platform.startup(() -> {});
+    }
 
     @BeforeEach
     void setUp() {

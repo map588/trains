@@ -1,8 +1,6 @@
 package trainModel;
 
 
-import Utilities.Constants;
-import Utilities.Enums.Direction;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -15,12 +13,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class trainModelManagerTest extends ApplicationTest {
 
     private TrainModelManager trainModelManager;
     private TrainModelImpl trainModel;
+
 
     @Override
     public void start(Stage stage) throws Exception {

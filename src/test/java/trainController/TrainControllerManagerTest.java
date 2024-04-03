@@ -1,7 +1,6 @@
 package trainController;
 
 import Common.TrainModel;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,15 +10,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import trainModel.TrainModelImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.testfx.api.FxAssert.verifyThat;
 
 
@@ -37,11 +33,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * It loads the trainController.fxml file and displays it in a new Stage.
      * It also initializes the controller and currentSubject variables.
      */
-    @BeforeAll
-    static void setUp() {
-        Platform.startup(() -> {
-        });
-    }
+
 
     @Override
     public void start(Stage stage) throws Exception {
