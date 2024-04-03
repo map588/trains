@@ -207,8 +207,9 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      */
 
     public void setValue(String propertyName, Object newValue) {
+        System.out.println("Value " + propertyName + " set to " + newValue);
         switch (propertyName) {
-            case Properties.AUTOMATIC_MODE_PROPERTY -> this.automaticMode = (boolean) newValue;
+            case AUTOMATIC_MODE_PROPERTY -> this.automaticMode = (boolean) newValue;
             case AUTHORITY_PROPERTY -> this.authority = (int) newValue;
             case OVERRIDE_SPEED_PROPERTY -> this.overrideSpeed = (double) newValue;
             case COMMAND_SPEED_PROPERTY -> this.commandSpeed = (double) newValue;
@@ -234,9 +235,10 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             case SPEED_LIMIT_PROPERTY -> this.speedLimit = (double) newValue;
             case NEXT_STATION_PROPERTY -> this.nextStationName = (String) newValue;
             case GRADE_PROPERTY -> this.grade = (double) newValue;
+            case TRAIN_ID_PROPERTY -> System.out.println("Train ID is a read-only property");
+            case ERROR_PROPERTY -> System.out.println("Error is a read-only property");
             default -> System.err.println("Property " + propertyName + " not found");
         }
-        System.out.println("Value " + propertyName + " set to " + newValue);
     }
 
 

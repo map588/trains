@@ -29,4 +29,7 @@ public class Properties {
      static final String NEXT_STATION_PROPERTY = "nextStationName";
      static final String GRADE_PROPERTY = "grade";
      static final String TRAIN_ID_PROPERTY = "trainID";
+
+     static final String ERROR_PROPERTY = "error";
 }
+

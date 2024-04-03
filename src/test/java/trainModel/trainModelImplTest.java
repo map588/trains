@@ -1,9 +1,11 @@
 package trainModel;
 
+import Common.TrainController;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class trainModelImplTest {
 
@@ -12,7 +14,7 @@ public class trainModelImplTest {
 
     @BeforeAll
     static void setUp() {
-        model = new TrainModelImpl(1, null); // Assuming '1' is a valid trainID
+        model = new TrainModelImpl(1, mock(TrainController.class)); // Assuming '1' is a valid trainID
     }
 
     @Test

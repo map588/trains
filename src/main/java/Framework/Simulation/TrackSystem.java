@@ -38,7 +38,7 @@ public class TrackSystem {
         });
     }
 
-    protected TrackLine getTrackLine(Lines line) {
+    protected TrackLine getLine(Lines line) {
         return TrackLines.get(line);
     }
 }

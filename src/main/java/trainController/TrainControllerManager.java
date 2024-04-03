@@ -1,7 +1,5 @@
 package trainController;
 
-import Common.TrainController;
-import Common.TrainModel;
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
@@ -17,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import trainModel.TrainModelImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,9 @@ import java.util.function.Consumer;
 import static trainController.Properties.*;
 
 public class TrainControllerManager {
-    @FXML AnchorPane masterTrainControllerPane;
+
+    @FXML
+    AnchorPane masterTrainControllerPane;
     @FXML
     public TextArea statusLog;
     @FXML
@@ -55,19 +54,21 @@ public class TrainControllerManager {
 
     @FXML
     public void initialize() {
-        TrainModel train = new TrainModelImpl(1);
-        TrainController controller = train.getController();
         subjectMap = TrainControllerSubjectMap.getInstance();
         setupMapChangeListener();
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
+            currentSubject = subjectMap.getSubject(firstKey);
+        }else{
+            statusLog.setText("No Trains Available");
         }
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
             }
         });
+
         currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
@@ -148,6 +149,10 @@ public class TrainControllerManager {
         bindDoubleTextField(setKiTextField, KI_PROPERTY);
         bindDoubleTextField(setKpTextField, KP_PROPERTY);
         setupButtonActions();
+
+        appendListener(currentSubject.getStringProperty(ERROR_PROPERTY), (obs, oldVal, newVal) -> {
+            showErrorDialog("Error: ", newVal);
+        });
     }
 
     private void bindCheckBox(CheckBox checkBox, String propertyName) {
@@ -157,16 +162,24 @@ public class TrainControllerManager {
         });
     }
 
-    private void bindDoubleTextField(TextField textField, String propertyName) {
+    private void bindDoubleTextField(TextField textField, String property) {
         Runnable textFieldUpdate = () -> {
             try {
-                currentSubject.setProperty(propertyName, Double.parseDouble(textField.getText()));
-                setNotification(propertyName,textField.getText());
+                currentSubject.setProperty(property, Double.parseDouble(textField.getText()));
+                setNotification(property, textField.getText());
             } catch (NumberFormatException e) {
+                showErrorDialog("Invalid input", "Please enter a valid number.");
                 textField.setText("");
             }
         };
         textField.setOnAction(event -> textFieldUpdate.run());
+    }
+
+     void showErrorDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void setupButtonActions() {
@@ -224,12 +237,12 @@ public class TrainControllerManager {
 
 
     private void changeTrainView(Integer trainID) {
-        currentSubject = subjectMap.getSubject(trainID);
         if(currentSubject != null) {
             statusLog.clear();
             statusLog.setText("\n Train is running");
             unbindControls();
             updateAll();
+            currentSubject = subjectMap.getSubject(trainID);
             bindControls();
             bindGauges();
             bindIndicators();
@@ -303,7 +316,7 @@ public class TrainControllerManager {
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED_PROPERTY).get());
             }catch (Exception e){
-                e.printStackTrace();
+
             }
 
     }
@@ -326,58 +339,53 @@ public class TrainControllerManager {
     }
 
     // Set the current action
-    private void setNotification(String propertyName, String value){
-        final String finalValue = value;
-        Runnable notification = () -> {
-            String statusNotification = "";
-
-            switch (propertyName) {
-                case OVERRIDE_SPEED_PROPERTY:
-                    statusNotification += ("\nSet Speed to \n" + finalValue + " MPH");
-                    break;
-                case SERVICE_BRAKE_PROPERTY:
-                    statusNotification = ("\nService Brake \n" + (finalValue.equals("true") ? "Engaged" : "Disengaged"));
-                    break;
-                case EMERGENCY_BRAKE_PROPERTY:
-                     // = eBrakeStatus.getFill().equals(Color.GRAY) ? "Engaged" : "Disengaged"; // Color of indicator as you turn on / off the button
-                    statusNotification = ("\nEmergency Brake \n" + finalValue);
-                    break;
-                case LEFT_DOORS_PROPERTY:
-                    statusNotification = ("\nLeft Doors \n" + (finalValue.equals("true") ? "Opened" : "Closed"));
-                    break;
-                case RIGHT_DOORS_PROPERTY:
-                    statusNotification = ("\nRight Doors \n" + (finalValue.equals("true") ? "Opened" : "Closed"));
-                    break;
-                case INT_LIGHTS_PROPERTY:
-                    statusNotification = ("\nInterior Lights \n" + (finalValue.equals("true") ? "On" : "Off"));
-                    break;
-                case EXT_LIGHTS_PROPERTY:
-                    statusNotification = ("\nExterior Lights \n" + (finalValue.equals("true") ? "On" : "Off"));
-                    break;
-                case TEMPERATURE_PROPERTY:
-                    statusNotification = ("\nTemperature set to \n" + finalValue + "°F");
-                    break;
-                case KI_PROPERTY:
-                    statusNotification = ("\nKi set to \n" + finalValue);
-                    break;
-                case KP_PROPERTY:
-                    statusNotification = ("\nKp set to \n" + finalValue);
-                    break;
-                case ANNOUNCEMENTS_PROPERTY:
-                    statusNotification = ("\nAnnouncements Created\n");
-                    break;
-                case AUTOMATIC_MODE_PROPERTY:
-                    statusNotification = ("\nAutomatic Mode \n" + (finalValue.equals("true") ? "On" : "Off"));
-                    break;
-                default:
-                    statusNotification = "\nTrain is running";
-                    break;
-            }
-
-            statusLog.setText(statusNotification);
-
-            statusLog.setWrapText(true);
+    private void setNotification(String propertyName, String value) {
+        String statusNotification = switch (propertyName) {
+            case OVERRIDE_SPEED_PROPERTY -> "\nSet Speed to \n" + value + " MPH";
+            case SERVICE_BRAKE_PROPERTY, LEFT_DOORS_PROPERTY, RIGHT_DOORS_PROPERTY, INT_LIGHTS_PROPERTY,
+                    EXT_LIGHTS_PROPERTY, AUTOMATIC_MODE_PROPERTY ->
+                    "\n" + getPropertyLabel(propertyName) + "\n" + (Boolean.parseBoolean(value) ? getOnLabel(propertyName) : getOffLabel(propertyName));
+            case EMERGENCY_BRAKE_PROPERTY -> "\nEmergency Brake \n" + value;
+            case TEMPERATURE_PROPERTY -> "\nTemperature set to \n" + value + "°F";
+            case KI_PROPERTY -> "\nKi set to \n" + value;
+            case KP_PROPERTY -> "\nKp set to \n" + value;
+            case ANNOUNCEMENTS_PROPERTY -> "\nAnnouncements Created\n";
+            default -> "\nTrain is running";
         };
-        Platform.runLater(notification);
+
+        Platform.runLater(() -> {
+            statusLog.setText(statusNotification);
+            statusLog.setWrapText(true);
+        });
+    }
+
+    private String getPropertyLabel(String propertyName) {
+        return switch (propertyName) {
+            case SERVICE_BRAKE_PROPERTY -> "Service Brake";
+            case LEFT_DOORS_PROPERTY -> "Left Doors";
+            case RIGHT_DOORS_PROPERTY -> "Right Doors";
+            case INT_LIGHTS_PROPERTY -> "Interior Lights";
+            case EXT_LIGHTS_PROPERTY -> "Exterior Lights";
+            case AUTOMATIC_MODE_PROPERTY -> "Automatic Mode";
+            default -> "";
+        };
+    }
+
+    private String getOnLabel(String propertyName) {
+        return switch (propertyName) {
+            case SERVICE_BRAKE_PROPERTY -> "Engaged";
+            case LEFT_DOORS_PROPERTY, RIGHT_DOORS_PROPERTY -> "Opened";
+            case INT_LIGHTS_PROPERTY, EXT_LIGHTS_PROPERTY, AUTOMATIC_MODE_PROPERTY -> "On";
+            default -> "";
+        };
+    }
+
+    private String getOffLabel(String propertyName) {
+        return switch (propertyName) {
+            case SERVICE_BRAKE_PROPERTY -> "Disengaged";
+            case LEFT_DOORS_PROPERTY, RIGHT_DOORS_PROPERTY -> "Closed";
+            case INT_LIGHTS_PROPERTY, EXT_LIGHTS_PROPERTY, AUTOMATIC_MODE_PROPERTY -> "Off";
+            default -> "";
+        };
     }
 }

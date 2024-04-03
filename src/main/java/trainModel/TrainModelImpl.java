@@ -84,6 +84,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.subject = new TrainModelSubject(this);
     }
 
+    public TrainModelImpl(int trainID, TrainController controller) {
+        initializeValues();
+        this.controller = controller;
+        this.subject = new TrainModelSubject(this);
+    }
+
 
     private void initializeValues() {
         this.authority = 0;

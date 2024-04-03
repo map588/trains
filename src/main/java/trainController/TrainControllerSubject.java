@@ -13,14 +13,16 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainController controller;
 
-    public  volatile boolean isGUIUpdateInProgress   = false;
-    private final boolean isLogicUpdateInProgress    = false;
+    public  volatile boolean  isGUIUpdateInProgress     = false;
+    private volatile boolean  isLogicUpdateInProgress   = false;
 
 
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
         initializeProperties();
-        System.out.println("Registering subject for controller " + controller.getID());
+        if(TrainControllerSubjectMap.getInstance().getSubjects().containsKey(controller.getID())){
+            TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
+        }
         TrainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
     }
 
@@ -54,14 +56,14 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         properties.put(NEXT_STATION_PROPERTY, new SimpleStringProperty("N/A"));
         properties.put(TRAIN_ID_PROPERTY, new SimpleIntegerProperty(controller.getID()));
         properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(controller.getGrade()));
+        properties.put(ERROR_PROPERTY, new SimpleStringProperty(""));
     }
 
     //Change coming from the logic side
     public void notifyChange(String propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
-           // executeUpdate(() -> updateProperty(property, newValue), true);
-            executeUpdate(() -> updateProperty(property, newValue), !isLogicUpdateInProgress);
+            executeUpdate(() -> updateProperty(property, newValue), true);
         }
     }
 
@@ -108,9 +110,12 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
                     ((StringProperty) property).set((String) newValue);
                 }
             } catch (ClassCastException e) {
-                System.err.println("Type mismatch for property " + property.getName() + ": " + e.getMessage());
+                String error = ("Type mismatch for property " + property.getName() + ": " + e.getMessage());
+                updateProperty(properties.get(ERROR_PROPERTY), error);
             }
     }
+
+
 
     public Property<?> getProperty(String propertyName) {
         return properties.get(propertyName);

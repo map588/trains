@@ -302,6 +302,7 @@ public class TrackLine implements TrackModel {
         return this.trackBlocks.get(blockID).isTrackCircuitFailure();
     }
 
+    //This operation is being done on the block, not the train
     @Override
     public void setPassengersDisembarked(TrainModel train, int disembarked) {
         syncTrackUpdate( () -> {
@@ -309,6 +310,7 @@ public class TrackLine implements TrackModel {
                 TrackBlock block = trackBlocks.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
                     block.feature.setPassengersDisembarked(disembarked);
+                    Integer newTotal = train.getPassengerCount() - disembarked;
                 } else {
                     throw new IllegalArgumentException("Train " + train.getTrainNumber() + " is not on a station block");
                 }
