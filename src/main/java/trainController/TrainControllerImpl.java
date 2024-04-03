@@ -425,7 +425,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     public void onTick(){
 
         // Power might go here
-
+        //train.trainModelPhysics();
         // Get new Temperature
         this.currentTemperature = train.getRealTemperature();
         if(this.currentTemperature != this.setTemperature) train.setSetTemperature(this.setTemperature);
@@ -444,7 +444,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      *  onBlock()
      */
     public void onBlock(){
-
+        //TODO:
         checkTunnel();
 
 
