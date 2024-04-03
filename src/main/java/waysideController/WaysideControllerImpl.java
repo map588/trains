@@ -5,10 +5,9 @@ import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.Notifier;
+import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
-import Utilities.BlockParser;
 import Utilities.Enums.Lines;
-import waysideController.plc_parser.Value;
 
 import java.io.File;
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         subject = new WaysideControllerSubject(this);
 
         // Parse the CSV file to get the blocks that the wayside controls
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BlockParser.parseCSV().get(Lines.GREEN);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = ParsedBasicBlocks.getInstance().getBasicLine(trackLine);
         for(int blockID : blockIDList) {
             WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);
@@ -137,7 +136,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         blockMap.get(blockID).setSpeed(speed);
 
         if(trackModel != null) {
-//            trackModel.setCommandedSpeed(blockID, speed);
+            trackModel.setCommandedSpeed(blockID, speed);
         }
     }
 

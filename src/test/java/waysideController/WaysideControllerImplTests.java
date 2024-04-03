@@ -108,6 +108,7 @@ public class WaysideControllerImplTests {
     @Test
     void testGreenLine1() {
         Map<Integer, WaysideBlock> blockMap = controller.getBlockMap();
+        controller.runPLC();
         assertTrue(blockMap.get(144).getBooleanAuth());
 
         // Start train at block 144, check that direction and switches are assigned correctly
