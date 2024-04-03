@@ -201,7 +201,8 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void runPLC() {
-
+        System.out.println("Send: runPLC");
+        printStream.println("runPLC");
     }
 
     @Override

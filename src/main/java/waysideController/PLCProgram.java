@@ -89,7 +89,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
         String listName = visit(ctx.list_name()).asString();
         boolean value = visit(ctx.getChild(5)).asBoolean();
 
-        System.out.println(listName + "[" + index + "] = " + value);
+//        System.out.println(listName + "[" + index + "] = " + value);
 
         switch (listName) {
             case "crossing":
@@ -159,12 +159,12 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
         int endIndex = visit(ctx.index(1)).asInteger();
         String varName = ctx.VARIABLE().getText();
 
-        System.out.println("For loop: " + varName + " = " + startIndex + " to " + endIndex);
+//        System.out.println("For loop: " + varName + " = " + startIndex + " to " + endIndex);
 
         for (int i = startIndex; i <= endIndex; i++) {
             intVarMap.put(varName, i);
             for (PLCParser.StatementContext statementCtx : ctx.statement()) {
-                System.out.println("Executing statement: " + statementCtx.getText());
+//                System.out.println("Executing statement: " + statementCtx.getText());
                 visit(statementCtx);
             }
         }

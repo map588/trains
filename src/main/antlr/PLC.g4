@@ -1,7 +1,7 @@
 grammar PLC;
 
 program : (statement | statement NEWLINE | NEWLINE)+;
-statement : set_list_value | if_statement | if_else_statement | for_statement | COMMENT ;
+statement : set_list_value | if_statement | if_else_statement | for_statement ;
 
 set_list_value : list_name '[' index ']' '=' (equality_check | compound_value | value_false | value_true) ;
 
@@ -49,7 +49,7 @@ ELSE : 'else' | 'ELSE' ;
 ENDIF : 'endif' | 'ENDIF' ;
 FOR : 'for' | 'FOR' ;
 ENDFOR : 'endfor' | 'ENDFOR' ;
-COMMENT : '//' ~( '\r' | '\n' )* NEWLINE ;
+COMMENT : '//' ~( '\r' | '\n' )* -> skip ;
 TO : 'to' | 'TO' ;
 DO : 'do' | 'DO' ;
 END : 'end' | 'END' ;
