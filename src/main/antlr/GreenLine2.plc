@@ -1,64 +1,98 @@
-// Controls Sections N, O, P, Q blocks 77 - 100
-// Accesses occupancies of blocks 73 - 104
+// Controls sections L - T, blocks 69 - 109
+// Accesses occupancies of blocks 65 - 105
 
-// Assign Directions for Outgoing trains
-// TODO: Implement this
+// Handling bi-directional N block
 
-// Occupancies O
-authority[86] = not occupied[87] and not occupied[88] and not occupied[89] and not occupied[90]
-authority[87] = not occupied[88] and not occupied[89] and not occupied[90] and not occupied[91]
-authority[88] = not occupied[89] and not occupied[90] and not occupied[91] and not occupied[92]
-
-// Occupancies P
-authority[89] = not occupied[90] and not occupied[91] and not occupied[92] and not occupied[93]
-authority[90] = not occupied[91] and not occupied[92] and not occupied[93] and not occupied[94]
-authority[91] = not occupied[92] and not occupied[93] and not occupied[94] and not occupied[95]
-authority[92] = not occupied[93] and not occupied[94] and not occupied[95] and not occupied[96]
-authority[93] = not occupied[94] and not occupied[95] and not occupied[96] and not occupied[97]
-authority[94] = not occupied[95] and not occupied[96] and not occupied[97] and not occupied[98]
-authority[95] = not occupied[96] and not occupied[97] and not occupied[98] and not occupied[99]
-authority[96] = not occupied[97] and not occupied[98] and not occupied[99] and not occupied[100]
-authority[97] = not occupied[98] and not occupied[99] and not occupied[100] and not occupied[101]
-
-// Occupancies Q
-authority[98] = not occupied[99] and not occupied[100] and not occupied[101] and not occupied[102] and switch[77] == ALT
-authority[99] = not occupied[100] and not occupied[101] and not occupied[102] and not occupied[103] and switch[77] == ALT
-authority[100] = not occupied[101] and not occupied[102] and not occupied[103] and not occupied[104] and switch[77] == ALT
-
-// Occupancies N
+// Remove direction assignment if adjacent block occupations don't support the assigned direction
 if dir_assigned[77]
-    if direction[77] == INBOUND
-        authority[77] = not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81]
-        authority[78] = not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82]
-        authority[79] = not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83]
-        authority[80] = not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84]
-        authority[81] = not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
-        authority[82] = not occupied[83] and not occupied[84] and not occupied[85] and not occupied[86]
-        authority[83] = not occupied[84] and not occupied[85] and not occupied[86] and not occupied[87]
-        authority[84] = not occupied[85] and not occupied[86] and not occupied[87] and not occupied[88]
-        authority[85] = not occupied[86] and not occupied[87] and not occupied[88] and not occupied[89]
-    else
-        authority[77] = not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and switch[77] == MAIN
-        authority[78] = not occupied[77] and not occupied[76] and not occupied[75] and not occupied[74] and switch[77] == MAIN
-        authority[79] = not occupied[78] and not occupied[77] and not occupied[76] and not occupied[75] and switch[77] == MAIN
-        authority[80] = not occupied[79] and not occupied[78] and not occupied[77] and not occupied[76] and switch[77] == MAIN
-        authority[81] = not occupied[80] and not occupied[79] and not occupied[78] and not occupied[77] and switch[77] == MAIN
-        authority[82] = not occupied[81] and not occupied[80] and not occupied[79] and not occupied[78] and switch[77] == MAIN
-        authority[83] = not occupied[82] and not occupied[81] and not occupied[80] and not occupied[79] and switch[77] == MAIN
-        authority[84] = not occupied[83] and not occupied[82] and not occupied[81] and not occupied[80] and switch[77] == MAIN
-        authority[85] = not occupied[84] and not occupied[83] and not occupied[82] and not occupied[81] and switch[77] == MAIN
+    if not occupied[76] and not occupied[101] and not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
+        if direction[77] and not occupied[95] and not occupied[96] and not occupied[97] and not occupied[98] and not occupied[99] and not occupied[100] or not direction[77] and not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71]
+            dir_assigned[77] = FALSE
+            switch[77] = MAIN
+            switch[85] = MAIN
+            for i = 76 to 85
+                authority[i] = FALSE
+            endfor
+        endif
     endif
-else
-    authority[77] = FALSE
-    authority[78] = FALSE
-    authority[79] = FALSE
-    authority[80] = FALSE
-    authority[81] = FALSE
-    authority[82] = FALSE
-    authority[83] = FALSE
-    authority[84] = FALSE
-    authority[85] = FALSE
 endif
 
-// No crossings
+// Assign a direction if adjacent block occupations support the assigned direction
+if not dir_assigned[77]
+    if occupied[74] or occupied[73] or occupied[72] or occupied[71]
+        if not not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
+            dir_assigned[77] = TRUE
+            direction[77] = SOUTHBOUND
+            switch[77] = ALT
+            switch[85] = MAIN
+        endif
+    else
+        if occupied[98] or occupied[97] or occupied[96] or occupied[95]
+            if not not occupied[77] and not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71]
+                dir_assigned[77] = TRUE
+                direction[77] = NORTHBOUND
+                switch[77] = MAIN
+                switch[85] = ALT
+            endif
+        endif
+    endif
+endif
+
+
+// Directional Occupancies for Section N
+if dir_assigned[77]
+    if direction[77] == NORTHBOUND
+        for i = 77 to 85 do
+            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4] and switch[77] == ALT
+        endfor
+    else
+        for i = 77 to 85 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+        endfor
+    endif
+else
+    for i = 77 to 85 do
+        authority[i] = FALSE
+    endfor
+endif
+
+
+// O Occupancies
+for i = 86 to 88 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+
+// P Occupancies
+for i = 89 to 97 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+
+// Q Occupancies
+for i = 98 to 100 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[77] == MAIN
+endfor
+
+// L Occupancies
+for i = 69 to 73 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+
+// M Occupancies
+for i = 74 to 76 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[77] == ALT
+endfor
+
+// R Occupancy
+authority[101] = not occupied[102] and not occupied[103] and not occupied[104] and not occupied[105]
+
+// S Occupancies
+for i = 102 to 104 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+
+// T Occupancies
+for i = 105 to 109 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+
 
