@@ -78,7 +78,7 @@ public class TrackLine implements TrackModel {
         //...
     }
 
-    private ConcurrentLinkedQueue<Callable<Void>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Callable<Void>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
     // Used to add a task to the work queue
     private void asyncTrackUpdate(Runnable task) {
@@ -207,9 +207,7 @@ public class TrackLine implements TrackModel {
 //    @Override
     public void setBeacon(int block, Beacon beacon){
         syncTrackUpdate( () -> {
-            if(beaconBlocks.containsKey(block)){
-                beaconBlocks.remove(block);
-            }
+            beaconBlocks.remove(block);
             beaconBlocks.put(block, beacon);
             //trackBlocks.get(block).setBeacon(beacon);
 
@@ -354,9 +352,7 @@ public class TrackLine implements TrackModel {
         return trackBlocks.get(blockID);
     }
     public void moveTrain(TrainModel train, int blockID) {
-        if(trackOccupancyMap.containsKey(train)){
-            trackOccupancyMap.remove(train);
-        }
+        trackOccupancyMap.remove(train);
         trackOccupancyMap.put(train, blockID);
     }
 }

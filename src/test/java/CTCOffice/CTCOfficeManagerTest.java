@@ -1,19 +1,10 @@
 package CTCOffice;
 
-import CTCOffice.CTCBlockSubject;
 import CTCOffice.CTCOfficeManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.testfx.api.FxAssert.verifyThat;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CTCOfficeManagerTest extends ApplicationTest {
 

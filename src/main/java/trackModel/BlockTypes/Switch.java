@@ -2,7 +2,6 @@ package trackModel.BlockTypes;
 
 import Utilities.Enums.Direction;
 import Utilities.Records.BasicBlock;
-import trackModel.TrackBlock;
 
 public interface Switch {
     BasicBlock.Connection getNorthDef();

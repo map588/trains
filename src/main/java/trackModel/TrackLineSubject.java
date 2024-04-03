@@ -1,6 +1,5 @@
 package trackModel;
 
-import Common.TrackModel;
 import javafx.beans.property.*;
 
 public class TrackLineSubject {

@@ -9,157 +9,154 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="779.0" prefWidth="817.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trackModel.TrackModelTBManager">
-    <children>
-        <TableView fx:id="tbTable" editable="true" layoutX="21.0" layoutY="163.0" prefHeight="396.0" prefWidth="380.0">
-            <columns>
-                <TableColumn fx:id="tbSectionColumn" editable="false" prefWidth="75.0" text="Section" />
-                <TableColumn fx:id="tbBlockColumn" editable="false" prefWidth="75.0" text="Block" />
-                <TableColumn fx:id="tbSwitchColumn" prefWidth="75.0" text="Switch" />
-                <TableColumn fx:id="tbSignalColumn" prefWidth="75.0" text="Signal" />
-                <TableColumn fx:id="tbOccupiedColumn" prefWidth="75.0" text="Occupied" />
-            </columns>
-        </TableView>
-        <Label fx:id="tbLogo" layoutX="15.0" layoutY="10.0" prefHeight="20.0" prefWidth="169.0" text="J.A.M.E.S.">
-            <font>
-                <Font name="Papyrus" size="30.0" />
-            </font>
-        </Label>
-        <Label fx:id="tbTrackModelLabel" layoutX="234.0" layoutY="24.0" text="TRACK MODEL TEST BENCH">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Label>
-        <ComboBox fx:id="tbChooseLine" layoutX="35.0" layoutY="114.0" prefWidth="150.0" promptText="Line" />
-        <Label fx:id="tbSetBlocks" layoutX="35.0" layoutY="79.0" text="Set Block Occupancies and Switch States">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Label>
-        <TitledPane fx:id="tbSetTempTab" animated="false" layoutX="415.0" layoutY="57.0" prefHeight="121.0" prefWidth="402.0" text="SET OUTSIDE TEMPERATURE">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
-                    <children>
-                        <TextField fx:id="tbTempInput" layoutX="172.0" layoutY="19.0" prefHeight="25.0" prefWidth="50.0" text="26">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </TextField>
-                        <Label fx:id="tbTempLabel" layoutX="36.0" layoutY="25.0" text="Outside Temp:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="tbDegF" layoutX="229.0" layoutY="25.0" prefHeight="18.0" prefWidth="47.0" text="º F">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </AnchorPane>
-            </content>
-            <font>
-                <Font size="24.0" />
-            </font>
-        </TitledPane>
-        <TitledPane fx:id="tbSetPassengersTab" animated="false" layoutX="415.0" layoutY="178.0" prefHeight="213.0" prefWidth="402.0" text="SET PASSENGERS">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
-                    <children>
-                        <Label fx:id="passEmarkedLabel" layoutX="14.0" layoutY="66.0" text="Passengers Embarked">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="passDisembarkLabel" layoutX="15.0" layoutY="107.0" text="Passengers Disembarked">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="locationLabel" layoutX="14.0" layoutY="23.0" text="STATION -">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="ticketSalesLabel" layoutX="294.0" layoutY="23.0" text="Ticket Sales">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="locationLabel2" layoutX="139.0" layoutY="23.0" text="Name of Station">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <TextField fx:id="tbPassEmbarkedInput" layoutX="216.0" layoutY="67.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
-                        <TextField fx:id="tbPassDisembarkedInput" layoutX="216.0" layoutY="102.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
-                        <TextField fx:id="tbTicketSalesInput" layoutX="315.0" layoutY="84.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
-                    </children>
-                </AnchorPane>
-            </content>
-            <font>
-                <Font size="24.0" />
-            </font>
-        </TitledPane>
-        <TitledPane fx:id="tbSetPassengersTab1" animated="false" layoutX="415.0" layoutY="391.0" prefHeight="165.0" prefWidth="402.0" text="SET BEACON INFORMTAION">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
-               <children>
-                  <Label fx:id="passEmarkedLabel1" layoutX="14.0" layoutY="21.0" text="Choose Beacon - ">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="tbBeaconComboBox" layoutX="155.0" layoutY="20.0" prefHeight="33.0" prefWidth="213.0" promptText="Choose Beacon Block" />
-                  <TextField fx:id="tbBeaconInput" layoutX="14.0" layoutY="71.0" prefHeight="33.0" prefWidth="380.0" promptText="Input info 128 Characters MAX" />
-               </children></AnchorPane>
-            </content>
-            <font>
-                <Font size="24.0" />
-            </font>
-        </TitledPane>
-      <TitledPane fx:id="comSpeedAuthority" animated="false" layoutX="414.0" layoutY="556.0" prefHeight="174.0" prefWidth="402.0" text="COM. SPEED AND AUTHORITY">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="172.0" prefWidth="400.0">
-               <children>
-                  <Label fx:id="passEmarkedLabel2" layoutX="10.0" layoutY="16.0" text="Commanded Speed">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="passDisembarkLabel1" layoutX="11.0" layoutY="54.0" text="Train Authority">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="comSpeedInput" layoutX="175.0" layoutY="15.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
-                  <TextField fx:id="trainAuthorityInput" layoutX="175.0" layoutY="58.0" prefHeight="33.0" prefWidth="50.0" promptText="#" />
-               </children>
-            </AnchorPane>
-         </content>
-         <font>
-            <Font size="24.0" />
-         </font>
-      </TitledPane>
-      <Label fx:id="passEmarkedLabel21" layoutX="24.0" layoutY="628.0" text="Commanded Speed - ">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="passDisembarkLabel11" layoutX="25.0" layoutY="666.0" text="Train Authority - ">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="comSpeedOutput" layoutX="277.0" layoutY="628.0" text="NONE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="trainAuthorityOutput" layoutX="278.0" layoutY="666.0" text="NONE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-    </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="779.0"
+            prefWidth="817.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="trackModel.TrackModelTBManager">
+    <TableView fx:id="tbTable" editable="true" layoutX="21.0" layoutY="163.0" prefHeight="396.0" prefWidth="380.0">
+        <columns>
+            <TableColumn fx:id="tbSectionColumn" editable="false" prefWidth="75.0" text="Section"/>
+            <TableColumn fx:id="tbBlockColumn" editable="false" prefWidth="75.0" text="Block"/>
+            <TableColumn fx:id="tbSwitchColumn" prefWidth="75.0" text="Switch"/>
+            <TableColumn fx:id="tbSignalColumn" prefWidth="75.0" text="Signal"/>
+            <TableColumn fx:id="tbOccupiedColumn" prefWidth="75.0" text="Occupied"/>
+        </columns>
+    </TableView>
+    <Label fx:id="tbLogo" layoutX="15.0" layoutY="10.0" prefHeight="20.0" prefWidth="169.0" text="J.A.M.E.S.">
+        <font>
+            <Font name="Papyrus" size="30.0"/>
+        </font>
+    </Label>
+    <Label fx:id="tbTrackModelLabel" layoutX="234.0" layoutY="24.0" text="TRACK MODEL TEST BENCH">
+        <font>
+            <Font size="24.0"/>
+        </font>
+    </Label>
+    <ComboBox fx:id="tbChooseLine" layoutX="35.0" layoutY="114.0" prefWidth="150.0" promptText="Line"/>
+    <Label fx:id="tbSetBlocks" layoutX="35.0" layoutY="79.0" text="Set Block Occupancies and Switch States">
+        <font>
+            <Font size="18.0"/>
+        </font>
+    </Label>
+    <TitledPane fx:id="tbSetTempTab" animated="false" layoutX="415.0" layoutY="57.0" prefHeight="121.0"
+                prefWidth="402.0" text="SET OUTSIDE TEMPERATURE">
+        <font>
+            <Font size="24.0"/>
+        </font>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
+            <TextField fx:id="tbTempInput" layoutX="172.0" layoutY="19.0" prefHeight="25.0" prefWidth="50.0"
+                       text="26">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </TextField>
+            <Label fx:id="tbTempLabel" layoutX="36.0" layoutY="25.0" text="Outside Temp:">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="tbDegF" layoutX="229.0" layoutY="25.0" prefHeight="18.0" prefWidth="47.0" text="º F">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+        </AnchorPane>
+    </TitledPane>
+    <TitledPane fx:id="tbSetPassengersTab" animated="false" layoutX="415.0" layoutY="178.0" prefHeight="213.0"
+                prefWidth="402.0" text="SET PASSENGERS">
+        <font>
+            <Font size="24.0"/>
+        </font>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
+            <Label fx:id="passEmarkedLabel" layoutX="14.0" layoutY="66.0" text="Passengers Embarked">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="passDisembarkLabel" layoutX="15.0" layoutY="107.0" text="Passengers Disembarked">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="locationLabel" layoutX="14.0" layoutY="23.0" text="STATION -">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="ticketSalesLabel" layoutX="294.0" layoutY="23.0" text="Ticket Sales">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="locationLabel2" layoutX="139.0" layoutY="23.0" text="Name of Station">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <TextField fx:id="tbPassEmbarkedInput" layoutX="216.0" layoutY="67.0" prefHeight="33.0"
+                       prefWidth="50.0" promptText="#"/>
+            <TextField fx:id="tbPassDisembarkedInput" layoutX="216.0" layoutY="102.0" prefHeight="33.0"
+                       prefWidth="50.0" promptText="#"/>
+            <TextField fx:id="tbTicketSalesInput" layoutX="315.0" layoutY="84.0" prefHeight="33.0"
+                       prefWidth="50.0" promptText="#"/>
+        </AnchorPane>
+    </TitledPane>
+    <TitledPane fx:id="tbSetPassengersTab1" animated="false" layoutX="415.0" layoutY="391.0" prefHeight="165.0"
+                prefWidth="402.0" text="SET BEACON INFORMTAION">
+        <font>
+            <Font size="24.0"/>
+        </font>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="75.0" prefWidth="374.0">
+            <Label fx:id="passEmarkedLabel1" layoutX="14.0" layoutY="21.0" text="Choose Beacon - ">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <ComboBox fx:id="tbBeaconComboBox" layoutX="155.0" layoutY="20.0" prefHeight="33.0"
+                      prefWidth="213.0" promptText="Choose Beacon Block"/>
+            <TextField fx:id="tbBeaconInput" layoutX="14.0" layoutY="71.0" prefHeight="33.0" prefWidth="380.0"
+                       promptText="Input info 128 Characters MAX"/>
+        </AnchorPane>
+    </TitledPane>
+    <TitledPane fx:id="comSpeedAuthority" animated="false" layoutX="414.0" layoutY="556.0" prefHeight="174.0"
+                prefWidth="402.0" text="COM. SPEED AND AUTHORITY">
+        <font>
+            <Font size="24.0"/>
+        </font>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="172.0" prefWidth="400.0">
+            <Label fx:id="passEmarkedLabel2" layoutX="10.0" layoutY="16.0" text="Commanded Speed">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="passDisembarkLabel1" layoutX="11.0" layoutY="54.0" text="Train Authority">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+            <TextField fx:id="comSpeedInput" layoutX="175.0" layoutY="15.0" prefHeight="33.0" prefWidth="50.0"
+                       promptText="#"/>
+            <TextField fx:id="trainAuthorityInput" layoutX="175.0" layoutY="58.0" prefHeight="33.0"
+                       prefWidth="50.0" promptText="#"/>
+        </AnchorPane>
+    </TitledPane>
+    <Label fx:id="passEmarkedLabel21" layoutX="24.0" layoutY="628.0" text="Commanded Speed - ">
+        <font>
+          <Font size="18.0"/>
+        </font>
+    </Label>
+    <Label fx:id="passDisembarkLabel11" layoutX="25.0" layoutY="666.0" text="Train Authority - ">
+        <font>
+          <Font size="18.0"/>
+        </font>
+    </Label>
+    <Label fx:id="comSpeedOutput" layoutX="277.0" layoutY="628.0" text="NONE">
+        <font>
+          <Font size="18.0"/>
+        </font>
+    </Label>
+    <Label fx:id="trainAuthorityOutput" layoutX="278.0" layoutY="666.0" text="NONE">
+        <font>
+          <Font size="18.0"/>
+        </font>
+    </Label>
 </AnchorPane>

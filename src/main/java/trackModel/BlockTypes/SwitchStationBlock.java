@@ -1,8 +1,5 @@
 package trackModel.BlockTypes;
 
-import Utilities.Enums.Direction;
-import Utilities.Records.BasicBlock;
-import Utilities.Records.BasicBlock.Connection;
 import Utilities.Records.BasicBlock.NextBlock;
 
 

@@ -10,11 +10,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static Utilities.Enums.Direction.*;
-import static Utilities.Records.BasicBlock.*;
+import static Utilities.Records.BasicBlock.Connection;
+import static Utilities.Records.BasicBlock.NextBlock;
 
 class BlockParser {
 
@@ -37,9 +38,7 @@ class BlockParser {
                 line = lines.get(i);
                 //if the values array is not the same size as the headers array, fill in the missing values with empty strings
 
-                for(int j = 0; j < values.length; j++) {
-                    correctedValues[j] = values[j];
-                }
+                System.arraycopy(values, 0, correctedValues, 0, values.length);
                 if(values.length != headers.length){
                     int diff = headers.length - values.length;
                     for(int j = values.length; j < diff; j++) {
@@ -69,11 +68,10 @@ class BlockParser {
         double blockGrade = Double.parseDouble(values[indexOf(headers, "Block Grade (%)")]);
         double speedLimit = Double.parseDouble(values[indexOf(headers, "Speed Limit (Km/Hr)")]);
         String infrastructure = values[indexOf(headers, "Infrastructure")];
-        Optional<String> doorDirection = Optional.ofNullable(values[indexOf(headers, "Door Direction")]);
-        if(doorDirection.isPresent() && doorDirection.get().isEmpty()){
+        String doorString = values[indexOf(headers, "Door Direction")].toUpperCase();
+        Optional<String> doorDirection = Optional.of(doorString);
+        if(doorDirection.get().isEmpty()){
             doorDirection = Optional.empty();
-        }else{
-            doorDirection = Optional.of(doorDirection.get().toUpperCase());
         }
         double elevation = Double.parseDouble(values[indexOf(headers, "ELEVATION (M)")]);
         double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMUALTIVE ELEVATION (M)")]);

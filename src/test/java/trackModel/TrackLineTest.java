@@ -95,7 +95,7 @@ public class TrackLineTest {
         ConcurrentSkipListSet<Integer> switches = new ConcurrentSkipListSet<>();
         for(BasicBlock block : basicBlockSkipList.values()) {
             if(block.isSwitch()) {
-                Integer switchBlock = block.blockNumber();
+                int switchBlock = block.blockNumber();
                 trackLine.setSwitchState(switchBlock, true);
                 switches.add(switchBlock);
             }

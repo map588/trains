@@ -8,41 +8,63 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainController.TrainControllerTB">
-    <children>
-        <Text layoutX="59.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Number:" />
-        <TextField fx:id="trainControllerTB_trainNo_TextField" layoutX="149.0" layoutY="31.0" prefHeight="26.0" prefWidth="54.0" />
-        <Button fx:id="trainControllerTB_AddTrain_Button" layoutX="210.0" layoutY="32.0" mnemonicParsing="false" text="Add Train" />
-        <CheckBox fx:id="trainControllerTB_PowerFailure_CheckBox" layoutX="59.0" layoutY="80.0" mnemonicParsing="false" text="Power Failure" />
-        <CheckBox fx:id="trainControllerTB_BrakeFailure_CheckBox" layoutX="59.0" layoutY="118.0" mnemonicParsing="false" text="Brake Failure" />
-        <CheckBox fx:id="trainControllerTB_SignalFailure_CheckBox" layoutX="59.0" layoutY="156.0" mnemonicParsing="false" text="Signal Failure" />
-        <Button fx:id="trainControllerTB_PassengerEBrake_Button" layoutX="59.0" layoutY="200.0" mnemonicParsing="false" text="Passenger E-Brake" />
-        <Text layoutX="315.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed" />
-        <Text layoutX="315.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed Limit" />
-        <Text layoutX="315.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Commanded Speed" />
-        <TextField fx:id="trainControllerTB_CurrentSpeed_TextField" layoutX="468.0" layoutY="29.0" prefHeight="26.0" prefWidth="54.0" />
-        <TextField fx:id="trainControllerTB_SpeedLimit_TextField" layoutX="468.0" layoutY="56.0" prefHeight="26.0" prefWidth="54.0" />
-        <TextField fx:id="trainControllerTB_CommandedSpeed_TextField" layoutX="468.0" layoutY="84.0" prefHeight="26.0" prefWidth="54.0" />
-        <Text layoutX="528.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH" wrappingWidth="48.166664123535156" />
-        <Text layoutX="528.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH" wrappingWidth="48.166664123535156" />
-        <Text layoutX="528.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH" wrappingWidth="48.166664123535156" />
-        <RadioButton fx:id="trainControllerTB_LeftPlatform_RadioButton" layoutX="339.0" layoutY="118.0" mnemonicParsing="false" text="Left Platform" />
-        <RadioButton fx:id="trainControllerTB_RightPlatform_RadioButton" layoutX="446.0" layoutY="118.0" mnemonicParsing="false" text="Right Platform" />
-        <Text layoutX="322.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grade" />
-        <TextField fx:id="trainControllerTB_Grade_TextField" layoutX="413.0" layoutY="153.0" prefHeight="26.0" prefWidth="54.0" />
-        <Text layoutX="473.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°" />
-        <Text layoutX="320.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority" />
-        <TextField fx:id="trainControllerTB_Authority_TextField" layoutX="413.0" layoutY="187.0" prefHeight="26.0" prefWidth="54.0" />
-        <Text layoutX="475.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ft." />
-      <Text layoutX="318.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Cabin Temperature" />
-      <TextField fx:id="trainControllerTB_CurrentTemperature_TextField" layoutX="466.0" layoutY="255.0" prefHeight="26.0" prefWidth="54.0" />
-      <Text layoutX="526.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°F" wrappingWidth="48.166664123535156" />
-      <Text layoutX="59.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Name" />
-      <CheckBox fx:id="trainControllerTB_InTunnel_CheckBox" layoutX="323.0" layoutY="301.0" mnemonicParsing="false" text="Inside Tunnel" />
-      <ChoiceBox fx:id="trainControllerTB_StationName_ChoiceBox" layoutX="173.0" layoutY="247.0" prefHeight="26.0" prefWidth="110.0" />
-      <Text layoutX="320.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sampling Period" />
-      <TextField fx:id="trainControllerTB_SamplingPeriod_TextField" layoutX="413.0" layoutY="220.0" prefHeight="26.0" prefWidth="54.0" />
-      <Text layoutX="480.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="seconds" />
-      <Button fx:id="trainControllerTB_CalculatePower_Button" layoutX="63.0" layoutY="298.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="207.0" text="Calculate Power" />
-    </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="trainController.TrainControllerTB">
+    <Text layoutX="59.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Train Number:"/>
+    <TextField fx:id="trainControllerTB_trainNo_TextField" layoutX="149.0" layoutY="31.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <Button fx:id="trainControllerTB_AddTrain_Button" layoutX="210.0" layoutY="32.0" mnemonicParsing="false"
+            text="Add Train"/>
+    <CheckBox fx:id="trainControllerTB_PowerFailure_CheckBox" layoutX="59.0" layoutY="80.0" mnemonicParsing="false"
+              text="Power Failure"/>
+    <CheckBox fx:id="trainControllerTB_BrakeFailure_CheckBox" layoutX="59.0" layoutY="118.0" mnemonicParsing="false"
+              text="Brake Failure"/>
+    <CheckBox fx:id="trainControllerTB_SignalFailure_CheckBox" layoutX="59.0" layoutY="156.0" mnemonicParsing="false"
+              text="Signal Failure"/>
+    <Button fx:id="trainControllerTB_PassengerEBrake_Button" layoutX="59.0" layoutY="200.0" mnemonicParsing="false"
+            text="Passenger E-Brake"/>
+    <Text layoutX="315.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Speed"/>
+    <Text layoutX="315.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed Limit"/>
+    <Text layoutX="315.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Commanded Speed"/>
+    <TextField fx:id="trainControllerTB_CurrentSpeed_TextField" layoutX="468.0" layoutY="29.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <TextField fx:id="trainControllerTB_SpeedLimit_TextField" layoutX="468.0" layoutY="56.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <TextField fx:id="trainControllerTB_CommandedSpeed_TextField" layoutX="468.0" layoutY="84.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <Text layoutX="528.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH"
+          wrappingWidth="48.166664123535156"/>
+    <Text layoutX="528.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH"
+          wrappingWidth="48.166664123535156"/>
+    <Text layoutX="528.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MPH"
+          wrappingWidth="48.166664123535156"/>
+    <RadioButton fx:id="trainControllerTB_LeftPlatform_RadioButton" layoutX="339.0" layoutY="118.0"
+                 mnemonicParsing="false" text="Left Platform"/>
+    <RadioButton fx:id="trainControllerTB_RightPlatform_RadioButton" layoutX="446.0" layoutY="118.0"
+                 mnemonicParsing="false" text="Right Platform"/>
+    <Text layoutX="322.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grade"/>
+    <TextField fx:id="trainControllerTB_Grade_TextField" layoutX="413.0" layoutY="153.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <Text layoutX="473.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°"/>
+    <Text layoutX="320.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority"/>
+    <TextField fx:id="trainControllerTB_Authority_TextField" layoutX="413.0" layoutY="187.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <Text layoutX="475.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ft."/>
+    <Text layoutX="318.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Cabin Temperature"/>
+    <TextField fx:id="trainControllerTB_CurrentTemperature_TextField" layoutX="466.0" layoutY="255.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <Text layoutX="526.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="°F"
+          wrappingWidth="48.166664123535156"/>
+    <Text layoutX="59.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Station Name"/>
+    <CheckBox fx:id="trainControllerTB_InTunnel_CheckBox" layoutX="323.0" layoutY="301.0" mnemonicParsing="false"
+              text="Inside Tunnel"/>
+    <ChoiceBox fx:id="trainControllerTB_StationName_ChoiceBox" layoutX="173.0" layoutY="247.0" prefHeight="26.0"
+               prefWidth="110.0"/>
+    <Text layoutX="320.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sampling Period"/>
+    <TextField fx:id="trainControllerTB_SamplingPeriod_TextField" layoutX="413.0" layoutY="220.0" prefHeight="26.0"
+               prefWidth="54.0"/>
+    <Text layoutX="480.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="seconds"/>
+    <Button fx:id="trainControllerTB_CalculatePower_Button" layoutX="63.0" layoutY="298.0" mnemonicParsing="false"
+            prefHeight="30.0" prefWidth="207.0" text="Calculate Power"/>
 </AnchorPane>

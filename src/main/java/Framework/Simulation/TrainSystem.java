@@ -5,7 +5,6 @@ import Common.TrainModel;
 import trackModel.TrackLine;
 import trainModel.TrainModelImpl;
 
-import java.util.ArrayList;
 import java.util.concurrent.*;
 
 public class TrainSystem {

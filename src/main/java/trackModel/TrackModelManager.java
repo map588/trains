@@ -1,63 +1,35 @@
 package trackModel;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
 
 
 public class TrackModelManager {
 
-
-    public Label ticketSalesLabel;
-    public Label locationLabel;
-    public Label passDisembarkLabel;
-    public Label passEmbarkedLabel;
+    @FXML
+    public Label ticketSalesLabel,locationLabel, passDisembarkLabel, passEmbarkedLabel;
+    @FXML
+    public Label tempLabel, uploadLayoutLabel, pathLabel,simSpeedLabel, switchBlockNumbersLabel;
+    @FXML
+    public Label switchStateLabel, signalBlockNumberLabel, signalStateLabel, crossingLabel;
+    @FXML
+    public Label beaconInfoLabel, lineInfoLabel,degF, sectionsLabel, logo;
+    @FXML
+    public TitledPane sssSec, getTrackHeaterSec, murphySec, simulationInformationSec, beaconInfoSec;
+    @FXML
+    public Tab layoutTab, switchTab, signalTab, stationTab;
+    @FXML
     public TabPane sssTabs;
-    public Tab stationTab;
-    public TitledPane sssSec;
-    public TitledPane trackHeaterSec;
-    public Label tempLabel;
-    public TitledPane murphySec;
-    public Label uploadLayoutLabel;
-    public Label pathLabel;
-    public Label simSpeedLabel;
-    public TitledPane simulationInformationSec;
-    public Tab layoutTab;
-    public Label switchBlockNumbersLabel;
-    public Tab switchTab;
-    public Label switchStateLabel;
-    public Tab signalTab;
-    public Label signalBlockNumberLabel;
-    public Label signalStateLabel;
-    public Label crossingLabel;
-    public TitledPane beaconInfoSec;
-    public Label beaconInfoLabel;
-    public Label lineInfoLabel;
-    public Label degF;
-    public Label sectionsLabel;
-    //simulation information
     @FXML
-    private Label logo;
+    private Button trackUpload, chooseFile;
     @FXML
-    private Button trackUpload;
-    @FXML
-    private Button chooseFile;
-    @FXML
-    private TextField trackFilePath;
+    private TextField trackFilePath, lineNameInput;
     @FXML
     private ComboBox<String> simSpeedInput;
-    @FXML
-    private TextField lineNameInput;
 
     //murphy
     @FXML
@@ -80,58 +52,32 @@ public class TrackModelManager {
 
     //station signal switch
     @FXML
-    private Label nameOfStationLabel;
+    private Label nameOfStationLabel, passEmbarkedValue,passDisembarkedValue;
     @FXML
-    private Label passEmbarkedValue;
-    @FXML
-    private Label passDisembarkedValue;
-    @FXML
-    private Label ticketSalesValue;
-    @FXML
-    private Label signalStateDisplay;
-    @FXML
-    private Label signalBlockNumberDisplay;
+    private Label ticketSalesValue,signalStateDisplay, signalBlockNumberDisplay;
 
     //beacon information
     @FXML
     private ComboBox<String> pickLine;
     @FXML
-    private Label displayBeaconInfo;
-    @FXML
-    private Label beaconBlockNumber;
+    private Label displayBeaconInfo, beaconBlockNumber;
 
     //switch information
     @FXML
-    private Label switchStateDisplay;
-    @FXML
-    private Label switchBlockNumbersDisplay;
-    @FXML
-    private Label crossingState;
-
+    private Label switchStateDisplay, switchBlockNumbersDisplay, crossingState;
 
     //table
     @FXML
     private TableView<TrackLineSubject> lineTable;
     @FXML
-    private TableColumn<TrackLineSubject, String> sectionsColumn;
+    private TableColumn<TrackLineSubject, String> sectionsColumn, blockColumn;
     @FXML
-    private TableColumn<TrackLineSubject, String> blockColumn;
+    private TableColumn<TrackLineSubject, Integer> sizeColumn, speedLimitColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> occupiedColumn;
-    @FXML
-    private TableColumn<TrackLineSubject, Integer> sizeColumn;
+    private TableColumn<TrackLineSubject, Boolean> stationColumn, signalColumn, switchColumn, occupiedColumn, failureColumn;
     @FXML
     private TableColumn<TrackLineSubject, Double> gradeColumn;
-    @FXML
-    private TableColumn<TrackLineSubject, Boolean> stationColumn;
-    @FXML
-    private TableColumn<TrackLineSubject, Boolean> signalColumn;
-    @FXML
-    private TableColumn<TrackLineSubject, Boolean> switchColumn;
-    @FXML
-    private TableColumn<TrackLineSubject, Integer> speedLimitColumn;
-    @FXML
-    private TableColumn<TrackLineSubject, Boolean> failureColumn;
+
 
     //subject
     private TrackLineSubject subject;

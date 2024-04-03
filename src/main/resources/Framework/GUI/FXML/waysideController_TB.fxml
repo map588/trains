@@ -7,54 +7,57 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="366.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="waysideController.WaysideControllerTB">
-   <children>
-      <Label fx:id="tbWaysideNumberLabel" alignment="CENTER" layoutX="388.0" layoutY="55.0" prefHeight="32.0" prefWidth="163.0" text="Wayside Controller #N" />
-      <Label layoutX="16.0" layoutY="21.0" prefHeight="18.0" prefWidth="124.0" text="Block Occupancies" />
-      <Label layoutX="177.0" layoutY="22.0" prefHeight="18.0" text="CTC Switch State Suggestions" />
-      <TableView fx:id="tbBlockTable" layoutX="16.0" layoutY="40.0" prefHeight="309.0" prefWidth="124.0">
-        <columns>
-          <TableColumn fx:id="tbBTID" prefWidth="44.80001926422119" style="-fx-alignment: CENTER;" text="ID" />
-          <TableColumn fx:id="tbBTOccupied" prefWidth="90.0" style="-fx-alignment: CENTER;" text="Occupied?" />
-        </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-      <TableView fx:id="tbSwitchTable" layoutX="177.0" layoutY="40.0" prefHeight="145.0" prefWidth="210.0">
-        <columns>
-          <TableColumn fx:id="tbSTID" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Block ID" />
-          <TableColumn fx:id="tbSTSwitchTo" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Switch To" />
-            <TableColumn fx:id="tbSTEnable" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Is Alt?" />
-        </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-      <TableView fx:id="tbSpeedAuthTable" layoutX="161.0" layoutY="212.0" prefHeight="138.0" prefWidth="374.0">
-        <columns>
-          <TableColumn fx:id="tbSATID" prefWidth="65.60003662109375" style="-fx-alignment: CENTER;" text="Train ID" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="366.0"
+            prefWidth="550.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="waysideController.WaysideControllerTB">
+    <Label fx:id="tbWaysideNumberLabel" alignment="CENTER" layoutX="388.0" layoutY="55.0" prefHeight="32.0"
+           prefWidth="163.0" text="Wayside Controller #N"/>
+    <Label layoutX="16.0" layoutY="21.0" prefHeight="18.0" prefWidth="124.0" text="Block Occupancies"/>
+    <Label layoutX="177.0" layoutY="22.0" prefHeight="18.0" text="CTC Switch State Suggestions"/>
+    <TableView fx:id="tbBlockTable" layoutX="16.0" layoutY="40.0" prefHeight="309.0" prefWidth="124.0">
+      <columns>
+          <TableColumn fx:id="tbBTID" prefWidth="44.80001926422119" style="-fx-alignment: CENTER;" text="ID"/>
+          <TableColumn fx:id="tbBTOccupied" prefWidth="90.0" style="-fx-alignment: CENTER;" text="Occupied?"/>
+      </columns>
+        <columnResizePolicy>
+          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <TableView fx:id="tbSwitchTable" layoutX="177.0" layoutY="40.0" prefHeight="145.0" prefWidth="210.0">
+      <columns>
+          <TableColumn fx:id="tbSTID" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Block ID"/>
+          <TableColumn fx:id="tbSTSwitchTo" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Switch To"/>
+          <TableColumn fx:id="tbSTEnable" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Is Alt?"/>
+      </columns>
+        <columnResizePolicy>
+          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <TableView fx:id="tbSpeedAuthTable" layoutX="161.0" layoutY="212.0" prefHeight="138.0" prefWidth="374.0">
+      <columns>
+          <TableColumn fx:id="tbSATID" prefWidth="65.60003662109375" style="-fx-alignment: CENTER;" text="Train ID"/>
           <TableColumn prefWidth="145.59999084472656" text="Speed (mph)">
-               <columns>
-                  <TableColumn fx:id="tbSATSpeedIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input" />
-                  <TableColumn fx:id="tbSATSpeedOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output" />
-               </columns>
-            </TableColumn>
-            <TableColumn prefWidth="75.0" text="Authority (feet)">
-               <columns>
-                  <TableColumn fx:id="tbSATAuthIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input" />
-                  <TableColumn fx:id="tbSATAuthOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output" />
-               </columns>
-            </TableColumn>
-        </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-      <Label layoutX="161.0" layoutY="195.0" prefHeight="18.0" text="Speed &amp; Authority" />
-      <Button fx:id="tbCreateNewControllerButton" layoutX="421.0" layoutY="98.0" mnemonicParsing="false" prefHeight="25.0" text="add controller" />
-      <ComboBox fx:id="tbHWPortComboBox" layoutX="421.0" layoutY="127.0" prefHeight="25.0" prefWidth="92.0" />
-      <Label fx:id="tbHWPortLabel" alignment="CENTER" layoutX="410.0" layoutY="79.0" prefHeight="17.0" prefWidth="124.0" text="Port" />
-      <Button fx:id="runPLCButton" layoutX="441.0" layoutY="171.0" mnemonicParsing="false" text="Run PLC" />
-   </children>
+              <columns>
+                  <TableColumn fx:id="tbSATSpeedIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input"/>
+                  <TableColumn fx:id="tbSATSpeedOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output"/>
+              </columns>
+          </TableColumn>
+          <TableColumn prefWidth="75.0" text="Authority (feet)">
+              <columns>
+                  <TableColumn fx:id="tbSATAuthIn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Input"/>
+                  <TableColumn fx:id="tbSATAuthOut" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Output"/>
+              </columns>
+          </TableColumn>
+      </columns>
+        <columnResizePolicy>
+          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <Label layoutX="161.0" layoutY="195.0" prefHeight="18.0" text="Speed &amp; Authority"/>
+    <Button fx:id="tbCreateNewControllerButton" layoutX="421.0" layoutY="98.0" mnemonicParsing="false" prefHeight="25.0"
+            text="add controller"/>
+    <ComboBox fx:id="tbHWPortComboBox" layoutX="421.0" layoutY="127.0" prefHeight="25.0" prefWidth="92.0"/>
+    <Label fx:id="tbHWPortLabel" alignment="CENTER" layoutX="410.0" layoutY="79.0" prefHeight="17.0" prefWidth="124.0"
+           text="Port"/>
+    <Button fx:id="runPLCButton" layoutX="441.0" layoutY="171.0" mnemonicParsing="false" text="Run PLC"/>
 </AnchorPane>

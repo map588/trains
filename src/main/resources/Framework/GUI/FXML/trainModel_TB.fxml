@@ -7,32 +7,42 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainModel.TrainModelTB">
-   <children>
-      <TextField fx:id="tbPower" layoutX="61.0" layoutY="14.0" prefHeight="26.0" prefWidth="79.0" promptText="Enter Power" />
-      <TextField fx:id="tbSpeed" layoutX="61.0" layoutY="40.0" prefHeight="26.0" prefWidth="102.0" promptText="Enter CmdSpeed" />
-      <TextField fx:id="tbAuthority" layoutX="61.0" layoutY="66.0" prefHeight="26.0" prefWidth="94.0" promptText="Enter Authority" />
-      <TextField fx:id="tbGrade" layoutX="61.0" layoutY="92.0" prefHeight="26.0" prefWidth="79.0" promptText="Enter Grade" />
-      <Text layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power" />
-      <Text layoutX="1.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CmdSpeed" />
-      <Text layoutX="5.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority" />
-      <Text layoutX="14.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grade" />
-      <ToggleButton fx:id="tbSBrake" layoutX="193.0" layoutY="131.0" mnemonicParsing="false" text="S-Brake" />
-      <ToggleButton fx:id="tbIntLights" layoutX="193.0" layoutY="221.0" mnemonicParsing="false" text="Int Lights" />
-      <ToggleButton fx:id="tbExtLights" layoutX="192.0" layoutY="251.0" mnemonicParsing="false" text="Ext Lights" />
-      <ToggleButton fx:id="tbRightDoors" layoutX="193.0" layoutY="191.0" mnemonicParsing="false" text="Right Doors" />
-      <ToggleButton fx:id="tbLeftDoors" layoutX="193.0" layoutY="161.0" mnemonicParsing="false" text="Left Doors" />
-      <TextField fx:id="tbTemp" layoutX="61.0" layoutY="118.0" prefHeight="26.0" prefWidth="79.0" promptText="Enter Temp" />
-      <Text layoutX="15.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temp" />
-      <Circle fx:id="tbPowerFailure" fill="WHITE" layoutX="265.0" layoutY="53.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fx:id="tbSignalFailure" fill="WHITE" layoutX="265.0" layoutY="79.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fx:id="tbBrakeFailure" fill="WHITE" layoutX="265.0" layoutY="27.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
-      <Text layoutX="180.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brake Failure" />
-      <Text layoutX="180.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Failure" />
-      <Text layoutX="180.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signal Failure" />
-      <Text layoutX="3.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TimeDelta" />
-      <TextField fx:id="tbTimeDelta" layoutX="61.0" layoutY="143.0" prefHeight="26.0" prefWidth="117.0" promptText="Enter Time Interval" />
-      <Button fx:id="tbTimeButton" layoutX="20.0" layoutY="196.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="161.0" text="Increment Time" />
-      <Button fx:id="tbEBrake" layoutX="193.0" layoutY="102.0" mnemonicParsing="false" text="E-Brake" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0"
+            prefWidth="298.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="trainModel.TrainModelTB">
+    <TextField fx:id="tbPower" layoutX="61.0" layoutY="14.0" prefHeight="26.0" prefWidth="79.0"
+               promptText="Enter Power"/>
+    <TextField fx:id="tbSpeed" layoutX="61.0" layoutY="40.0" prefHeight="26.0" prefWidth="102.0"
+               promptText="Enter CmdSpeed"/>
+    <TextField fx:id="tbAuthority" layoutX="61.0" layoutY="66.0" prefHeight="26.0" prefWidth="94.0"
+               promptText="Enter Authority"/>
+    <TextField fx:id="tbGrade" layoutX="61.0" layoutY="92.0" prefHeight="26.0" prefWidth="79.0"
+               promptText="Enter Grade"/>
+    <Text layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power"/>
+    <Text layoutX="1.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CmdSpeed"/>
+    <Text layoutX="5.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Authority"/>
+    <Text layoutX="14.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grade"/>
+    <ToggleButton fx:id="tbSBrake" layoutX="193.0" layoutY="131.0" mnemonicParsing="false" text="S-Brake"/>
+    <ToggleButton fx:id="tbIntLights" layoutX="193.0" layoutY="221.0" mnemonicParsing="false" text="Int Lights"/>
+    <ToggleButton fx:id="tbExtLights" layoutX="192.0" layoutY="251.0" mnemonicParsing="false" text="Ext Lights"/>
+    <ToggleButton fx:id="tbRightDoors" layoutX="193.0" layoutY="191.0" mnemonicParsing="false" text="Right Doors"/>
+    <ToggleButton fx:id="tbLeftDoors" layoutX="193.0" layoutY="161.0" mnemonicParsing="false" text="Left Doors"/>
+    <TextField fx:id="tbTemp" layoutX="61.0" layoutY="118.0" prefHeight="26.0" prefWidth="79.0"
+               promptText="Enter Temp"/>
+    <Text layoutX="15.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Temp"/>
+    <Circle fx:id="tbPowerFailure" fill="WHITE" layoutX="265.0" layoutY="53.0" radius="9.0" stroke="BLACK"
+            strokeType="INSIDE"/>
+    <Circle fx:id="tbSignalFailure" fill="WHITE" layoutX="265.0" layoutY="79.0" radius="9.0" stroke="BLACK"
+            strokeType="INSIDE"/>
+    <Circle fx:id="tbBrakeFailure" fill="WHITE" layoutX="265.0" layoutY="27.0" radius="9.0" stroke="BLACK"
+            strokeType="INSIDE"/>
+    <Text layoutX="180.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brake Failure"/>
+    <Text layoutX="180.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Power Failure"/>
+    <Text layoutX="180.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signal Failure"/>
+    <Text layoutX="3.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TimeDelta"/>
+    <TextField fx:id="tbTimeDelta" layoutX="61.0" layoutY="143.0" prefHeight="26.0" prefWidth="117.0"
+               promptText="Enter Time Interval"/>
+    <Button fx:id="tbTimeButton" layoutX="20.0" layoutY="196.0" mnemonicParsing="false" prefHeight="75.0"
+            prefWidth="161.0" text="Increment Time"/>
+    <Button fx:id="tbEBrake" layoutX="193.0" layoutY="102.0" mnemonicParsing="false" text="E-Brake"/>
 </AnchorPane>

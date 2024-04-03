@@ -1,24 +1,19 @@
 package Integration;
 
 import Framework.Simulation.TrainSystem;
-import Utilities.BlockParser;
-import Utilities.Enums.Lines;
-import Utilities.Records.BasicBlock;
+import Utilities.BasicLineMap;
+import Utilities.ParsedBasicBlocks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import trackModel.TrackLine;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 import static Utilities.Enums.Lines.GREEN;
 
 public class TrainModelAndController {
 
     private final TrainSystem trainSystem = new TrainSystem();
-    private final ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> trackLines = BlockParser.parseCSV();
+    private final BasicLineMap trackLines = ParsedBasicBlocks.getInstance().getAllBasicLines();
     private  TrackLine trackLine;
-
 
     @BeforeEach
     void setUp() {

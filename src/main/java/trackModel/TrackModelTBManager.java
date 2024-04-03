@@ -65,7 +65,7 @@ public class TrackModelTBManager {
         System.out.println("LAUNCHED TESTBENCH");
 
         trackModelSubject = new TrackLineSubject(trackModel);
-        StringConverter<Integer> intConverter = new StringConverter<Integer>() {
+        StringConverter<Integer> intConverter = new StringConverter<>() {
             @Override
             public String toString(Integer integer) {
                 return integer.toString();
@@ -76,7 +76,7 @@ public class TrackModelTBManager {
                 return Integer.parseInt(s);
             }
         };
-        StringConverter<Boolean> boolConverter = new StringConverter<Boolean>() {
+        StringConverter<Boolean> boolConverter = new StringConverter<>() {
             @Override
             public String toString(Boolean bool) {
                 return bool.toString();
