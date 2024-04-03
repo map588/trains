@@ -5,6 +5,7 @@ import Common.TrainModel;
 import Framework.Support.GUIModifiable;
 import Utilities.Constants;
 import Utilities.Records.Beacon;
+import javafx.scene.control.Alert;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
@@ -36,7 +37,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
 
     private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
             speedLimit = 0.0, Ki = 1.0, Kp = 1.0, power = 0.0, grade = 0.0,
-            temperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
+            setTemperature = 0.0, currentTemperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
 
     private int authority = 0;
 
@@ -146,9 +147,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         this.rightDoors = doors;
         subject.notifyChange(RIGHT_DOORS_PROPERTY, doors);
     }
-    public void setTemperature(double temp) {
-        this.temperature = temp;
-        subject.notifyChange(TEMPERATURE_PROPERTY, temp);
+    public void setSetTemperature(double temp) {
+        this.setTemperature = temp;
+        subject.notifyChange(SET_TEMPERATURE_PROPERTY, temp);
+    }
+    public void setCurrentTemperature(double temp){
+        this.currentTemperature = temp;
+        subject.notifyChange(CURRENT_TEMPERATURE_PROPERTY,temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
@@ -207,8 +212,9 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
      */
 
     public void setValue(String propertyName, Object newValue) {
+        System.out.println("Value " + propertyName + " set to " + newValue);
         switch (propertyName) {
-            case Properties.AUTOMATIC_MODE_PROPERTY -> this.automaticMode = (boolean) newValue;
+            case AUTOMATIC_MODE_PROPERTY -> this.automaticMode = (boolean) newValue;
             case AUTHORITY_PROPERTY -> this.authority = (int) newValue;
             case OVERRIDE_SPEED_PROPERTY -> this.overrideSpeed = (double) newValue;
             case COMMAND_SPEED_PROPERTY -> this.commandSpeed = (double) newValue;
@@ -222,7 +228,8 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             case EXT_LIGHTS_PROPERTY -> this.externalLights = (boolean) newValue;
             case LEFT_DOORS_PROPERTY -> this.leftDoors = (boolean) newValue;
             case RIGHT_DOORS_PROPERTY -> this.rightDoors = (boolean) newValue;
-            case TEMPERATURE_PROPERTY -> this.temperature = (double) newValue;
+            case SET_TEMPERATURE_PROPERTY -> this.setTemperature = (double) newValue;
+            case CURRENT_TEMPERATURE_PROPERTY ->  this.currentTemperature = (double) newValue;
             case ANNOUNCEMENTS_PROPERTY -> this.announcements = (boolean) newValue;
             case SIGNAL_FAILURE_PROPERTY -> this.signalFailure = (boolean) newValue;
             case BRAKE_FAILURE_PROPERTY -> this.brakeFailure = (boolean) newValue;
@@ -234,9 +241,10 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             case SPEED_LIMIT_PROPERTY -> this.speedLimit = (double) newValue;
             case NEXT_STATION_PROPERTY -> this.nextStationName = (String) newValue;
             case GRADE_PROPERTY -> this.grade = (double) newValue;
+            case TRAIN_ID_PROPERTY -> System.out.println("Train ID is a read-only property");
+            case ERROR_PROPERTY -> System.out.println("Error is a read-only property");
             default -> System.err.println("Property " + propertyName + " not found");
         }
-        System.out.println("Value " + propertyName + " set to " + newValue);
     }
 
 
@@ -310,8 +318,11 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
     public boolean getRightDoors() {
         return this.rightDoors;
     }
-    public double  getTemperature() {
-        return this.temperature;
+    public double  getSetTemperature() {
+        return this.setTemperature;
+    }
+    public double  getCurrentTemperature() {
+        return this.currentTemperature;
     }
     public String  getStationName(){
         return this.nextStationName;
@@ -407,4 +418,124 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         return setSpeed;
     }
 
+    /**
+     *  onTick()
+     *  Get current values and then run related flags
+     */
+    public void onTick(){
+
+        // Power might go here
+        //train.trainModelPhysics();
+        // Get new Temperature
+        this.currentTemperature = train.getRealTemperature();
+        if(this.currentTemperature != this.setTemperature) train.setSetTemperature(this.setTemperature);
+
+        // Redundancy Check
+        this.checkBrakeFailure();
+        this.checkBrakeFailure();
+        this.checkPowerFailure();
+        this.checkPowerFailure();
+        this.checkSignalFailure();
+        this.checkSignalFailure();
+
+        // Authority Stopping
+    }
+    /**
+     *  onBlock()
+     */
+    public void onBlock(){
+        //TODO:
+        checkTunnel();
+
+
+    }
+    /**
+     * onStation()
+     */
+    public void onStation(){
+
+        // Get Block info
+
+
+        //TODO: Stopping train in middle of a block
+
+
+        //This will eventually go inside a check to see if we are stopped at a station.
+        if (train.getSpeed() == 0){                             // Check if train is stopped
+
+            // Hopefully wont affect make announcment implementation in manager
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Arrival");
+            alert.setHeaderText(null);
+            alert.setContentText("Arriving at " + nextStationName); // Note that nextStationName will be updated at some point
+            alert.showAndWait();
+
+            if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
+            if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
+
+            //wait(60000);
+
+            this.setLeftDoors(false);
+            this.setRightDoors(false);
+        }
+
+
+
+
+    }
+
+
+    // Implement Crossing tunnel
+    public void checkTunnel(){
+        // Get block information somehow
+
+        if(inTunnel) {
+            setIntLights(true);
+            setExtLights(true);
+
+            train.setIntLights(true);
+            train.setExtLights(true);
+        }
+        else{
+            setIntLights(false);
+            setExtLights(false);
+
+            train.setIntLights(false);
+            train.setExtLights(false);
+        }
+    }
+
+    // Failure Management with Steven He
+    public boolean checkBrakeFailure(){
+
+        // Failures occur when the brake states in the train controller do not match with brake states in the train model
+        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
+        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
+
+        // If true, pick a god and pray
+
+        return brakeFailure;
+    }
+    public boolean checkSignalFailure(){
+        // Failure occur when the commanded speed or commanded authority is -1
+        this.setCommandSpeed(train.getCommandSpeed());
+        this.setAuthority(train.getAuthority());
+
+        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
+
+        //If true, activate emergency brake
+        if (signalFailure) this.setEmergencyBrake(true);
+
+        return signalFailure;
+    }
+    public boolean checkPowerFailure(){
+        // Failure occurs when train model's set power equals 0 but we are outputting power
+
+        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
+
+        // If true, activate emergency brake
+        if (this.powerFailure) this.setEmergencyBrake(true);
+
+        return this.powerFailure;
+    }
 }

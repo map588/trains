@@ -17,6 +17,7 @@ public interface TrainController extends GUIModifiable {
     //-----Speed functions--------
     //Called by the train based on information from the track model
     void setCommandSpeed(double speed);
+    void setCurrentTemperature(double temp);
 
     //-----Functions called by the controller function or the train controller UI
     void setEmergencyBrake(boolean brake);
@@ -42,22 +43,20 @@ public interface TrainController extends GUIModifiable {
     boolean getIntLights();
     boolean getLeftDoors();
     boolean getRightDoors();
-    double getTemperature();
+    double getSetTemperature();
+    double getCurrentTemperature();
 
 
     double getCommandSpeed();
     int    getAuthority();
 
-    void setTemperature(double newTemperature);
+    //void setTemperature(double newTemperature);
 
 
     boolean getAnnouncements();
     boolean getSignalFailure();
     boolean getBrakeFailure();
     boolean getPowerFailure();
-
-
-
 
 
     double calculatePower(double currentVelocity);

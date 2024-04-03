@@ -41,6 +41,9 @@ dependencies {
 
     // Serial Library jSerialComm
     implementation 'com.fazecast:jSerialComm:2.10.4'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
 }
 
 generateGrammarSource {
@@ -50,7 +53,7 @@ generateGrammarSource {
 }
 
 application {
-    mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.GUI.mainMenu'
+    mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.Simulation.Main'
     //mainClass = 'Framework.GUI.TrackLayoutVisualizer'
 }
 

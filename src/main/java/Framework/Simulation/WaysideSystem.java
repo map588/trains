@@ -43,7 +43,7 @@ public class WaysideSystem {
     ExecutorService waysideExecutor;
 
     public WaysideSystem(TrackSystem trackSystem) {
-        TrackModel greenLine = trackSystem.getTrackLine(Lines.GREEN);
+        TrackModel greenLine = trackSystem.getLine(Lines.GREEN);
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
                 1, 2, 3,
                 4, 5, 6,

@@ -1,0 +1,165 @@
+// Controls sections F-M and R-Z blocks 21-76 and 101-150
+// Accesses occupancies of blocks 17-80 and 97-150
+
+// F Occupancies
+if dir_assigned[21]
+    if direction[21] == OUTBOUND
+        authority[21] = not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25]
+        authority[22] = not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26]
+        authority[23] = not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27]
+        authority[24] = not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28]
+        authority[25] = not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and switch[28] == MAIN
+        authority[26] = not occupied[27] and not occupied[28] and not occupied[29] and not occupied[30] and switch[28] == MAIN
+        authority[27] = not occupied[28] and not occupied[29] and not occupied[30] and not occupied[31] and switch[28] == MAIN
+        authority[28] = not occupied[29] and not occupied[30] and not occupied[31] and not occupied[32] and switch[28] == MAIN
+    else
+        authority[21] = not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17]
+        authority[22] = not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18]
+        authority[23] = not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19]
+        authority[24] = not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20]
+        authority[25] = not occupied[24] and not occupied[23] and not occupied[22] and not occupied[21]
+        authority[26] = not occupied[25] and not occupied[24] and not occupied[23] and not occupied[22]
+        authority[27] = not occupied[26] and not occupied[25] and not occupied[24] and not occupied[23]
+    endif
+else
+    authority[21] = FALSE
+    authority[22] = FALSE
+    authority[23] = FALSE
+    authority[24] = FALSE
+    authority[25] = FALSE
+    authority[26] = FALSE
+    authority[27] = FALSE
+    authority[28] = FALSE
+endif
+
+
+// Generic Occupancies
+// G Occupancies
+authority[29] = not occupied[30] and not occupied[31] and not occupied[32] and not occupied[33]
+authority[30] = not occupied[31] and not occupied[32] and not occupied[33] and not occupied[34]
+authority[31] = not occupied[32] and not occupied[33] and not occupied[34] and not occupied[35]
+authority[32] = not occupied[33] and not occupied[34] and not occupied[35] and not occupied[36]
+
+// H Occupancies
+authority[33] = not occupied[34] and not occupied[35] and not occupied[36] and not occupied[37]
+authority[34] = not occupied[35] and not occupied[36] and not occupied[37] and not occupied[38]
+authority[35] = not occupied[36] and not occupied[37] and not occupied[38] and not occupied[39]
+
+// I Occupancies
+authority[36] = not occupied[37] and not occupied[38] and not occupied[39] and not occupied[40]
+authority[37] = not occupied[38] and not occupied[39] and not occupied[40] and not occupied[41]
+authority[38] = not occupied[39] and not occupied[40] and not occupied[41] and not occupied[42]
+authority[39] = not occupied[40] and not occupied[41] and not occupied[42] and not occupied[43]
+authority[40] = not occupied[41] and not occupied[42] and not occupied[43] and not occupied[44]
+authority[41] = not occupied[42] and not occupied[43] and not occupied[44] and not occupied[45]
+authority[42] = not occupied[43] and not occupied[44] and not occupied[45] and not occupied[46]
+authority[43] = not occupied[44] and not occupied[45] and not occupied[46] and not occupied[47]
+authority[44] = not occupied[45] and not occupied[46] and not occupied[47] and not occupied[48]
+authority[45] = not occupied[46] and not occupied[47] and not occupied[48] and not occupied[49]
+authority[46] = not occupied[47] and not occupied[48] and not occupied[49] and not occupied[50]
+authority[47] = not occupied[48] and not occupied[49] and not occupied[50] and not occupied[51]
+authority[48] = not occupied[49] and not occupied[50] and not occupied[51] and not occupied[52]
+authority[49] = not occupied[50] and not occupied[51] and not occupied[52] and not occupied[53]
+authority[50] = not occupied[51] and not occupied[52] and not occupied[53] and not occupied[54]
+authority[51] = not occupied[52] and not occupied[53] and not occupied[54] and not occupied[55]
+authority[52] = not occupied[53] and not occupied[54] and not occupied[55] and not occupied[56]
+authority[53] = not occupied[54] and not occupied[55] and not occupied[56] and not occupied[57]
+authority[54] = not occupied[55] and not occupied[56] and not occupied[57] and not occupied[58]
+authority[55] = not occupied[56] and not occupied[57] and not occupied[58] and not occupied[59]
+authority[56] = not occupied[57] and not occupied[58] and not occupied[59] and not occupied[60]
+authority[57] = not occupied[58] and not occupied[59] and not occupied[60] and not occupied[61]
+
+// J Occupancies
+authority[58] = not occupied[59] and not occupied[60] and not occupied[61] and not occupied[62]
+authority[59] = not occupied[60] and not occupied[61] and not occupied[62] and not occupied[63]
+authority[60] = not occupied[61] and not occupied[62] and not occupied[63] and not occupied[64]
+authority[61] = not occupied[62] and not occupied[63] and not occupied[64] and not occupied[65]
+authority[62] = not occupied[63] and not occupied[64] and not occupied[65] and not occupied[66]
+
+// K Occupancies
+authority[63] = not occupied[64] and not occupied[65] and not occupied[66] and not occupied[67]
+authority[64] = not occupied[65] and not occupied[66] and not occupied[67] and not occupied[68]
+authority[65] = not occupied[66] and not occupied[67] and not occupied[68] and not occupied[69]
+authority[66] = not occupied[67] and not occupied[68] and not occupied[69] and not occupied[70]
+authority[67] = not occupied[68] and not occupied[69] and not occupied[70] and not occupied[71]
+authority[68] = not occupied[69] and not occupied[70] and not occupied[71] and not occupied[72]
+
+// L Occupancies
+authority[69] = not occupied[70] and not occupied[71] and not occupied[72] and not occupied[73]
+authority[70] = not occupied[71] and not occupied[72] and not occupied[73] and not occupied[74]
+authority[71] = not occupied[72] and not occupied[73] and not occupied[74] and not occupied[75]
+authority[72] = not occupied[73] and not occupied[74] and not occupied[75] and not occupied[76]
+authority[73] = not occupied[74] and not occupied[75] and not occupied[76] and not occupied[77]
+
+// M Occupancies
+authority[74] = not occupied[75] and not occupied[76] and not occupied[77] and not occupied[78] and switch[77] == MAIN
+authority[75] = not occupied[76] and not occupied[77] and not occupied[78] and not occupied[79] and switch[77] == MAIN
+authority[76] = not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and switch[77] == MAIN
+
+// R Occupancy
+authority[101] = not occupied[102] and not occupied[103] and not occupied[104] and not occupied[105]
+
+// S Occupancies
+authority[102] = not occupied[103] and not occupied[104] and not occupied[105] and not occupied[106]
+authority[103] = not occupied[104] and not occupied[105] and not occupied[106] and not occupied[107]
+authority[104] = not occupied[105] and not occupied[106] and not occupied[107] and not occupied[108]
+
+// T Occupancies
+authority[105] = not occupied[106] and not occupied[107] and not occupied[108] and not occupied[109]
+authority[106] = not occupied[107] and not occupied[108] and not occupied[109] and not occupied[110]
+authority[107] = not occupied[108] and not occupied[109] and not occupied[110] and not occupied[111]
+authority[108] = not occupied[109] and not occupied[110] and not occupied[111] and not occupied[112]
+authority[109] = not occupied[110] and not occupied[111] and not occupied[112] and not occupied[113]
+
+// U Occupancies
+authority[110] = not occupied[111] and not occupied[112] and not occupied[113] and not occupied[114]
+authority[111] = not occupied[112] and not occupied[113] and not occupied[114] and not occupied[115]
+authority[112] = not occupied[113] and not occupied[114] and not occupied[115] and not occupied[116]
+authority[113] = not occupied[114] and not occupied[115] and not occupied[116] and not occupied[117]
+authority[114] = not occupied[115] and not occupied[116] and not occupied[117] and not occupied[118]
+authority[115] = not occupied[116] and not occupied[117] and not occupied[118] and not occupied[119]
+authority[116] = not occupied[117] and not occupied[118] and not occupied[119] and not occupied[120]
+
+// V Occupancies
+authority[117] = not occupied[118] and not occupied[119] and not occupied[120] and not occupied[121]
+authority[118] = not occupied[119] and not occupied[120] and not occupied[121] and not occupied[122]
+authority[119] = not occupied[120] and not occupied[121] and not occupied[122] and not occupied[123]
+authority[120] = not occupied[121] and not occupied[122] and not occupied[123] and not occupied[124]
+authority[121] = not occupied[122] and not occupied[123] and not occupied[124] and not occupied[125]
+
+// W Occupancies
+authority[122] = not occupied[123] and not occupied[124] and not occupied[125] and not occupied[126]
+authority[123] = not occupied[124] and not occupied[125] and not occupied[126] and not occupied[127]
+authority[124] = not occupied[125] and not occupied[126] and not occupied[127] and not occupied[128]
+authority[125] = not occupied[126] and not occupied[127] and not occupied[128] and not occupied[129]
+authority[126] = not occupied[127] and not occupied[128] and not occupied[129] and not occupied[130]
+authority[127] = not occupied[128] and not occupied[129] and not occupied[130] and not occupied[131]
+authority[128] = not occupied[129] and not occupied[130] and not occupied[131] and not occupied[132]
+authority[129] = not occupied[130] and not occupied[131] and not occupied[132] and not occupied[133]
+authority[130] = not occupied[131] and not occupied[132] and not occupied[133] and not occupied[134]
+authority[131] = not occupied[132] and not occupied[133] and not occupied[134] and not occupied[135]
+authority[132] = not occupied[133] and not occupied[134] and not occupied[135] and not occupied[136]
+authority[133] = not occupied[134] and not occupied[135] and not occupied[136] and not occupied[137]
+authority[134] = not occupied[135] and not occupied[136] and not occupied[137] and not occupied[138]
+authority[135] = not occupied[136] and not occupied[137] and not occupied[138] and not occupied[139]
+authority[136] = not occupied[137] and not occupied[138] and not occupied[139] and not occupied[140]
+authority[137] = not occupied[138] and not occupied[139] and not occupied[140] and not occupied[141]
+authority[138] = not occupied[139] and not occupied[140] and not occupied[141] and not occupied[142]
+authority[139] = not occupied[140] and not occupied[141] and not occupied[142] and not occupied[143]
+authority[140] = not occupied[141] and not occupied[142] and not occupied[143] and not occupied[144]
+authority[141] = not occupied[142] and not occupied[143] and not occupied[144] and not occupied[145]
+authority[142] = not occupied[143] and not occupied[144] and not occupied[145] and not occupied[146]
+authority[143] = not occupied[144] and not occupied[145] and not occupied[146] and not occupied[147]
+
+// X Occupancies
+authority[144] = not occupied[145] and not occupied[146] and not occupied[147] and not occupied[148]
+authority[145] = not occupied[146] and not occupied[147] and not occupied[148] and not occupied[149]
+authority[146] = not occupied[147] and not occupied[148] and not occupied[149] and not occupied[150]
+
+// Y Occupancies
+authority[147] = not occupied[148] and not occupied[149] and not occupied[150] and not occupied[28] and switch[28] == ALT
+authority[148] = not occupied[149] and not occupied[150] and not occupied[28] and not occupied[27] and switch[28] == ALT
+authority[149] = not occupied[150] and not occupied[28] and not occupied[27] and not occupied[26] and switch[28] == ALT
+
+// Z Occupancy
+authority[150] = not occupied[28] and not occupied[27] and not occupied[26] and not occupied[25] and switch[28] == ALT
