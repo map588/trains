@@ -31,6 +31,8 @@ public class WaysideControllerTB {
     public ComboBox<String> tbHWPortComboBox;
     @FXML
     public Label tbHWPortLabel;
+    @FXML
+    public Button runPLCButton;
 
     WaysideControllerSubject currentSubject;
 
@@ -43,6 +45,8 @@ public class WaysideControllerTB {
 
         tbSTID.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         tbSTSwitchTo.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
+
+        runPLCButton.setOnAction(event -> currentSubject.getController().runPLC());
 
         // Set up cell factories for table views
         setupTableCellFactories();

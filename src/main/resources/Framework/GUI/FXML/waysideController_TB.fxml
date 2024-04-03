@@ -55,5 +55,6 @@
       <Button fx:id="tbCreateNewControllerButton" layoutX="421.0" layoutY="98.0" mnemonicParsing="false" prefHeight="25.0" text="add controller" />
       <ComboBox fx:id="tbHWPortComboBox" layoutX="421.0" layoutY="127.0" prefHeight="25.0" prefWidth="92.0" />
       <Label fx:id="tbHWPortLabel" alignment="CENTER" layoutX="410.0" layoutY="79.0" prefHeight="17.0" prefWidth="124.0" text="Port" />
+      <Button fx:id="runPLCButton" layoutX="441.0" layoutY="171.0" mnemonicParsing="false" text="Run PLC" />
    </children>
 </AnchorPane>

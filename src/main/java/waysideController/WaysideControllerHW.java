@@ -170,10 +170,11 @@ public class WaysideControllerHW implements PLCRunner {
                 String[] setValues = values[1].split(":");
                 blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
             }
+            case "runPLC" -> {
+                if(!maintenanceMode && !blockMap.isEmpty() && plcPrograms[0] != null)
+                    plcPrograms[0].run();
+            }
         }
-
-        if(!maintenanceMode && !blockMap.isEmpty() && plcPrograms[0] != null)
-            plcPrograms[0].run();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

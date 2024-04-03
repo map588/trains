@@ -31,15 +31,10 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     // The map of blocks that the wayside controller controls
     protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
 
-    // The PLC program that the wayside controller is running
-    private File PLCFile = null;
-    private PLCProgram[] plcProgramSW;
-
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
 
     private final SerialPort port;
-    private final BufferedReader inputStream;
     private final PrintStream printStream;
 
     public WaysideControllerHWBridge(int id, String trackLine, int[] blockIDList, String comPort) {
@@ -59,7 +54,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
         port.openPort();
-        inputStream = new BufferedReader(new InputStreamReader(port.getInputStream()));
         printStream = new PrintStream(port.getOutputStream(), true);
 
         port.addDataListener(new SerialPortMessageListener() {
@@ -89,8 +83,8 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         }
         printStream.println(blockIDList[blockIDList.length-1]);
 
-        System.out.println("Send: runPLC=true");
-        printStream.println("runPLC=true");
+        System.out.println("Send: runPLC");
+        printStream.println("runPLC");
     }
 
     @Override
@@ -217,8 +211,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void loadPLC(File PLC) {
-        this.PLCFile = PLC;
-//        plcProgramSW.loadPLC(PLC.getAbsolutePath());
         notifyChange(PLCName_p, PLC.getName());
         subject.updateActivePLCProp();
 
@@ -238,22 +230,18 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         switch (values[0]) {
             case "switchState" -> {
                 String[] setValues = values[1].split(":");
-//                super.setSwitchPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setSwitchState(Boolean.parseBoolean(setValues[1]));
             }
             case "trafficLight" -> {
                 String[] setValues = values[1].split(":");
-//                super.setTrafficLightPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setLightState(Boolean.parseBoolean(setValues[1]));
             }
             case "crossing" -> {
                 String[] setValues = values[1].split(":");
-//                super.setCrossingPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setCrossingState(Boolean.parseBoolean(setValues[1]));
             }
             case "auth" -> {
                 String[] setValues = values[1].split(":");
-//                super.setAuthorityPLC(Integer.parseInt(setValues[0]), Boolean.parseBoolean(setValues[1]));
                 blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
             }
         }
