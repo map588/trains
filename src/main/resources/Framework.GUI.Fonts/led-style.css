@@ -18,7 +18,7 @@
 
 .text-area .content {
     -fx-background-color: #2c3a47;
-
+    -fx-line-spacing: 5px;
 }
 
 .text-area:focused {
