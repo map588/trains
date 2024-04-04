@@ -49,6 +49,26 @@ public class TrackBlock {
      * @param blockInfo the BasicBlock object containing the block information
      * @throws IllegalArgumentException if the provided block information is invalid
      */
+    public TrackBlock(){
+        this.blockID = 0;
+        this.isUnderground = false;
+        this.isSwitch = false;
+        this.blockType = BlockType.REGULAR;
+        this.grade = 0;
+        this.elevation = 0;
+        this.cumulativeElevation = 0;
+        this.speedLimit = 0;
+        this.length = 0;
+        this.line = Lines.GREEN;
+        this.northConnect = null;
+        this.southConnect = null;
+        this.feature = new StandardBlock();
+        this.hasFailure = false;
+        this.brokenRail = false;
+        this.trackCircuitFailure = false;
+        this.powerFailure = false;
+    }
+
     TrackBlock(BasicBlock blockInfo) {
         validateBlockInfo(blockInfo);
 

@@ -104,7 +104,7 @@ public class TrainModelSubject implements AbstractSubject{
 
     public void setProperty(String propertyName, Object newValue) {
         Runnable updateTask = () -> {
-            System.out.println("setProperty called from " + Thread.currentThread().getName() + " with " + propertyName + " and " + newValue);
+            //System.out.println("setProperty called from " + Thread.currentThread().getName() + " with " + propertyName + " and " + newValue);
             Property<?> property = properties.get(propertyName);
             updateProperty(property, newValue);
             model.setValue(propertyName, newValue);
@@ -133,7 +133,7 @@ public class TrainModelSubject implements AbstractSubject{
 
 
     public void updateFromGUI(Runnable updateLogic) {
-        System.out.println("Called from updateFromGUI.");
+        //System.out.println("Called from updateFromGUI.");
         isGUIUpdate = true;
         try {
             updateLogic.run();
@@ -143,7 +143,7 @@ public class TrainModelSubject implements AbstractSubject{
     }
 
     public void updateFromLogic(Runnable updateLogic) {
-        System.out.println("Called from updateFromLogic.");
+        //System.out.println("Called from updateFromLogic.");
          isLogicUpdate = true;
         try {
             updateLogic.run();

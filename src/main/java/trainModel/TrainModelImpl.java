@@ -34,34 +34,34 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
     //Passed Variables
-    private int authority;
-    private double commandSpeed;
-    private String announcement;
+    private int authority = 0;
+    private double commandSpeed = 0;
+    private String announcement = "";
 
-    private double relativeDistance, currentBlockLength;
+    private double relativeDistance = 0, currentBlockLength = 0;
 
 
     //Vital Variables
-    private double speed, acceleration, power;
-    private double newSpeed, newAcceleration, newPower;
-    private double mass, grade;
-    private boolean serviceBrake, emergencyBrake;
-    private boolean newServiceBrake, newEmergencyBrake;
-    private double distanceTraveled;
+    private double speed = 0, acceleration = 0, power = 0;
+    private double newSpeed = 0, newAcceleration = 0, newPower = 0;
+    private double mass= 0, grade = 0;
+    private boolean serviceBrake = false, emergencyBrake = false;
+    private boolean newServiceBrake = false, newEmergencyBrake = false;
+    private double distanceTraveled = 0;
 
 
     //physics variables (no setters or getters, only to be used within train model
-    private double brakeForce;
-    private int TIME_DELTA;
+    private double brakeForce = 0;
+    private int TIME_DELTA = 10;
     //Murphy Variables
-    private boolean brakeFailure, powerFailure, signalFailure;
+    private boolean brakeFailure = false, powerFailure = false, signalFailure = false;
 
     //NonVital Variables
-    private boolean extLights, intLights, rightDoors, leftDoors;
-    private boolean newExtLights, newIntLights, newRightDoors, newLeftDoors;
-    private double realTemperature, setTemperature;
-    private double newRealTemperature, newSetTemperature;
-    private int numCars, numPassengers, crewCount;
+    private boolean extLights = false, intLights = false, rightDoors = false, leftDoors = false;
+    private boolean newExtLights = false, newIntLights = false, newRightDoors = false, newLeftDoors = false;
+    private double realTemperature = 70, setTemperature = 70;
+    private double newRealTemperature = 70, newSetTemperature = 70;
+    private int numCars = 1, numPassengers = 0, crewCount = 2;
     private double length = Constants.TRAIN_LENGTH * numCars;
 
 
@@ -69,8 +69,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private final TrainController controller;
 
     private TrackLine track;
-    private Direction direction;
-    private TrackBlock currentBlock;
+    private Direction direction = Direction.NORTH;
+    private TrackBlock currentBlock = new TrackBlock();
 
     //purely for temperature calculation
     private double elapsedTime = 0;
