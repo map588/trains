@@ -7,6 +7,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import trackModel.TrackLineMap;
 import waysideController.WaysideControllerHWBridge;
 import waysideController.WaysideControllerImpl;
 
@@ -43,7 +44,7 @@ public class WaysideSystem {
     ExecutorService waysideExecutor;
 
     public WaysideSystem(TrackSystem trackSystem, boolean useHardware) {
-        TrackModel greenLine = trackSystem.getLine(Lines.GREEN);
+        TrackModel greenLine = TrackLineMap.getTrackLine(Lines.GREEN);
 //        TrackModel greenLine = null;
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
                 1, 2, 3,

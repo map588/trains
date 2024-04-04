@@ -224,7 +224,7 @@ public class TrackModelManager {
         //lineTable.setItems(tableInfo);
         //ObservableList<ParsedBasicBlocks> tableInfo = subject.getTrackInfo();
         Lines line = Lines.valueOf(lineSelect);
-        //TrackSystem.getLine(line);
+        subject = TrackLineMap.getTrackLine(line).getSubject();
 
 
     }
