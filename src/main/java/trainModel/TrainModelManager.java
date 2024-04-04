@@ -54,17 +54,18 @@ public class TrainModelManager {
         subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
-        //testBench = launchTestBench();
-        while (subjectMap.getSubjects().isEmpty()) {
-            System.out.println("Waiting for subjects to be added to the map");
-        }
-
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
             }
         });
         setUpCircleColors();
+
+        if(!subjectMap.getSubjects().isEmpty()) {
+            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
+        }else{
+            System.out.println("No trains to display");
+        }
 
         System.out.println("Finished TrainModelManager initialize");
     }
