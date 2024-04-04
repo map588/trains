@@ -159,9 +159,11 @@ public class trainControllerStub implements TrainController {
     }
 
     @Override
-    public double getTemperature() {
+    public double getSetTemperature() {
         return 0;
     }
+    @Override
+    public double getCurrentTemperature(){return 0;}
 
     @Override
     public double getCommandSpeed() {
@@ -174,9 +176,12 @@ public class trainControllerStub implements TrainController {
     }
 
     @Override
-    public void setTemperature(double newTemperature) {
+    public void setSetTemperature(double newTemperature) {
 
     }
+
+    @Override
+    public void setCurrentTemperature(double newTemperature){}
 
     @Override
     public TrainControllerSubject getSubject() {

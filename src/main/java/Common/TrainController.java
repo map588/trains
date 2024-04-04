@@ -50,8 +50,8 @@ public interface TrainController extends GUIModifiable {
     double getCommandSpeed();
     int    getAuthority();
 
-    //void setTemperature(double newTemperature);
-
+    void setSetTemperature(double newTemperature);
+    //void setCurrentTemperature(double newTemp);
 
     boolean getAnnouncements();
     boolean getSignalFailure();
