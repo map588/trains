@@ -4,6 +4,7 @@ import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
 import Utilities.BasicBlockLine;
+import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock.Connection;
 import Utilities.Records.Beacon;
@@ -27,9 +28,11 @@ public class TrackLine implements TrackModel {
     //maps blocks to block numbers
     private final ConcurrentSkipListMap<Integer, TrackBlock> trackBlocks;
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
-    private int outsideTemperature = 70;
     private int ticketSales = 0;
     private final TrackLineSubject subject;
+    private BeaconParser beaconParser;
+    public int outsideTemperature = 40;
+
 
 
     public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
@@ -45,6 +48,10 @@ public class TrackLine implements TrackModel {
             TrackBlock block = new TrackBlock(basicTrackLayout.get(blockIndex));
             trackBlocks.put(block.blockID, block);
         }
+
+        //TODO: Add beacons to the beaconBlocks map
+
+
 
         this.line = line;
         setupListeners();
@@ -161,9 +168,6 @@ public class TrackLine implements TrackModel {
         trackOccupancyMap.addChangeListener(trackListener);
     }
 
-    public void setTemperature(int i) {
-        outsideTemperature = i;
-    }
 
 
 
@@ -184,6 +188,21 @@ public class TrackLine implements TrackModel {
     }
 
 //TODO: Beacon communication with the train
+
+//    public void setBeacon(int block, Beacon beacon) {
+//        syncTrackUpdate( () -> {
+//            beaconBlocks.put(block, beacon);
+//        });
+//    }
+
+    public Beacon beaconTransmit(int block) {
+        if(beaconBlocks.containsKey(block)) {
+            return beaconBlocks.get(block);
+        } else{
+            throw new IllegalArgumentException("Block: " + block + " does not have a beacon");
+        }
+    }
+
 //TODO: Maybe refactor set to pass for clearer communication.
 
     @Override
@@ -319,6 +338,10 @@ public class TrackLine implements TrackModel {
         this.ticketSales = 0;
     }
 
+    public void newTemperature(){
+        int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
+        this.outsideTemperature += newTemp;
+    }
 
     //Testing purposes
     public TrackBlock getBlock(int blockID) {

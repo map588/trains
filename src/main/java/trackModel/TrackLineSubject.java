@@ -29,8 +29,6 @@ public class TrackLineSubject {
     private StringProperty ticketSales;
     private StringProperty status;
     private StringProperty switchBlockID;
-    private StringProperty switchMain;
-    private StringProperty switchAlt;
     private StringProperty switchState;
     private StringProperty signalID;
     private StringProperty signalState;
@@ -40,8 +38,6 @@ public class TrackLineSubject {
     private StringProperty nameOfStation;
     private StringProperty trackHeater;
     private StringProperty tempProperty;
-    private StringProperty comSpeed;
-    private StringProperty trainAuthority;
 
 
     private void initializeValues() {
@@ -69,8 +65,6 @@ public class TrackLineSubject {
         crossingState = new SimpleStringProperty();
         tempDisplay = new SimpleStringProperty();
         setBeacon = new SimpleStringProperty();
-        switchMain = new SimpleStringProperty();
-        switchAlt = new SimpleStringProperty();
         nameOfStation = new SimpleStringProperty();
         trackHeater = new SimpleStringProperty("STATUS - OFF");
         tempProperty = new SimpleStringProperty();
@@ -94,21 +88,25 @@ public class TrackLineSubject {
 
     private void initializeListeners() {
 
-        switchState.addListener((observableValue, oldValue, newVal) -> setSwitchState(newVal));
-        signalState.addListener((observableValue, oldValue, newVal) -> setSignalState(newVal));
-        isOccupied.addListener((observableValue, oldValue, newVal) -> {
-            if (newVal) {
-                setStatus("OCCUPIED");
-            } else {
-                setStatus("UNOCCUPIED");
-            }
-        });
-
-        tempProperty.addListener((observable, oldValue, newValue) -> {
-                    System.out.println("Temp change detected");
-                    trackLine.setTemperature(Integer.parseInt(newValue));
-                }
-        );
+//        switchState.addListener((observableValue, oldValue, newVal) -> setSwitchState(newVal));
+//        signalState.addListener((observableValue, oldValue, newVal) -> setSignalState(newVal));
+//        isOccupied.addListener((observableValue, oldValue, newVal) -> {
+//            if (newVal) {
+//                setStatus("OCCUPIED");
+//            } else {
+//                setStatus("UNOCCUPIED");
+//            }
+//        });
+//
+//        tempProperty.addListener((observable, oldValue, newValue) -> {
+//                    System.out.println("Temp change detected");
+//                    if (Double.parseDouble(newValue) < 40) {
+//                        setTrackHeater("STATUS - ON");
+//                    } else {
+//                        setTrackHeater("STATUS - OFF");
+//                    }
+//                }
+//        );
     }
 
 
@@ -339,13 +337,6 @@ public class TrackLineSubject {
     }
 
     public void setSwitchState(String switchState) {
-
-        if (switchState.equals("Main")) {
-            this.switchBlockID.set(switchMain.get());
-        } else {
-            this.switchBlockID.set(switchAlt.get());
-        }
-
         this.switchState.set(switchState);
     }
 
@@ -409,30 +400,6 @@ public class TrackLineSubject {
         this.setBeacon.set(setBeacon);
     }
 
-    public String getSwitchMain() {
-        return switchMain.get();
-    }
-
-    public StringProperty switchMainProperty() {
-        return switchMain;
-    }
-
-    public void setSwitchMain(String switchMain) {
-        this.switchMain.set(switchMain);
-    }
-
-    public String getSwitchAlt() {
-        return switchAlt.get();
-    }
-
-    public StringProperty switchAltProperty() {
-        return switchAlt;
-    }
-
-    public void setSwitchAlt(String switchAlt) {
-        this.switchAlt.set(switchAlt);
-    }
-
     public String getNameOfStation() {
         return nameOfStation.get();
     }
@@ -459,30 +426,6 @@ public class TrackLineSubject {
 
     public StringProperty tempProperty() {
         return tempProperty;
-    }
-
-    public String getComSpeed() {
-        return comSpeed.get();
-    }
-
-    public StringProperty comSpeedProperty() {
-        return comSpeed;
-    }
-
-    public void setComSpeed(String comSpeed) {
-        this.comSpeed.set(comSpeed);
-    }
-
-    public String getTrainAuthority() {
-        return trainAuthority.get();
-    }
-
-    public StringProperty trainAuthorityProperty() {
-        return trainAuthority;
-    }
-
-    public void setTrainAuthority(String trainAuthority) {
-        this.trainAuthority.set(trainAuthority);
     }
 
     public boolean isTrackCircuitFailure() {
