@@ -141,7 +141,7 @@ public class WaysideControllerManager {
 
         // Create initial controller and update values
 //        createNewController();
-        changeActiveController(WaysideSystem.getController(1));
+        changeActiveController(WaysideSystem.getController(Lines.GREEN, 1));
         testBench.setController(currentSubject);
 
         // Set default folder for PLC:
@@ -371,7 +371,7 @@ public class WaysideControllerManager {
                     testBench.tbHWPortComboBox.getValue());
         }
 
-        WaysideSystem.addController(newController);
+        WaysideSystem.addController(newController, Lines.GREEN);
         changeActiveController(newController);
     }
 

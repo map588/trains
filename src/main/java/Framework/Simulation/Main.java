@@ -1,6 +1,7 @@
 package Framework.Simulation;
 
 import CTCOffice.CTCOfficeImpl;
+import Common.CTCOffice;
 import Framework.GUI.mainMenu;
 import Utilities.Enums.Lines;
 import javafx.application.Application;
@@ -31,9 +32,9 @@ public class Main {
 
         System.out.println("Starting simulation...");
          trackSystem = new TrackSystem();
-         waysideController = new WaysideSystem(trackSystem, false);
-         trainSystem = new TrainSystem();
         CTCOfficeImpl CTC = CTCOfficeImpl.OFFICE;
+         waysideController = new WaysideSystem(trackSystem, CTC, false);
+         trainSystem = new TrainSystem();
 
         CTC.setTrackSystem(trackSystem);
 

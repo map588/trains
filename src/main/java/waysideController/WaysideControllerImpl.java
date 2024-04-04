@@ -364,7 +364,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public boolean getOutsideOccupancy(int blockID) {
-        WaysideController controller = WaysideSystem.getController(blockID);
+        WaysideController controller = WaysideSystem.getController(trackLine, blockID);
         return controller.getBlockMap().get(blockID).isOccupied();
     }
 
