@@ -66,7 +66,7 @@ def getJavaFXLibPath() {
     def os = org.gradle.internal.os.OperatingSystem.current()
     def arch = System.getProperty("os.arch")
     def macLibPath = '/javafx-sdk/javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
-    def winLibPath = '\\javafx-sdk\\javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
+    def winLibPath = '/javafx-sdk/javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
 
     if (os.isWindows()) {
         println "This is WINDOWS!"
@@ -85,10 +85,10 @@ def getJavaFXLibPath() {
 
     def libPath = os.isWindows() ? winLibPath : macLibPath
 
-    println "JavaFX SDK path: ${project.rootDir}${libPath}\\lib"
+    println "JavaFX SDK path: ${project.rootDir}${libPath}/lib"
 
     // Append the standard lib directory of JavaFX SDK
-    return "${project.rootDir}${libPath}\\lib"
+    return "${project.rootDir}${libPath}/lib"
 }
 
 sourceSets {
