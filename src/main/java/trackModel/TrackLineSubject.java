@@ -1,7 +1,11 @@
 package trackModel;
 
+import Utilities.BasicBlockLine;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 
 public class TrackLineSubject {
     private StringProperty blockNumber;
@@ -41,7 +45,6 @@ public class TrackLineSubject {
     private StringProperty trackHeater;
     private StringProperty outsideTemp;
 
-    private TrackBlockLine trackBlockLine;
     private ObservableList<TrackBlockSubject> blockList;
 
 
@@ -77,7 +80,7 @@ public class TrackLineSubject {
         blockElevation = new SimpleDoubleProperty();
         outsideTemp = new SimpleStringProperty();
         direction = new SimpleStringProperty();
-        //blockList = FX.Collections.observableArrayList();
+        blockList = FXCollections.observableArrayList();
     }
 
     private TrackLine trackLine;
@@ -87,11 +90,16 @@ public class TrackLineSubject {
         initializeListeners();
     }
 
-    public TrackLineSubject(TrackLine line) {
+    public TrackLineSubject(TrackLine line, TrackBlockLine trackBlockLine) {
         this.trackLine = line;
         initializeValues();
         initializeListeners();
+        trackBlockLine.forEach((blockID, block) -> {
+            blockList.add(new TrackBlockSubject(block));
+        });
     }
+
+
 
     private void initializeListeners() {
 

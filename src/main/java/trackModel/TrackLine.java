@@ -29,14 +29,14 @@ public class TrackLine implements TrackModel {
     private final TrackBlockLine trackBlocks;
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
     private int ticketSales = 0;
-    //private final TrackLineSubject subject;
+    private TrackLineSubject subject;
     private BeaconParser beaconParser;
     public int outsideTemperature = 40;
 
 
 
     public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
-       // this.subject = new TrackLineSubject(this);
+
 
         trackBlocks = new TrackBlockLine();
         beaconBlocks = new ConcurrentHashMap<>();
@@ -49,12 +49,18 @@ public class TrackLine implements TrackModel {
             trackBlocks.put(block.blockID, block);
         }
 
+        this.subject = new TrackLineSubject(this, trackBlocks);
+
         //TODO: Add beacons to the beaconBlocks map
 
 
 
         this.line = line;
         setupListeners();
+    }
+
+    public TrackLineSubject getSubject() {
+        return this.subject;
     }
 
 

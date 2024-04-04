@@ -1,13 +1,16 @@
 package trackModel;
 
+import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.DirectoryChooser;
+import Framework.Simulation.TrackSystem;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 public class TrackModelManager {
@@ -87,7 +90,6 @@ public class TrackModelManager {
     @FXML
     public void initialize(){
         //initialize buttons and user inputs
-
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
         murphyEnter.setOnAction(event -> murphyEnter());
@@ -215,13 +217,16 @@ public class TrackModelManager {
     }
     private void updateTable() {
         //get the line
-        //String lineSelect = pickLine.getValue();
+        String lineSelect = pickLine.getValue();
         //send the line to the track model
         //currTrackModel.getLine(line);
         //ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
         //lineTable.setItems(tableInfo);
-
         //ObservableList<ParsedBasicBlocks> tableInfo = subject.getTrackInfo();
+        Lines line = Lines.valueOf(lineSelect);
+        //TrackSystem.getLine(line);
+
+
     }
 
     private void murphyEnter() {
@@ -264,8 +269,6 @@ public class TrackModelManager {
         File file = new File(trackFilePath.getText());
         //send file to parser
         this.addLineName(lineNameInput.getText());
-        //update table
-        this.updateTable();
     }
 
     //user input for track layout

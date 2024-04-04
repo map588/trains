@@ -42,7 +42,7 @@ public class TrackSystem {
         });
     }
 
-    protected TrackLine getLine(Lines line) {
+    public TrackLine getLine(Lines line) {
         return TrackLines.get(line);
     }
 }
