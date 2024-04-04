@@ -65,7 +65,7 @@ public class TrackLine implements TrackModel {
 
 
     public TrainModel trainDispatch(int trainID) {
-        TrainModel train = new TrainModelImpl(trainID, this);
+        TrainModel train = new TrainModelImpl(this, trainID);
         trackOccupancyMap.put(train, 0);
         return train;
     }

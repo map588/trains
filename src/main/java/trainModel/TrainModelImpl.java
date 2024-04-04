@@ -77,6 +77,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     private final ThreadLocalRandom r = ThreadLocalRandom.current();
 
+    public TrainModelImpl() {
+        initializeValues();
+        this.controller = new TrainControllerImpl(this, -1);
+        this.subject = new TrainModelSubject(this);
+    }
 
     public TrainModelImpl(TrackLine track, int trainID) {
         initializeValues();
@@ -86,7 +91,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void delete() {
-        //controller.delete();
+        controller.delete();
         this.subject.subjectDelete();
 
     }
