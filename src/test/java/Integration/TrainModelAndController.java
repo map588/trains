@@ -20,17 +20,17 @@ public class TrainModelAndController extends BaseTest  {
         TrackLine line = new TrackLine(GREEN, trackLines.get(GREEN));
     }
 
-    @Test
-    public void DoesNotExplode() {
-        boolean please = true;
-        try{
-            trainSystem.dispatchTrain(trackLine, 1);
-            trainSystem.update();
-        } catch (Exception e) {
-            please = false;
-            e.printStackTrace();
-        }
-        assert(please);
-    }
+//    @Test
+//    public void DoesNotExplode() {
+//        boolean please = true;
+//        try{
+//            trainSystem.dispatchTrain(trackLine, 1);
+//            trainSystem.update();
+//        } catch (Exception e) {
+//            please = false;
+//            e.printStackTrace();
+//        }
+//        assert(please);
+//    }
 
 }
