@@ -2,6 +2,7 @@ package Common;
 
 import Utilities.Enums.Direction;
 import Utilities.Records.Beacon;
+import Utilities.Records.UpdatedTrainValues;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -82,6 +83,6 @@ public interface  TrainModel {
 
     TrainController getController();
 
-    void trainModelPhysics(Future<Double> power) throws ExecutionException, InterruptedException;
+    void trainModelTimeStep(Future<UpdatedTrainValues> updatedTrainValuesFuture) throws ExecutionException, InterruptedException;
     void trainModelPhysics() throws ExecutionException, InterruptedException;
 }

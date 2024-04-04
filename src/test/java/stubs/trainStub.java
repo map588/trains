@@ -4,9 +4,11 @@ import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Enums.Direction;
 import Utilities.Records.Beacon;
+import Utilities.Records.UpdatedTrainValues;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
@@ -325,7 +327,7 @@ public class trainStub implements TrainModel {
     }
 
     @Override
-    public void trainModelPhysics(Future<Double> power) {
+    public void trainModelTimeStep(Future<UpdatedTrainValues> updatedTrainValuesFuture) throws ExecutionException, InterruptedException {
 
     }
 
