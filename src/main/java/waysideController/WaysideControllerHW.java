@@ -8,6 +8,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class WaysideControllerHW implements PLCRunner {
@@ -19,10 +20,17 @@ public class WaysideControllerHW implements PLCRunner {
     private final PrintStream outputStream;
     private final File plcFile;
     private final PLCProgram[] plcPrograms;
+    private final Stack<PLCChange>[] plcResults;
+    private Stack<PLCChange> currentPLCResult;
     public WaysideControllerHW(String comPort) {
-        plcPrograms = new PLCProgram[1];
+        plcPrograms = new PLCProgram[2];
         plcPrograms[0] = new PLCProgram(this);
-        plcFile = new File("PLC.plc");
+        plcPrograms[1] = new PLCProgram(this);
+        plcResults = new Stack[2];
+        plcResults[0] = new Stack<>();
+        plcResults[1] = new Stack<>();
+
+        plcFile = new File("plcFile.plc");
 
         SerialPort port = SerialPort.getCommPort(comPort);
         port.setComPortParameters(19200, 8, 1, 0);
@@ -41,10 +49,17 @@ public class WaysideControllerHW implements PLCRunner {
         WaysideBlock block = blockMap.get(blockID);
 
         if(block.isOpen() && block.getSwitchState() != switchState) {
-            block.setSwitchState(switchState);
-            System.out.println("Send: switchState="+blockID+":"+switchState);
-            outputStream.println("switchState="+blockID+":"+switchState);
+            currentPLCResult.push(new PLCChange("switch", blockID, switchState));
+//            block.setSwitchState(switchState);
+//            System.out.println("Send: switchState="+blockID+":"+switchState);
+//            outputStream.println("switchState="+blockID+":"+switchState);
         }
+    }
+
+    private void outputSwitchPLC(int blockID, boolean switchState) {
+        blockMap.get(blockID).setSwitchState(switchState);
+        System.out.println("Send: switchState="+blockID+":"+switchState);
+        outputStream.println("switchState="+blockID+":"+switchState);
     }
 
     /**
@@ -56,10 +71,17 @@ public class WaysideControllerHW implements PLCRunner {
         WaysideBlock block = blockMap.get(blockID);
 
         if(block.isOpen() && block.getSwitchState() != lightState) {
-            block.setSwitchState(lightState);
-            System.out.println("Send: trafficLight=" + blockID + ":" + lightState);
-            outputStream.println("trafficLight=" + blockID + ":" + lightState);
+            currentPLCResult.push(new PLCChange("light", blockID, lightState));
+//            block.setSwitchState(lightState);
+//            System.out.println("Send: trafficLight=" + blockID + ":" + lightState);
+//            outputStream.println("trafficLight=" + blockID + ":" + lightState);
         }
+    }
+
+    private void outputTrafficLightPLC(int blockID, boolean lightState) {
+        blockMap.get(blockID).setLightState(lightState);
+        System.out.println("Send: trafficLight=" + blockID + ":" + lightState);
+        outputStream.println("trafficLight=" + blockID + ":" + lightState);
     }
 
     /**
@@ -71,10 +93,17 @@ public class WaysideControllerHW implements PLCRunner {
         WaysideBlock block = blockMap.get(blockID);
 
         if(block.isOpen() && block.getSwitchState() != crossingState) {
-            block.setSwitchState(crossingState);
-            System.out.println("Send: crossing=" + blockID + ":" + crossingState);
-            outputStream.println("crossing=" + blockID + ":" + crossingState);
+            currentPLCResult.push(new PLCChange("crossing", blockID, crossingState));
+//            block.setSwitchState(crossingState);
+//            System.out.println("Send: crossing=" + blockID + ":" + crossingState);
+//            outputStream.println("crossing=" + blockID + ":" + crossingState);
         }
+    }
+
+    private void outputCrossingPLC(int blockID, boolean crossingState) {
+        blockMap.get(blockID).setCrossingState(crossingState);
+        System.out.println("Send: crossing=" + blockID + ":" + crossingState);
+        outputStream.println("crossing=" + blockID + ":" + crossingState);
     }
 
     @Override
@@ -82,10 +111,17 @@ public class WaysideControllerHW implements PLCRunner {
         WaysideBlock block = blockMap.get(blockID);
 
         if(block.isOpen() && block.getSwitchState() != auth) {
-            block.setSwitchState(auth);
-            System.out.println("Send: auth=" + blockID + ":" + auth);
-            outputStream.println("auth=" + blockID + ":" + auth);
+            currentPLCResult.push(new PLCChange("auth", blockID, auth));
+//            block.setSwitchState(auth);
+//            System.out.println("Send: auth=" + blockID + ":" + auth);
+//            outputStream.println("auth=" + blockID + ":" + auth);
         }
+    }
+
+    private void outputAuthorityPLC(int blockID, boolean auth) {
+        blockMap.get(blockID).setBooleanAuth(auth);
+        System.out.println("Send: auth=" + blockID + ":" + auth);
+        outputStream.println("auth=" + blockID + ":" + auth);
     }
 
     // TODO: Fix this implementation
@@ -126,7 +162,9 @@ public class WaysideControllerHW implements PLCRunner {
                     e.printStackTrace();
                 }
                 System.out.println("PLC Uploaded");
-                plcPrograms[0].loadPLC(plcFile.getAbsolutePath());
+                for(PLCProgram program : plcPrograms) {
+                    program.loadPLC(plcFile.getAbsolutePath());
+                }
             }
             case "setLine" -> {
                 trackLine = values[1];
@@ -171,8 +209,41 @@ public class WaysideControllerHW implements PLCRunner {
                 blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
             }
             case "runPLC" -> {
-                if(!maintenanceMode && !blockMap.isEmpty() && plcPrograms[0] != null)
-                    plcPrograms[0].run();
+                if(!maintenanceMode && !blockMap.isEmpty() && plcPrograms[0] != null) {
+                    runPLC();
+                }
+            }
+        }
+    }
+
+    private void runPLC() {
+        for(int plcIndex = 0; plcIndex < plcPrograms.length; plcIndex++) {
+            currentPLCResult = plcResults[plcIndex];
+            plcPrograms[plcIndex].run();
+//                System.out.println("PLC Results[" + plcIndex + "]: " + plcResults[plcIndex].size() + " " + currentPLCResult.size());
+        }
+
+        int changeSize = plcResults[0].size();
+        for(int changeIndex = 0; changeIndex < changeSize; changeIndex++) {
+            PLCChange change = plcResults[0].pop();
+
+//                System.out.println("PLC Change: " + change.changeType + " " + change.blockID + " " + change.changeValue + " " + plcResults[0].size());
+
+            for(int plcIndex = 1; plcIndex < plcResults.length; plcIndex++) {
+                PLCChange otherChange = plcResults[plcIndex].pop();
+
+                if(!change.changeType().equals(otherChange.changeType()) ||
+                        change.changeValue() != otherChange.changeValue() ||
+                        change.blockID() != otherChange.blockID())
+                    throw new RuntimeException("PLC programs are not in sync");
+            }
+
+            switch(change.changeType()) {
+                case "switch" -> outputSwitchPLC(change.blockID(), change.changeValue());
+                case "light" -> outputTrafficLightPLC(change.blockID(), change.changeValue());
+                case "crossing" -> outputCrossingPLC(change.blockID(), change.changeValue());
+                case "auth" -> outputAuthorityPLC(change.blockID(), change.changeValue());
+                default -> throw new RuntimeException("Invalid PLC change type");
             }
         }
     }

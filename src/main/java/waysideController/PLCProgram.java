@@ -45,7 +45,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     public void run() {
         if(PLCTree != null) {
             visit(PLCTree);
-            System.out.println("PLC program executed");
+//            System.out.println("PLC program executed");
         }
     }
 
