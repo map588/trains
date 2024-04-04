@@ -33,6 +33,7 @@ public class TrackBlock {
      boolean brokenRail;
      boolean trackCircuitFailure;
      boolean powerFailure;
+     boolean occupied;
 
      BlockFeature feature;
 
@@ -221,6 +222,10 @@ public class TrackBlock {
     public double getSpeedLimit() {
         return speedLimit;
     }
+
+    public boolean isOccupied() {return occupied;}
+
+    public void setOccupied(boolean occupied) {this.occupied = occupied;}
 
     public Lines getLine() {
         return line;

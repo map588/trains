@@ -446,6 +446,10 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
      */
     public void onBlock(){
         //TODO:
+
+        // Update Block by Block
+
+        // Get Specific Block Info
         checkTunnel();
 
     }
