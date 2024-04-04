@@ -46,7 +46,6 @@ public class TrackBlock {
     /**
      * Constructs a new TrackBlock object based on the provided BasicBlock information.
      *
-     * @param blockInfo the BasicBlock object containing the block information
      * @throws IllegalArgumentException if the provided block information is invalid
      */
     public TrackBlock(){
