@@ -3,13 +3,10 @@ package trackModel;
 import javafx.beans.property.*;
 
 public class TrackLineSubject {
-
-
-    private StringProperty section;
     private StringProperty blockNumber;
     private IntegerProperty blockLength;
     private DoubleProperty blockGrade;
-    private IntegerProperty speedLimit;
+    private DoubleProperty speedLimit;
 
     // boolean properties
     private BooleanProperty isCrossing;
@@ -18,7 +15,7 @@ public class TrackLineSubject {
     private BooleanProperty isSwitch;
     private BooleanProperty isStation;
     private BooleanProperty isBeacon;
-    private BooleanProperty hasFailure;
+    private StringProperty failure;
     private BooleanProperty trackCircuitFailure;
     private BooleanProperty powerFailure;
     private BooleanProperty brokenRail;
@@ -46,7 +43,7 @@ public class TrackLineSubject {
         blockNumber = new SimpleStringProperty();
         blockLength = new SimpleIntegerProperty();
         blockGrade = new SimpleDoubleProperty();
-        speedLimit = new SimpleIntegerProperty();
+        speedLimit = new SimpleDoubleProperty();
         isCrossing = new SimpleBooleanProperty();
         isUnderground = new SimpleBooleanProperty();
         isSignal = new SimpleBooleanProperty();
@@ -54,8 +51,7 @@ public class TrackLineSubject {
         isStation = new SimpleBooleanProperty();
         isBeacon = new SimpleBooleanProperty();
         isOccupied = new SimpleBooleanProperty();
-        hasFailure = new SimpleBooleanProperty();
-        section = new SimpleStringProperty();
+        failure = new SimpleStringProperty();
         passEmbarked = new SimpleStringProperty();
         passDisembarked = new SimpleStringProperty();
         ticketSales = new SimpleStringProperty();
@@ -110,19 +106,6 @@ public class TrackLineSubject {
 //        );
     }
 
-
-    public String getSection() {
-        return section.get();
-    }
-
-    public StringProperty sectionProperty() {
-        return section;
-    }
-
-    public void setSection(String section) {
-        this.section.set(section);
-    }
-
     public String getBlockNumber() {
         return blockNumber.get();
     }
@@ -159,15 +142,15 @@ public class TrackLineSubject {
         this.blockGrade.set(blockGrade);
     }
 
-    public int getSpeedLimit() {
+    public double getSpeedLimit() {
         return speedLimit.get();
     }
 
-    public IntegerProperty speedLimitProperty() {
+    public DoubleProperty speedLimitProperty() {
         return speedLimit;
     }
 
-    public void setSpeedLimit(int speedLimit) {
+    public void setSpeedLimit(double speedLimit) {
         this.speedLimit.set(speedLimit);
     }
 
@@ -243,16 +226,16 @@ public class TrackLineSubject {
         this.isBeacon.set(isBeacon);
     }
 
-    public boolean isHasFailure() {
-        return hasFailure.get();
+    public String getFailure() {
+        return failure.get();
     }
 
-    public BooleanProperty hasFailureProperty() {
-        return hasFailure;
+    public StringProperty failureProperty() {
+        return failure;
     }
 
-    public void setHasFailure(boolean hasFailure) {
-        this.hasFailure.set(hasFailure);
+    public void setFailure(String failure) {
+        this.failure.set(failure);
     }
 
     public boolean isIsOccupied() {
