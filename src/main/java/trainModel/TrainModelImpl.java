@@ -126,7 +126,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     public void notifyChange(String property, Object newValue) {
 
-        System.out.println("Variable: " + property + " changed to " + newValue);
+       // System.out.println("Variable: " + property + " changed to " + newValue);
 
         // If the set is called by the GUI, it implies that the property is already changed
         // and we should not notify the subject of the change, because its already changed...

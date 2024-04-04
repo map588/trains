@@ -250,6 +250,8 @@ public class CTCOfficeManager {
         DispatchButton.setOnAction(event -> {
             office.DispatchTrain(Lines.GREEN, ++numOfTrains);
             System.out.println("Dispatched Train : ID " + numOfTrains + " on Line " + "GREEN");
+            office.sendAuthority(Lines.GREEN, numOfTrains, 9);
+            office.sendSpeed(Lines.GREEN, numOfTrains, 10);
         });
 
     }

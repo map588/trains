@@ -6,6 +6,7 @@ import CTCOffice.ScheduleInfo.ScheduleLibrary;
 import CTCOffice.ScheduleInfo.TrainStop;
 import Common.CTCOffice;
 import Framework.Simulation.TrackSystem;
+import Framework.Simulation.WaysideSystem;
 import Utilities.BasicLineMap;
 import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
@@ -35,6 +36,7 @@ public class CTCOfficeImpl implements CTCOffice {
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
 
     private TrackSystem trackSystem;
+    private WaysideSystem waysideController;
 
     /**
      * Constructor for the CTCOfficeImpl class.
@@ -82,6 +84,10 @@ public class CTCOfficeImpl implements CTCOffice {
 
     public void setTrackSystem(TrackSystem trackSystem) {
         this.trackSystem = trackSystem;
+    }
+
+    public void setWaysideSystem(WaysideSystem waysideController) {
+        this.waysideController = waysideController;
     }
 
     public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {
@@ -160,11 +166,17 @@ public class CTCOfficeImpl implements CTCOffice {
     boolean getAutoMode() {
         return autoMode;
     }
-
-    public void DispatchTrain(Lines line , int trainID) {
+    void DispatchTrain(Lines line , int trainID) {
         trackSystem.dispatchTrain(line, trainID);
     }
 
+    void sendSpeed(Lines line, int blockID, double speed) {
+        waysideController.getController(line, blockID).CTCSendSpeed(blockID, speed);
+    }
+
+    void sendAuthority(Lines line, int blockID, int authority) {
+        waysideController.getController(line, blockID).CTCSendAuthority(blockID, authority);
+    }
 
 
 
