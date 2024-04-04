@@ -5,6 +5,7 @@ import Common.TrainModel;
 import Framework.Support.GUIModifiable;
 import Utilities.Constants;
 import Utilities.Records.Beacon;
+import Utilities.Records.UpdatedTrainValues;
 import javafx.scene.control.Alert;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
@@ -16,6 +17,7 @@ import static Utilities.Conversion.powerUnits.WATTS;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
 import static trainController.Properties.*;
+//import static trainController.Property_enum.*;
 
 /**
  * This is the constructor for the trainControllerImpl class.
@@ -480,8 +482,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         }
 
 
-
-
     }
 
 
@@ -493,15 +493,15 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             setIntLights(true);
             setExtLights(true);
 
-            train.setIntLights(true);
-            train.setExtLights(true);
+//            train.setIntLights(true);
+//            train.setExtLights(true);
         }
         else{
             setIntLights(false);
             setExtLights(false);
 
-            train.setIntLights(false);
-            train.setExtLights(false);
+//            train.setIntLights(false);
+//            train.setExtLights(false);
         }
     }
 
@@ -537,5 +537,19 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         if (this.powerFailure) this.setEmergencyBrake(true);
 
         return this.powerFailure;
+    }
+
+    public UpdatedTrainValues sendUpdatedTrainValues(){
+
+        return new UpdatedTrainValues(
+                power,
+                serviceBrake,
+                emergencyBrake,
+                setTemperature,
+                internalLights,
+                externalLights,
+                leftDoors,
+                rightDoors
+        );
     }
 }
