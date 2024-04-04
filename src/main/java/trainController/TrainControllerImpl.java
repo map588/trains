@@ -535,7 +535,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     public void setValue(String propertyName, Object newValue) {
         setValue(Controller_Property.valueOf(propertyName.toUpperCase()), newValue);
     }
-
+    @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
         return new UpdatedTrainValues(
                 this.power,
