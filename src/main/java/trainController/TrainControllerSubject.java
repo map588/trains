@@ -77,6 +77,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     }
 
     //Change coming from the GUI side
+    //TODO track down why emergency button is not updating
     @Override
     public void setProperty(String propertyName, Object newValue) {
 
