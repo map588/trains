@@ -36,7 +36,6 @@ public class CTCOfficeImpl implements CTCOffice {
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
 
     private TrackSystem trackSystem;
-    private WaysideSystem waysideController;
 
     /**
      * Constructor for the CTCOfficeImpl class.
@@ -84,10 +83,6 @@ public class CTCOfficeImpl implements CTCOffice {
 
     public void setTrackSystem(TrackSystem trackSystem) {
         this.trackSystem = trackSystem;
-    }
-
-    public void setWaysideSystem(WaysideSystem waysideController) {
-        this.waysideController = waysideController;
     }
 
     public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {
@@ -171,11 +166,11 @@ public class CTCOfficeImpl implements CTCOffice {
     }
 
     void sendSpeed(Lines line, int blockID, double speed) {
-        waysideController.getController(line, blockID).CTCSendSpeed(blockID, speed);
+        WaysideSystem.getController(line, blockID).CTCSendSpeed(blockID, speed);
     }
 
     void sendAuthority(Lines line, int blockID, int authority) {
-        waysideController.getController(line, blockID).CTCSendAuthority(blockID, authority);
+        WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
     }
 
 

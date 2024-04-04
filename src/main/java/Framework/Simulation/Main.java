@@ -30,7 +30,6 @@ public class Main {
          waysideController = new WaysideSystem(trackSystem, CTC, false);
          trainSystem = new TrainSystem();
         CTC.setTrackSystem(trackSystem);
-        CTC.setWaysideSystem(waysideController);
 
 
 
