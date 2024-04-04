@@ -160,6 +160,9 @@ public class TrainModelManager {
 
     private void changeTrainView(int trainID) {
         subject = subjectMap.getSubject(trainID);
+        if(subject == null) {
+            subject = nullSubject;
+        }
         updateView();
     }
 
