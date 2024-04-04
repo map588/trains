@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import stubs.trainStub;
 import trackModel.TrackLine;
 
-import java.util.HashSet;
 import java.util.Random;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class TrainMovement {
 
@@ -20,7 +20,8 @@ public class TrainMovement {
     private static BasicBlockLine basicBlockSkipList;
     private static int i = 10;
     Random r = new Random();
-    private static HashSet<Integer> switches = new HashSet<>();
+    private static ConcurrentSkipListSet<Integer> switches = new ConcurrentSkipListSet<>();
+    private static ConcurrentSkipListSet<Integer> stations = new ConcurrentSkipListSet<>();
 
     @BeforeAll
     public static void setUpAll() {
