@@ -4,6 +4,7 @@
 !gradle/wrapper/gradle-wrapper.jar
 src/main/java/waysideController/plc_parser
 /src/main/java/Framework/Simulation/csvs/
+plcFile.plc
 
 ### IntelliJ IDEA ###
 .idea/
@@ -11,16 +12,6 @@ src/main/java/waysideController/plc_parser
 *.iws
 *.iml
 *.ipr
-.idea/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/compiler.xml
-.idea/dictionaries
-.idea/gradle.xml
-.idea/misc.xml
-.idea/vcs.xml
-
-
 
 ### Eclipse ###
 .apt_generated

@@ -10,7 +10,7 @@ if dir_assigned[77]
             dir_assigned[77] = FALSE
             switch[77] = MAIN
             switch[85] = MAIN
-            for i = 76 to 85
+            for i = 76 to 85 do
                 authority[i] = FALSE
             endfor
         endif
@@ -20,7 +20,7 @@ endif
 // Assign a direction if adjacent block occupations support the assigned direction
 if not dir_assigned[77]
     if occupied[74] or occupied[73] or occupied[72] or occupied[71]
-        if not not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
+        if not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
             dir_assigned[77] = TRUE
             direction[77] = SOUTHBOUND
             switch[77] = ALT
@@ -28,7 +28,7 @@ if not dir_assigned[77]
         endif
     else
         if occupied[98] or occupied[97] or occupied[96] or occupied[95]
-            if not not occupied[77] and not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71]
+            if not occupied[77] and not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71]
                 dir_assigned[77] = TRUE
                 direction[77] = NORTHBOUND
                 switch[77] = MAIN

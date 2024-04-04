@@ -184,8 +184,8 @@ public class TrainControllerManagerTest extends ApplicationTest {
     @Test
     void directTestSetTemperature() {
         double newTemperature = 25.5;
-        controller.setTemperature(newTemperature); // Assuming such a setter exists
-        assertEquals(newTemperature, controller.getTemperature(), "The temperature should match the newly set value.");
+        controller.setSetTemperature(newTemperature); // Assuming such a setter exists
+        assertEquals(newTemperature, controller.getSetTemperature(), "The temperature should match the newly set value.");
     }
 
     /**
@@ -203,7 +203,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
         });
 
         // Verify the temperature's new value in the controller
-        assertEquals(Double.parseDouble(newTemperature), controller.getTemperature(), "Temperature should be updated based on TextField input.");
+        assertEquals(Double.parseDouble(newTemperature), controller.getSetTemperature(), "Temperature should be updated based on TextField input.");
     }
 
 

@@ -42,8 +42,9 @@ public class WaysideSystem {
 
     ExecutorService waysideExecutor;
 
-    public WaysideSystem(TrackSystem trackSystem) {
-        TrackModel greenLine = trackSystem.getLine(Lines.GREEN);
+    public WaysideSystem(TrackSystem trackSystem, boolean useHardware) {
+//        TrackModel greenLine = trackSystem.getLine(Lines.GREEN);
+        TrackModel greenLine = null;
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
                 1, 2, 3,
                 4, 5, 6,
@@ -72,15 +73,28 @@ public class WaysideSystem {
                 greenLine, null,
                 "src/main/antlr/GreenLine2.plc"));
 
-        addController(new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
-                36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-                58, 59, 60, 61, 62,
-                63, 64, 65, 66, 67, 68,
-                110, 111, 112, 113, 114, 115, 116,
-                117, 118, 119, 120, 121,
-                122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143},
-                "COM6",
-                "src/main/antlr/GreenLine3.plc"));
+        if(useHardware) {
+            addController(new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
+                    36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+                    58, 59, 60, 61, 62,
+                    63, 64, 65, 66, 67, 68,
+                    110, 111, 112, 113, 114, 115, 116,
+                    117, 118, 119, 120, 121,
+                    122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143},
+                    "COM6",
+                    "src/main/antlr/GreenLine3.plc"));
+        }
+        else {
+            addController(new WaysideControllerImpl(3, Lines.GREEN, new int[]{
+                    36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+                    58, 59, 60, 61, 62,
+                    63, 64, 65, 66, 67, 68,
+                    110, 111, 112, 113, 114, 115, 116,
+                    117, 118, 119, 120, 121,
+                    122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143},
+                    greenLine, null,
+                    "src/main/antlr/GreenLine3.plc"));
+        }
 
         waysideExecutor = Executors.newFixedThreadPool(size());
     }
