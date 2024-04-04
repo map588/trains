@@ -130,8 +130,6 @@ public class TrackModelTBManager {
                 tbPassDisembarkedInput.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
                 tbTicketSalesInput.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
                 tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
-                tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchMainProperty());
-                tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchAltProperty());
             }
 
             if(trackProperties.isIsSignal()){
@@ -157,8 +155,6 @@ public class TrackModelTBManager {
             tbPassDisembarkedInput.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
             tbTicketSalesInput.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
             tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchStateProperty());
-            tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchMainProperty());
-            tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchAltProperty());
         }
 
         if(trackProperties.isIsSignal()){
@@ -194,10 +190,6 @@ public class TrackModelTBManager {
     public void setTrackModelSubject(TrackLineSubject trackModelSubject){
         this.trackModelSubject = trackModelSubject;
         tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
-        comSpeedInput.textProperty().bindBidirectional(trackModelSubject.comSpeedProperty());
-        comSpeedOutput.textProperty().bindBidirectional(trackModelSubject.comSpeedProperty());
-        trainAuthorityOutput.textProperty().bindBidirectional(trackModelSubject.trainAuthorityProperty());
-        trainAuthorityInput.textProperty().bindBidirectional(trackModelSubject.trainAuthorityProperty());
     }
 
     public void setPassEmbarked(int passEmbarked){

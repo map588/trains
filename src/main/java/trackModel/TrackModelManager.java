@@ -112,9 +112,9 @@ public class TrackModelManager {
         switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
         failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
+
         occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
-        crossingState.setText("false");
 
         //labels
         lineTable.getSelectionModel().selectedItemProperty().addListener(event -> {
@@ -140,8 +140,6 @@ public class TrackModelManager {
                 switchBlockNumbersDisplay.textProperty().unbindBidirectional(subject.switchBlockIDProperty());
                 switchStateDisplay.textProperty().unbindBidirectional(subject.switchStateProperty());
                 switchColumn.textProperty().unbindBidirectional(subject.switchStateProperty());
-                switchStateDisplay.textProperty().unbindBidirectional(subject.switchMainProperty());
-                switchStateDisplay.textProperty().unbindBidirectional(subject.switchAltProperty());
             }
 
             if(subject.isIsSignal()){
@@ -184,8 +182,6 @@ public class TrackModelManager {
         if(subject.isIsSwitch()){
             switchBlockNumbersDisplay.textProperty().bindBidirectional(subject.switchBlockIDProperty());
             switchStateDisplay.textProperty().bindBidirectional(subject.switchStateProperty());
-            switchStateDisplay.textProperty().bindBidirectional(subject.switchMainProperty());
-            switchStateDisplay.textProperty().bindBidirectional(subject.switchAltProperty());
             switchColumn.textProperty().bindBidirectional(subject.switchStateProperty());
 
         }
