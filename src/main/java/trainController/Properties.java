@@ -15,7 +15,7 @@ public class Properties {
      static final String INT_LIGHTS_PROPERTY = "int_Lights";
      static final String EXT_LIGHTS_PROPERTY = "ext_Lights";
      static final String LEFT_DOORS_PROPERTY = "left_Doors";
-     static final String RIGHT_DOORS_PROPERTY = "rightDoors";
+     static final String RIGHT_DOORS_PROPERTY = "right_Doors";
      static final String SET_TEMPERATURE_PROPERTY = "set_Temperature";
      static final String CURRENT_TEMPERATURE_PROPERTY ="current_Temperature";
      static final String ANNOUNCEMENTS_PROPERTY = "announcements";
