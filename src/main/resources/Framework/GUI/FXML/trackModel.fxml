@@ -16,7 +16,6 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="747.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane prefHeight="62.0" prefWidth="1024.0">
@@ -41,18 +40,16 @@
         </AnchorPane>
         <AnchorPane layoutY="83.0" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="1024.0">
             <children>
-                <TableView fx:id="lineTable" layoutX="384.0" layoutY="55.0" prefHeight="574.0" prefWidth="625.0">
+                <TableView fx:id="lineTable" layoutX="384.0" layoutY="55.0" prefHeight="574.0" prefWidth="637.0">
                     <columns>
-                        <TableColumn fx:id="occupiedColumn" editable="false" prefWidth="62.25" text="Occupied" />
-                        <TableColumn fx:id="sectionsColumn" editable="false" prefWidth="62.25" text="Section" />
-                        <TableColumn fx:id="blockColumn" editable="false" prefWidth="62.25" text="Block" />
-                        <TableColumn fx:id="sizeColumn" editable="false" prefWidth="62.25" text="Size" />
-                        <TableColumn fx:id="gradeColumn" editable="false" prefWidth="62.25" text="Grade" />
-                        <TableColumn fx:id="speedLimitColumn" editable="false" prefWidth="62.25" text="Speed Limit" />
-                        <TableColumn fx:id="stationColumn" editable="false" prefWidth="62.25" text="Station" />
-                        <TableColumn fx:id="signalColumn" editable="false" prefWidth="62.25" text="Signal" />
-                        <TableColumn fx:id="switchColumn" editable="false" prefWidth="62.25" text="Switch" />
-                        <TableColumn fx:id="failureColumn" editable="false" prefWidth="62.25" text="Failure" />
+                        <TableColumn fx:id="occupiedColumn" editable="false" prefWidth="70.5" text="Occupied" />
+                        <TableColumn fx:id="blockColumn" editable="false" prefWidth="43.5" text="Block" />
+                        <TableColumn fx:id="sizeColumn" editable="false" prefWidth="59.5" text="Length" />
+                        <TableColumn fx:id="gradeColumn" editable="false" prefWidth="55.5" text="Grade" />
+                  <TableColumn prefWidth="69.0" text="Elevation" />
+                        <TableColumn fx:id="speedLimitColumn" editable="false" prefWidth="71.5" text="Sp. Limit" />
+                  <TableColumn prefWidth="106.0" text="Direction" />
+                        <TableColumn fx:id="failureColumn" editable="false" prefWidth="149.5" text="Failure" />
                     </columns>
                 </TableView>
                 <Label fx:id="sectionsLabel" layoutX="756.0" layoutY="13.5" text="Select a Line">
@@ -208,7 +205,7 @@
                                                                                         <Font size="13.5" />
                                                                                     </font>
                                                                                 </Label>
-                                                                                <Label fx:id="nameOfStationLabel" layoutX="111.0" layoutY="13.5" text="NO STATION">
+                                                                                <Label fx:id="nameOfStationLabel" layoutX="111.0" layoutY="13.5" text="NOT A  STATION BLOCK">
                                                                                     <font>
                                                                                         <Font size="13.5" />
                                                                                     </font>
@@ -241,8 +238,8 @@
                                                                                         <Font size="13.5" />
                                                                                     </font>
                                                                                 </Label>
-                                                                                <Label fx:id="switchBlockNumbersDisplay" layoutX="189.0" layoutY="31.5" text="#'s" />
-                                                                                <Label fx:id="switchStateDisplay" layoutX="189.0" layoutY="68.25" text="Main or Alt" />
+                                                                                <Label fx:id="switchBlockNumbersDisplay" layoutX="189.0" layoutY="31.5" text="NOT A SWITCH BLOCK" />
+                                                                                <Label fx:id="switchStateDisplay" layoutX="189.0" layoutY="68.25" text="NONE" />
                                                                             </children>
                                                                         </AnchorPane>
                                                                     </content>
@@ -261,12 +258,12 @@
                                                                                         <Font size="13.5" />
                                                                                     </font>
                                                                                 </Label>
-                                                                                <Label fx:id="signalBlockNumberDisplay" layoutX="159.75" layoutY="31.5" text="0">
+                                                                                <Label fx:id="signalBlockNumberDisplay" layoutX="142.0" layoutY="31.0" text="NO SIGNAL">
                                                                                     <font>
                                                                                         <Font size="13.5" />
                                                                                     </font>
                                                                                 </Label>
-                                                                                <Label fx:id="signalStateDisplay" layoutX="105.75" layoutY="68.25" text="NO SIGNAL">
+                                                                                <Label fx:id="signalStateDisplay" layoutX="142.0" layoutY="69.0" text="NONE">
                                                                                     <font>
                                                                                         <Font size="13.5" />
                                                                                     </font>
@@ -303,12 +300,12 @@
                                                                 <Font size="13.5" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="displayBeaconInfo" layoutX="8.25" layoutY="39.75" text="NO BEACON DETECTED">
+                                                        <Label fx:id="displayBeaconInfo" layoutX="8.25" layoutY="39.75" text="NO CURRENT BEACON INFORMATION">
                                                             <font>
                                                                 <Font size="13.5" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="beaconBlockNumber" layoutX="118.5" layoutY="15.0" text="0">
+                                                        <Label fx:id="beaconBlockNumber" layoutX="118.5" layoutY="15.0" text="NOT A BEACON BLOCK">
                                                             <font>
                                                                 <Font size="13.5" />
                                                             </font>

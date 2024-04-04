@@ -26,7 +26,7 @@ public class TrackLine implements TrackModel {
     private final ObservableHashMap<TrainModel, Integer> trackOccupancyMap;
 
     //maps blocks to block numbers
-    private final ConcurrentSkipListMap<Integer, TrackBlock> trackBlocks;
+    private final TrackBlockLine trackBlocks;
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
     private int ticketSales = 0;
     private final TrackLineSubject subject;
@@ -38,7 +38,7 @@ public class TrackLine implements TrackModel {
     public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
         this.subject = new TrackLineSubject(this);
 
-        trackBlocks = new ConcurrentSkipListMap<>();
+        trackBlocks = new TrackBlockLine();
         beaconBlocks = new ConcurrentHashMap<>();
         trackOccupancyMap = new ObservableHashMap<>();
 
@@ -346,6 +346,10 @@ public class TrackLine implements TrackModel {
     //Testing purposes
     public TrackBlock getBlock(int blockID) {
         return trackBlocks.get(blockID);
+    }
+
+    public TrackBlockLine getTrack(){
+        return trackBlocks;
     }
     public void moveTrain(TrainModel train, int blockID) {
         trackOccupancyMap.remove(train);
