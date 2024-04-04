@@ -47,7 +47,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             internalLights = false, externalLights = false, leftDoors = false,
             rightDoors = false, announcements = false, signalFailure = false,
             brakeFailure = false, powerFailure = false, leftPlatform = false,
-            rightPlatform = false, inTunnel = false;
+            rightPlatform = false, inTunnel = false, passengerEngageEBrake = false;
 
     private String nextStationName;
 
@@ -94,6 +94,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         this.setSignalFailure(train.getSignalFailure());
         this.setBrakeFailure(train.getBrakeFailure());
         this.setPowerFailure(train.getPowerFailure());
+        this.setCurrentTemperature((train.getRealTemperature()));
     }
 
 
@@ -537,6 +538,20 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
+
+        //This is a bandaged solution
+        this.setCurrentTemperature(train.getRealTemperature());
+        if (train.getEmergencyBrake() && !passengerEngageEBrake){
+            passengerEngageEBrake = true;
+            this.setEmergencyBrake((passengerEngageEBrake));
+        }
+        else if (!emergencyBrake){
+            passengerEngageEBrake = false;
+            this.setEmergencyBrake(false);
+        }
+
+        calculatePower(this.currentSpeed);
+
         return new UpdatedTrainValues(
                 this.power,
                 this.serviceBrake,
@@ -548,4 +563,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
                 this.rightDoors
         );
     }
+
+
 }
