@@ -55,7 +55,7 @@ public class TrainSystem {
                 //Passes the power calculation to the work stealing pool
                 Future<Double> powerFuture = trainExecutor.submit(() -> controller.calculatePower(train.getSpeed()));
                 //Calls the physics simulation, passing it the future value of the power calculation
-                train.trainModelPhysics(powerFuture);
+                //train.trainModelPhysics(powerFuture);
 
             } catch (Exception e) {
                 throw new RuntimeException(e + " in TrainUpdateTask for train " + train.getTrainNumber());
