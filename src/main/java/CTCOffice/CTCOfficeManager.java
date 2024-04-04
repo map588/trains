@@ -6,7 +6,6 @@ import Framework.Support.ObservableHashMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -29,15 +28,22 @@ import static CTCOffice.Properties.ScheduleProperties.*;
  */
 public class CTCOfficeManager {
 
-    @FXML private TableView<CTCBlockSubject> blockTable;
-    @FXML private TableColumn<CTCBlockSubject, Integer> blockNumberColumn;
-    @FXML private TableColumn<CTCBlockSubject, Boolean> occupationLightColumn;
-    @FXML private TableColumn<CTCBlockSubject, Paint> switchLightColumn;
+    @FXML private TableView<CTCBlockSubject> blockTableGreen;
+    @FXML private TableColumn<CTCBlockSubject, Integer> blockNumberColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, Boolean> occupationLightColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, Paint> switchLightColumnGreen;
+    @FXML private TableView<CTCBlockSubject> blockTableRed;
+    @FXML private TableColumn<CTCBlockSubject, Integer> blockNumberColumnRed;
+    @FXML private TableColumn<CTCBlockSubject, Boolean> occupationLightColumnRed;
+    @FXML private TableColumn<CTCBlockSubject, Paint> switchLightColumnRed;
     @FXML private SplitPane mainSplit;
     @FXML private AnchorPane mainAnchor;
-    @FXML private TableColumn<CTCBlockSubject, String> switchStateColumn;
-    @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumn;
-    @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumn;
+    @FXML private TableColumn<CTCBlockSubject, String> switchStateColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, String> switchStateColumnRed;
+    @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumnRed;
+    @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumnRed;
     @FXML private TableView<ScheduleFileSubject> scheduleTable;
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleNameColumn;
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleDateModColumn;
@@ -77,7 +83,8 @@ public class CTCOfficeManager {
     @FXML private Button maintenanceToggle;
 
 
-    CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
+    CTCBlockSubjectMapGreen blockMapGreen = CTCBlockSubjectMapGreen.getInstance();
+    CTCBlockSubjectMapRed blockMapRed = CTCBlockSubjectMapRed.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
 
     /**
@@ -97,49 +104,74 @@ public class CTCOfficeManager {
     public void initialize() {
         setupMapChangeListener();
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
-        blockTable.setEditable(true);
-        Collection<CTCBlockSubject> blockList = blockMap.getSubjects().values();
+        blockTableGreen.setEditable(true);
+        Collection<CTCBlockSubject> blockListGreen = blockMapGreen.getSubjects().values();
 
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
-        blockTable.getItems().addAll(blockList);
-        blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
-        blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
-        blockNumberColumn.setEditable(false);
+        blockTableGreen.getItems().addAll(blockListGreen);
+        blockNumberColumnGreen.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
+        blockNumberColumnGreen.setStyle("-fx-alignment: CENTER_RIGHT;");
+        blockNumberColumnGreen.setEditable(false);
 
-        occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
-        occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
-        occupationLightColumn.setEditable(false);
+        occupationLightColumnGreen.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
+        occupationLightColumnGreen.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumnGreen));
+        occupationLightColumnGreen.setEditable(false);
 
-        switchStateColumn.setCellValueFactory(block -> {
+        switchStateColumnGreen.setCellValueFactory(block -> {
             block.getValue().updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
-            boolean isConvergingSwitch = block.getValue().getBooleanProperty(HAS_SWITCH_CON_PROPERTY).getValue();
-            boolean isDivergingSwitch = block.getValue().getBooleanProperty(HAS_SWITCH_DIV_PROPERTY).getValue();
-            StringProperty stateString = block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
-
-            return isConvergingSwitch || isDivergingSwitch ? stateString : null;
+            return block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
         });
-        switchStateColumn.setStyle("-fx-alignment: CENTER;");
+        switchStateColumnGreen.setStyle("-fx-alignment: CENTER;");
 
 
-        switchLightColumn.setCellFactory(column -> createColoredCircleCell());
-        crossingStateColumn.setCellFactory(column -> createColoredCircleCell());
-        underMaintenanceColumn.setCellFactory(column -> createColoredCircleCell());
+        switchLightColumnGreen.setCellFactory(column -> createColoredCircleCell());
+        crossingStateColumnGreen.setCellFactory(column -> createColoredCircleCell());
+        underMaintenanceColumnGreen.setCellFactory(column -> createColoredCircleCell());
 
-        crossingStateColumn.setCellValueFactory(block -> crossingColors.get(block.getValue()));
-        underMaintenanceColumn.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
-        switchLightColumn.setCellValueFactory(block -> switchColors.get(block.getValue()));
+        crossingStateColumnGreen.setCellValueFactory(block -> crossingColors.get(block.getValue()));
+        underMaintenanceColumnGreen.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
+        switchLightColumnGreen.setCellValueFactory(block -> switchColors.get(block.getValue()));
+
+        blockTableRed.setEditable(true);
+        Collection<CTCBlockSubject> blockListRed = blockMapRed.getSubjects().values();
+
+        //first lane table view
+        blockTableRed.getItems().addAll(blockListRed);
+        blockNumberColumnRed.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
+        blockNumberColumnRed.setStyle("-fx-alignment: CENTER_RIGHT;");
+        blockNumberColumnRed.setEditable(false);
+
+        occupationLightColumnRed.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
+        occupationLightColumnRed.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumnRed));
+        occupationLightColumnRed.setEditable(false);
+
+        switchStateColumnRed.setCellValueFactory(block -> {
+            block.getValue().updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
+            return block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
+        });
+        switchStateColumnRed.setStyle("-fx-alignment: CENTER;");
+
+
+        switchLightColumnRed.setCellFactory(column -> createColoredCircleCell());
+        crossingStateColumnRed.setCellFactory(column -> createColoredCircleCell());
+        underMaintenanceColumnRed.setCellFactory(column -> createColoredCircleCell());
+
+        crossingStateColumnRed.setCellValueFactory(block -> crossingColors.get(block.getValue()));
+        underMaintenanceColumnRed.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
+        switchLightColumnRed.setCellValueFactory(block -> switchColors.get(block.getValue()));
+
 
         //Table editing bar
-        blockSelection.getItems().addAll(blockMap.getSubjects().keySet());
+        blockSelection.getItems().addAll(blockMapGreen.getSubjects().keySet());
 
         switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
         switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
         crossingStateToggle.setOnAction(event -> toggleProperty(CROSSING_STATE_PROPERTY));
         maintenanceToggle.setOnAction(event -> toggleProperty(UNDER_MAINTENANCE_PROPERTY));
 
-        //This is bad, because these properties don't change
-        blockTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        //This is bad, because these properties don't change   // they do change Matt, the listener is for what is selected on screen
+        blockTableGreen.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 blockSelection.setValue(newValue.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
                 lineSelection.setValue(newValue.getStringProperty(LINE_PROPERTY).getValue());
@@ -217,7 +249,7 @@ public class CTCOfficeManager {
      */
     private void toggleProperty(String propertyName) {
         System.out.println("\n ");
-        CTCBlockSubject block = blockMap.getSubject(blockSelection.getValue());
+        CTCBlockSubject block = blockMapGreen.getSubject(blockSelection.getValue());
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
 
@@ -290,7 +322,7 @@ public class CTCOfficeManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, CTCBlockSubject> subjects = blockMap.getSubjects();
+        ObservableHashMap<Integer, CTCBlockSubject> subjects = blockMapGreen.getSubjects();
 
         // Add a listener to the map of CTCBlockSubjects to add a color property for each new block is added
         ObservableHashMap.MapListener<Integer, CTCBlockSubject> colorListener = new ObservableHashMap.MapListener<>() {

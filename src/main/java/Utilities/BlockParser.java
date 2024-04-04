@@ -77,6 +77,7 @@ class BlockParser {
         double cumulativeElevation = Double.parseDouble(values[indexOf(headers, "CUMUALTIVE ELEVATION (M)")]);
         boolean isUnderground = infrastructure.contains("UNDERGROUND");
         boolean isSwitch = infrastructure.contains("SWITCH");
+        boolean isLight = infrastructure.contains("LIGHT");
 
         BasicBlock.NextBlock nextBlock = parseNextBlock(isSwitch, values[indexOf(headers, "North Bound")], values[indexOf(headers, "South Bound")]);
 
@@ -86,7 +87,7 @@ class BlockParser {
         Lines line = Lines.valueOf(trackLineString.toUpperCase());
 
         return new BasicBlock(line, section, blockNumber, blockLength, blockGrade, speedLimit,
-                elevation, cumulativeElevation, isUnderground, isSwitch, blockType, Optional.ofNullable(stationName),
+                elevation, cumulativeElevation, isUnderground, isSwitch, isLight, blockType, Optional.ofNullable(stationName),
                 doorDirection, nextBlock);
     }
 

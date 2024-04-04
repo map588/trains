@@ -9,12 +9,12 @@ import Framework.Support.SubjectMap;
  * @see SubjectMap
  * @see CTCBlockSubject
  */
-public class CTCBlockSubjectMap extends SubjectMap<Integer, CTCBlockSubject> {
-    private static final CTCBlockSubjectMap INSTANCE = new CTCBlockSubjectMap();
-    private CTCBlockSubjectMap() {
+public class CTCBlockSubjectMapRed extends SubjectMap<Integer, CTCBlockSubject> {
+    private static final CTCBlockSubjectMapRed INSTANCE = new CTCBlockSubjectMapRed();
+    private CTCBlockSubjectMapRed() {
         super();
     }
-    public static CTCBlockSubjectMap getInstance() {
+    public static CTCBlockSubjectMapRed getInstance() {
         return INSTANCE;
     }
     public ObservableHashMap<Integer, CTCBlockSubject> getSubjects() {

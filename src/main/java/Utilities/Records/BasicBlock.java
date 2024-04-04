@@ -18,6 +18,7 @@ public record BasicBlock(
         double cumulativeElevation,
         boolean isUnderground,
         boolean isSwitch,
+        boolean isLight,
         BlockType blockType,
         Optional<String> stationName,
         Optional<String> doorDirection,
