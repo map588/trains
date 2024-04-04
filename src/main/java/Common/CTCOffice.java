@@ -1,6 +1,8 @@
 package Common;
 
 public interface CTCOffice{
+    //Todo: talk to track, and wayside on functions that are needed for the requirements of the CTC Office
+
     boolean getBlockOccupancy(boolean line, int blockID);
     boolean getSwitchState(boolean line, int switchID);
     boolean getLightState(boolean line, int blockID);
