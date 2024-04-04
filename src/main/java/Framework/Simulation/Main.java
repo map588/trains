@@ -37,7 +37,8 @@ public class Main {
 
         CTC.setTrackSystem(trackSystem);
 
-        CTC.DispatchTrain(Lines.GREEN , 1);
+
+
 
 
 
