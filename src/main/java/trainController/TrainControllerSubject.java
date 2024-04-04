@@ -26,6 +26,40 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         TrainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
     }
 
+    public TrainControllerSubject(){
+        this.controller = null;
+
+        properties.put(AUTHORITY, new SimpleIntegerProperty(0));
+        properties.put(SAMPLING_PERIOD, new SimpleIntegerProperty(0));
+        properties.put(COMMAND_SPEED, new SimpleDoubleProperty(0.0));
+        properties.put(CURRENT_SPEED, new SimpleDoubleProperty(0.0));
+        properties.put(OVERRIDE_SPEED, new SimpleDoubleProperty(0.0));
+        properties.put(SPEED_LIMIT, new SimpleDoubleProperty(0.0));
+        properties.put(KI, new SimpleDoubleProperty(0.0));
+        properties.put(KP, new SimpleDoubleProperty(0.0));
+        properties.put(POWER, new SimpleDoubleProperty(0));
+        properties.put(SERVICE_BRAKE, new SimpleBooleanProperty(false));
+        properties.put(EMERGENCY_BRAKE, new SimpleBooleanProperty(false));
+        properties.put(AUTOMATIC_MODE, new SimpleBooleanProperty(false));
+        properties.put(EXT_LIGHTS, new SimpleBooleanProperty(false));
+        properties.put(INT_LIGHTS, new SimpleBooleanProperty(false));
+        properties.put(ANNOUNCEMENTS, new SimpleBooleanProperty(false));
+        properties.put(SIGNAL_FAILURE, new SimpleBooleanProperty(false));
+        properties.put(BRAKE_FAILURE, new SimpleBooleanProperty(false));
+        properties.put(POWER_FAILURE, new SimpleBooleanProperty(false));
+        properties.put(SET_TEMPERATURE, new SimpleDoubleProperty(0));
+        properties.put(CURRENT_TEMPERATURE, new SimpleDoubleProperty(0));
+        properties.put(LEFT_DOORS, new SimpleBooleanProperty(false));
+        properties.put(RIGHT_DOORS, new SimpleBooleanProperty(false));
+        properties.put(IN_TUNNEL, new SimpleBooleanProperty(false));
+        properties.put(LEFT_PLATFORM, new SimpleBooleanProperty(false));
+        properties.put(RIGHT_PLATFORM, new SimpleBooleanProperty(false));
+        properties.put(NEXT_STATION, new SimpleStringProperty("N/A"));
+        properties.put(TRAIN_ID, new SimpleIntegerProperty(0));
+        properties.put(GRADE, new SimpleDoubleProperty(0));
+        properties.put(ERROR, new SimpleStringProperty(""));
+    }
+
     // Simplified property initialization
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available

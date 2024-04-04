@@ -49,28 +49,48 @@ public class TrainControllerManager {
 
     private TrainControllerSubjectMap subjectMap;
     private TrainControllerSubject currentSubject;
+
+    private final TrainControllerSubject nullSubject = new TrainControllerSubject();
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
 
     @FXML
     public void initialize() {
+        System.out.println("Started Train Controller Manager Initialize");
+
         subjectMap = TrainControllerSubjectMap.getInstance();
         setupMapChangeListener();
-        if (!subjectMap.getSubjects().isEmpty()) {
-            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
-            changeTrainView(firstKey);
-            currentSubject = subjectMap.getSubject(firstKey);
-
-            //currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
-        }else{
-            statusLog.setText("No Trains Available");
-        }
-
-        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
+        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection,newSelection) ->{
+            if (newSelection != null){
                 changeTrainView(newSelection);
             }
         });
+
+        if (!subjectMap.getSubjects().isEmpty()){
+            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
+        }else{
+            System.out.println("No trains to display");
+            statusLog.setText("No Trains to Display");
+            currentSubject = nullSubject;
+            updateAll();
+        }
+
+//        if (!subjectMap.getSubjects().isEmpty()) {
+//            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
+//            changeTrainView(firstKey);
+//            currentSubject = subjectMap.getSubject(firstKey);
+//
+//            //currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
+//        }else{
+//            statusLog.setText("No Trains Available");
+//        }
+//
+//
+//        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+//            if (newSelection != null) {
+//                changeTrainView(newSelection);
+//            }
+//        });
 
 
         currentSubject.setProperty(AUTOMATIC_MODE.getPropertyName(), true);

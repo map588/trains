@@ -46,7 +46,7 @@ public class TrainModelManager {
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private TrainModelSubject subject;
     //private TrainModelTB testBench;
-
+    private final TrainModelSubject nullSubject = new TrainModelSubject();
     @FXML
     public void initialize() {
         System.out.println("Started TrainModelManager initialize");
@@ -54,17 +54,20 @@ public class TrainModelManager {
         subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
-        //testBench = launchTestBench();
-        while (subjectMap.getSubjects().isEmpty()) {
-            System.out.println("Waiting for subjects to be added to the map");
-        }
-
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
             }
         });
         setUpCircleColors();
+
+        if(!subjectMap.getSubjects().isEmpty()) {
+            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
+        }else{
+            System.out.println("No trains to display");
+            subject = nullSubject;
+            updateView();
+        }
 
         System.out.println("Finished TrainModelManager initialize");
     }
@@ -157,13 +160,19 @@ public class TrainModelManager {
 
     private void changeTrainView(int trainID) {
         subject = subjectMap.getSubject(trainID);
+        if(subject == null) {
+            subject = nullSubject;
+        }
+        updateView();
+    }
+
+    private void updateView() {
         if(subject != null) {
             unbindValues();
             bindControls();
             bindGauges();
             bindIndicators();
             bindLabels();
-            //testBench.changeModels(subject.getModel());
         }
     }
 
