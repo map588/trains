@@ -63,6 +63,8 @@ public class TrainControllerManager {
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection,newSelection) ->{
             if (newSelection != null){
                 changeTrainView(newSelection);
+            }else{
+                changeTrainView(oldSelection);
             }
         });
 

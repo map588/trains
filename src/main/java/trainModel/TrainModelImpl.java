@@ -97,8 +97,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     private void initializeValues() {
-        this.authority = 0;
-        this.commandSpeed = 0;
+        this.authority = 10;
+        this.commandSpeed = 10;
         this.speed = 0;
         this.acceleration = 0;
         this.power = 0;
@@ -285,6 +285,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void setCommandSpeed(double speed) {
+        System.out.println("Command Speed: " + speed);
 
         if (signalFailure) {
             this.commandSpeed = -1;
@@ -297,6 +298,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
     public void setActualSpeed(double speed) {this.speed = speed;notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));}
     public void setAuthority(int authority) {
+        System.out.println("Authority: " + authority);
 
         if (signalFailure) {
             this.authority = -1;

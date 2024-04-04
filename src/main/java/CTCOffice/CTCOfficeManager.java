@@ -251,7 +251,7 @@ public class CTCOfficeManager {
             office.DispatchTrain(Lines.GREEN, ++numOfTrains);
             System.out.println("Dispatched Train : ID " + numOfTrains + " on Line " + "GREEN");
             office.sendAuthority(Lines.GREEN, 0, 9);
-            office.sendSpeed(Lines.GREEN, 0, 10);
+            office.sendSpeed(Lines.GREEN, 0, 10.0);
         });
 
     }

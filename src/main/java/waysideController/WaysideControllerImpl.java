@@ -172,8 +172,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
-        speed = Math.min(speed, blockMap.get(blockID).getSpeed());
+//        speed = Math.min(speed, blockMap.get(blockID).getSpeed());
         blockMap.get(blockID).setSpeed(speed);
+
+        System.out.println("CTCSendSpeed: " + blockID + " " + speed);
 
         if(trackModel != null) {
             trackModel.setCommandedSpeed(blockID, speed);
@@ -397,6 +399,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // TODO: implement these functions
     @Override
     public void CTCSendAuthority(int blockID, int blockCount) {
+        System.out.println("CTCSendAuthority: " + blockID + " " + blockCount);
+
         if(blockMap.get(blockID).isOpen() && blockMap.get(blockID).isOccupied()) {
             trackModel.setTrainAuthority(blockID, blockCount);
         }
