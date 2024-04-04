@@ -25,8 +25,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
     testImplementation 'org.testfx:openjfx-monocle:17.0.10'
 
-    testImplementation 'org.testfx:testfx-core:4.0.17'
-    testImplementation 'org.testfx:testfx-junit5:4.0.17'
+    testImplementation 'org.testfx:testfx-core:4.0.18'
+    testImplementation 'org.testfx:testfx-junit5:4.0.18'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
@@ -65,9 +65,10 @@ application {
 def getJavaFXLibPath() {
     def os = org.gradle.internal.os.OperatingSystem.current()
     def arch = System.getProperty("os.arch")
-    def libPath = 'javafx-sdk/javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
+    def libPath = '\\javafx-sdk\\javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
 
     if (os.isWindows()) {
+        println "This is WINDOWS!"
         libPath += '-windows'
     } else if (os.isMacOsX()) {
         if (arch.startsWith("aarch64") || arch.startsWith("arm")) {
@@ -81,8 +82,10 @@ def getJavaFXLibPath() {
         throw new GradleException("Unsupported OS")
     }
 
+    println "JavaFX SDK path: ${project.rootDir}${libPath}\\lib"
+
     // Append the standard lib directory of JavaFX SDK
-    return "${project.rootDir}/${libPath}/lib"
+    return "${project.rootDir}${libPath}\\lib"
 }
 
 sourceSets {
@@ -108,6 +111,7 @@ processResources {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE // or choose 'EXCLUDE' to ignore duplicates
 }
 
+
 test {
     useJUnitPlatform()
     testLogging {
@@ -117,9 +121,6 @@ test {
         def javafxLibPath = getJavaFXLibPath()
         jvmArgs = [
                 '--module-path', javafxLibPath,
-                '--add-modules', 'javafx.controls,javafx.fxml',
-                '--add-opens',   'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
-                '--add-exports', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
         ]
     }
 }
@@ -130,7 +131,6 @@ run {
         def javafxLibPath = getJavaFXLibPath()
         jvmArgs = [
                 '--module-path', javafxLibPath,
-                '--add-modules', 'javafx.controls,javafx.fxml'
         ]
     }
 }
