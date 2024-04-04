@@ -39,6 +39,8 @@ public class TrackLineSubject {
     private StringProperty trackHeater;
     private StringProperty tempProperty;
 
+    private TrackBlockLine trackBlockLine;
+
 
     private void initializeValues() {
         blockNumber = new SimpleStringProperty();
