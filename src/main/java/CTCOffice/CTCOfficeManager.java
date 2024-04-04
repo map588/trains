@@ -3,6 +3,7 @@ package CTCOffice;
 import CTCOffice.ScheduleInfo.ScheduleFileSubject;
 import CTCOffice.ScheduleInfo.ScheduleLibrary;
 import Framework.Support.ObservableHashMap;
+import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -95,7 +96,7 @@ public class CTCOfficeManager {
     Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors      = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors    = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> maintenanceColors = new ConcurrentHashMap<>();
-
+    int numOfTrains = 0;
     /**
      * Initializes the GUI components.
      * This method is called after all the FXML annotated fields have been injected.
@@ -244,8 +245,11 @@ public class CTCOfficeManager {
             scheduleDateModColumn.setMaxWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.3);
             scheduleNameColumn.setMinWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.7);
             scheduleDateModColumn.setMinWidth(((mainAnchor.getWidth() * (1 - newValue.doubleValue())) - tableWidthAdjustment) * 0.3);
+        });
 
-
+        DispatchButton.setOnAction(event -> {
+            office.DispatchTrain(Lines.GREEN, ++numOfTrains);
+            System.out.println("Dispatched Train : ID " + numOfTrains + " on Line " + "GREEN");
         });
 
     }
