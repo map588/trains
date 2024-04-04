@@ -15,10 +15,10 @@ public class TrackSystem {
      * GREEN -> {TrackLine}
      * ....
      */
-    ExecutorService trackLineExecutor;
-    ParsedBasicBlocks parsedBasicBlocks = ParsedBasicBlocks.getInstance();
+    private final ExecutorService trackLineExecutor;
 
     public TrackSystem() {
+        ParsedBasicBlocks parsedBasicBlocks = ParsedBasicBlocks.getInstance();
         BasicLineMap basicLines = parsedBasicBlocks.getAllBasicLines();
         trackLineExecutor = Executors.newFixedThreadPool(basicLines.size());
         for (Lines line : Lines.values()) {
