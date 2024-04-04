@@ -57,7 +57,7 @@ public class TrainSystem {
                 //Future<Double> powerFuture = trainExecutor.submit(() -> controller.calculatePower(train.getSpeed()));
                 Future<UpdatedTrainValues> utvFuture = trainExecutor.submit(() -> controller.sendUpdatedTrainValues());
                 //Calls the physics simulation, passing it the future value of the power calculation
-                //train.trainModelPhysics(powerFuture);
+                train.trainModelTimeStep(utvFuture);
 
             } catch (Exception e) {
                 throw new RuntimeException(e + " in TrainUpdateTask for train " + train.getTrainNumber());
