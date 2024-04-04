@@ -96,6 +96,23 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
             }
         }
     }
+    public void setProperty(Controller_Property propertyName, Object newValue) {
+
+        Property<?> property = properties.get(propertyName);
+
+        if (property != null && !isLogicUpdateInProgress) {
+            isGUIUpdateInProgress = true;
+            try {
+                executeUpdate(() -> {
+                    //System.out.println("Setting property " + propertyName + " to " + newValue);
+                    updateProperty(property, newValue);
+                    controller.setValue(propertyName.getPropertyName(), newValue);
+                }, false);
+            } finally {
+                isGUIUpdateInProgress = false;
+            }
+        }
+    }
 
     @Override
     public Property<?> getProperty(String propertyName) {

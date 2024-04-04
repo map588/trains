@@ -191,7 +191,7 @@ public class TrainControllerManager {
     private void setupButtonActions() {
         emergencyBrakeButton.setOnAction(event -> {
             BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE);
-            currentSubject.setProperty(EMERGENCY_BRAKE.getPropertyName(), !eBrakeProp.get());
+            currentSubject.setProperty(EMERGENCY_BRAKE, !eBrakeProp.get());
             setNotification(EMERGENCY_BRAKE,String.valueOf(eBrakeProp.get()));
         });
         makeAnnouncementsButton.setOnAction(event -> {
