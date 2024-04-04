@@ -7,6 +7,7 @@ import Utilities.Constants;
 import Utilities.Records.Beacon;
 import Utilities.Records.UpdatedTrainValues;
 import javafx.scene.control.Alert;
+import trainModel.TrainModelImpl;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
@@ -66,6 +67,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         this.train = train;
         this.subject = new TrainControllerSubject(this);
         populateTrainValues(train);
+        this.nextStationName = "Yard";
+    }
+
+    public TrainControllerImpl() {
+        this.trainID = -1;
+        this.train = new TrainModelImpl();
+        this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
     }
 
