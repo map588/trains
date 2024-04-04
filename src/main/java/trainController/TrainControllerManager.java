@@ -67,9 +67,7 @@ public class TrainControllerManager {
         }
 
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            System.out.println("Inside trainNoChoiceBox");
             if (newSelection != null) {
-                System.out.println("Inside trainNoChoiceBox, inside if");
                 changeTrainView(newSelection);
             }
         });
@@ -78,8 +76,6 @@ public class TrainControllerManager {
         currentSubject.setProperty(AUTOMATIC_MODE.getPropertyName(), true);
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
-
-        System.out.println("End of initialization");
     }
 
     private void setupMapChangeListener() {
