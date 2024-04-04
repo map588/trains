@@ -98,7 +98,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
 
     @Override
     public Property<?> getProperty(String propertyName) {
-        throw new UnsupportedOperationException("Not implemented");
+        return properties.get(Controller_Property.valueOf(propertyName.toUpperCase()));
     }
 
     private void executeUpdate(Runnable updateTask, boolean runImmediately) {

@@ -21,7 +21,7 @@ public class trainModelImplTest {
     }
 
     @Test
-    void testSettersAndGetters() {
+    void testSettersAndGetters() throws InterruptedException {
         // Test set and get methods for authority
         model.setAuthority(10);
         assertEquals(10, model.getAuthority());

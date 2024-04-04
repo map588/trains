@@ -3,18 +3,12 @@ package Integration;
 import Framework.Simulation.TrackSystem;
 import Framework.Simulation.TrainSystem;
 import Utilities.Enums.Lines;
-import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TrainAndTrack {
 
-    @BeforeAll
-    public static void setup() {
-        Platform.startup(() -> {});
-    }
 
     private final TrainSystem trainSystem = new TrainSystem();
     private final TrackSystem trackSystem = new TrackSystem();

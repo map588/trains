@@ -65,22 +65,25 @@ application {
 def getJavaFXLibPath() {
     def os = org.gradle.internal.os.OperatingSystem.current()
     def arch = System.getProperty("os.arch")
-    def libPath = '\\javafx-sdk\\javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
+    def macLibPath = '/javafx-sdk/javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
+    def winLibPath = '\\javafx-sdk\\javafx-sdk-17.0.10' // Default base directory for JavaFX SDKs
 
     if (os.isWindows()) {
         println "This is WINDOWS!"
-        libPath += '-windows'
+        winLibPath += '-windows'
     } else if (os.isMacOsX()) {
         if (arch.startsWith("aarch64") || arch.startsWith("arm")) {
-            libPath += '-osx-arm64'
+            macLibPath += '-osx-arm64'
         } else {
-            libPath += '-osx-x64'
+            macLibPath += '-osx-x64'
         }
     } else if (arch.startsWith("aarch64") || arch.startsWith("arm")) {
-        libPath += '-rpi'
+        macLibPath += '-rpi'
     } else {
         throw new GradleException("Unsupported OS")
     }
+
+    def libPath = os.isWindows() ? winLibPath : macLibPath
 
     println "JavaFX SDK path: ${project.rootDir}${libPath}\\lib"
 
