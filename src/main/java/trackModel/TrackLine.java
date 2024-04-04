@@ -2,6 +2,7 @@ package trackModel;
 
 import Common.TrackModel;
 import Common.TrainModel;
+import Framework.Simulation.WaysideSystem;
 import Framework.Support.ObservableHashMap;
 import Utilities.BasicBlockLine;
 import Utilities.BeaconParser;
@@ -32,11 +33,9 @@ public class TrackLine implements TrackModel {
     private TrackLineSubject subject;
     private BeaconParser beaconParser;
     public int outsideTemperature = 40;
-
-
+    private WaysideSystem waysideSystem;
 
     public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
-
 
         trackBlocks = new TrackBlockLine();
         beaconBlocks = new ConcurrentHashMap<>();
@@ -73,6 +72,10 @@ public class TrackLine implements TrackModel {
         });
     }
 
+    public void setWaysideSystem(WaysideSystem waysideSystem) {
+        this.waysideSystem = waysideSystem;
+    }
+
     //////////////////////////
 
     private void handleTrainEntry(TrainModel train, Integer blockID) {
@@ -86,6 +89,7 @@ public class TrackLine implements TrackModel {
         }
         block.setOccupied(true);
         block.occupiedBy = train;
+        WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, true);
     }
 
 
@@ -96,6 +100,7 @@ public class TrackLine implements TrackModel {
         }
         block.setOccupied(false);
         block.occupiedBy = null;
+        WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, false);
     }
 
     ///////////////////////////
