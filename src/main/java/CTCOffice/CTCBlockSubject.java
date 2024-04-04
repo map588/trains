@@ -4,6 +4,9 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 import static CTCOffice.Properties.BlockProperties.*;
 
 /**
@@ -12,29 +15,29 @@ import static CTCOffice.Properties.BlockProperties.*;
  * It also contains methods for getting and setting these properties.
  */
 public class CTCBlockSubject implements AbstractSubject {
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
-
-    CTCBlockInfo blockInfo;
+    private final CTCBlock block;
 
     /**
      * Constructor for the CTCBlockSubject class.
      * Initializes the properties with the values from the given block.
      * Also sets up listeners for changes in the properties.
      */
-     CTCBlockSubject(CTCBlockInfo block) {
+     CTCBlockSubject(CTCBlock block) {
         properties.put(BLOCK_ID_PROPERTY, new SimpleIntegerProperty(this, BLOCK_ID_PROPERTY, block.getBlockID()));
         properties.put(LINE_PROPERTY, new SimpleStringProperty(this, LINE_PROPERTY, block.getLine()));
         properties.put(OCCUPIED_PROPERTY, new SimpleBooleanProperty(this, OCCUPIED_PROPERTY, block.getOccupied()));
         properties.put(HAS_LIGHT_PROPERTY, new SimpleBooleanProperty(this, HAS_LIGHT_PROPERTY, block.getHasLight()));
-        properties.put(HAS_SWITCH_CON_PROPERTY, new SimpleBooleanProperty(this, HAS_SWITCH_CON_PROPERTY, block.getHasSwitchCon()));
-        properties.put(HAS_SWITCH_DIV_PROPERTY, new SimpleBooleanProperty(this, HAS_SWITCH_DIV_PROPERTY, block.getHasSwitchDiv()));
+        properties.put(HAS_SWITCH_CON_PROPERTY, new SimpleBooleanProperty(this, HAS_SWITCH_CON_PROPERTY, block.getSwitchCon()));
+        properties.put(HAS_SWITCH_DIV_PROPERTY, new SimpleBooleanProperty(this, HAS_SWITCH_DIV_PROPERTY, block.getSwitchDiv()));
         properties.put(HAS_CROSSING_PROPERTY, new SimpleBooleanProperty(this, HAS_CROSSING_PROPERTY, block.getHasCrossing()));
         properties.put(SWITCH_LIGHT_STATE_PROPERTY, new SimpleBooleanProperty(this, SWITCH_LIGHT_STATE_PROPERTY, block.getSwitchLightState()));
         properties.put(CROSSING_STATE_PROPERTY, new SimpleBooleanProperty(this, CROSSING_STATE_PROPERTY, block.getCrossingState()));
         properties.put(SWITCH_STATE_PROPERTY, new SimpleBooleanProperty(this, SWITCH_STATE_PROPERTY, block.getSwitchState()));
         properties.put(UNDER_MAINTENANCE_PROPERTY, new SimpleBooleanProperty(this, UNDER_MAINTENANCE_PROPERTY, block.getUnderMaintenance()));
         properties.put(SWITCH_STATE_STRING_PROPERTY, new SimpleStringProperty(this, SWITCH_STATE_STRING_PROPERTY, block.getSwitchStateString()));
-        this.blockInfo = block;
+        this.block = block;
 
         getBooleanProperty(OCCUPIED_PROPERTY).addListener((observable, oldValue, newValue) -> block.setOccupied(newValue));
         getBooleanProperty(SWITCH_LIGHT_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> block.setSwitchLightState(newValue));
@@ -44,7 +47,7 @@ public class CTCBlockSubject implements AbstractSubject {
     }
 
     public BooleanProperty getBooleanProperty(String propertyName) {
-        if(blockInfo == null) {
+        if(block == null) {
             System.err.println("Null value for property " + propertyName);
             return null;
         }
@@ -57,8 +60,8 @@ public class CTCBlockSubject implements AbstractSubject {
             return;
         }
         switch (propertyName) {
-            case SWITCH_STATE_STRING_PROPERTY -> updateProperty(getProperty(SWITCH_STATE_STRING_PROPERTY), blockInfo.getSwitchStateString());
-            case LINE_PROPERTY -> updateProperty(getProperty(LINE_PROPERTY), blockInfo.getLine());
+            case SWITCH_STATE_STRING_PROPERTY -> updateProperty(getProperty(SWITCH_STATE_STRING_PROPERTY), block.getSwitchStateString());
+            case LINE_PROPERTY -> updateProperty(getProperty(LINE_PROPERTY), block.getLine());
         }
     }
 
@@ -82,16 +85,16 @@ public class CTCBlockSubject implements AbstractSubject {
         return properties.get(propertyName);
     }
 
-    CTCBlockInfo getBlockInfo() {
-        return blockInfo;
+    CTCBlock getBlockInfo() {
+        return block;
     }
 
     boolean hasLight() {
-        return blockInfo.getHasLight();
+        return block.getHasLight();
     }
 
     boolean hasCrossing() {
-        return blockInfo.getHasCrossing();
+        return block.getHasCrossing();
     }
 
 }

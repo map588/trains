@@ -93,7 +93,6 @@ public class TrackModelTBManager {
         tbSwitchColumn.setEditable(true);
         tbSignalColumn.setEditable(true);
 
-        tbSectionColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         tbBlockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
         tbSwitchColumn.setCellValueFactory(block -> block.getValue().switchStateProperty());
         tbSignalColumn.setCellValueFactory(block -> block.getValue().signalStateProperty());

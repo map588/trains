@@ -23,27 +23,44 @@
     <SplitPane fx:id="mainSplit" dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <AnchorPane>
             <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <ScrollPane hbarPolicy="ALWAYS" prefHeight="10000" vbarPolicy="ALWAYS">
+                <ScrollPane hbarPolicy="ALWAYS" prefHeight="1000" vbarPolicy="ALWAYS">
                     <AnchorPane prefHeight="795.0">
                         <HBox fx:id="TrackLinesBox">
                             <VBox fx:id="FirstLineBox" alignment="TOP_CENTER" prefHeight="795.0">
-                                <Label fx:id="FirstLineLabel" text="RED Line"/>
+                                <Label fx:id="FirstLineLabel" text="Green Line"/>
                                 <Separator/>
-                                <HBox fx:id="FirstLineContents" minHeight="20000">
-                                    <TableView fx:id="blockTable" minWidth="408">
+                                <HBox fx:id="FirstLineContents" minHeight="4000">
+                                    <TableView fx:id="blockTableGreen" minWidth="408">
 <!--this has a min that might want to be changed ^^^ -->
                                         <columns>
-                                            <TableColumn fx:id="blockNumberColumn" prefWidth="50" resizable="false" text="Block #"/>
-                                            <TableColumn fx:id="occupationLightColumn" prefWidth="43" resizable="false" text="Occ."/>
-                                            <TableColumn fx:id="switchStateColumn" maxWidth="100" prefWidth="100" text="Switch State"/>
-                                            <TableColumn fx:id="switchLightColumn" maxWidth="43" prefWidth="43" text="Light"/>
-                                            <TableColumn fx:id="crossingStateColumn" prefWidth="60" text="Crossing"/>
-                                            <TableColumn fx:id="underMaintenanceColumn" prefWidth="100" text="Maintenance"/>
+                                            <TableColumn fx:id="blockNumberColumnGreen" prefWidth="50" resizable="false" text="Block #"/>
+                                            <TableColumn fx:id="occupationLightColumnGreen" prefWidth="43" resizable="false" text="Occ."/>
+                                            <TableColumn fx:id="switchStateColumnGreen" maxWidth="100" prefWidth="100" text="Switch State"/>
+                                            <TableColumn fx:id="switchLightColumnGreen" maxWidth="43" prefWidth="43" text="Light"/>
+                                            <TableColumn fx:id="crossingStateColumnGreen" prefWidth="60" text="Crossing"/>
+                                            <TableColumn fx:id="underMaintenanceColumnGreen" prefWidth="100" text="Maintenance"/>
                                         </columns>
                                     </TableView>
                                 </HBox>
                             </VBox>
                             <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                            <VBox fx:id="SecondLineBox" alignment="TOP_CENTER" prefHeight="795.0">
+                                <Label fx:id="SecondLineLabel" text="Red Line"/>
+                                <Separator/>
+                                <HBox fx:id="SecondLineContents" minHeight="4000">
+                                    <TableView fx:id="blockTableRed" minWidth="408">
+                                        <!--this has a min that might want to be changed ^^^ -->
+                                        <columns>
+                                            <TableColumn fx:id="blockNumberColumnRed" prefWidth="50" resizable="false" text="Block #"/>
+                                            <TableColumn fx:id="occupationLightColumnRed" prefWidth="43" resizable="false" text="Occ."/>
+                                            <TableColumn fx:id="switchStateColumnRed" maxWidth="100" prefWidth="100" text="Switch State"/>
+                                            <TableColumn fx:id="switchLightColumnRed" maxWidth="43" prefWidth="43" text="Light"/>
+                                            <TableColumn fx:id="crossingStateColumnRed" prefWidth="60" text="Crossing"/>
+                                            <TableColumn fx:id="underMaintenanceColumnRed" prefWidth="100" text="Maintenance"/>
+                                        </columns>
+                                    </TableView>
+                                </HBox>
+                            </VBox>
                         </HBox>
                     </AnchorPane>
                 </ScrollPane>

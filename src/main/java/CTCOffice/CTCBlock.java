@@ -1,67 +1,82 @@
 package CTCOffice;
 
+import Framework.Support.Notifier;
+import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 
+import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
 import static Utilities.Enums.BlockType.*;
 import static Utilities.Enums.Direction.NORTH;
-import static Utilities.Enums.Direction.SOUTH;
 
 /**
  * This class represents a block of the track in the Centralized Traffic Control (CTC) system.
  * It contains information about the block such as its ID, occupancy status, presence of light, switch and crossing,
  * their states, speed limit, block length, IDs of converging and diverging blocks, and the state of the switch.
  */
-class CTCBlockInfo {
+class CTCBlock implements Notifier {
     private final int blockID;
+    private final Lines line;
+    private final boolean hasLight, hasCrossing;
+    private boolean isSwitchCon, isSwitchDiv;
+    private boolean occupied, underMaintenance, direction, directionAssigned;
+
+    private int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
+    private boolean lightState, switchState, crossingState;
     private final double speedLimit, blockLength;
-    private final String line;
-    private boolean occupied, underMaintenance;
-    private final boolean hasLight, hasCrossing, hasSwitch;
-    private final boolean hasSwitchCon, hasSwitchDiv;
-    private boolean switchLightState, crossingState, switchState;
-    private final int convergingBlockID, divergingBlockOneID, divergingBlockTwoID;
-    //private javafx.scene.paint.Paint switchLightColor, crossingLightColor, maintenanceLightColor;
-    CTCBlockSubjectMap map = CTCBlockSubjectMap.getInstance();
+
+    CTCBlockSubjectMapGreen map = CTCBlockSubjectMapGreen.getInstance();
 
     /**
      * Constructor for the CTCBlockInfo class.
      * Initializes the block properties and registers the block with the CTCBlockSubjectFactory.
      */
-    CTCBlockInfo(BasicBlock block) {
+    CTCBlock(BasicBlock block) {
 
         this.blockID = block.blockNumber();
-        this.line = block.trackLine().toString();
+        this.line = block.trackLine();
         this.occupied = false;
-        this.hasLight = false;//tbd
-        this.hasSwitch = block.isSwitch();
-        this.hasSwitchCon = block.nextBlock().primarySwitchDirection() == NORTH;
-        this.hasSwitchDiv = block.nextBlock().primarySwitchDirection() == SOUTH;
+        this.hasLight = block.blockType() == STATION;
+        this.isSwitchCon = block.isSwitch();
+
         this.hasCrossing = (block.blockType() == CROSSING);
-        this.switchLightState = false;
+        this.lightState = false;
         this.crossingState = false;
         this.speedLimit = block.speedLimit();
         this.blockLength = block.blockLength();
-        this.convergingBlockID = block.blockNumber();
-        this.divergingBlockOneID = block.nextBlock().northDefault().blockNumber();
-        this.divergingBlockTwoID = block.nextBlock().northAlternate().blockNumber();
-        this.switchState = false;
-        this.underMaintenance = false;
-//        updateSwitchLightColor();
-//        updateCrossingLightColor();
-//        updateMaintenanceLightColor();
 
+        this.switchState = false;
+
+        this.underMaintenance = false;
+
+        if(this.isSwitchCon) {
+            this.convergingBlockID = block.blockNumber();
+            this.divergingBlockOneID = (block.nextBlock().primarySwitchDirection() == NORTH) ?
+                    block.nextBlock().northDefault().blockNumber() : block.nextBlock().southDefault().blockNumber();
+            this.divergingBlockTwoID = (block.nextBlock().primarySwitchDirection() == NORTH) ?
+                    block.nextBlock().northAlternate().blockNumber() : block.nextBlock().southAlternate().blockNumber();
+        }
        map.registerSubject(blockID, new CTCBlockSubject(this));
     }
 
-//    CTCBlockInfo(BasicBlock block) {
-//        this(block.blockNumber(), block.trackLine(), block.isOccupied(), block.hasSwitchLight(), block.isSwitchConvergingBlock(),
-//                block.isSwitchDivergingBlock(), block.hasCrossing(), block.switchLightState(), block.crossingState(), block.speedLimit(),
-//                block.blockLength(), block.convergingBlockID(), block.divergingBlockID_Main(), block.divergingBlockID_Alt(), block.switchState(),
-//                block.underMaintenance());
-//    }
-                 // Complex setters and getters
+    void setSwitchDivInformation(int convergingBlockID, int divergingBlockOneID, int divergingBlockTwoID) {
+        this.isSwitchDiv = true;
+        this.convergingBlockID = convergingBlockID;
+        this.divergingBlockOneID = divergingBlockOneID;
+        this.divergingBlockTwoID = divergingBlockTwoID;
 
-                 /**
+        CTCBlockSubjectMapGreen.getInstance().getSubject(this.blockID).updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
+    }
+    int getDivergingBlockOneID() {
+        return divergingBlockOneID;
+    }
+    int getDivergingBlockTwoID() {
+        return divergingBlockTwoID;
+    }
+    int getConvergingBlockID() {
+        return convergingBlockID;
+    }
+
+    /**
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean state) {
@@ -92,19 +107,19 @@ class CTCBlockInfo {
             }
         }
         else{return null;}
-        if(hasSwitchCon && !switchState) {
+        if(isSwitchCon && !switchState) {
             return ( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
         }
-        else if(hasSwitchCon) {
+        else if(isSwitchCon) {
             return ( divergingBlockOneID +"  ( "   + convergingBlockID + " == " + divergingBlockTwoID + " )");
         }
-        else if(hasSwitchDiv && !switchState) {
+        else if(isSwitchDiv && !switchState) {
             if(divergingBlockOneID == blockID) {
                 return ( divergingBlockOneID + " ==== " + convergingBlockID);
             }else {
                 return ( divergingBlockTwoID + "\t\t" + convergingBlockID);
             }
-        }else if(hasSwitchDiv) {
+        }else if(isSwitchDiv) {
             if(divergingBlockTwoID == blockID) {
                 return ( divergingBlockTwoID + " ==== " + convergingBlockID);
             }else {
@@ -115,64 +130,13 @@ class CTCBlockInfo {
         }
     }
 
-    /**
-     * Updates the color of the light based on its state.
-     */
-//    void updateSwitchLightColor() {
-//        if(map.getSubject(getBlockID()) != null) {
-//            if (this.switchLightState) {
-//                this.switchLightColor = javafx.scene.paint.Color.GREEN;
-//            } else {
-//                this.switchLightColor = javafx.scene.paint.Color.RED;
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Returns the color of the Crossing light.
-//     */
-//    void updateCrossingLightColor() {
-//        if (map.getSubject(getBlockID()) != null) {
-//            if (this.crossingState) {
-//                this.crossingLightColor = Color.RED;
-//            } else {
-//                this.crossingLightColor = Color.DARKGRAY;
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Returns the color of the Maintenance light.
-//     */
-//    void updateMaintenanceLightColor() {
-//        if (map.getSubject(getBlockID()) != null) {
-//            if(this.underMaintenance) {
-//                this.maintenanceLightColor = Color.RED;
-//            } else {
-//                this.maintenanceLightColor = Color.GREEN;
-//            }
-//        }
-//    }
-//
-//    Paint getSwitchLightColor() {
-//        updateSwitchLightColor();
-//        return switchLightColor;
-//    }
-//    Paint getCrossingLightColor() {
-//        updateCrossingLightColor();
-//        return crossingLightColor;
-//    }
-//    Paint getMaintenanceLightColor() {
-//        updateMaintenanceLightColor();
-//        return maintenanceLightColor;
-//    }
 
     // Simple setters and getters
     int     getBlockID      () {
         return blockID;
     }
     String getLine         () {
-        return line;
+        return line.toString();
     }
     double     getSpeedLimit   () {
         return speedLimit;
@@ -195,13 +159,13 @@ class CTCBlockInfo {
     }
 
     void setSwitchLightState(boolean switchLightState) {
-        this.switchLightState = switchLightState;
+        this.lightState = switchLightState;
     }
     boolean getHasLight     () {
         return hasLight;
     }
     boolean getSwitchLightState() {
-        return switchLightState;
+        return lightState;
     }
 
     void    setCrossingState(boolean crossingState) {
@@ -217,12 +181,15 @@ class CTCBlockInfo {
     public boolean getSwitchState           () {
         return switchState;
     }
-    boolean        getHasSwitchCon          () {
-        return hasSwitchCon;
+    boolean getSwitchCon() {
+        return isSwitchCon;
     }
-    boolean        getHasSwitchDiv          () {
-        return hasSwitchDiv;
+    boolean getSwitchDiv() {
+        return isSwitchDiv;
     }
 
+    public void notifyChange(String property, Object newValue) {
+
+    }
 }
 

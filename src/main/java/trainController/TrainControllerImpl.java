@@ -420,16 +420,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
 
 
-        // Redundancy Check
-        this.checkBrakeFailure();
-        this.checkBrakeFailure();
-        this.checkPowerFailure();
-        this.checkPowerFailure();
-        this.checkSignalFailure();
-        this.checkSignalFailure();
-
-        // Authority Stopping
-    }
     /**
      *  onBlock()
      */

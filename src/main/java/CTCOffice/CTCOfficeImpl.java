@@ -41,14 +41,34 @@ public class CTCOfficeImpl implements CTCOffice {
     private CTCOfficeImpl() {
 
         BasicLineMap trackLineBlocks = ParsedBasicBlocks.getInstance().getAllBasicLines();
-
-        for(Lines line : trackLineBlocks.keySet()) {
-            ArrayList<CTCBlockSubject> blockSubjects = new ArrayList<>();
-            for(BasicBlock block : trackLineBlocks.get(line).values()) {
-                blockSubjects.add(new CTCBlockSubject(new CTCBlockInfo(block)));
+        ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
+            ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
+            for(BasicBlock block : trackLineBlocks.get(Lines.GREEN).values()) {
+                greenBlockSubjects.add(new CTCBlockSubject(new CTCBlock(block)));
+                if(block.isSwitch()) {
+                    greenBlockSwitches.add(CTCBlockSubjectMapGreen.getInstance().getSubject(block.blockNumber()).getBlockInfo());
+                }
             }
-            track.put(line.toString(), blockSubjects);
+            track.put(Lines.GREEN.toString(), greenBlockSubjects);
+            for(CTCBlock block : greenBlockSwitches) {
+                    CTCBlockSubjectMapGreen.getInstance().getSubject(block.getDivergingBlockOneID()).getBlockInfo().setSwitchDivInformation(block.getConvergingBlockID(), block.getDivergingBlockOneID(), block.getDivergingBlockTwoID());
+                    CTCBlockSubjectMapGreen.getInstance().getSubject(block.getDivergingBlockTwoID()).getBlockInfo().setSwitchDivInformation(block.getConvergingBlockID(), block.getDivergingBlockOneID(), block.getDivergingBlockTwoID());
+            }
+
+        ArrayList<CTCBlock> redBlockSwitches = new ArrayList<>();
+        ArrayList<CTCBlockSubject> redBlockSubjects = new ArrayList<>();
+        for(BasicBlock block : trackLineBlocks.get(Lines.RED).values()) {
+            redBlockSubjects.add(new CTCBlockSubject(new CTCBlock(block)));
+            if(block.isSwitch()) {
+                redBlockSwitches.add(CTCBlockSubjectMapRed.getInstance().getSubject(block.blockNumber()).getBlockInfo());
+            }
         }
+        track.put(Lines.RED.toString(), redBlockSubjects);
+        for(CTCBlock block : redBlockSwitches) {
+            CTCBlockSubjectMapRed.getInstance().getSubject(block.getDivergingBlockOneID()).getBlockInfo().setSwitchDivInformation(block.getConvergingBlockID(), block.getDivergingBlockOneID(), block.getDivergingBlockTwoID());
+            CTCBlockSubjectMapRed.getInstance().getSubject(block.getDivergingBlockTwoID()).getBlockInfo().setSwitchDivInformation(block.getConvergingBlockID(), block.getDivergingBlockOneID(), block.getDivergingBlockTwoID());
+        }
+
 
         new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
         scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, "BlueLine", 0, 2, new ArrayList<>() {{
