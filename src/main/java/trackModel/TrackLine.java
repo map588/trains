@@ -75,14 +75,26 @@ public class TrackLine implements TrackModel {
     //////////////////////////
 
     private void handleTrainEntry(TrainModel train, Integer blockID) {
+        if(blockID == 0){
+            train.delete();
+            return;
+        }
         TrackBlock block = trackBlocks.get(blockID);
-        //...
+        if (block.isOccupied()) {
+            throw new IllegalArgumentException("Block: " + blockID + " is already occupied");
+        }
+        block.setOccupied(true);
+        block.occupiedBy = train;
     }
 
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
         TrackBlock block = trackBlocks.get(blockID);
-        //...
+        if (!block.isOccupied()) {
+            throw new IllegalArgumentException("Block: " + blockID + " is not occupied");
+        }
+        block.setOccupied(false);
+        block.occupiedBy = null;
     }
 
     ///////////////////////////
@@ -100,13 +112,9 @@ public class TrackLine implements TrackModel {
         trackUpdateQueue.add(updateTask);
     }
 
-    public void update() {
+    public void update() throws InterruptedException {
         while (!trackUpdateQueue.isEmpty()) {
-            try {
-                trackUpdateExecutor.invokeAll(trackUpdateQueue);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e + " in TrackLine update()");
-            }
+            trackUpdateExecutor.invokeAll(trackUpdateQueue);
         }
     }
     /**
@@ -246,7 +254,7 @@ public class TrackLine implements TrackModel {
         syncTrackUpdate( () -> {
             TrackBlock brokenBlock = this.trackBlocks.get(blockID);
             if (brokenBlock != null) {
-                brokenBlock.setBrokenRail(state);
+                brokenBlock.setFailure(true,false,false);
             } else {
                 throw new IllegalArgumentException("Block: " + blockID + " does not exist");
             }
@@ -258,7 +266,7 @@ public class TrackLine implements TrackModel {
         syncTrackUpdate( () -> {
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setPowerFailure(state);
+                failedBlock.setFailure(false,false,true);
             } else {
                 throw new IllegalArgumentException("Block: " + blockID + " does not exist");
             }
@@ -270,26 +278,27 @@ public class TrackLine implements TrackModel {
         syncTrackUpdate( () -> {
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setTrackCircuitFailure(state);
+                failedBlock.setFailure(false,true,false);
             } else {
                 throw new IllegalArgumentException("Block: " + blockID + " does not exist");
             }
         });
     }
-//TODO: make sure occupancies are set in the map and to wayside for failures
+
+    //TODO: make sure occupancies are set in the map and to wayside for failures
     @Override
     public boolean getBrokenRail(Integer blockID) {
-        return this.trackBlocks.get(blockID).isBrokenRail();
+        return this.trackBlocks.get(blockID).brokenRail;
     }
 
     @Override
     public boolean getPowerFailure(Integer blockID) {
-        return this.trackBlocks.get(blockID).isPowerFailure();
+        return this.trackBlocks.get(blockID).powerFailure;
     }
 
     @Override
     public boolean getTrackCircuitFailure(Integer blockID) {
-        return this.trackBlocks.get(blockID).isTrackCircuitFailure();
+        return this.trackBlocks.get(blockID).trackCircuitFailure;
     }
 
     //This operation is being done on the block, not the train

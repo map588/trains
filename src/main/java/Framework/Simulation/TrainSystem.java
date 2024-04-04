@@ -2,9 +2,12 @@ package Framework.Simulation;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Framework.Support.ObservableHashMap;
 import Utilities.Records.UpdatedTrainValues;
 import trackModel.TrackLine;
 import trainModel.TrainModelImpl;
+import trainModel.TrainModelSubject;
+import trainModel.TrainModelSubjectMap;
 
 import java.util.concurrent.*;
 
@@ -14,6 +17,7 @@ public class TrainSystem {
     private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ConcurrentHashMap<>();
 
     public TrainSystem() {
+        taskRemovalSetup();
     }
 
     public void dispatchTrain(TrackLine line, int trainID) {
@@ -29,6 +33,10 @@ public class TrainSystem {
         } catch (InterruptedException e) {
             throw new RuntimeException(e + " in TrainSystem update()");
         }
+    }
+
+    public void deleteTrainTask(TrainModel train) {
+        updateTasks.remove(train);
     }
 
     public void shutdown() {
@@ -65,5 +73,20 @@ public class TrainSystem {
 
             return null;
         }
+    }
+
+    final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
+
+    private void taskRemovalSetup() {
+        ObservableHashMap<Integer, TrainModelSubject> subjects = trainSubjectMap.getSubjects();
+
+        // Create a listener that reacts to any change (add, remove, update) by updating choice box items
+        ObservableHashMap.MapListener<Integer, TrainModelSubject> deleteListener = new ObservableHashMap.MapListener<>() {
+            @Override
+            public void onRemoved(Integer key, TrainModelSubject value) {
+               deleteTrainTask(value.getModel());
+            }
+        };
+        subjects.addChangeListener(deleteListener);
     }
 }

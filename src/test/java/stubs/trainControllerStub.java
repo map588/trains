@@ -209,7 +209,12 @@ public class trainControllerStub implements TrainController {
         return false;
     }
 
-//    @Override
+    @Override
+    public void delete() {
+
+    }
+
+    //    @Override
     public boolean getLeftPlatform() {
         return false;
     }
@@ -261,6 +266,11 @@ public class trainControllerStub implements TrainController {
 
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues() {
+        return null;
+    }
+
+    @Override
+    public TrainModel getTrain() {
         return null;
     }
 

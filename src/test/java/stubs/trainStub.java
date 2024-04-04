@@ -101,6 +101,11 @@ public class trainStub implements TrainModel {
     }
 
     @Override
+    public void delete() {
+
+    }
+
+    @Override
     public void setEmergencyBrake(boolean brake) {
 
     }

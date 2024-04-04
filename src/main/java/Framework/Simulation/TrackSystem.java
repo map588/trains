@@ -33,7 +33,11 @@ public class TrackSystem {
     public void update() {
         trackLineExecutor.submit(() -> {
             for (TrackLine line : TrackLines.values()) {
-                line.update();
+                try {
+                    line.update();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

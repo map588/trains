@@ -2,6 +2,7 @@ package trackModel;
 
 import javafx.beans.property.*;
 
+
 public class TrackBlockSubject {
 
     private Integer blockID;
@@ -26,9 +27,8 @@ public class TrackBlockSubject {
         this.elevation.set(block.getElevation());
         this.speedLimit.set(block.getSpeedLimit());
         this.isOccupied.set(block.isOccupied());
-        this.failure.set(block.isTrackCircuitFailure() || block.isPowerFailure()
-                               || block.isBrokenRail() ||  block.isTrackCircuitFailure() ? "FAILURE" : "NO FAILURE");
-
+        this.failure.set(block.hasFailure() ? "FAILURE" : "");
+        this.direction.set((block.isOccupied()) ? block.getOccupiedBy().getDirection().toString() : "");
     }
 
 

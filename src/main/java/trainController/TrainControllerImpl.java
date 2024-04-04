@@ -251,7 +251,10 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
     //-----------------Getters-----------------
 
-
+    @Override
+    public TrainModel getTrain() {
+        return train;
+    }
     public int  getID() {
         return this.trainID;
     }
@@ -310,6 +313,12 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     public boolean getPowerFailure() {
         return this.powerFailure;
     }
+
+    @Override
+    public void delete() {
+        this.subject.delete();
+    }
+
     public double  getSpeedLimit() {
         return this.speedLimit;
     }

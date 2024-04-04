@@ -3,7 +3,6 @@ package trainModel;
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,7 +21,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TrainModelManager {
 
@@ -50,19 +51,12 @@ public class TrainModelManager {
     public void initialize() {
         System.out.println("Started TrainModelManager initialize");
 
-
-
         subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
-        new TrainModelImpl(0);
-
         //testBench = launchTestBench();
-        if (!subjectMap.getSubjects().isEmpty()) {
-            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
-            changeTrainView(firstKey);
-        }else{
-            System.out.println("No train models found");
+        while (subjectMap.getSubjects().isEmpty()) {
+            System.out.println("Waiting for subjects to be added to the map");
         }
 
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -221,10 +215,9 @@ public class TrainModelManager {
     }
 
     private void updateChoiceBoxItems() {
-        Platform.runLater(() -> {
-            trainDropDown.setItems(FXCollections.observableArrayList(
-                    new ArrayList<>(subjectMap.getSubjects().keySet())));
-        });
+        int previousSelection = trainDropDown.getSelectionModel().getSelectedIndex();
+        trainDropDown.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
+        trainDropDown.getSelectionModel().select(previousSelection);
     }
 
     private TrainModelTB launchTestBench() {

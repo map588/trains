@@ -113,6 +113,10 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         }
     }
 
+    void delete() {
+        TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
+    }
+
     @Override
     public Property<?> getProperty(String propertyName) {
         return properties.get(Controller_Property.valueOf(propertyName.toUpperCase()));

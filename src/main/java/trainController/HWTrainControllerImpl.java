@@ -1,6 +1,7 @@
 package trainController;
 
 import Common.TrainController;
+import Common.TrainModel;
 import Utilities.Records.Beacon;
 import Utilities.Records.UpdatedTrainValues;
 import com.fazecast.jSerialComm.SerialPort;
@@ -186,6 +187,11 @@ public class HWTrainControllerImpl implements TrainController {
     }
 
     @Override
+    public void delete() {
+        
+    }
+
+    @Override
     public double calculatePower(double currentVelocity) {
         return 0;
     }
@@ -205,6 +211,12 @@ public class HWTrainControllerImpl implements TrainController {
     }
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){ return null;}
+
+    @Override
+    public TrainModel getTrain() {
+        return null;
+    }
+
     @Override
     public void setValue(String propertyName, Object newValue) {
 

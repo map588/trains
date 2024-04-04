@@ -59,10 +59,12 @@ public interface TrainController extends GUIModifiable {
     boolean getBrakeFailure();
     boolean getPowerFailure();
 
+    void delete();
 
     double calculatePower(double currentVelocity);
 
     double getGrade();
     void updateBeacon(Beacon beacon);
     UpdatedTrainValues sendUpdatedTrainValues();
+    TrainModel getTrain();
 }

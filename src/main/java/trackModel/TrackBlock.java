@@ -1,11 +1,15 @@
 package trackModel;
 
-import Utilities.Records.BasicBlock;
-import Utilities.Records.BasicBlock.Connection;
+import Common.TrainModel;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
+import Utilities.Records.BasicBlock;
+import Utilities.Records.BasicBlock.Connection;
 import trackModel.BlockTypes.*;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TrackBlock {
     // Block Information
@@ -34,6 +38,8 @@ public class TrackBlock {
      boolean trackCircuitFailure;
      boolean powerFailure;
      boolean occupied;
+     TrainModel occupiedBy;
+    private static final Logger logger = Logger.getLogger(TrackBlock.class.getName());
 
      BlockFeature feature;
 
@@ -86,53 +92,15 @@ public class TrackBlock {
         this.powerFailure = false;
     }
 
+    public void setFailure(boolean brokenRail, boolean trackCircuitFailure, boolean powerFailure) {
+        this.brokenRail = brokenRail;
+        this.trackCircuitFailure = trackCircuitFailure;
+        this.powerFailure = powerFailure;
+        this.hasFailure = brokenRail || trackCircuitFailure || powerFailure;
+    }
+
     public boolean hasFailure() {
         return brokenRail || trackCircuitFailure || powerFailure;
-    }
-
-    public boolean isBrokenRail() {
-        return brokenRail;
-    }
-
-    public void setBrokenRail(boolean brokenRail) {
-        this.brokenRail = brokenRail;
-    }
-
-    public boolean isTrackCircuitFailure() {
-        return trackCircuitFailure;
-    }
-
-    public void setTrackCircuitFailure(boolean trackCircuitFailure) {
-        this.trackCircuitFailure = trackCircuitFailure;
-    }
-
-    public boolean isPowerFailure() {
-        return powerFailure;
-    }
-
-    public void setPowerFailure(boolean powerFailure) {
-        this.powerFailure = powerFailure;
-    }
-
-    /**
-     * Validates the provided BasicBlock object to ensure it contains valid data.
-     *
-     * @param blockInfo the BasicBlock object to validate
-     * @throws IllegalArgumentException if the block information is invalid
-     */
-     void validateBlockInfo(BasicBlock blockInfo) {
-        if (blockInfo.blockType() == BlockType.STATION) {
-            if (blockInfo.stationName().isEmpty() || blockInfo.doorDirection().isEmpty()) {
-                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Station block must have a station name and door direction");
-            }
-        }else if(blockInfo.isSwitch()){
-            if(blockInfo.nextBlock().northDefault() == null || blockInfo.nextBlock().southDefault() == null) {
-                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Switch block must have a default connection for both directions.");
-            }
-            if(blockInfo.nextBlock().northAlternate() == null && blockInfo.nextBlock().southAlternate() == null){
-                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Switch block must have an alternate connection for at least one direction.");
-            }
-        }
     }
 
      Connection getNextBlock(Direction direction) {
@@ -235,115 +203,148 @@ public class TrackBlock {
         return blockType;
     }
 
+    public TrainModel getOccupiedBy() {
+        return occupiedBy;
+    }
+
     String getStationName() {
         if (feature.isStation()) {
             return feature.getStationName();
-        }else{
-            throw new UnsupportedOperationException("getStationName called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getStationName", "station"));
+            return null;
         }
     }
 
     String getDoorDirection() {
         if (feature.isStation()) {
             return feature.getDoorDirection();
-        }else{
-            throw new UnsupportedOperationException("getDoorDirection called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getDoorDirection", "station"));
+            return null;
         }
     }
 
     public int getPassengersWaiting() {
         if (feature.isStation()) {
             return feature.getPassengersWaiting();
-        }else{
-            throw new UnsupportedOperationException("getPassengersWaiting called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getPassengersWaiting", "station"));
+            return 0;
         }
     }
 
     public void setPassengersWaiting(int passengersWaiting) {
         if (feature.isStation()) {
             feature.setPassengersWaiting(passengersWaiting);
-        }else{
-            throw new UnsupportedOperationException("setPassengersWaiting called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("setPassengersWaiting", "station"));
         }
     }
 
     public int getPassengersEmbarked() {
         if (feature.isStation()) {
             return feature.getPassengersEmbarked();
-        }else{
-            throw new UnsupportedOperationException("getPassengersEmbarked called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getPassengersEmbarked", "station"));
+            return 0;
         }
     }
 
     public void setPassengersEmbarked(int passengersEmbarked) {
         if (feature.isStation()) {
             feature.setPassengersEmbarked(passengersEmbarked);
-        }else{
-            throw new UnsupportedOperationException("setPassengersEmbarked called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("setPassengersEmbarked", "station"));
         }
     }
 
     public int getPassengersDisembarked() {
         if (feature.isStation()) {
             return feature.getPassengersDisembarked();
-        }else{
-            throw new UnsupportedOperationException("getPassengersDisembarked called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getPassengersDisembarked", "station"));
+            return 0;
         }
     }
 
     public void setPassengersDisembarked(int passengersDisembarked) {
         if (feature.isStation()) {
             feature.setPassengersDisembarked(passengersDisembarked);
-        }else{
-            throw new UnsupportedOperationException("setPassengersDisembarked called on Block: " + this.blockID + ", which is not a station block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("setPassengersDisembarked", "station"));
         }
     }
 
     public void setSwitchState(boolean state) {
         if (feature.isSwitch()) {
             feature.setSwitchState(state);
-        }else{
-            throw new UnsupportedOperationException("setSwitchState called on Block: " + this.blockID + ", which is not a switch block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("setSwitchState", "switch"));
         }
     }
 
     public boolean getSwitchState() {
         if (feature.isSwitch()) {
             return feature.getSwitchState();
-        }else{
-            throw new UnsupportedOperationException("getSwitchState called on Block: " + this.blockID + ", which is not a switch block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getSwitchState", "switch"));
+            return false;
         }
     }
 
     boolean getSwitchStateAuto() {
         if (feature.isSwitch()) {
             return feature.getAutoState();
-        }else{
-            throw new UnsupportedOperationException("getSwitchStateAuto called on Block: " + this.blockID + ", which is not a switch block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getSwitchStateAuto", "switch"));
+            return false;
         }
     }
 
-    public void setSwitchStateAuto (boolean state){
+    public void setSwitchStateAuto(boolean state) {
         if (feature.isSwitch()) {
             feature.setSwitchStateAuto(state);
-        }else
-            throw new UnsupportedOperationException("setSwitchStateAuto called on Block: " + this.blockID + ", which is not a switch block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("setSwitchStateAuto", "switch"));
+        }
     }
 
-
-    public void setCrossingState ( boolean state){
+    public void setCrossingState(boolean state) {
         if (feature.isCrossing()) {
             feature.setCrossingState(state);
-        }else
-            throw new UnsupportedOperationException("setCrossingState called on Block: " + this.blockID + ", which is not a crossing block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("setCrossingState", "crossing"));
+        }
     }
 
     public boolean getCrossingState() {
         if (feature.isCrossing()) {
             return feature.getCrossingState();
-        }else{
-            throw new UnsupportedOperationException("getCrossingState called on Block: " + this.blockID + ", which is not a crossing block");
+        } else {
+            logger.log(Level.SEVERE, generateLogMessage("getCrossingState", "crossing"));
+            return false;
         }
     }
 
+
+
+    void validateBlockInfo(BasicBlock blockInfo) {
+        if (blockInfo.blockType() == BlockType.STATION) {
+            if (blockInfo.stationName().isEmpty() || blockInfo.doorDirection().isEmpty()) {
+                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Station block must have a station name and door direction");
+            }
+        }else if(blockInfo.isSwitch()){
+            if(blockInfo.nextBlock().northDefault() == null || blockInfo.nextBlock().southDefault() == null) {
+                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Switch block must have a default connection for both directions.");
+            }
+            if(blockInfo.nextBlock().northAlternate() == null && blockInfo.nextBlock().southAlternate() == null){
+                throw new IllegalArgumentException("Block: " + blockInfo.blockNumber() + "Switch block must have an alternate connection for at least one direction.");
+            }
+        }
+    }
+
+    private String generateLogMessage(String methodName, String blockType) {
+        return methodName + " called on Block: " + this.blockID + ", which is not a " + blockType + " block";
+    }
 }
