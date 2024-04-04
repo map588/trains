@@ -1,21 +1,24 @@
 package trainController;
 
 import Common.TrainController;
+import Common.TrainModel;
 import Framework.Support.AbstractSubject;
 import Framework.Support.Notifier;
 import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import trainModel.TrainModelSubjectMap;
 
 import static trainController.Controller_Property.*;
 
 public class TrainControllerSubject implements AbstractSubject, Notifier {
     private final ObservableHashMap<Controller_Property, Property<?>> properties = new ObservableHashMap<>();
-    private final TrainController controller;
+    private TrainController controller;
 
     public  volatile boolean  isGUIUpdateInProgress     = false;
     private volatile boolean  isLogicUpdateInProgress   = false;
 
+    private TrainModelSubjectMap trainModelSubjectMap = TrainModelSubjectMap.getInstance();
 
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
@@ -27,7 +30,12 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     }
 
     public TrainControllerSubject(){
-        this.controller = null;
+        if(trainModelSubjectMap.getSubjects().isEmpty()) {
+            this.controller = new TrainControllerImpl();
+        }else{
+            TrainModel model = trainModelSubjectMap.getSubject(trainModelSubjectMap.getSubjects().keySet().iterator().next()).getModel();
+            this.controller = new TrainControllerImpl(model, model.getTrainNumber());
+        }
 
         properties.put(AUTHORITY, new SimpleIntegerProperty(0));
         properties.put(SAMPLING_PERIOD, new SimpleIntegerProperty(0));
