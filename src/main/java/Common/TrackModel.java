@@ -11,10 +11,6 @@ public interface TrackModel {
     void setTrainAuthority(Integer blockID, int authority);
     void setCommandedSpeed(Integer blockID, double commandedSpeed);
 
-    //Vital Getters
-    boolean getLightState(int block);
-    boolean getSwitchState(int block);
-    boolean getCrossingState(int block);
 
     //Failure Setters
     void setBrokenRail(Integer blockID, boolean state);
