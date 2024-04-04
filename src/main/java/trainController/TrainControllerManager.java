@@ -113,25 +113,25 @@ public class TrainControllerManager {
     }
 
     private void bindGauges() {
-        currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_SPEED.getPropertyName()));
-        commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(COMMAND_SPEED.getPropertyName()));
-        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty(SPEED_LIMIT.getPropertyName()));
-        authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty(AUTHORITY.getPropertyName()));
-        currentTemperatureGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_TEMPERATURE.getPropertyName()));
-        appendListener(currentSubject.getDoubleProperty(POWER.getPropertyName()), (obs, oldVal, newVal) -> {
-            double p = currentSubject.getDoubleProperty(POWER.getPropertyName()).get();
+        currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_SPEED));
+        commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(COMMAND_SPEED));
+        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty(SPEED_LIMIT));
+        authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty(AUTHORITY));
+        currentTemperatureGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_TEMPERATURE));
+        appendListener(currentSubject.getDoubleProperty(POWER), (obs, oldVal, newVal) -> {
+            double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
         });
     }
 
     private void bindIndicators() {
-        appendListener(currentSubject.getBooleanProperty(EMERGENCY_BRAKE.getPropertyName()), (obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, eBrakeStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(SIGNAL_FAILURE.getPropertyName()),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, signalFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(BRAKE_FAILURE.getPropertyName()),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, brakeFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(POWER_FAILURE.getPropertyName()),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, powerFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(IN_TUNNEL.getPropertyName()),(obs, oldVal, newVal) ->     Platform.runLater(() -> {updateIndicator(Color.YELLOW, inTunnelStatus, newVal); inTunnelUpdates();}));
-        appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM.getPropertyName()),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM.getPropertyName()),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(EMERGENCY_BRAKE), (obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, eBrakeStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(SIGNAL_FAILURE),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, signalFailureStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(BRAKE_FAILURE),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, brakeFailureStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(POWER_FAILURE),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, powerFailureStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(IN_TUNNEL),(obs, oldVal, newVal) ->     Platform.runLater(() -> {updateIndicator(Color.YELLOW, inTunnelStatus, newVal); inTunnelUpdates();}));
+        appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal)));
         bindStringText(nextStationText, NEXT_STATION.getPropertyName());
     }
 
@@ -160,7 +160,7 @@ public class TrainControllerManager {
         bindDoubleTextField(setKpTextField, KP);
         setupButtonActions();
 
-        appendListener(currentSubject.getStringProperty(ERROR.getPropertyName()), (obs, oldVal, newVal) -> {
+        appendListener(currentSubject.getStringProperty(ERROR), (obs, oldVal, newVal) -> {
             showErrorDialog("Error: ", newVal);
         });
     }
@@ -194,12 +194,12 @@ public class TrainControllerManager {
 
     private void setupButtonActions() {
         emergencyBrakeButton.setOnAction(event -> {
-            BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE.getPropertyName());
+            BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE);
             currentSubject.setProperty(EMERGENCY_BRAKE.getPropertyName(), !eBrakeProp.get());
             setNotification(EMERGENCY_BRAKE,"");
         });
         makeAnnouncementsButton.setOnAction(event -> {
-            BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS.getPropertyName());
+            BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
             currentSubject.setProperty(ANNOUNCEMENTS.getPropertyName(), !announceProp.get());
 
             setNotification(ANNOUNCEMENTS,"");
@@ -293,40 +293,40 @@ public class TrainControllerManager {
 
         //Batch update all properties
             try{
-            currentSpeedGauge.setValue(currentSubject.getDoubleProperty(CURRENT_SPEED.getPropertyName()).get());
-            commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(COMMAND_SPEED.getPropertyName()).get());
-            speedLimitGauge.setValue(currentSubject.getDoubleProperty(SPEED_LIMIT.getPropertyName()).get());
-            authorityGauge.setValue(currentSubject.getIntegerProperty(AUTHORITY.getPropertyName()).get());
-            powerOutputGauge.setValue(currentSubject.getDoubleProperty(POWER.getPropertyName()).get());
+            currentSpeedGauge.setValue(currentSubject.getDoubleProperty(CURRENT_SPEED).get());
+            commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(COMMAND_SPEED).get());
+            speedLimitGauge.setValue(currentSubject.getDoubleProperty(SPEED_LIMIT).get());
+            authorityGauge.setValue(currentSubject.getIntegerProperty(AUTHORITY).get());
+            powerOutputGauge.setValue(currentSubject.getDoubleProperty(POWER).get());
 
             // Update indicators
-            updateIndicator(Color.RED, eBrakeStatus, currentSubject.getBooleanProperty(EMERGENCY_BRAKE.getPropertyName()).get());
-            updateIndicator(Color.RED, signalFailureStatus, currentSubject.getBooleanProperty(SIGNAL_FAILURE.getPropertyName()).get());
-            updateIndicator(Color.RED, brakeFailureStatus, currentSubject.getBooleanProperty(BRAKE_FAILURE.getPropertyName()).get());
-            updateIndicator(Color.RED, powerFailureStatus, currentSubject.getBooleanProperty(POWER_FAILURE.getPropertyName()).get());
-            updateIndicator(Color.YELLOW, inTunnelStatus, currentSubject.getBooleanProperty(IN_TUNNEL.getPropertyName()).get());
-            updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, currentSubject.getBooleanProperty(LEFT_PLATFORM.getPropertyName()).get());
-            updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, currentSubject.getBooleanProperty(RIGHT_PLATFORM.getPropertyName()).get());
+            updateIndicator(Color.RED, eBrakeStatus, currentSubject.getBooleanProperty(EMERGENCY_BRAKE).get());
+            updateIndicator(Color.RED, signalFailureStatus, currentSubject.getBooleanProperty(SIGNAL_FAILURE).get());
+            updateIndicator(Color.RED, brakeFailureStatus, currentSubject.getBooleanProperty(BRAKE_FAILURE).get());
+            updateIndicator(Color.RED, powerFailureStatus, currentSubject.getBooleanProperty(POWER_FAILURE).get());
+            updateIndicator(Color.YELLOW, inTunnelStatus, currentSubject.getBooleanProperty(IN_TUNNEL).get());
+            updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, currentSubject.getBooleanProperty(LEFT_PLATFORM).get());
+            updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, currentSubject.getBooleanProperty(RIGHT_PLATFORM).get());
 
             // Update checkboxes
-            intLightCheckBox.setSelected(currentSubject.getBooleanProperty(INT_LIGHTS.getPropertyName()).get());
-            extLightCheckBox.setSelected(currentSubject.getBooleanProperty(EXT_LIGHTS.getPropertyName()).get());
-            openDoorLeftCheckBox.setSelected(currentSubject.getBooleanProperty(LEFT_DOORS.getPropertyName()).get());
-            openDoorRightCheckBox.setSelected(currentSubject.getBooleanProperty(RIGHT_DOORS.getPropertyName()).get());
-            toggleServiceBrakeCheckBox.setSelected(currentSubject.getBooleanProperty(SERVICE_BRAKE.getPropertyName()).get());
-            autoModeCheckBox.setSelected(currentSubject.getBooleanProperty(AUTOMATIC_MODE.getPropertyName()).get());
+            intLightCheckBox.setSelected(currentSubject.getBooleanProperty(INT_LIGHTS).get());
+            extLightCheckBox.setSelected(currentSubject.getBooleanProperty(EXT_LIGHTS).get());
+            openDoorLeftCheckBox.setSelected(currentSubject.getBooleanProperty(LEFT_DOORS).get());
+            openDoorRightCheckBox.setSelected(currentSubject.getBooleanProperty(RIGHT_DOORS).get());
+            toggleServiceBrakeCheckBox.setSelected(currentSubject.getBooleanProperty(SERVICE_BRAKE).get());
+            autoModeCheckBox.setSelected(currentSubject.getBooleanProperty(AUTOMATIC_MODE).get());
 
             // Update text fields
-            setTemperatureTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(SET_TEMPERATURE.getPropertyName()).get()));
-            setKiTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(KI.getPropertyName()).get()));
-            setKpTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(KP.getPropertyName()).get()));
-            setSpeedTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(OVERRIDE_SPEED.getPropertyName()).get()));
-            nextStationText.setText(currentSubject.getStringProperty(NEXT_STATION.getPropertyName()).get());
+            setTemperatureTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(SET_TEMPERATURE).get()));
+            setKiTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(KI).get()));
+            setKpTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(KP).get()));
+            setSpeedTextField.setText(String.format("%.2f", currentSubject.getDoubleProperty(OVERRIDE_SPEED).get()));
+            nextStationText.setText(currentSubject.getStringProperty(NEXT_STATION).get());
 
             // Update slider (Assuming it should match the overrideSpeed)
-            setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED.getPropertyName()).get());
+            setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED).get());
             }catch (Exception e){
-
+                System.out.println("Error updating UI elements");
             }
 
     }

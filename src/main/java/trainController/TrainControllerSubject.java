@@ -61,7 +61,15 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     }
 
     //Change coming from the logic side
+    @Override
     public void notifyChange(String propertyName, Object newValue) {
+        Controller_Property property = Controller_Property.valueOf(propertyName.toUpperCase());
+        if (newValue != null) {
+            executeUpdate(() -> notifyChange(property, newValue), false);
+        }
+    }
+
+    public void notifyChange(Controller_Property propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
             executeUpdate(() -> updateProperty(property, newValue), true);
@@ -69,7 +77,9 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     }
 
     //Change coming from the GUI side
+    @Override
     public void setProperty(String propertyName, Object newValue) {
+
         Property<?> property = properties.get(propertyName);
 
         if (property != null && !isLogicUpdateInProgress) {
@@ -84,6 +94,11 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
                 isGUIUpdateInProgress = false;
             }
         }
+    }
+
+    @Override
+    public Property<?> getProperty(String propertyName) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     private void executeUpdate(Runnable updateTask, boolean runImmediately) {
@@ -118,26 +133,26 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
 
 
 
-    public Property<?> getProperty(String propertyName) {
+    public Property<?> getProperty(Controller_Property propertyName) {
         return properties.get(propertyName);
     }
 
-    public StringProperty getStringProperty(String propertyName){
+    public StringProperty getStringProperty(Controller_Property propertyName){
         Property<?> property = getProperty(propertyName);
             return (StringProperty) property;
     }
     // Directly accessing typed properties for GUI binding
-    public BooleanProperty getBooleanProperty(String propertyName) {
+    public BooleanProperty getBooleanProperty(Controller_Property propertyName) {
         Property<?> property = getProperty(propertyName);
             return (BooleanProperty) property;
     }
 
-    public DoubleProperty getDoubleProperty(String propertyName) {
+    public DoubleProperty getDoubleProperty(Controller_Property propertyName) {
         Property<?> property = getProperty(propertyName);
         return (DoubleProperty) property;
     }
 
-    public IntegerProperty getIntegerProperty(String propertyName) {
+    public IntegerProperty getIntegerProperty(Controller_Property propertyName) {
         Property<?> property = getProperty(propertyName);
         return (IntegerProperty) property;
     }

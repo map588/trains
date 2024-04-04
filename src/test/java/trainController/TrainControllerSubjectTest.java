@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import static trainController.Controller_Property.*;
+import static trainController.Properties.*;
+
 class TrainControllerSubjectTest {
     private TrainControllerSubject subject;
     private TrainController controller;
@@ -18,14 +21,14 @@ class TrainControllerSubjectTest {
 
     @Test
     void testSetProperty() {
-        subject.setProperty(Properties.COMMAND_SPEED_PROPERTY, 50.0);
-        verify(controller).setValue(Properties.COMMAND_SPEED_PROPERTY, 50.0);
+        subject.setProperty(COMMAND_SPEED_PROPERTY, 50.0);
+        verify(controller).setValue(COMMAND_SPEED_PROPERTY, 50.0);
     }
 
     @Test
     void testNotifyChange() {
-        subject.notifyChange(Properties.AUTHORITY_PROPERTY, 1000);
-        assertEquals(1000, subject.getIntegerProperty(Properties.AUTHORITY_PROPERTY).get());
+        subject.notifyChange(AUTHORITY, 1000);
+        assertEquals(1000, subject.getIntegerProperty(AUTHORITY).get());
     }
 
     // Add more test methods for other properties and scenarios
