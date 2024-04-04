@@ -100,7 +100,7 @@ public class TrackModelSubject {
             //        }
             executeUpdate(() -> {
                 updateProperty(property, newValue);
-                model.setValue(propertyName, newValue);
+              //  model.setValue(propertyName, newValue);
             }, false);
         }
 
@@ -108,7 +108,7 @@ public class TrackModelSubject {
             Property<?> property = properties.get(propertyName);
             executeUpdate(() -> {
                 updateProperty(property, newValue);
-                model.setValue(propertyName, newValue, blockID);
+              //  model.setValue(propertyName, newValue, blockID);
             }, false);
         }
 

@@ -3,6 +3,7 @@ package stubs;
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
+import Utilities.Records.UpdatedTrainValues;
 import trainController.TrainControllerSubject;
 
 public class trainControllerStub implements TrainController {
@@ -256,6 +257,11 @@ public class trainControllerStub implements TrainController {
     @Override
     public void updateBeacon(Beacon beacon) {
 
+    }
+
+    @Override
+    public UpdatedTrainValues sendUpdatedTrainValues() {
+        return null;
     }
 
     @Override
