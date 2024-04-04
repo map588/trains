@@ -3,10 +3,13 @@ package waysideController;
 import Common.CTCOffice;
 import Common.TrackModel;
 import Utilities.Enums.Lines;
+import Utilities.ParsedBasicBlocks;
+import Utilities.Records.BasicBlock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -45,6 +48,52 @@ public class WaysideControllerImplTests {
         for (int i = 1; i <= 24; i++) {
             assertTrue(blockMap.containsKey(i));
             assertEquals(blockMap.get(i).getBlockID(), i);
+        }
+
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.GREEN);
+        int blockID = 62;
+        boolean direction = true;
+        for(int i = 0; i < 100; i++) {
+            System.out.println(blockID + " " + (direction ? "north" : "south"));
+            BasicBlock block = blockList.get(blockID);
+            if(block.isSwitch()) {
+                if (block.nextBlock().primarySwitchDirection() == (direction ? Utilities.Enums.Direction.NORTH : Utilities.Enums.Direction.SOUTH)) {
+                    if(blockID == 85 && direction) {
+                        blockID = block.nextBlock().northDefault().blockNumber();
+                        if(block.nextBlock().northDefault().directionChange())
+                            direction = !direction;
+                    }
+                    if(blockID == 77 && !direction) {
+                        blockID = block.nextBlock().southDefault().blockNumber();
+                        if(block.nextBlock().southDefault().directionChange())
+                            direction = !direction;
+                    }
+                }
+                else {
+                    if(direction) {
+                        blockID = block.nextBlock().northDefault().blockNumber();
+                        if(block.nextBlock().northDefault().directionChange())
+                            direction = !direction;
+                    }
+                    else {
+                        blockID = block.nextBlock().southDefault().blockNumber();
+                        if(block.nextBlock().southDefault().directionChange())
+                            direction = !direction;
+                    }
+                }
+            }
+            else {
+                if(direction) {
+                    blockID = block.nextBlock().north().blockNumber();
+                    if(block.nextBlock().north().directionChange())
+                        direction = !direction;
+                }
+                else {
+                    blockID = block.nextBlock().south().blockNumber();
+                    if(block.nextBlock().south().directionChange())
+                        direction = !direction;
+                }
+            }
         }
     }
 

@@ -27,17 +27,7 @@ public class Main {
          waysideController = new WaysideSystem(trackSystem, false);
          trainSystem = new TrainSystem();
 
-        while(true) {
-            trackSystem.update();
-            waysideController.update();
-            trainSystem.update();
-            try {
-                Thread.sleep(TIMESTEP);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
-            }
-        }
+
         // Schedule the time synchronization task
         scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackSystem, waysideController, trainSystem),
                 0, TIMESTEP, TimeUnit.MILLISECONDS);

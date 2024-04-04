@@ -371,8 +371,6 @@ public class WaysideControllerManager {
                     testBench.tbHWPortComboBox.getValue());
         }
 
-        newController.runPLC();
-
         WaysideSystem.addController(newController);
         changeActiveController(newController);
     }

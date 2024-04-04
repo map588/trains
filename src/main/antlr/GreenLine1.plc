@@ -101,3 +101,9 @@ authority[150] = not occupied[28] and not occupied[27] and not occupied[26] and 
 
 // Crossings
 crossing[19] = not occupied[18] and not occupied[19] and not occupied[20]
+
+// Lights
+light[1] = dir_assigned[13] and not direction[13] and switch[13]
+light[13] = dir_assigned[13] and direction[13] and not switch[13]
+light[28] = dir_assigned[13] and not direction[13] and not switch[28]
+light[150] = dir_assigned[13] and direction[13] and switch[28]

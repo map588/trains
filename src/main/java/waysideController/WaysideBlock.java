@@ -36,7 +36,7 @@ public class WaysideBlock implements Notifier {
     public WaysideBlock(BasicBlock block) {
         this.blockID = block.blockNumber();
         this.hasSwitch = block.isSwitch();
-        this.hasLight = block.blockType() == STATION;
+        this.hasLight = block.isLight();
         this.hasCrossing = block.blockType() == CROSSING;
         this.speedLimit = block.speedLimit();
         this.open = true;
