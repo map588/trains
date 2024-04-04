@@ -36,6 +36,5 @@ public interface AbstractSubject {
             return;
         }
 
-        System.out.println("Property " + property.getName() + " updated to " + newValue);
  }
 }
