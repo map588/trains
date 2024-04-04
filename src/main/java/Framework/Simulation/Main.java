@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     private static final int NUM_THREADS = 2;
-    private static final long TIMESTEP = 10; // Timestep in milliseconds
+    private static final long TIMESTEP = 100; // Timestep in milliseconds
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
     private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -24,7 +24,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Starting simulation...");
          trackSystem = new TrackSystem();
-         waysideController = new WaysideSystem(trackSystem, false);
+         waysideController = new WaysideSystem(trackSystem, true);
          trainSystem = new TrainSystem();
 
 

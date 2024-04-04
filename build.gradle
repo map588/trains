@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'antlr'
     id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'org.james'
@@ -60,6 +61,19 @@ generateGrammarSource {
 application {
     mainClass = project.hasProperty("mainClass") ? project.getProperty("mainClass") : 'Framework.Simulation.Main'
     //mainClass = 'Framework.GUI.TrackLayoutVisualizer'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+}
+
+// Output to build/libs/trains.jar
+shadowJar {
+    archiveBaseName.set('trains')
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }
 
 def getJavaFXLibPath() {
