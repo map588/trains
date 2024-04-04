@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.concurrent.*;
 
 import static Utilities.Constants.MAX_PASSENGERS;
+import static trackModel.TrackProperty.TRACKHEATER;
 
 public class TrackLine implements TrackModel {
 
@@ -333,6 +334,7 @@ public class TrackLine implements TrackModel {
     public int getTicketSales() {
         return this.ticketSales;
     }
+
 
     public void resetTicketSales() {
         this.ticketSales = 0;
