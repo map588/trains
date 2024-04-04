@@ -249,7 +249,7 @@ public class TrainControllerManager {
     private void changeTrainView(Integer trainID) {
         if(currentSubject != null) {
             statusLog.clear();
-            statusLog.setText("\n Train is running");
+            statusLog.setText("\nTrain is running");
             unbindControls();
             updateAll();
             currentSubject = subjectMap.getSubject(trainID);
@@ -351,20 +351,20 @@ public class TrainControllerManager {
     // Set the current action
     private void setNotification(String propertyName, String value) {
         String statusNotification = switch (propertyName) {
-            case OVERRIDE_SPEED_PROPERTY -> "\nSet Speed to \n" + value + " MPH";
+            case OVERRIDE_SPEED_PROPERTY -> "Set Speed to \n" + value + " MPH";
             case SERVICE_BRAKE_PROPERTY, LEFT_DOORS_PROPERTY, RIGHT_DOORS_PROPERTY, INT_LIGHTS_PROPERTY,
                     EXT_LIGHTS_PROPERTY, AUTOMATIC_MODE_PROPERTY ->
-                    "\n" + getPropertyLabel(propertyName) + "\n" + (Boolean.parseBoolean(value) ? getOnLabel(propertyName) : getOffLabel(propertyName));
-            case EMERGENCY_BRAKE_PROPERTY -> "\nEmergency Brake \n" + value;
-            case SET_TEMPERATURE_PROPERTY -> "\nTemperature set to \n" + value + "°F";
-            case KI_PROPERTY -> "\nKi set to \n" + value;
-            case KP_PROPERTY -> "\nKp set to \n" + value;
-            case ANNOUNCEMENTS_PROPERTY -> "\nAnnouncements Created\n";
-            default -> "\nTrain is running";
+                    getPropertyLabel(propertyName) + "\n" + (Boolean.parseBoolean(value) ? getOnLabel(propertyName) : getOffLabel(propertyName));
+            case EMERGENCY_BRAKE_PROPERTY -> "Emergency Brake \n" + value;
+            case SET_TEMPERATURE_PROPERTY -> "Temperature set to \n" + value + " \u00B0F";
+            case KI_PROPERTY -> "Ki set to \n" + value;
+            case KP_PROPERTY -> "Kp set to \n" + value;
+            case ANNOUNCEMENTS_PROPERTY -> "Announcements Created\n";
+            default -> "Train is running";
         };
 
         Platform.runLater(() -> {
-            statusLog.setText(statusNotification);
+            statusLog.setText("\n"+statusNotification);
             statusLog.setWrapText(true);
         });
     }
