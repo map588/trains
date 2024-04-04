@@ -84,8 +84,6 @@ public class TrackModelManager {
     //subject
     private TrackLineSubject subject;
 
-    //TODO: get TrackBlocks into table in the UI
-
     @FXML
     public void initialize(){
         //initialize buttons and user inputs
@@ -224,8 +222,6 @@ public class TrackModelManager {
         //lineTable.setItems(tableInfo);
 
         //ObservableList<ParsedBasicBlocks> tableInfo = subject.getTrackInfo();
-
-
     }
 
     private void murphyEnter() {
