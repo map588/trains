@@ -6,9 +6,6 @@ import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 import static trainModel.Properties.*;
 
 public class TrainModelSubject implements AbstractSubject{
@@ -17,7 +14,6 @@ public class TrainModelSubject implements AbstractSubject{
     public boolean isLogicUpdate;
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainModelImpl model;
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private final TrainModelSubjectMap map = TrainModelSubjectMap.getInstance();
 
     public void intitializeValues() {

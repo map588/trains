@@ -46,7 +46,7 @@ public class TrainModelManager {
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private TrainModelSubject subject;
     //private TrainModelTB testBench;
-
+    private final TrainModelSubject nullSubject = new TrainModelSubject();
     @FXML
     public void initialize() {
         System.out.println("Started TrainModelManager initialize");
@@ -65,6 +65,8 @@ public class TrainModelManager {
             changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
         }else{
             System.out.println("No trains to display");
+            subject = nullSubject;
+            updateView();
         }
 
         System.out.println("Finished TrainModelManager initialize");
@@ -158,13 +160,16 @@ public class TrainModelManager {
 
     private void changeTrainView(int trainID) {
         subject = subjectMap.getSubject(trainID);
+        updateView();
+    }
+
+    private void updateView() {
         if(subject != null) {
             unbindValues();
             bindControls();
             bindGauges();
             bindIndicators();
             bindLabels();
-            //testBench.changeModels(subject.getModel());
         }
     }
 
