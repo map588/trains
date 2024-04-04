@@ -72,7 +72,7 @@ public class TrainControllerManager {
             }
         });
 
-        // Error Occurs Here: currentSubject is Null here. Moved to line 64
+
         currentSubject.setProperty(AUTOMATIC_MODE.getPropertyName(), true);
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
