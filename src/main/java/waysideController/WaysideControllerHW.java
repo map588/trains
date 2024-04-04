@@ -110,7 +110,7 @@ public class WaysideControllerHW implements PLCRunner {
     public void setAuthorityPLC(int blockID, boolean auth) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen() && block.getSwitchState() != auth) {
+        if(block.isOpen() && block.getBooleanAuth() != auth) {
             currentPLCResult.push(new PLCChange("auth", blockID, auth));
 //            block.setSwitchState(auth);
 //            System.out.println("Send: auth=" + blockID + ":" + auth);
@@ -220,14 +220,14 @@ public class WaysideControllerHW implements PLCRunner {
         for(int plcIndex = 0; plcIndex < plcPrograms.length; plcIndex++) {
             currentPLCResult = plcResults[plcIndex];
             plcPrograms[plcIndex].run();
-//                System.out.println("PLC Results[" + plcIndex + "]: " + plcResults[plcIndex].size() + " " + currentPLCResult.size());
+//            System.out.println("PLC Results[" + plcIndex + "]: " + plcResults[plcIndex].size() + " " + currentPLCResult.size());
         }
 
         int changeSize = plcResults[0].size();
         for(int changeIndex = 0; changeIndex < changeSize; changeIndex++) {
             PLCChange change = plcResults[0].pop();
 
-//                System.out.println("PLC Change: " + change.changeType + " " + change.blockID + " " + change.changeValue + " " + plcResults[0].size());
+//            System.out.println("PLC Change: " + change.changeType() + " " + change.blockID() + " " + change.changeValue() + " " + plcResults[0].size());
 
             for(int plcIndex = 1; plcIndex < plcResults.length; plcIndex++) {
                 PLCChange otherChange = plcResults[plcIndex].pop();
