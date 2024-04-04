@@ -211,13 +211,16 @@ public class TrackLine implements TrackModel {
     public void setTrainAuthority(Integer blockID, int authority) {
         asyncTrackUpdate( () -> {
             trackBlocks.get(blockID).setAuthority(authority);
+            trackBlocks.get(blockID).getOccupiedBy().setAuthority(authority);
         });
     }
 
     @Override
     public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
         asyncTrackUpdate( () -> {
+            System.out.println("Setting speed to: " + commandedSpeed + " at block " + blockID);
             trackBlocks.get(blockID).setCommandSpeed(commandedSpeed);
+            trackBlocks.get(blockID).getOccupiedBy().setCommandSpeed(commandedSpeed);
         });
     }
 
