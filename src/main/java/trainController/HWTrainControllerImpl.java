@@ -2,6 +2,7 @@ package trainController;
 
 import Common.TrainController;
 import Utilities.Records.Beacon;
+import Utilities.Records.UpdatedTrainValues;
 import com.fazecast.jSerialComm.SerialPort;
 
 public class HWTrainControllerImpl implements TrainController {
@@ -202,7 +203,8 @@ public class HWTrainControllerImpl implements TrainController {
         // Implement the logic to update the beacon information
         // ...
     }
-
+    @Override
+    public UpdatedTrainValues sendUpdatedTrainValues(){ return null;}
     @Override
     public void setValue(String propertyName, Object newValue) {
 
