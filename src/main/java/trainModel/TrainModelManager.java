@@ -90,7 +90,7 @@ public class TrainModelManager {
     private void bindLabelToProperty(String property, Label label) {
         appendListener(subject.getProperty(property) ,(obs, oldValue, newValue) -> {
                 String newVal = newValue.toString();
-                System.out.println("newVal: " + newVal);
+                //System.out.println("newVal: " + newVal);
                 if(newVal.isEmpty()) {return;}
                 try {
                     label.setText(newVal);
@@ -220,7 +220,7 @@ public class TrainModelManager {
         };
 
         subjects.addChangeListener(genericListener);
-        //updateChoiceBoxItems();
+        updateChoiceBoxItems();
     }
 
     private void updateChoiceBoxItems() {
@@ -233,7 +233,7 @@ public class TrainModelManager {
     }
 
     private TrainModelTB launchTestBench() {
-        System.out.println(System.getProperty("Preparing to launch test bench"));
+       // System.out.println(System.getProperty("Preparing to launch test bench"));
         try {
             String tbFile = "/Framework/GUI/FXML/trainModel_TB.fxml";
             URL url = getClass().getResource(tbFile);
@@ -247,7 +247,7 @@ public class TrainModelManager {
             return loader.getController();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Failed to launch test bench");
+       //     System.out.println("Failed to launch test bench");
             throw new RuntimeException(e);
         }
     }
