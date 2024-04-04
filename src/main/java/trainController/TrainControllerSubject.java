@@ -113,8 +113,8 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     //Change coming from the GUI side
     @Override
     public void setProperty(String propertyName, Object newValue) {
-
-        Property<?> property = properties.get(propertyName);
+        Controller_Property property_e = Controller_Property.valueOf(propertyName.toUpperCase());
+        Property<?> property = properties.get(property_e);
 
         if (property != null && !isLogicUpdateInProgress) {
             isGUIUpdateInProgress = true;

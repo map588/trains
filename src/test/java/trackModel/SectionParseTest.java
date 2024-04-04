@@ -1,5 +1,6 @@
 package trackModel;
 
+import Integration.BaseTest;
 import Utilities.BasicLineMap;
 import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
@@ -13,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static Utilities.TrackSegmentParser.parseTrackSegments;
 
-public class SectionParseTest {
+public class SectionParseTest extends BaseTest {
 
     private final ConcurrentHashMap<Lines, ArrayList<TrackSegment>> TrackSegments = new ConcurrentHashMap<>();
 

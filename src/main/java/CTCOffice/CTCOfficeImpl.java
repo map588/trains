@@ -34,6 +34,7 @@ public class CTCOfficeImpl implements CTCOffice {
     public static final ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
 
+    private TrackSystem trackSystem;
 
     /**
      * Constructor for the CTCOfficeImpl class.
@@ -77,6 +78,10 @@ public class CTCOfficeImpl implements CTCOffice {
             add(new TrainStop(7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add(new TrainStop(10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
+    }
+
+    public void setTrackSystem(TrackSystem trackSystem) {
+        this.trackSystem = trackSystem;
     }
 
     public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {
@@ -156,7 +161,9 @@ public class CTCOfficeImpl implements CTCOffice {
         return autoMode;
     }
 
-
+    public void DispatchTrain(Lines line , int trainID) {
+        trackSystem.dispatchTrain(line, trainID);
+    }
 
 
 

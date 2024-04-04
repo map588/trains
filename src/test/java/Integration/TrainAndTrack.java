@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TrainAndTrack {
+public class TrainAndTrack extends BaseTest {
 
 
     private final TrainSystem trainSystem = new TrainSystem();
@@ -17,7 +17,7 @@ public class TrainAndTrack {
     public void DoesNotExplode() {
         boolean please = true;
         try {
-            trackSystem.trainDispatch(Lines.GREEN, 1);
+            trackSystem.dispatchTrain(Lines.GREEN, 1);
         } catch (Exception e) {
             please = false;
             e.printStackTrace();

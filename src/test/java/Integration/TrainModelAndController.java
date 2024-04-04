@@ -9,7 +9,7 @@ import trackModel.TrackLine;
 
 import static Utilities.Enums.Lines.GREEN;
 
-public class TrainModelAndController {
+public class TrainModelAndController extends BaseTest  {
 
     private final TrainSystem trainSystem = new TrainSystem();
     private final BasicLineMap trackLines = ParsedBasicBlocks.getInstance().getAllBasicLines();

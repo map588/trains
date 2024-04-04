@@ -13,7 +13,7 @@ import trackModel.TrackLine;
 import java.util.Random;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-public class TrainMovement {
+public class TrainMovement  extends BaseTest {
 
     private static TrackLine trackLine;
     private trainStub stub;

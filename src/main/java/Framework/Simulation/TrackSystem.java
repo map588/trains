@@ -26,7 +26,7 @@ public class TrackSystem {
         }
     }
 
-    public void trainDispatch(Lines line, int trainID) {
+    public void dispatchTrain(Lines line, int trainID) {
         TrackLineMap.getTrackLine(line).trainDispatch(trainID);
     }
 

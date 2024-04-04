@@ -1,4 +1,6 @@
 package trackModel;
 
-public class trackModelUXTests {
+import Integration.BaseTest;
+
+public class trackModelUXTests extends BaseTest {
 }

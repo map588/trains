@@ -73,7 +73,7 @@ public class WaysideSystem {
                 105, 106, 107, 108, 109},
                 greenLine, null,
                 "src/main/antlr/GreenLine2.plc"));
-
+        useHardware = false;
         if(useHardware) {
             addController(new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
                     36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
@@ -102,8 +102,12 @@ public class WaysideSystem {
 
     public void update() {
         // For each WaysideController in the controllerList, run its PLC
-        for (WaysideController controller : controllerList.get()) {
-            waysideExecutor.submit(controller::runPLC);
+        try{
+            for (WaysideController controller : controllerList.get()) {
+                controller.runPLC();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

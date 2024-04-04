@@ -1,6 +1,7 @@
 package trainModel;
 
 import Common.TrainController;
+import Integration.BaseTest;
 import Utilities.Records.UpdatedTrainValues;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import java.util.concurrent.Future;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class trainModelImplTest {
+public class trainModelImplTest extends BaseTest {
 
     private static TrainModelImpl model;
 

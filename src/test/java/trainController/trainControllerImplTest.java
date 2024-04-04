@@ -1,12 +1,13 @@
 package trainController;
 
 import Common.TrainModel;
+import Integration.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class trainControllerImplTest {
+class trainControllerImplTest extends BaseTest {
     private TrainControllerImpl controller;
     private TrainModel trainModel;
 

@@ -4,8 +4,6 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
 import Utilities.Records.UpdatedTrainValues;
-import trackModel.TrackLine;
-import trainModel.TrainModelImpl;
 import trainModel.TrainModelSubject;
 import trainModel.TrainModelSubjectMap;
 
@@ -17,11 +15,10 @@ public class TrainSystem {
     private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ConcurrentHashMap<>();
 
     public TrainSystem() {
-        taskRemovalSetup();
+        ObserverSetup();
     }
 
-    public void dispatchTrain(TrackLine line, int trainID) {
-        TrainModel train = new TrainModelImpl(trainID, line);
+    public void addTrainProcess(TrainModel train, int trainID) {
         TrainUpdateTask trainUpdate = new TrainUpdateTask(train, train.getController());
         updateTasks.put(train, trainUpdate);
     }
@@ -77,16 +74,20 @@ public class TrainSystem {
 
     final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
 
-    private void taskRemovalSetup() {
+    private void ObserverSetup() {
         ObservableHashMap<Integer, TrainModelSubject> subjects = trainSubjectMap.getSubjects();
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
-        ObservableHashMap.MapListener<Integer, TrainModelSubject> deleteListener = new ObservableHashMap.MapListener<>() {
+        ObservableHashMap.MapListener<Integer, TrainModelSubject> mapListener = new ObservableHashMap.MapListener<>() {
+            @Override
+            public void onAdded(Integer key, TrainModelSubject value) {
+                addTrainProcess(value.getModel(), value.getModel().getTrainNumber());
+            }
             @Override
             public void onRemoved(Integer key, TrainModelSubject value) {
                deleteTrainTask(value.getModel());
             }
         };
-        subjects.addChangeListener(deleteListener);
+        subjects.addChangeListener(mapListener);
     }
 }

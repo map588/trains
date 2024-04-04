@@ -1,5 +1,6 @@
 package trackModel;
 
+import Integration.BaseTest;
 import Utilities.BasicBlockLine;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Lines;
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TrackLineTest {
+public class TrackLineTest extends BaseTest {
 
     // unit tests for TrackLine class
 

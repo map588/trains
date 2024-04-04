@@ -2,6 +2,7 @@ package waysideController;
 
 import Common.CTCOffice;
 import Common.TrackModel;
+import Integration.BaseTest;
 import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class WaysideControllerImplTests {
+public class WaysideControllerImplTests extends BaseTest {
     private WaysideControllerImpl controller;
     private TrackModel trackModel;
     private CTCOffice ctcOffice;

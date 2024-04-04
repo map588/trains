@@ -1,4 +1,6 @@
 package waysideController;
 
-public class waysideControllerUXTests {
+import Integration.BaseTest;
+
+public class waysideControllerUXTests extends BaseTest {
 }
