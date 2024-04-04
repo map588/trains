@@ -356,7 +356,7 @@ public class TrainControllerManager {
                     EXT_LIGHTS, AUTOMATIC_MODE ->
                     "\n" + getPropertyLabel(propertyName) + "\n" + (Boolean.parseBoolean(value) ? getOnLabel(propertyName) : getOffLabel(propertyName));
             case EMERGENCY_BRAKE -> "\nEmergency Brake \n" + value;
-            case SET_TEMPERATURE -> "\nTemperature set to \n" + value + "°F";
+            case SET_TEMPERATURE -> "\nTemperature set to \n" + value + " \u00B0F";
             case KI -> "\nKi set to \n" + value;
             case KP -> "\nKp set to \n" + value;
             case ANNOUNCEMENTS -> "\nAnnouncements Created\n";
