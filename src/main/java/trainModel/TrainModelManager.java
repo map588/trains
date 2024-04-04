@@ -220,12 +220,15 @@ public class TrainModelManager {
         };
 
         subjects.addChangeListener(genericListener);
-        updateChoiceBoxItems();
+        //updateChoiceBoxItems();
     }
 
     private void updateChoiceBoxItems() {
         int previousSelection = trainDropDown.getSelectionModel().getSelectedIndex();
         trainDropDown.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
+        if(previousSelection != -1 || trainDropDown.getItems().isEmpty() || previousSelection >= trainDropDown.getItems().size()) {
+            previousSelection = 0;
+        }
         trainDropDown.getSelectionModel().select(previousSelection);
     }
 

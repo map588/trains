@@ -77,22 +77,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     private final ThreadLocalRandom r = ThreadLocalRandom.current();
 
-    public TrainModelImpl(int trainID) {
-        initializeValues();
-        this.controller = new TrainControllerImpl(this, trainID);
-        this.subject = new TrainModelSubject(this);
-    }
 
-    public TrainModelImpl(int trainID, TrackLine track) {
+    public TrainModelImpl(TrackLine line, int trainID) {
         initializeValues();
         this.track = track;
         this.controller = new TrainControllerImpl(this, trainID);
-        this.subject = new TrainModelSubject(this);
-    }
-
-    public TrainModelImpl(int trainID, TrainController controller) {
-        initializeValues();
-        this.controller = controller;
         this.subject = new TrainModelSubject(this);
     }
 

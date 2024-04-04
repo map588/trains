@@ -51,7 +51,7 @@ public class TrainModelSubject implements AbstractSubject{
     }
 
     public TrainModelSubject() {
-        this.model = null;
+        this.model = new TrainModelImpl();
 
         properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(0));
         properties.put(COMMANDSPEED_PROPERTY, new SimpleDoubleProperty(0));
