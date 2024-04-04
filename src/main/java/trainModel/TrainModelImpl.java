@@ -96,6 +96,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.subject = new TrainModelSubject(this);
     }
 
+    public void delete() {
+        //controller.delete();
+        this.subject.subjectDelete();
+
+    }
 
     private void initializeValues() {
         this.authority = 0;

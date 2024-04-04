@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 
 public interface  TrainModel {
 
+    void delete();
     //----Vital Setter Signals----
     void setEmergencyBrake(boolean brake);
     void setServiceBrake(boolean brake);

@@ -54,6 +54,41 @@ public class TrainModelSubject implements AbstractSubject{
         map.registerSubject(trainModel.getTrainNumber(),this);
     }
 
+    public TrainModelSubject() {
+        this.model = null;
+
+        properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(0));
+        properties.put(COMMANDSPEED_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(ACTUALSPEED_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(ACCELERATION_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(POWER_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(SERVICEBRAKE_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(EMERGENCYBRAKE_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(BRAKEFAILURE_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(POWERFAILURE_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(SIGNALFAILURE_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(SETTEMPERATURE_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(REALTEMPERATURE_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(EXTLIGHTS_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(INTLIGHTS_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(LEFTDOORS_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(RIGHTDOORS_PROPERTY, new SimpleBooleanProperty(false));
+        properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(0));
+        properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(0));
+        properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(0));
+        properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(MASS_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(0));
+        properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(0));
+//        properties.put(BEACON_PROPERTY, new SimpleStringProperty(""));
+        properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(""));
+    }
+
+    public void subjectDelete() {
+        map.removeSubject(model.getTrainNumber());
+    }
+
     public BooleanProperty getBooleanProperty (String propertyName) {
         return (BooleanProperty) getProperty(propertyName);
     }
