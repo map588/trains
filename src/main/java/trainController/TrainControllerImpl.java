@@ -489,15 +489,11 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             setIntLights(true);
             setExtLights(true);
 
-            train.setIntLights(true);
-            train.setExtLights(true);
         }
         else{
             setIntLights(false);
             setExtLights(false);
 
-            train.setIntLights(false);
-            train.setExtLights(false);
         }
     }
 
