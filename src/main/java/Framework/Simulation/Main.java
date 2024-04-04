@@ -21,6 +21,7 @@ public class Main {
     private static WaysideSystem waysideController;
     private static TrainSystem trainSystem;
 
+
     public static void main(String[] args) {
         System.out.println("Starting simulation...");
          trackSystem = new TrackSystem();

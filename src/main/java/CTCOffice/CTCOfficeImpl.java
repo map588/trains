@@ -5,6 +5,7 @@ import CTCOffice.ScheduleInfo.ScheduleFileSubject;
 import CTCOffice.ScheduleInfo.ScheduleLibrary;
 import CTCOffice.ScheduleInfo.TrainStop;
 import Common.CTCOffice;
+import Framework.Simulation.TrackSystem;
 import Utilities.BasicLineMap;
 import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
@@ -154,7 +155,6 @@ public class CTCOfficeImpl implements CTCOffice {
     boolean getAutoMode() {
         return autoMode;
     }
-
 
 
 

@@ -164,7 +164,7 @@ public class CTCOfficeManager {
 
         //Table editing bar
         blockSelection.getItems().addAll(blockMapGreen.getSubjects().keySet());
-        blockSelection.getItems().addAll(blockMapRed.getSubjects().keySet());
+        lineSelection.getItems().addAll("GREEN", "RED");
 
         switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
         switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
@@ -187,7 +187,7 @@ public class CTCOfficeManager {
         });
 
         blockSelection.setValue(1);
-        lineSelection.setValue("Green");
+        lineSelection.setValue("GREEN");
 
 
         //schedules table
@@ -247,6 +247,7 @@ public class CTCOfficeManager {
 
 
         });
+
     }
 
     /**

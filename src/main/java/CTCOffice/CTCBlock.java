@@ -56,7 +56,7 @@ class CTCBlock implements Notifier {
             this.divergingBlockTwoID = (block.nextBlock().primarySwitchDirection() == NORTH) ?
                     block.nextBlock().northAlternate().blockNumber() : block.nextBlock().southAlternate().blockNumber();
         }
-        if(line == Lines.GREEN) {
+        if(line.equals(Lines.GREEN)) {
             mapGreen.registerSubject(blockID, new CTCBlockSubject(this));
         } else {
             mapRed.registerSubject(blockID, new CTCBlockSubject(this));
@@ -68,7 +68,7 @@ class CTCBlock implements Notifier {
         this.convergingBlockID = convergingBlockID;
         this.divergingBlockOneID = divergingBlockOneID;
         this.divergingBlockTwoID = divergingBlockTwoID;
-        if(line == Lines.GREEN) {
+        if(this.line.equals(Lines.GREEN)) {
             CTCBlockSubjectMapGreen.getInstance().getSubject(this.blockID).updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
         } else {
             CTCBlockSubjectMapRed.getInstance().getSubject(this.blockID).updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
@@ -94,7 +94,7 @@ class CTCBlock implements Notifier {
         }
 
         if(convergingBlockID == blockID) {
-            if(line == Lines.RED) {
+            if(line.equals(Lines.RED)) {
                 mapRed.getSubject(divergingBlockOneID).setProperty("switchState", state);
                 mapRed.getSubject(divergingBlockTwoID).setProperty("switchState", state);
             } else {
@@ -103,7 +103,7 @@ class CTCBlock implements Notifier {
             }
         }
         System.out.println("Switch State: " + switchState + " \n");
-        if(line == Lines.RED) {
+        if(line.equals(Lines.RED)) {
             mapRed.getSubject(convergingBlockID).updateStringProperty("switchStateString");
             mapRed.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
             mapRed.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
@@ -158,7 +158,7 @@ class CTCBlock implements Notifier {
     int     getBlockID      () {
         return blockID;
     }
-    String getLine         () {
+    String getLine() {
         return line.toString();
     }
     double     getSpeedLimit   () {
