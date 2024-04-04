@@ -284,9 +284,29 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return passengersDisembarked;
     }
 
-    public void setCommandSpeed(double speed) { this.commandSpeed = speed; notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH)); }
-    public void setActualSpeed(double speed) { this.speed = speed; notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH)); }
-    public void setAuthority(int authority) { this.authority = authority; notifyChange(AUTHORITY_PROPERTY, authority); }
+    public void setCommandSpeed(double speed) {
+
+        if (signalFailure) {
+            this.commandSpeed = -1;
+        }
+        else {
+            this.commandSpeed = speed;
+        }
+        notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));
+        controller.setCommandSpeed(speed);
+    }
+    public void setActualSpeed(double speed) {this.speed = speed;notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));}
+    public void setAuthority(int authority) {
+
+        if (signalFailure) {
+            this.authority = -1;
+        }
+        else {
+            this.authority = authority;
+        }
+        notifyChange(AUTHORITY_PROPERTY, authority);
+        controller.setAuthority(authority);
+    }
     public void setEmergencyBrake(boolean brake) {
         if (this.brakeFailure) {
             this.emergencyBrake = false;
