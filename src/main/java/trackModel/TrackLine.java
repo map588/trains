@@ -60,8 +60,12 @@ public class TrackLine implements TrackModel {
     }
 
     public TrainModel trainDispatch(int trainID) {
+        System.out.println("Train: " + trainID + " dispatched");
         TrainModel train = new TrainModelImpl(this, trainID);
-        trackOccupancyMap.put(train, 0);
+        asyncTrackUpdate(() -> {
+            trackOccupancyMap.put(train, 0);
+            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
+        });
         return train;
     }
 
