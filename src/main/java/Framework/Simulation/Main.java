@@ -2,14 +2,9 @@ package Framework.Simulation;
 
 import CTCOffice.CTCOfficeImpl;
 import Framework.GUI.mainMenu;
-import Utilities.Enums.Lines;
 import javafx.application.Application;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static Framework.Simulation.BaseApplication.initializeJavaFX;
 
@@ -91,5 +86,10 @@ public class Main {
             // Call trackSystem.update() after both update methods have finished
             trackSystem.update();
         }
+    }
+
+    public static void stopSimulation() {
+        scheduledExecutorService.shutdown();
+        synchronizationPool.shutdown();
     }
 }
