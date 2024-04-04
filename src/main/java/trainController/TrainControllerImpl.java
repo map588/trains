@@ -5,6 +5,7 @@ import Common.TrainModel;
 import Framework.Support.GUIModifiableEnum;
 import Utilities.Constants;
 import Utilities.Records.Beacon;
+import Utilities.Records.UpdatedTrainValues;
 import javafx.scene.control.Alert;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
@@ -537,5 +538,18 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     @Override
     public void setValue(String propertyName, Object newValue) {
         setValue(Controller_Property.valueOf(propertyName.toUpperCase()), newValue);
+    }
+
+    public UpdatedTrainValues sendUpdatedTrainValues(){
+        return new UpdatedTrainValues(
+                this.power,
+                this.serviceBrake,
+                this.emergencyBrake,
+                this.setTemperature,
+                this.internalLights,
+                this.externalLights,
+                this.leftDoors,
+                this.rightDoors
+        );
     }
 }
