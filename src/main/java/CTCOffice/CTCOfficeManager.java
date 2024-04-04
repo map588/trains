@@ -164,6 +164,7 @@ public class CTCOfficeManager {
 
         //Table editing bar
         blockSelection.getItems().addAll(blockMapGreen.getSubjects().keySet());
+        blockSelection.getItems().addAll(blockMapRed.getSubjects().keySet());
 
         switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
         switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
@@ -178,8 +179,15 @@ public class CTCOfficeManager {
             }
         });
 
-        //blockSelection.setValue(1);
-        //lineSelection.setValue(CSVTokenizer.lineNames.get(0));
+        blockTableRed.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                blockSelection.setValue(newValue.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
+                lineSelection.setValue(newValue.getStringProperty(LINE_PROPERTY).getValue());
+            }
+        });
+
+        blockSelection.setValue(1);
+        lineSelection.setValue("Green");
 
 
         //schedules table
@@ -249,7 +257,12 @@ public class CTCOfficeManager {
      */
     private void toggleProperty(String propertyName) {
         System.out.println("\n ");
-        CTCBlockSubject block = blockMapGreen.getSubject(blockSelection.getValue());
+        CTCBlockSubject block;
+        if (lineSelection.getValue().equals("Green")) {
+            block = blockMapGreen.getSubject(blockSelection.getValue());
+        }else {
+            block = blockMapRed.getSubject(blockSelection.getValue());
+        }
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
 
