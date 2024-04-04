@@ -49,6 +49,8 @@ public class TrainControllerManager {
 
     private TrainControllerSubjectMap subjectMap;
     private TrainControllerSubject currentSubject;
+
+    private final TrainControllerSubject nullSubject = new TrainControllerSubject();
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
 
@@ -68,6 +70,9 @@ public class TrainControllerManager {
             changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
         }else{
             System.out.println("No trains to display");
+            statusLog.setText("No Trains to Display");
+            currentSubject = nullSubject;
+            updateAll();
         }
 
 //        if (!subjectMap.getSubjects().isEmpty()) {
