@@ -70,13 +70,13 @@ public class TrackModelManager {
     @FXML
     private TableView<TrackLineSubject> lineTable;
     @FXML
-    private TableColumn<TrackLineSubject, String> sectionsColumn, blockColumn;
+    private TableColumn<TrackLineSubject, String> directionColumn, failureColumn, blockColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Integer> sizeColumn, speedLimitColumn;
+    private TableColumn<TrackLineSubject, Integer> lengthColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> stationColumn, signalColumn, switchColumn, occupiedColumn, failureColumn;
+    private TableColumn<TrackLineSubject, Boolean> occupiedColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Double> gradeColumn;
+    private TableColumn<TrackLineSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
 
 
     //subject
@@ -103,15 +103,12 @@ public class TrackModelManager {
         switchStateDisplay.setText("No Switch Present");
 
         //set up cell factories
-        sectionsColumn.setCellValueFactory(block -> block.getValue().sectionProperty());
         blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
-        sizeColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
+        lengthColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
         gradeColumn.setCellValueFactory(block -> block.getValue().blockGradeProperty().asObject());
-        stationColumn.setCellValueFactory(block -> block.getValue().isStationProperty());
-        signalColumn.setCellValueFactory(block -> block.getValue().isSignalProperty());
-        switchColumn.setCellValueFactory(block -> block.getValue().isSwitchProperty());
+
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
-        failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
+        failureColumn.setCellValueFactory(block -> block.getValue().failureProperty());
 
         occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
@@ -139,7 +136,6 @@ public class TrackModelManager {
             if(subject.isIsSwitch()){
                 switchBlockNumbersDisplay.textProperty().unbindBidirectional(subject.switchBlockIDProperty());
                 switchStateDisplay.textProperty().unbindBidirectional(subject.switchStateProperty());
-                switchColumn.textProperty().unbindBidirectional(subject.switchStateProperty());
             }
 
             if(subject.isIsSignal()){
@@ -182,8 +178,6 @@ public class TrackModelManager {
         if(subject.isIsSwitch()){
             switchBlockNumbersDisplay.textProperty().bindBidirectional(subject.switchBlockIDProperty());
             switchStateDisplay.textProperty().bindBidirectional(subject.switchStateProperty());
-            switchColumn.textProperty().bindBidirectional(subject.switchStateProperty());
-
         }
         else {
             switchBlockNumbersDisplay.setText("NONE");
@@ -237,7 +231,7 @@ public class TrackModelManager {
 
         //send the failure to the track model
         //currTrackModel.setFailure(Integer.parseInt(blockSelect), failure);
-        failureColumn.setCellValueFactory(block -> block.getValue().hasFailureProperty());
+        failureColumn.setCellValueFactory(block -> block.getValue().failureProperty());
 
         switch(failure) {
             case "Broken Rail" :
@@ -265,6 +259,8 @@ public class TrackModelManager {
         File file = new File(trackFilePath.getText());
         //send file to parser
         this.addLineName(lineNameInput.getText());
+        //update table
+        this.updateTable();
     }
 
     //user input for track layout

@@ -72,6 +72,8 @@ public class TrackLine implements TrackModel {
     }
 
 
+    //////////////////////////
+
     private void handleTrainEntry(TrainModel train, Integer blockID) {
         TrackBlock block = trackBlocks.get(blockID);
         //...
@@ -82,6 +84,9 @@ public class TrackLine implements TrackModel {
         TrackBlock block = trackBlocks.get(blockID);
         //...
     }
+
+    ///////////////////////////
+
 
     private final ConcurrentLinkedQueue<Callable<Void>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 

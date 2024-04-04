@@ -31,7 +31,7 @@ public class TrackModelSubject {
             properties.put(BLOCKNUMBER, new SimpleStringProperty());
             properties.put(BLOCKLENGTH, new SimpleIntegerProperty());
             properties.put(BLOCKGRADE, new SimpleDoubleProperty());
-            properties.put(SPEEDLIMIT, new SimpleIntegerProperty());
+            properties.put(SPEEDLIMIT, new SimpleDoubleProperty());
             properties.put(ISCROSSING, new SimpleBooleanProperty());
             properties.put(ISUNDERGROUND, new SimpleBooleanProperty());
             properties.put(ISSIGNAL, new SimpleBooleanProperty());
