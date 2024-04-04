@@ -1,5 +1,7 @@
 package Common;
 
+import trackModel.TrackProperty;
+
 public interface TrackModel {
 
     //Vital Setters
@@ -27,5 +29,7 @@ public interface TrackModel {
     void setPassengersDisembarked(TrainModel train, int disembarked);
     int getPassengersEmbarked(TrainModel train);
     int getTicketSales();
+
+    void setValue(TrackProperty propertyName, Object newValue);
 
 }
