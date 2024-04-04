@@ -482,8 +482,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
         }
 
 
-
-
     }
 
 
@@ -495,15 +493,15 @@ public class TrainControllerImpl implements TrainController, GUIModifiable {
             setIntLights(true);
             setExtLights(true);
 
-            train.setIntLights(true);
-            train.setExtLights(true);
+//            train.setIntLights(true);
+//            train.setExtLights(true);
         }
         else{
             setIntLights(false);
             setExtLights(false);
 
-            train.setIntLights(false);
-            train.setExtLights(false);
+//            train.setIntLights(false);
+//            train.setExtLights(false);
         }
     }
 
