@@ -7,6 +7,8 @@ public class TrackLineSubject {
     private IntegerProperty blockLength;
     private DoubleProperty blockGrade;
     private DoubleProperty speedLimit;
+    private DoubleProperty blockElevation;
+
 
     // boolean properties
     private BooleanProperty isCrossing;
@@ -22,6 +24,7 @@ public class TrackLineSubject {
     private BooleanProperty isOccupied;
 
     //labels
+    private StringProperty direction;
     private StringProperty passEmbarked;
     private StringProperty passDisembarked;
     private StringProperty ticketSales;
@@ -35,6 +38,7 @@ public class TrackLineSubject {
     private StringProperty setBeacon;
     private StringProperty nameOfStation;
     private StringProperty trackHeater;
+    private StringProperty outsideTemp;
 
     private TrackBlockLine trackBlockLine;
 
@@ -68,6 +72,9 @@ public class TrackLineSubject {
         trackCircuitFailure = new SimpleBooleanProperty();
         powerFailure = new SimpleBooleanProperty();
         brokenRail = new SimpleBooleanProperty();
+        blockElevation = new SimpleDoubleProperty();
+        outsideTemp = new SimpleStringProperty();
+        direction = new SimpleStringProperty();
     }
 
     private TrackLine trackLine;
@@ -443,5 +450,43 @@ public class TrackLineSubject {
 
     public void setBrokenRail(boolean brokenRail) {
         this.brokenRail.set(brokenRail);
+    }
+
+
+    public double getBlockElevation() {
+        return blockElevation.get();
+    }
+
+    public DoubleProperty blockElevationProperty() {
+        return blockElevation;
+    }
+
+    public void setBlockElevation(double blockElevation) {
+        this.blockElevation.set(blockElevation);
+    }
+
+
+    public String getOutsideTemp() {
+        return outsideTemp.get();
+    }
+
+    public StringProperty outsideTempProperty() {
+        return outsideTemp;
+    }
+
+    public void setOutsideTemp(String outsideTemp) {
+        this.outsideTemp.set(outsideTemp);
+    }
+
+    public String getDirection() {
+        return direction.get();
+    }
+
+    public StringProperty directionProperty() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction.set(direction);
     }
 }
