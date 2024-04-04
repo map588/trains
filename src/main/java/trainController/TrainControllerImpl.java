@@ -419,28 +419,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         return setSpeed;
     }
 
-    /**
-     *  onTick()
-     *  Get current values and then run related flags
-     */
-    public void onTick(){
 
-        // Power might go here
-        //train.trainModelPhysics();
-        // Get new Temperature
-        this.currentTemperature = train.getRealTemperature();
-        if(this.currentTemperature != this.setTemperature) train.setSetTemperature(this.setTemperature);
-
-        // Redundancy Check
-        this.checkBrakeFailure();
-        this.checkBrakeFailure();
-        this.checkPowerFailure();
-        this.checkPowerFailure();
-        this.checkSignalFailure();
-        this.checkSignalFailure();
-
-        // Authority Stopping
-    }
     /**
      *  onBlock()
      */
