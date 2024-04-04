@@ -7,10 +7,10 @@ import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 
-import static trainController.Properties.*;
+import static trainController.Controller_Property.*;
 
 public class TrainControllerSubject implements AbstractSubject, Notifier {
-    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
+    private final ObservableHashMap<Controller_Property, Property<?>> properties = new ObservableHashMap<>();
     private final TrainController controller;
 
     public  volatile boolean  isGUIUpdateInProgress     = false;
@@ -29,35 +29,35 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     // Simplified property initialization
     private void initializeProperties() {
         // Initialize properties with correct initial values from controller if available
-        properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(controller.getAuthority()));
-        properties.put(SAMPLING_PERIOD_PROPERTY, new SimpleIntegerProperty());
-        properties.put(COMMAND_SPEED_PROPERTY, new SimpleDoubleProperty(controller.getCommandSpeed()));
-        properties.put(CURRENT_SPEED_PROPERTY, new SimpleDoubleProperty(0.0));
-        properties.put(OVERRIDE_SPEED_PROPERTY, new SimpleDoubleProperty(controller.getOverrideSpeed()));
-        properties.put(SPEED_LIMIT_PROPERTY, new SimpleDoubleProperty(controller.getSpeedLimit()));
-        properties.put(KI_PROPERTY, new SimpleDoubleProperty(controller.getKi()));
-        properties.put(KP_PROPERTY, new SimpleDoubleProperty(controller.getKp()));
-        properties.put(POWER_PROPERTY, new SimpleDoubleProperty(controller.getPower()));
-        properties.put(SERVICE_BRAKE_PROPERTY, new SimpleBooleanProperty(controller.getServiceBrake()));
-        properties.put(EMERGENCY_BRAKE_PROPERTY, new SimpleBooleanProperty(controller.getEmergencyBrake()));
-        properties.put(AUTOMATIC_MODE_PROPERTY, new SimpleBooleanProperty(controller.getAutomaticMode()));
-        properties.put(EXT_LIGHTS_PROPERTY, new SimpleBooleanProperty(controller.getExtLights()));
-        properties.put(INT_LIGHTS_PROPERTY, new SimpleBooleanProperty(controller.getIntLights()));
-        properties.put(ANNOUNCEMENTS_PROPERTY, new SimpleBooleanProperty(controller.getAnnouncements()));
-        properties.put(SIGNAL_FAILURE_PROPERTY, new SimpleBooleanProperty(controller.getSignalFailure()));
-        properties.put(BRAKE_FAILURE_PROPERTY, new SimpleBooleanProperty(controller.getBrakeFailure()));
-        properties.put(POWER_FAILURE_PROPERTY, new SimpleBooleanProperty(controller.getPowerFailure()));
-        properties.put(SET_TEMPERATURE_PROPERTY, new SimpleDoubleProperty(controller.getSetTemperature()));
-        properties.put(CURRENT_TEMPERATURE_PROPERTY, new SimpleDoubleProperty(controller.getCurrentTemperature()));
-        properties.put(LEFT_DOORS_PROPERTY, new SimpleBooleanProperty(controller.getLeftDoors()));
-        properties.put(RIGHT_DOORS_PROPERTY, new SimpleBooleanProperty(controller.getRightDoors()));
-        properties.put(IN_TUNNEL_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(LEFT_PLATFORM_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(RIGHT_PLATFORM_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(NEXT_STATION_PROPERTY, new SimpleStringProperty("N/A"));
-        properties.put(TRAIN_ID_PROPERTY, new SimpleIntegerProperty(controller.getID()));
-        properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(controller.getGrade()));
-        properties.put(ERROR_PROPERTY, new SimpleStringProperty(""));
+        properties.put(AUTHORITY, new SimpleIntegerProperty(controller.getAuthority()));
+        properties.put(SAMPLING_PERIOD, new SimpleIntegerProperty());
+        properties.put(COMMAND_SPEED, new SimpleDoubleProperty(controller.getCommandSpeed()));
+        properties.put(CURRENT_SPEED, new SimpleDoubleProperty(0.0));
+        properties.put(OVERRIDE_SPEED, new SimpleDoubleProperty(controller.getOverrideSpeed()));
+        properties.put(SPEED_LIMIT, new SimpleDoubleProperty(controller.getSpeedLimit()));
+        properties.put(KI, new SimpleDoubleProperty(controller.getKi()));
+        properties.put(KP, new SimpleDoubleProperty(controller.getKp()));
+        properties.put(POWER, new SimpleDoubleProperty(controller.getPower()));
+        properties.put(SERVICE_BRAKE, new SimpleBooleanProperty(controller.getServiceBrake()));
+        properties.put(EMERGENCY_BRAKE, new SimpleBooleanProperty(controller.getEmergencyBrake()));
+        properties.put(AUTOMATIC_MODE, new SimpleBooleanProperty(controller.getAutomaticMode()));
+        properties.put(EXT_LIGHTS, new SimpleBooleanProperty(controller.getExtLights()));
+        properties.put(INT_LIGHTS, new SimpleBooleanProperty(controller.getIntLights()));
+        properties.put(ANNOUNCEMENTS, new SimpleBooleanProperty(controller.getAnnouncements()));
+        properties.put(SIGNAL_FAILURE, new SimpleBooleanProperty(controller.getSignalFailure()));
+        properties.put(BRAKE_FAILURE, new SimpleBooleanProperty(controller.getBrakeFailure()));
+        properties.put(POWER_FAILURE, new SimpleBooleanProperty(controller.getPowerFailure()));
+        properties.put(SET_TEMPERATURE, new SimpleDoubleProperty(controller.getSetTemperature()));
+        properties.put(CURRENT_TEMPERATURE, new SimpleDoubleProperty(controller.getCurrentTemperature()));
+        properties.put(LEFT_DOORS, new SimpleBooleanProperty(controller.getLeftDoors()));
+        properties.put(RIGHT_DOORS, new SimpleBooleanProperty(controller.getRightDoors()));
+        properties.put(IN_TUNNEL, new SimpleBooleanProperty(false));
+        properties.put(LEFT_PLATFORM, new SimpleBooleanProperty(false));
+        properties.put(RIGHT_PLATFORM, new SimpleBooleanProperty(false));
+        properties.put(NEXT_STATION, new SimpleStringProperty("N/A"));
+        properties.put(TRAIN_ID, new SimpleIntegerProperty(controller.getID()));
+        properties.put(GRADE, new SimpleDoubleProperty(controller.getGrade()));
+        properties.put(ERROR, new SimpleStringProperty(""));
     }
 
     //Change coming from the logic side
@@ -112,7 +112,7 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
                 }
             } catch (ClassCastException e) {
                 String error = ("Type mismatch for property " + property.getName() + ": " + e.getMessage());
-                updateProperty(properties.get(ERROR_PROPERTY), error);
+                updateProperty(properties.get(ERROR), error);
             }
     }
 
