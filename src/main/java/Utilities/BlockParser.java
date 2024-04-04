@@ -157,7 +157,7 @@ class BlockParser {
                 north = parseConnection(northBoundString);
                 south = parseConnection(southBoundString);
 
-                primarySwitchDirection = EITHER;
+                primarySwitchDirection = NORTH;
             }
 
         }else {

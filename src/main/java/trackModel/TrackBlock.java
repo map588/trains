@@ -85,31 +85,31 @@ public class TrackBlock {
         this.powerFailure = false;
     }
 
-    boolean hasFailure() {
+    public boolean hasFailure() {
         return brokenRail || trackCircuitFailure || powerFailure;
     }
 
-    boolean isBrokenRail() {
+    public boolean isBrokenRail() {
         return brokenRail;
     }
 
-    void setBrokenRail(boolean brokenRail) {
+    public void setBrokenRail(boolean brokenRail) {
         this.brokenRail = brokenRail;
     }
 
-    boolean isTrackCircuitFailure() {
+    public boolean isTrackCircuitFailure() {
         return trackCircuitFailure;
     }
 
-    void setTrackCircuitFailure(boolean trackCircuitFailure) {
+    public void setTrackCircuitFailure(boolean trackCircuitFailure) {
         this.trackCircuitFailure = trackCircuitFailure;
     }
 
-    boolean isPowerFailure() {
+    public boolean isPowerFailure() {
         return powerFailure;
     }
 
-    void setPowerFailure(boolean powerFailure) {
+    public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
     }
 
@@ -150,20 +150,84 @@ public class TrackBlock {
         return blockID;
     }
 
-    void setMaintenanceMode(boolean maintenanceMode) {
+    public void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
     }
 
-    void setAuthority(int authority) {
+    public void setAuthority(int authority) {
         this.authority = authority;
     }
 
-    void setCommandSpeed(double commandSpeed) {
+    public void setCommandSpeed(double commandSpeed) {
         this.commandSpeed = commandSpeed;
     }
 
-    void setUnderMaintenance (boolean state){
+    public void setUnderMaintenance (boolean state){
         maintenanceMode = state;
+    }
+
+    public boolean isSwitch() {
+        return isSwitch;
+    }
+
+    public boolean isStation() {
+        return blockType == BlockType.STATION;
+    }
+
+    public boolean isCrossing() {
+        return blockType == BlockType.CROSSING;
+    }
+
+    public boolean isYard() {
+        return blockType == BlockType.YARD;
+    }
+
+    public boolean isUnderground() {
+        return isUnderground;
+    }
+
+    public boolean isMaintenanceMode() {
+        return maintenanceMode;
+    }
+
+    public boolean getLightState() {
+        return lightState;
+    }
+
+    public void setLightState(boolean state) {
+        lightState = state;
+    }
+
+    public int getAuthority() {
+        return authority;
+    }
+
+    public double getCommandSpeed() {
+        return commandSpeed;
+    }
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public double getElevation() {
+        return elevation;
+    }
+
+    public double getCumulativeElevation() {
+        return cumulativeElevation;
+    }
+
+    public double getSpeedLimit() {
+        return speedLimit;
+    }
+
+    public Lines getLine() {
+        return line;
+    }
+
+    public BlockType getBlockType() {
+        return blockType;
     }
 
     String getStationName() {
@@ -230,7 +294,7 @@ public class TrackBlock {
         }
     }
 
-    void setSwitchState(boolean state) {
+    public void setSwitchState(boolean state) {
         if (feature.isSwitch()) {
             feature.setSwitchState(state);
         }else{
@@ -254,7 +318,7 @@ public class TrackBlock {
         }
     }
 
-    void setSwitchStateAuto (boolean state){
+    public void setSwitchStateAuto (boolean state){
         if (feature.isSwitch()) {
             feature.setSwitchStateAuto(state);
         }else
@@ -262,7 +326,7 @@ public class TrackBlock {
     }
 
 
-    void setCrossingState ( boolean state){
+    public void setCrossingState ( boolean state){
         if (feature.isCrossing()) {
             feature.setCrossingState(state);
         }else

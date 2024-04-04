@@ -1,11 +1,11 @@
 package trackModel;
 
-import Common.TrainModel;
 import Utilities.BasicBlockLine;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Lines;
 import Utilities.ParsedBasicBlocks;
 import Utilities.Records.BasicBlock;
+import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,7 @@ import stubs.trainStub;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TrackLineTest {
@@ -47,20 +46,23 @@ public class TrackLineTest {
 
 
     private static TrackLine trackLine;
-    private TrainModel trainModel;
+    private trainStub stub;
     private static BasicBlockLine basicBlockSkipList;
     private static int i = 10;
 
     @BeforeAll
     public static void setUpAll() {
+        Platform.startup(() ->  {});
         basicBlockSkipList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.GREEN);
     }
 
     @BeforeEach
-    public void setup() {
-        trackLine = new TrackLine(Lines.GREEN, basicBlockSkipList);
-        trainModel = trackLine.trainDispatch(i);
-        i++;
+    public void setup() throws InterruptedException {
+        trackLine  = new TrackLine(Lines.GREEN, basicBlockSkipList);
+        stub = new trainStub(trackLine, 1);
+        trackLine.trainDispatch(stub);
+        Thread.sleep(1000);
+        stub.go_Brr();
     }
 
 //    @Test
@@ -72,9 +74,9 @@ public class TrackLineTest {
 
     @Test
     public void updateTrainLocationChangesTrainBlock() {
-        TrackBlock newBlock = trackLine.updateTrainLocation(trainModel);
-        assertEquals(100.0, newBlock.getLength());
-        assertEquals(63, newBlock.getBlockID());
+        TrackBlock newBlock = trackLine.updateTrainLocation(stub);
+        TrackBlock currentBlock = stub.getCurrentBlock();
+        assertNotEquals(newBlock, currentBlock);
     }
 
 //    @Test

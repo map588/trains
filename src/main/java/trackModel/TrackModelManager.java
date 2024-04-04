@@ -177,7 +177,7 @@ public class TrackModelManager {
         }
 
         statusLabel.textProperty().bindBidirectional(subject.trackHeaterProperty());
-        tempValueLabel.textProperty().bindBidirectional(subject.tempProperty());
+        //tempValueLabel.textProperty().bindBidirectional(subject.tempProperty());
 
         if(subject.isIsSwitch()){
             switchBlockNumbersDisplay.textProperty().bindBidirectional(subject.switchBlockIDProperty());

@@ -4,6 +4,7 @@ import javafx.beans.property.*;
 
 public class TrackLineSubject {
 
+
     private StringProperty section;
     private StringProperty blockNumber;
     private IntegerProperty blockLength;
@@ -37,7 +38,6 @@ public class TrackLineSubject {
     private StringProperty setBeacon;
     private StringProperty nameOfStation;
     private StringProperty trackHeater;
-    private StringProperty tempProperty;
 
     private TrackBlockLine trackBlockLine;
 
@@ -69,7 +69,6 @@ public class TrackLineSubject {
         setBeacon = new SimpleStringProperty();
         nameOfStation = new SimpleStringProperty();
         trackHeater = new SimpleStringProperty("STATUS - OFF");
-        tempProperty = new SimpleStringProperty();
         trackCircuitFailure = new SimpleBooleanProperty();
         powerFailure = new SimpleBooleanProperty();
         brokenRail = new SimpleBooleanProperty();
@@ -425,10 +424,7 @@ public class TrackLineSubject {
     public void setTrackHeater(String trackHeater) {
         this.trackHeater.set(trackHeater);
     }
-
-    public StringProperty tempProperty() {
-        return tempProperty;
-    }
+    
 
     public boolean isTrackCircuitFailure() {
         return trackCircuitFailure.get();

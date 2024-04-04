@@ -42,6 +42,8 @@ public class trainStub implements TrainModel {
     double grade;
     double temperature;
     String announcement;
+    double currentBlockLength;
+    double relativeDistance;
 
     TrackLine track;
     TrackBlock currentBlock;
@@ -49,8 +51,15 @@ public class trainStub implements TrainModel {
     public trainStub(TrackLine track, int trainID) {
         this.trainID = trainID;
         this.track = track;
+        this.currentBlock = track.getTrack().get(0);
         this.controller = new trainControllerStub(this, trainID);
         initializeValues();
+
+
+    }
+
+    public TrackBlock getCurrentBlock() {
+        return currentBlock;
     }
 
     private void initializeValues(){
@@ -79,6 +88,12 @@ public class trainStub implements TrainModel {
         this.mass = 1000.0;
         this.temperature = 70.0;
         this.announcement = "All Aboard!";
+    }
+
+    public void go_Brr(){
+        for(int i = 0; i < track.getTrack().size(); i++) {
+            updateLocation(currentBlock.getLength()-0.001);
+        }
     }
 
     public void setTrackBlock(TrackBlock block){
@@ -144,6 +159,18 @@ public class trainStub implements TrainModel {
         }
     }
 
+    public void enteredNextBlock() {
+        currentBlock = track.updateTrainLocation(this);
+        //controller.onBlock();
+        relativeDistance = 0;
+    }
+
+    void updateLocation(double distance) {
+        relativeDistance += distance;
+        if (relativeDistance >= currentBlockLength) {
+            enteredNextBlock();
+        }
+    }
     @Override
     public void passBeacon(Beacon beacon) {
         controller.updateBeacon(beacon);

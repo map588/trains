@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.concurrent.*;
 
 import static Utilities.Constants.MAX_PASSENGERS;
-import static trackModel.TrackProperty.TRACKHEATER;
 
 public class TrackLine implements TrackModel {
 
@@ -30,14 +29,14 @@ public class TrackLine implements TrackModel {
     private final TrackBlockLine trackBlocks;
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
     private int ticketSales = 0;
-    private final TrackLineSubject subject;
+    //private final TrackLineSubject subject;
     private BeaconParser beaconParser;
     public int outsideTemperature = 40;
 
 
 
     public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
-        this.subject = new TrackLineSubject(this);
+       // this.subject = new TrackLineSubject(this);
 
         trackBlocks = new TrackBlockLine();
         beaconBlocks = new ConcurrentHashMap<>();
@@ -67,7 +66,7 @@ public class TrackLine implements TrackModel {
 
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
-        syncTrackUpdate(() -> {
+        asyncTrackUpdate(() -> {
             trackOccupancyMap.put(train, 0);
         });
     }
@@ -111,7 +110,6 @@ public class TrackLine implements TrackModel {
      * @return the block the train is moving to
      */
     public TrackBlock updateTrainLocation(TrainModel train) {
-        CompletableFuture<TrackBlock> futureBlock = CompletableFuture.supplyAsync(() -> {
             Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
 
             System.out.println("Train: " + train.getTrainNumber() + " is on block: " + currentBlockID);
@@ -127,17 +125,12 @@ public class TrackLine implements TrackModel {
             }
             Integer nextBlockID = next.blockNumber();
 
-            System.out.println("Train: " + train.getTrainNumber() + " is moving to block: " + nextBlockID);
+            System.out.println("Train: " + train.getTrainNumber() + " ->  " + nextBlockID);
 
-            syncTrackUpdate(() -> {
-                trackOccupancyMap.remove(train, currentBlockID);
-                trackOccupancyMap.put(train, next.blockNumber());
-            });
+            trackOccupancyMap.remove(train, currentBlockID);
+            trackOccupancyMap.put(train, next.blockNumber());
 
             return trackBlocks.get(nextBlockID);
-        }, trackUpdateExecutor);
-
-        return futureBlock.join();
     }
 
     private record TrackUpdateTask(Runnable task) implements Callable<Void> {
@@ -153,16 +146,18 @@ public class TrackLine implements TrackModel {
 
             public void onAdded(TrainModel train, Integer blockID) {
                 // A train enters a new block
-                handleTrainEntry(train, blockID);
+                trackUpdateExecutor.submit(() -> handleTrainEntry(train, blockID));
             }
             public void onRemoved(TrainModel train, Integer blockID) {
                 // A train leaves a block
-                handleTrainExit(train, blockID);
+                trackUpdateExecutor.submit(() -> handleTrainExit(train, blockID));
             }
             // Assuming updates are less common, but you could implement it as needed
             public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
-               handleTrainExit(train, oldBlockID);
-               handleTrainEntry(train, newBlockID);
+                trackUpdateExecutor.submit(() -> {
+                    handleTrainExit(train, oldBlockID);
+                    handleTrainEntry(train, newBlockID);
+                });
             }
         };
 

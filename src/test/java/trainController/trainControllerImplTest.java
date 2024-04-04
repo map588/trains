@@ -18,7 +18,7 @@ class trainControllerImplTest {
 
     @Test
     void testSetValue() {
-        controller.setValue(Properties.SPEED_LIMIT_PROPERTY, 70.0);
+        controller.setValue(Controller_Property.SPEED_LIMIT, 70.0);
         assertEquals(70.0, controller.getSpeedLimit());
     }
 
@@ -35,40 +35,40 @@ class trainControllerImplTest {
     @Test
     void testDoors(){
         System.out.println("Testing Opening Doors");
-        controller.setValue(Properties.LEFT_DOORS_PROPERTY,true);
-        controller.setValue(Properties.RIGHT_DOORS_PROPERTY,true);
+        controller.setValue(Controller_Property.LEFT_DOORS,true);
+        controller.setValue(Controller_Property.RIGHT_DOORS,true);
         assertTrue(controller.getLeftDoors());
         assertTrue(controller.getRightDoors());
 
         System.out.println("Testing Closing Doors");
-        controller.setValue(Properties.LEFT_DOORS_PROPERTY,false);
-        controller.setValue(Properties.RIGHT_DOORS_PROPERTY,false);
+        controller.setValue(Controller_Property.LEFT_DOORS,false);
+        controller.setValue(Controller_Property.RIGHT_DOORS,false);
         assertFalse(controller.getLeftDoors());
         assertFalse(controller.getRightDoors());
     }
     @Test
     void testLights(){
         System.out.println("Testing Turning Lights On");
-        controller.setValue(Properties.INT_LIGHTS_PROPERTY,true);
-        controller.setValue(Properties.EXT_LIGHTS_PROPERTY, true);
+        controller.setValue(Controller_Property.INT_LIGHTS,true);
+        controller.setValue(Controller_Property.EXT_LIGHTS, true);
         assertTrue(controller.getExtLights());
         assertTrue(controller.getIntLights());
 
         System.out.println("Testing Turning Lights Off");
-        controller.setValue(Properties.INT_LIGHTS_PROPERTY,false);
-        controller.setValue(Properties.EXT_LIGHTS_PROPERTY, false);
+        controller.setValue(Controller_Property.INT_LIGHTS,false);
+        controller.setValue(Controller_Property.EXT_LIGHTS, false);
         assertFalse(controller.getExtLights());
         assertFalse(controller.getIntLights());
     }
     @Test
     void testSetTemperature(){
-        controller.setValue(Properties.SET_TEMPERATURE_PROPERTY, 70.0);
+        controller.setValue(Controller_Property.SET_TEMPERATURE, 70.0);
         assertEquals(70.0,controller.getSetTemperature());
     }
     @Test
     void testSetKiAndKp(){
-        controller.setValue(Properties.KI_PROPERTY,100.0);
-        controller.setValue(Properties.KP_PROPERTY,50.0);
+        controller.setValue(Controller_Property.KI,100.0);
+        controller.setValue(Controller_Property.KP,50.0);
 
         assertEquals(100,controller.getKi());
         assertEquals(50, controller.getKp());
@@ -83,22 +83,22 @@ class trainControllerImplTest {
         //assertTrue(controller.getEmergencyBrake());
 
         // Check if both eBrakes are disengage
-        controller.setValue(Properties.EMERGENCY_BRAKE_PROPERTY,false);
+        controller.setValue(Controller_Property.EMERGENCY_BRAKE,false);
         assertFalse(controller.getEmergencyBrake());
         //assertFalse(trainModel.getEmergencyBrake());
 
         // Check if both eBrake are engage again
-        controller.setValue(Properties.EMERGENCY_BRAKE_PROPERTY,true);
+        controller.setValue(Controller_Property.EMERGENCY_BRAKE,true);
         assertTrue(controller.getEmergencyBrake());
         //assertTrue(trainModel.getEmergencyBrake());
 
     }
     @Test
     void testServiceBrake(){
-        controller.setValue(Properties.SERVICE_BRAKE_PROPERTY,true);
+        controller.setValue(Controller_Property.SERVICE_BRAKE,true);
         assertTrue(controller.getServiceBrake());
 
-        controller.setValue(Properties.SERVICE_BRAKE_PROPERTY,false);
+        controller.setValue(Controller_Property.SERVICE_BRAKE,false);
         assertFalse(controller.getServiceBrake());
     }
 

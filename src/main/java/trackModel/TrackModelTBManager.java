@@ -142,7 +142,7 @@ public class TrackModelTBManager {
             }
 
             tbSignalColumn.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
-            tbTempInput.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
+            //tbTempInput.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
 
         }
 
@@ -167,7 +167,7 @@ public class TrackModelTBManager {
 
 
         tbSignalColumn.textProperty().bindBidirectional(trackProperties.signalStateProperty());
-        tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
+        //tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
 
     }
 
@@ -189,7 +189,7 @@ public class TrackModelTBManager {
     }
     public void setTrackModelSubject(TrackLineSubject trackModelSubject){
         this.trackModelSubject = trackModelSubject;
-        tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
+        //tbTempInput.textProperty().bindBidirectional(trackModelSubject.tempProperty());
     }
 
     public void setPassEmbarked(int passEmbarked){
