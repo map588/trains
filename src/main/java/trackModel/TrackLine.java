@@ -26,13 +26,11 @@ public class TrackLine implements TrackModel {
 
     //maps blocks to block numbers
     private final ConcurrentSkipListMap<Integer, TrackBlock> trackBlocks;
-
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
-
     private int outsideTemperature = 70;
     private int ticketSales = 0;
-
     private final TrackLineSubject subject;
+
 
     public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
         this.subject = new TrackLineSubject(this);
@@ -99,7 +97,6 @@ public class TrackLine implements TrackModel {
             }
         }
     }
-
     /**
      * Updates the location of a train on the track
      * @param train
@@ -135,7 +132,6 @@ public class TrackLine implements TrackModel {
         return futureBlock.join();
     }
 
-
     private record TrackUpdateTask(Runnable task) implements Callable<Void> {
         @Override
         public Void call() {
@@ -143,7 +139,6 @@ public class TrackLine implements TrackModel {
             return null;
         }
     }
-
 
     private void setupListeners() {
         ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
@@ -175,12 +170,21 @@ public class TrackLine implements TrackModel {
     //------------------From interface------------------
 
     //TODO: We don't have light states figured out yet
+    //light blocks will be wherever there is a beacon
+    //false red, true is green
     @Override
     public void setLightState(int block, boolean state) {
         syncTrackUpdate( () -> {
-            trackBlocks.get(block).lightState = state;
+            if(beaconBlocks.contains(block)) {
+                trackBlocks.get(block).lightState = state;
+            } else {
+                throw new IllegalArgumentException("Block: " + block + " does not have a light");
+            }
         });
     }
+
+//TODO: Beacon communication with the train
+//TODO: Maybe refactor set to pass for clearer communication.
 
     @Override
     public void setSwitchState(int block, boolean state) {
@@ -203,17 +207,6 @@ public class TrackLine implements TrackModel {
         });
     }
 
-    //TODO: We don't know how beacons will work yet
-//    @Override
-    public void setBeacon(int block, Beacon beacon){
-        syncTrackUpdate( () -> {
-            beaconBlocks.remove(block);
-            beaconBlocks.put(block, beacon);
-            //trackBlocks.get(block).setBeacon(beacon);
-
-        });
-    }
-
     @Override
     public void setTrainAuthority(Integer blockID, int authority) {
         syncTrackUpdate( () -> {
@@ -226,29 +219,6 @@ public class TrackLine implements TrackModel {
         syncTrackUpdate( () -> {
             trackBlocks.get(blockID).setCommandSpeed(commandedSpeed);
         });
-    }
-
-    @Override
-    public boolean getLightState(int block) {
-        CompletableFuture<Boolean> futureLightState = CompletableFuture.supplyAsync(() -> trackBlocks.get(block).lightState, trackUpdateExecutor);
-        return futureLightState.join();
-    }
-
-    @Override
-    public boolean getSwitchState(int block) {
-        if(!trackBlocks.get(block).isSwitch){
-            throw new IllegalArgumentException("Block: " + block + " is not a switch");
-        }
-        return trackBlocks.get(block).getSwitchState();
-    }
-
-    @Override
-    public boolean getCrossingState(int block) {
-        if (trackBlocks.get(block).feature.isCrossing()) {
-            return trackBlocks.get(block).getCrossingState();
-        } else {
-            throw new IllegalArgumentException("Block: " + block + " is not a crossing");
-        }
     }
 
     @Override
@@ -286,7 +256,7 @@ public class TrackLine implements TrackModel {
             }
         });
     }
-
+//TODO: make sure occupancies are set in the map and to wayside for failures
     @Override
     public boolean getBrokenRail(Integer blockID) {
         return this.trackBlocks.get(blockID).isBrokenRail();
@@ -338,7 +308,8 @@ public class TrackLine implements TrackModel {
         }
     }
 
-
+//TODO: make sure to reset ticket sales when needed
+    //every tick is a second to ticket sales will reset every 3600 seconds
     @Override
     public int getTicketSales() {
         return this.ticketSales;

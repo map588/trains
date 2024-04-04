@@ -109,13 +109,13 @@ public class WaysideControllerImplTests {
         Map<Integer, WaysideBlock> blockMap = controller.getBlockMap();
         controller.runPLC();
         assertTrue(blockMap.get(144).getBooleanAuth());
+        assertFalse(blockMap.get(28).getSwitchState());
+        assertFalse(blockMap.get(13).getSwitchState());
 
         // Start train at block 144, check that direction and switches are assigned correctly
         controller.trackModelSetOccupancy(144, true);
         controller.runPLC();
         assertTrue(blockMap.get(144).getBooleanAuth());
-        assertTrue(blockMap.get(13).isDir_assigned());
-        assertTrue(blockMap.get(13).getDirection());
         assertTrue(blockMap.get(28).getSwitchState());
         assertFalse(blockMap.get(13).getSwitchState());
 
@@ -148,7 +148,6 @@ public class WaysideControllerImplTests {
         }
 
         // Ensure direction is properly deallocated and switches moved back
-        assertFalse(blockMap.get(13).isDir_assigned());
         assertFalse(blockMap.get(28).getSwitchState());
         assertFalse(blockMap.get(13).getSwitchState());
 
@@ -163,8 +162,6 @@ public class WaysideControllerImplTests {
         }
 
         // Ensure direction is properly allocated and switches moved
-        assertTrue(blockMap.get(13).isDir_assigned());
-        assertFalse(blockMap.get(13).getDirection());
         assertFalse(blockMap.get(28).getSwitchState());
         assertTrue(blockMap.get(13).getSwitchState());
 
@@ -197,7 +194,6 @@ public class WaysideControllerImplTests {
         }
 
         // Ensure direction is properly deallocated and switches moved back
-        assertFalse(blockMap.get(13).isDir_assigned());
         assertFalse(blockMap.get(28).getSwitchState());
         assertFalse(blockMap.get(13).getSwitchState());
 

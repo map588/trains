@@ -155,6 +155,9 @@ public class HWTrainControllerImpl implements TrainController {
     }
 
     @Override
+    public void setSetTemperature(double newTemperature){}
+
+    @Override
     public TrainControllerSubject getSubject() {
         return null;
     }

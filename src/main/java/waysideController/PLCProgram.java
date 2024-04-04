@@ -18,13 +18,17 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     private final Map<Integer, WaysideBlock> blockMap;
     private final PLCRunner controller;
     private ParseTree PLCTree;
-    private Map<String, Integer> intVarMap;
+    private final Map<String, Integer> intVarMap;
+    private final Map<Integer, Boolean> dir_assignedMap;
+    private final Map<Integer, Boolean> directionMap;
 
     public PLCProgram(PLCRunner controller) {
         this.controller = controller;
         this.blockMap = controller.getBlockMap();
 
         intVarMap = new HashMap<>();
+        dir_assignedMap = new HashMap<>();
+        directionMap = new HashMap<>();
     }
 
     public void loadPLC(String filename) {
@@ -39,8 +43,10 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     }
 
     public void run() {
-        if(PLCTree != null)
+        if(PLCTree != null) {
             visit(PLCTree);
+//            System.out.println("PLC program executed");
+        }
     }
 
     private void setSwitch(int blockID, boolean switchState) {
@@ -61,14 +67,6 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     private void setAuth(int blockID, boolean auth) {
 //        blockMap.get(blockID).setBooleanAuth(auth);
         controller.setAuthorityPLC(blockID, auth);
-    }
-
-    private void setDirection(int blockID, boolean dir) {
-        blockMap.get(blockID).setDirection(dir);
-    }
-
-    private void setDirAssigned(int blockID, boolean assigned) {
-        blockMap.get(blockID).setDir_assigned(assigned);
     }
 
     @Override
@@ -103,10 +101,10 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
                 setAuth(index, value);
                 break;
             case "direction":
-                setDirection(index, value);
+                directionMap.put(index, value);
                 break;
             case "dir_assigned":
-                setDirAssigned(index, value);
+                dir_assignedMap.put(index, value);
                 break;
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
@@ -256,9 +254,13 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             case "authority":
                 return new Value(blockMap.get(index).getBooleanAuth());
             case "direction":
-                return new Value(blockMap.get(index).getDirection());
+                if(!directionMap.containsKey(index))
+                    directionMap.put(index, false);
+                return new Value(directionMap.get(index));
             case "dir_assigned":
-                return new Value(blockMap.get(index).isDir_assigned());
+                if(!dir_assignedMap.containsKey(index))
+                    dir_assignedMap.put(index, false);
+                return new Value(dir_assignedMap.get(index) == true);
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
         }
