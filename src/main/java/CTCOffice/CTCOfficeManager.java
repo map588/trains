@@ -367,4 +367,9 @@ public class CTCOfficeManager {
 //    }
 
 
+    //TODO Implement a Create Train Code
+    public void createTrain(){
+
+    }
+
 }
