@@ -3,6 +3,7 @@ package trainModel;
 import Integration.BaseTest;
 import Utilities.Records.UpdatedTrainValues;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.util.concurrent.Future;
 
@@ -12,12 +13,14 @@ import static org.mockito.Mockito.*;
 public class trainModelImplTest extends BaseTest {
 
     private static TrainModelImpl model;
+    private static trackModel.TrackLine track;
 
 
-//    @BeforeAll
-//    static void setUp() {
-//        model = new TrainModelImpl(,1); // Assuming '1' is a valid trainID
-//    }
+    @BeforeAll
+    static void setUp() {
+        track = mock(trackModel.TrackLine.class);
+        model = new TrainModelImpl(track, 1); // Assuming '1' is a valid trainID
+    }
 
     @Test
     void testSettersAndGetters() throws InterruptedException {
