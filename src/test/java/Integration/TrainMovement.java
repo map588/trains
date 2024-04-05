@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import stubs.trainStub;
+import trackModel.TrackBlock;
 import trackModel.TrackLine;
 
 import java.util.Random;
@@ -27,9 +28,14 @@ public class TrainMovement  extends BaseTest {
     @BeforeAll
     public static void setUpAll() {
         basicBlockSkipList = GlobalBasicBlockParser.getInstance().getBasicLine(Lines.GREEN);
-        for( int i = 0; i < basicBlockSkipList.size(); i++) {
-            if(basicBlockSkipList.get(i).isSwitch()) {
+        TrackLine trackLine = new TrackLine(Lines.GREEN, basicBlockSkipList);
+        TrackBlock block;
+        for(Integer blkID : trackLine.getTrack().keySet()) {
+            block = trackLine.getTrack().get(blkID);
+            if(block.isSwitch()) {
                 switches.add(i);
+            }else if(block.isStation()) {
+                stations.add(i);
             }
         }
     }
@@ -39,11 +45,18 @@ public class TrainMovement  extends BaseTest {
         trackLine  = new TrackLine(Lines.GREEN, basicBlockSkipList);
         stub = new trainStub(trackLine, 1);
         trackLine.trainDispatch(stub);
+
         int randomSwitches = r.nextInt() >> 20;
-        for(int i = 0; i < randomSwitches; i++) {
-            int randomSwitch = r.nextInt() >> 20;
-            if(switches.contains(randomSwitch)) {
-                trackLine.setSwitchState(randomSwitch, true);
+        int bitTest = 1;
+        bitTest = ~bitTest;
+        for(TrackBlock trackBlock : trackLine.getTrack().values()) {;
+            if(switches.contains(trackBlock)) {
+                if((randomSwitches | bitTest) != 0) {
+                    trackLine.setSwitchState(trackBlock.getBlockID(), true);
+                } else {
+                    trackLine.setSwitchState(trackBlock.getBlockID(), false);
+                }
+                bitTest = bitTest << 1;
             }
         }
         Thread.sleep(1);

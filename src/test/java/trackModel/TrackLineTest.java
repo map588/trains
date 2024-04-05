@@ -153,8 +153,9 @@ public class TrackLineTest extends BaseTest {
             }
         }
         int passengers = stub.getPassengerCount();
-        trackLine.disembarkPassengers(stub, 10);
-        assertEquals(passengers - 10, stub.getPassengerCount());
+        int disembarked = trackLine.getBlock(stub.getCurrentBlock().getPassengersDisembarked()).getPassengersDisembarked();
+        trackLine.disembarkPassengers(stub, disembarked);
+        assertEquals(passengers - disembarked, stub.getPassengerCount());
     }
 
     @Test
