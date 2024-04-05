@@ -3,7 +3,6 @@ package trainModel;
 import Common.TrainModel;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 
 import static trainModel.Properties.*;
@@ -110,9 +109,9 @@ public class TrainModelSubject implements AbstractSubject{
             model.setValue(propertyName, newValue);
         };
         if(!isLogicUpdate){
-            Platform.runLater(() -> updateFromGUI(updateTask));
+            return;
         }else{
-            throw new IllegalStateException("Cannot call setProperty from logic update, or perform GUI update during logic update.");
+            updateFromGUI(updateTask);
         }
     }
 

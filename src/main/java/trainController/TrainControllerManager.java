@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +52,14 @@ public class TrainControllerManager {
     private TrainControllerSubjectMap subjectMap;
     private TrainControllerSubject currentSubject;
 
-    private final TrainControllerSubject nullSubject = new TrainControllerSubject();
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainControllerManager.class);
 
 
     @FXML
     public void initialize() {
-        System.out.println("Started Train Controller Manager Initialize");
+        logger.info("Started Train Controller Manager initialization");
 
         subjectMap = TrainControllerSubjectMap.getInstance();
         setupMapChangeListener();
@@ -66,36 +69,20 @@ public class TrainControllerManager {
             }else{
                 changeTrainView(oldSelection);
             }
+            currentSubject = subjectMap.getSubject(newSelection);
         });
-
-        if (!subjectMap.getSubjects().isEmpty()){
-            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
-        }else{
-            System.out.println("No trains to display");
-            statusLog.setText("No Trains to Display");
-            currentSubject = nullSubject;
-            updateAll();
-        }
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
-            currentSubject = subjectMap.getSubject(firstKey);
-        }else{
+            logger.info("Initialized Train Controller with train ID: {}", firstKey);
+        } else {
             statusLog.setText("No Trains Available");
+            logger.warn("No trains available to initialize Train Controller");
         }
 
-
-        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                changeTrainView(newSelection);
-            }
-        });
-
-
-        currentSubject.setProperty(AUTOMATIC_MODE, true);
-
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
+
     }
 
     private void setupMapChangeListener() {
@@ -120,9 +107,13 @@ public class TrainControllerManager {
 
 
     private void updateChoiceBoxItems() {
-        int previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedIndex();
+        if(trainNoChoiceBox.getItems().isEmpty()){
+            trainNoChoiceBox.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
+        }else {
+            int previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedIndex();
             trainNoChoiceBox.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
             trainNoChoiceBox.getSelectionModel().select(previousSelection);
+        }
     }
 
     private void bindGauges() {
@@ -134,18 +125,42 @@ public class TrainControllerManager {
         appendListener(currentSubject.getDoubleProperty(POWER), (obs, oldVal, newVal) -> {
             double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
+            logger.debug("Power output gauge updated to {}", p);
         });
     }
 
     private void bindIndicators() {
-        appendListener(currentSubject.getBooleanProperty(EMERGENCY_BRAKE), (obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, eBrakeStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(SIGNAL_FAILURE),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, signalFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(BRAKE_FAILURE),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, brakeFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(POWER_FAILURE),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.RED, powerFailureStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(IN_TUNNEL),(obs, oldVal, newVal) ->     Platform.runLater(() -> {updateIndicator(Color.YELLOW, inTunnelStatus, newVal); inTunnelUpdates();}));
-        appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal)));
-        appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal)));
+        appendListener(currentSubject.getBooleanProperty(EMERGENCY_BRAKE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.RED, eBrakeStatus, newVal);
+            logger.info("Emergency brake status updated to {}", newVal);
+        }));
+        appendListener(currentSubject.getBooleanProperty(SIGNAL_FAILURE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.RED, signalFailureStatus, newVal);
+            logger.info("Signal failure status updated to {}", newVal);
+        }));
+        appendListener(currentSubject.getBooleanProperty(BRAKE_FAILURE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.RED, brakeFailureStatus, newVal);
+            logger.info("Brake failure status updated to {}", newVal);
+        }));
+        appendListener(currentSubject.getBooleanProperty(POWER_FAILURE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.RED, powerFailureStatus, newVal);
+            logger.info("Power failure status updated to {}", newVal);
+        }));
+        appendListener(currentSubject.getBooleanProperty(IN_TUNNEL), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.YELLOW, inTunnelStatus, newVal);
+            inTunnelUpdates();
+            logger.info("In tunnel status updated to {}", newVal);
+        }));
+        appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal);
+            logger.info("Left platform status updated to {}", newVal);
+        }));
+        appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM), (obs, oldVal, newVal) -> Platform.runLater(() -> {
+            updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal);
+            logger.info("Right platform status updated to {}", newVal);
+        }));
         bindStringText(nextStationText, NEXT_STATION);
+
     }
 
     private void bindStringText(Text text, ControllerProperty propertyName){
@@ -209,7 +224,8 @@ public class TrainControllerManager {
         emergencyBrakeButton.setOnAction(event -> {
             BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE);
             currentSubject.setProperty(EMERGENCY_BRAKE, !eBrakeProp.get());
-            setNotification(EMERGENCY_BRAKE,String.valueOf(eBrakeProp.get()));
+            setNotification(EMERGENCY_BRAKE, String.valueOf(eBrakeProp.get()));
+            logger.info("Emergency brake toggled to {}", !eBrakeProp.get());
         });
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
@@ -238,6 +254,7 @@ public class TrainControllerManager {
         Runnable textFieldUpdate = () -> {
             try {
                 double newValue = Double.parseDouble(textField.getText());
+                newValue = (double) Math.round(newValue * 20) / 20.0;
                 if (newValue < slider.getMin() || newValue > slider.getMax()) {
                     throw new NumberFormatException();
                 }
@@ -260,16 +277,18 @@ public class TrainControllerManager {
 
 
     private void changeTrainView(Integer trainID) {
-        if(currentSubject != null) {
+        if (currentSubject != null) {
             statusLog.clear();
             statusLog.setText("\n Train is running");
             unbindControls();
-            updateAll();
             currentSubject = subjectMap.getSubject(trainID);
+            updateAll();
             bindControls();
             bindGauges();
             bindIndicators();
+            logger.info("Train view changed to train ID: {}", trainID);
         }
+
     }
 
     private void unbindControls() {
@@ -300,7 +319,7 @@ public class TrainControllerManager {
     //Called when controller is switched, updates state of all UI elements
     private void updateAll() {
         if (currentSubject == null) {
-            System.out.println("No subject to update");
+            logger.warn("No subject to update");
             return;
         }
 
@@ -338,8 +357,10 @@ public class TrainControllerManager {
 
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED).get());
+
+            logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
             }catch (Exception e){
-                System.out.println("Error updating UI elements");
+                logger.error("Error updating UI elements", e);
             }
 
     }
@@ -379,6 +400,7 @@ public class TrainControllerManager {
         Platform.runLater(() -> {
             statusLog.setText(statusNotification);
             statusLog.setWrapText(true);
+            logger.info("Status notification set for {}: {}", propertyName, statusNotification.trim());
         });
     }
 

@@ -26,18 +26,21 @@ public class TrackLine implements TrackModel {
 
     Lines line;
 
-    ExecutorService trackUpdateExecutor = Executors.newCachedThreadPool();
-
-
-    //calls all listeners when a train enters or exits a block
-    private final ConcurrentHashMap<TrainModel, Integer> trackOccupancyMap;
-    private final ConcurrentLinkedQueue<TrackUpdateTask> trackUpdateQueue = new ConcurrentLinkedQueue<>();
-
-    private volatile long time = 0;
+    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(8);
 
     //maps blocks to block numbers
     private final TrackBlockLine trackBlocks;
+    //maps beacons to block numbers
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
+    //maps trains to block numbers
+    private final ObservableHashMap<TrainModel, Integer> trackOccupancyMap;
+
+    //queue of track update tasks
+    private final ConcurrentLinkedQueue<TrackUpdateTask> trackUpdateQueue = new ConcurrentLinkedQueue<>();
+
+    private long time = 0;
+
+
     private int ticketSales = 0;
     private TrackLineSubject subject;
     private BeaconParser beaconParser;
@@ -60,15 +63,36 @@ public class TrackLine implements TrackModel {
         this.subject = new TrackLineSubject(this, trackBlocks);
 
         //TODO: Add beacons to the beaconBlocks map
-
+        setupListeners();
         this.line = line;
     }
 
 
     public void update(){
         time += TIME_STEP_MS;
+        // Execute all pending track update tasks
+        while (!trackUpdateQueue.isEmpty()) {
+            trackUpdateQueue.poll().execute();
+        }
     }
 
+    private void setupListeners() {
+        ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
+            public void onAdded(TrainModel train, Integer blockID) {
+                // A train enters a new block
+                handleTrainEntry(train, blockID);
+            }
+            public void onRemoved(TrainModel train, Integer blockID) {
+                // A train leaves a block
+                handleTrainExit(train, blockID);
+            }
+            public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
+                // A train moves from one block to another
+                handleYardEntry(train, newBlockID, oldBlockID);
+            }
+        };
+        trackOccupancyMap.addChangeListener(trackListener);
+    }
 
     public TrainModel trainDispatch(int trainID) {
         System.out.println("Train: " + trainID + " dispatched");
@@ -121,31 +145,45 @@ public class TrackLine implements TrackModel {
 
 
     private void handleTrainEntry(TrainModel train, Integer blockID) {
-        if(blockID == 0){
-            train.delete();
-            return;
-        }
-        TrackBlock block = trackBlocks.get(blockID);
-        if (block.isOccupied()) {
-            logger.log(Level.SEVERE, "Block {0} is already occupied", blockID);
-            return;
-        }
-        block.setOccupied(true);
-        block.occupiedBy = train;
-        WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, true);
-    }
 
+        asyncTrackUpdate( () -> {
+            if (trackBlocks.get(blockID).isOccupied()) {
+                logger.log(Level.WARNING, "Block {0} is already occupied", blockID);
+            }
+            trackBlocks.get(blockID).setOccupied(true);
+            trackBlocks.get(blockID).occupiedBy = train;
+            WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, true);
+            return null;
+        });
+
+        return;
+    }
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
-        TrackBlock block = trackBlocks.get(blockID);
-        if (!block.isOccupied()) {
-            logger.log(Level.SEVERE, "Block {0} is not occupied", blockID);
-            return;
-        }
-        block.setOccupied(false);
-        block.occupiedBy = null;
-        WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, false);
+
+        asyncTrackUpdate( () -> {
+            if (!trackBlocks.get(blockID).isOccupied()) {
+                logger.log(Level.WARNING, "Block {0} is not occupied", blockID);
+            }
+            trackBlocks.get(blockID).setOccupied(false);
+            trackBlocks.get(blockID).occupiedBy = null;
+            WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, false);
+            return null;
+        });
+
+        return;
     }
+
+    private void handleYardEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
+        if(newBlockID == 0 && oldBlockID == 57 && line == Lines.GREEN) {
+            train.delete();
+        }else if(newBlockID == oldBlockID) {
+            logger.warning("Error: False Occupancy Update from " + oldBlockID + " to " + newBlockID);
+        }else if(newBlockID == 0) {
+            logger.info("Train " + train.getTrainNumber() + " was/is in the yard");
+        }
+    }
+
 
 
     private <T> CompletableFuture<T> asyncTrackUpdate(Supplier<T> task) {
@@ -174,7 +212,7 @@ public class TrackLine implements TrackModel {
     //false red, true is green
     @Override
     public void setLightState(int block, boolean state) {
-        queueTrackUpdate( () -> {
+        asyncTrackUpdate( () -> {
             if(beaconBlocks.contains(block)) {
                 trackBlocks.get(block).lightState = state;
             } else {
@@ -208,7 +246,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setSwitchState(int block, boolean state) {
-        queueTrackUpdate( () -> {
+        asyncTrackUpdate( () -> {
             if (trackBlocks.get(block).feature.isSwitch()) {
                 trackBlocks.get(block).setSwitchState(state);
             } else {
@@ -220,7 +258,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setCrossing(int block, boolean state) {
-        queueTrackUpdate(() -> {
+        asyncTrackUpdate(() -> {
             if (trackBlocks.get(block).feature.isCrossing()) {
                 trackBlocks.get(block).setCrossingState(state);
             } else {
@@ -231,17 +269,17 @@ public class TrackLine implements TrackModel {
     }
 
     @Override
-    public void setTrainAuthority(Integer blockID, int authority) {
+    public void setTrainAuthority(Integer blockID, int authority){
         asyncTrackUpdate( () -> {
-            trackBlocks.get(blockID).setAuthority(authority);
             trackBlocks.get(blockID).getOccupiedBy().setAuthority(authority);
+            trackBlocks.get(blockID).setAuthority(authority);
             return null;
         }).join();
     }
 
     @Override
     public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
-        queueTrackUpdate( () -> {
+        asyncTrackUpdate( () -> {
             System.out.println("Setting speed to: " + commandedSpeed + " at block " + blockID);
             trackBlocks.get(blockID).setCommandSpeed(commandedSpeed);
             trackBlocks.get(blockID).getOccupiedBy().setCommandSpeed(commandedSpeed);
@@ -264,28 +302,28 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setPowerFailure(Integer blockID, boolean state) {
-        asyncTrackUpdate( () -> {
+        //asyncTrackUpdate( () -> {
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setFailure(false,false,true);
             } else {
                 logger.log(Level.SEVERE, "Block {0} does not exist", blockID);
             }
-            return null;
-        });
+            //return null;
+       // });
     }
 
     @Override
     public void setTrackCircuitFailure(Integer blockID, boolean state) {
-        asyncTrackUpdate( () -> {
+       // asyncTrackUpdate( () -> {
             TrackBlock failedBlock = this.trackBlocks.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setFailure(false,true,false);
             } else {
                 logger.log(Level.SEVERE, "Block {0} does not exist", blockID);
             }
-            return null;
-        });
+            //return null;
+      //  });
     }
 
     //TODO: make sure occupancies are set in the map and to wayside for failures

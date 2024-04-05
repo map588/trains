@@ -71,7 +71,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     private TrackLine track;
     private Direction direction = Direction.NORTH;
-    private TrackBlock currentBlock = new TrackBlock();
 
     //purely for temperature calculation
     private double elapsedTime = 0;
@@ -260,7 +259,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
     public void enteredNextBlock() {
-        currentBlock = track.updateTrainLocation(this);
+        TrackBlock currentBlock = track.updateTrainLocation(this);
         currentBlockLength = currentBlock.getLength();
         //controller.onBlock();
         relativeDistance = 0;
@@ -294,8 +293,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
     public void setActualSpeed(double speed) {
         this.speed = speed;
-        notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));
-    }
+        notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));}
     public void setAuthority(int authority) {
 
         if (signalFailure) {

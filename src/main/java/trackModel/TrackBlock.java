@@ -7,6 +7,7 @@ import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.BasicBlock.Connection;
 import trackModel.BlockTypes.*;
+import trainModel.NullTrain;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +67,12 @@ public class TrackBlock {
         this.brokenRail = false;
         this.trackCircuitFailure = false;
         this.powerFailure = false;
+        this.maintenanceMode = false;
+        this.lightState = false;
+        this.authority = 0;
+        this.commandSpeed = 0;
+        this.occupied = false;
+        this.occupiedBy = null;
     }
 
     TrackBlock(BasicBlock blockInfo) {
@@ -109,6 +116,12 @@ public class TrackBlock {
         this.brokenRail = false;
         this.trackCircuitFailure = false;
         this.powerFailure = false;
+        this.maintenanceMode = false;
+        this.lightState = false;
+        this.authority = 0;
+        this.commandSpeed = 0;
+        this.occupied = false;
+        this.occupiedBy = null;
     }
 
     public void setFailure(boolean brokenRail, boolean trackCircuitFailure, boolean powerFailure) {
@@ -223,7 +236,11 @@ public class TrackBlock {
     }
 
     public TrainModel getOccupiedBy() {
-        return occupiedBy;
+        if(occupiedBy != null){
+            return occupiedBy;
+        }else{
+            return NullTrain.getInstance();
+        }
     }
 
     String getStationName() {

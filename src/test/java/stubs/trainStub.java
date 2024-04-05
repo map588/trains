@@ -3,10 +3,13 @@ package stubs;
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Enums.Direction;
+import Utilities.Enums.Lines;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.Beacon;
 import Utilities.Records.UpdatedTrainValues;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
+import trainController.TrainControllerImpl;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -54,8 +57,14 @@ public class trainStub implements TrainModel {
         this.currentBlock = track.getTrack().get(0);
         this.controller = new trainControllerStub(this, trainID);
         initializeValues();
+    }
 
-
+    public trainStub() {
+        this.trainID = 1;
+        this.track = new TrackLine(Lines.GREEN, GlobalBasicBlockParser.getInstance().getBasicLine(Lines.GREEN));
+        this.currentBlock = track.getTrack().get(0);
+        this.controller = new TrainControllerImpl(this, trainID);
+        initializeValues();
     }
 
     public TrackBlock getCurrentBlock() {

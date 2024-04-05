@@ -14,12 +14,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import java.util.concurrent.ThreadLocalRandom;
+import stubs.trainStub;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.testfx.api.FxAssert.verifyThat;
 
 
@@ -30,9 +28,9 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class TrainControllerManagerTest extends ApplicationTest {
 
     TrainControllerImpl controller;
-    Integer controllerID = 1;
+    TrainModel mockModel;
 
-    Integer index = 1;
+    Integer controllerID = 1;
     TrainControllerSubjectMap subjects = TrainControllerSubjectMap.getInstance();
     /**
      * This method sets up the testing environment.
@@ -42,11 +40,9 @@ public class TrainControllerManagerTest extends ApplicationTest {
 
     @BeforeEach
     public void setUp() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        TrainModel mockModel = mock(TrainModel.class);
-        controllerID = random.nextInt(1, 39);
-        controller = new TrainControllerImpl(mockModel, controllerID);
-
+        TrainModel mockModel = new trainStub();
+        controller = mockModel.getController().getSubject().getController();
+        controllerID = controller.getID();
     }
 
     @AfterEach

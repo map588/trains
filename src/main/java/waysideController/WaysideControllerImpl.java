@@ -5,9 +5,9 @@ import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.Notifier;
+import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
-import Utilities.Enums.Lines;
 
 import java.io.File;
 import java.util.HashMap;

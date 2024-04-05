@@ -71,7 +71,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
 
     public TrainControllerImpl() {
-        this.trainID = -1;
+        this.trainID = 0;
         this.train = new TrainModelImpl();
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
