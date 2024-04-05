@@ -303,113 +303,113 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        subject.notifyChange(AUTOMATIC_MODE.getPropertyName(), mode);
+        subject.notifyChange(AUTOMATIC_MODE, mode);
     }
     public void setAuthority(int authority) {
         this.authority = authority;
-        subject.notifyChange(AUTHORITY.getPropertyName(), authority);
+        subject.notifyChange(AUTHORITY , authority);
     }
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        subject.notifyChange(OVERRIDE_SPEED.getPropertyName(), speed);
+        subject.notifyChange(OVERRIDE_SPEED , speed);
         //calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        subject.notifyChange(COMMAND_SPEED.getPropertyName(), speed);
+        subject.notifyChange(COMMAND_SPEED , speed);
         //calculatePower();
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        subject.notifyChange(CURRENT_SPEED.getPropertyName(), speed);
+        subject.notifyChange(CURRENT_SPEED , speed);
     }
     private void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        subject.notifyChange(SERVICE_BRAKE.getPropertyName(), brake);
+        subject.notifyChange(SERVICE_BRAKE , brake);
     }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        subject.notifyChange(EMERGENCY_BRAKE.getPropertyName(), brake);
+        subject.notifyChange(EMERGENCY_BRAKE , brake);
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
-        subject.notifyChange(KI.getPropertyName(), Ki);
+        subject.notifyChange(KI , Ki);
     }
     public void setKp(double Kp) {
         this.Kp = Kp;
-        subject.notifyChange(KP.getPropertyName(), Kp);
+        subject.notifyChange(KP , Kp);
     }
     public void setPower(double power) {
         this.power = power;
-        subject.notifyChange(POWER.getPropertyName(), power);
+        subject.notifyChange(POWER , power);
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        subject.notifyChange(INT_LIGHTS.getPropertyName(), lights); // This might've been the issue interiorLights -> intLights
+        subject.notifyChange(INT_LIGHTS , lights); // This might've been the issue interiorLights -> intLights
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
-        subject.notifyChange(EXT_LIGHTS.getPropertyName(), lights); // This might've been the issue exteriorLights -> extLights
+        subject.notifyChange(EXT_LIGHTS , lights); // This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        subject.notifyChange(LEFT_DOORS.getPropertyName(), doors);
+        subject.notifyChange(LEFT_DOORS , doors);
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        subject.notifyChange(RIGHT_DOORS.getPropertyName(), doors);
+        subject.notifyChange(RIGHT_DOORS , doors);
     }
     public void setSetTemperature(double temp) {
         this.setTemperature = temp;
-        subject.notifyChange(SET_TEMPERATURE.getPropertyName(), temp);
+        subject.notifyChange(SET_TEMPERATURE , temp);
     }
     public void setCurrentTemperature(double temp){
         this.currentTemperature = temp;
-        subject.notifyChange(CURRENT_TEMPERATURE.getPropertyName(),temp);
+        subject.notifyChange(CURRENT_TEMPERATURE ,temp);
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        subject.notifyChange(ANNOUNCEMENTS.getPropertyName(), announcements);
+        subject.notifyChange(ANNOUNCEMENTS , announcements);
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        subject.notifyChange(SIGNAL_FAILURE.getPropertyName(), signalFailure);
+        subject.notifyChange(SIGNAL_FAILURE , signalFailure);
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        subject.notifyChange(BRAKE_FAILURE.getPropertyName(), brakeFailure);
+        subject.notifyChange(BRAKE_FAILURE , brakeFailure);
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        subject.notifyChange(POWER_FAILURE.getPropertyName(), powerFailure);
+        subject.notifyChange(POWER_FAILURE , powerFailure);
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
-        subject.notifyChange(IN_TUNNEL.getPropertyName(),tunnel);
+        subject.notifyChange(IN_TUNNEL ,tunnel);
     }
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
-        subject.notifyChange(LEFT_PLATFORM.getPropertyName(),platform);
+        subject.notifyChange(LEFT_PLATFORM ,platform);
     }
     public void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
-        subject.notifyChange(RIGHT_PLATFORM.getPropertyName(),platform);
+        subject.notifyChange(RIGHT_PLATFORM ,platform);
     }
     public void setSamplingPeriod(int period){
         this.samplingPeriod = period;
-        subject.notifyChange(SAMPLING_PERIOD.getPropertyName(),period);
+        subject.notifyChange(SAMPLING_PERIOD ,period);
     }
     public void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
-        subject.notifyChange(SPEED_LIMIT.getPropertyName(),speedLimit);
+        subject.notifyChange(SPEED_LIMIT ,speedLimit);
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
-        subject.notifyChange(NEXT_STATION.getPropertyName(),name);
+        subject.notifyChange(NEXT_STATION ,name);
     }
     public void setGrade(double newValue) {
         this.grade = newValue;
-        subject.notifyChange(GRADE.getPropertyName(),newValue);
+        subject.notifyChange(GRADE ,newValue);
     }
 
     /**
@@ -559,15 +559,9 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
     }
 
-
-
-
-
     @Override
     public void setValue(String propertyName, Object newValue) {
         setValue(ControllerProperty.valueOf(propertyName.toUpperCase()), newValue);
     }
-
-
 
 }

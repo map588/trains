@@ -70,16 +70,13 @@ public class TrainControllerSubject implements Notifier {
     //Change coming from the logic side
     @Override
     public void notifyChange(String propertyName, Object newValue) {
-        ControllerProperty property = ControllerProperty.valueOf(propertyName.toUpperCase());
-        if (newValue != null) {
-            executeUpdate(() -> notifyChange(property, newValue), false);
-        }
+       logger.info("deprecatedMessage");
     }
 
     public void notifyChange(ControllerProperty propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
-            executeUpdate(() -> updateProperty(property, newValue), true);
+            executeUpdate(() -> updateProperty(property, newValue), !isGUIUpdateInProgress);
         }
     }
 

@@ -117,15 +117,38 @@ public class TrainControllerManager {
     }
 
     private void bindGauges() {
-        currentSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_SPEED));
-        commandedSpeedGauge.valueProperty().bind(currentSubject.getDoubleProperty(COMMAND_SPEED));
-        speedLimitGauge.valueProperty().bind(currentSubject.getDoubleProperty(SPEED_LIMIT));
-        authorityGauge.valueProperty().bind(currentSubject.getIntegerProperty(AUTHORITY));
-        currentTemperatureGauge.valueProperty().bind(currentSubject.getDoubleProperty(CURRENT_TEMPERATURE));
+        appendListener(currentSubject.getDoubleProperty(CURRENT_SPEED), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            currentSpeedGauge.setValue(newVal.doubleValue());
+            logger.debug("Current speed gauge updated to {}", newVal);
+        });
+        appendListener(currentSubject.getDoubleProperty(COMMAND_SPEED), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            commandedSpeedGauge.setValue(newVal.doubleValue());
+            logger.debug("Commanded speed gauge updated to {}", newVal);
+        });
+        appendListener(currentSubject.getDoubleProperty(SPEED_LIMIT), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            speedLimitGauge.setValue(newVal.doubleValue());
+            logger.debug("Speed limit gauge updated to {}", newVal);
+        });
+        appendListener(currentSubject.getIntegerProperty(AUTHORITY), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            authorityGauge.setValue(newVal.doubleValue());
+            logger.debug("Authority gauge updated to {}", newVal);
+        });
+        appendListener(currentSubject.getDoubleProperty(SET_TEMPERATURE), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            currentTemperatureGauge.setValue(newVal.doubleValue());
+            logger.debug("Current temperature gauge updated to {}", newVal);
+        });
         appendListener(currentSubject.getDoubleProperty(POWER), (obs, oldVal, newVal) -> {
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) > 10){
             logger.debug("Power output gauge updated to {}", p);
+            }
         });
     }
 
