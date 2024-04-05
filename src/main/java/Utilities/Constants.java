@@ -22,6 +22,9 @@ public class Constants {
     final public static boolean RED_LINE = false;
     final public static boolean GREEN_LINE = true;
 
+    //Time Step Interval
+    final public static int TIME_STEP_MS = 200;
+
     final public static Direction YARD_OUT_DIRECTION = Direction.NORTH;
 
     final public static int YARD_OUT_BLOCK = 0;

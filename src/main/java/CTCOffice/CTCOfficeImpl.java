@@ -9,7 +9,7 @@ import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
 import Utilities.BasicLineMap;
 import Utilities.Enums.Lines;
-import Utilities.ParsedBasicBlocks;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class CTCOfficeImpl implements CTCOffice {
      */
     private CTCOfficeImpl() {
 
-        BasicLineMap trackLineBlocks = ParsedBasicBlocks.getInstance().getAllBasicLines();
+        BasicLineMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
             ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
             for(BasicBlock block : trackLineBlocks.get(Lines.GREEN).values()) {

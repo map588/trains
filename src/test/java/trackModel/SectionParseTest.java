@@ -3,7 +3,7 @@ package trackModel;
 import Integration.BaseTest;
 import Utilities.BasicLineMap;
 import Utilities.Enums.Lines;
-import Utilities.ParsedBasicBlocks;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.TrackSegment;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ public class SectionParseTest extends BaseTest {
 
     @BeforeEach
     public void setUp() {
-        BasicLineMap sectionBlocks = ParsedBasicBlocks.getInstance().getAllBasicLines();
+        BasicLineMap sectionBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         for (Lines line : sectionBlocks.keySet()) {
             ArrayList<TrackSegment> sections = parseTrackSegments(sectionBlocks.get(line));
             TrackSegments.put(line, sections);

@@ -2,8 +2,7 @@ package Integration;
 
 import Utilities.BasicBlockLine;
 import Utilities.Enums.Lines;
-import Utilities.ParsedBasicBlocks;
-import javafx.application.Platform;
+import Utilities.GlobalBasicBlockParser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,8 @@ import trackModel.TrackLine;
 
 import java.util.Random;
 import java.util.concurrent.ConcurrentSkipListSet;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TrainMovement  extends BaseTest {
 
@@ -25,8 +26,7 @@ public class TrainMovement  extends BaseTest {
 
     @BeforeAll
     public static void setUpAll() {
-        Platform.startup(() ->  {});
-        basicBlockSkipList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.GREEN);
+        basicBlockSkipList = GlobalBasicBlockParser.getInstance().getBasicLine(Lines.GREEN);
         for( int i = 0; i < basicBlockSkipList.size(); i++) {
             if(basicBlockSkipList.get(i).isSwitch()) {
                 switches.add(i);
@@ -52,6 +52,8 @@ public class TrainMovement  extends BaseTest {
     @Test
     public void move() {
         stub.go_Brr();
+
+        assertTrue(stub.getNumCars() > 0);
     }
 
     // test for train movement

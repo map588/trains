@@ -1,8 +1,10 @@
 package Framework.Simulation;
 
 import Utilities.BasicLineMap;
-import Utilities.ParsedBasicBlocks;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Enums.Lines;
+import trackModel.TrackBlock;
+import trackModel.TrackBlogLog;
 import trackModel.TrackLine;
 import trackModel.TrackLineMap;
 
@@ -18,10 +20,15 @@ public class TrackSystem {
     private final ExecutorService trackLineExecutor;
 
     public TrackSystem() {
-        ParsedBasicBlocks parsedBasicBlocks = ParsedBasicBlocks.getInstance();
+        GlobalBasicBlockParser parsedBasicBlocks = GlobalBasicBlockParser.getInstance();
         BasicLineMap basicLines = parsedBasicBlocks.getAllBasicLines();
         trackLineExecutor = Executors.newFixedThreadPool(basicLines.size());
         for (Lines line : Lines.values()) {
+            TrackLine track = new TrackLine(line, basicLines.get(line));
+            for(int i = 0; i < track.getTrack().size(); i++) {
+                TrackBlock block = track.getTrack().get(i);
+                new TrackBlogLog(block);
+            }
             TrackLineMap.addTrackLine(line, new TrackLine(line, basicLines.get(line)));
         }
     }
@@ -33,11 +40,7 @@ public class TrackSystem {
     public void update() {
         trackLineExecutor.submit(() -> {
             for (TrackLine line : TrackLineMap.getValues()) {
-                try {
                     line.update();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
             }
         });
     }

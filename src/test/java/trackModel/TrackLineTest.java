@@ -2,17 +2,20 @@ package trackModel;
 
 import Integration.BaseTest;
 import Utilities.BasicBlockLine;
+import Utilities.Constants;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Lines;
-import Utilities.ParsedBasicBlocks;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
-import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import stubs.trainStub;
 
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +47,7 @@ public class TrackLineTest extends BaseTest {
     // test set commanded speed
     // test that the set commanded speed method sets the correct commanded speed
 
-
+    ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
 
     private static TrackLine trackLine;
     private trainStub stub;
@@ -53,16 +56,18 @@ public class TrackLineTest extends BaseTest {
 
     @BeforeAll
     public static void setUpAll() {
-        Platform.startup(() ->  {});
-        basicBlockSkipList = ParsedBasicBlocks.getInstance().getBasicLine(Lines.GREEN);
+        basicBlockSkipList = GlobalBasicBlockParser.getInstance().getBasicLine(Lines.GREEN);
+        trackLine = new TrackLine(Lines.GREEN, basicBlockSkipList);
     }
 
     @BeforeEach
     public void setup() throws InterruptedException {
-        trackLine  = new TrackLine(Lines.GREEN, basicBlockSkipList);
         stub = new trainStub(trackLine, 1);
         trackLine.trainDispatch(stub);
-        Thread.sleep(1000);
+        executorService.scheduleAtFixedRate(() ->
+        {
+            trackLine.update();
+        }, 2, Constants.TIME_STEP_MS, TimeUnit.MILLISECONDS);
         stub.go_Brr();
     }
 
@@ -148,7 +153,7 @@ public class TrackLineTest extends BaseTest {
             }
         }
         int passengers = stub.getPassengerCount();
-        trackLine.setPassengersDisembarked(stub, 10);
+        trackLine.disembarkPassengers(stub, 10);
         assertEquals(passengers - 10, stub.getPassengerCount());
     }
 

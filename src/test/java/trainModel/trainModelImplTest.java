@@ -1,9 +1,7 @@
 package trainModel;
 
-import Common.TrainController;
 import Integration.BaseTest;
 import Utilities.Records.UpdatedTrainValues;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Future;
@@ -16,10 +14,10 @@ public class trainModelImplTest extends BaseTest {
     private static TrainModelImpl model;
 
 
-    @BeforeAll
-    static void setUp() {
-        model = new TrainModelImpl(1, mock(TrainController.class)); // Assuming '1' is a valid trainID
-    }
+//    @BeforeAll
+//    static void setUp() {
+//        model = new TrainModelImpl(,1); // Assuming '1' is a valid trainID
+//    }
 
     @Test
     void testSettersAndGetters() throws InterruptedException {

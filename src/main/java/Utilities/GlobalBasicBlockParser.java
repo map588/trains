@@ -6,13 +6,13 @@ import Utilities.Records.BasicBlock;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class ParsedBasicBlocks{
+public class GlobalBasicBlockParser {
 
-    private static final ParsedBasicBlocks INSTANCE = new ParsedBasicBlocks();
+    private static final GlobalBasicBlockParser INSTANCE = new GlobalBasicBlockParser();
 
     private final ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> basicBlocks = new ConcurrentHashMap<>();
 
-    private ParsedBasicBlocks() {
+    private GlobalBasicBlockParser() {
         ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = BlockParser.parseCSV();
         map.forEach(this::addLines);
     }
@@ -23,7 +23,7 @@ public class ParsedBasicBlocks{
 
 
 
-    public static ParsedBasicBlocks getInstance() {
+    public static GlobalBasicBlockParser getInstance() {
         return INSTANCE;
     }
 

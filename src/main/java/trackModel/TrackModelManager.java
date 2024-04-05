@@ -1,16 +1,12 @@
 package trackModel;
 
 import Utilities.Enums.Lines;
-import Utilities.ParsedBasicBlocks;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.DirectoryChooser;
-import Framework.Simulation.TrackSystem;
 
 import java.io.File;
-import java.util.ArrayList;
 
 
 public class TrackModelManager {

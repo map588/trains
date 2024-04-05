@@ -3,7 +3,7 @@ package Utilities;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.Beacon;
-import Utilities.Records.BeaconEntry;
+import trainController.ControllerBlock;
 import Utilities.Records.TrackSegment;
 
 import java.util.*;
@@ -28,12 +28,12 @@ public class BeaconParser {
         Map<Integer, Beacon> beacons = new HashMap<>();
 
         for (TrackSegment segment : trackSegments) {
-            ArrayDeque<BeaconEntry> beaconEntries = new ArrayDeque<>();
+            ArrayDeque<ControllerBlock> beaconEntries = new ArrayDeque<>();
             int startId = segment.blocks().getFirst().blockNumber();
             int endId = segment.blocks().getLast().blockNumber();
 
             for (BasicBlock block : segment.blocks()) {
-                beaconEntries.add(new BeaconEntry(block));
+                beaconEntries.add(new ControllerBlock(block));
             }
 
             Beacon beacon = new Beacon(startId, endId, beaconEntries);

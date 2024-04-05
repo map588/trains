@@ -24,8 +24,8 @@ public interface TrackModel {
 
 
     //Non-Vitals
-    void setPassengersDisembarked(TrainModel train, int disembarked);
-    int getPassengersEmbarked(TrainModel train);
+    void disembarkPassengers(TrainModel train, int disembarked);
+    int embarkPassengers(TrainModel train);
     int getTicketSales();
 
 }

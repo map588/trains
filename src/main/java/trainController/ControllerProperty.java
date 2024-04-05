@@ -4,7 +4,7 @@ package trainController;
 //public class Properties {
 
 //}
-public enum Controller_Property {
+public enum ControllerProperty {
      AUTHORITY("authority"),
      OVERRIDE_SPEED("override_Speed"),
      COMMAND_SPEED("command_Speed"),
@@ -37,7 +37,7 @@ public enum Controller_Property {
 
      private final String propertyName;
 
-     Controller_Property(String propertyName) {
+     ControllerProperty(String propertyName) {
           this.propertyName = propertyName;
      }
 
@@ -45,7 +45,7 @@ public enum Controller_Property {
           return propertyName;
      }
 
-     public Controller_Property getProperty(String propertyName) {
-          return Controller_Property.valueOf(propertyName.toUpperCase());
+     public ControllerProperty getProperty(String propertyName) {
+          return ControllerProperty.valueOf(propertyName.toUpperCase());
      }
 }

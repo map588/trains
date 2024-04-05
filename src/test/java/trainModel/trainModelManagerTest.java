@@ -24,7 +24,7 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        trainModel = new TrainModelImpl(0);
+        trainModel = new TrainModelImpl();
         trainModelManager = new TrainModelManager();
         trainModelManager.initialize();
     }
@@ -33,7 +33,7 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @BeforeEach
     public void setup() {
-        trainModel = new TrainModelImpl(1);
+        trainModel = new TrainModelImpl();
 
     }
 
@@ -100,7 +100,7 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @Test
     public void testTrainDropDown() {
-        TrainModelImpl newTrainModel = new TrainModelImpl(1);
+        TrainModelImpl newTrainModel = new TrainModelImpl();
 //        trainModelManager.subjectMap.getSubjects().put(1, newTrainModel);
 
         ChoiceBox<Integer> trainDropDown = lookup("#trainDropDown").queryAs(ChoiceBox.class);

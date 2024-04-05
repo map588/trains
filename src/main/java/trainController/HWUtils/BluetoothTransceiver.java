@@ -1,4 +1,4 @@
-package trainController.HWImpl;
+package trainController.HWUtils;
 
 import javax.bluetooth.LocalDevice;
 import javax.bluetooth.UUID;

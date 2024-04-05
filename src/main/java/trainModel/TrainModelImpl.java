@@ -32,6 +32,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     private final TrainModelSubject subject;
 
+    //TODO: John, please seperate your methods into what is done to the train, within the train, and what the train does to other modules
 
     //Passed Variables
     private int authority = 0;
@@ -220,7 +221,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         else {
             engineForce = this.power / this.speed;
         }
-//        System.out.println("Engine Force: " + engineForce);
 
         //SLOPE FORCE
         double currentAngle = Math.atan(this.grade / 100);
@@ -231,12 +231,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (netForce > Constants.MAX_ENGINE_FORCE){
             netForce = Constants.MAX_ENGINE_FORCE;
         }
-//        System.out.println("Net Force: " + netForce);
 
         //ACCELERATION CALCULATION
         this.acceleration = (netForce / this.mass);
         this.newAcceleration = this.acceleration;
-//        System.out.println("Acceleration: " + this.acceleration);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
@@ -246,7 +244,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
         this.newSpeed = this.speed;
-//        System.out.println("Speed: " + this.speed);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -285,7 +282,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void setCommandSpeed(double speed) {
-        System.out.println("Command Speed: " + speed);
 
         if (signalFailure) {
             this.commandSpeed = -1;
@@ -296,9 +292,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));
         controller.setCommandSpeed(speed);
     }
-    public void setActualSpeed(double speed) {this.speed = speed;notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));}
+    public void setActualSpeed(double speed) {
+        this.speed = speed;
+        notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));
+    }
     public void setAuthority(int authority) {
-        System.out.println("Authority: " + authority);
 
         if (signalFailure) {
             this.authority = -1;

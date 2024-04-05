@@ -17,7 +17,7 @@ import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
-import static trainController.Controller_Property.*;
+import static trainController.ControllerProperty.*;
 
 /**
  * This is the constructor for the trainControllerImpl class.
@@ -29,7 +29,7 @@ import static trainController.Controller_Property.*;
  * The rate is determined by the samplingPeriod property.
  *
  */
-public class TrainControllerImpl implements TrainController, GUIModifiableEnum<Controller_Property> {
+public class TrainControllerImpl implements TrainController, GUIModifiableEnum<ControllerProperty> {
     private final int trainID;
     private final TrainControllerSubject subject;
     private final TrainModel train;
@@ -95,6 +95,208 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         this.setBrakeFailure(train.getBrakeFailure());
         this.setPowerFailure(train.getPowerFailure());
         this.setCurrentTemperature((train.getRealTemperature()));
+    }
+
+    @Override
+    public UpdatedTrainValues sendUpdatedTrainValues(){
+
+        //This is a bandaged solution
+        this.setCurrentTemperature(train.getRealTemperature());
+        if (train.getEmergencyBrake() && !passengerEngageEBrake){
+            passengerEngageEBrake = true;
+            this.setEmergencyBrake(true);
+        }
+        else if (!emergencyBrake){
+            passengerEngageEBrake = false;
+            this.setEmergencyBrake(false);
+        }
+
+        calculatePower(this.currentSpeed);
+
+        return new UpdatedTrainValues(
+                this.power,
+                this.serviceBrake,
+                this.emergencyBrake,
+                this.setTemperature,
+                this.internalLights,
+                this.externalLights,
+                this.leftDoors,
+                this.rightDoors
+        );
+    }
+
+
+    /**
+     * Profetta Notes:
+     * The train controller is meant to stop if a command speed is not sent.  The wayside is not able to send a corrected speed,
+     * rather it just chooses not to send a speed at all, and if the train does not receive a speed, it should stop.
+     */
+    /**
+     * This method is used to calculate the power needed for the train.
+     * It first determines the set speed based on whether the train is in automatic mode or not.
+     * Then it calculates the current speed and initializes acceleration to 0.
+     * It calculates the error between the set speed and the current speed, and updates the rolling error.
+     * The power is then calculated using the proportional-integral (PI) controller formula.
+     * If the calculated power exceeds the maximum power, it is set to the maximum power.
+     * If the train is in automatic mode and the calculated power is less than 0, the power is set to 0 and the service brake is activated.
+     * If the service brake is active and the calculated power is greater than 0, the service brake is deactivated.
+     * If the emergency brake or service brake is active, or there is a power failure, or the calculated power is less than 0, the power is set to 0.
+     * If the emergency brake is active, the acceleration is set to the emergency brake deceleration.
+     * If the service brake is active, the acceleration is set to the service brake deceleration.
+     * Otherwise, the acceleration is calculated by dividing the power by the weight of the train.
+     * The current speed is then updated based on the calculated acceleration.
+     * If the current speed is less than 0, it is set to 0.
+     * Finally, the speed and power of the train are updated.
+     */
+    public double calculatePower(double currentSpeed){
+        // Convert Units
+        double setSpeed, currSpeed, pow, accel;
+
+        if (automaticMode){
+            setSpeed = convertVelocity(commandSpeed, MPH, MPS);
+        }
+        else{
+            setSpeed = convertVelocity(overrideSpeed, MPH, MPS);
+        }
+
+        currSpeed = convertVelocity(currentSpeed, MPH, MPS);
+        accel = 0;
+
+
+        error = setSpeed - currSpeed;
+        rollingError += (double)samplingPeriod/1000 * (error + prevError);
+        prevError = error;
+
+        pow = Kp * error + Ki * rollingError;
+        if(pow > Constants.MAX_POWER) {
+            pow = convertPower(Constants.MAX_POWER,HORSEPOWER, WATTS);
+        }
+
+        if(automaticMode && (pow < 0)){
+            pow = 0;
+            setServiceBrake(true);
+        }else if(serviceBrake && (pow > 0)){
+            setServiceBrake(false);
+        }
+
+        if(emergencyBrake || serviceBrake || powerFailure || (pow < 0)) {
+            pow = 0;
+            if(emergencyBrake){
+                accel = -1 * EMERGENCY_BRAKE_DECELERATION;
+            }else if(serviceBrake) {
+                accel = -1 * SERVICE_BRAKE_DECELERATION;
+            }
+        } else{
+            double mass = train.getMass();
+            if(mass <= 0){
+                mass = 1;
+            }
+            accel = pow / mass;
+        }
+
+        currSpeed += accel * (double)samplingPeriod/1000;
+        if(currSpeed < 0){
+            currSpeed = 0;
+        }
+
+        this.setSpeed(convertVelocity(currSpeed, MPS, MPH));
+        this.setPower(convertPower(pow, WATTS, HORSEPOWER));
+        return setSpeed;
+    }
+
+
+    /**
+     *  onBlock()
+     */
+    public void onBlock(){
+        //TODO:
+
+        // Update Block by Block
+
+        // Get Specific Block Info
+        checkTunnel();
+
+    }
+    /**
+     * onStation()
+     */
+    public void onStation(){
+
+        // Get Block info
+
+
+        //TODO: Stopping train in middle of a block
+
+
+        //This will eventually go inside a check to see if we are stopped at a station.
+        if (train.getSpeed() == 0){                             // Check if train is stopped
+
+            // Hopefully wont affect make announcment implementation in manager
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Arrival");
+            alert.setHeaderText(null);
+            alert.setContentText("Arriving at " + nextStationName); // Note that nextStationName will be updated at some point
+            alert.showAndWait();
+
+            if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
+            if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
+
+            //wait(60000);
+
+            this.setLeftDoors(false);
+            this.setRightDoors(false);
+        }
+    }
+
+
+    // Implement Crossing tunnel
+    public void checkTunnel(){
+        // Get block information somehow
+
+        if(inTunnel) {
+            setIntLights(true);
+            setExtLights(true);
+
+        }
+        else{
+            setIntLights(false);
+            setExtLights(false);
+
+        }
+    }
+
+    // Failure Management with Steven He
+    public boolean checkBrakeFailure(){
+
+        // Failures occur when the brake states in the train controller do not match with brake states in the train model
+        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
+        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
+
+        // If true, pick a god and pray
+
+        return brakeFailure;
+    }
+    public boolean checkSignalFailure(){
+        // Failure occur when the commanded speed or commanded authority is -1
+        this.setCommandSpeed(train.getCommandSpeed());
+        this.setAuthority(train.getAuthority());
+
+        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
+
+        //If true, activate emergency brake
+        if (signalFailure) this.setEmergencyBrake(true);
+
+        return signalFailure;
+    }
+    public boolean checkPowerFailure(){
+        // Failure occurs when train model's set power equals 0 but we are outputting power
+
+        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
+
+        // If true, activate emergency brake
+        if (this.powerFailure) this.setEmergencyBrake(true);
+
+        return this.powerFailure;
     }
 
 
@@ -221,7 +423,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
      * @param newValue      The new value to be set for the property.
      */
 
-    public void setValue(Controller_Property propertyName, Object newValue) {
+    public void setValue(ControllerProperty propertyName, Object newValue) {
         System.out.println("Value " + propertyName + " set to " + newValue);
         switch (propertyName) {
             case AUTOMATIC_MODE -> this.automaticMode = (boolean) newValue;
@@ -359,210 +561,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
 
 
-    /**
-     * Profetta Notes:
-     * The train controller is meant to stop if a command speed is not sent.  The wayside is not able to send a corrected speed,
-     * rather it just chooses not to send a speed at all, and if the train does not receive a speed, it should stop.
-     */
-    /**
-     * This method is used to calculate the power needed for the train.
-     * It first determines the set speed based on whether the train is in automatic mode or not.
-     * Then it calculates the current speed and initializes acceleration to 0.
-     * It calculates the error between the set speed and the current speed, and updates the rolling error.
-     * The power is then calculated using the proportional-integral (PI) controller formula.
-     * If the calculated power exceeds the maximum power, it is set to the maximum power.
-     * If the train is in automatic mode and the calculated power is less than 0, the power is set to 0 and the service brake is activated.
-     * If the service brake is active and the calculated power is greater than 0, the service brake is deactivated.
-     * If the emergency brake or service brake is active, or there is a power failure, or the calculated power is less than 0, the power is set to 0.
-     * If the emergency brake is active, the acceleration is set to the emergency brake deceleration.
-     * If the service brake is active, the acceleration is set to the service brake deceleration.
-     * Otherwise, the acceleration is calculated by dividing the power by the weight of the train.
-     * The current speed is then updated based on the calculated acceleration.
-     * If the current speed is less than 0, it is set to 0.
-     * Finally, the speed and power of the train are updated.
-     */
-    public double calculatePower(double currentSpeed){
-        // Convert Units
-        double setSpeed, currSpeed, pow, accel;
 
-        if (automaticMode){
-            setSpeed = convertVelocity(commandSpeed, MPH, MPS);
-        }
-        else{
-            setSpeed = convertVelocity(overrideSpeed, MPH, MPS);
-        }
-
-        currSpeed = convertVelocity(currentSpeed, MPH, MPS);
-        accel = 0;
-
-
-        error = setSpeed - currSpeed;
-        rollingError += (double)samplingPeriod/2000 * (error + prevError);
-        prevError = error;
-
-        pow = Kp * error + Ki * rollingError;
-        if(pow > Constants.MAX_POWER) {
-            pow = convertPower(Constants.MAX_POWER,HORSEPOWER, WATTS);
-        }
-
-        if(automaticMode && (pow < 0)){
-            pow = 0;
-            setServiceBrake(true);
-        }else if(serviceBrake && (pow > 0)){
-            setServiceBrake(false);
-        }
-
-        if(emergencyBrake || serviceBrake || powerFailure || (pow < 0)) {
-            pow = 0;
-            if(emergencyBrake){
-                accel = -1 * EMERGENCY_BRAKE_DECELERATION;
-            }else if(serviceBrake) {
-                accel = -1 * SERVICE_BRAKE_DECELERATION;
-            }
-        } else{
-            double mass = train.getMass();
-            if(mass <= 0){
-                mass = 1;
-            }
-            accel = pow / mass;
-        }
-
-        currSpeed += accel * (double)samplingPeriod/1000;
-        if(currSpeed < 0){
-            currSpeed = 0;
-        }
-
-        this.setSpeed(convertVelocity(currSpeed, MPS, MPH));
-        this.setPower(convertPower(pow, WATTS, HORSEPOWER));
-        return setSpeed;
-    }
-
-
-    /**
-     *  onBlock()
-     */
-    public void onBlock(){
-        //TODO:
-
-        // Update Block by Block
-
-        // Get Specific Block Info
-        checkTunnel();
-
-    }
-    /**
-     * onStation()
-     */
-    public void onStation(){
-
-        // Get Block info
-
-
-        //TODO: Stopping train in middle of a block
-
-
-        //This will eventually go inside a check to see if we are stopped at a station.
-        if (train.getSpeed() == 0){                             // Check if train is stopped
-
-            // Hopefully wont affect make announcment implementation in manager
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Arrival");
-            alert.setHeaderText(null);
-            alert.setContentText("Arriving at " + nextStationName); // Note that nextStationName will be updated at some point
-            alert.showAndWait();
-
-            if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
-            if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
-
-            //wait(60000);
-
-            this.setLeftDoors(false);
-            this.setRightDoors(false);
-        }
-    }
-
-
-    // Implement Crossing tunnel
-    public void checkTunnel(){
-        // Get block information somehow
-
-        if(inTunnel) {
-            setIntLights(true);
-            setExtLights(true);
-
-        }
-        else{
-            setIntLights(false);
-            setExtLights(false);
-
-        }
-    }
-
-    // Failure Management with Steven He
-    public boolean checkBrakeFailure(){
-
-        // Failures occur when the brake states in the train controller do not match with brake states in the train model
-        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
-        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
-
-        // If true, pick a god and pray
-
-        return brakeFailure;
-    }
-    public boolean checkSignalFailure(){
-        // Failure occur when the commanded speed or commanded authority is -1
-        this.setCommandSpeed(train.getCommandSpeed());
-        this.setAuthority(train.getAuthority());
-
-        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
-
-        //If true, activate emergency brake
-        if (signalFailure) this.setEmergencyBrake(true);
-
-        return signalFailure;
-    }
-    public boolean checkPowerFailure(){
-        // Failure occurs when train model's set power equals 0 but we are outputting power
-
-        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
-
-        // If true, activate emergency brake
-        if (this.powerFailure) this.setEmergencyBrake(true);
-
-        return this.powerFailure;
-    }
 
     @Override
     public void setValue(String propertyName, Object newValue) {
-        setValue(Controller_Property.valueOf(propertyName.toUpperCase()), newValue);
+        setValue(ControllerProperty.valueOf(propertyName.toUpperCase()), newValue);
     }
-    @Override
-    public UpdatedTrainValues sendUpdatedTrainValues(){
 
-        //This is a bandaged solution
-        this.setCurrentTemperature(train.getRealTemperature());
-        if (train.getEmergencyBrake() && !passengerEngageEBrake){
-            passengerEngageEBrake = true;
-            this.setEmergencyBrake((passengerEngageEBrake));
-        }
-        else if (!emergencyBrake){
-            passengerEngageEBrake = false;
-            this.setEmergencyBrake(false);
-        }
-
-        calculatePower(this.currentSpeed);
-
-        return new UpdatedTrainValues(
-                this.power,
-                this.serviceBrake,
-                this.emergencyBrake,
-                this.setTemperature,
-                this.internalLights,
-                this.externalLights,
-                this.leftDoors,
-                this.rightDoors
-        );
-    }
 
 
 }

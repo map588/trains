@@ -2,17 +2,16 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Support.AbstractSubject;
 import Framework.Support.Notifier;
 import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import trainModel.TrainModelSubjectMap;
 
-import static trainController.Controller_Property.*;
+import static trainController.ControllerProperty.*;
 
-public class TrainControllerSubject implements AbstractSubject, Notifier {
-    private final ObservableHashMap<Controller_Property, Property<?>> properties = new ObservableHashMap<>();
+public class TrainControllerSubject implements Notifier {
+    private final ObservableHashMap<ControllerProperty, Property<?>> properties = new ObservableHashMap<>();
     private TrainController controller;
 
     public  volatile boolean  isGUIUpdateInProgress     = false;
@@ -105,39 +104,21 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
     //Change coming from the logic side
     @Override
     public void notifyChange(String propertyName, Object newValue) {
-        Controller_Property property = Controller_Property.valueOf(propertyName.toUpperCase());
+        ControllerProperty property = ControllerProperty.valueOf(propertyName.toUpperCase());
         if (newValue != null) {
             executeUpdate(() -> notifyChange(property, newValue), false);
         }
     }
 
-    public void notifyChange(Controller_Property propertyName, Object newValue) {
+    public void notifyChange(ControllerProperty propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
             executeUpdate(() -> updateProperty(property, newValue), true);
         }
     }
 
-    //Change coming from the GUI side
-    @Override
-    public void setProperty(String propertyName, Object newValue) {
-        Controller_Property property_e = Controller_Property.valueOf(propertyName.toUpperCase());
-        Property<?> property = properties.get(property_e);
 
-        if (property != null && !isLogicUpdateInProgress) {
-            isGUIUpdateInProgress = true;
-            try {
-                executeUpdate(() -> {
-                    System.out.println("Setting property " + propertyName + " to " + newValue);
-                    updateProperty(property, newValue);
-                    controller.setValue(propertyName, newValue);
-                }, false);
-            } finally {
-                isGUIUpdateInProgress = false;
-            }
-        }
-    }
-    public void setProperty(Controller_Property propertyName, Object newValue) {
+    public void setProperty(ControllerProperty propertyName, Object newValue) {
 
         Property<?> property = properties.get(propertyName);
 
@@ -159,9 +140,9 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
         TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
     }
 
-    @Override
+
     public Property<?> getProperty(String propertyName) {
-        return properties.get(Controller_Property.valueOf(propertyName.toUpperCase()));
+        return properties.get(ControllerProperty.valueOf(propertyName.toUpperCase()));
     }
 
     private void executeUpdate(Runnable updateTask, boolean runImmediately) {
@@ -196,26 +177,26 @@ public class TrainControllerSubject implements AbstractSubject, Notifier {
 
 
 
-    public Property<?> getProperty(Controller_Property propertyName) {
+    public Property<?> getProperty(ControllerProperty propertyName) {
         return properties.get(propertyName);
     }
 
-    public StringProperty getStringProperty(Controller_Property propertyName){
+    public StringProperty getStringProperty(ControllerProperty propertyName){
         Property<?> property = getProperty(propertyName);
             return (StringProperty) property;
     }
     // Directly accessing typed properties for GUI binding
-    public BooleanProperty getBooleanProperty(Controller_Property propertyName) {
+    public BooleanProperty getBooleanProperty(ControllerProperty propertyName) {
         Property<?> property = getProperty(propertyName);
             return (BooleanProperty) property;
     }
 
-    public DoubleProperty getDoubleProperty(Controller_Property propertyName) {
+    public DoubleProperty getDoubleProperty(ControllerProperty propertyName) {
         Property<?> property = getProperty(propertyName);
         return (DoubleProperty) property;
     }
 
-    public IntegerProperty getIntegerProperty(Controller_Property propertyName) {
+    public IntegerProperty getIntegerProperty(ControllerProperty propertyName) {
         Property<?> property = getProperty(propertyName);
         return (IntegerProperty) property;
     }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static trainController.Controller_Property.*;
+import static trainController.ControllerProperty.*;
 
 public class TrainControllerManager {
 
@@ -68,21 +68,19 @@ public class TrainControllerManager {
             }
         });
 
-//        if (!subjectMap.getSubjects().isEmpty()){
-//            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
-//        }else{
-//            System.out.println("No trains to display");
-//            statusLog.setText("No Trains to Display");
-//            currentSubject = nullSubject;
-//            updateAll();
-//        }
+        if (!subjectMap.getSubjects().isEmpty()){
+            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
+        }else{
+            System.out.println("No trains to display");
+            statusLog.setText("No Trains to Display");
+            currentSubject = nullSubject;
+            updateAll();
+        }
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             changeTrainView(firstKey);
             currentSubject = subjectMap.getSubject(firstKey);
-
-            //currentSubject.setProperty(AUTOMATIC_MODE_PROPERTY, true);
         }else{
             statusLog.setText("No Trains Available");
         }
@@ -95,7 +93,7 @@ public class TrainControllerManager {
         });
 
 
-        currentSubject.setProperty(AUTOMATIC_MODE.getPropertyName(), true);
+        currentSubject.setProperty(AUTOMATIC_MODE, true);
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
@@ -147,10 +145,10 @@ public class TrainControllerManager {
         appendListener(currentSubject.getBooleanProperty(IN_TUNNEL),(obs, oldVal, newVal) ->     Platform.runLater(() -> {updateIndicator(Color.YELLOW, inTunnelStatus, newVal); inTunnelUpdates();}));
         appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal)));
         appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM),(obs, oldVal, newVal) -> Platform.runLater(() -> updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal)));
-        bindStringText(nextStationText, NEXT_STATION.getPropertyName());
+        bindStringText(nextStationText, NEXT_STATION);
     }
 
-    private void bindStringText(Text text, String propertyName){
+    private void bindStringText(Text text, ControllerProperty propertyName){
         appendListener(currentSubject.getProperty(propertyName),(obs,oldVal,newVal) -> {
             Platform.runLater(()-> text.setText((String)newVal));
         });
@@ -162,7 +160,7 @@ public class TrainControllerManager {
 
     private void bindControls() {
         bindSliderAndTextField(setSpeedSlider, setSpeedTextField, newValue -> {
-            currentSubject.setProperty(OVERRIDE_SPEED.getPropertyName(), newValue);
+            currentSubject.setProperty(OVERRIDE_SPEED, newValue);
         });
         bindCheckBox(intLightCheckBox, INT_LIGHTS);
         bindCheckBox(extLightCheckBox, EXT_LIGHTS);
@@ -180,17 +178,17 @@ public class TrainControllerManager {
         });
     }
 
-    private void bindCheckBox(CheckBox checkBox, Controller_Property propertyName) {
+    private void bindCheckBox(CheckBox checkBox, ControllerProperty property) {
         appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
-                currentSubject.setProperty(propertyName.getPropertyName(), newVal);
-                setNotification(propertyName,String.valueOf(checkBox.isSelected()));
+                currentSubject.setProperty(property, newVal);
+                setNotification(property,String.valueOf(checkBox.isSelected()));
         });
     }
 
-    private void bindDoubleTextField(TextField textField, Controller_Property property) {
+    private void bindDoubleTextField(TextField textField, ControllerProperty property) {
         Runnable textFieldUpdate = () -> {
             try {
-                currentSubject.setProperty(property.getPropertyName(), Double.parseDouble(textField.getText()));
+                currentSubject.setProperty(property, Double.parseDouble(textField.getText()));
                 setNotification(property, textField.getText());
             } catch (NumberFormatException e) {
                 showErrorDialog("Invalid input", "Please enter a valid number.");
@@ -215,7 +213,7 @@ public class TrainControllerManager {
         });
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
-            currentSubject.setProperty(ANNOUNCEMENTS.getPropertyName(), !announceProp.get());
+            currentSubject.setProperty(ANNOUNCEMENTS, !announceProp.get());
 
             setNotification(ANNOUNCEMENTS,"");
             if (!nextStationText.getText().contains("yard") && !nextStationText.getText().contains("Yard")) {
@@ -364,7 +362,7 @@ public class TrainControllerManager {
     }
 
     // Set the current action
-    private void setNotification(Controller_Property propertyName, String value) {
+    private void setNotification(ControllerProperty propertyName, String value) {
         String statusNotification = switch (propertyName) {
             case OVERRIDE_SPEED -> "\nSet Speed to \n" + value + " MPH";
             case SERVICE_BRAKE, LEFT_DOORS, RIGHT_DOORS, INT_LIGHTS,
@@ -384,7 +382,7 @@ public class TrainControllerManager {
         });
     }
 
-    private String getPropertyLabel(Controller_Property propertyName) {
+    private String getPropertyLabel(ControllerProperty propertyName) {
         return switch (propertyName) {
             case SERVICE_BRAKE -> "Service Brake";
             case LEFT_DOORS -> "Left Doors";
@@ -396,7 +394,7 @@ public class TrainControllerManager {
         };
     }
 
-    private String getOnLabel(Controller_Property propertyName) {
+    private String getOnLabel(ControllerProperty propertyName) {
         return switch (propertyName) {
             case SERVICE_BRAKE -> "Engaged";
             case LEFT_DOORS, RIGHT_DOORS -> "Opened";
@@ -405,7 +403,7 @@ public class TrainControllerManager {
         };
     }
 
-    private String getOffLabel(Controller_Property propertyName) {
+    private String getOffLabel(ControllerProperty propertyName) {
         return switch (propertyName) {
             case SERVICE_BRAKE -> "Disengaged";
             case LEFT_DOORS, RIGHT_DOORS -> "Closed";
