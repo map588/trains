@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainModel.TrainModelSubjectMap;
 
 import static trainController.ControllerProperty.*;
 
@@ -20,15 +19,18 @@ public class TrainControllerSubject implements Notifier {
     public  volatile boolean  isGUIUpdateInProgress     = false;
     private volatile boolean  isLogicUpdateInProgress   = false;
 
-    private TrainModelSubjectMap trainModelSubjectMap = TrainModelSubjectMap.getInstance();
+    private final TrainControllerSubjectMap controllerSubjectMap = TrainControllerSubjectMap.getInstance();
 
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
-        initializeProperties();
-        if(TrainControllerSubjectMap.getInstance().getSubjects().containsKey(controller.getID())){
-            TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
+        if(controller.getID()  == -1){
+            return;
         }
-        TrainControllerSubjectMap.getInstance().registerSubject(controller.getID(), this);
+        initializeProperties();
+        if(controllerSubjectMap.getSubjects().containsKey(controller.getID())){
+            controllerSubjectMap.removeSubject(controller.getID());
+        }
+        controllerSubjectMap.registerSubject(controller.getID(), this);
         logger.info("Train Controller Subject created with ID: " + controller.getID());
     }
 
@@ -70,7 +72,7 @@ public class TrainControllerSubject implements Notifier {
     //Change coming from the logic side
     @Override
     public void notifyChange(String propertyName, Object newValue) {
-       logger.info("deprecatedMessage");
+       logger.info("deprecated string change called");
     }
 
     public void notifyChange(ControllerProperty propertyName, Object newValue) {

@@ -45,6 +45,9 @@ public class TrainModelSubject implements AbstractSubject{
     }
     public TrainModelSubject(TrainModelImpl trainModel) {
         this.model = trainModel;
+        if(trainModel.getTrainNumber() == -1 ){
+            return;
+        }
         intitializeValues();
         map.registerSubject(trainModel.getTrainNumber(),this);
     }

@@ -4,7 +4,6 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.GUIModifiableEnum;
 import Utilities.Constants;
-import Utilities.Conversion;
 import Utilities.Records.Beacon;
 import Utilities.Records.UpdatedTrainValues;
 import javafx.scene.control.Alert;
@@ -61,7 +60,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
     private int authority = 0;
 
-    private boolean serviceBrake = false, emergencyBrake = false, automaticMode = false,
+    private boolean serviceBrake = false, emergencyBrake = false, automaticMode = true,
             internalLights = false, externalLights = false, leftDoors = false,
             rightDoors = false, announcements = false, signalFailure = false,
             brakeFailure = false, powerFailure = false, leftPlatform = false,
@@ -89,7 +88,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
 
     public TrainControllerImpl() {
-        this.trainID = 0;
+        this.trainID = -1;
         this.train = new TrainModelImpl();
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
@@ -319,7 +318,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        subject.notifyChange(CURRENT_SPEED , Conversion.convertVelocity(speed, MPS, MPH));
+        subject.notifyChange(CURRENT_SPEED , convertVelocity(speed, MPS, MPH));
     }
     private void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
@@ -339,7 +338,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
     public void setPower(double power) {
         this.power = power;
-        subject.notifyChange(POWER , power);
+        subject.notifyChange(POWER , convertPower(power, WATTS, HORSEPOWER));
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
