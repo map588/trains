@@ -42,13 +42,23 @@ endif
 // Directional Occupancies for Section N
 if dir_assigned[77]
     if direction[77] == NORTHBOUND
-        for i = 77 to 85 do
-            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4] and switch[77] == ALT
+        authority[77] = not occupied[101] and not occupied[102] and not occupied[103] and not occupied[104] and not switch[77]
+        authority[78] = not occupied[77] and not occupied[101] and not occupied[102] and not occupied[103] and not switch[77]
+        authority[79] = not occupied[78] and not occupied[77] and not occupied[101] and not occupied[102] and not switch[77]
+        authority[80] = not occupied[79] and not occupied[78] and not occupied[77] and not occupied[101] and not switch[77]
+
+        for i = 81 to 85 do
+            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
         endfor
     else
-        for i = 77 to 85 do
+        for i = 77 to 81 do
             authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
         endfor
+
+        authority[82] = not occupied[83] and not occupied[84] and not occupied[85] and not occupied[86] and not switch[85]
+        authority[83] = not occupied[84] and not occupied[85] and not occupied[86] and not occupied[78] and not switch[85]
+        authority[84] = not occupied[85] and not occupied[86] and not occupied[87] and not occupied[88] and not switch[85]
+        authority[85] = not occupied[86] and not occupied[87] and not occupied[89] and not occupied[89] and not switch[85]
     endif
 else
     for i = 77 to 85 do
@@ -63,14 +73,15 @@ for i = 86 to 88 do
 endfor
 
 // P Occupancies
-for i = 89 to 97 do
+for i = 89 to 96 do
     authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
 endfor
+authority[97] = not occupied[98] and not occupied[99] and not occupied[100] and not occupied[85] and switch[85]
 
 // Q Occupancies
-for i = 98 to 100 do
-    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[77] == MAIN
-endfor
+authority[98] = not occupied[99] and not occupied[100] and not occupied[85] and not occupied[84] and switch[85]
+authority[99] = not occupied[100] and not occupied[85] and not occupied[84] and not occupied[83] and switch[85]
+authority[100] = not occupied[85] and not occupied[84] and not occupied[83] and not occupied[82] and switch[85]
 
 // L Occupancies
 for i = 69 to 73 do
@@ -79,7 +90,7 @@ endfor
 
 // M Occupancies
 for i = 74 to 76 do
-    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[77] == ALT
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[77]
 endfor
 
 // R Occupancy
