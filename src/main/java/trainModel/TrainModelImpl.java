@@ -213,7 +213,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.brakeForce = 0;
         }
 
-        System.out.println("Power: " + this.power);
+        //System.out.println("Power: " + this.power);
 
         //ENGINE FORCE
         double engineForce;
@@ -233,24 +233,24 @@ public class TrainModelImpl implements TrainModel, Notifier {
             engineForce = MAX_ENGINE_FORCE;
         }
 
-        System.out.println("Engine Force: " + engineForce);
+        //System.out.println("Engine Force: " + engineForce);
 
         //SLOPE FORCE
         double currentAngle = Math.atan(this.grade / 100);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
-        System.out.println("Gravity Force: " + gravityForce);
+        //System.out.println("Gravity Force: " + gravityForce);
 
         //NET FORCE
         double netForce = engineForce - gravityForce - this.brakeForce;
         if (netForce > MAX_ENGINE_FORCE){
             netForce = MAX_ENGINE_FORCE;
         }
-        System.out.println("Net Force: " + netForce);
+        //System.out.println("Net Force: " + netForce);
 
         //ACCELERATION CALCULATION
         this.acceleration = (netForce / this.mass);
         this.newAcceleration = this.acceleration;
-        System.out.println("Acceleration: " + this.acceleration);
+        //System.out.println("Acceleration: " + this.acceleration);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
@@ -260,7 +260,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
         this.newSpeed = this.speed;
-        System.out.println("Speed: " + this.speed);
+        //System.out.println("Speed: " + this.speed);
 
         this.relativeDistance += this.speed * (this.TIME_DELTA / 1000.0);
 
@@ -279,7 +279,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
     public void enteredNextBlock() {
-        System.out.println("Train Entered Next Block");
+        //System.out.println("Train Entered Next Block");
         TrackBlock currentBlock = track.updateTrainLocation(this);
         currentBlockLength = currentBlock.getLength();
         //controller.onBlock();
