@@ -4,6 +4,7 @@ package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Framework.Simulation.Main;
 import Framework.Support.Notifier;
 import Utilities.Constants;
 import Utilities.Conversion;
@@ -16,6 +17,7 @@ import trainController.TrainControllerImpl;
 
 import java.util.concurrent.*;
 
+import static Utilities.Constants.MAX_ENGINE_FORCE;
 import static Utilities.Constants.YARD_OUT_DIRECTION;
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
@@ -97,8 +99,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     private void initializeValues() {
-        this.authority = 10;
-        this.commandSpeed = 10;
+        this.authority = 0;
+        this.commandSpeed = 0;
         this.speed = 0;
         this.acceleration = 0;
         this.power = 0;
@@ -108,7 +110,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.brakeFailure = false;
         this.powerFailure = false;
         this.signalFailure = false;
-        this.TIME_DELTA = 10;
+        this.TIME_DELTA = (int)Main.TIMESTEP;
         this.realTemperature = 0;
         this.setTemperature = 0;
         this.extLights = false;
@@ -188,8 +190,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
         }
 
+        // TODO: Remove print statements once things are fully sorted out
+
         //NEXT BLOCK NOTICE
-        if(currentBlockLength - relativeDistance < 0) {
+        System.out.println("Relative Distance: " + relativeDistance);
+        System.out.println("Current Block Length: " + currentBlockLength);
+        if(currentBlockLength - relativeDistance <= 0) {
             enteredNextBlock();
         }
 
@@ -208,32 +214,44 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.brakeForce = 0;
         }
 
+        System.out.println("Power: " + this.power);
+
         //ENGINE FORCE
         double engineForce;
-        if (this.power > 0 && this.speed == 0) {
+        if (this.power > 0.0001 && this.speed < 0.0001) {
             this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             engineForce = this.power / 0.1;
         }
-        else if(this.speed == 0 && this.emergencyBrake) {
-            engineForce = 0;
+        else if(this.speed < 0.0001) {
+            engineForce = 0.0;
         }
         else {
             engineForce = this.power / this.speed;
         }
 
+        // TODO: Is this a reasonable way to do this?
+        if(Double.isNaN(engineForce) || engineForce > MAX_ENGINE_FORCE) {
+            engineForce = MAX_ENGINE_FORCE;
+        }
+
+        System.out.println("Engine Force: " + engineForce);
+
         //SLOPE FORCE
         double currentAngle = Math.atan(this.grade / 100);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
+        System.out.println("Gravity Force: " + gravityForce);
 
         //NET FORCE
         double netForce = engineForce - gravityForce - this.brakeForce;
-        if (netForce > Constants.MAX_ENGINE_FORCE){
-            netForce = Constants.MAX_ENGINE_FORCE;
+        if (netForce > MAX_ENGINE_FORCE){
+            netForce = MAX_ENGINE_FORCE;
         }
+        System.out.println("Net Force: " + netForce);
 
         //ACCELERATION CALCULATION
         this.acceleration = (netForce / this.mass);
         this.newAcceleration = this.acceleration;
+        System.out.println("Acceleration: " + this.acceleration);
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
@@ -243,6 +261,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
         this.newSpeed = this.speed;
+        System.out.println("Speed: " + this.speed);
+
+        this.relativeDistance += this.speed * (this.TIME_DELTA / 1000.0);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -259,6 +280,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
     public void enteredNextBlock() {
+        System.out.println("Train Entered Next Block");
         TrackBlock currentBlock = track.updateTrainLocation(this);
         currentBlockLength = currentBlock.getLength();
         //controller.onBlock();
