@@ -1,6 +1,6 @@
 package Framework.Simulation;
 
-import Utilities.BlockSkipListMap;
+import Utilities.BasicTrackMap;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Enums.Lines;
 import org.slf4j.LoggerFactory;
@@ -27,15 +27,15 @@ public class TrackSystem {
 
     public TrackSystem() {
         GlobalBasicBlockParser parsedBasicBlocks = GlobalBasicBlockParser.getInstance();
-        BlockSkipListMap blockSkipListMap = parsedBasicBlocks.getAllBasicLines();
-        trackLineExecutor = Executors.newFixedThreadPool(blockSkipListMap.size());
+        BasicTrackMap basicTrackMap = parsedBasicBlocks.getAllBasicLines();
+        trackLineExecutor = Executors.newFixedThreadPool(basicTrackMap.size());
         for (Lines line : Lines.values()) {
-            TrackLine track = new TrackLine(line, blockSkipListMap.get(line));
+            TrackLine track = new TrackLine(line, basicTrackMap.get(line));
             for(int i = 0; i < track.getTrack().size(); i++) {
                 TrackBlock block = track.getTrack().get(i);
                 logBlockInfo(block);
             }
-            TrackLineMap.addTrackLine(line, new TrackLine(line, blockSkipListMap.get(line)));
+            TrackLineMap.addTrackLine(line, new TrackLine(line, basicTrackMap.get(line)));
             logger.info("TrackLine {} has been added to the TrackLineMap", line);
         }
     }

@@ -27,12 +27,12 @@ public class GlobalBasicBlockParser {
         return INSTANCE;
     }
 
-    public BasicSkipList getBasicLine(Lines line) {
-        return new BasicSkipList(basicBlocks.get(line));
+    public BasicTrackLine getBasicLine(Lines line) {
+        return new BasicTrackLine(basicBlocks.get(line));
     }
 
-    public BlockSkipListMap getAllBasicLines() {
-        return new BlockSkipListMap(basicBlocks);
+    public BasicTrackMap getAllBasicLines() {
+        return new BasicTrackMap(basicBlocks);
     }
 
     public void updateFile(String filePath) {

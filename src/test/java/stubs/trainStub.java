@@ -2,6 +2,8 @@ package stubs;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Utilities.BasicTrackMap;
+import Utilities.BasicTrackLine;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
@@ -10,6 +12,7 @@ import trainModel.Records.UpdatedTrainValues;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
+
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -50,6 +53,8 @@ public class trainStub implements TrainModel {
 
     TrackLine track;
     TrackBlock currentBlock;
+    BasicTrackMap trackMap = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+    BasicTrackLine basicTrackLine = trackMap.get(Lines.GREEN);
 
     public trainStub(TrackLine track, int trainID) {
         this.trainID = trainID;
@@ -61,7 +66,7 @@ public class trainStub implements TrainModel {
 
     public trainStub() {
         this.trainID = 1;
-        this.track = new TrackLine(Lines.GREEN, GlobalBasicBlockParser.getInstance().getBasicLine(Lines.GREEN));
+        this.track = new TrackLine(Lines.GREEN, basicTrackLine);
         this.currentBlock = track.getTrack().get(0);
         this.controller = new TrainControllerImpl(this, trainID);
         initializeValues();
@@ -375,5 +380,10 @@ public class trainStub implements TrainModel {
     @Override
     public void trainModelPhysics() {
 
+    }
+
+    @Override
+    public Lines getLine() {
+        return null;
     }
 }

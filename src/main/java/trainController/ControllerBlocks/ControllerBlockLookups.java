@@ -1,6 +1,6 @@
 package trainController.ControllerBlocks;
 
-import Utilities.BlockSkipListMap;
+import Utilities.BasicTrackMap;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
@@ -15,7 +15,7 @@ public final class ControllerBlockLookups {
     private static final ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, ControllerBlock>> lineLookups = new ConcurrentHashMap<>();
 
     private ControllerBlockLookups() {
-        BlockSkipListMap lineMaps = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+        BasicTrackMap lineMaps = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         for(Lines line : lineMaps.keySet()){
             ConcurrentHashMap<Integer, ControllerBlock> lookup = new ConcurrentHashMap<>();
             for(Integer blockID : lineMaps.get(line).keySet()){

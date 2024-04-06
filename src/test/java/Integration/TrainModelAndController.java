@@ -1,7 +1,7 @@
 package Integration;
 
 import Framework.Simulation.TrainSystem;
-import Utilities.BlockSkipListMap;
+import Utilities.BasicTrackMap;
 import Utilities.GlobalBasicBlockParser;
 import org.junit.jupiter.api.BeforeEach;
 import trackModel.TrackLine;
@@ -11,7 +11,7 @@ import static Utilities.Enums.Lines.GREEN;
 public class TrainModelAndController extends BaseTest  {
 
     private final TrainSystem trainSystem = new TrainSystem();
-    private final BlockSkipListMap trackLines = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+    private final BasicTrackMap trackLines = GlobalBasicBlockParser.getInstance().getAllBasicLines();
     private  TrackLine trackLine;
 
     @BeforeEach

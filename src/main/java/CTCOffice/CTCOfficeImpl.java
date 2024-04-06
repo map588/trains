@@ -7,7 +7,7 @@ import CTCOffice.ScheduleInfo.TrainStop;
 import Common.CTCOffice;
 import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
-import Utilities.BlockSkipListMap;
+import Utilities.BasicTrackMap;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
@@ -43,7 +43,7 @@ public class CTCOfficeImpl implements CTCOffice {
      */
     private CTCOfficeImpl() {
 
-        BlockSkipListMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+        BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
             ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
             for(BasicBlock block : trackLineBlocks.get(Lines.GREEN).values()) {

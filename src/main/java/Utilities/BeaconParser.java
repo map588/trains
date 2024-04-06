@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class BeaconParser {
-    private static BlockSkipListMap blockLines = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+    private static BasicTrackMap blockLines = GlobalBasicBlockParser.getInstance().getAllBasicLines();
 
     private static ConcurrentSkipListSet<BasicBlock> switches = new ConcurrentSkipListSet<>();
 
@@ -104,7 +104,7 @@ public class BeaconParser {
         }
 
 
-        return null;
+        return beacons;
     }
 
 

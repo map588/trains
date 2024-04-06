@@ -4,13 +4,13 @@ import Utilities.Records.BasicBlock;
 
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class BasicSkipList extends ConcurrentSkipListMap<Integer, BasicBlock>{
+public final class BasicTrackLine extends ConcurrentSkipListMap<Integer, BasicBlock>{
 
-    public BasicSkipList() {
+    public BasicTrackLine() {
         super();
     }
 
-    public BasicSkipList(ConcurrentSkipListMap<Integer, BasicBlock> map) {
+    public BasicTrackLine(ConcurrentSkipListMap<Integer, BasicBlock> map) {
         super(map);
     }
 

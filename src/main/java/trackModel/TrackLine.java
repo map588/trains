@@ -4,7 +4,7 @@ import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.ObservableHashMap;
-import Utilities.BasicSkipList;
+import Utilities.BasicTrackLine;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
@@ -47,7 +47,7 @@ public class TrackLine implements TrackModel {
     public int outsideTemperature = 40;
     private WaysideSystem waysideSystem;
 
-    public TrackLine(Lines line, BasicSkipList basicTrackLayout) {
+    public TrackLine(Lines line, BasicTrackLine basicTrackLayout) {
 
         trackBlocks = new TrackBlockLine();
         beaconBlocks = new ConcurrentHashMap<>();
