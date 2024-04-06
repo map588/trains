@@ -19,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TrainModelManager {
+    
+    Logger logger = LoggerFactory.getLogger(TrainModelManager.class);
 
     @FXML
     public Button eBrakeBtn;
@@ -49,7 +53,7 @@ public class TrainModelManager {
     private final TrainModelSubject nullSubject = new TrainModelSubject();
     @FXML
     public void initialize() {
-        System.out.println("Started TrainModelManager initialize");
+        logger.info("Started TrainModelManager initialize");
 
         subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
@@ -64,12 +68,12 @@ public class TrainModelManager {
         if(!subjectMap.getSubjects().isEmpty()) {
             changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
         }else{
-            System.out.println("No trains to display");
+            logger.info("No trains to display");
             subject = nullSubject;
             updateView();
         }
 
-        System.out.println("Finished TrainModelManager initialize");
+        logger.info("Finished TrainModelManager initialize");
     }
 
     private void bindLabels() {
@@ -90,7 +94,7 @@ public class TrainModelManager {
     private void bindLabelToProperty(String property, Label label) {
         appendListener(subject.getProperty(property) ,(obs, oldValue, newValue) -> {
                 String newVal = newValue.toString();
-                //System.out.println("newVal: " + newVal);
+                //logger.info("newVal: " + newVal);
                 if(newVal.isEmpty()) {return;}
                 try {
                     label.setText(newVal);
@@ -206,6 +210,7 @@ public class TrainModelManager {
             @Override
             public void onAdded(Integer key, TrainModelSubject value) {
                 updateChoiceBoxItems();
+                trainDropDown.getSelectionModel().select(value.getModel().getTrainNumber());
             }
 
             @Override
@@ -224,16 +229,11 @@ public class TrainModelManager {
     }
 
     private void updateChoiceBoxItems() {
-        int previousSelection = trainDropDown.getSelectionModel().getSelectedIndex();
         trainDropDown.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
-        if(previousSelection != -1 || trainDropDown.getItems().isEmpty() || previousSelection >= trainDropDown.getItems().size()) {
-            previousSelection = 0;
-        }
-        trainDropDown.getSelectionModel().select(previousSelection);
     }
 
     private TrainModelTB launchTestBench() {
-       // System.out.println(System.getProperty("Preparing to launch test bench"));
+       // logger.info(System.getProperty("Preparing to launch test bench"));
         try {
             String tbFile = "/Framework/GUI/FXML/trainModel_TB.fxml";
             URL url = getClass().getResource(tbFile);
@@ -247,7 +247,7 @@ public class TrainModelManager {
             return loader.getController();
         } catch (Exception e) {
             e.printStackTrace();
-       //     System.out.println("Failed to launch test bench");
+       //     logger.info("Failed to launch test bench");
             throw new RuntimeException(e);
         }
     }

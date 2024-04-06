@@ -4,7 +4,7 @@ import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.ObservableHashMap;
-import Utilities.BasicBlockLine;
+import Utilities.BasicSkipList;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
@@ -26,7 +26,7 @@ public class TrackLine implements TrackModel {
 
     Lines line;
 
-    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(8);
+    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     //maps blocks to block numbers
     private final TrackBlockLine trackBlocks;
@@ -47,7 +47,7 @@ public class TrackLine implements TrackModel {
     public int outsideTemperature = 40;
     private WaysideSystem waysideSystem;
 
-    public TrackLine(Lines line, BasicBlockLine basicTrackLayout) {
+    public TrackLine(Lines line, BasicSkipList basicTrackLayout) {
 
         trackBlocks = new TrackBlockLine();
         beaconBlocks = new ConcurrentHashMap<>();
@@ -389,6 +389,11 @@ public class TrackLine implements TrackModel {
             {this.ticketSales = 0;}
             return ticketSales;
         }).join();
+    }
+
+    @Override
+    public Lines getLine() {
+        return this.line;
     }
 
     public void resetTicketSales() {

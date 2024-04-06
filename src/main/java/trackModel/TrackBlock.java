@@ -135,7 +135,7 @@ public class TrackBlock {
         return brokenRail || trackCircuitFailure || powerFailure;
     }
 
-     Connection getNextBlock(Direction direction) {
+     public Connection getNextBlock(Direction direction) {
         if (isSwitch) {
             return feature.getNextBlock(direction);
         } else {

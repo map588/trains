@@ -1,7 +1,7 @@
 package trainModel;
 
 import Integration.BaseTest;
-import Utilities.Records.UpdatedTrainValues;
+import trainModel.Records.UpdatedTrainValues;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 

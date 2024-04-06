@@ -9,8 +9,9 @@ import Framework.Support.Notifier;
 import Utilities.Constants;
 import Utilities.Conversion;
 import Utilities.Enums.Direction;
+import Utilities.Enums.Lines;
 import Utilities.Records.Beacon;
-import Utilities.Records.UpdatedTrainValues;
+import trainModel.Records.UpdatedTrainValues;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
@@ -181,6 +182,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setAcceleration(newAcceleration);
         this.setActualSpeed(newSpeed);
         this.setRealTemperature(newRealTemperature);
+    }
+
+    @Override
+    public Lines getLine() {
+        return track.getLine();
     }
 
     private void physicsUpdate() {

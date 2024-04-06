@@ -1,14 +1,18 @@
 package Framework.Simulation;
 
-import Utilities.BasicLineMap;
+import Utilities.BlockSkipListMap;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Enums.Lines;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import trackModel.TrackBlock;
-import trackModel.TrackBlogLog;
 import trackModel.TrackLine;
 import trackModel.TrackLineMap;
 
 import java.util.concurrent.*;
+
+import static Utilities.Enums.Direction.NORTH;
+import static Utilities.Enums.Direction.SOUTH;
 
 public class TrackSystem {
 
@@ -19,17 +23,20 @@ public class TrackSystem {
      */
     private final ExecutorService trackLineExecutor;
 
+    private static final Logger logger = LoggerFactory.getLogger(TrackSystem.class);
+
     public TrackSystem() {
         GlobalBasicBlockParser parsedBasicBlocks = GlobalBasicBlockParser.getInstance();
-        BasicLineMap basicLines = parsedBasicBlocks.getAllBasicLines();
-        trackLineExecutor = Executors.newFixedThreadPool(basicLines.size());
+        BlockSkipListMap blockSkipListMap = parsedBasicBlocks.getAllBasicLines();
+        trackLineExecutor = Executors.newFixedThreadPool(blockSkipListMap.size());
         for (Lines line : Lines.values()) {
-            TrackLine track = new TrackLine(line, basicLines.get(line));
+            TrackLine track = new TrackLine(line, blockSkipListMap.get(line));
             for(int i = 0; i < track.getTrack().size(); i++) {
                 TrackBlock block = track.getTrack().get(i);
-                new TrackBlogLog(block);
+                logBlockInfo(block);
             }
-            TrackLineMap.addTrackLine(line, new TrackLine(line, basicLines.get(line)));
+            TrackLineMap.addTrackLine(line, new TrackLine(line, blockSkipListMap.get(line)));
+            logger.info("TrackLine {} has been added to the TrackLineMap", line);
         }
     }
 
@@ -43,5 +50,13 @@ public class TrackSystem {
                     line.update();
             }
         });
+    }
+
+    private void logBlockInfo(TrackBlock block) {
+
+        logger.info("Block: {} Type: {} Line: {}", block.getBlockID(), block.getBlockType().toString(), block.getLine().toString());
+        logger.info("Next Block North: {}", block.getNextBlock(NORTH).toString());
+        logger.info("Next Block South: {}", block.getNextBlock(SOUTH).toString());
+        logger.info("Switch: {}", block.isSwitch());
     }
 }

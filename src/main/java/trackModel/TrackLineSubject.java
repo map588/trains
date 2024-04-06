@@ -1,11 +1,8 @@
 package trackModel;
 
-import Utilities.BasicBlockLine;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
 
 public class TrackLineSubject {
     private StringProperty blockNumber;

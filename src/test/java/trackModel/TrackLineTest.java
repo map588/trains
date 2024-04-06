@@ -1,7 +1,7 @@
 package trackModel;
 
 import Integration.BaseTest;
-import Utilities.BasicBlockLine;
+import Utilities.BasicSkipList;
 import Utilities.Constants;
 import Utilities.Enums.BlockType;
 import Utilities.Enums.Lines;
@@ -51,7 +51,7 @@ public class TrackLineTest extends BaseTest {
 
     private static TrackLine trackLine;
     private trainStub stub;
-    private static BasicBlockLine basicBlockSkipList;
+    private static BasicSkipList basicBlockSkipList;
     private static int i = 10;
 
     @BeforeAll

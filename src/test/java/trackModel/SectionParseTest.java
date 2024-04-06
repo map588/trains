@@ -1,18 +1,17 @@
 package trackModel;
 
 import Integration.BaseTest;
-import Utilities.BasicLineMap;
+import Utilities.BlockSkipListMap;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
-import Utilities.Records.TrackSegment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static Utilities.TrackSegmentParser.parseTrackSegments;
+import static Utilities.BeaconParser.parseTrackSegments;
 
 public class SectionParseTest extends BaseTest {
 
@@ -20,7 +19,7 @@ public class SectionParseTest extends BaseTest {
 
     @BeforeEach
     public void setUp() {
-        BasicLineMap sectionBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+        BlockSkipListMap sectionBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         for (Lines line : sectionBlocks.keySet()) {
             ArrayList<TrackSegment> sections = parseTrackSegments(sectionBlocks.get(line));
             TrackSegments.put(line, sections);

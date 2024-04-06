@@ -3,7 +3,7 @@ package stubs;
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
-import Utilities.Records.UpdatedTrainValues;
+import trainModel.Records.UpdatedTrainValues;
 import trainController.TrainControllerSubject;
 
 public class trainControllerStub implements TrainController {

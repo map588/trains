@@ -69,20 +69,19 @@ public class TrainControllerManager {
             }else{
                 changeTrainView(oldSelection);
             }
-            currentSubject = subjectMap.getSubject(newSelection);
         });
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
-            changeTrainView(firstKey);
             logger.info("Initialized Train Controller with train ID: {}", firstKey);
+            changeTrainView(firstKey);
         } else {
             statusLog.setText("No Trains Available");
             logger.warn("No trains available to initialize Train Controller");
         }
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
-
+        updateAll();
     }
 
     private void setupMapChangeListener() {
@@ -92,17 +91,17 @@ public class TrainControllerManager {
         ObservableHashMap.MapListener<Integer, TrainControllerSubject> genericListener = new ObservableHashMap.MapListener<>() {
             public void onAdded(Integer key, TrainControllerSubject value) {
                 updateChoiceBoxItems();
+                trainNoChoiceBox.getSelectionModel().select(value.getController().getID());
             }
             public void onRemoved(Integer key, TrainControllerSubject value) {
                 updateChoiceBoxItems();
             }
             public void onUpdated(Integer key, TrainControllerSubject oldValue, TrainControllerSubject newValue) {
                 updateChoiceBoxItems();
+                trainNoChoiceBox.getSelectionModel().select(newValue.getController().getID());
             }
         };
-
         subjects.addChangeListener(genericListener);
-        updateChoiceBoxItems();
     }
 
 
@@ -120,17 +119,17 @@ public class TrainControllerManager {
         appendListener(currentSubject.getDoubleProperty(CURRENT_SPEED), (obs, oldVal, newVal) -> {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             currentSpeedGauge.setValue(newVal.doubleValue());
-            logger.debug("Current speed gauge updated to {}", newVal);
+    //        logger.debug("Current speed gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(COMMAND_SPEED), (obs, oldVal, newVal) -> {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             commandedSpeedGauge.setValue(newVal.doubleValue());
-            logger.debug("Commanded speed gauge updated to {}", newVal);
+    //        logger.debug("Commanded speed gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(SPEED_LIMIT), (obs, oldVal, newVal) -> {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             speedLimitGauge.setValue(newVal.doubleValue());
-            logger.debug("Speed limit gauge updated to {}", newVal);
+     //       logger.debug("Speed limit gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getIntegerProperty(AUTHORITY), (obs, oldVal, newVal) -> {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
@@ -140,14 +139,14 @@ public class TrainControllerManager {
         appendListener(currentSubject.getDoubleProperty(SET_TEMPERATURE), (obs, oldVal, newVal) -> {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             currentTemperatureGauge.setValue(newVal.doubleValue());
-            logger.debug("Current temperature gauge updated to {}", newVal);
+    //        logger.debug("Current temperature gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(POWER), (obs, oldVal, newVal) -> {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) > 10){
-            logger.debug("Power output gauge updated to {}", p);
+     //       logger.debug("Power output gauge updated to {}", p);
             }
         });
     }
@@ -155,32 +154,32 @@ public class TrainControllerManager {
     private void bindIndicators() {
         appendListener(currentSubject.getBooleanProperty(EMERGENCY_BRAKE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.RED, eBrakeStatus, newVal);
-            logger.info("Emergency brake status updated to {}", newVal);
+   //         logger.info("Emergency brake status updated to {}", newVal);
         }));
         appendListener(currentSubject.getBooleanProperty(SIGNAL_FAILURE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.RED, signalFailureStatus, newVal);
-            logger.info("Signal failure status updated to {}", newVal);
+    //        logger.info("Signal failure status updated to {}", newVal);
         }));
         appendListener(currentSubject.getBooleanProperty(BRAKE_FAILURE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.RED, brakeFailureStatus, newVal);
-            logger.info("Brake failure status updated to {}", newVal);
+    //        logger.info("Brake failure status updated to {}", newVal);
         }));
         appendListener(currentSubject.getBooleanProperty(POWER_FAILURE), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.RED, powerFailureStatus, newVal);
-            logger.info("Power failure status updated to {}", newVal);
+    //        logger.info("Power failure status updated to {}", newVal);
         }));
         appendListener(currentSubject.getBooleanProperty(IN_TUNNEL), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.YELLOW, inTunnelStatus, newVal);
             inTunnelUpdates();
-            logger.info("In tunnel status updated to {}", newVal);
+   //         logger.info("In tunnel status updated to {}", newVal);
         }));
         appendListener(currentSubject.getBooleanProperty(LEFT_PLATFORM), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.LIGHTGREEN, stationSideLeftStatus, newVal);
-            logger.info("Left platform status updated to {}", newVal);
+   //         logger.info("Left platform status updated to {}", newVal);
         }));
         appendListener(currentSubject.getBooleanProperty(RIGHT_PLATFORM), (obs, oldVal, newVal) -> Platform.runLater(() -> {
             updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal);
-            logger.info("Right platform status updated to {}", newVal);
+  //          logger.info("Right platform status updated to {}", newVal);
         }));
         bindStringText(nextStationText, NEXT_STATION);
 
@@ -248,7 +247,7 @@ public class TrainControllerManager {
             BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE);
             currentSubject.setProperty(EMERGENCY_BRAKE, !eBrakeProp.get());
             setNotification(EMERGENCY_BRAKE, String.valueOf(eBrakeProp.get()));
-            logger.info("Emergency brake toggled to {}", !eBrakeProp.get());
+            logger.info("Emergency button toggled to {}", !eBrakeProp.get());
         });
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
@@ -381,7 +380,7 @@ public class TrainControllerManager {
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED).get());
 
-            logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
+      //      logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
             }catch (Exception e){
                 logger.error("Error updating UI elements", e);
             }
@@ -423,7 +422,7 @@ public class TrainControllerManager {
         Platform.runLater(() -> {
             statusLog.setText(statusNotification);
             statusLog.setWrapText(true);
-            logger.info("Status notification set for {}: {}", propertyName, statusNotification.trim());
+   //         logger.info("Status notification set for {}: {}", propertyName, statusNotification.trim());
         });
     }
 

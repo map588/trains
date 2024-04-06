@@ -1,6 +1,6 @@
 package Integration;
 
-import Utilities.BasicBlockLine;
+import Utilities.BasicSkipList;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +19,7 @@ public class TrainMovement  extends BaseTest {
 
     private static TrackLine trackLine;
     private trainStub stub;
-    private static BasicBlockLine basicBlockSkipList;
+    private static BasicSkipList basicBlockSkipList;
     private static int i = 10;
     Random r = new Random();
     private static ConcurrentSkipListSet<Integer> switches = new ConcurrentSkipListSet<>();

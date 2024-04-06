@@ -3,14 +3,15 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.GUIModifiableEnum;
-import Utilities.Constants;
 import Utilities.Records.Beacon;
-import Utilities.Records.UpdatedTrainValues;
 import javafx.scene.control.Alert;
-import trainModel.TrainModelImpl;
+import trainController.ControllerBlocks.ControllerBlock;
+import trainController.ControllerBlocks.ControllerBlockLookups;
+import trainModel.Records.UpdatedTrainValues;
 
-import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
-import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static Utilities.Constants.*;
 import static Utilities.Conversion.*;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
@@ -45,12 +46,13 @@ import static trainController.ControllerProperty.*;
  * Finally, the speed and power of the train are updated.
  */
 public class TrainControllerImpl implements TrainController, GUIModifiableEnum<ControllerProperty> {
-    private final int trainID;
-    private final TrainControllerSubject subject;
-    private final TrainModel train;
+
+    private volatile int samplingPeriod = TIME_STEP_MS;
+
+
+
     private Beacon beacon;
 
-    private volatile int samplingPeriod = 10;
 
     //Internal Metric
     private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
@@ -68,30 +70,19 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
     private String nextStationName;
 
-    /**
-     * This is the constructor for the trainControllerImpl class.
-     * It initializes all the properties of the trainControllerImpl object.
-     * It sets the trainID to the passed value and initializes all other properties to their default values.
-     * It also creates a new trainControllerSubject object and assigns it to the subject property.
-     * A stubTrainModel object is created and assigned to the train property.
-     * The constructor also schedules the calculatePower method to be called at fixed rate intervals.
-     * The rate is determined by the samplingPeriod property.
-     *
-     * @param train  The train to be controlled by this trainControllerImpl object.
-     */
+
+    private final int trainID;
+    private final TrainControllerSubject subject;
+    private final TrainModel train;
+    private static ConcurrentHashMap<Integer, ControllerBlock> blockLookup;
+
     public TrainControllerImpl(TrainModel train, int trainID) {
         this.trainID = trainID;
         this.train = train;
         this.subject = new TrainControllerSubject(this);
         populateTrainValues(train);
         this.nextStationName = "Yard";
-    }
-
-    public TrainControllerImpl() {
-        this.trainID = -1;
-        this.train = new TrainModelImpl();
-        this.subject = new TrainControllerSubject(this);
-        this.nextStationName = "Yard";
+        blockLookup = ControllerBlockLookups.getLookup(train.getLine());
     }
 
     /**
@@ -165,8 +156,8 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         prevError = error;
 
         pow = Kp * error + Ki * rollingError;
-        if(pow > Constants.MAX_POWER) {
-            pow = convertPower(Constants.MAX_POWER, HORSEPOWER, WATTS);
+        if(pow > MAX_POWER) {
+            pow = convertPower(MAX_POWER, HORSEPOWER, WATTS);
         }
 
         if(automaticMode && (pow < 0)){
@@ -558,7 +549,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
     @Override
     public void setValue(String propertyName, Object newValue) {
-        setValue(ControllerProperty.valueOf(propertyName.toUpperCase()), newValue);
+        setValue(valueOf(propertyName.toUpperCase()), newValue);
     }
 
 }

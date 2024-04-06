@@ -3,7 +3,7 @@ package Framework.Simulation;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
-import Utilities.Records.UpdatedTrainValues;
+import trainModel.Records.UpdatedTrainValues;
 import trainModel.TrainModelSubject;
 import trainModel.TrainModelSubjectMap;
 

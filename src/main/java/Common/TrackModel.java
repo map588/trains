@@ -1,5 +1,6 @@
 package Common;
 
+import Utilities.Enums.Lines;
 public interface TrackModel {
 
     //Vital Setters
@@ -27,5 +28,7 @@ public interface TrackModel {
     void disembarkPassengers(TrainModel train, int disembarked);
     int embarkPassengers(TrainModel train);
     int getTicketSales();
+
+    Lines getLine();
 
 }

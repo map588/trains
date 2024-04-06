@@ -3,7 +3,7 @@ package Common;
 
 import Framework.Support.GUIModifiable;
 import Utilities.Records.Beacon;
-import Utilities.Records.UpdatedTrainValues;
+import trainModel.Records.UpdatedTrainValues;
 import trainController.TrainControllerSubject;
 
 public interface TrainController extends GUIModifiable {

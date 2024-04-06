@@ -1,4 +1,4 @@
-package Utilities.Records;
+package trainModel.Records;
 
 public record UpdatedTrainValues(
         double    power,
