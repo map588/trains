@@ -4,6 +4,7 @@ import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.GUIModifiableEnum;
 import Utilities.Constants;
+import Utilities.Conversion;
 import Utilities.Records.Beacon;
 import Utilities.Records.UpdatedTrainValues;
 import javafx.scene.control.Alert;
@@ -11,23 +12,38 @@ import trainModel.TrainModelImpl;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
 import static Utilities.Constants.SERVICE_BRAKE_DECELERATION;
-import static Utilities.Conversion.convertPower;
-import static Utilities.Conversion.convertVelocity;
+import static Utilities.Conversion.*;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
+import static Utilities.Conversion.temperatureUnit.CELSIUS;
+import static Utilities.Conversion.temperatureUnit.FAHRENHEIT;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
 import static trainController.ControllerProperty.*;
 
+//TODO: The Subject is now entirely storing imperial units, and here we have only metric units. We convert them all here, and it is consistent.
+
 /**
- * This is the constructor for the trainControllerImpl class.
- * It initializes all the properties of the trainControllerImpl object.
- * It sets the trainID to the passed value and initializes all other properties to their default values.
- * It also creates a new trainControllerSubject object and assigns it to the subject property.
- * A stubTrainModel object is created and assigned to the train property.
- * The constructor also schedules the calculatePower method to be called at fixed rate intervals.
- * The rate is determined by the samplingPeriod property.
- *
+ * Profetta Notes:
+ * The train controller is meant to stop if a command speed is not sent.  The wayside is not able to send a corrected speed,
+ * rather it just chooses not to send a speed at all, and if the train does not receive a speed, it should stop.
+ */
+/**
+ * This method is used to calculate the power needed for the train.
+ * It first determines the set speed based on whether the train is in automatic mode or not.
+ * Then it calculates the current speed and initializes acceleration to 0.
+ * It calculates the error between the set speed and the current speed, and updates the rolling error.
+ * The power is then calculated using the proportional-integral (PI) controller formula.
+ * If the calculated power exceeds the maximum power, it is set to the maximum power.
+ * If the train is in automatic mode and the calculated power is less than 0, the power is set to 0 and the service brake is activated.
+ * If the service brake is active and the calculated power is greater than 0, the service brake is deactivated.
+ * If the emergency brake or service brake is active, or there is a power failure, or the calculated power is less than 0, the power is set to 0.
+ * If the emergency brake is active, the acceleration is set to the emergency brake deceleration.
+ * If the service brake is active, the acceleration is set to the service brake deceleration.
+ * Otherwise, the acceleration is calculated by dividing the power by the weight of the train.
+ * The current speed is then updated based on the calculated acceleration.
+ * If the current speed is less than 0, it is set to 0.
+ * Finally, the speed and power of the train are updated.
  */
 public class TrainControllerImpl implements TrainController, GUIModifiableEnum<ControllerProperty> {
     private final int trainID;
@@ -37,9 +53,11 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
     private volatile int samplingPeriod = 10;
 
+    //Internal Metric
     private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
-            speedLimit = 0.0, Ki = 100.0, Kp = 100.0, power = 0.0, grade = 0.0,
+            speedLimit = 0.0, Ki = 0.3, Kp = 0.6, power = 0.0, grade = 0.0,
             setTemperature = 0.0, currentTemperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
+
 
     private int authority = 0;
 
@@ -111,7 +129,8 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             this.setEmergencyBrake(false);
         }
 
-        calculatePower(this.currentSpeed);
+        this.setPower(calculatePower(this.currentSpeed));
+        //TODO: this.authorityCheck(this.power, this.currentSpeed);  will change power if it does not align with authority
 
         return new UpdatedTrainValues(
                 this.power,
@@ -126,40 +145,19 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
 
 
-    /**
-     * Profetta Notes:
-     * The train controller is meant to stop if a command speed is not sent.  The wayside is not able to send a corrected speed,
-     * rather it just chooses not to send a speed at all, and if the train does not receive a speed, it should stop.
-     */
-    /**
-     * This method is used to calculate the power needed for the train.
-     * It first determines the set speed based on whether the train is in automatic mode or not.
-     * Then it calculates the current speed and initializes acceleration to 0.
-     * It calculates the error between the set speed and the current speed, and updates the rolling error.
-     * The power is then calculated using the proportional-integral (PI) controller formula.
-     * If the calculated power exceeds the maximum power, it is set to the maximum power.
-     * If the train is in automatic mode and the calculated power is less than 0, the power is set to 0 and the service brake is activated.
-     * If the service brake is active and the calculated power is greater than 0, the service brake is deactivated.
-     * If the emergency brake or service brake is active, or there is a power failure, or the calculated power is less than 0, the power is set to 0.
-     * If the emergency brake is active, the acceleration is set to the emergency brake deceleration.
-     * If the service brake is active, the acceleration is set to the service brake deceleration.
-     * Otherwise, the acceleration is calculated by dividing the power by the weight of the train.
-     * The current speed is then updated based on the calculated acceleration.
-     * If the current speed is less than 0, it is set to 0.
-     * Finally, the speed and power of the train are updated.
-     */
+
     public double calculatePower(double currentSpeed){
         // Convert Units
         double setSpeed, currSpeed, pow, accel;
 
         if (automaticMode){
-            setSpeed = convertVelocity(commandSpeed, MPH, MPS);
+            setSpeed = commandSpeed;
         }
         else{
-            setSpeed = convertVelocity(overrideSpeed, MPH, MPS);
+            setSpeed = overrideSpeed;
         }
 
-        currSpeed = convertVelocity(currentSpeed, MPH, MPS);
+        currSpeed = currentSpeed;
         accel = 0;
 
 
@@ -169,7 +167,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
         pow = Kp * error + Ki * rollingError;
         if(pow > Constants.MAX_POWER) {
-            pow = convertPower(Constants.MAX_POWER,HORSEPOWER, WATTS);
+            pow = convertPower(Constants.MAX_POWER, HORSEPOWER, WATTS);
         }
 
         if(automaticMode && (pow < 0)){
@@ -199,8 +197,8 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             currSpeed = 0;
         }
 
-        this.setSpeed(convertVelocity(currSpeed, MPS, MPH));
-        this.setPower(convertPower(pow, WATTS, HORSEPOWER));
+        this.setSpeed(currSpeed);
+        this.setPower(pow);
         return setSpeed;
     }
 
@@ -311,17 +309,17 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
     public void setOverrideSpeed(double speed) {
         this.overrideSpeed = speed;
-        subject.notifyChange(OVERRIDE_SPEED , speed);
+        subject.notifyChange(OVERRIDE_SPEED , convertVelocity(speed, MPS, MPH));
         //calculatePower();
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = speed;
-        subject.notifyChange(COMMAND_SPEED , speed);
+        subject.notifyChange(COMMAND_SPEED , convertVelocity(speed, MPS, MPH));
         //calculatePower();
     }
     public void setSpeed(double speed) {
         this.currentSpeed = speed;
-        subject.notifyChange(CURRENT_SPEED , speed);
+        subject.notifyChange(CURRENT_SPEED , Conversion.convertVelocity(speed, MPS, MPH));
     }
     private void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
@@ -361,11 +359,11 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
     public void setSetTemperature(double temp) {
         this.setTemperature = temp;
-        subject.notifyChange(SET_TEMPERATURE , temp);
+        subject.notifyChange(SET_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT));
     }
     public void setCurrentTemperature(double temp){
         this.currentTemperature = temp;
-        subject.notifyChange(CURRENT_TEMPERATURE ,temp);
+        subject.notifyChange(CURRENT_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT));
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
@@ -401,7 +399,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     }
     public void setSpeedLimit(double speedLimit){
         this.speedLimit = speedLimit;
-        subject.notifyChange(SPEED_LIMIT ,speedLimit);
+        subject.notifyChange(SPEED_LIMIT , convertVelocity(speedLimit, MPS, MPH));
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
@@ -428,20 +426,20 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         switch (propertyName) {
             case AUTOMATIC_MODE -> this.automaticMode = (boolean) newValue;
             case AUTHORITY -> this.authority = (int) newValue;
-            case OVERRIDE_SPEED -> this.overrideSpeed = (double) newValue;
-            case COMMAND_SPEED -> this.commandSpeed = (double) newValue;
-            case CURRENT_SPEED -> this.currentSpeed = (double) newValue;
+            case OVERRIDE_SPEED -> this.overrideSpeed = convertVelocity((double) newValue, MPH, MPS);
+            case COMMAND_SPEED -> this.commandSpeed = convertVelocity((double) newValue, MPH, MPS);
+            case CURRENT_SPEED -> this.currentSpeed = convertVelocity((double) newValue, MPH, MPS);
             case SERVICE_BRAKE -> this.serviceBrake = (boolean) newValue;
             case EMERGENCY_BRAKE -> this.emergencyBrake = (boolean) newValue;
             case KI -> this.Ki = (double) newValue;
             case KP -> this.Kp = (double) newValue;
-            case POWER -> this.power = (double) newValue;
+            case POWER -> this.power = convertPower((double) newValue, WATTS, HORSEPOWER);
             case INT_LIGHTS -> this.internalLights = (boolean) newValue;
             case EXT_LIGHTS -> this.externalLights = (boolean) newValue;
             case LEFT_DOORS -> this.leftDoors = (boolean) newValue;
             case RIGHT_DOORS -> this.rightDoors = (boolean) newValue;
-            case SET_TEMPERATURE -> this.setTemperature = (double) newValue;
-            case CURRENT_TEMPERATURE ->  this.currentTemperature = (double) newValue;
+            case SET_TEMPERATURE -> this.setTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
+            case CURRENT_TEMPERATURE ->  this.currentTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
             case ANNOUNCEMENTS -> this.announcements = (boolean) newValue;
             case SIGNAL_FAILURE -> this.signalFailure = (boolean) newValue;
             case BRAKE_FAILURE -> this.brakeFailure = (boolean) newValue;
@@ -450,7 +448,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             case LEFT_PLATFORM -> this.leftPlatform = (boolean) newValue;
             case RIGHT_PLATFORM -> this.rightPlatform = (boolean) newValue;
             case SAMPLING_PERIOD -> this.samplingPeriod = (int) newValue;
-            case SPEED_LIMIT -> this.speedLimit = (double) newValue;
+            case SPEED_LIMIT -> this.speedLimit = convertVelocity((double) newValue, MPH, MPS);
             case NEXT_STATION -> this.nextStationName = (String) newValue;
             case GRADE -> this.grade = (double) newValue;
             case TRAIN_ID -> System.out.println("Train ID is a read-only property");

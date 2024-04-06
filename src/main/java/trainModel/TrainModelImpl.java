@@ -19,12 +19,15 @@ import java.util.concurrent.*;
 
 import static Utilities.Constants.MAX_ENGINE_FORCE;
 import static Utilities.Constants.YARD_OUT_DIRECTION;
+import static Utilities.Conversion.*;
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
 import static Utilities.Conversion.distanceUnit.FEET;
 import static Utilities.Conversion.distanceUnit.METERS;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
+import static Utilities.Conversion.temperatureUnit.CELSIUS;
+import static Utilities.Conversion.temperatureUnit.FAHRENHEIT;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
 import static trainModel.Properties.*;
@@ -55,7 +58,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce = 0;
-    private int TIME_DELTA = 10;
+    private int TIME_DELTA = Constants.TIME_STEP_MS;
     //Murphy Variables
     private boolean brakeFailure = false, powerFailure = false, signalFailure = false;
 
@@ -309,12 +312,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
         else {
             this.commandSpeed = speed;
         }
-        notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));
+        notifyChange(COMMANDSPEED_PROPERTY, convertVelocity(speed, MPS, MPH));
         controller.setCommandSpeed(speed);
     }
     public void setActualSpeed(double speed) {
         this.speed = speed;
-        notifyChange(ACTUALSPEED_PROPERTY, Conversion.convertVelocity(speed, MPS, MPH));}
+        notifyChange(ACTUALSPEED_PROPERTY, convertVelocity(speed, MPS, MPH));}
     public void setAuthority(int authority) {
 
         if (signalFailure) {
@@ -365,18 +368,18 @@ public class TrainModelImpl implements TrainModel, Notifier {
             return;
         switch(propertyName){
             case AUTHORITY_PROPERTY -> this.authority = (int)newValue;
-            case Properties.COMMANDSPEED_PROPERTY -> this.commandSpeed = (double)newValue;
-            case Properties.ACTUALSPEED_PROPERTY -> this.speed = (double)newValue;
-            case Properties.ACCELERATION_PROPERTY -> this.acceleration = (double)newValue;
-            case Properties.POWER_PROPERTY -> this.power = (double)newValue;
+            case Properties.COMMANDSPEED_PROPERTY -> this.commandSpeed = convertVelocity((double)newValue, MPH, MPS);
+            case Properties.ACTUALSPEED_PROPERTY -> this.speed = convertVelocity((double)newValue, MPH, MPS);
+            case Properties.ACCELERATION_PROPERTY -> this.acceleration = convertAcceleration((double)newValue, FPS2, MPS2);
+            case Properties.POWER_PROPERTY -> this.power = convertPower((double)newValue, HORSEPOWER, WATTS);
             case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
             case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
             case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
             case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
             case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
             case Properties.SIGNALFAILURE_PROPERTY -> this.signalFailure = (boolean)newValue;
-            case Properties.SETTEMPERATURE_PROPERTY -> this.setTemperature = (double)newValue;
-            case Properties.REALTEMPERATURE_PROPERTY -> this.realTemperature = (double)newValue;
+            case Properties.SETTEMPERATURE_PROPERTY -> this.setTemperature = convertTemperature((double)newValue, FAHRENHEIT, CELSIUS);
+            case Properties.REALTEMPERATURE_PROPERTY -> this.realTemperature = convertTemperature((double)newValue, FAHRENHEIT, CELSIUS);
             case Properties.EXTLIGHTS_PROPERTY -> this.extLights = (boolean)newValue;
             case Properties.INTLIGHTS_PROPERTY -> this.intLights = (boolean)newValue;
             case Properties.LEFTDOORS_PROPERTY -> this.leftDoors = (boolean)newValue;
@@ -386,8 +389,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
             case Properties.CREWCOUNT_PROPERTY -> this.crewCount = (int)newValue;
             case Properties.TIMEDELTA_PROPERTY -> this.TIME_DELTA = (int)newValue;
             case Properties.MASS_PROPERTY -> this.mass = (double)newValue;
-            case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = (double)newValue;
-            case Properties.LENGTH_PROPERTY -> this.length = (double)newValue;
+            case Properties.DISTANCETRAVELED_PROPERTY -> this.distanceTraveled = convertDistance((double)newValue, FEET, METERS);
+            case Properties.LENGTH_PROPERTY -> this.length = convertDistance((double)newValue, FEET, METERS);
         }
     }
 
