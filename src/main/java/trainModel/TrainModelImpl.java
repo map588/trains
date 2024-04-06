@@ -148,7 +148,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         if (this.brakeFailure) {
             this.setServiceBrake(false);
-            this.setEmergencyBrake(false);
         }
         else {
             this.setServiceBrake(controllerValues.serviceBrake());
@@ -193,8 +192,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         // TODO: Remove print statements once things are fully sorted out
 
         //NEXT BLOCK NOTICE
-        System.out.println("Relative Distance: " + relativeDistance);
-        System.out.println("Current Block Length: " + currentBlockLength);
+        //System.out.println("Relative Distance: " + relativeDistance);
+        //System.out.println("Current Block Length: " + currentBlockLength);
         if(currentBlockLength - relativeDistance <= 0) {
             enteredNextBlock();
         }
@@ -328,13 +327,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.setAuthority(authority);
     }
     public void setEmergencyBrake(boolean brake) {
-        if (this.brakeFailure) {
-            this.emergencyBrake = false;
-            notifyChange(EMERGENCYBRAKE_PROPERTY, false);
-        } else {
             this.emergencyBrake = brake;
             notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
-        }
     }
     public void setServiceBrake(boolean brake) {
         if (this.brakeFailure) {
@@ -514,7 +508,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     //TEMP TIME DELTA SETTER/GETTER
-    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = timeDelta; notifyChange(TIMEDELTA_PROPERTY, timeDelta); }
+    public void changeTimeDelta(int timeDelta) { this.TIME_DELTA = (timeDelta / 1000); notifyChange(TIMEDELTA_PROPERTY, timeDelta); }
     public int getTimeDelta() { return this.TIME_DELTA; }
 
 
