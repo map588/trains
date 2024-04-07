@@ -7,7 +7,7 @@ import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.BasicBlock.Connection;
 import trackModel.BlockTypes.*;
-import trainModel.NullTrain;
+import trainModel.NullObjects.NullTrain;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

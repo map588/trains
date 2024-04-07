@@ -3,6 +3,7 @@ package trainModel;
 import Framework.Support.ListenerReference;
 import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +22,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainModel.NullObjects.NullTrainSubject;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,21 +60,23 @@ public class TrainModelManager {
         subjectMap = TrainModelSubjectMap.getInstance();
         setupMapChangeListener();
 
+        if (!subjectMap.getSubjects().isEmpty()) {
+            Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
+            changeTrainView(firstKey); // Switch to the first available subject
+        } else {
+            subject = NullTrainSubject.getInstance(); // Use the null object
+            updateViewForNullSubject(); // Prepare UI for no subject selected
+        }
+        updateChoiceBoxItems(); // Reflect current subjects in the UI
+
+
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 changeTrainView(newSelection);
             }
         });
+
         setUpCircleColors();
-
-        if(!subjectMap.getSubjects().isEmpty()) {
-            changeTrainView(subjectMap.getSubjects().keySet().iterator().next());
-        }else{
-            logger.info("No trains to display");
-            subject = nullSubject;
-            updateView();
-        }
-
         logger.info("Finished TrainModelManager initialize");
     }
 
@@ -162,13 +166,32 @@ public class TrainModelManager {
         rightDoorsEn.setFill(active ? Color.YELLOW : Color.GRAY);
     }
 
-    private void changeTrainView(int trainID) {
-        subject = subjectMap.getSubject(trainID);
-        if(subject == null) {
-            subject = nullSubject;
+    private void changeTrainView(Integer trainID) {
+        if (trainID == null || trainID == -1 || !subjectMap.getSubjects().containsKey(trainID)) {
+            subject = NullTrainSubject.getInstance(); // Fallback to null object
+            updateViewForNullSubject(); // Special UI update for no subject
+        } else {
+            subject = subjectMap.getSubjects().get(trainID);
+            updateView(); // Regular UI update for an actual subject
         }
-        updateView();
     }
+
+
+    private void updateViewForNullSubject() {
+        // Example UI adjustments for the null subject
+        actualPowerDisp.setValue(0);
+        actualVelocityDisp.setValue(0);
+        actualAccelerationDisp.setValue(0);
+        cmdSpeedDisp.setValue(0);
+        authorityDisp.setValue(0);
+        setTempDisp.setValue(0);
+        realTempDisp.setValue(0);
+        brakeFailureBtn.setSelected(false);
+        powerFailureBtn.setSelected(false);
+        signalFailureBtn.setSelected(false);
+    }
+
+
 
     private void updateView() {
         if(subject != null) {
@@ -209,27 +232,53 @@ public class TrainModelManager {
         ObservableHashMap.MapListener<Integer, TrainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
             @Override
             public void onAdded(Integer key, TrainModelSubject value) {
-                updateChoiceBoxItems();
-                trainDropDown.getSelectionModel().select(value.getModel().getTrainNumber());
+                Platform.runLater(() -> {
+                    updateChoiceBoxItems();
+                    if(subjectMap.getSubjects().size() == 1) { // If it's the only train, select it
+                        trainDropDown.getSelectionModel().select(key);
+                    }
+                });
             }
 
             @Override
             public void onRemoved(Integer key, TrainModelSubject value) {
-                updateChoiceBoxItems();
+                Platform.runLater(() -> {
+                    updateChoiceBoxItems();
+                    // Additional logic can be added here to select another item if the current selection was removed
+                });
             }
 
             @Override
             public void onUpdated(Integer key, TrainModelSubject oldValue, TrainModelSubject newValue) {
-                updateChoiceBoxItems();
+                Platform.runLater(() -> updateChoiceBoxItems());
             }
         };
 
         subjects.addChangeListener(genericListener);
-        updateChoiceBoxItems();
+        updateChoiceBoxItems(); // Initial population
     }
 
     private void updateChoiceBoxItems() {
-        trainDropDown.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
+        Integer currentSelection = trainDropDown.getSelectionModel().getSelectedItem();
+
+        List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
+            trainIDs.add(0, -1); // Assuming -1 as the ID for the null train
+
+            trainDropDown.setItems(FXCollections.observableArrayList(trainIDs));
+
+            if (!subjectMap.getSubjects().isEmpty()) {
+                if (subjectMap.getSubjects().containsKey(currentSelection)) {
+                    trainDropDown.getSelectionModel().select(currentSelection);
+                } else {
+                    // Select the first actual subject if the current selection is invalid
+                    trainDropDown.getSelectionModel().selectFirst();
+                }
+            } else {
+                // Select the "no selection" option when no subjects are available
+                trainDropDown.getSelectionModel().select(Integer.valueOf(-1));
+            }
+
+        // Additional logic to handle no selection case can be added here
     }
 
     private TrainModelTB launchTestBench() {

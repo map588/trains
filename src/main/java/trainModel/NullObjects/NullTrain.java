@@ -1,7 +1,8 @@
-package trainModel;
+package trainModel.NullObjects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainModel.TrainModelImpl;
 
 public final class NullTrain extends TrainModelImpl {
 
@@ -26,19 +27,13 @@ public final class NullTrain extends TrainModelImpl {
     public void setCommandSpeed(double commandSpeed) {
         logger.warn("NullTrain Command Speed to {}", commandSpeed);
     }
-    
-    @Override
-    public void setAcceleration(double acceleration) {
-    }
+
     
     @Override
     public void setPower(double power) {
         logger.warn("NullTrain Power to {}", power);
     }
-    
-    @Override
-    public void setGrade(double grade) {
-    }
+
     
     @Override
     public void setServiceBrake(boolean serviceBrake) {
@@ -49,7 +44,6 @@ public final class NullTrain extends TrainModelImpl {
     public void setEmergencyBrake(boolean emergencyBrake) {
         logger.warn("NullTrain Emergency brake to {}", emergencyBrake);
     }
-    
     @Override
     public void setBrakeFailure(boolean brakeFailure) {
         logger.warn("NullTrain Brake failure to {}", brakeFailure);
@@ -64,50 +58,16 @@ public final class NullTrain extends TrainModelImpl {
     public void setSignalFailure(boolean signalFailure) {
         logger.warn("NullTrain Signal failure to {}", signalFailure);
     }
-    
-    @Override
-    public void setSetTemperature(double setTemperature) {
-    }
-
-    @Override
-    public void setLeftDoors(boolean leftDoors) {
-    }
-
-    @Override
-    public void setRightDoors(boolean rightDoors) {
-    }
-
-    @Override
-    public void setExtLights(boolean extLights) {
-    }
-
-    @Override
-    public void setIntLights(boolean intLights) {
-    }
-
-    @Override
-    public void setNumCars(int numCars) {
-    }
-
-    @Override
-    public void setCrewCount(int crewCount) {
-    }
-
-    @Override
-    public void setMass(double mass) {
-    }
-
-    @Override
-    public void setDistanceTraveled(double distanceTraveled) {
-    }
-
-    @Override
-    public void setLength(double length) {
-    }
 
     @Override
     public int getTrainNumber() {
         logger.warn("NullTrain ID requested");
         return -1;
+    }
+
+
+    @Override
+    public void setValue(String propertyName, Object newValue) {
+        logger.warn("NullTrain setProperty called with " + propertyName + " and " + newValue);
     }
 }

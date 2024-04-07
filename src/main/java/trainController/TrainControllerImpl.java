@@ -82,7 +82,9 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
         this.subject = new TrainControllerSubject(this);
         populateTrainValues(train);
         this.nextStationName = "Yard";
-        blockLookup = ControllerBlockLookups.getLookup(train.getLine());
+        if(train.getTrainNumber() != -1) {
+            blockLookup = ControllerBlockLookups.getLookup(train.getLine());
+        }
     }
 
     /**
@@ -118,6 +120,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             passengerEngageEBrake = false;
             this.setEmergencyBrake(false);
         }
+        this.setSpeed(train.getSpeed());
 
         this.setPower(calculatePower(this.currentSpeed));
         //TODO: this.authorityCheck(this.power, this.currentSpeed);  will change power if it does not align with authority
@@ -137,8 +140,7 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
 
 
     public double calculatePower(double currentSpeed){
-        // Convert Units
-        double setSpeed, currSpeed, pow, accel;
+        double setSpeed, pow, accel;
 
         if (automaticMode){
             setSpeed = commandSpeed;
@@ -147,11 +149,9 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             setSpeed = overrideSpeed;
         }
 
-        currSpeed = currentSpeed;
         accel = 0;
 
-
-        error = setSpeed - currSpeed;
+        error = setSpeed - currentSpeed;
         rollingError += (double)samplingPeriod/1000 * (error + prevError);
         prevError = error;
 
@@ -174,22 +174,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             }else if(serviceBrake) {
                 accel = -1 * SERVICE_BRAKE_DECELERATION;
             }
-        } else{
-            double mass = train.getMass();
-            if(mass <= 0){
-                mass = 1;
-            }
-            accel = pow / mass;
+        }else{
+            accel = pow / train.getMass();
         }
 
-        currSpeed += accel * (double)samplingPeriod/1000;
-        if(currSpeed < 0){
-            currSpeed = 0;
-        }
 
-        this.setSpeed(currSpeed);
         this.setPower(pow);
-        return setSpeed;
+        return pow;
     }
 
 

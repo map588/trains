@@ -26,6 +26,15 @@ public class Conversion {
         WATTS,
         HORSEPOWER
     }
+    public enum massUnits {
+        KILOGRAMS,
+        POUNDS
+    }
+    public enum timeUnits {
+        SECONDS,
+        MINUTES,
+        HOURS
+    }
 
     public static double convertDistance(double distance, distanceUnit from, distanceUnit to) {
         if (from == to) {
@@ -189,6 +198,54 @@ public class Conversion {
         if (from == powerUnits.HORSEPOWER) {
             if (to == powerUnits.WATTS) {
                 return power * 745.7;
+            }
+        }
+        return 0;
+    }
+
+    public static double convertMass(double mass, massUnits from, massUnits to) {
+        if (from == to) {
+            return mass;
+        }
+        if (from == massUnits.KILOGRAMS) {
+            if (to == massUnits.POUNDS) {
+                return mass * 2.20462;
+            }
+        }
+        if (from == massUnits.POUNDS) {
+            if (to == massUnits.KILOGRAMS) {
+                return mass / 2.20462;
+            }
+        }
+        return 0;
+    }
+
+    public static double convertTime(double time, timeUnits from, timeUnits to) {
+        if (from == to) {
+            return time;
+        }
+        if (from == timeUnits.SECONDS) {
+            if (to == timeUnits.MINUTES) {
+                return time / 60;
+            }
+            if (to == timeUnits.HOURS) {
+                return time / 3600;
+            }
+        }
+        if (from == timeUnits.MINUTES) {
+            if (to == timeUnits.SECONDS) {
+                return time * 60;
+            }
+            if (to == timeUnits.HOURS) {
+                return time / 60;
+            }
+        }
+        if (from == timeUnits.HOURS) {
+            if (to == timeUnits.SECONDS) {
+                return time * 3600;
+            }
+            if (to == timeUnits.MINUTES) {
+                return time * 60;
             }
         }
         return 0;

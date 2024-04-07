@@ -11,18 +11,20 @@ import Utilities.Conversion;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import Utilities.Records.Beacon;
-import trainModel.Records.UpdatedTrainValues;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
+import trainModel.Records.UpdatedTrainValues;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static Utilities.Constants.MAX_ENGINE_FORCE;
 import static Utilities.Constants.YARD_OUT_DIRECTION;
-import static Utilities.Conversion.*;
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
+import static Utilities.Conversion.*;
 import static Utilities.Conversion.distanceUnit.FEET;
 import static Utilities.Conversion.distanceUnit.METERS;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
@@ -37,6 +39,7 @@ import static trainModel.Properties.*;
 public class TrainModelImpl implements TrainModel, Notifier {
 
     private final TrainModelSubject subject;
+    private final int trainID;
 
     //TODO: John, please seperate your methods into what is done to the train, within the train, and what the train does to other modules
 
@@ -50,12 +53,14 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Vital Variables
     private double speed = 0, acceleration = 0, power = 0;
-    private double newSpeed = 0, newAcceleration = 0, newPower = 0;
     private double mass= 0, grade = 0;
     private boolean serviceBrake = false, emergencyBrake = false;
-    private boolean newServiceBrake = false, newEmergencyBrake = false;
+
     private double distanceTraveled = 0;
 
+
+    private double newSpeed = 0, newAcceleration = 0;
+    private boolean newServiceBrake = false, newEmergencyBrake = false;
 
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce = 0;
@@ -85,12 +90,16 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     public TrainModelImpl() {
         initializeValues();
+        //Who knows what this will do.
+        this.trainID = -1;
+        this.track = null;
         this.controller = new TrainControllerImpl(this, -1);
         this.subject = new TrainModelSubject(this);
     }
 
     public TrainModelImpl(TrackLine track, int trainID) {
         initializeValues();
+        this.trainID = trainID;
         this.track = track;
         this.controller = new TrainControllerImpl(this, trainID);
         this.subject = new TrainModelSubject(this);
@@ -176,6 +185,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setRealTemperature(newRealTemperature);
     }
 
+    //Called when not running System.
     public void trainModelPhysics(){
         physicsUpdate();
 
@@ -222,19 +232,19 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.brakeForce = 0;
         }
 
-        //System.out.println("Power: " + this.power);
+        //TODO: When you assign this.<variable> instead of this.new<variable>, you break the contract.
 
         //ENGINE FORCE
         double engineForce;
         if (this.power > 0.0001 && this.speed < 0.0001) {
-            this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+            this.newSpeed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             engineForce = this.power / 0.1;
         }
         else if(this.speed < 0.0001) {
             engineForce = 0.0;
         }
         else {
-            engineForce = this.power / this.speed;
+            engineForce = this.power / this.newSpeed;
         }
 
         // TODO: Is this a reasonable way to do this?
@@ -263,27 +273,27 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //SPEED CALCULATION
         if (this.power <= Constants.MAX_POWER) {
-            this.speed = (this.speed + ((double) this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
+            this.newSpeed = (this.speed + ((double) this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
         }
 
-        if (this.speed < 0) { this.speed = 0; }
-        if (this.speed > Constants.MAX_SPEED) { this.setActualSpeed(Constants.MAX_SPEED); }
-        this.newSpeed = this.speed;
+        if (this.newSpeed < 0) { this.newSpeed = 0; }
+        if (this.newSpeed > Constants.MAX_SPEED) { this.newSpeed = Constants.MAX_SPEED; }
+
         //System.out.println("Speed: " + this.speed);
 
-        this.relativeDistance += this.speed * (this.TIME_DELTA / 1000.0);
+        this.relativeDistance += this.newSpeed * (this.TIME_DELTA / 1000.0);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
         if(this.elapsedTime >= 1 && (this.realTemperature < this.setTemperature)) {
-            this.realTemperature = this.realTemperature + 1;
+            this.newRealTemperature = this.realTemperature + 1;
             this.elapsedTime = 0;
         }
         else if(this.elapsedTime >= 1 && (this.realTemperature > this.setTemperature)) {
-            this.realTemperature = this.realTemperature - 1;
+            this.newRealTemperature = this.realTemperature - 1;
             this.elapsedTime = 0;
         }
-        this.newRealTemperature = this.realTemperature;
+
     }
 
 
@@ -405,7 +415,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return this.authority;
     }
     public int getTrainNumber() {
-        return controller.getID();
+        return this.trainID;
     }
     public double getCommandSpeed() {
         return this.commandSpeed;

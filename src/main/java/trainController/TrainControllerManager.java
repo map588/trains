@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.NullObjects.NullControllerSubject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,18 +57,21 @@ public class TrainControllerManager {
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerManager.class);
 
-
     @FXML
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");
 
         subjectMap = TrainControllerSubjectMap.getInstance();
+        currentSubject = NullControllerSubject.INSTANCE; // Default to null object
         setupMapChangeListener();
-        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection,newSelection) ->{
-            if (newSelection != null){
+
+        updateChoiceBoxItems(); // Populate the choice box and handle initial selection
+
+        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
                 changeTrainView(newSelection);
-            }else{
-                changeTrainView(oldSelection);
+            } else {
+                changeTrainView(oldSelection != null ? oldSelection : -1); // Use -1 or any invalid ID to revert to NullSubject
             }
         });
 
@@ -78,11 +82,14 @@ public class TrainControllerManager {
         } else {
             statusLog.setText("No Trains Available");
             logger.warn("No trains available to initialize Train Controller");
+            updateUIForNullSubject(); // Method to reset or initialize UI for null subject
         }
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
-        updateAll();
     }
+
+
+
 
     private void setupMapChangeListener() {
         ObservableHashMap<Integer, TrainControllerSubject> subjects = subjectMap.getSubjects();
@@ -106,47 +113,68 @@ public class TrainControllerManager {
 
 
     private void updateChoiceBoxItems() {
-        if(trainNoChoiceBox.getItems().isEmpty()){
-            trainNoChoiceBox.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
-        }else {
-            int previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedIndex();
-            trainNoChoiceBox.setItems(FXCollections.observableArrayList(new ArrayList<>(subjectMap.getSubjects().keySet())));
-            trainNoChoiceBox.getSelectionModel().select(previousSelection);
+            List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
+            trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
+
+            if (!trainIDs.isEmpty()) {
+                // Automatically select the first train if one is available
+                trainNoChoiceBox.getSelectionModel().selectFirst();
+            } else {
+                logger.info("No trains available after update.");
+                changeTrainView(-1); // Explicitly handle no selection
+            }
+    }
+
+
+    private void changeTrainView(Integer trainID) {
+        TrainControllerSubject newSubject = subjectMap.getSubjects().getOrDefault(trainID, NullControllerSubject.INSTANCE);
+
+        if (!currentSubject.equals(newSubject)) {
+            unbindControls(); // Clear previous bindings
+            currentSubject = newSubject;
+            bindAll(); // Re-bind controls to the new (or null) subject
+            updateAll(); // Refresh UI elements to reflect the current subject's state
         }
     }
 
+    private void bindAll(){
+        bindControls();
+        bindGauges();
+        bindIndicators();
+    }
+
+
     private void bindGauges() {
         appendListener(currentSubject.getDoubleProperty(CURRENT_SPEED), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(currentSpeedGauge.getValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
             currentSpeedGauge.setValue(newVal.doubleValue());
     //        logger.debug("Current speed gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(COMMAND_SPEED), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
             commandedSpeedGauge.setValue(newVal.doubleValue());
     //        logger.debug("Commanded speed gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(SPEED_LIMIT), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
             speedLimitGauge.setValue(newVal.doubleValue());
      //       logger.debug("Speed limit gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getIntegerProperty(AUTHORITY), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
-            authorityGauge.setValue(newVal.doubleValue());
+            authorityGauge.setValue(newVal.intValue());
             logger.debug("Authority gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(SET_TEMPERATURE), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(currentTemperatureGauge.getValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
             currentTemperatureGauge.setValue(newVal.doubleValue());
     //        logger.debug("Current temperature gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(POWER), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(powerOutputGauge.getValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
             double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) > 10){
-     //       logger.debug("Power output gauge updated to {}", p);
+                logger.debug("Power output jumped to {} from {}", p, oldVal);
             }
         });
     }
@@ -298,20 +326,7 @@ public class TrainControllerManager {
     }
 
 
-    private void changeTrainView(Integer trainID) {
-        if (currentSubject != null) {
-            statusLog.clear();
-            statusLog.setText("\n Train is running");
-            unbindControls();
-            currentSubject = subjectMap.getSubject(trainID);
-            updateAll();
-            bindControls();
-            bindGauges();
-            bindIndicators();
-            logger.info("Train view changed to train ID: {}", trainID);
-        }
 
-    }
 
     private void unbindControls() {
         listenerReferences.forEach(ListenerReference::detach);
@@ -336,7 +351,43 @@ public class TrainControllerManager {
         setTemperatureTextField.textProperty().unbind();
         setKiTextField.textProperty().unbind();
         setKpTextField.textProperty().unbind();
+
+        logger.info("Controls unbound from train ID: {}", currentSubject.getController().getID());
     }
+
+    private void updateUIForNullSubject() {
+        // Example of resetting UI components
+        statusLog.setText("N/A");
+        // Disable UI elements or set to default values
+        intLightCheckBox.setSelected(false);
+        extLightCheckBox.setSelected(false);
+        openDoorLeftCheckBox.setSelected(false);
+        openDoorRightCheckBox.setSelected(false);
+        toggleServiceBrakeCheckBox.setSelected(false);
+        autoModeCheckBox.setSelected(false);
+        setTemperatureTextField.setText("0.0");
+        setKiTextField.setText("0.0");
+        setKpTextField.setText("0.0");
+        setSpeedTextField.setText("0.0");
+        nextStationText.setText("No Station");
+        setSpeedSlider.setValue(0.0);
+        currentSpeedGauge.setValue(0.0);
+        commandedSpeedGauge.setValue(0.0);
+        speedLimitGauge.setValue(0.0);
+        authorityGauge.setValue(0.0);
+        powerOutputGauge.setValue(0.0);
+        currentTemperatureGauge.setValue(0.0);
+        updateIndicator(Color.GRAY, eBrakeStatus, false);
+        updateIndicator(Color.GRAY, signalFailureStatus, false);
+        updateIndicator(Color.GRAY, brakeFailureStatus, false);
+        updateIndicator(Color.GRAY, powerFailureStatus, false);
+        updateIndicator(Color.GRAY, inTunnelStatus, false);
+        updateIndicator(Color.GRAY, stationSideLeftStatus, false);
+        updateIndicator(Color.GRAY, stationSideRightStatus, false);
+        logger.info("UI reset for null subject");
+    }
+
+
 
     //Called when controller is switched, updates state of all UI elements
     private void updateAll() {
@@ -380,7 +431,7 @@ public class TrainControllerManager {
             // Update slider (Assuming it should match the overrideSpeed)
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED).get());
 
-      //      logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
+            logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
             }catch (Exception e){
                 logger.error("Error updating UI elements", e);
             }
