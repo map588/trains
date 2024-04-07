@@ -16,8 +16,7 @@ public class TrainControllerSubject implements Notifier {
 
     private final Logger logger = LoggerFactory.getLogger(TrainControllerSubject.class);
 
-    public  volatile boolean  isGUIUpdateInProgress     = false;
-    private volatile boolean  isLogicUpdateInProgress   = false;
+    private volatile boolean  subjectChange             = false;
 
     private final TrainControllerSubjectMap controllerSubjectMap = TrainControllerSubjectMap.getInstance();
 
@@ -78,7 +77,7 @@ public class TrainControllerSubject implements Notifier {
     public void notifyChange(ControllerProperty propertyName, Object newValue) {
         Property<?> property = properties.get(propertyName);
         if (property != null && newValue != null) {
-            executeUpdate(() -> updateProperty(property, newValue), !isGUIUpdateInProgress);
+            executeUpdate(() -> updateProperty(property, newValue), !subjectChange);
         }
     }
 
@@ -87,17 +86,12 @@ public class TrainControllerSubject implements Notifier {
 
         Property<?> property = properties.get(propertyName);
 
-        if (property != null && !isLogicUpdateInProgress) {
-            isGUIUpdateInProgress = true;
-            try {
-                executeUpdate(() -> {
-                    //System.out.println("Setting property " + propertyName + " to " + newValue);
-                    updateProperty(property, newValue);
-                    controller.setValue(propertyName.getPropertyName(), newValue);
-                }, false);
-            } finally {
-                isGUIUpdateInProgress = false;
-            }
+        if (property != null) {
+            executeUpdate(() -> {
+                //System.out.println("Setting property " + propertyName + " to " + newValue);
+                updateProperty(property, newValue);
+                controller.setValue(propertyName, newValue);
+            }, subjectChange);
         }
     }
 
@@ -166,6 +160,9 @@ public class TrainControllerSubject implements Notifier {
         return (IntegerProperty) property;
     }
 
+     void setSubjectChangeInProgress(boolean inProgress){
+        subjectChange = inProgress;
+    }
 
     public TrainControllerImpl getController() {
         return  (TrainControllerImpl) controller;

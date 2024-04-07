@@ -21,6 +21,7 @@ import trainController.NullObjects.NullControllerSubject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static trainController.ControllerProperty.*;
@@ -57,6 +58,7 @@ public class TrainControllerManager {
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerManager.class);
 
+
     @FXML
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");
@@ -68,11 +70,8 @@ public class TrainControllerManager {
         updateChoiceBoxItems(); // Populate the choice box and handle initial selection
 
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                changeTrainView(newSelection);
-            } else {
-                changeTrainView(oldSelection != null ? oldSelection : -1); // Use -1 or any invalid ID to revert to NullSubject
-            }
+            // Use -1 or any invalid ID to revert to NullSubject
+            changeTrainView(Objects.requireNonNullElseGet(newSelection, () -> oldSelection != null ? oldSelection : -1));
         });
 
         if (!subjectMap.getSubjects().isEmpty()) {
@@ -127,14 +126,21 @@ public class TrainControllerManager {
 
 
     private void changeTrainView(Integer trainID) {
-        TrainControllerSubject newSubject = subjectMap.getSubjects().getOrDefault(trainID, NullControllerSubject.INSTANCE);
+        Runnable update = () -> {
+            unbindControls();
+            if (trainID == -1) {
+                currentSubject = NullControllerSubject.INSTANCE;
+                updateUIForNullSubject();
+                logger.info("Train Controller switched to null subject");
+            } else {
+                currentSubject = subjectMap.getSubjects().getOrDefault(trainID, NullControllerSubject.INSTANCE);
+                bindAll();
+                updateAll();
+                logger.info("Train Controller switched to train ID: {}", trainID);
+            }
+        };
 
-        if (!currentSubject.equals(newSubject)) {
-            unbindControls(); // Clear previous bindings
-            currentSubject = newSubject;
-            bindAll(); // Re-bind controls to the new (or null) subject
-            updateAll(); // Refresh UI elements to reflect the current subject's state
-        }
+        executeViewChange(update);
     }
 
     private void bindAll(){
@@ -146,17 +152,17 @@ public class TrainControllerManager {
 
     private void bindGauges() {
         appendListener(currentSubject.getDoubleProperty(CURRENT_SPEED), (obs, oldVal, newVal) -> {
-            if(Math.abs(currentSpeedGauge.getValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(currentSpeedGauge.getValue() - newVal.doubleValue()) < 0.01) {return;} // Only update if there is a significant change (0.1 difference)
             currentSpeedGauge.setValue(newVal.doubleValue());
     //        logger.debug("Current speed gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(COMMAND_SPEED), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.01) {return;} // Only update if there is a significant change (0.1 difference)
             commandedSpeedGauge.setValue(newVal.doubleValue());
     //        logger.debug("Commanded speed gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(SPEED_LIMIT), (obs, oldVal, newVal) -> {
-            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.01) {return;} // Only update if there is a significant change (0.1 difference)
             speedLimitGauge.setValue(newVal.doubleValue());
      //       logger.debug("Speed limit gauge updated to {}", newVal);
         });
@@ -165,12 +171,12 @@ public class TrainControllerManager {
             logger.debug("Authority gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(SET_TEMPERATURE), (obs, oldVal, newVal) -> {
-            if(Math.abs(currentTemperatureGauge.getValue() - newVal.doubleValue()) < 0.2) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(currentTemperatureGauge.getValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
             currentTemperatureGauge.setValue(newVal.doubleValue());
     //        logger.debug("Current temperature gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(POWER), (obs, oldVal, newVal) -> {
-            if(Math.abs(powerOutputGauge.getValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
+            if(Math.abs(powerOutputGauge.getValue() - newVal.doubleValue()) < 0.01) {return;} // Only update if there is a significant change (0.1 difference)
             double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) > 10){
@@ -506,4 +512,16 @@ public class TrainControllerManager {
             default -> "";
         };
     }
+
+
+    private void executeViewChange(Runnable viewChange){
+        TrainControllerSubject viewChangeSubject = currentSubject;
+        viewChangeSubject.setSubjectChangeInProgress(true);
+        try{
+            viewChange.run();
+        }finally{
+            viewChangeSubject.setSubjectChangeInProgress(false);
+        }
+    }
+
 }

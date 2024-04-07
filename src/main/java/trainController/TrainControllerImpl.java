@@ -2,7 +2,6 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Support.GUIModifiableEnum;
 import Utilities.Records.Beacon;
 import javafx.scene.control.Alert;
 import trainController.ControllerBlocks.ControllerBlock;
@@ -45,8 +44,7 @@ import static trainController.ControllerProperty.*;
  * If the current speed is less than 0, it is set to 0.
  * Finally, the speed and power of the train are updated.
  */
-public class TrainControllerImpl implements TrainController, GUIModifiableEnum<ControllerProperty> {
-
+public class TrainControllerImpl implements TrainController{
     private volatile int samplingPeriod = TIME_STEP_MS;
 
 
@@ -121,8 +119,8 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             this.setEmergencyBrake(false);
         }
         this.setSpeed(train.getSpeed());
-
         this.setPower(calculatePower(this.currentSpeed));
+
         //TODO: this.authorityCheck(this.power, this.currentSpeed);  will change power if it does not align with authority
 
         return new UpdatedTrainValues(
@@ -178,8 +176,6 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
             accel = pow / train.getMass();
         }
 
-
-        this.setPower(pow);
         return pow;
     }
 
@@ -532,15 +528,13 @@ public class TrainControllerImpl implements TrainController, GUIModifiableEnum<C
     public boolean getInTunnel(){return this.inTunnel;}
     public double  getGrade(){return this.grade;}
 
-    //TODO: Implement this method
     @Override
     public void updateBeacon(Beacon beacon) {
-
+        this.beacon = beacon;
     }
 
     @Override
-    public void setValue(String propertyName, Object newValue) {
-        setValue(valueOf(propertyName.toUpperCase()), newValue);
+    public void setValue(Enum<?> propertyName, Object newValue) {
+        setValue((ControllerProperty) propertyName, newValue);
     }
-
 }

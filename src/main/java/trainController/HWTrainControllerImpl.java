@@ -217,8 +217,9 @@ public class HWTrainControllerImpl implements TrainController {
         return null;
     }
 
+
     @Override
-    public void setValue(String propertyName, Object newValue) {
+    public void setValue(Enum<?> propertyName, Object newValue) {
 
     }
 }

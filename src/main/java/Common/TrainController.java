@@ -1,12 +1,13 @@
 package Common;
 
 
-import Framework.Support.GUIModifiable;
+import Framework.Support.GUIModifiableEnum;
 import Utilities.Records.Beacon;
-import trainModel.Records.UpdatedTrainValues;
+import trainController.ControllerProperty;
 import trainController.TrainControllerSubject;
+import trainModel.Records.UpdatedTrainValues;
 
-public interface TrainController extends GUIModifiable {
+public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
 
     //To clear the situation, all setters and getters are called from logic, not from the GUI
     //GUI sets values through the setVaalue function
