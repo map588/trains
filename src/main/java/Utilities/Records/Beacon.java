@@ -1,12 +1,9 @@
 package Utilities.Records;
 
-import trainController.ControllerBlocks.ControllerBlock;
-
 import java.util.ArrayDeque;
 
-public record Beacon(int startId,
-                     int endId,
-                     ArrayDeque<ControllerBlock> blockIndices
-)
-{
+public record Beacon(Integer startId,
+                     Integer endId,
+                     ArrayDeque<Integer> blockIndices
+) {
 }

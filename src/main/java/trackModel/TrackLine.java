@@ -50,7 +50,6 @@ public class TrackLine implements TrackModel {
     public TrackLine(Lines line, BasicTrackLine basicTrackLayout) {
 
         trackBlocks = new TrackBlockLine();
-        beaconBlocks = new ConcurrentHashMap<>();
         trackOccupancyMap = new ObservableHashMap<>();
 
         ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
@@ -59,6 +58,9 @@ public class TrackLine implements TrackModel {
             TrackBlock block = new TrackBlock(basicTrackLayout.get(blockIndex));
             trackBlocks.put(block.blockID, block);
         }
+
+        //Needs more testing, but the beacon parser seems to work.
+        beaconBlocks = BeaconParser.parseBeacons(line);
 
         this.subject = new TrackLineSubject(this, trackBlocks);
 
@@ -153,10 +155,12 @@ public class TrackLine implements TrackModel {
             trackBlocks.get(blockID).setOccupied(true);
             trackBlocks.get(blockID).occupiedBy = train;
             WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, true);
+            if(beaconBlocks.containsKey(blockID)) {
+                train.passBeacon(beaconBlocks.get(blockID));
+            }
             return null;
         });
 
-        return;
     }
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
