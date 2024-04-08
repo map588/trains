@@ -53,7 +53,7 @@ public class WaysideSystem {
                 controllerMapGreen.put(blockID, controller);
         });
         waysideQueue.add(new WaysideUpdate(controller));
-        logger.info("Added Wayside Controller: " + controller.getID() + " to " + line);
+        logger.info("Added Wayside Controller: {} to line {}", controller.getID(), line);
     }
 
     public static int size() {

@@ -17,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainController.NullController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,28 +77,26 @@ public class TrainModelManager {
 
 
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if(subjectMap.getSubjects().isEmpty()){
+            if(subjectMap.getSubjects().isEmpty() || newSelection == null){
                 logger.warn("No trains available to select");
-                changeTrainView(NullController.getInstance().getID());
-            }
-            if(newSelection == null){
-                logger.warn("No selection made");
-                changeTrainView(oldSelection);
+                changeTrainView(-1);
             }else {
                 changeTrainView(newSelection);
             }
         });
+
+
+        maxPowerLabel.setText("643.68");
+        maxVelocityLabel.setText("43.48");
+        medAccelerationLabel.setText("1.64");
+        trainHeightLabel.setText("11.22");
+        trainWidthLabel.setText("8.69");
 
         setUpCircleColors();
         logger.info("Finished TrainModelManager initialize");
     }
 
     private void bindLabels() {
-        maxPowerLabel.setText("643.68");
-        maxVelocityLabel.setText("43.48");
-        medAccelerationLabel.setText("1.64");
-        trainHeightLabel.setText("11.22");
-        trainWidthLabel.setText("8.69");
 
         bindLabelToProperty(MASS_PROPERTY, massLabel);
         bindLabelToProperty(LENGTH_PROPERTY, trainLengthLabel);
@@ -124,14 +121,13 @@ public class TrainModelManager {
 
     private void changeTrainView(Integer trainID) {
             executeUpdate(() -> {
-                unbindValues();
+                unbindAll();
                 if (trainID == -1) {
                     subject = nullSubject;
                     updateViewForNullSubject();
                     logger.info("Train Controller switched to null subject");
                 } else {
                     subject = subjectMap.getSubjects().get(trainID);
-                    bindAll();
                     updateView();
                     logger.info("Train Controller switched to train ID: {}", trainID);
                 }
@@ -151,6 +147,47 @@ public class TrainModelManager {
         }
     }
 
+
+    private void updateView() {
+        actualPowerDisp.setValue(subject.getDoubleProperty(POWER_PROPERTY).get());
+        actualVelocityDisp.setValue(subject.getDoubleProperty(ACTUALSPEED_PROPERTY).get());
+        actualAccelerationDisp.setValue(subject.getDoubleProperty(ACCELERATION_PROPERTY).get());
+        cmdSpeedDisp.setValue(subject.getDoubleProperty(COMMANDSPEED_PROPERTY).get());
+        authorityDisp.setValue(subject.getIntegerProperty(AUTHORITY_PROPERTY).get());
+        setTempDisp.setValue(subject.getDoubleProperty(SETTEMPERATURE_PROPERTY).get());
+        realTempDisp.setValue(subject.getDoubleProperty(REALTEMPERATURE_PROPERTY).get());
+        brakeFailureBtn.setSelected(subject.getBooleanProperty(BRAKEFAILURE_PROPERTY).get());
+        powerFailureBtn.setSelected(subject.getBooleanProperty(POWERFAILURE_PROPERTY).get());
+        signalFailureBtn.setSelected(subject.getBooleanProperty(SIGNALFAILURE_PROPERTY).get());
+        updateEBrakeIndicator(subject.getBooleanProperty(EMERGENCYBRAKE_PROPERTY).get());
+        updateSBrakeIndicator(subject.getBooleanProperty(SERVICEBRAKE_PROPERTY).get());
+        updateExtLightsIndicator(subject.getBooleanProperty(EXTLIGHTS_PROPERTY).get());
+        updateIntLightsIndicator(subject.getBooleanProperty(INTLIGHTS_PROPERTY).get());
+        updateLeftDoorsIndicator(subject.getBooleanProperty(LEFTDOORS_PROPERTY).get());
+        updateRightDoorsIndicator(subject.getBooleanProperty(RIGHTDOORS_PROPERTY).get());
+        bindAll();
+    }
+
+    private void bindAll(){
+        bindControls();
+        bindGauges();
+        bindIndicators();
+        bindLabels();
+    }
+
+    private void updateViewForNullSubject() {
+        // Example UI adjustments for the null subject
+        actualPowerDisp.setValue(0);
+        actualVelocityDisp.setValue(0);
+        actualAccelerationDisp.setValue(0);
+        cmdSpeedDisp.setValue(0);
+        authorityDisp.setValue(0);
+        setTempDisp.setValue(0);
+        realTempDisp.setValue(0);
+        brakeFailureBtn.setSelected(false);
+        powerFailureBtn.setSelected(false);
+        signalFailureBtn.setSelected(false);
+    }
 
     private void bindGauges() {
         actualPowerDisp.valueProperty().bind(subject.getDoubleProperty(POWER_PROPERTY));
@@ -176,17 +213,17 @@ public class TrainModelManager {
 
         brakeFailureBtn.setOnAction(event -> {
             BooleanProperty brakeFailure = subject.getBooleanProperty(BRAKEFAILURE_PROPERTY);
-            subject.setProperty("brakeFailure", !brakeFailure.get());
+            subject.setProperty(BRAKEFAILURE_PROPERTY, !brakeFailure.get());
         });
 
         powerFailureBtn.setOnAction(event -> {
             BooleanProperty powerFailure = subject.getBooleanProperty(POWERFAILURE_PROPERTY);
-            subject.setProperty("powerFailure", !powerFailure.get());
+            subject.setProperty(POWERFAILURE_PROPERTY, !powerFailure.get());
         });
 
         signalFailureBtn.setOnAction(event -> {
             BooleanProperty signalFailure = subject.getBooleanProperty(SIGNALFAILURE_PROPERTY);
-            subject.setProperty("signalFailure", !signalFailure.get());
+            subject.setProperty(SIGNALFAILURE_PROPERTY, !signalFailure.get());
         });
     }
 
@@ -211,40 +248,9 @@ public class TrainModelManager {
 
 
 
-    private void updateViewForNullSubject() {
-        // Example UI adjustments for the null subject
-        actualPowerDisp.setValue(0);
-        actualVelocityDisp.setValue(0);
-        actualAccelerationDisp.setValue(0);
-        cmdSpeedDisp.setValue(0);
-        authorityDisp.setValue(0);
-        setTempDisp.setValue(0);
-        realTempDisp.setValue(0);
-        brakeFailureBtn.setSelected(false);
-        powerFailureBtn.setSelected(false);
-        signalFailureBtn.setSelected(false);
-    }
 
 
-
-    private void updateView() {
-        if(subject != null) {
-            unbindValues();
-            bindControls();
-            bindGauges();
-            bindIndicators();
-            bindLabels();
-        }
-    }
-
-    private void bindAll(){
-        bindControls();
-        bindGauges();
-        bindIndicators();
-        bindLabels();
-    }
-
-    private void unbindValues() {
+    private void unbindAll() {
         listenerReferences.forEach(ListenerReference::detach);
         listenerReferences.clear();
 

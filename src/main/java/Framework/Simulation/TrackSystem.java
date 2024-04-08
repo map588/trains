@@ -22,8 +22,8 @@ public class TrackSystem {
     private final ExecutorService trackLineExecutor;
     private static final GlobalBasicBlockParser blockParser = GlobalBasicBlockParser.getInstance();
 
-
     private static TrainSystem trainSystem;
+
     public TrackSystem(TrainSystem trainSystem) {
         trackLineExecutor = Executors.newFixedThreadPool(blockParser.lineCount());
         TrackSystem.trainSystem = trainSystem;
@@ -39,11 +39,12 @@ public class TrackSystem {
     }
 
     public void update() {
-        trackLineExecutor.submit(() -> {
+
             for (TrackLine line : TrackLineMap.getValues()) {
+                trackLineExecutor.submit(() -> {
                     line.update();
+                });
             }
-        });
     }
 
 //    private void logBlockInfo(TrackBlock block) {

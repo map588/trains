@@ -17,6 +17,7 @@ public class TrainModelSubject implements AbstractSubject{
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainModelImpl model;
     private final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
+    private final int trainID;
 
 
 
@@ -24,6 +25,7 @@ public class TrainModelSubject implements AbstractSubject{
     public TrainModelSubject(TrainModelImpl trainModel) {
         this.model = trainModel;
         int trainID = trainModel.getTrainNumber();
+        this.trainID = trainID;
         intitializeValues();
         if(trainModel.getTrainNumber() == -1 ){
             return;
@@ -39,6 +41,7 @@ public class TrainModelSubject implements AbstractSubject{
     public TrainModelSubject() {
         this.model = NullTrain.getInstance();
         intitializeValues();
+        this.trainID = -1;
         //Noteably, we do not register the NullTrain with the map
     }
 

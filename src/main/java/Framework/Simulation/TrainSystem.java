@@ -2,7 +2,6 @@ package Framework.Simulation;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Support.ObservableHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trainModel.Records.UpdatedTrainValues;
@@ -10,11 +9,11 @@ import trainModel.Records.UpdatedTrainValues;
 import java.util.concurrent.*;
 
 public class TrainSystem {
+    private final static Logger logger = LoggerFactory.getLogger(TrainSystem.class);
+
     ExecutorService trainExecutor = Executors.newWorkStealingPool();
 
-    final static Logger logger = LoggerFactory.getLogger(TrainSystem.class);
-
-    private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ObservableHashMap<>();
+    private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ConcurrentHashMap<>();
 
 
     public TrainSystem() {
@@ -22,6 +21,7 @@ public class TrainSystem {
     }
 
     public void addTrainProcess(TrainModel train) {
+        logger.info("Train {}: Process added to TrainSystem", train.getTrainNumber());
         TrainUpdateTask trainUpdate = new TrainUpdateTask(train, train.getController());
         updateTasks.put(train, trainUpdate);
     }
@@ -55,12 +55,11 @@ public class TrainSystem {
 
         @Override
         public Void call() {
-
-            if(controller == null || train == null) {
+            if(train == null || controller == null) {
                 deleteTrainTask(train);
+                return null;
             }
             try {
-
                 Future<UpdatedTrainValues> utvFuture = trainExecutor.submit(controller::sendUpdatedTrainValues);
                 train.trainModelTimeStep(utvFuture);
 

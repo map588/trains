@@ -67,10 +67,10 @@ public class TrainControllerManager {
 
         currentSubject = nullSubject; // Default to null object
         setupMapChangeListener();
-        updateChoiceBoxItems(); // Populate the choice box and handle initial selection
 
 
         if (!subjectMap.getSubjects().isEmpty()) {
+            updateChoiceBoxItems();
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             logger.info("Initialized Train Controller with train ID: {}", firstKey);
             changeTrainView(firstKey);
@@ -83,7 +83,7 @@ public class TrainControllerManager {
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if(subjectMap.getSubjects().isEmpty()){
                 logger.warn("No controllers available to select");
-                changeTrainView(NullController.getInstance().getID());
+                changeTrainView(-1);
             }
             if(newSelection == null){
                 logger.warn("No selection made");
@@ -110,10 +110,14 @@ public class TrainControllerManager {
             }
             public void onRemoved(Integer key, TrainControllerSubject value) {
                 updateChoiceBoxItems();
+                if(subjects.isEmpty()) {
+                    changeTrainView(-1);
+                }else if(trainNoChoiceBox.getSelectionModel().getSelectedItem() == key){
+                    trainNoChoiceBox.getSelectionModel().selectFirst();
+                }
             }
             public void onUpdated(Integer key, TrainControllerSubject oldValue, TrainControllerSubject newValue) {
                 updateChoiceBoxItems();
-                trainNoChoiceBox.getSelectionModel().select(newValue.getController().getID());
             }
         };
         subjects.addChangeListener(genericListener);
@@ -121,7 +125,6 @@ public class TrainControllerManager {
 
 
     private void updateChoiceBoxItems() {
-
         List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
         trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
 
@@ -143,14 +146,13 @@ public class TrainControllerManager {
         logger.warn("Switching Train Controller to train ID: {}", trainID);
             executeUpdate(() -> {
                 unbindControls();
-                if (trainID == -1) {
+                if (trainID == -1 || !subjectMap.getSubjects().containsKey(trainID)) {
                     currentSubject = NullController.getInstance().getSubject();
                     updateUIForNullSubject();
                     logger.info("Train Controller switched to null subject");
                 } else {
                     currentSubject = subjectMap.getSubjects().get(trainID);
-                    bindAll();
-                    updateAll();
+                    updateView();
                     logger.info("Train Controller switched to train ID: {}", trainID);
                 }
             });
@@ -164,9 +166,7 @@ public class TrainControllerManager {
                 propertyChangeLock.unlock();
             }
         } else {
-            // Handle the case when the lock is not available
-            // You can choose to retry, skip the update, or log a warning/error
-            // depending on your specific requirements
+            Platform.runLater(updateOperation);
             logger.warn("Unable to acquire lock for update operation");
         }
     }
@@ -424,14 +424,7 @@ public class TrainControllerManager {
 
 
     //Called when controller is switched, updates state of all UI elements
-    private void updateAll() {
-        if (currentSubject == null) {
-            logger.warn("No subject to update");
-            return;
-        }
-
-        //Batch update all properties
-            try{
+    private void updateView() {
             currentSpeedGauge.setValue(currentSubject.getDoubleProperty(CURRENT_SPEED).get());
             commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(COMMAND_SPEED).get());
             speedLimitGauge.setValue(currentSubject.getDoubleProperty(SPEED_LIMIT).get());
@@ -466,10 +459,8 @@ public class TrainControllerManager {
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED).get());
 
             logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
-            }catch (Exception e){
-                logger.error("Error updating UI elements", e);
-            }
 
+            bindAll();
     }
 
     // Calls when the inTunnelStatus is updated, it checks off the intLights and extLights

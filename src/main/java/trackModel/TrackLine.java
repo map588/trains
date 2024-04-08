@@ -113,8 +113,8 @@ public class TrackLine implements TrackModel {
     public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(this, trainID);
         asyncTrackUpdate(() -> {
-            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
             trackOccupancyMap.put(train, 0);
+            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
             return null;
         });
         return train;
@@ -123,8 +123,8 @@ public class TrackLine implements TrackModel {
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
         asyncTrackUpdate(() -> {
-            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
             trackOccupancyMap.put(train, 0);
+            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
             return null;
         });
     }
@@ -136,7 +136,7 @@ public class TrackLine implements TrackModel {
     public TrackBlock updateTrainLocation(TrainModel train) {
         Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
         if (currentBlockID == -1) {
-            logger.error("Train {} is not on the track", train.getTrainNumber());
+            logger.error("Train {} cannot change location" , train.getTrainNumber());
             return null;
         }
         BasicBlock.Connection next = mainTrackLine.get(currentBlockID).getNextBlock(train.getDirection());
@@ -161,13 +161,13 @@ public class TrackLine implements TrackModel {
          if (mainTrackLine.get(blockID).isOccupied()) {
                 logger.warn("Block {} is already occupied", blockID);
             }
-            mainTrackLine.get(blockID).occupiedBy = train;
-            mainTrackLine.get(blockID).setOccupied(true);
+            setOccuppied(train, blockID);
             WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, true);
+
             if(beaconBlocks.containsKey(blockID)) {
                 train.passBeacon(beaconBlocks.get(blockID));
+                logger.info("Train {} received beacon number {}", train.getTrainNumber(), blockID);
             }
-
     }
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
@@ -175,21 +175,31 @@ public class TrackLine implements TrackModel {
         if (!mainTrackLine.get(blockID).isOccupied()) {
             logger.warn("Block {} is not occupied", blockID);
         }
+
+        setUnoccupied(blockID);
         WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, false);
-        mainTrackLine.get(blockID).occupiedBy = null;
-        mainTrackLine.get(blockID).setOccupied(false);
     }
 
     private void handleYardEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
-        if(newBlockID == 0 && oldBlockID == 57 && line == Lines.GREEN) {
+        if(newBlockID == 0) {
             train.delete();
         }else if(newBlockID == oldBlockID) {
             logger.warn("Error: False Occupancy Update from " + oldBlockID + " to " + newBlockID);
-        }else if(newBlockID == 0) {
-            logger.info("Train " + train.getTrainNumber() + " was/is in the yard");
         }
     }
 
+
+    private void setOccuppied(TrainModel train, int blockID){
+        TrackBlock block = mainTrackLine.get(blockID);
+        block.setOccupied(true);
+        block.occupiedBy = train;
+    }
+
+    private void setUnoccupied(int blockID){
+        TrackBlock block = mainTrackLine.get(blockID);
+        block.setOccupied(false);
+        block.occupiedBy = null;
+    }
 
 
     private <T> CompletableFuture<T> asyncTrackUpdate(Supplier<T> task) {
@@ -274,7 +284,7 @@ public class TrackLine implements TrackModel {
             if (brokenBlock != null) {
                 brokenBlock.setFailure(true,false,false);
             } else {
-                logger.error("Block {} does not exist", blockID);
+                logger.error("Broken Rail called on Block {} does not exist", blockID);
             }
        });
     }
@@ -286,7 +296,7 @@ public class TrackLine implements TrackModel {
             if (failedBlock != null) {
                 failedBlock.setFailure(false,false,true);
             } else {
-                logger.error("Block {} does not exist", blockID);
+                logger.error("Power Failure called on Block {} does not exist", blockID);
             }
         });
     }
@@ -298,7 +308,7 @@ public class TrackLine implements TrackModel {
             if (failedBlock != null) {
                 failedBlock.setFailure(false,true,false);
             } else {
-                logger.error("Block {} does not exist", blockID);
+                logger.error("Circuit Failure called on Block {} does not exist", blockID);
             }
         });
     }

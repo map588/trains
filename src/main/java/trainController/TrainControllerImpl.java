@@ -409,7 +409,6 @@ public class TrainControllerImpl implements TrainController{
      */
 
     public void setValue(ControllerProperty propertyName, Object newValue) {
-        System.out.println("Value " + propertyName + " set to " + newValue);
         switch (propertyName) {
             case AUTOMATIC_MODE -> this.automaticMode = (boolean) newValue;
             case AUTHORITY -> this.authority = (int) newValue;
@@ -442,6 +441,7 @@ public class TrainControllerImpl implements TrainController{
             case ERROR -> System.out.println("Error is a read-only property");
             default -> System.err.println("Property " + propertyName + " not found");
         }
+        logger.info("TrainController Value {} set to {} from GUI.",propertyName,newValue);
     }
 
 

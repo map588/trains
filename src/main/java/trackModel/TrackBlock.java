@@ -6,11 +6,12 @@ import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.BasicBlock.Connection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import trackModel.BlockTypes.*;
 import trainModel.NullTrain;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class TrackBlock {
     // Block Information
@@ -40,7 +41,7 @@ public class TrackBlock {
      boolean powerFailure;
      boolean occupied;
      TrainModel occupiedBy;
-    private static final Logger logger = Logger.getLogger(TrackBlock.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TrackBlock.class);
 
      BlockFeature feature;
 
@@ -249,7 +250,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             return feature.getStationName();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getStationName", "station"));
+            logger.warn(generateLogMessage("getStationName", "station"));
             return null;
         }
     }
@@ -258,7 +259,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             return feature.getDoorDirection();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getDoorDirection", "station"));
+            logger.warn(generateLogMessage("getDoorDirection", "station"));
             return null;
         }
     }
@@ -267,7 +268,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             return feature.getPassengersWaiting();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getPassengersWaiting", "station"));
+            logger.warn(generateLogMessage("getPassengersWaiting", "station"));
             return 0;
         }
     }
@@ -276,7 +277,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             feature.setPassengersWaiting(passengersWaiting);
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("setPassengersWaiting", "station"));
+            logger.warn(generateLogMessage("setPassengersWaiting", "station"));
         }
     }
 
@@ -284,7 +285,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             return feature.getPassengersEmbarked();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getPassengersEmbarked", "station"));
+            logger.warn(generateLogMessage("getPassengersEmbarked", "station"));
             return 0;
         }
     }
@@ -293,7 +294,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             feature.setPassengersEmbarked(passengersEmbarked);
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("setPassengersEmbarked", "station"));
+            logger.warn( generateLogMessage("setPassengersEmbarked", "station"));
         }
     }
 
@@ -301,7 +302,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             return feature.getPassengersDisembarked();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getPassengersDisembarked", "station"));
+            logger.warn(generateLogMessage("getPassengersDisembarked", "station"));
             return 0;
         }
     }
@@ -310,7 +311,7 @@ public class TrackBlock {
         if (feature.isStation()) {
             feature.setPassengersDisembarked(passengersDisembarked);
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("setPassengersDisembarked", "station"));
+            logger.warn( generateLogMessage("setPassengersDisembarked", "station"));
         }
     }
 
@@ -318,7 +319,7 @@ public class TrackBlock {
         if (feature.isSwitch()) {
             feature.setSwitchState(state);
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("setSwitchState", "switch"));
+            logger.warn(generateLogMessage("setSwitchState", "switch"));
         }
     }
 
@@ -326,7 +327,7 @@ public class TrackBlock {
         if (feature.isSwitch()) {
             return feature.getSwitchState();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getSwitchState", "switch"));
+            logger.warn( generateLogMessage("getSwitchState", "switch"));
             return false;
         }
     }
@@ -335,7 +336,7 @@ public class TrackBlock {
         if (feature.isSwitch()) {
             return feature.getAutoState();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getSwitchStateAuto", "switch"));
+            logger.warn( generateLogMessage("getSwitchStateAuto", "switch"));
             return false;
         }
     }
@@ -344,7 +345,7 @@ public class TrackBlock {
         if (feature.isSwitch()) {
             feature.setSwitchStateAuto(state);
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("setSwitchStateAuto", "switch"));
+            logger.warn( generateLogMessage("setSwitchStateAuto", "switch"));
         }
     }
 
@@ -352,7 +353,7 @@ public class TrackBlock {
         if (feature.isCrossing()) {
             feature.setCrossingState(state);
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("setCrossingState", "crossing"));
+            logger.warn( generateLogMessage("setCrossingState", "crossing"));
         }
     }
 
@@ -360,7 +361,7 @@ public class TrackBlock {
         if (feature.isCrossing()) {
             return feature.getCrossingState();
         } else {
-            logger.log(Level.SEVERE, generateLogMessage("getCrossingState", "crossing"));
+            logger.warn( generateLogMessage("getCrossingState", "crossing"));
             return false;
         }
     }
