@@ -6,6 +6,7 @@ import Utilities.Records.Beacon;
 import javafx.scene.control.Alert;
 import trainController.ControllerBlocks.ControllerBlock;
 import trainController.ControllerBlocks.ControllerBlockLookups;
+import trainModel.NullTrain;
 import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,6 +86,12 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
+    public TrainControllerImpl() {
+        this.trainID = -1;
+        this.train = NullTrain.getInstance();
+        this.subject = new TrainControllerSubject(this);
+        this.nextStationName = "Yard";
+    }
     /**
      * This method is used to assign a TrainModel object to the trainControllerImpl.
      * It first assigns the passed TrainModel object to the train variable of the trainControllerImpl.
@@ -520,12 +527,18 @@ public class TrainControllerImpl implements TrainController{
     public double  getCurrentTemperature() {
         return this.currentTemperature;
     }
-    public String  getStationName(){
+    public String getNextStationName(){
         return this.nextStationName;
     }
     public boolean getLeftPlatform(){return this.leftPlatform;}
     public boolean getRightPlatform(){return this.rightPlatform;}
     public boolean getInTunnel(){return this.inTunnel;}
+
+    @Override
+    public Beacon getBeacon() {
+        return this.beacon;
+    }
+
     public double  getGrade(){return this.grade;}
 
     @Override

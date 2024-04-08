@@ -53,4 +53,13 @@ public class ObservableHashMap<K, V> extends ConcurrentHashMap<K, V> {
     private void notifyListenersUpdated(K key, V oldValue, V newValue) {
         listeners.forEach(listener -> listener.onUpdated(key, oldValue, newValue));
     }
+
+    public void clear() {
+        super.clear();
+        listeners.clear();
+    }
+
+    public ObservableHashMap(int size) {
+        super(size);
+    }
 }

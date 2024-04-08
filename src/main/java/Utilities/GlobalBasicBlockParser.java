@@ -21,7 +21,9 @@ public class GlobalBasicBlockParser {
         basicBlocks.put(line, blocks);
     }
 
-
+    public int lineCount() {
+        return basicBlocks.size();
+    }
 
     public static GlobalBasicBlockParser getInstance() {
         return INSTANCE;

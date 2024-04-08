@@ -7,6 +7,7 @@ import Framework.Support.ObservableHashMap;
 import Utilities.BasicTrackLine;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.Beacon;
 import trainModel.TrainModelImpl;
@@ -28,8 +29,8 @@ public class TrackLine implements TrackModel {
 
     ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    //maps blocks to block numbers
-    private final TrackBlockLine trackBlocks;
+    //map of dynamic Track Blocks
+    private final TrackBlockLine trackBlocks = new TrackBlockLine();
     //maps beacons to block numbers
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
     //maps trains to block numbers
@@ -47,15 +48,21 @@ public class TrackLine implements TrackModel {
     public int outsideTemperature = 40;
     private WaysideSystem waysideSystem;
 
-    public TrackLine(Lines line, BasicTrackLine basicTrackLayout) {
+    public TrackLine(Lines line) {
 
-        trackBlocks = new TrackBlockLine();
-        trackOccupancyMap = new ObservableHashMap<>();
 
-        ArrayList<Integer> blockIndices = new ArrayList<>(basicTrackLayout.keySet());
+        GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
+
+        //maps blocks to block numbers
+        BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+
+        //keeps track of which blocks are occupied
+        trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
+
+        ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
         for (Integer blockIndex : blockIndices) {
-            TrackBlock block = new TrackBlock(basicTrackLayout.get(blockIndex));
+            TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
             trackBlocks.put(block.blockID, block);
         }
 
@@ -69,13 +76,16 @@ public class TrackLine implements TrackModel {
         this.line = line;
     }
 
-
     public void update(){
         time += TIME_STEP_MS;
         // Execute all pending track update tasks
         while (!trackUpdateQueue.isEmpty()) {
             trackUpdateQueue.poll().execute();
         }
+    }
+
+    public TrackLine() {
+        this(Lines.NULL);
     }
 
     private void setupListeners() {

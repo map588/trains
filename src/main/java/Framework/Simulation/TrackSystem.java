@@ -1,15 +1,15 @@
 package Framework.Simulation;
 
-import Utilities.BasicTrackMap;
-import Utilities.GlobalBasicBlockParser;
 import Utilities.Enums.Lines;
-import org.slf4j.LoggerFactory;
+import Utilities.GlobalBasicBlockParser;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
 import trackModel.TrackLineMap;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static Utilities.Enums.Direction.NORTH;
 import static Utilities.Enums.Direction.SOUTH;
@@ -26,16 +26,14 @@ public class TrackSystem {
     private static final Logger logger = LoggerFactory.getLogger(TrackSystem.class);
 
     public TrackSystem() {
-        GlobalBasicBlockParser parsedBasicBlocks = GlobalBasicBlockParser.getInstance();
-        BasicTrackMap basicTrackMap = parsedBasicBlocks.getAllBasicLines();
-        trackLineExecutor = Executors.newFixedThreadPool(basicTrackMap.size());
+        trackLineExecutor = Executors.newFixedThreadPool(GlobalBasicBlockParser.getInstance().lineCount());
         for (Lines line : Lines.values()) {
-            TrackLine track = new TrackLine(line, basicTrackMap.get(line));
+            TrackLine track = new TrackLine(line);
             for(int i = 0; i < track.getTrack().size(); i++) {
                 TrackBlock block = track.getTrack().get(i);
                 logBlockInfo(block);
             }
-            TrackLineMap.addTrackLine(line, new TrackLine(line, basicTrackMap.get(line)));
+            TrackLineMap.addTrackLine(line, new TrackLine(line));
             logger.info("TrackLine {} has been added to the TrackLineMap", line);
         }
     }

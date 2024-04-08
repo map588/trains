@@ -1,18 +1,15 @@
-package trainController.NullObjects;
+package trainController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainController.ControllerProperty;
-import trainController.TrainControllerImpl;
-import trainModel.NullObjects.NullTrain;
 
 public final class NullController extends TrainControllerImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(NullController.class);
-    public static final NullController INSTANCE = new NullController();
+    private static final NullController INSTANCE = new NullController();
 
     private NullController() {
-        super(NullTrain.getInstance(), -1);
+        super();
     }
 
     public static NullController getInstance() {

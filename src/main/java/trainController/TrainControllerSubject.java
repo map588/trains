@@ -1,7 +1,7 @@
 package trainController;
 
 import Common.TrainController;
-import Framework.Support.Notifier;
+import Framework.Support.NotifierEnum;
 import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -10,22 +10,21 @@ import org.slf4j.LoggerFactory;
 
 import static trainController.ControllerProperty.*;
 
-public class TrainControllerSubject implements Notifier {
+public class TrainControllerSubject implements NotifierEnum {
     private final ObservableHashMap<ControllerProperty, Property<?>> properties = new ObservableHashMap<>();
-    private TrainController controller;
+
+    private final TrainController controller;
 
     private final Logger logger = LoggerFactory.getLogger(TrainControllerSubject.class);
-
-    private volatile boolean  subjectChange             = false;
 
     private final TrainControllerSubjectMap controllerSubjectMap = TrainControllerSubjectMap.getInstance();
 
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
-        if(controller.getID()  == -1){
+        initializeProperties();
+        if(controller.getID() == -1){
             return;
         }
-        initializeProperties();
         if(controllerSubjectMap.getSubjects().containsKey(controller.getID())){
             controllerSubjectMap.removeSubject(controller.getID());
         }
@@ -33,6 +32,60 @@ public class TrainControllerSubject implements Notifier {
         logger.info("Train Controller Subject created with ID: " + controller.getID());
     }
 
+    public TrainControllerSubject() {
+        this.controller = new TrainControllerImpl();
+        initializeProperties();
+    }
+
+
+    @Override
+    public void notifyChange(Enum<?> propertyName, Object newValue) {
+        Platform.runLater(() -> {
+                Property<?> property = properties.get((ControllerProperty) propertyName);
+                updateProperty(property, newValue);
+        });
+    }
+
+
+    public void setProperty(ControllerProperty propertyName, Object newValue) {
+        Platform.runLater(() -> {
+            Property<?> property = properties.get((ControllerProperty)propertyName);
+            updateProperty(property, newValue);
+            controller.setValue(propertyName, newValue);
+        });
+    }
+
+    void delete() {
+        TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
+    }
+
+
+    public Property<?> getProperty(String propertyName) {
+        return properties.get(ControllerProperty.valueOf(propertyName.toUpperCase()));
+    }
+
+
+    // Update property safely with the correct type
+    public <T> void updateProperty(Property<T> property, Object newValue) {
+            if (newValue == null) {
+                System.err.println("Null value for property " + property.getName());
+                return;
+            }
+            try {
+                if (property instanceof IntegerProperty) {
+                    ((IntegerProperty) property).set(((Number) newValue).intValue());
+                } else if (property instanceof DoubleProperty) {
+                    ((DoubleProperty) property).set(((Number) newValue).doubleValue());
+                } else if (property instanceof BooleanProperty) {
+                    ((BooleanProperty) property).set((Boolean) newValue);
+                } else if (property instanceof StringProperty) {
+                    ((StringProperty) property).set((String) newValue);
+                }
+            } catch (ClassCastException e) {
+                String error = ("Type mismatch for property " + property.getName() + ": " + e.getMessage());
+                updateProperty(properties.get(ERROR), error);
+            }
+    }
 
     // Simplified property initialization
     private void initializeProperties() {
@@ -68,73 +121,6 @@ public class TrainControllerSubject implements Notifier {
         properties.put(ERROR, new SimpleStringProperty(""));
     }
 
-    //Change coming from the logic side
-    @Override
-    public void notifyChange(String propertyName, Object newValue) {
-       logger.info("deprecated string change called");
-    }
-
-    public void notifyChange(ControllerProperty propertyName, Object newValue) {
-        Property<?> property = properties.get(propertyName);
-        if (property != null && newValue != null) {
-            executeUpdate(() -> updateProperty(property, newValue), !subjectChange);
-        }
-    }
-
-
-    public void setProperty(ControllerProperty propertyName, Object newValue) {
-
-        Property<?> property = properties.get(propertyName);
-
-        if (property != null) {
-            executeUpdate(() -> {
-                //System.out.println("Setting property " + propertyName + " to " + newValue);
-                updateProperty(property, newValue);
-                controller.setValue(propertyName, newValue);
-            }, subjectChange);
-        }
-    }
-
-    void delete() {
-        TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
-    }
-
-
-    public Property<?> getProperty(String propertyName) {
-        return properties.get(ControllerProperty.valueOf(propertyName.toUpperCase()));
-    }
-
-    private void executeUpdate(Runnable updateTask, boolean runImmediately) {
-        if (runImmediately) {
-            updateTask.run();
-        } else {
-            Platform.runLater(updateTask);
-        }
-    }
-
-    // Update property safely with the correct type
-    public <T> void updateProperty(Property<T> property, Object newValue) {
-            if (newValue == null) {
-                System.err.println("Null value for property " + property.getName());
-                return;
-            }
-            try {
-                if (property instanceof IntegerProperty) {
-                    ((IntegerProperty) property).set(((Number) newValue).intValue());
-                } else if (property instanceof DoubleProperty) {
-                    ((DoubleProperty) property).set(((Number) newValue).doubleValue());
-                } else if (property instanceof BooleanProperty) {
-                    ((BooleanProperty) property).set((Boolean) newValue);
-                } else if (property instanceof StringProperty) {
-                    ((StringProperty) property).set((String) newValue);
-                }
-            } catch (ClassCastException e) {
-                String error = ("Type mismatch for property " + property.getName() + ": " + e.getMessage());
-                updateProperty(properties.get(ERROR), error);
-            }
-    }
-
-
 
     public Property<?> getProperty(ControllerProperty propertyName) {
         return properties.get(propertyName);
@@ -160,11 +146,9 @@ public class TrainControllerSubject implements Notifier {
         return (IntegerProperty) property;
     }
 
-     void setSubjectChangeInProgress(boolean inProgress){
-        subjectChange = inProgress;
-    }
 
     public TrainControllerImpl getController() {
         return  (TrainControllerImpl) controller;
     }
+
 }

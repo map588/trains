@@ -22,16 +22,18 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainModel.NullObjects.NullTrainSubject;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TrainModelManager {
     
     Logger logger = LoggerFactory.getLogger(TrainModelManager.class);
+
+    private final ReentrantLock viewChangeLock = new ReentrantLock();
 
     @FXML
     public Button eBrakeBtn;
@@ -51,8 +53,12 @@ public class TrainModelManager {
     TrainModelSubjectMap subjectMap;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
     private TrainModelSubject subject;
-    //private TrainModelTB testBench;
+
     private final TrainModelSubject nullSubject = new TrainModelSubject();
+
+    final static ReentrantLock subjectChangeLock = new ReentrantLock();
+
+
     @FXML
     public void initialize() {
         logger.info("Started TrainModelManager initialize");
@@ -106,6 +112,34 @@ public class TrainModelManager {
                     label.setText("");
                 }
         });
+    }
+
+    private void changeTrainView(Integer trainID) {
+            executeUpdate(() -> {
+                unbindValues();
+                if (trainID == -1) {
+                    subject = NullTrain.INSTANCE.;
+                    updateViewForNullSubject();
+                    logger.info("Train Controller switched to null subject");
+                } else {
+                    subject = subjectMap.getSubjects().getOrDefault(trainID, NullTrainSubject.INSTANCE);
+                    bindAll();
+                    logger.info("Train Controller switched to train ID: {}", trainID);
+                }
+            });
+    }
+
+    void executeUpdate(Runnable updateOperation) {
+        if (subjectChangeLock.tryLock()) {
+            try {
+                updateOperation.run();
+            } finally {
+                subjectChangeLock.unlock();
+            }
+        } else {
+            Platform.runLater(updateOperation);
+            logger.warn("Unable to acquire lock for update operation");
+        }
     }
 
 
@@ -166,15 +200,6 @@ public class TrainModelManager {
         rightDoorsEn.setFill(active ? Color.YELLOW : Color.GRAY);
     }
 
-    private void changeTrainView(Integer trainID) {
-        if (trainID == null || trainID == -1 || !subjectMap.getSubjects().containsKey(trainID)) {
-            subject = NullTrainSubject.getInstance(); // Fallback to null object
-            updateViewForNullSubject(); // Special UI update for no subject
-        } else {
-            subject = subjectMap.getSubjects().get(trainID);
-            updateView(); // Regular UI update for an actual subject
-        }
-    }
 
 
     private void updateViewForNullSubject() {
@@ -201,6 +226,13 @@ public class TrainModelManager {
             bindIndicators();
             bindLabels();
         }
+    }
+
+    private void bindAll(){
+        bindControls();
+        bindGauges();
+        bindIndicators();
+        bindLabels();
     }
 
     private void unbindValues() {

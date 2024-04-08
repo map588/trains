@@ -1,8 +1,7 @@
-package trainModel.NullObjects;
+package trainModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainModel.TrainModelImpl;
 
 public final class NullTrain extends TrainModelImpl {
 

@@ -17,11 +17,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainController.NullObjects.NullControllerSubject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import static trainController.ControllerProperty.*;
@@ -54,24 +53,30 @@ public class TrainControllerManager {
     private TrainControllerSubjectMap subjectMap;
     private TrainControllerSubject currentSubject;
 
+
+
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerManager.class);
 
+    private final ReentrantLock propertyChangeLock = new ReentrantLock();
 
     @FXML
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");
 
         subjectMap = TrainControllerSubjectMap.getInstance();
-        currentSubject = NullControllerSubject.INSTANCE; // Default to null object
+        currentSubject = NullController.getInstance().getSubject(); // Default to null object
         setupMapChangeListener();
 
         updateChoiceBoxItems(); // Populate the choice box and handle initial selection
 
         trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            // Use -1 or any invalid ID to revert to NullSubject
-            changeTrainView(Objects.requireNonNullElseGet(newSelection, () -> oldSelection != null ? oldSelection : -1));
+            if(TrainControllerSubjectMap.getInstance().getSubjects().isEmpty()){
+                logger.warn("No trains available to select");
+                changeTrainView(NullController.getInstance().getID());
+            }
+            changeTrainView(newSelection);
         });
 
         if (!subjectMap.getSubjects().isEmpty()) {
@@ -126,21 +131,34 @@ public class TrainControllerManager {
 
 
     private void changeTrainView(Integer trainID) {
-        Runnable update = () -> {
-            unbindControls();
-            if (trainID == -1) {
-                currentSubject = NullControllerSubject.INSTANCE;
-                updateUIForNullSubject();
-                logger.info("Train Controller switched to null subject");
-            } else {
-                currentSubject = subjectMap.getSubjects().getOrDefault(trainID, NullControllerSubject.INSTANCE);
-                bindAll();
-                updateAll();
-                logger.info("Train Controller switched to train ID: {}", trainID);
-            }
-        };
+            executeUpdate(() -> {
+                unbindControls();
+                if (trainID == -1) {
+                    currentSubject = NullController.getInstance().getSubject();
+                    updateUIForNullSubject();
+                    logger.info("Train Controller switched to null subject");
+                } else {
+                    currentSubject = subjectMap.getSubjects().get(trainID);
+                    bindAll();
+                    updateAll();
+                    logger.info("Train Controller switched to train ID: {}", trainID);
+                }
+            });
+    }
 
-        executeViewChange(update);
+    void executeUpdate(Runnable updateOperation) {
+        if (propertyChangeLock.tryLock()) {
+            try {
+                updateOperation.run();
+            } finally {
+                propertyChangeLock.unlock();
+            }
+        } else {
+            // Handle the case when the lock is not available
+            // You can choose to retry, skip the update, or log a warning/error
+            // depending on your specific requirements
+            logger.warn("Unable to acquire lock for update operation");
+        }
     }
 
     private void bindAll(){
@@ -513,15 +531,5 @@ public class TrainControllerManager {
         };
     }
 
-
-    private void executeViewChange(Runnable viewChange){
-        TrainControllerSubject viewChangeSubject = currentSubject;
-        viewChangeSubject.setSubjectChangeInProgress(true);
-        try{
-            viewChange.run();
-        }finally{
-            viewChangeSubject.setSubjectChangeInProgress(false);
-        }
-    }
 
 }

@@ -4,7 +4,6 @@ package trainModel;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Framework.Simulation.Main;
 import Framework.Support.Notifier;
 import Utilities.Constants;
 import Utilities.Conversion;
@@ -90,7 +89,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     public TrainModelImpl() {
         initializeValues();
-        //Who knows what this will do.
         this.trainID = -1;
         this.track = null;
         this.controller = new TrainControllerImpl(this, -1);
@@ -123,7 +121,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.brakeFailure = false;
         this.powerFailure = false;
         this.signalFailure = false;
-        this.TIME_DELTA = (int)Main.TIMESTEP;
+        this.TIME_DELTA = Constants.TIME_STEP_MS;
         this.realTemperature = 0;
         this.setTemperature = 0;
         this.extLights = false;
@@ -140,14 +138,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void notifyChange(String property, Object newValue) {
-
-       // System.out.println("Variable: " + property + " changed to " + newValue);
-
-        // If the set is called by the GUI, it implies that the property is already changed
-        // and we should not notify the subject of the change, because its already changed...
-        if(!subject.isGUIUpdate) {
-            subject.notifyChange(property, newValue);
-        }
+        subject.notifyChange(property, newValue);
     }
 
     public void trainModelTimeStep(Future<UpdatedTrainValues> updatedTrainValuesFuture) throws ExecutionException, InterruptedException {

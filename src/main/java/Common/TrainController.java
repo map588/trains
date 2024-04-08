@@ -68,4 +68,16 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
     void updateBeacon(Beacon beacon);
     UpdatedTrainValues sendUpdatedTrainValues();
     TrainModel getTrain();
+
+    boolean getLeftPlatform();
+
+    String getNextStationName();
+
+    double getSpeed();
+
+    boolean getRightPlatform();
+
+    boolean getInTunnel();
+
+    Beacon getBeacon();
 }

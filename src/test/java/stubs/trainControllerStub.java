@@ -225,7 +225,7 @@ public class trainControllerStub implements TrainController {
     }
 
 //    @Override
-    public String getStationName() {
+    public String getNextStationName() {
         return null;
     }
 
