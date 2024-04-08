@@ -18,15 +18,16 @@ public class TrackSystem {
      * GREEN -> {TrackLine}
      * ....
      */
-    private final ExecutorService trackLineExecutor;
-
     private static final Logger logger = LoggerFactory.getLogger(TrackSystem.class);
-    private static TrainSystem trainSystem;
+    private final ExecutorService trackLineExecutor;
+    private static final GlobalBasicBlockParser blockParser = GlobalBasicBlockParser.getInstance();
 
+
+    private static TrainSystem trainSystem;
     public TrackSystem(TrainSystem trainSystem) {
-        trackLineExecutor = Executors.newFixedThreadPool(GlobalBasicBlockParser.getInstance().lineCount());
+        trackLineExecutor = Executors.newFixedThreadPool(blockParser.lineCount());
         TrackSystem.trainSystem = trainSystem;
-        for (Lines line : Lines.values()) {
+        for (Lines line : blockParser.getAllBasicLines().keySet()) {
             TrackLineMap.addTrackLine(line, new TrackLine(line));
             logger.info("TrackLine {} has been added to the TrackLineMap", line);
         }

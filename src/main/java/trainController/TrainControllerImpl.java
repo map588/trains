@@ -48,9 +48,8 @@ import static trainController.ControllerProperty.*;
 public class TrainControllerImpl implements TrainController{
     private int TIME_STEP = TIME_STEP_MS/1000;
 
-
-
-    private Beacon beacon;
+    private ControllerBlock currentBlock;
+    private Beacon currentBeacon = null;
 
 
     //Internal Metric
@@ -93,6 +92,7 @@ public class TrainControllerImpl implements TrainController{
         if(train.getTrainNumber() != -1) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
         }
+        currentBlock = blockLookup.get(0);
     }
 
     public TrainControllerImpl() {
@@ -192,7 +192,13 @@ public class TrainControllerImpl implements TrainController{
      *  onBlock()
      */
     public void onBlock(){
-        //TODO:
+        if(currentBeacon != null) {
+            currentBlock = blockLookup.get(currentBeacon.blockIndices().poll());
+        }
+        setNextStationName(currentBlock.stationName());
+        setSpeedLimit(currentBlock.speedLimit());
+        setInTunnel(currentBlock.isUnderground());
+        //.... proof of concept
 
         // Update Block by Block
 
@@ -532,14 +538,14 @@ public class TrainControllerImpl implements TrainController{
 
     @Override
     public Beacon getBeacon() {
-        return this.beacon;
+        return this.currentBeacon;
     }
 
     public double  getGrade(){return this.grade;}
 
     @Override
     public void updateBeacon(Beacon beacon) {
-        this.beacon = beacon;
+        this.currentBeacon = beacon;
     }
 
     @Override
