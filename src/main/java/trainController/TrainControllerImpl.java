@@ -384,9 +384,9 @@ public class TrainControllerImpl implements TrainController{
         this.TIME_STEP = period;
         subject.notifyChange(SAMPLING_PERIOD ,period);
     }
-    public void setSpeedLimit(double speedLimit){
-        this.speedLimit = speedLimit;
-        subject.notifyChange(SPEED_LIMIT , convertVelocity(speedLimit, MPS, MPH));
+    public void setSpeedLimit(double limit){
+        this.speedLimit = convertVelocity(limit, MPH, MPS);
+        subject.notifyChange(SPEED_LIMIT , limit);
     }
     public void setNextStationName(String name){
         this.nextStationName = name;

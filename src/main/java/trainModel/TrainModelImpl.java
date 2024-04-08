@@ -206,9 +206,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.newSpeed = this.speed;
 
         //NEXT BLOCK NOTICE
-//        if(currentBlockLength - relativeDistance <= 0) {
-//            enteredNextBlock();
-//        }
+        if(currentBlockLength - relativeDistance <= 0) {
+            enteredNextBlock();
+        }
 
         //ACCELERATION PROGRESSION
         double previousAcceleration = this.acceleration;
@@ -238,8 +238,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.newSpeed = this.speed + halfDt * (this.acceleration + previousAcceleration);
         this.relativeDistance += this.newSpeed * dt + halfDt * dt * halfAcceleration;
 
-        if (this.newSpeed < 0) { this.newSpeed = 0; }
-        if (this.newSpeed > Constants.MAX_SPEED) { this.newSpeed = Constants.MAX_SPEED; }
+        if (this.speed < 0) { this.speed = 0; }
+        if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
+
+        setActualSpeed(this.newSpeed);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -257,10 +259,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         double engineForce;
 
         //ENGINE FORCE (Power is assumed to be in Watts)
-        if (this.newSpeed < 0.0001) {
+        if (this.speed < 0.001) {
             engineForce = this.power / 0.0001; // Use a small threshold speed to avoid division by zero
         } else {
-            engineForce = this.power / this.newSpeed;
+            engineForce = this.power / this.speed;
         }
 
         if(engineForce > MAX_ENGINE_FORCE) {
@@ -290,8 +292,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void setCommandSpeed(double speed) {
-        this.commandSpeed = (signalFailure) ? -1 : speed;
-        notifyChange(COMMANDSPEED_PROPERTY, convertVelocity(speed, MPS, MPH));
+        this.commandSpeed = (signalFailure) ? -1 : convertVelocity(speed, MPH, MPS);
+        notifyChange(COMMANDSPEED_PROPERTY, speed);
         controller.setCommandSpeed(speed);
     }
     public void setAuthority(int authority) {
