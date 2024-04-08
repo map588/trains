@@ -122,6 +122,7 @@ public class WaysideBlock implements Notifier {
             subject.notifyChange(occupied_p, occupied);
     }
 
+
     public void setBlockMaintenanceState(boolean open) {
        // System.out.println("Block Access State: " + open);
         this.open = open;
