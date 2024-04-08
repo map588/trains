@@ -11,7 +11,7 @@ import static Framework.Simulation.BaseApplication.initializeJavaFX;
 public class Main {
 
     private static final int NUM_THREADS = 2;
-    public static         long TIMESTEP = 50; // Timestep in milliseconds
+    public static         long TIMESTEP = 100; // Timestep in milliseconds
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
     private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();

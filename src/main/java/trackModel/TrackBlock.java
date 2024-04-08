@@ -156,10 +156,12 @@ public class TrackBlock {
     }
 
     public void setAuthority(int authority) {
+        this.occupiedBy.setAuthority(authority);
         this.authority = authority;
     }
 
     public void setCommandSpeed(double commandSpeed) {
+        this.occupiedBy.setCommandSpeed(commandSpeed);
         this.commandSpeed = commandSpeed;
     }
 
