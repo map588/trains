@@ -30,7 +30,11 @@ public class GlobalBasicBlockParser {
     }
 
     public BasicTrackLine getBasicLine(Lines line) {
-        return new BasicTrackLine(basicBlocks.get(line));
+        if(line != Lines.NULL) {
+            return new BasicTrackLine(basicBlocks.get(line));
+        }else{
+            return new BasicTrackLine();
+        }
     }
 
     public BasicTrackMap getAllBasicLines() {

@@ -11,7 +11,7 @@ public final class BasicTrackLine extends ConcurrentSkipListMap<Integer, BasicBl
     }
 
     public BasicTrackLine(ConcurrentSkipListMap<Integer, BasicBlock> map) {
-        super(map);
+            super(map);
     }
 
     public ConcurrentSkipListMap<Integer, BasicBlock> toConcurrentSkipListMap() {

@@ -11,7 +11,7 @@ import static Framework.Simulation.BaseApplication.initializeJavaFX;
 public class Main {
 
     private static final int NUM_THREADS = 2;
-    public static final long TIMESTEP = 100; // Timestep in milliseconds
+    public static         long TIMESTEP = 50; // Timestep in milliseconds
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
     private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -25,14 +25,13 @@ public class Main {
         initializeJavaFX();
 
         System.out.println("Starting simulation...");
-         trackSystem = new TrackSystem();
         CTCOfficeImpl CTC = CTCOfficeImpl.OFFICE;
-         waysideController = new WaysideSystem(trackSystem, CTC, false);
+
          trainSystem = new TrainSystem();
+        trackSystem = new TrackSystem(trainSystem);
+        waysideController = new WaysideSystem(trackSystem, CTC, false);
+
         CTC.setTrackSystem(trackSystem);
-
-
-
 
 
 

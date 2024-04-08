@@ -79,8 +79,8 @@ public class TrainControllerImpl implements TrainController{
         this.trainID = trainID;
         this.train = train;
         this.subject = new TrainControllerSubject(this);
-        populateTrainValues(train);
         this.nextStationName = "Yard";
+        populateTrainValues(train);
         if(train.getTrainNumber() != -1) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
         }

@@ -21,20 +21,17 @@ public class TrainControllerSubject implements NotifierEnum {
 
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
+        int controllerID = controller.getID();
+        logger.info("Creating Train Controller Subject with ID: " + controllerID);
         initializeProperties();
         if(controller.getID() == -1){
             return;
         }
-        if(controllerSubjectMap.getSubjects().containsKey(controller.getID())){
-            controllerSubjectMap.removeSubject(controller.getID());
+        if(controllerSubjectMap.getSubjects().containsKey(controllerID)){
+            controllerSubjectMap.removeSubject(controllerID);
         }
-        controllerSubjectMap.registerSubject(controller.getID(), this);
-        logger.info("Train Controller Subject created with ID: " + controller.getID());
-    }
-
-    public TrainControllerSubject() {
-        this.controller = new TrainControllerImpl();
-        initializeProperties();
+        controllerSubjectMap.registerSubject(controllerID, this);
+        logger.info("Train Controller Subject created with ID: " + controllerID);
     }
 
 

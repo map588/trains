@@ -50,10 +50,10 @@ public class TrainControllerManager {
     @FXML
     private ChoiceBox<Integer> trainNoChoiceBox;
 
-    private TrainControllerSubjectMap subjectMap;
+    private final TrainControllerSubjectMap subjectMap = TrainControllerSubjectMap.getInstance();
+    private final TrainControllerSubject nullSubject = NullController.getInstance().getSubject();
+
     private TrainControllerSubject currentSubject;
-
-
 
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
@@ -65,19 +65,10 @@ public class TrainControllerManager {
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");
 
-        subjectMap = TrainControllerSubjectMap.getInstance();
-        currentSubject = NullController.getInstance().getSubject(); // Default to null object
+        currentSubject = nullSubject; // Default to null object
         setupMapChangeListener();
-
         updateChoiceBoxItems(); // Populate the choice box and handle initial selection
 
-        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if(TrainControllerSubjectMap.getInstance().getSubjects().isEmpty()){
-                logger.warn("No trains available to select");
-                changeTrainView(NullController.getInstance().getID());
-            }
-            changeTrainView(newSelection);
-        });
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
@@ -89,10 +80,21 @@ public class TrainControllerManager {
             updateUIForNullSubject(); // Method to reset or initialize UI for null subject
         }
 
+        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if(subjectMap.getSubjects().isEmpty()){
+                logger.warn("No controllers available to select");
+                changeTrainView(NullController.getInstance().getID());
+            }
+            if(newSelection == null){
+                logger.warn("No selection made");
+                changeTrainView(oldSelection);
+            }else {
+                changeTrainView(newSelection);
+            }
+        });
+
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
-
-
 
 
     private void setupMapChangeListener() {
@@ -117,20 +119,26 @@ public class TrainControllerManager {
 
 
     private void updateChoiceBoxItems() {
-            List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
-            trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
 
-            if (!trainIDs.isEmpty()) {
-                // Automatically select the first train if one is available
+        List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
+        trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
+
+        if (!trainIDs.isEmpty()) {
+            if(trainIDs.size() == 1){
                 trainNoChoiceBox.getSelectionModel().selectFirst();
-            } else {
-                logger.info("No trains available after update.");
-                changeTrainView(-1); // Explicitly handle no selection
+            }else {
+                Integer previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedItem();
+                trainNoChoiceBox.getSelectionModel().select(previousSelection);
             }
+        } else {
+            logger.info("No trains available after update.");
+            changeTrainView(-1); // Explicitly handle no selection
+        }
     }
 
 
     private void changeTrainView(Integer trainID) {
+        logger.warn("Switching Train Controller to train ID: {}", trainID);
             executeUpdate(() -> {
                 unbindControls();
                 if (trainID == -1) {

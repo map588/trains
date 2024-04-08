@@ -61,7 +61,7 @@ public class WaysideControllerSubject implements AbstractSubject, Notifier {
         if (isLogicUpdate) {
             executorService.scheduleWithFixedDelay(() -> {
                 if (!isLogicUpdate) {
-                    System.out.println("Delayed setProperty from GUI");
+      //              System.out.println("Delayed setProperty from GUI");
                     Platform.runLater(() -> updateFromGUI(updateTask));
                 }
             }, 0, 10, TimeUnit.MILLISECONDS);
@@ -102,7 +102,7 @@ public class WaysideControllerSubject implements AbstractSubject, Notifier {
 
     // Handling updates from the GUI
     public void updateFromGUI(Runnable updateLogic) {
-        System.out.println("Called from updateFromGUI.");
+       // System.out.println("Called from updateFromGUI.");
         isGUIUpdate = true;
         try {
             updateLogic.run();

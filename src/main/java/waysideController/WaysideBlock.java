@@ -1,11 +1,10 @@
 package waysideController;
 
 import Framework.Support.Notifier;
-import Utilities.Records.BasicBlock;
 import Utilities.Enums.Direction;
+import Utilities.Records.BasicBlock;
 
 import static Utilities.Enums.BlockType.CROSSING;
-import static Utilities.Enums.BlockType.STATION;
 import static waysideController.Properties.*;
 
 public class WaysideBlock implements Notifier {
@@ -120,7 +119,7 @@ public class WaysideBlock implements Notifier {
     }
 
     public void setBlockMaintenanceState(boolean open) {
-        System.out.println("Block Access State: " + open);
+       // System.out.println("Block Access State: " + open);
         this.open = open;
 
         if(subject != null)

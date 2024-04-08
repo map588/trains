@@ -217,6 +217,36 @@ public class HWTrainControllerImpl implements TrainController {
         return null;
     }
 
+    @Override
+    public boolean getLeftPlatform() {
+        return false;
+    }
+
+    @Override
+    public String getNextStationName() {
+        return null;
+    }
+
+    @Override
+    public double getSpeed() {
+        return 0;
+    }
+
+    @Override
+    public boolean getRightPlatform() {
+        return false;
+    }
+
+    @Override
+    public boolean getInTunnel() {
+        return false;
+    }
+
+    @Override
+    public Beacon getBeacon() {
+        return null;
+    }
+
 
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {

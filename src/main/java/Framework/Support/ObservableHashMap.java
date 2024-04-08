@@ -62,4 +62,8 @@ public class ObservableHashMap<K, V> extends ConcurrentHashMap<K, V> {
     public ObservableHashMap(int size) {
         super(size);
     }
+
+    public ObservableHashMap() {
+        super();
+    }
 }

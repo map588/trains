@@ -9,31 +9,22 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.NullController;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TrainModelManager {
-    
-    Logger logger = LoggerFactory.getLogger(TrainModelManager.class);
-
-    private final ReentrantLock viewChangeLock = new ReentrantLock();
 
     @FXML
     public Button eBrakeBtn;
@@ -50,11 +41,16 @@ public class TrainModelManager {
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
-    TrainModelSubjectMap subjectMap;
-    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+
+    private final TrainModelSubjectMap subjectMap = TrainModelSubjectMap.getInstance();
+    private final TrainModelSubject nullSubject = new TrainModelSubject();
+
     private TrainModelSubject subject;
 
-    private final TrainModelSubject nullSubject = new TrainModelSubject();
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainModelManager.class);
+
 
     final static ReentrantLock subjectChangeLock = new ReentrantLock();
 
@@ -63,21 +59,31 @@ public class TrainModelManager {
     public void initialize() {
         logger.info("Started TrainModelManager initialize");
 
-        subjectMap = TrainModelSubjectMap.getInstance();
+        subject = nullSubject;
         setupMapChangeListener();
+        updateChoiceBoxItems();
+
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
+            logger.info("Initialized Train Model UI with train ID: {}", firstKey);
             changeTrainView(firstKey); // Switch to the first available subject
         } else {
-            subject = NullTrainSubject.getInstance(); // Use the null object
+            subject = nullSubject; // Use the null object
+            logger.warn("No trains available to initialize Train Model");
             updateViewForNullSubject(); // Prepare UI for no subject selected
         }
-        updateChoiceBoxItems(); // Reflect current subjects in the UI
 
 
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
+            if(subjectMap.getSubjects().isEmpty()){
+                logger.warn("No trains available to select");
+                changeTrainView(NullController.getInstance().getID());
+            }
+            if(newSelection == null){
+                logger.warn("No selection made");
+                changeTrainView(oldSelection);
+            }else {
                 changeTrainView(newSelection);
             }
         });
@@ -118,12 +124,13 @@ public class TrainModelManager {
             executeUpdate(() -> {
                 unbindValues();
                 if (trainID == -1) {
-                    subject = NullTrain.INSTANCE.;
+                    subject = nullSubject;
                     updateViewForNullSubject();
                     logger.info("Train Controller switched to null subject");
                 } else {
-                    subject = subjectMap.getSubjects().getOrDefault(trainID, NullTrainSubject.INSTANCE);
+                    subject = subjectMap.getSubjects().get(trainID);
                     bindAll();
+                    updateView();
                     logger.info("Train Controller switched to train ID: {}", trainID);
                 }
             });
@@ -262,76 +269,38 @@ public class TrainModelManager {
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
         ObservableHashMap.MapListener<Integer, TrainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
-            @Override
             public void onAdded(Integer key, TrainModelSubject value) {
-                Platform.runLater(() -> {
                     updateChoiceBoxItems();
-                    if(subjectMap.getSubjects().size() == 1) { // If it's the only train, select it
-                        trainDropDown.getSelectionModel().select(key);
-                    }
-                });
+                    trainDropDown.getSelectionModel().select(value.getModel().getTrainNumber());
             }
-
-            @Override
             public void onRemoved(Integer key, TrainModelSubject value) {
-                Platform.runLater(() -> {
                     updateChoiceBoxItems();
                     // Additional logic can be added here to select another item if the current selection was removed
-                });
             }
-
-            @Override
             public void onUpdated(Integer key, TrainModelSubject oldValue, TrainModelSubject newValue) {
-                Platform.runLater(() -> updateChoiceBoxItems());
+                 updateChoiceBoxItems();
+                trainDropDown.getSelectionModel().select(newValue.getModel().getTrainNumber());
             }
         };
-
         subjects.addChangeListener(genericListener);
-        updateChoiceBoxItems(); // Initial population
     }
 
     private void updateChoiceBoxItems() {
-        Integer currentSelection = trainDropDown.getSelectionModel().getSelectedItem();
-
         List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
-            trainIDs.add(0, -1); // Assuming -1 as the ID for the null train
-
             trainDropDown.setItems(FXCollections.observableArrayList(trainIDs));
 
-            if (!subjectMap.getSubjects().isEmpty()) {
-                if (subjectMap.getSubjects().containsKey(currentSelection)) {
-                    trainDropDown.getSelectionModel().select(currentSelection);
-                } else {
-                    // Select the first actual subject if the current selection is invalid
+            if (!trainIDs.isEmpty()) {
+                if(trainIDs.size() == 1){
                     trainDropDown.getSelectionModel().selectFirst();
                 }
+                Integer previousSelection = trainDropDown.getSelectionModel().getSelectedItem();
+                trainDropDown.getSelectionModel().select(previousSelection);
             } else {
-                // Select the "no selection" option when no subjects are available
-                trainDropDown.getSelectionModel().select(Integer.valueOf(-1));
+                logger.info("No trains available to select");
+                changeTrainView(-1);
             }
-
-        // Additional logic to handle no selection case can be added here
     }
 
-    private TrainModelTB launchTestBench() {
-       // logger.info(System.getProperty("Preparing to launch test bench"));
-        try {
-            String tbFile = "/Framework/GUI/FXML/trainModel_TB.fxml";
-            URL url = getClass().getResource(tbFile);
-            FXMLLoader loader = new FXMLLoader(url);
-            Node content = loader.load();
-            Stage newStage = new Stage();
-            Scene newScene = new Scene(new VBox(content));
-            newStage.setScene(newScene);
-            newStage.setTitle("Train Model Test Bench");
-            newStage.show();
-            return loader.getController();
-        } catch (Exception e) {
-            e.printStackTrace();
-       //     logger.info("Failed to launch test bench");
-            throw new RuntimeException(e);
-        }
-    }
     private void setUpCircleColors() {
         List<Circle> circleList =  Arrays.asList(extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn);
         for (Circle c : circleList){

@@ -3,22 +3,25 @@ package Framework.Simulation;
 import Common.TrainController;
 import Common.TrainModel;
 import Framework.Support.ObservableHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import trainModel.Records.UpdatedTrainValues;
-import trainModel.TrainModelSubject;
-import trainModel.TrainModelSubjectMap;
 
 import java.util.concurrent.*;
 
 public class TrainSystem {
     ExecutorService trainExecutor = Executors.newWorkStealingPool();
 
-    private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ConcurrentHashMap<>();
+    final static Logger logger = LoggerFactory.getLogger(TrainSystem.class);
+
+    private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ObservableHashMap<>();
+
 
     public TrainSystem() {
-        ObserverSetup();
+        logger.info("TrainSystem initialized");
     }
 
-    public void addTrainProcess(TrainModel train, int trainID) {
+    public void addTrainProcess(TrainModel train) {
         TrainUpdateTask trainUpdate = new TrainUpdateTask(train, train.getController());
         updateTasks.put(train, trainUpdate);
     }
@@ -50,17 +53,15 @@ public class TrainSystem {
             this.controller = controller;
         }
 
-        public TrainController getController() {
-            return controller;
-        }
-
         @Override
         public Void call() {
 
+            if(controller == null || train == null) {
+                deleteTrainTask(train);
+            }
             try {
-                //Passes the power calculation to the work stealing pool
-                //Future<Double> powerFuture = trainExecutor.submit(() -> controller.calculatePower(train.getSpeed()));
-                Future<UpdatedTrainValues> utvFuture = trainExecutor.submit(controller::sendUpdatedTrainValues);                //Calls the physics simulation, passing it the future value of the power calculation
+
+                Future<UpdatedTrainValues> utvFuture = trainExecutor.submit(controller::sendUpdatedTrainValues);
                 train.trainModelTimeStep(utvFuture);
 
             } catch (Exception e) {
@@ -69,24 +70,5 @@ public class TrainSystem {
 
             return null;
         }
-    }
-
-    final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
-
-    private void ObserverSetup() {
-        ObservableHashMap<Integer, TrainModelSubject> subjects = trainSubjectMap.getSubjects();
-
-        // Create a listener that reacts to any change (add, remove, update) by updating choice box items
-        ObservableHashMap.MapListener<Integer, TrainModelSubject> mapListener = new ObservableHashMap.MapListener<>() {
-            @Override
-            public void onAdded(Integer key, TrainModelSubject value) {
-                addTrainProcess(value.getModel(), value.getModel().getTrainNumber());
-            }
-            @Override
-            public void onRemoved(Integer key, TrainModelSubject value) {
-               deleteTrainTask(value.getModel());
-            }
-        };
-        subjects.addChangeListener(mapListener);
     }
 }

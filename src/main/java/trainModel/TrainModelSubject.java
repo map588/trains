@@ -3,6 +3,7 @@ package trainModel;
 import Common.TrainModel;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,28 +16,24 @@ public class TrainModelSubject implements AbstractSubject{
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainModelImpl model;
-    private final TrainModelSubjectMap map = TrainModelSubjectMap.getInstance();
+    private final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
 
 
 
-    public void setProperty(String propertyName, Object newValue) {
-            Property<?> property = properties.get(propertyName);
-            updateProperty(property, newValue);
-            model.setValue(propertyName, newValue);
-    }
 
-    public void notifyChange(String propertyName, Object newValue) {
-            Property<?> property = properties.get(propertyName);
-            updateProperty(property, newValue);
-    }
 
     public TrainModelSubject(TrainModelImpl trainModel) {
         this.model = trainModel;
+        int trainID = trainModel.getTrainNumber();
+        intitializeValues();
         if(trainModel.getTrainNumber() == -1 ){
             return;
         }
-        intitializeValues();
-        map.registerSubject(trainModel.getTrainNumber(),this);
+        if(trainSubjectMap.getSubjects().containsKey(trainID)){
+            trainSubjectMap.removeSubject(trainID);
+        }
+        trainSubjectMap.registerSubject(trainID, this);
+        logger.info("Train Subject added to map with ID: " + trainID);
     }
 
 
@@ -46,9 +43,24 @@ public class TrainModelSubject implements AbstractSubject{
         //Noteably, we do not register the NullTrain with the map
     }
 
+    public void setProperty(String propertyName, Object newValue) {
+        Platform.runLater(() -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+            model.setValue(propertyName, newValue);
+        });
+    }
+
+    public void notifyChange(String propertyName, Object newValue) {
+        Platform.runLater(() -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+        });
+    }
+
 
     public void subjectDelete() {
-        map.removeSubject(model.getTrainNumber());
+        trainSubjectMap.removeSubject(model.getTrainNumber());
     }
 
 
