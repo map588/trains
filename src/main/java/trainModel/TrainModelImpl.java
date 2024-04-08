@@ -40,11 +40,11 @@ import static trainModel.Properties.*;
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
-    Logger logger = LoggerFactory.getLogger(TrainModelImpl.class.getName());
+    Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
     private final TrainModelSubject subject;
     private final int trainID;
 
-    //TODO: John, please seperate your methods into what is done to the train, within the train, and what the train does to other modules
+    //TODO: John, please separate your methods into what is done to the train, within the train, and what the train does to other modules
 
     //Passed Variables
     private int authority = 0;
@@ -255,12 +255,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
         double engineForce;
 
         //ENGINE FORCE (Power is assumed to be in Watts)
-        if(this.speed < 0.001 && !(emergencyBrake || serviceBrake)) {
-            this.speed = 0.1;
+        if(this.speed < 0.1 && !(emergencyBrake || serviceBrake)) {
+            this.speed = 3;
         }
 
-        if (this.speed < 0.001) {
-            engineForce = this.power / 0.001; // Use a small threshold speed to avoid division by zero
+        if (this.speed < 0.1) {
+            engineForce = this.power / 0.1; // Use a small threshold speed to avoid division by zero
         } else {
             engineForce = this.power / this.speed;
         }

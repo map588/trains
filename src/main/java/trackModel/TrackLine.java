@@ -147,10 +147,9 @@ public class TrackLine implements TrackModel {
 
         System.out.println("Train: " + train.getTrainNumber() + " " + currentBlockID + " ->  " + nextBlockID);
 
-        asyncTrackUpdate(() -> {
+        queueTrackUpdate(() -> {
             trackOccupancyMap.remove(train, currentBlockID);
             trackOccupancyMap.put(train, nextBlockID);
-            return null;
         });
 
         return mainTrackLine.get(nextBlockID);
