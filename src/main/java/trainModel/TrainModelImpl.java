@@ -176,7 +176,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void trainModelPhysics(){
         physicsUpdate();
 
-        this.acceleration = acceleration;
+        this.setAcceleration(acceleration);
         this.setActualSpeed(newSpeed);
         this.setRealTemperature(newRealTemperature);
     }

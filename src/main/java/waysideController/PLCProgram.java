@@ -260,7 +260,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             case "dir_assigned":
                 if(!dir_assignedMap.containsKey(index))
                     dir_assignedMap.put(index, false);
-                return new Value(dir_assignedMap.get(index) == true);
+                return new Value(dir_assignedMap.get(index));
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
         }

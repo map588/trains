@@ -22,7 +22,7 @@ public class TrainControllerSubject implements NotifierEnum {
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
         int controllerID = controller.getID();
-        logger.info("Creating Train Controller Subject with ID: " + controllerID);
+        logger.info("Creating Train Controller Subject with ID: {}", controllerID);
         initializeProperties();
         if(controller.getID() == -1){
             return;
@@ -31,7 +31,7 @@ public class TrainControllerSubject implements NotifierEnum {
             controllerSubjectMap.removeSubject(controllerID);
         }
         controllerSubjectMap.registerSubject(controllerID, this);
-        logger.info("Train Controller Subject created with ID: " + controllerID);
+        logger.info("Train Controller Subject created with ID: {} ", controllerID);
     }
 
 

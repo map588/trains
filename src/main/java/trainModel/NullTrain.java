@@ -67,6 +67,6 @@ public final class NullTrain extends TrainModelImpl {
 
     @Override
     public void setValue(String propertyName, Object newValue) {
-        logger.warn("NullTrain setProperty called with " + propertyName + " and " + newValue);
+        logger.warn("NullTrain setProperty called with {} and {}", propertyName, newValue);
     }
 }

@@ -184,7 +184,7 @@ public class TrackLine implements TrackModel {
         if(newBlockID == 0) {
             train.delete();
         }else if(newBlockID == oldBlockID) {
-            logger.warn("Error: False Occupancy Update from " + oldBlockID + " to " + newBlockID);
+            logger.warn("Error: False Occupancy Update from {} to {} ", oldBlockID , newBlockID);
         }
     }
 
@@ -228,7 +228,7 @@ public class TrackLine implements TrackModel {
     @Override
     public void setLightState(int block, boolean state) {
         asyncTrackUpdate( () -> {
-            if(beaconBlocks.contains(block)) {
+            if(beaconBlocks.keySet().contains(block)) {
                 mainTrackLine.get(block).lightState = state;
             } else {
                 logger.error("Block {} does not have a light", block);
@@ -265,7 +265,7 @@ public class TrackLine implements TrackModel {
     public void setTrainAuthority(Integer blockID, int authority){
         queueTrackUpdate( () -> {
             mainTrackLine.get(blockID).setAuthority(authority);
-            logger.info("Track set authority to: " + authority + " at block " + blockID);
+            logger.info("Track set authority to: {} at block: {}", authority, blockID);
         });
     }
 
@@ -273,7 +273,7 @@ public class TrackLine implements TrackModel {
     public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
         queueTrackUpdate( () -> {
             mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
-            logger.info("Track set commanded speed to: " + commandedSpeed + " at block " + blockID);
+            logger.info("Track set commanded speed to: {} at block: {}", commandedSpeed, blockID);
         });
     }
 
@@ -284,7 +284,7 @@ public class TrackLine implements TrackModel {
             if (brokenBlock != null) {
                 brokenBlock.setFailure(true,false,false);
             } else {
-                logger.error("Broken Rail called on Block {} does not exist", blockID);
+                logger.error("Broken Rail called on Block: {} does not exist", blockID);
             }
        });
     }
@@ -296,7 +296,7 @@ public class TrackLine implements TrackModel {
             if (failedBlock != null) {
                 failedBlock.setFailure(false,false,true);
             } else {
-                logger.error("Power Failure called on Block {} does not exist", blockID);
+                logger.error("Power Failure called on Block: {} does not exist", blockID);
             }
         });
     }
@@ -308,7 +308,7 @@ public class TrackLine implements TrackModel {
             if (failedBlock != null) {
                 failedBlock.setFailure(false,true,false);
             } else {
-                logger.error("Circuit Failure called on Block {} does not exist", blockID);
+                logger.error("Circuit Failure called on Block: {} does not exist", blockID);
             }
         });
     }
@@ -339,10 +339,10 @@ public class TrackLine implements TrackModel {
                     block.feature.setPassengersDisembarked(disembarked);
                     Integer newTotal = train.getPassengerCount() - disembarked;
                 } else {
-                    logger.warn("Train {} is not on a station block", train.getTrainNumber());
+                    logger.warn("Train: {} is not on a STATION block", train.getTrainNumber());
                 }
             } else {
-                logger.warn("Train {} is not on the track", train.getTrainNumber());
+                logger.warn("Train: {} is not on the track", train.getTrainNumber());
             }
         });
     }
@@ -356,11 +356,11 @@ public class TrackLine implements TrackModel {
                 if (block.feature.isStation()) {
                     return random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
                 } else {
-                    logger.warn("Train {0} is not on a station block", train.getTrainNumber());
+                    logger.warn("Train: {} is not on a station block", train.getTrainNumber());
                     return 0;
                 }
             } else {
-                logger.error("Train {} is not on the track", train.getTrainNumber());
+                logger.error("Train: {} is not on the track", train.getTrainNumber());
                 return 0;
             }
         }).join();

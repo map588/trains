@@ -20,24 +20,25 @@ public final class NullController extends TrainControllerImpl {
 
     @Override
     public void setValue(ControllerProperty property, Object value) {
-        logger.warn("NullController setProperty called with " + property + " and " + value);
+        logger.warn("NullController setProperty called with {} and {}", property, value);
     }
 
     @Override
     public void setPower(double power) {
-        logger.warn("NullController setPower called with " + power);
+        logger.warn("NullController setPower called with {}", power);
     }
 
     @Override
 
     public void setSpeed(double speed) {
-        logger.warn("NullController setSpeed called with " + speed);
+        logger.warn("NullController setSpeed called with {}", speed);
+    } speed);
     }
 
     @Override
 
     public void setAuthority(int authority) {
-        logger.warn("NullController setAuthority called with " + authority);
+        logger.warn("NullController setAuthority called with {}", authority);
     }
 
 

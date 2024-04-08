@@ -34,7 +34,7 @@ public class TrainModelSubject implements AbstractSubject{
             trainSubjectMap.removeSubject(trainID);
         }
         trainSubjectMap.registerSubject(trainID, this);
-        logger.info("Train Subject added to map with ID: " + trainID);
+        logger.info("Train Subject added to map with ID: {}", trainID);
     }
 
 
