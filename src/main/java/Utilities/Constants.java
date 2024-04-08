@@ -44,7 +44,9 @@ public class Constants {
     final public static double LOADED_TRAIN_MASS = 51437.37; // kg
     final public static double PASSENGER_MASS = 83.9146; // kg
     final public static double MAX_SPEED = 19.44; // m/s
-    final public static double MAX_POWER = 480.0; // kW
+    final public static double MAX_POWER_KW = 480.0; // kW
+    final public static double MAX_POWER_W = MAX_POWER_KW * 1000; // W
+    final public static double MAX_POWER_HP = MAX_POWER_W / 745.7; // HP
     final public static double MAX_ENGINE_FORCE = 40000; //N
     final public static int MAX_PASSENGERS = 222;
 }

@@ -4,6 +4,8 @@ import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
 import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import trainController.ControllerBlocks.ControllerBlock;
 import trainController.ControllerBlocks.ControllerBlockLookups;
 import trainModel.NullTrain;
@@ -51,14 +53,15 @@ public class TrainControllerImpl implements TrainController{
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;
 
+    private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
     //Internal Metric
     private double commandSpeed = 0.0;
     private double currentSpeed = 0.0;
     private double overrideSpeed = 0.0;
     private double speedLimit = 0.0;
-    private double Ki = 0.3;
-    private double Kp = 0.6;
+    private double Ki = 88016.69;
+    private double Kp = 379.8;
     private double power = 0.0;
     private double grade = 0.0;
     private double setTemperature = 0.0;
@@ -151,8 +154,6 @@ public class TrainControllerImpl implements TrainController{
         );
     }
 
-
-
     public double calculatePower(double currentSpeed){
         double setSpeed, pow;
 
@@ -168,9 +169,9 @@ public class TrainControllerImpl implements TrainController{
         rollingError += (double) TIME_STEP * ((error + prevError)/2);
         prevError = error;
 
-        pow = Kp * error + Ki * rollingError;
-        if(pow > MAX_POWER) {
-            pow = MAX_POWER;
+        pow = (Kp * error + Ki * rollingError) * 1000;
+        if(pow > MAX_POWER_W) {
+            pow = MAX_POWER_W;
         }
 
         if(automaticMode && (pow < 0)){
@@ -299,8 +300,8 @@ public class TrainControllerImpl implements TrainController{
         subject.notifyChange(AUTHORITY , authority);
     }
     public void setCommandSpeed(double speed) {
-        this.commandSpeed = speed;
-        subject.notifyChange(COMMAND_SPEED , convertVelocity(speed, MPS, MPH));
+        this.commandSpeed = convertVelocity(speed, MPH, MPS);
+        subject.notifyChange(COMMAND_SPEED , speed);
         //calculatePower();
     }
     public void setSpeed(double speed) {

@@ -1,13 +1,15 @@
 package Framework.Simulation;
 
 import Common.CTCOffice;
-import Common.TrackModel;
 import Common.WaysideController;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import trackModel.TrackLine;
 import trackModel.TrackLineMap;
 import waysideController.WaysideControllerHWBridge;
 import waysideController.WaysideControllerImpl;
@@ -15,10 +17,14 @@ import waysideController.WaysideControllerImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class WaysideSystem {
+
+    private static final Logger logger = LoggerFactory.getLogger(WaysideSystem.class);
 
     private static final ObjectProperty<ObservableList<WaysideController>> controllerList = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
     private static final Map<Integer, WaysideController> controllerMapGreen = new HashMap<>();
@@ -28,6 +34,9 @@ public class WaysideSystem {
         return controllerList;
     }
 
+    private static final LinkedBlockingQueue<Callable<Void>> waysideQueue = new LinkedBlockingQueue<>();
+
+    
     public static WaysideController getController(Lines line, int blockID) {
         if(line == Lines.GREEN)
             return controllerMapGreen.get(blockID);
@@ -43,6 +52,8 @@ public class WaysideSystem {
             else
                 controllerMapGreen.put(blockID, controller);
         });
+        waysideQueue.add(new WaysideUpdate(controller));
+        logger.info("Added Wayside Controller: " + controller.getID() + " to " + line);
     }
 
     public static int size() {
@@ -52,7 +63,7 @@ public class WaysideSystem {
     ExecutorService waysideExecutor;
 
     public WaysideSystem(TrackSystem trackSystem, CTCOffice ctcOffice, boolean useHardware) {
-        TrackModel greenLine = TrackLineMap.getTrackLine(Lines.GREEN);
+        TrackLine greenLine = TrackLineMap.getTrackLine(Lines.GREEN);
 //        TrackModel greenLine = null;
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
                 1, 2, 3,
@@ -111,12 +122,19 @@ public class WaysideSystem {
 
     public void update() {
         // For each WaysideController in the controllerList, run its PLC
-        try{
-            for (WaysideController controller : controllerList.get()) {
-                controller.runPLC();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        try {
+            waysideExecutor.invokeAll(waysideQueue);
+        } catch (InterruptedException e) {
+            logger.error("Wayside Update Interrupted", e);
         }
     }
+
+    private record WaysideUpdate(WaysideController controller) implements Callable<Void> {
+
+        @Override
+            public Void call() {
+                controller.runPLC();
+                return null;
+            }
+        }
 }

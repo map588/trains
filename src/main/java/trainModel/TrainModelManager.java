@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static trainModel.Properties.*;
+
 public class TrainModelManager {
 
     @FXML
@@ -99,12 +101,12 @@ public class TrainModelManager {
         trainHeightLabel.setText("11.22");
         trainWidthLabel.setText("8.69");
 
-        bindLabelToProperty("mass", massLabel);
-        bindLabelToProperty("length", trainLengthLabel);
-        bindLabelToProperty("numCars", numCarsLabel);
-        bindLabelToProperty("numPassengers", numPassengerLabel);
-        bindLabelToProperty("crewCount", crewCountLabel);
-        bindLabelToProperty("grade", gradeLabel);
+        bindLabelToProperty(MASS_PROPERTY, massLabel);
+        bindLabelToProperty(LENGTH_PROPERTY, trainLengthLabel);
+        bindLabelToProperty(NUMCARS_PROPERTY, numCarsLabel);
+        bindLabelToProperty(NUMPASSENGERS_PROPERTY, numPassengerLabel);
+        bindLabelToProperty(CREWCOUNT_PROPERTY, crewCountLabel);
+        bindLabelToProperty(GRADE_PROPERTY, gradeLabel);
     }
 
     private void bindLabelToProperty(String property, Label label) {
@@ -151,39 +153,39 @@ public class TrainModelManager {
 
 
     private void bindGauges() {
-        actualPowerDisp.valueProperty().bind(subject.getDoubleProperty("power"));
-        actualVelocityDisp.valueProperty().bind(subject.getDoubleProperty("actualSpeed"));
-        actualAccelerationDisp.valueProperty().bind(subject.getDoubleProperty("acceleration"));
-        cmdSpeedDisp.valueProperty().bind(subject.getDoubleProperty("commandSpeed"));
-        authorityDisp.valueProperty().bind(subject.getIntegerProperty("authority"));
-        setTempDisp.valueProperty().bind(subject.getDoubleProperty("setTemperature"));
-        realTempDisp.valueProperty().bind(subject.getDoubleProperty("realTemperature"));
+        actualPowerDisp.valueProperty().bind(subject.getDoubleProperty(POWER_PROPERTY));
+        actualVelocityDisp.valueProperty().bind(subject.getDoubleProperty(ACTUALSPEED_PROPERTY));
+        actualAccelerationDisp.valueProperty().bind(subject.getDoubleProperty(ACCELERATION_PROPERTY));
+        cmdSpeedDisp.valueProperty().bind(subject.getDoubleProperty(COMMANDSPEED_PROPERTY));
+        authorityDisp.valueProperty().bind(subject.getIntegerProperty(AUTHORITY_PROPERTY));
+        setTempDisp.valueProperty().bind(subject.getDoubleProperty(SETTEMPERATURE_PROPERTY));
+        realTempDisp.valueProperty().bind(subject.getDoubleProperty(REALTEMPERATURE_PROPERTY));
     }
 
     private void bindIndicators() {
-        appendListener(subject.getBooleanProperty("emergencyBrake"), (obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("serviceBrake"), (obs, oldSelection, newSelection) -> updateSBrakeIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("extLights"), (obs, oldSelection, newSelection) -> updateExtLightsIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("intLights"), (obs, oldSelection, newSelection) -> updateIntLightsIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("leftDoors"), (obs, oldSelection, newSelection) -> updateLeftDoorsIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("rightDoors"), (obs, oldSelection, newSelection) -> updateRightDoorsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(EMERGENCYBRAKE_PROPERTY), (obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(SERVICEBRAKE_PROPERTY), (obs, oldSelection, newSelection) -> updateSBrakeIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(EXTLIGHTS_PROPERTY), (obs, oldSelection, newSelection) -> updateExtLightsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(INTLIGHTS_PROPERTY), (obs, oldSelection, newSelection) -> updateIntLightsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(LEFTDOORS_PROPERTY), (obs, oldSelection, newSelection) -> updateLeftDoorsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(RIGHTDOORS_PROPERTY), (obs, oldSelection, newSelection) -> updateRightDoorsIndicator(newSelection));
     }
 
     private void bindControls() {
-        eBrakeBtn.setOnAction(event -> subject.setProperty("emergencyBrake", true));
+        eBrakeBtn.setOnAction(event -> subject.setProperty(EMERGENCYBRAKE_PROPERTY, true));
 
         brakeFailureBtn.setOnAction(event -> {
-            BooleanProperty brakeFailure = subject.getBooleanProperty("brakeFailure");
+            BooleanProperty brakeFailure = subject.getBooleanProperty(BRAKEFAILURE_PROPERTY);
             subject.setProperty("brakeFailure", !brakeFailure.get());
         });
 
         powerFailureBtn.setOnAction(event -> {
-            BooleanProperty powerFailure = subject.getBooleanProperty("powerFailure");
+            BooleanProperty powerFailure = subject.getBooleanProperty(POWERFAILURE_PROPERTY);
             subject.setProperty("powerFailure", !powerFailure.get());
         });
 
         signalFailureBtn.setOnAction(event -> {
-            BooleanProperty signalFailure = subject.getBooleanProperty("signalFailure");
+            BooleanProperty signalFailure = subject.getBooleanProperty(SIGNALFAILURE_PROPERTY);
             subject.setProperty("signalFailure", !signalFailure.get());
         });
     }

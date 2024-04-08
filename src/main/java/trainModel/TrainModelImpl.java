@@ -66,7 +66,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce = 0;
-    private int TIME_DELTA = Constants.TIME_STEP_MS;
+    private int TIME_DELTA = Constants.TIME_STEP_MS/1000;
     //Murphy Variables
     private boolean brakeFailure = false, powerFailure = false, signalFailure = false;
 
@@ -195,10 +195,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     private void physicsUpdate() {
-
-        //MASS CALCULATION (some reduncancy here the empty train mass is final, and the crewcount is final)
+        //MASS CALCULATION (some redundancy here, the empty train mass is final, and the crew count is final)
         this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
-        //How many loaded trains? I think you need to multiply by the number of cars
+
+        //Check if the train is fully loaded
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
             this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
         }
@@ -206,10 +206,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.newSpeed = this.speed;
 
         //NEXT BLOCK NOTICE
-
-        if(currentBlockLength - relativeDistance <= 0) {
-            enteredNextBlock();
-        }
+//        if(currentBlockLength - relativeDistance <= 0) {
+//            enteredNextBlock();
+//        }
 
         //ACCELERATION PROGRESSION
         double previousAcceleration = this.acceleration;
@@ -228,22 +227,19 @@ public class TrainModelImpl implements TrainModel, Notifier {
         //ENGINE FORCE
         double netForce = getNetForce();
 
-
         //ACCELERATION CALCULATION
         this.acceleration = (netForce / this.mass);
 
+        //SPEED CALCULATION USING VELOCITY VERLET ALGORITHM
+        double dt = this.TIME_DELTA;
+        double halfDt = dt / 2.0;
+        double halfAcceleration = this.acceleration / 2.0;
 
-        //SPEED CALCULATION
-        if (this.power <= Constants.MAX_POWER) {
-            this.newSpeed = (this.newSpeed + ((double) this.TIME_DELTA * (this.acceleration + previousAcceleration)/2));
-        }
+        this.newSpeed = this.speed + halfDt * (this.acceleration + previousAcceleration);
+        this.relativeDistance += this.newSpeed * dt + halfDt * dt * halfAcceleration;
 
         if (this.newSpeed < 0) { this.newSpeed = 0; }
         if (this.newSpeed > Constants.MAX_SPEED) { this.newSpeed = Constants.MAX_SPEED; }
-
-
-
-        this.relativeDistance += this.newSpeed * (this.TIME_DELTA);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -255,13 +251,14 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.newRealTemperature = this.realTemperature - 1;
             this.elapsedTime = 0;
         }
-
     }
 
     private double getNetForce() {
         double engineForce;
-        if (this.power > 0.0001 && this.newSpeed < 0.0001) {
-            engineForce = this.power / 0.0001; // Use the threshold value in the denominator
+
+        //ENGINE FORCE (Power is assumed to be in Watts)
+        if (this.newSpeed < 0.0001) {
+            engineForce = this.power / 0.0001; // Use a small threshold speed to avoid division by zero
         } else {
             engineForce = this.power / this.newSpeed;
         }
@@ -275,7 +272,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         //SLOPE FORCE
         double currentAngle = Math.atan(this.grade / 100);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
-        //System.out.println("Gravity Force: " + gravityForce);
 
         //NET FORCE
         double netForce = engineForce - gravityForce - this.brakeForce;
@@ -314,7 +310,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         notifyChange(SERVICEBRAKE_PROPERTY, this.serviceBrake);
     }
 
-    public void setPower(double power) { this.power = power;
+    public void setPower(double power) {
+        if(power < 0) power = 0;
+        if(power > Constants.MAX_POWER_W) power = Constants.MAX_POWER_W;
+        this.power = power;
         notifyChange(POWER_PROPERTY,
         Conversion.convertPower(this.power, WATTS, HORSEPOWER));
     }
