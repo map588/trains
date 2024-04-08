@@ -21,7 +21,6 @@ public class TrainModelSubject implements AbstractSubject{
 
 
 
-
     public TrainModelSubject(TrainModelImpl trainModel) {
         this.model = trainModel;
         int trainID = trainModel.getTrainNumber();
@@ -52,10 +51,10 @@ public class TrainModelSubject implements AbstractSubject{
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        Platform.runLater(() -> {
+       // Platform.runLater(() -> {
             Property<?> property = properties.get(propertyName);
             updateProperty(property, newValue);
-        });
+       // });
     }
 
 

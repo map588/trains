@@ -88,7 +88,9 @@ public class TrainControllerManager {
             if(newSelection == null){
                 logger.warn("No selection made");
                 changeTrainView(oldSelection);
-            }else {
+            }else if (!subjectMap.getSubjects().containsKey(newSelection)) {
+                logger.warn("Selected train is not in the map");
+            }else{
                 changeTrainView(newSelection);
             }
         });

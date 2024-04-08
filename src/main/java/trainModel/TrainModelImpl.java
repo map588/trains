@@ -62,8 +62,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private double distanceTraveled = 0;
 
 
-    private double newSpeed = 0;
-
     //physics variables (no setters or getters, only to be used within train model
     private double brakeForce = 0;
     private int TIME_DELTA = Constants.TIME_STEP_MS/1000;
@@ -176,7 +174,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setSetTemperature(controllerValues.setTemperature());
 
         this.setAcceleration(acceleration);
-        this.setActualSpeed(newSpeed);
+        this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);
     }
 
@@ -185,7 +183,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         physicsUpdate();
 
         this.setAcceleration(acceleration);
-        this.setActualSpeed(newSpeed);
+        this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);
     }
 
@@ -202,8 +200,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
             this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
         }
-
-        this.newSpeed = this.speed;
 
         //NEXT BLOCK NOTICE
         if(currentBlockLength - relativeDistance <= 0) {
@@ -235,13 +231,13 @@ public class TrainModelImpl implements TrainModel, Notifier {
         double halfDt = dt / 2.0;
         double halfAcceleration = this.acceleration / 2.0;
 
-        this.newSpeed = this.speed + halfDt * (this.acceleration + previousAcceleration);
-        this.relativeDistance += this.newSpeed * dt + halfDt * dt * halfAcceleration;
+        this.speed = this.speed + halfDt * (this.acceleration + previousAcceleration);
+        this.relativeDistance += this.speed * dt + halfDt * dt * halfAcceleration;
 
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
 
-        setActualSpeed(this.newSpeed);
+        setActualSpeed(this.speed);
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -259,8 +255,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
         double engineForce;
 
         //ENGINE FORCE (Power is assumed to be in Watts)
+        if(this.speed < 0.001 && !(emergencyBrake || serviceBrake)) {
+            this.speed = 0.1;
+        }
+
         if (this.speed < 0.001) {
-            engineForce = this.power / 0.0001; // Use a small threshold speed to avoid division by zero
+            engineForce = this.power / 0.001; // Use a small threshold speed to avoid division by zero
         } else {
             engineForce = this.power / this.speed;
         }
@@ -268,7 +268,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if(engineForce > MAX_ENGINE_FORCE) {
             engineForce = MAX_ENGINE_FORCE;
         }else if(Double.isNaN(engineForce)){
-            engineForce = 0;
+            engineForce = 2; //Why not
         }
 
         //SLOPE FORCE
