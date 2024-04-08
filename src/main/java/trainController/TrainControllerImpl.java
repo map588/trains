@@ -92,7 +92,7 @@ public class TrainControllerImpl implements TrainController{
         if(train.getTrainNumber() != -1) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
         }
-        currentBlock = blockLookup.get(0);
+        //currentBlock = blockLookup.get(0);
     }
 
     public TrainControllerImpl() {
