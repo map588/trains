@@ -40,7 +40,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
     private final int trainID;
-    private final int TIME_DELTA = TIME_STEP_MS/1000;
+    private final double TIME_DELTA = (double)TIME_STEP_MS/1000;
 
 
     private final TrainModelSubject subject;
@@ -120,14 +120,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public TrainModelImpl(TrackLine track, int trainID) {
-
         initializeValues();
         this.trainID = trainID;
         this.track = track;
-
-        this.subject = new TrainModelSubject(this);
         this.controller = new TrainControllerImpl(this, trainID);
-
+        this.subject = new TrainModelSubject(this);
     }
 
     public void delete() {
@@ -141,8 +138,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void trainModelTimeStep(Future<UpdatedTrainValues> updatedTrainValuesFuture) throws ExecutionException, InterruptedException {
+        // Data Locked
         physicsUpdate();
-        reconcileControllerValues(updatedTrainValuesFuture.get());
+
+        reconcileControllerValues(updatedTrainValuesFuture.get()); //Data unlocked
     }
 
     public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
@@ -177,7 +176,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void trainModelPhysics(){
         physicsUpdate();
 
-        this.setAcceleration(acceleration);
+        this.acceleration = acceleration;
         this.setActualSpeed(newSpeed);
         this.setRealTemperature(newRealTemperature);
     }
@@ -197,13 +196,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
 
         //NEXT BLOCK NOTICE
-        if(currentBlockLength - relativeDistance <= 0) {
-            enteredNextBlock();
-        }
+//        if(currentBlockLength - relativeDistance <= 0) {
+//            enteredNextBlock();
+//        }
 
         //TRANSITION STEP
         double previousAcceleration = this.acceleration;
-        this.newSpeed = this.speed;
 
 
         //BRAKE FORCES
@@ -218,20 +216,46 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
 
         //ENGINE FORCE
-        double netForce = getNetForce();
+        double engineForce;
+        if (this.power > 0.0001 && this.speed < 0.0001) {
+            this.newSpeed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+            engineForce = this.power / 0.1;
+        }
+        else {
+            engineForce = this.power / this.newSpeed;
+        }
+
+        if(engineForce > MAX_ENGINE_FORCE) {
+            engineForce = MAX_ENGINE_FORCE;
+        }else if(Double.isNaN(engineForce)){
+            engineForce = 0;
+        }
+
+
+        //SLOPE FORCE
+        double currentAngle = Math.atan(this.grade / 100);
+        double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
+        //System.out.println("Gravity Force: " + gravityForce);
+
+        //NET FORCE
+        double netForce = engineForce - gravityForce - this.brakeForce;
+        if (netForce > MAX_ENGINE_FORCE){
+            netForce = MAX_ENGINE_FORCE;
+        }
+
 
         //ACCELERATION CALCULATION
         this.acceleration = (netForce / this.mass);
 
         //SPEED CALCULATION
-        this.power = Math.min(this.power, MAX_POWER_W);
-        this.newSpeed = (this.speed + TIME_DELTA * ((this.acceleration + previousAcceleration)/2));
+        if (this.power <= MAX_POWER_W) {
+            this.newSpeed = (this.speed + (this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
+        }
 
+        if (this.newSpeed < 0) { this.newSpeed = 0; }
+        if (this.newSpeed > Constants.MAX_SPEED) { this.newSpeed = Constants.MAX_SPEED; }
 
-        this.newSpeed = Math.max(this.newSpeed, 0);
-        this.newSpeed = Math.min(this.newSpeed, MAX_SPEED);
-
-
+        //DISTANCE CALCULATION
         this.relativeDistance += this.newSpeed * this.TIME_DELTA;
 
         //TEMPERATURE CALCULATION
@@ -245,37 +269,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.elapsedTime = 0;
         }
 
+        this.speed = this.newSpeed;
+
     }
 
-    private double getNetForce() {
-        double engineForce;
-
-        //ENGINE FORCE (Power is assumed to be in Watts)
-        if(this.speed < 0.1 && !(emergencyBrake || serviceBrake)) {
-            this.speed = 3;
-        }
-
-        if (this.speed < 0.1) {
-            engineForce = this.power / 0.1; // Use a small threshold speed to avoid division by zero
-        } else {
-            engineForce = this.power / this.speed;
-        }
-
-        engineForce = Math.min(engineForce, MAX_ENGINE_FORCE);
-
-        if(Double.isNaN(engineForce)){
-            engineForce = 5; //Why not
-        }
-
-        //SLOPE FORCE
-        double currentAngle = Math.atan(this.grade / 100);
-        double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
-
-        //NET FORCE
-        double netForce = engineForce - gravityForce - this.brakeForce;
-
-        return netForce;
-    }
 
 
     public void enteredNextBlock() {
@@ -309,7 +306,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     public void setPower(double power) {
         if(power < 0) power = 0;
-        if(power > Constants.MAX_POWER_W) power = Constants.MAX_POWER_W;
+        //if(power > Constants.MAX_POWER_W) power = Constants.MAX_POWER_W;
         this.power = power;
         notifyChange(POWER_PROPERTY,
         Conversion.convertPower(this.power, WATTS, HORSEPOWER));
@@ -507,10 +504,5 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void passBeacon(Beacon beacon) {
         controller.updateBeacon(beacon);
     }
-
-    //TEMP TIME DELTA SETTER/GETTER
-    public int getTimeDelta() { return this.TIME_DELTA; }
-
-
 
 }

@@ -48,7 +48,8 @@ import static trainController.ControllerProperty.*;
  * Finally, the speed and power of the train are updated.
  */
 public class TrainControllerImpl implements TrainController{
-    private int TIME_STEP = TIME_STEP_MS/1000;
+    private static final int TIME_STEP = TIME_STEP_MS/1000;
+    private static final double DEADBAND = 0.1;
 
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;
@@ -60,8 +61,8 @@ public class TrainControllerImpl implements TrainController{
     private double currentSpeed = 0.0;
     private double overrideSpeed = 0.0;
     private double speedLimit = 0.0;
-    private double Ki = 88016.69;
-    private double Kp = 379.8;
+    private double Ki = 1;
+    private double Kp = 1.5;
     private double power = 0.0;
     private double grade = 0.0;
     private double setTemperature = 0.0;
@@ -154,34 +155,53 @@ public class TrainControllerImpl implements TrainController{
         );
     }
 
-    public double calculatePower(double currentSpeed){
+    public double calculatePower(double currentSpeed) {
         double setSpeed, pow;
 
-        if (automaticMode){
+        if (automaticMode) {
             setSpeed = commandSpeed;
-        }
-        else{
+        } else {
             setSpeed = overrideSpeed;
         }
 
-
         double error = setSpeed - currentSpeed;
-        rollingError += (double) TIME_STEP * ((error + prevError)/2);
-        prevError = error;
+        double proportionalTerm = Kp * error;
 
-        pow = (Kp * error + Ki * rollingError) * 1000;
-        if(pow > MAX_POWER_W) {
-            pow = MAX_POWER_W;
+        // Update the rolling error
+        rollingError += error * TIME_STEP;
+
+        // Introduce an integral term to reduce steady-state error
+        double integralTerm = Ki * rollingError;
+
+        // Calculate the control output
+        double controlOutput = proportionalTerm + integralTerm;
+
+        // Limit the control output to a reasonable range
+        controlOutput = Math.max(-MAX_POWER_W, Math.min(MAX_POWER_W, controlOutput));
+
+        // Apply a deadband to avoid oscillations around the setpoint
+        if (Math.abs(error) < DEADBAND) {
+            controlOutput = 0.0;
         }
 
-        if(automaticMode && (pow < 0)){
+        // Anti-windup mechanism to prevent integral windup
+        if (controlOutput >= MAX_POWER_W || controlOutput <= -MAX_POWER_W) {
+            rollingError -= error * TIME_STEP;
+        }
+
+        // Adjust the power based on the control output
+        pow = controlOutput;
+
+        // Apply brakes if the power is negative or if the train is overshooting
+        if (automaticMode && (pow < 0 || currentSpeed > setSpeed)) {
             pow = 0;
             setServiceBrake(true);
-        }else if(serviceBrake && (pow > 0)){
+        } else if (serviceBrake && (pow > 0)) {
             setServiceBrake(false);
         }
 
-        if(emergencyBrake || serviceBrake || powerFailure || (pow < 0)) {
+        // Cut off power if brakes are engaged or there's a failure
+        if (emergencyBrake || serviceBrake || powerFailure) {
             pow = 0;
         }
 
@@ -380,10 +400,6 @@ public class TrainControllerImpl implements TrainController{
         this.rightPlatform = platform;
         subject.notifyChange(RIGHT_PLATFORM ,platform);
     }
-    public void setTimeStep(int period){
-        this.TIME_STEP = period;
-        subject.notifyChange(SAMPLING_PERIOD ,period);
-    }
     public void setSpeedLimit(double limit){
         this.speedLimit = convertVelocity(limit, MPH, MPS);
         subject.notifyChange(SPEED_LIMIT , limit);
@@ -433,7 +449,6 @@ public class TrainControllerImpl implements TrainController{
             case IN_TUNNEL -> this.inTunnel = (boolean) newValue;
             case LEFT_PLATFORM -> this.leftPlatform = (boolean) newValue;
             case RIGHT_PLATFORM -> this.rightPlatform = (boolean) newValue;
-            case SAMPLING_PERIOD -> this.TIME_STEP = (int) newValue;
             case SPEED_LIMIT -> this.speedLimit = convertVelocity((double) newValue, MPH, MPS);
             case NEXT_STATION -> this.nextStationName = (String) newValue;
             case GRADE -> this.grade = (double) newValue;

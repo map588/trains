@@ -2,6 +2,7 @@ package Framework.Simulation;
 
 import CTCOffice.CTCOfficeImpl;
 import Framework.GUI.mainMenu;
+import Utilities.KTuner;
 import javafx.application.Application;
 
 import java.util.concurrent.*;
@@ -33,7 +34,7 @@ public class Main {
 
         CTC.setTrackSystem(trackSystem);
 
-
+        new KTuner(32, 100000);
 
         // Schedule the time synchronization task
         scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackSystem, waysideController, trainSystem),

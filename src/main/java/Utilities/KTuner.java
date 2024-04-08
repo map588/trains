@@ -1,13 +1,13 @@
 package Utilities;
 
 import org.slf4j.Logger;
+import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 import trainModel.TrainModelImpl;
 
 public class KTuner {
-
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(KTuner.class);
-    private static final double TIME_STEP = Constants.TIME_STEP_MS / 1000.0;
+    private static final double TIME_STEP = (double)Constants.TIME_STEP_MS / 1000.0;
 
     private final TrainModelImpl train;
     private final TrainControllerImpl controller;
@@ -15,112 +15,93 @@ public class KTuner {
     private double Kp;
     private double setSpeed;
 
-
     public KTuner(double setSpeed, int iterations) {
-        this.train = new TrainModelImpl();
-        this.controller = new TrainControllerImpl(train,train.getTrainNumber());
-        this.Ki = controller.getKi();
-        this.Kp = controller.getKp();
+        this.train = new TrainModelImpl(new TrackLine(), 0);
+        this.controller = new TrainControllerImpl(train, train.getTrainNumber());
+        this.Ki = 8;
+        this.Kp = 12;
         this.setSpeed = setSpeed;
         tuneGains(iterations);
-        logger.info("Tuned K values after {} iterations: Ki = {}, Kp = {}", iterations, controller.getKi(), controller.getKp());
     }
-
 
     public void tuneGains(int iterations) {
-        // Set the initial values for Ki and Kp
-        double initialKi = 0.0;
-        double initialKp = 0.0;
+        double bestKi = Ki;
+        double bestKp = Kp;
+        double bestScore = Double.MAX_VALUE;
 
-        double kiStep = 0.05;
-        double kpStep = 0.1;
+        double prevScore = bestScore;
 
-        // Set the initial scaling factors for Ki and Kp adjustments
-        double kiScale = 0.1;
-        double kpScale = 0.2;
-
-        // Set the adjustment factors for scaling factors
-        double kiScaleAdjustment = 0.01;
-        double kpScaleAdjustment = 0.02;
-
-        // Initialize the rolling error and current error
-        double rollingError = 0.0;
-        double currentError = 0.0;
-
-        // Perform the tuning iterations
         for (int i = 0; i < iterations; i++) {
-            // Simulate the system with the current gains
-            double[] errors = simulateSystem(initialKi, initialKp);
-            rollingError += errors[0];
-            currentError = errors[1];
+            double ki = bestKi;
+            double kp = bestKp;
 
-            // Adjust the scaling factors based on the errors
-            if (Math.abs(rollingError) > 1.0) {
-                kiScale += kiScaleAdjustment;
-            } else {
-                kiScale -= kiScaleAdjustment;
+            double score = simulateSystem(ki, kp);
+
+            double deltaPrevScore = prevScore - score;
+            prevScore = score;
+
+            if (score < bestScore) {
+                bestKi = ki;
+                bestKp = kp;
+                bestScore = score;
             }
 
-            if (Math.abs(currentError) > 1.0) {
-                kpScale += kpScaleAdjustment;
-            } else {
-                kpScale -= kpScaleAdjustment;
-            }
+            // Update Ki and Kp based on the change in error
+            double kiDelta = 20 * deltaPrevScore;
+            double kpDelta = 30 * deltaPrevScore;
 
-            // Ensure the scaling factors remain within reasonable ranges
-            kiScale = Math.max(0.01, Math.min(1.0, kiScale));
-            kpScale = Math.max(0.01, Math.min(1.0, kpScale));
-
-            // Adjust Ki based on the rolling error
-            double kiAdjustment = kiScale * rollingError;
-            initialKi += kiAdjustment * kiStep;
-
-            // Adjust Kp based on the current error
-            double kpAdjustment = kpScale * currentError;
-            initialKp += kpAdjustment * kpStep;
+            ki += kiDelta;
+            kp += kpDelta;
         }
 
-        // Set the optimized gains
-        controller.setKi(initialKi);
-        controller.setKp(initialKp);
+        controller.setKi(bestKi);
+        controller.setKp(bestKp);
+
+        logger.info("Tuning completed.");
+        logger.info("Best score: {}", String.format("%.12f", bestScore));
+        logger.info("Best Ki: {}", String.format("%.6f", bestKi));
+        logger.info("Best Kp: {}", String.format("%.6f", bestKp));
     }
 
-    private double[] simulateSystem(double ki, double kp) {
-        // Save the current values of Ki and Kp
+    private double simulateSystem(double ki, double kp) {
         double prevKi = this.Ki;
         double prevKp = this.Kp;
         double currentSpeed = train.getSpeed();
 
-        // Set the temporary values of Ki and Kp for simulation
         setKi(ki);
         setKp(kp);
 
-        // Run the simulation for a certain duration
-        double duration = 10.0; // Adjust the duration as needed
-        double rollingError = 0.0;
-        double currentError = 0.0;
+        double duration = 10.0;
+        double overshoot = 0.0;
+        double settlingTime = 0.0;
         double time = 0.0;
+        boolean settled = false;
+
         while (time < duration) {
-            // Calculate the power and update the train model
             double power = controller.calculatePower(currentSpeed);
             train.setPower(power);
             train.trainModelPhysics();
+            currentSpeed = train.getSpeed();
 
-            // Calculate the current error
-            currentError = setSpeed - train.getSpeed();
+            double error = setSpeed - currentSpeed;
 
-            // Accumulate the rolling error
-            rollingError += currentError * TIME_STEP;
+            if (!settled && Math.abs(error) <= 0.0001) {
+                settlingTime = time;
+                settled = true;
+            }
+
+            if (currentSpeed > setSpeed) {
+                overshoot = Math.max(overshoot, currentSpeed - setSpeed);
+            }
 
             time += TIME_STEP;
         }
 
-        // Restore the previous values of Ki and Kp
         setKi(prevKi);
         setKp(prevKp);
 
-        // Return the rolling error and current error
-        return new double[]{rollingError, currentError};
+        double score = overshoot + settlingTime;
+        return score;
     }
 
     private void setKi(double ki) {
