@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
@@ -487,7 +488,7 @@ public class TrainControllerManager {
             case SERVICE_BRAKE, LEFT_DOORS, RIGHT_DOORS, INT_LIGHTS,
                     EXT_LIGHTS, AUTOMATIC_MODE ->
                     "\n" + getPropertyLabel(propertyName) + "\n" + (Boolean.parseBoolean(value) ? getOnLabel(propertyName) : getOffLabel(propertyName));
-            case EMERGENCY_BRAKE -> "\nEmergency Brake \n" + value;
+            case EMERGENCY_BRAKE -> "\nEmergency Brake \n" + (Boolean.parseBoolean(value) ? getOffLabel(propertyName):getOnLabel(propertyName)); // For some reason emergency brake boolean values are flipped
             case SET_TEMPERATURE -> "\nTemperature set to \n" + value + " \u00B0F";
             case KI -> "\nKi set to \n" + value;
             case KP -> "\nKp set to \n" + value;
@@ -510,6 +511,7 @@ public class TrainControllerManager {
             case INT_LIGHTS -> "Interior Lights";
             case EXT_LIGHTS -> "Exterior Lights";
             case AUTOMATIC_MODE -> "Automatic Mode";
+            case EMERGENCY_BRAKE -> "Emergency Brake";
             default -> "";
         };
     }
@@ -518,7 +520,7 @@ public class TrainControllerManager {
         return switch (propertyName) {
             case SERVICE_BRAKE -> "Engaged";
             case LEFT_DOORS, RIGHT_DOORS -> "Opened";
-            case INT_LIGHTS, EXT_LIGHTS, AUTOMATIC_MODE -> "On";
+            case INT_LIGHTS, EXT_LIGHTS, AUTOMATIC_MODE,EMERGENCY_BRAKE -> "On";
             default -> "";
         };
     }
@@ -527,10 +529,20 @@ public class TrainControllerManager {
         return switch (propertyName) {
             case SERVICE_BRAKE -> "Disengaged";
             case LEFT_DOORS, RIGHT_DOORS -> "Closed";
-            case INT_LIGHTS, EXT_LIGHTS, AUTOMATIC_MODE -> "Off";
+            case INT_LIGHTS, EXT_LIGHTS, AUTOMATIC_MODE,EMERGENCY_BRAKE -> "Off";
             default -> "";
         };
     }
+
+    ///TODO
+    // Goal: Reflect all changes to the train (aka, listening to all the properties)
+    // Goal: Change to an alert
+    //      - Entering a new block
+    //      - When we get new authority from track
+    //      - New Command Speed Updates
+    //      - Passenger E-Brake
+    // When a new action occurs, store inside queue thats in single-executed thread
+
 
 
 }
