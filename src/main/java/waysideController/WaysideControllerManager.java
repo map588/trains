@@ -84,20 +84,20 @@ public class WaysideControllerManager {
 
     private WaysideControllerSubject currentSubject = null;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
-    private WaysideControllerTB testBench;
+//    private WaysideControllerTB testBench;
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
     @FXML
     public void initialize() {
         // Launch the test bench
-        testBench = launchTestBench();
+//        testBench = launchTestBench();
 
 
         // Set up event listeners
         plcFolderButton.setOnAction(event -> pickFolder());
         plcFolderTextField.setOnAction(event -> updatePLCTableView(new File(plcFolderTextField.getText())));
         plcUploadButton.setOnAction(event ->  uploadPLC());
-        testBench.tbCreateNewControllerButton.setOnAction(event -> createNewController());
+//        testBench.tbCreateNewControllerButton.setOnAction(event -> createNewController());
         changeControllerComboBox.setOnAction(event -> changeActiveController(changeControllerComboBox.getValue()));
         maintenanceModeCheckbox.setOnAction(event -> {
             currentSubject.setProperty(maintenanceMode_p, maintenanceModeCheckbox.isSelected());
@@ -144,7 +144,7 @@ public class WaysideControllerManager {
         // Create initial controller and update values
 //        createNewController();
         changeActiveController(WaysideSystem.getController(Lines.GREEN, 1));
-        testBench.setController(currentSubject);
+//        testBench.setController(currentSubject);
 
         // Set default folder for PLC:
         File dir = new File("src/main/antlr");
@@ -341,47 +341,47 @@ public class WaysideControllerManager {
     /**
      * Creates a new wayside controller and adds it to the list of controllers
      */
-    private void createNewController() {
-        WaysideController newController;
-        if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
-            newController = new WaysideControllerImpl(WaysideSystem.size(),
-                    Lines.GREEN,
-                    new int[]{
-                            1, 2, 3,
-                            4, 5, 6,
-                            7, 8, 9, 10, 11, 12,
-                            13, 14, 15, 16,
-                            17, 18, 19, 20,
-                            21, 22, 23, 24, 25, 26, 27, 28,
-                            29, 30, 31, 32,
-                            33, 34, 35,
-                            36, 37, 38, 39,
-                            144, 145, 146,
-                            147, 148, 149,
-                            150},
-                    null, null);
-        } else {
-            newController = new WaysideControllerHWBridge(WaysideSystem.size(),
-                    Lines.GREEN,
-                    new int[]{
-                            1, 2, 3,
-                            4, 5, 6,
-                            7, 8, 9, 10, 11, 12,
-                            13, 14, 15, 16,
-                            17, 18, 19, 20,
-                            21, 22, 23, 24, 25, 26, 27, 28,
-                            29, 30, 31, 32,
-                            33, 34, 35,
-                            36, 37, 38, 39,
-                            144, 145, 146,
-                            147, 148, 149,
-                            150},
-                    testBench.tbHWPortComboBox.getValue());
-        }
-
-        WaysideSystem.addController(newController, Lines.GREEN);
-        changeActiveController(newController);
-    }
+//    private void createNewController() {
+//        WaysideController newController;
+//        if(testBench.tbHWPortComboBox.getValue().equals("SW")) {
+//            newController = new WaysideControllerImpl(WaysideSystem.size(),
+//                    Lines.GREEN,
+//                    new int[]{
+//                            1, 2, 3,
+//                            4, 5, 6,
+//                            7, 8, 9, 10, 11, 12,
+//                            13, 14, 15, 16,
+//                            17, 18, 19, 20,
+//                            21, 22, 23, 24, 25, 26, 27, 28,
+//                            29, 30, 31, 32,
+//                            33, 34, 35,
+//                            36, 37, 38, 39,
+//                            144, 145, 146,
+//                            147, 148, 149,
+//                            150},
+//                    null, null);
+//        } else {
+//            newController = new WaysideControllerHWBridge(WaysideSystem.size(),
+//                    Lines.GREEN,
+//                    new int[]{
+//                            1, 2, 3,
+//                            4, 5, 6,
+//                            7, 8, 9, 10, 11, 12,
+//                            13, 14, 15, 16,
+//                            17, 18, 19, 20,
+//                            21, 22, 23, 24, 25, 26, 27, 28,
+//                            29, 30, 31, 32,
+//                            33, 34, 35,
+//                            36, 37, 38, 39,
+//                            144, 145, 146,
+//                            147, 148, 149,
+//                            150},
+//                    testBench.tbHWPortComboBox.getValue());
+//        }
+//
+//        WaysideSystem.addController(newController, Lines.GREEN);
+//        changeActiveController(newController);
+//    }
 
     /**
      * Changes the active controller to the one selected in the combo box
@@ -400,14 +400,14 @@ public class WaysideControllerManager {
         currentSubject = controller.getSubject();
         changeControllerComboBox.getSelectionModel().select(controller);
         changeControllerLabel.setText(controller.toString());
-        testBench.tbWaysideNumberLabel.setText(controller.toString());
+//        testBench.tbWaysideNumberLabel.setText(controller.toString());
 
         // Bind new subject
         appendListener(currentSubject.getBooleanProperty(maintenanceMode_p), (observable, oldValue, newValue) -> updateMaintenanceWriteable());
         plcCurrentFileLabel.textProperty().bindBidirectional(currentSubject.getStringProperty(PLCName_p));
         plcActiveIndicator.fillProperty().bindBidirectional(currentSubject.getPaintProperty(activePLCColor_p));
 
-        testBench.setController(controller.getSubject());
+//        testBench.setController(controller.getSubject());
 
         // Update block lists
         updateMaintenanceWriteable();
