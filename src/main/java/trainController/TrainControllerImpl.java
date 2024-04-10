@@ -49,7 +49,7 @@ import static trainController.ControllerProperty.*;
  */
 public class TrainControllerImpl implements TrainController{
     private static final double TIME_STEP = TIME_STEP_S;
-    private static final double DEAD_BAND = 0.1;
+    private static final double DEAD_BAND = 0.01;
 
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;

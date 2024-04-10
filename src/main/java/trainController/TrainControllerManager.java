@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
@@ -62,6 +63,11 @@ public class TrainControllerManager {
 
     private final ReentrantLock propertyChangeLock = new ReentrantLock();
 
+    private final LinkedBlockingQueue<TextUpdateTask> textUpdateQueue = new LinkedBlockingQueue<>();
+    private final ScheduledExecutorService textUpdateExecutor = Executors.newSingleThreadScheduledExecutor();
+
+
+
     @FXML
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");
@@ -97,6 +103,7 @@ public class TrainControllerManager {
         });
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
+        runQueue();
     }
 
 
@@ -281,7 +288,7 @@ public class TrainControllerManager {
     private void bindCheckBox(CheckBox checkBox, ControllerProperty property) {
         appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
                 currentSubject.setProperty(property, newVal);
-                setNotification(property,String.valueOf(checkBox.isSelected()));
+                queueNotification(property,String.valueOf(checkBox.isSelected()));
         });
     }
 
@@ -289,7 +296,7 @@ public class TrainControllerManager {
         Runnable textFieldUpdate = () -> {
             try {
                 currentSubject.setProperty(property, Double.parseDouble(textField.getText()));
-                setNotification(property, textField.getText());
+                queueNotification(property, textField.getText());
             } catch (NumberFormatException e) {
                 showErrorDialog("Invalid input", "Please enter a valid number.");
                 textField.setText("");
@@ -309,14 +316,14 @@ public class TrainControllerManager {
         emergencyBrakeButton.setOnAction(event -> {
             BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE);
             currentSubject.setProperty(EMERGENCY_BRAKE, !eBrakeProp.get());
-            setNotification(EMERGENCY_BRAKE, String.valueOf(eBrakeProp.get()));
+            queueNotification(EMERGENCY_BRAKE, String.valueOf(eBrakeProp.get()));
             logger.info("Emergency button toggled to {}", !eBrakeProp.get());
         });
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
             currentSubject.setProperty(ANNOUNCEMENTS, !announceProp.get());
 
-            setNotification(ANNOUNCEMENTS,"");
+            queueNotification(ANNOUNCEMENTS,"");
             if (!nextStationText.getText().contains("yard") && !nextStationText.getText().contains("Yard")) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Arrival");
@@ -334,7 +341,7 @@ public class TrainControllerManager {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;}
             consumer.accept(newVal.doubleValue());
             textField.setText(String.format("%.1f", newVal.doubleValue()));
-            setNotification(OVERRIDE_SPEED,String.format("%.1f",newVal.doubleValue()));
+            queueNotification(OVERRIDE_SPEED,String.format("%.1f",newVal.doubleValue()));
         });
         Runnable textFieldUpdate = () -> {
             try {
@@ -344,10 +351,10 @@ public class TrainControllerManager {
                     throw new NumberFormatException();
                 }
                 slider.setValue(newValue);
-                setNotification(OVERRIDE_SPEED,String.format("%.1f",newValue));
+                queueNotification(OVERRIDE_SPEED,String.format("%.1f",newValue));
             } catch (NumberFormatException e) {
                 textField.setText(String.format("%.1f", slider.getValue()));
-                setNotification(OVERRIDE_SPEED,String.format("%.1f",slider.getValue()));
+                queueNotification(OVERRIDE_SPEED,String.format("%.1f",slider.getValue()));
             }
         };
 
@@ -543,6 +550,43 @@ public class TrainControllerManager {
     //      - Passenger E-Brake
     // When a new action occurs, store inside queue thats in single-executed thread
 
+
+    private void runQueue(){
+        textUpdateExecutor.scheduleAtFixedRate(() -> {
+
+            if(!textUpdateQueue.isEmpty()) {
+                try {
+                    textUpdateQueue.take().run();
+                } catch (InterruptedException e) {
+                    logger.error("Interrupted while running text update task: {}", e.getMessage());
+                }
+            }
+
+        }, 5, 2, TimeUnit.SECONDS);
+    }
+
+    private void queueNotification(ControllerProperty propertyName, String value){
+        try {
+            textUpdateQueue.put(new TextUpdateTask(propertyName,value));
+        } catch (InterruptedException e) {
+            logger.error("Interrupted while adding text update task to queue: {}", e.getMessage());
+        }
+    }
+
+    private class TextUpdateTask implements Runnable {
+        private final ControllerProperty propertyName;
+        private final String text;
+
+        public TextUpdateTask(ControllerProperty propertyName, String value){
+            this.propertyName = propertyName;
+            this.text = value;
+        }
+
+        @Override
+        public void run() {
+           setNotification(propertyName,text);
+        }
+    }
 
 
 }
