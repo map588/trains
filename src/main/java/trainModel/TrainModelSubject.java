@@ -3,17 +3,68 @@ package trainModel;
 import Common.TrainModel;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
+import javafx.application.Platform;
 import javafx.beans.property.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static trainModel.Properties.*;
 
 public class TrainModelSubject implements AbstractSubject{
 
-    public boolean isGUIUpdate;
-    public boolean isLogicUpdate;
+    private static final Logger logger = LoggerFactory.getLogger(TrainModelSubject.class);
+
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainModelImpl model;
-    private final TrainModelSubjectMap map = TrainModelSubjectMap.getInstance();
+    private final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
+    private final int trainID;
+
+
+
+
+    public TrainModelSubject(TrainModelImpl trainModel) {
+        this.model = trainModel;
+        int trainID = trainModel.getTrainNumber();
+        this.trainID = trainID;
+        intitializeValues();
+        if(trainModel.getTrainNumber() == -1 ){
+            return;
+        }
+        if(trainSubjectMap.getSubjects().containsKey(trainID)){
+            trainSubjectMap.removeSubject(trainID);
+        }
+        trainSubjectMap.registerSubject(trainID, this);
+        logger.info("Train Subject added to map with ID: {}", trainID);
+    }
+
+
+    public TrainModelSubject() {
+        this.model = NullTrain.getInstance();
+        intitializeValues();
+        this.trainID = -1;
+        //Noteably, we do not register the NullTrain with the map
+    }
+
+    public void setProperty(String propertyName, Object newValue) {
+        Platform.runLater(() -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+            model.setValue(propertyName, newValue);
+        });
+    }
+
+    public void notifyChange(String propertyName, Object newValue) {
+        Platform.runLater(() -> {
+            Property<?> property = properties.get(propertyName);
+            updateProperty(property, newValue);
+        });
+    }
+
+
+    public void subjectDelete() {
+        trainSubjectMap.removeSubject(model.getTrainNumber());
+    }
+
 
     public void intitializeValues() {
         properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(model.getAuthority()));
@@ -36,56 +87,13 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(model.getNumCars()));
         properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(model.getPassengerCount()));
         properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(model.getCrewCount()));
-        properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(model.getTimeDelta()));
         properties.put(MASS_PROPERTY, new SimpleDoubleProperty(model.getMass()));
         properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(model.getDistanceTraveled()));
         properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(model.getlength()));
 //        properties.put(BEACON_PROPERTY, new SimpleStringProperty(model.getBeacon()));
         properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(model.getAnnouncement()));
     }
-    public TrainModelSubject(TrainModelImpl trainModel) {
-        this.model = trainModel;
-        if(trainModel.getTrainNumber() == -1 ){
-            return;
-        }
-        intitializeValues();
-        map.registerSubject(trainModel.getTrainNumber(),this);
-    }
 
-    public TrainModelSubject() {
-        this.model = new TrainModelImpl();
-
-        properties.put(AUTHORITY_PROPERTY, new SimpleIntegerProperty(0));
-        properties.put(COMMANDSPEED_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(ACTUALSPEED_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(ACCELERATION_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(POWER_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(GRADE_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(SERVICEBRAKE_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(EMERGENCYBRAKE_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(BRAKEFAILURE_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(POWERFAILURE_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(SIGNALFAILURE_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(SETTEMPERATURE_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(REALTEMPERATURE_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(EXTLIGHTS_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(INTLIGHTS_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(LEFTDOORS_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(RIGHTDOORS_PROPERTY, new SimpleBooleanProperty(false));
-        properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(0));
-        properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(0));
-        properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(0));
-        properties.put(TIMEDELTA_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(MASS_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(0));
-        properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(0));
-//        properties.put(BEACON_PROPERTY, new SimpleStringProperty(""));
-        properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(""));
-    }
-
-    public void subjectDelete() {
-        map.removeSubject(model.getTrainNumber());
-    }
 
     public BooleanProperty getBooleanProperty (String propertyName) {
         return (BooleanProperty) getProperty(propertyName);
@@ -104,26 +112,6 @@ public class TrainModelSubject implements AbstractSubject{
     }
 
 
-    public void setProperty(String propertyName, Object newValue) {
-        Runnable updateTask = () -> {
-            //System.out.println("setProperty called from " + Thread.currentThread().getName() + " with " + propertyName + " and " + newValue);
-            Property<?> property = properties.get(propertyName);
-            updateProperty(property, newValue);
-            model.setValue(propertyName, newValue);
-        };
-        if(!isLogicUpdate){
-            return;
-        }else{
-            updateFromGUI(updateTask);
-        }
-    }
-
-    public void notifyChange(String propertyName, Object newValue){
-        updateFromLogic(() -> {
-            Property<?> property = properties.get(propertyName);
-            updateProperty(property, newValue);
-        });
-    }
 
     public TrainModel getModel() {
         return model;
@@ -133,24 +121,4 @@ public class TrainModelSubject implements AbstractSubject{
         return properties.get(propertyName);
     }
 
-
-    public void updateFromGUI(Runnable updateLogic) {
-        //System.out.println("Called from updateFromGUI.");
-        isGUIUpdate = true;
-        try {
-            updateLogic.run();
-        } finally {
-            isGUIUpdate = false;
-        }
-    }
-
-    public void updateFromLogic(Runnable updateLogic) {
-        //System.out.println("Called from updateFromLogic.");
-         isLogicUpdate = true;
-        try {
-            updateLogic.run();
-        } finally {
-            isLogicUpdate = false;
-        }
-    }
 }

@@ -1,14 +1,18 @@
 package waysideController;
 
 import Framework.Support.Notifier;
-import Utilities.Records.BasicBlock;
 import Utilities.Enums.Direction;
+import Utilities.Records.BasicBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static Utilities.Enums.BlockType.CROSSING;
-import static Utilities.Enums.BlockType.STATION;
 import static waysideController.Properties.*;
 
 public class WaysideBlock implements Notifier {
+
+    private final Logger logger = LoggerFactory.getLogger(WaysideBlock.class);
+
     private final int blockID;
     private final boolean hasSwitch;
     private final boolean hasLight;
@@ -42,12 +46,11 @@ public class WaysideBlock implements Notifier {
         this.open = true;
 
         if(this.hasSwitch) {
-            System.out.println("North: " + block.nextBlock().north());
-            System.out.println("South: " + block.nextBlock().south());
-            System.out.println("NorthDef: " + block.nextBlock().northDefault());
-            System.out.println("NorthAlt: " + block.nextBlock().northAlternate());
-            System.out.println("SouthDef: " + block.nextBlock().southDefault());
-            System.out.println("SouthAlt: " + block.nextBlock().southAlternate());
+            logger.info("Switch Block: {}", block.blockNumber());
+            logger.info("NorthDef: {}", block.nextBlock().northDefault());
+            logger.info("NorthAlt: {}", block.nextBlock().northAlternate());
+            logger.info("SouthDef: {}", block.nextBlock().southDefault());
+            logger.info("SouthAlt: {}", block.nextBlock().southAlternate());
 
             this.switchBlockParent = this.blockID;
 
@@ -112,15 +115,16 @@ public class WaysideBlock implements Notifier {
     }
     public boolean isOpen() { return open; }
     public void setOccupied(boolean occupied) {
-        System.out.println("Occupied: " + occupied);
+       logger.info("Wayside block: {} -> Changed occupancy to {}", this.blockID, occupied);
         this.occupied = occupied;
 
         if(subject != null)
             subject.notifyChange(occupied_p, occupied);
     }
 
+
     public void setBlockMaintenanceState(boolean open) {
-        System.out.println("Block Access State: " + open);
+       // System.out.println("Block Access State: " + open);
         this.open = open;
 
         if(subject != null)

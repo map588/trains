@@ -23,6 +23,7 @@ public class Conversion {
         FPS2
     }
     public enum powerUnits {
+        KILOWATTS,
         WATTS,
         HORSEPOWER
     }
@@ -194,10 +195,24 @@ public class Conversion {
             if (to == powerUnits.HORSEPOWER) {
                 return power / 745.7;
             }
+            if(to == powerUnits.KILOWATTS){
+                return power / 1000;
+            }
         }
         if (from == powerUnits.HORSEPOWER) {
             if (to == powerUnits.WATTS) {
                 return power * 745.7;
+            }
+            if(to == powerUnits.KILOWATTS){
+                return power * 0.7457;
+            }
+        }
+        if(from == powerUnits.KILOWATTS){
+            if(to == powerUnits.WATTS){
+                return power * 1000;
+            }
+            if(to == powerUnits.HORSEPOWER){
+                return power * 1.34102;
             }
         }
         return 0;

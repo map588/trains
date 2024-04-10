@@ -1,8 +1,7 @@
-package trainModel.NullObjects;
+package trainModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainModel.TrainModelImpl;
 
 public final class NullTrain extends TrainModelImpl {
 
@@ -68,6 +67,6 @@ public final class NullTrain extends TrainModelImpl {
 
     @Override
     public void setValue(String propertyName, Object newValue) {
-        logger.warn("NullTrain setProperty called with " + propertyName + " and " + newValue);
+        logger.warn("NullTrain setProperty called with {} and {}", propertyName, newValue);
     }
 }

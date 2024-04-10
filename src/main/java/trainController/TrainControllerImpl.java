@@ -4,8 +4,11 @@ import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
 import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import trainController.ControllerBlocks.ControllerBlock;
 import trainController.ControllerBlocks.ControllerBlockLookups;
+import trainModel.NullTrain;
 import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,17 +48,27 @@ import static trainController.ControllerProperty.*;
  * Finally, the speed and power of the train are updated.
  */
 public class TrainControllerImpl implements TrainController{
-    private volatile int samplingPeriod = TIME_STEP_MS;
+    private static final double TIME_STEP = TIME_STEP_S;
+    private static final double DEAD_BAND = 0.1;
 
+    private ControllerBlock currentBlock;
+    private Beacon currentBeacon = null;
 
-
-    private Beacon beacon;
-
+    private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
     //Internal Metric
-    private double commandSpeed = 0.0, currentSpeed = 0.0, overrideSpeed = 0.0,
-            speedLimit = 0.0, Ki = 0.3, Kp = 0.6, power = 0.0, grade = 0.0,
-            setTemperature = 0.0, currentTemperature = 0.0, rollingError = 0.0, prevError = 0.0, error = 0.0;
+    private double commandSpeed = 0.0;
+    private double currentSpeed = 0.0;
+    private double overrideSpeed = 0.0;
+    private double speedLimit = 0.0;
+    private double Ki = 4;
+    private double Kp = 12;
+    private double power = 0.0;
+    private double grade = 0.0;
+    private double setTemperature = 0.0;
+    private double currentTemperature = 0.0;
+    private double rollingError = 0.0;
+    private double prevError = 0.0;
 
 
     private int authority = 0;
@@ -78,13 +91,20 @@ public class TrainControllerImpl implements TrainController{
         this.trainID = trainID;
         this.train = train;
         this.subject = new TrainControllerSubject(this);
-        populateTrainValues(train);
         this.nextStationName = "Yard";
+        populateTrainValues(train);
         if(train.getTrainNumber() != -1) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
         }
+        //currentBlock = blockLookup.get(0);
     }
 
+    public TrainControllerImpl() {
+        this.trainID = -1;
+        this.train = NullTrain.getInstance();
+        this.subject = new TrainControllerSubject(this);
+        this.nextStationName = "Yard";
+    }
     /**
      * This method is used to assign a TrainModel object to the trainControllerImpl.
      * It first assigns the passed TrainModel object to the train variable of the trainControllerImpl.
@@ -104,7 +124,6 @@ public class TrainControllerImpl implements TrainController{
         this.setPowerFailure(train.getPowerFailure());
         this.setCurrentTemperature((train.getRealTemperature()));
     }
-
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
@@ -135,45 +154,49 @@ public class TrainControllerImpl implements TrainController{
         );
     }
 
+    public double calculatePower(double currentSpeed) {
+        double setSpeed, pow;
 
-
-    public double calculatePower(double currentSpeed){
-        double setSpeed, pow, accel;
-
-        if (automaticMode){
+        if (automaticMode) {
             setSpeed = commandSpeed;
-        }
-        else{
+        } else {
             setSpeed = overrideSpeed;
         }
 
-        accel = 0;
+        double error = setSpeed - currentSpeed;
+        double proportionalTerm = Kp * error;
 
-        error = setSpeed - currentSpeed;
-        rollingError += (double)samplingPeriod/1000 * (error + prevError);
-        prevError = error;
+        // Update the rolling error
+        rollingError += error * TIME_STEP;
 
-        pow = Kp * error + Ki * rollingError;
-        if(pow > MAX_POWER) {
-            pow = convertPower(MAX_POWER, HORSEPOWER, WATTS);
+        // Introduce an integral term to reduce steady-state error
+        double integralTerm = Ki * rollingError;
+
+        // Calculate the control output
+        double controlOutput = proportionalTerm + integralTerm;
+
+        // Limit the control output to a reasonable range
+        controlOutput = Math.max(-1, Math.min(MAX_POWER_W, controlOutput));
+
+        // Apply a deadband to avoid oscillations around the setpoint
+        if (Math.abs(error) < DEAD_BAND) {
+            controlOutput = 0.0;
         }
 
-        if(automaticMode && (pow < 0)){
+        // Adjust the power based on the control output
+        pow = controlOutput;
+
+        // Apply brakes if the power is negative or if the train is overshooting
+        if (automaticMode && (pow < 0 || currentSpeed > setSpeed)) {
             pow = 0;
             setServiceBrake(true);
-        }else if(serviceBrake && (pow > 0)){
+        } else if (serviceBrake && (pow > 0)) {
             setServiceBrake(false);
         }
 
-        if(emergencyBrake || serviceBrake || powerFailure || (pow < 0)) {
+        // Cut off power if brakes are engaged or there's a failure
+        if (emergencyBrake || serviceBrake || powerFailure) {
             pow = 0;
-            if(emergencyBrake){
-                accel = -1 * EMERGENCY_BRAKE_DECELERATION;
-            }else if(serviceBrake) {
-                accel = -1 * SERVICE_BRAKE_DECELERATION;
-            }
-        }else{
-            accel = pow / train.getMass();
         }
 
         return pow;
@@ -184,7 +207,13 @@ public class TrainControllerImpl implements TrainController{
      *  onBlock()
      */
     public void onBlock(){
-        //TODO:
+        if(currentBeacon != null) {
+            currentBlock = blockLookup.get(currentBeacon.blockIndices().poll());
+        }
+        setNextStationName(currentBlock.stationName());
+        setSpeedLimit(currentBlock.speedLimit());
+        setInTunnel(currentBlock.isUnderground());
+        //.... proof of concept
 
         // Update Block by Block
 
@@ -284,14 +313,9 @@ public class TrainControllerImpl implements TrainController{
         this.authority = authority;
         subject.notifyChange(AUTHORITY , authority);
     }
-    public void setOverrideSpeed(double speed) {
-        this.overrideSpeed = speed;
-        subject.notifyChange(OVERRIDE_SPEED , convertVelocity(speed, MPS, MPH));
-        //calculatePower();
-    }
     public void setCommandSpeed(double speed) {
-        this.commandSpeed = speed;
-        subject.notifyChange(COMMAND_SPEED , convertVelocity(speed, MPS, MPH));
+        this.commandSpeed = convertVelocity(speed, MPH, MPS);
+        subject.notifyChange(COMMAND_SPEED , speed);
         //calculatePower();
     }
     public void setSpeed(double speed) {
@@ -370,13 +394,9 @@ public class TrainControllerImpl implements TrainController{
         this.rightPlatform = platform;
         subject.notifyChange(RIGHT_PLATFORM ,platform);
     }
-    public void setSamplingPeriod(int period){
-        this.samplingPeriod = period;
-        subject.notifyChange(SAMPLING_PERIOD ,period);
-    }
-    public void setSpeedLimit(double speedLimit){
-        this.speedLimit = speedLimit;
-        subject.notifyChange(SPEED_LIMIT , convertVelocity(speedLimit, MPS, MPH));
+    public void setSpeedLimit(double limit){
+        this.speedLimit = convertVelocity(limit, MPH, MPS);
+        subject.notifyChange(SPEED_LIMIT , limit);
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
@@ -399,7 +419,6 @@ public class TrainControllerImpl implements TrainController{
      */
 
     public void setValue(ControllerProperty propertyName, Object newValue) {
-        System.out.println("Value " + propertyName + " set to " + newValue);
         switch (propertyName) {
             case AUTOMATIC_MODE -> this.automaticMode = (boolean) newValue;
             case AUTHORITY -> this.authority = (int) newValue;
@@ -424,7 +443,6 @@ public class TrainControllerImpl implements TrainController{
             case IN_TUNNEL -> this.inTunnel = (boolean) newValue;
             case LEFT_PLATFORM -> this.leftPlatform = (boolean) newValue;
             case RIGHT_PLATFORM -> this.rightPlatform = (boolean) newValue;
-            case SAMPLING_PERIOD -> this.samplingPeriod = (int) newValue;
             case SPEED_LIMIT -> this.speedLimit = convertVelocity((double) newValue, MPH, MPS);
             case NEXT_STATION -> this.nextStationName = (String) newValue;
             case GRADE -> this.grade = (double) newValue;
@@ -432,6 +450,7 @@ public class TrainControllerImpl implements TrainController{
             case ERROR -> System.out.println("Error is a read-only property");
             default -> System.err.println("Property " + propertyName + " not found");
         }
+        logger.info("TrainController Value {} set to {} from GUI.",propertyName,newValue);
     }
 
 
@@ -450,7 +469,9 @@ public class TrainControllerImpl implements TrainController{
     public double  getAcceleration() {
         return this.train.getAcceleration();
     }
-    public int  getSamplingPeriod(){return this.samplingPeriod;}
+    public double getTimeInterval(){
+        return TIME_STEP;
+    }
     public double  getPower() {
         return this.power;
     }
@@ -520,17 +541,31 @@ public class TrainControllerImpl implements TrainController{
     public double  getCurrentTemperature() {
         return this.currentTemperature;
     }
-    public String  getStationName(){
+    public String getNextStationName(){
         return this.nextStationName;
     }
-    public boolean getLeftPlatform(){return this.leftPlatform;}
-    public boolean getRightPlatform(){return this.rightPlatform;}
-    public boolean getInTunnel(){return this.inTunnel;}
-    public double  getGrade(){return this.grade;}
+    public boolean getLeftPlatform(){
+        return this.leftPlatform;
+    }
+    public boolean getRightPlatform(){
+        return this.rightPlatform;
+    }
+    public boolean getInTunnel(){
+        return this.inTunnel;
+    }
+
+    @Override
+    public Beacon getBeacon() {
+        return this.currentBeacon;
+    }
+
+    public double getGrade(){
+        return this.grade;
+    }
 
     @Override
     public void updateBeacon(Beacon beacon) {
-        this.beacon = beacon;
+        this.currentBeacon = beacon;
     }
 
     @Override

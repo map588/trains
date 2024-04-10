@@ -3,6 +3,7 @@ package Utilities;
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -21,14 +22,24 @@ public class GlobalBasicBlockParser {
         basicBlocks.put(line, blocks);
     }
 
-
+    public int lineCount() {
+        return basicBlocks.size();
+    }
 
     public static GlobalBasicBlockParser getInstance() {
         return INSTANCE;
     }
 
     public BasicTrackLine getBasicLine(Lines line) {
-        return new BasicTrackLine(basicBlocks.get(line));
+        if(line != Lines.NULL) {
+            return new BasicTrackLine(basicBlocks.get(line));
+        }else{
+            return new BasicTrackLine();
+        }
+    }
+
+    public HashSet<Lines> getLines() {
+        return new HashSet<>(basicBlocks.keySet());
     }
 
     public BasicTrackMap getAllBasicLines() {

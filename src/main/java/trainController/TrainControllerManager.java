@@ -17,11 +17,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainController.NullObjects.NullControllerSubject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import static trainController.ControllerProperty.*;
@@ -51,30 +50,27 @@ public class TrainControllerManager {
     @FXML
     private ChoiceBox<Integer> trainNoChoiceBox;
 
-    private TrainControllerSubjectMap subjectMap;
+    private final TrainControllerSubjectMap subjectMap = TrainControllerSubjectMap.getInstance();
+    private final TrainControllerSubject nullSubject = NullController.getInstance().getSubject();
+
     private TrainControllerSubject currentSubject;
 
     private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerManager.class);
 
+    private final ReentrantLock propertyChangeLock = new ReentrantLock();
 
     @FXML
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");
 
-        subjectMap = TrainControllerSubjectMap.getInstance();
-        currentSubject = NullControllerSubject.INSTANCE; // Default to null object
+        currentSubject = nullSubject; // Default to null object
         setupMapChangeListener();
 
-        updateChoiceBoxItems(); // Populate the choice box and handle initial selection
-
-        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            // Use -1 or any invalid ID to revert to NullSubject
-            changeTrainView(Objects.requireNonNullElseGet(newSelection, () -> oldSelection != null ? oldSelection : -1));
-        });
 
         if (!subjectMap.getSubjects().isEmpty()) {
+            updateChoiceBoxItems();
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
             logger.info("Initialized Train Controller with train ID: {}", firstKey);
             changeTrainView(firstKey);
@@ -84,10 +80,23 @@ public class TrainControllerManager {
             updateUIForNullSubject(); // Method to reset or initialize UI for null subject
         }
 
+        trainNoChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if(subjectMap.getSubjects().isEmpty()){
+                logger.warn("No controllers available to select");
+                changeTrainView(-1);
+            }
+            if(newSelection == null){
+                logger.warn("No selection made");
+                changeTrainView(oldSelection);
+            }else if (!subjectMap.getSubjects().containsKey(newSelection)) {
+                logger.warn("Selected train is not in the map");
+            }else{
+                changeTrainView(newSelection);
+            }
+        });
+
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
     }
-
-
 
 
     private void setupMapChangeListener() {
@@ -101,10 +110,14 @@ public class TrainControllerManager {
             }
             public void onRemoved(Integer key, TrainControllerSubject value) {
                 updateChoiceBoxItems();
+                if(subjects.isEmpty()) {
+                    changeTrainView(-1);
+                }else if(trainNoChoiceBox.getSelectionModel().getSelectedItem() == key){
+                    trainNoChoiceBox.getSelectionModel().selectFirst();
+                }
             }
             public void onUpdated(Integer key, TrainControllerSubject oldValue, TrainControllerSubject newValue) {
                 updateChoiceBoxItems();
-                trainNoChoiceBox.getSelectionModel().select(newValue.getController().getID());
             }
         };
         subjects.addChangeListener(genericListener);
@@ -112,35 +125,50 @@ public class TrainControllerManager {
 
 
     private void updateChoiceBoxItems() {
-            List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
-            trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
+        List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
+        trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
 
-            if (!trainIDs.isEmpty()) {
-                // Automatically select the first train if one is available
+        if (!trainIDs.isEmpty()) {
+            if(trainIDs.size() == 1){
                 trainNoChoiceBox.getSelectionModel().selectFirst();
-            } else {
-                logger.info("No trains available after update.");
-                changeTrainView(-1); // Explicitly handle no selection
+            }else {
+                Integer previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedItem();
+                trainNoChoiceBox.getSelectionModel().select(previousSelection);
             }
+        } else {
+            logger.info("No trains available after update.");
+            changeTrainView(-1); // Explicitly handle no selection
+        }
     }
 
 
     private void changeTrainView(Integer trainID) {
-        Runnable update = () -> {
-            unbindControls();
-            if (trainID == -1) {
-                currentSubject = NullControllerSubject.INSTANCE;
-                updateUIForNullSubject();
-                logger.info("Train Controller switched to null subject");
-            } else {
-                currentSubject = subjectMap.getSubjects().getOrDefault(trainID, NullControllerSubject.INSTANCE);
-                bindAll();
-                updateAll();
-                logger.info("Train Controller switched to train ID: {}", trainID);
-            }
-        };
+        logger.warn("Switching Train Controller to train ID: {}", trainID);
+            executeUpdate(() -> {
+                unbindControls();
+                if (trainID == -1 || !subjectMap.getSubjects().containsKey(trainID)) {
+                    currentSubject = NullController.getInstance().getSubject();
+                    updateUIForNullSubject();
+                    logger.info("Train Controller switched to null subject");
+                } else {
+                    currentSubject = subjectMap.getSubjects().get(trainID);
+                    updateView();
+                    logger.info("Train Controller switched to train ID: {}", trainID);
+                }
+            });
+    }
 
-        executeViewChange(update);
+    void executeUpdate(Runnable updateOperation) {
+        if (propertyChangeLock.tryLock()) {
+            try {
+                updateOperation.run();
+            } finally {
+                propertyChangeLock.unlock();
+            }
+        } else {
+            Platform.runLater(updateOperation);
+            logger.warn("Unable to acquire lock for update operation");
+        }
     }
 
     private void bindAll(){
@@ -396,14 +424,7 @@ public class TrainControllerManager {
 
 
     //Called when controller is switched, updates state of all UI elements
-    private void updateAll() {
-        if (currentSubject == null) {
-            logger.warn("No subject to update");
-            return;
-        }
-
-        //Batch update all properties
-            try{
+    private void updateView() {
             currentSpeedGauge.setValue(currentSubject.getDoubleProperty(CURRENT_SPEED).get());
             commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(COMMAND_SPEED).get());
             speedLimitGauge.setValue(currentSubject.getDoubleProperty(SPEED_LIMIT).get());
@@ -438,10 +459,8 @@ public class TrainControllerManager {
             setSpeedSlider.setValue(currentSubject.getDoubleProperty(OVERRIDE_SPEED).get());
 
             logger.debug("UI elements updated for train ID: {}", currentSubject.getProperty(TRAIN_ID));
-            }catch (Exception e){
-                logger.error("Error updating UI elements", e);
-            }
 
+            bindAll();
     }
 
     // Calls when the inTunnelStatus is updated, it checks off the intLights and extLights
@@ -513,15 +532,5 @@ public class TrainControllerManager {
         };
     }
 
-
-    private void executeViewChange(Runnable viewChange){
-        TrainControllerSubject viewChangeSubject = currentSubject;
-        viewChangeSubject.setSubjectChangeInProgress(true);
-        try{
-            viewChange.run();
-        }finally{
-            viewChangeSubject.setSubjectChangeInProgress(false);
-        }
-    }
 
 }

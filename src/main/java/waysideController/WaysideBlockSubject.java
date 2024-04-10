@@ -74,13 +74,13 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
             Property<?> property = properties.get(propertyName);
             updateProperty(property, newValue);
             block.setValue(propertyName, newValue);
-            System.out.println("Property " + propertyName + " updated to " + newValue + " in Subject");
+     //       System.out.println("Property " + propertyName + " updated to " + newValue + " in Wayside Subject");
         };
 
         if (isLogicUpdate) {
             executorService.scheduleWithFixedDelay(() -> {
                 if (!isLogicUpdate) {
-                    System.out.println("Delayed setProperty from GUI");
+   //                 System.out.println("Delayed setProperty from GUI");
                     Platform.runLater(() -> updateFromGUI(updateTask));
                 }
             }, 0, 10, TimeUnit.MILLISECONDS);
@@ -90,7 +90,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
     }
 
     public void updateFromGUI(Runnable updateLogic) {
-        System.out.println("Called from updateFromGUI.");
+   //     System.out.println("Called from updateFromGUI.");
         isGUIUpdate = true;
         try {
             updateLogic.run();
@@ -154,7 +154,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
             updateFromLogic(() -> {
                 Property<?> property = properties.get(propertyName);
                 updateProperty(property, newValue);
-                System.out.println("Property " + propertyName + " updated to " + newValue + " in Subject");
+   //             System.out.println("Property " + propertyName + " updated to " + newValue + " in Wayside Subject");
             });
         }
     }

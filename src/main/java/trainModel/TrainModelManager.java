@@ -9,29 +9,23 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainModel.NullObjects.NullTrainSubject;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static trainModel.Properties.*;
 
 public class TrainModelManager {
-    
-    Logger logger = LoggerFactory.getLogger(TrainModelManager.class);
 
     @FXML
     public Button eBrakeBtn;
@@ -48,51 +42,68 @@ public class TrainModelManager {
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
 
-    TrainModelSubjectMap subjectMap;
-    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
-    private TrainModelSubject subject;
-    //private TrainModelTB testBench;
+
+    private final TrainModelSubjectMap subjectMap = TrainModelSubjectMap.getInstance();
     private final TrainModelSubject nullSubject = new TrainModelSubject();
+
+    private TrainModelSubject subject;
+
+    private final List<ListenerReference<?>> listenerReferences = new ArrayList<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainModelManager.class);
+
+
+    final static ReentrantLock subjectChangeLock = new ReentrantLock();
+
+
     @FXML
     public void initialize() {
         logger.info("Started TrainModelManager initialize");
 
-        subjectMap = TrainModelSubjectMap.getInstance();
+        subject = nullSubject;
         setupMapChangeListener();
+        updateChoiceBoxItems();
+
 
         if (!subjectMap.getSubjects().isEmpty()) {
             Integer firstKey = subjectMap.getSubjects().keySet().iterator().next();
+            logger.info("Initialized Train Model UI with train ID: {}", firstKey);
             changeTrainView(firstKey); // Switch to the first available subject
         } else {
-            subject = NullTrainSubject.getInstance(); // Use the null object
+            subject = nullSubject; // Use the null object
+            logger.warn("No trains available to initialize Train Model");
             updateViewForNullSubject(); // Prepare UI for no subject selected
         }
-        updateChoiceBoxItems(); // Reflect current subjects in the UI
 
 
         trainDropDown.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
+            if(subjectMap.getSubjects().isEmpty() || newSelection == null){
+                logger.warn("No trains available to select");
+                changeTrainView(-1);
+            }else {
                 changeTrainView(newSelection);
             }
         });
 
-        setUpCircleColors();
-        logger.info("Finished TrainModelManager initialize");
-    }
 
-    private void bindLabels() {
         maxPowerLabel.setText("643.68");
         maxVelocityLabel.setText("43.48");
         medAccelerationLabel.setText("1.64");
         trainHeightLabel.setText("11.22");
         trainWidthLabel.setText("8.69");
 
-        bindLabelToProperty("mass", massLabel);
-        bindLabelToProperty("length", trainLengthLabel);
-        bindLabelToProperty("numCars", numCarsLabel);
-        bindLabelToProperty("numPassengers", numPassengerLabel);
-        bindLabelToProperty("crewCount", crewCountLabel);
-        bindLabelToProperty("grade", gradeLabel);
+        setUpCircleColors();
+        logger.info("Finished TrainModelManager initialize");
+    }
+
+    private void bindLabels() {
+
+        bindLabelToProperty(MASS_PROPERTY, massLabel);
+        bindLabelToProperty(LENGTH_PROPERTY, trainLengthLabel);
+        bindLabelToProperty(NUMCARS_PROPERTY, numCarsLabel);
+        bindLabelToProperty(NUMPASSENGERS_PROPERTY, numPassengerLabel);
+        bindLabelToProperty(CREWCOUNT_PROPERTY, crewCountLabel);
+        bindLabelToProperty(GRADE_PROPERTY, gradeLabel);
     }
 
     private void bindLabelToProperty(String property, Label label) {
@@ -108,42 +119,111 @@ public class TrainModelManager {
         });
     }
 
+    private void changeTrainView(Integer trainID) {
+            executeUpdate(() -> {
+                unbindAll();
+                if (trainID == -1) {
+                    subject = nullSubject;
+                    updateViewForNullSubject();
+                    logger.info("Train Controller switched to null subject");
+                } else {
+                    subject = subjectMap.getSubjects().get(trainID);
+                    updateView();
+                    logger.info("Train Controller switched to train ID: {}", trainID);
+                }
+            });
+    }
+
+    void executeUpdate(Runnable updateOperation) {
+        if (subjectChangeLock.tryLock()) {
+            try {
+                updateOperation.run();
+            } finally {
+                subjectChangeLock.unlock();
+            }
+        } else {
+            Platform.runLater(updateOperation);
+            logger.warn("Unable to acquire lock for update operation");
+        }
+    }
+
+
+    private void updateView() {
+        actualPowerDisp.setValue(subject.getDoubleProperty(POWER_PROPERTY).get());
+        actualVelocityDisp.setValue(subject.getDoubleProperty(ACTUALSPEED_PROPERTY).get());
+        actualAccelerationDisp.setValue(subject.getDoubleProperty(ACCELERATION_PROPERTY).get());
+        cmdSpeedDisp.setValue(subject.getDoubleProperty(COMMANDSPEED_PROPERTY).get());
+        authorityDisp.setValue(subject.getIntegerProperty(AUTHORITY_PROPERTY).get());
+        setTempDisp.setValue(subject.getDoubleProperty(SETTEMPERATURE_PROPERTY).get());
+        realTempDisp.setValue(subject.getDoubleProperty(REALTEMPERATURE_PROPERTY).get());
+        brakeFailureBtn.setSelected(subject.getBooleanProperty(BRAKEFAILURE_PROPERTY).get());
+        powerFailureBtn.setSelected(subject.getBooleanProperty(POWERFAILURE_PROPERTY).get());
+        signalFailureBtn.setSelected(subject.getBooleanProperty(SIGNALFAILURE_PROPERTY).get());
+        updateEBrakeIndicator(subject.getBooleanProperty(EMERGENCYBRAKE_PROPERTY).get());
+        updateSBrakeIndicator(subject.getBooleanProperty(SERVICEBRAKE_PROPERTY).get());
+        updateExtLightsIndicator(subject.getBooleanProperty(EXTLIGHTS_PROPERTY).get());
+        updateIntLightsIndicator(subject.getBooleanProperty(INTLIGHTS_PROPERTY).get());
+        updateLeftDoorsIndicator(subject.getBooleanProperty(LEFTDOORS_PROPERTY).get());
+        updateRightDoorsIndicator(subject.getBooleanProperty(RIGHTDOORS_PROPERTY).get());
+        bindAll();
+    }
+
+    private void bindAll(){
+        bindControls();
+        bindGauges();
+        bindIndicators();
+        bindLabels();
+    }
+
+    private void updateViewForNullSubject() {
+        // Example UI adjustments for the null subject
+        actualPowerDisp.setValue(0);
+        actualVelocityDisp.setValue(0);
+        actualAccelerationDisp.setValue(0);
+        cmdSpeedDisp.setValue(0);
+        authorityDisp.setValue(0);
+        setTempDisp.setValue(0);
+        realTempDisp.setValue(0);
+        brakeFailureBtn.setSelected(false);
+        powerFailureBtn.setSelected(false);
+        signalFailureBtn.setSelected(false);
+    }
 
     private void bindGauges() {
-        actualPowerDisp.valueProperty().bind(subject.getDoubleProperty("power"));
-        actualVelocityDisp.valueProperty().bind(subject.getDoubleProperty("actualSpeed"));
-        actualAccelerationDisp.valueProperty().bind(subject.getDoubleProperty("acceleration"));
-        cmdSpeedDisp.valueProperty().bind(subject.getDoubleProperty("commandSpeed"));
-        authorityDisp.valueProperty().bind(subject.getIntegerProperty("authority"));
-        setTempDisp.valueProperty().bind(subject.getDoubleProperty("setTemperature"));
-        realTempDisp.valueProperty().bind(subject.getDoubleProperty("realTemperature"));
+        actualPowerDisp.valueProperty().bind(subject.getDoubleProperty(POWER_PROPERTY));
+        actualVelocityDisp.valueProperty().bind(subject.getDoubleProperty(ACTUALSPEED_PROPERTY));
+        actualAccelerationDisp.valueProperty().bind(subject.getDoubleProperty(ACCELERATION_PROPERTY));
+        cmdSpeedDisp.valueProperty().bind(subject.getDoubleProperty(COMMANDSPEED_PROPERTY));
+        authorityDisp.valueProperty().bind(subject.getIntegerProperty(AUTHORITY_PROPERTY));
+        setTempDisp.valueProperty().bind(subject.getDoubleProperty(SETTEMPERATURE_PROPERTY));
+        realTempDisp.valueProperty().bind(subject.getDoubleProperty(REALTEMPERATURE_PROPERTY));
     }
 
     private void bindIndicators() {
-        appendListener(subject.getBooleanProperty("emergencyBrake"), (obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("serviceBrake"), (obs, oldSelection, newSelection) -> updateSBrakeIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("extLights"), (obs, oldSelection, newSelection) -> updateExtLightsIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("intLights"), (obs, oldSelection, newSelection) -> updateIntLightsIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("leftDoors"), (obs, oldSelection, newSelection) -> updateLeftDoorsIndicator(newSelection));
-        appendListener(subject.getBooleanProperty("rightDoors"), (obs, oldSelection, newSelection) -> updateRightDoorsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(EMERGENCYBRAKE_PROPERTY), (obs, oldSelection, newSelection) -> updateEBrakeIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(SERVICEBRAKE_PROPERTY), (obs, oldSelection, newSelection) -> updateSBrakeIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(EXTLIGHTS_PROPERTY), (obs, oldSelection, newSelection) -> updateExtLightsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(INTLIGHTS_PROPERTY), (obs, oldSelection, newSelection) -> updateIntLightsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(LEFTDOORS_PROPERTY), (obs, oldSelection, newSelection) -> updateLeftDoorsIndicator(newSelection));
+        appendListener(subject.getBooleanProperty(RIGHTDOORS_PROPERTY), (obs, oldSelection, newSelection) -> updateRightDoorsIndicator(newSelection));
     }
 
     private void bindControls() {
-        eBrakeBtn.setOnAction(event -> subject.setProperty("emergencyBrake", true));
+        eBrakeBtn.setOnAction(event -> subject.setProperty(EMERGENCYBRAKE_PROPERTY, true));
 
         brakeFailureBtn.setOnAction(event -> {
-            BooleanProperty brakeFailure = subject.getBooleanProperty("brakeFailure");
-            subject.setProperty("brakeFailure", !brakeFailure.get());
+            BooleanProperty brakeFailure = subject.getBooleanProperty(BRAKEFAILURE_PROPERTY);
+            subject.setProperty(BRAKEFAILURE_PROPERTY, !brakeFailure.get());
         });
 
         powerFailureBtn.setOnAction(event -> {
-            BooleanProperty powerFailure = subject.getBooleanProperty("powerFailure");
-            subject.setProperty("powerFailure", !powerFailure.get());
+            BooleanProperty powerFailure = subject.getBooleanProperty(POWERFAILURE_PROPERTY);
+            subject.setProperty(POWERFAILURE_PROPERTY, !powerFailure.get());
         });
 
         signalFailureBtn.setOnAction(event -> {
-            BooleanProperty signalFailure = subject.getBooleanProperty("signalFailure");
-            subject.setProperty("signalFailure", !signalFailure.get());
+            BooleanProperty signalFailure = subject.getBooleanProperty(SIGNALFAILURE_PROPERTY);
+            subject.setProperty(SIGNALFAILURE_PROPERTY, !signalFailure.get());
         });
     }
 
@@ -166,44 +246,11 @@ public class TrainModelManager {
         rightDoorsEn.setFill(active ? Color.YELLOW : Color.GRAY);
     }
 
-    private void changeTrainView(Integer trainID) {
-        if (trainID == null || trainID == -1 || !subjectMap.getSubjects().containsKey(trainID)) {
-            subject = NullTrainSubject.getInstance(); // Fallback to null object
-            updateViewForNullSubject(); // Special UI update for no subject
-        } else {
-            subject = subjectMap.getSubjects().get(trainID);
-            updateView(); // Regular UI update for an actual subject
-        }
-    }
-
-
-    private void updateViewForNullSubject() {
-        // Example UI adjustments for the null subject
-        actualPowerDisp.setValue(0);
-        actualVelocityDisp.setValue(0);
-        actualAccelerationDisp.setValue(0);
-        cmdSpeedDisp.setValue(0);
-        authorityDisp.setValue(0);
-        setTempDisp.setValue(0);
-        realTempDisp.setValue(0);
-        brakeFailureBtn.setSelected(false);
-        powerFailureBtn.setSelected(false);
-        signalFailureBtn.setSelected(false);
-    }
 
 
 
-    private void updateView() {
-        if(subject != null) {
-            unbindValues();
-            bindControls();
-            bindGauges();
-            bindIndicators();
-            bindLabels();
-        }
-    }
 
-    private void unbindValues() {
+    private void unbindAll() {
         listenerReferences.forEach(ListenerReference::detach);
         listenerReferences.clear();
 
@@ -230,76 +277,38 @@ public class TrainModelManager {
 
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
         ObservableHashMap.MapListener<Integer, TrainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
-            @Override
             public void onAdded(Integer key, TrainModelSubject value) {
-                Platform.runLater(() -> {
                     updateChoiceBoxItems();
-                    if(subjectMap.getSubjects().size() == 1) { // If it's the only train, select it
-                        trainDropDown.getSelectionModel().select(key);
-                    }
-                });
+                    trainDropDown.getSelectionModel().select(value.getModel().getTrainNumber());
             }
-
-            @Override
             public void onRemoved(Integer key, TrainModelSubject value) {
-                Platform.runLater(() -> {
                     updateChoiceBoxItems();
                     // Additional logic can be added here to select another item if the current selection was removed
-                });
             }
-
-            @Override
             public void onUpdated(Integer key, TrainModelSubject oldValue, TrainModelSubject newValue) {
-                Platform.runLater(() -> updateChoiceBoxItems());
+                 updateChoiceBoxItems();
+                trainDropDown.getSelectionModel().select(newValue.getModel().getTrainNumber());
             }
         };
-
         subjects.addChangeListener(genericListener);
-        updateChoiceBoxItems(); // Initial population
     }
 
     private void updateChoiceBoxItems() {
-        Integer currentSelection = trainDropDown.getSelectionModel().getSelectedItem();
-
         List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
-            trainIDs.add(0, -1); // Assuming -1 as the ID for the null train
-
             trainDropDown.setItems(FXCollections.observableArrayList(trainIDs));
 
-            if (!subjectMap.getSubjects().isEmpty()) {
-                if (subjectMap.getSubjects().containsKey(currentSelection)) {
-                    trainDropDown.getSelectionModel().select(currentSelection);
-                } else {
-                    // Select the first actual subject if the current selection is invalid
+            if (!trainIDs.isEmpty()) {
+                if(trainIDs.size() == 1){
                     trainDropDown.getSelectionModel().selectFirst();
                 }
+                Integer previousSelection = trainDropDown.getSelectionModel().getSelectedItem();
+                trainDropDown.getSelectionModel().select(previousSelection);
             } else {
-                // Select the "no selection" option when no subjects are available
-                trainDropDown.getSelectionModel().select(Integer.valueOf(-1));
+                logger.info("No trains available to select");
+                changeTrainView(-1);
             }
-
-        // Additional logic to handle no selection case can be added here
     }
 
-    private TrainModelTB launchTestBench() {
-       // logger.info(System.getProperty("Preparing to launch test bench"));
-        try {
-            String tbFile = "/Framework/GUI/FXML/trainModel_TB.fxml";
-            URL url = getClass().getResource(tbFile);
-            FXMLLoader loader = new FXMLLoader(url);
-            Node content = loader.load();
-            Stage newStage = new Stage();
-            Scene newScene = new Scene(new VBox(content));
-            newStage.setScene(newScene);
-            newStage.setTitle("Train Model Test Bench");
-            newStage.show();
-            return loader.getController();
-        } catch (Exception e) {
-            e.printStackTrace();
-       //     logger.info("Failed to launch test bench");
-            throw new RuntimeException(e);
-        }
-    }
     private void setUpCircleColors() {
         List<Circle> circleList =  Arrays.asList(extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn);
         for (Circle c : circleList){
