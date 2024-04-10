@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -63,7 +62,6 @@ public class TrainControllerManager {
 
     private final ReentrantLock propertyChangeLock = new ReentrantLock();
 
-    private final LinkedBlockingQueue<TextUpdateTask> textUpdateQueue = new LinkedBlockingQueue<>();
     private final ScheduledExecutorService textUpdateExecutor = Executors.newSingleThreadScheduledExecutor();
 
 
@@ -341,7 +339,7 @@ public class TrainControllerManager {
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) < 0.1) {return;}
             consumer.accept(newVal.doubleValue());
             textField.setText(String.format("%.1f", newVal.doubleValue()));
-            queueNotification(OVERRIDE_SPEED,String.format("%.1f",newVal.doubleValue()));
+            sendNotification(OVERRIDE_SPEED,String.format("%.1f",newVal.doubleValue()));
         });
         Runnable textFieldUpdate = () -> {
             try {
@@ -549,42 +547,66 @@ public class TrainControllerManager {
     //      - New Command Speed Updates
     //      - Passenger E-Brake
     // When a new action occurs, store inside queue thats in single-executed thread
+    //
+    private final Object lock = new Object();
+    private Future<?> scheduledFuture = null;
+    private Future<?> debounceFuture = null;
+    private final long debounceDelay = 100; // Debounce delay in milliseconds for sendNotification
+    private final LinkedBlockingDeque<TextUpdateTask> textUpdateQueue = new LinkedBlockingDeque<>();
 
-
-    private void runQueue(){
-        textUpdateExecutor.scheduleAtFixedRate(() -> {
-
-            if(!textUpdateQueue.isEmpty()) {
-                try {
-                    textUpdateQueue.take().run();
-                } catch (InterruptedException e) {
-                    logger.error("Interrupted while running text update task: {}", e.getMessage());
+    private void runQueue() {
+        synchronized (lock) {
+            if (scheduledFuture == null || scheduledFuture.isDone()) {
+                if (!textUpdateQueue.isEmpty()) {
+                    TextUpdateTask task = textUpdateQueue.poll();
+                    scheduledFuture = textUpdateExecutor.schedule(task::run, task.delay, TimeUnit.MILLISECONDS);
                 }
             }
-
-        }, 5, 2, TimeUnit.SECONDS);
+        }
     }
 
-    private void queueNotification(ControllerProperty propertyName, String value){
-        try {
-            textUpdateQueue.put(new TextUpdateTask(propertyName,value));
-        } catch (InterruptedException e) {
-            logger.error("Interrupted while adding text update task to queue: {}", e.getMessage());
+    private void sendNotification(ControllerProperty propertyName, String value) {
+        synchronized (lock) {
+            textUpdateQueue.clear();
+            TextUpdateTask task = new TextUpdateTask(propertyName, value, 0);
+
+            if (debounceFuture != null && !debounceFuture.isDone()) {
+                debounceFuture.cancel(false);
+            }
+
+            debounceFuture = textUpdateExecutor.schedule(() -> {
+                synchronized (lock) {
+                    textUpdateQueue.offer(task);
+                    runQueue();
+                }
+            }, debounceDelay, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private void queueNotification(ControllerProperty propertyName, String value) {
+        synchronized (lock) {
+            boolean wasEmpty = textUpdateQueue.isEmpty();
+            textUpdateQueue.offer(new TextUpdateTask(propertyName, value, wasEmpty ? 0 : 1000));
+            if (wasEmpty) {
+                runQueue();
+            }
         }
     }
 
     private class TextUpdateTask implements Runnable {
         private final ControllerProperty propertyName;
         private final String text;
+        private final long delay;
 
-        public TextUpdateTask(ControllerProperty propertyName, String value){
+        public TextUpdateTask(ControllerProperty propertyName, String value, long delay) {
             this.propertyName = propertyName;
             this.text = value;
+            this.delay = delay;
         }
 
         @Override
         public void run() {
-           setNotification(propertyName,text);
+            setNotification(propertyName, text);
         }
     }
 
