@@ -120,7 +120,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                     if(!change.changeType().equals(otherChange.changeType()) ||
                             change.changeValue() != otherChange.changeValue() ||
                             change.blockID() != otherChange.blockID()) {
-//                        throw new RuntimeException("PLC programs are not in sync");
+                      //  throw new RuntimeException("PLC programs are not in sync");
                     }
                 }
 

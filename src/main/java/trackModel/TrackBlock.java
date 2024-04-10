@@ -166,6 +166,20 @@ public class TrackBlock {
         this.commandSpeed = commandSpeed;
     }
 
+    void addOccupation(TrainModel train){
+        if(!occupied){
+            this.occupied = true;
+            occupiedBy = train;
+        }else{
+            logger.warn("Block: " + blockID + " is already occupied by Train: " + occupiedBy.getTrainNumber());
+        }
+    }
+
+    void removeOccupation(){
+        this.occupied = false;
+        this.occupiedBy = null;
+    }
+
     public void setUnderMaintenance (boolean state){
         maintenanceMode = state;
     }

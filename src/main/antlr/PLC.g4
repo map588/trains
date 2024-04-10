@@ -41,6 +41,8 @@ list_name : (OCCUPANCY | SWITCH | LIGHT | CROSSING | AUTHORITY | DIRECTION | DIR
 value_false : FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;
 value_true : TRUE | GREEN | ALT | OPEN | NORTHBOUND ;
 
+
+END : 'end' | 'END' ;
 AND : 'and' | 'AND' ;
 OR : 'or' | 'OR' ;
 NOT : 'not' | 'NOT' ;
@@ -52,7 +54,7 @@ ENDFOR : 'endfor' | 'ENDFOR' ;
 COMMENT : '//' ~( '\r' | '\n' )* NEWLINE -> skip ;
 TO : 'to' | 'TO' ;
 DO : 'do' | 'DO' ;
-END : 'end' | 'END' ;
+
 
 OCCUPANCY : 'occupied' ;
 SWITCH : 'switch' ;

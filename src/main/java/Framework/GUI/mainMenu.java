@@ -30,16 +30,16 @@ public class mainMenu extends Application {
             Button tabButton = new Button(tabNames[i]);
             final int moduleId = i;
 
-//            // Right-click menu for opening in a new window
-//          ContextMenu contextMenu = new ContextMenu();
-//          MenuItem openInTab = new MenuItem("Open in tab.");
-//          openInTab.setOnAction(e -> openModuleTab(tabPane, tabNames[moduleId]));
-//          contextMenu.getItems().add(openInTab);
+            // Right-click menu for opening in a new window
+          ContextMenu contextMenu = new ContextMenu();
+          MenuItem openInTab = new MenuItem("Open in a tab.");
+          openInTab.setOnAction(e -> openModuleTab(tabPane, tabNames[moduleId]));
+          contextMenu.getItems().add(openInTab);
 
             // Consolidate event handling for right and left clicks
             tabButton.setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.SECONDARY) {
-                    //contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
+                    contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
                     openModuleTab(tabPane, tabNames[moduleId]);
                 } else if (e.getButton() == MouseButton.PRIMARY) {
                     openInNewWindow(tabNames[moduleId]);
@@ -55,7 +55,7 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
 
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,1920,1080);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
@@ -85,6 +85,7 @@ public class mainMenu extends Application {
         newStage.setTitle(moduleName);
         newStage.show();
     }
+
 
     private Node createModuleContent(String moduleName) {
         try {

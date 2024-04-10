@@ -48,8 +48,8 @@ import static trainController.ControllerProperty.*;
  * Finally, the speed and power of the train are updated.
  */
 public class TrainControllerImpl implements TrainController{
-    private static final int TIME_STEP = TIME_STEP_MS/1000;
-    private static final double DEADBAND = 0.1;
+    private static final double TIME_STEP = TIME_STEP_S;
+    private static final double DEAD_BAND = 0.1;
 
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;
@@ -61,8 +61,8 @@ public class TrainControllerImpl implements TrainController{
     private double currentSpeed = 0.0;
     private double overrideSpeed = 0.0;
     private double speedLimit = 0.0;
-    private double Ki = 1;
-    private double Kp = 1.5;
+    private double Ki = 4;
+    private double Kp = 12;
     private double power = 0.0;
     private double grade = 0.0;
     private double setTemperature = 0.0;
@@ -176,16 +176,11 @@ public class TrainControllerImpl implements TrainController{
         double controlOutput = proportionalTerm + integralTerm;
 
         // Limit the control output to a reasonable range
-        controlOutput = Math.max(0, Math.min(MAX_POWER_W, controlOutput));
+        controlOutput = Math.max(-1, Math.min(MAX_POWER_W, controlOutput));
 
         // Apply a deadband to avoid oscillations around the setpoint
-        if (Math.abs(error) < DEADBAND) {
+        if (Math.abs(error) < DEAD_BAND) {
             controlOutput = 0.0;
-        }
-
-        // Anti-windup mechanism to prevent integral windup
-        if (controlOutput >= MAX_POWER_W || controlOutput <= -MAX_POWER_W) {
-            rollingError -= error * TIME_STEP;
         }
 
         // Adjust the power based on the control output
@@ -474,7 +469,9 @@ public class TrainControllerImpl implements TrainController{
     public double  getAcceleration() {
         return this.train.getAcceleration();
     }
-    public int getTimeInterval(){return this.TIME_STEP;}
+    public double getTimeInterval(){
+        return TIME_STEP;
+    }
     public double  getPower() {
         return this.power;
     }
@@ -547,16 +544,24 @@ public class TrainControllerImpl implements TrainController{
     public String getNextStationName(){
         return this.nextStationName;
     }
-    public boolean getLeftPlatform(){return this.leftPlatform;}
-    public boolean getRightPlatform(){return this.rightPlatform;}
-    public boolean getInTunnel(){return this.inTunnel;}
+    public boolean getLeftPlatform(){
+        return this.leftPlatform;
+    }
+    public boolean getRightPlatform(){
+        return this.rightPlatform;
+    }
+    public boolean getInTunnel(){
+        return this.inTunnel;
+    }
 
     @Override
     public Beacon getBeacon() {
         return this.currentBeacon;
     }
 
-    public double  getGrade(){return this.grade;}
+    public double getGrade(){
+        return this.grade;
+    }
 
     @Override
     public void updateBeacon(Beacon beacon) {

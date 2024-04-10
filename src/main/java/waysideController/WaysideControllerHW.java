@@ -1,8 +1,8 @@
 package waysideController;
 
+import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
-import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.*;
@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class WaysideControllerHW implements PLCRunner {
 
@@ -249,14 +251,20 @@ public class WaysideControllerHW implements PLCRunner {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
+        Executor executor = Executors.newSingleThreadExecutor();
         System.out.println("Starting Wayside Controller");
         WaysideControllerHW controller = new WaysideControllerHW("/dev/ttyS0");
 
-        while (true) {
-            if (controller.bufferedReader.ready()) {
-                controller.parseCOMMessage(controller.bufferedReader.readLine());
+        executor.execute(() ->{
+            while (true) {
+                try {
+                    if (controller.bufferedReader.ready()) {
+                        controller.parseCOMMessage(controller.bufferedReader.readLine());
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        }
+        });
     }
 }

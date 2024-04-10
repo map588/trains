@@ -19,7 +19,6 @@ import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 import static Utilities.Constants.MAX_PASSENGERS;
-import static Utilities.Constants.TIME_STEP_MS;
 
 public class TrackLine implements TrackModel {
 
@@ -31,22 +30,23 @@ public class TrackLine implements TrackModel {
 
     //map of dynamic Track Blocks
     private final TrackBlockLine mainTrackLine = new TrackBlockLine();
-    //maps beacons to block numbers
+
+    //Object Lookups
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
-    //maps trains to block numbers
+
+    //Occupancy Map
     private final ObservableHashMap<TrainModel, Integer> trackOccupancyMap;
 
-    //queue of track update tasks
+    //Task Queue
     private final ConcurrentLinkedQueue<Callable<Object>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
     private long time = 0;
 
 
+    private final TrackLineSubject subject;
+
     private int ticketSales = 0;
-    private TrackLineSubject subject;
-    private BeaconParser beaconParser;
-    public int outsideTemperature = 40;
-    private WaysideSystem waysideSystem;
+    public  int outsideTemperature = 40;
 
     public TrackLine(Lines line) {
 
@@ -59,7 +59,6 @@ public class TrackLine implements TrackModel {
 
         //keeps track of which blocks are occupied
         trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
-
         ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
         for (Integer blockIndex : blockIndices) {
@@ -75,46 +74,27 @@ public class TrackLine implements TrackModel {
     }
 
     public void update() {
-        time += TIME_STEP_MS;
         // Execute all pending track update tasks
-            try {
-                trackUpdateExecutor.invokeAll(trackUpdateQueue);
-            } catch (RejectedExecutionException e) {
-                logger.error("Track update task rejected", e);
-            } catch (InterruptedException e) {
-                logger.error( "Track update task failed", e);
-                throw new RuntimeException(e);
-            }
-            trackUpdateQueue.clear();
+        try {
+            trackUpdateExecutor.invokeAll(trackUpdateQueue);
+        } catch (RejectedExecutionException e) {
+            logger.error("Track update task rejected", e);
+        } catch (InterruptedException e) {
+            logger.error( "Track update task failed", e);
+            throw new RuntimeException(e);
+        }
+        trackUpdateQueue.clear();
     }
 
     public TrackLine() {
         this(Lines.NULL);
     }
 
-    private void setupListeners() {
-        ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
-            public void onAdded(TrainModel train, Integer blockID) {
-                // A train enters a new block
-                handleTrainEntry(train, blockID);
-            }
-            public void onRemoved(TrainModel train, Integer blockID) {
-                // A train leaves a block
-                handleTrainExit(train, blockID);
-            }
-            public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
-                // A train moves from one block to another
-                handleYardEntry(train, newBlockID, oldBlockID);
-            }
-        };
-        trackOccupancyMap.addChangeListener(trackListener);
-    }
-
     public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(this, trainID);
+        trackOccupancyMap.put(train,0);
         asyncTrackUpdate(() -> {
-            trackOccupancyMap.put(train, 0);
-            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
+            setOccuppied(train, 0);
             return null;
         });
         return train;
@@ -122,9 +102,9 @@ public class TrackLine implements TrackModel {
 
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
+        trackOccupancyMap.put(train,0);
         asyncTrackUpdate(() -> {
-            trackOccupancyMap.put(train, 0);
-            WaysideSystem.getController(this.line, 0).trackModelSetOccupancy(0, true);
+            setOccuppied(train, 0);
             return null;
         });
     }
@@ -148,7 +128,7 @@ public class TrackLine implements TrackModel {
         System.out.println("Train: " + train.getTrainNumber() + " " + currentBlockID + " ->  " + nextBlockID);
 
         queueTrackUpdate(() -> {
-            trackOccupancyMap.remove(train, currentBlockID);
+            trackOccupancyMap.remove(train);
             trackOccupancyMap.put(train, nextBlockID);
         });
 
@@ -159,10 +139,9 @@ public class TrackLine implements TrackModel {
     private void handleTrainEntry(TrainModel train, Integer blockID) {
         logger.info("Train {} entered block {}", train.getTrainNumber(), blockID);
          if (mainTrackLine.get(blockID).isOccupied()) {
-                logger.warn("Block {} is already occupied", blockID);
-            }
+             logger.warn("Block {} is already occupied by train {} ", blockID, mainTrackLine.get(blockID).getOccupiedBy().getTrainNumber());
+         }
             setOccuppied(train, blockID);
-            WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, true);
 
             if(beaconBlocks.containsKey(blockID)) {
                 train.passBeacon(beaconBlocks.get(blockID));
@@ -177,30 +156,25 @@ public class TrackLine implements TrackModel {
         }
 
         setUnoccupied(blockID);
-        WaysideSystem.getController(this.line, blockID).trackModelSetOccupancy(blockID, false);
     }
 
     private void handleYardEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
         if(newBlockID == 0) {
             train.delete();
-        }else if(newBlockID == oldBlockID) {
+        }else if(newBlockID.equals(oldBlockID)) {
             logger.warn("Error: False Occupancy Update from {} to {} ", oldBlockID , newBlockID);
         }
     }
 
-
     private void setOccuppied(TrainModel train, int blockID){
-        TrackBlock block = mainTrackLine.get(blockID);
-        block.setOccupied(true);
-        block.occupiedBy = train;
+        mainTrackLine.get(blockID).addOccupation(train);
+        WaysideSystem.getController(this.line,blockID).trackModelSetOccupancy(blockID, true);
     }
 
     private void setUnoccupied(int blockID){
-        TrackBlock block = mainTrackLine.get(blockID);
-        block.setOccupied(false);
-        block.occupiedBy = null;
+        mainTrackLine.get(blockID).removeOccupation();
+        WaysideSystem.getController(this.line,blockID).trackModelSetOccupancy(blockID, false);
     }
-
 
     private <T> CompletableFuture<T> asyncTrackUpdate(Supplier<T> task) {
         return CompletableFuture.supplyAsync(task, trackUpdateExecutor);
@@ -210,7 +184,6 @@ public class TrackLine implements TrackModel {
         Callable<Object> callableTask = Executors.callable(task);
         trackUpdateQueue.add(callableTask);
     }
-
 
 //--------------------------Getters and Setters--------------------------
 
@@ -385,6 +358,7 @@ public class TrackLine implements TrackModel {
         this.ticketSales = 0;
     }
 
+
     public void newTemperature(){
         queueTrackUpdate(() -> {
             int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
@@ -392,5 +366,23 @@ public class TrackLine implements TrackModel {
         });
     }
 
+
+    private void setupListeners() {
+        ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
+            public void onAdded(TrainModel train, Integer blockID) {
+                // A train enters a new block
+                handleTrainEntry(train, blockID);
+            }
+            public void onRemoved(TrainModel train, Integer blockID) {
+                // A train leaves a block
+                handleTrainExit(train, blockID);
+            }
+            public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
+                // A train moves from one block to another
+                handleYardEntry(train, newBlockID, oldBlockID);
+            }
+        };
+        trackOccupancyMap.addChangeListener(trackListener);
+    }
 
 }

@@ -47,18 +47,10 @@ public class CTCBlockSubject implements AbstractSubject {
     }
 
     public BooleanProperty getBooleanProperty(String propertyName) {
-        if(block == null) {
-            System.err.println("Null value for property " + propertyName);
-            return null;
-        }
         return (BooleanProperty) getProperty(propertyName);
     }
 
     public void updateStringProperty(String propertyName) {
-        if(propertyName == null) {
-            System.err.println("Null value for property " + propertyName);
-            return;
-        }
         switch (propertyName) {
             case SWITCH_STATE_STRING_PROPERTY -> updateProperty(getProperty(SWITCH_STATE_STRING_PROPERTY), block.getSwitchStateString());
             case LINE_PROPERTY -> updateProperty(getProperty(LINE_PROPERTY), block.getLine());

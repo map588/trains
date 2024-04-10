@@ -36,7 +36,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //TODO: John, please separate your methods into what is done to the train, within the train, and what the train does to other modules
 
-
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
     private final int trainID;
@@ -90,8 +89,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private double  length = Constants.TRAIN_LENGTH * numCars;
     private double  brakeForce = 0;
 
-    //Trasition Variables
-    private double newSpeed = 0;
+    //Transition Variables
 
 
 
@@ -158,7 +156,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setPower(0);
         }
         else {
-            this.setPower(controllerValues.power());
+            this.setPower(controllerValues.power() * numCars);
         }
 
         this.setExtLights(controllerValues.exteriorLights());
@@ -168,7 +166,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setSetTemperature(controllerValues.setTemperature());
 
         this.setAcceleration(acceleration);
-        this.setActualSpeed(newSpeed);
+        this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);
     }
 
@@ -177,7 +175,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         physicsUpdate();
 
         this.setAcceleration(acceleration);
-        this.setActualSpeed(newSpeed);
+        this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);
     }
 
@@ -196,9 +194,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
 
         //NEXT BLOCK NOTICE
-//        if(currentBlockLength - relativeDistance <= 0) {
-//            enteredNextBlock();
-//        }
+        if(currentBlockLength - relativeDistance <= 0) {
+            enteredNextBlock();
+        }
 
         //TRANSITION STEP
         double previousAcceleration = this.acceleration;
@@ -218,15 +216,15 @@ public class TrainModelImpl implements TrainModel, Notifier {
         //ENGINE FORCE
         double engineForce;
         if (this.power > 0.0001 && this.speed < 0.0001) {
-            this.newSpeed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
+            this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             engineForce = this.power / 0.1;
         }
         else {
-            engineForce = this.power / this.newSpeed;
+            engineForce = this.power / this.speed;
         }
 
-        if(engineForce > MAX_ENGINE_FORCE) {
-            engineForce = MAX_ENGINE_FORCE;
+        if(engineForce > MAX_ENGINE_FORCE * numCars) {
+            engineForce = MAX_ENGINE_FORCE * numCars;
         }else if(Double.isNaN(engineForce)){
             engineForce = 0;
         }
@@ -239,8 +237,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //NET FORCE
         double netForce = engineForce - gravityForce - this.brakeForce;
-        if (netForce > MAX_ENGINE_FORCE){
-            netForce = MAX_ENGINE_FORCE;
+        if (netForce > MAX_ENGINE_FORCE * numCars){
+            netForce = MAX_ENGINE_FORCE * numCars;
         }
 
 
@@ -248,15 +246,15 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.acceleration = (netForce / this.mass);
 
         //SPEED CALCULATION
-        if (this.power <= MAX_POWER_W) {
-            this.newSpeed = (this.speed + (this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
+        if (this.power <= MAX_POWER_W * numCars) {
+            this.speed = (this.speed + (this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
         }
 
-        if (this.newSpeed < 0) { this.newSpeed = 0; }
-        if (this.newSpeed > Constants.MAX_SPEED) { this.newSpeed = Constants.MAX_SPEED; }
+        if (this.speed < 0) { this.speed = 0; }
+        if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
 
         //DISTANCE CALCULATION
-        this.relativeDistance += this.newSpeed * this.TIME_DELTA;
+        this.relativeDistance += this.speed * this.TIME_DELTA;
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -268,8 +266,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.newRealTemperature = this.realTemperature - 1;
             this.elapsedTime = 0;
         }
-
-        this.speed = this.newSpeed;
 
     }
 
@@ -308,8 +304,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if(power < 0) power = 0;
         //if(power > Constants.MAX_POWER_W) power = Constants.MAX_POWER_W;
         this.power = power;
-        notifyChange(POWER_PROPERTY,
-        Conversion.convertPower(this.power, WATTS, HORSEPOWER));
+        notifyChange(POWER_PROPERTY, Conversion.convertPower(this.power, WATTS, HORSEPOWER));
     }
 
     public void setActualSpeed(double speed) {

@@ -3,7 +3,7 @@ package trainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public static final class NullController extends TrainControllerImpl {
+public final class NullController extends TrainControllerImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(NullController.class);
 
@@ -42,7 +42,8 @@ public static final class NullController extends TrainControllerImpl {
 
     @Override
     public double calculatePower(double speed) {
-
+        logger.warn("NullController calculatePower called with {}", speed);
+        return 0;
     }
 
 }

@@ -17,10 +17,7 @@ import waysideController.WaysideControllerImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 public class WaysideSystem {
 
@@ -30,12 +27,19 @@ public class WaysideSystem {
     private static final Map<Integer, WaysideController> controllerMapGreen = new HashMap<>();
     private static final Map<Integer, WaysideController> controllerMapRed = new HashMap<>();
 
+    private static final LinkedBlockingQueue<Callable<Void>> waysideQueue = new LinkedBlockingQueue<>();
+
+
     public static ObjectProperty<ObservableList<WaysideController>> getControllerList() {
         return controllerList;
     }
 
-    private static final LinkedBlockingQueue<Callable<Void>> waysideQueue = new LinkedBlockingQueue<>();
-
+    public static Map<Integer, WaysideController> getControllerMap(Lines line) {
+        if(line == Lines.GREEN)
+            return controllerMapGreen;
+        else
+            return controllerMapRed;
+    }
     
     public static WaysideController getController(Lines line, int blockID) {
         if(line == Lines.GREEN)

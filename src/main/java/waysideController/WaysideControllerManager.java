@@ -4,7 +4,6 @@ import Common.WaysideController;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.ListenerReference;
 import Utilities.Enums.Lines;
-import Utilities.BooleanIconTableCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +20,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.File;
 import java.net.URL;
@@ -163,12 +161,12 @@ public class WaysideControllerManager {
      * Sets up the cell factories for the table views
      */
     private void setupTableCellFactories() {
-        blockTableCircuitColumn.setCellFactory(new Callback<TableColumn<WaysideBlockSubject, Boolean>, TableCell<WaysideBlockSubject, Boolean>>() {
-            @Override
-            public TableCell<WaysideBlockSubject, Boolean> call(TableColumn<WaysideBlockSubject, Boolean> waysideBlockSubjectBooleanTableColumn) {
-                return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24);
-            }
-        });
+//        blockTableCircuitColumn.setCellFactory(new Callback<TableColumn<WaysideBlockSubject, Boolean>, TableCell<WaysideBlockSubject, Boolean>>() {
+//            @Override
+//            public TableCell<WaysideBlockSubject, Boolean> call(TableColumn<WaysideBlockSubject, Boolean> waysideBlockSubjectBooleanTableColumn) {
+//                return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/tunnel.png", 24, 24);
+//            }
+//        });
         blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Paint>() {
             private final BorderPane graphic;
             private final Circle circle;
