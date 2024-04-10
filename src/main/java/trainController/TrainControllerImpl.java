@@ -124,7 +124,6 @@ public class TrainControllerImpl implements TrainController{
         this.setPowerFailure(train.getPowerFailure());
         this.setCurrentTemperature((train.getRealTemperature()));
     }
-
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
@@ -177,7 +176,7 @@ public class TrainControllerImpl implements TrainController{
         double controlOutput = proportionalTerm + integralTerm;
 
         // Limit the control output to a reasonable range
-        controlOutput = Math.max(-MAX_POWER_W, Math.min(MAX_POWER_W, controlOutput));
+        controlOutput = Math.max(0, Math.min(MAX_POWER_W, controlOutput));
 
         // Apply a deadband to avoid oscillations around the setpoint
         if (Math.abs(error) < DEADBAND) {
