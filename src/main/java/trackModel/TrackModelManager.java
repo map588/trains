@@ -1,10 +1,13 @@
 package trackModel;
 
+import Utilities.BooleanIconTableCell;
 import Utilities.Enums.Lines;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.DirectoryChooser;
+import javafx.util.Callback;
+import waysideController.WaysideBlockSubject;
 
 import java.io.File;
 
@@ -34,22 +37,15 @@ public class TrackModelManager {
 
     //murphy
     @FXML
-    private ComboBox<String> murphyLine;
-    @FXML
-    private TextField murphyBlockInput;
-    @FXML
     private ComboBox<String> chooseFailureMode;
     @FXML
     private Button murphyEnter;
 
-    //TODO: track heater
-
+    //track heater and environmental temperature
     @FXML
-    private TextField tempDisplay;
+    private Label trackHeaterStatus;
     @FXML
-    private Label tempValueLabel;
-    @FXML
-    private Label statusLabel;
+    private Label outsideTemp;
 
     //station signal switch
     @FXML
@@ -90,9 +86,10 @@ public class TrackModelManager {
         trackUpload.setOnAction(event -> uploadTrack());
         murphyEnter.setOnAction(event -> murphyEnter());
         pickLine.setOnAction(event -> updateTable());
+        simSpeedInput.setOnAction(event -> setSimSpeed(simSpeedInput.getValue()));
+        lineNameInput.setOnAction(event -> addLineName(lineNameInput.getText()));
 
         simSpeedInput.getItems().addAll("1x","2x","3x","4x","5x","6x","7x","8x","9x","10x");
-        lineNameInput.setOnAction(event -> addLineName(lineNameInput.getText()));
         chooseFailureMode.getItems().addAll(
                 "Broken Rail",
                 "Track Circuit Failure",
@@ -100,31 +97,35 @@ public class TrackModelManager {
                 "Fix Track Failure"
         );
 
-        //set up cell factories for table
+        //set up cell value factories for table
         blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
         lengthColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
         gradeColumn.setCellValueFactory(block -> block.getValue().blockGradeProperty().asObject());
         elevationColumn.setCellValueFactory(block -> block.getValue().blockElevationProperty().asObject());
         speedLimitColumn.setCellValueFactory(block -> block.getValue().speedLimitProperty().asObject());
         failureColumn.setCellValueFactory(block -> block.getValue().failureProperty());
-
-        //set up occupied column and direction column
-        occupiedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupiedColumn));
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
         directionColumn.setCellValueFactory(block -> block.getValue().directionProperty());
 
+        //set up factories for occupied column and direction column
+        occupiedColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
+            @Override
+            public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
+                return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24);
+            }
+        });
+
         //set temperature and track heater
-        statusLabel.textProperty().bindBidirectional(subject.trackHeaterProperty());
-        tempValueLabel.textProperty().bindBidirectional(subject.outsideTempProperty());
+        trackHeaterStatus.textProperty().bindBidirectional(subject.trackHeaterProperty());
+        outsideTemp.textProperty().bindBidirectional(subject.outsideTempProperty());
 
         //table
         lineTable.getSelectionModel().selectedItemProperty().addListener(event -> {
             selectBlock(lineTable.getSelectionModel().getSelectedItem());
         });
-
-
     }
 
+    //change values based on selection in table
     public void selectBlock(TrackLineSubject newProperties){
         System.out.println("Selected block");
         if(subject != null) {
@@ -231,8 +232,6 @@ public class TrackModelManager {
         subject.setTrackCircuitFailure(false);
         subject.setPowerFailure(false);
 
-        String lineSelect = murphyLine.getValue();
-        String blockSelect = murphyBlockInput.getText();
         String failure = chooseFailureMode.getValue();
 
         //send the failure to the track model
@@ -249,6 +248,10 @@ public class TrackModelManager {
             case "Power Failure" :
                 subject.setPowerFailure(true);
                 break;
+            case "Fix Track Failure" :
+                subject.setBrokenRail(false);
+                subject.setTrackCircuitFailure(false);
+                subject.setPowerFailure(false);
             default:
                 break;
         }
@@ -257,14 +260,43 @@ public class TrackModelManager {
 
     private void addLineName(String text) {
         pickLine.getItems().add(text);
-        murphyLine.getItems().add(text);
     }
 
     private void uploadTrack() {
         //parse the csv file
         File file = new File(trackFilePath.getText());
+        //TODO: uploading csv from track model
         //send file to parser
         this.addLineName(lineNameInput.getText());
+    }
+
+    private void setSimSpeed(String value) {
+        //set the simulation speed
+        //TODO: figure out changing sim speed
+        switch(value){
+            case "1x":
+                break;
+            case "2x":
+                break;
+            case "3x":
+                break;
+            case "4x":
+                break;
+            case "5x":
+                break;
+            case "6x":
+                break;
+            case "7x":
+                break;
+            case "8x":
+                break;
+            case "9x":
+                break;
+            case "10x":
+                break;
+            default:
+                break;
+        }
     }
 
     //user input for track layout

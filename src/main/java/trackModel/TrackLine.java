@@ -213,7 +213,6 @@ public class TrackLine implements TrackModel {
 
     //------------------From interface------------------
 
-    //TODO: We don't have light states figured out yet
     //light blocks will be wherever there is a beacon
     //false red, true is green
     @Override
@@ -228,8 +227,6 @@ public class TrackLine implements TrackModel {
             return null;
         });
     }
-
-//TODO: Maybe refactor set to pass for clearer communication.
 
     @Override
     public void setSwitchState(int block, boolean state) {

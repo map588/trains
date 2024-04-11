@@ -118,10 +118,13 @@
                                             <content>
                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="102.0" prefWidth="354.75">
                                                     <children>
-                                                        <Button fx:id="murphyEnter" layoutX="268.0" layoutY="51.0" mnemonicParsing="false" text="ENTER" />
-                                                        <ComboBox fx:id="murphyLine" layoutX="18.0" layoutY="10.0" prefHeight="18.0" prefWidth="94.0" promptText="Line" />
-                                                        <TextField fx:id="murphyBlockInput" layoutX="143.0" layoutY="10.0" prefHeight="24.75" prefWidth="95.25" promptText="Block #" />
-                                                        <ComboBox fx:id="chooseFailureMode" layoutX="18.0" layoutY="51.0" prefHeight="24.75" prefWidth="220.5" promptText="Choose Failure Mode" />
+                                                        <Button fx:id="murphyEnter" layoutX="268.0" layoutY="54.0" mnemonicParsing="false" text="ENTER" />
+                                                        <ComboBox fx:id="chooseFailureMode" layoutX="18.0" layoutY="54.0" prefHeight="24.75" prefWidth="220.5" promptText="Choose Failure Mode" />
+                                          <Label fx:id="nameOfStationLabel1" layoutX="20.0" layoutY="19.0" text="SET FAILURE ON SELECTED BLOCK">
+                                             <font>
+                                                <Font size="13.5" />
+                                             </font>
+                                          </Label>
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -143,12 +146,12 @@
                                                                 <Font size="13.5" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="tempValueLabel" layoutX="285.0" layoutY="12.75" text="0">
+                                                        <Label fx:id="outsideTemp" layoutX="285.0" layoutY="12.75" text="0">
                                                             <font>
                                                                 <Font size="13.5" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="statusLabel" layoutX="10.5" layoutY="12.75" text="Status - ON">
+                                                        <Label fx:id="trackHeaterStatus" layoutX="10.5" layoutY="12.75" text="Status - ON">
                                                             <font>
                                                                 <Font size="13.5" />
                                                             </font>
