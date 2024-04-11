@@ -586,7 +586,7 @@ public class TrainControllerManager {
     private void queueNotification(ControllerProperty propertyName, String value) {
         synchronized (lock) {
             boolean wasEmpty = textUpdateQueue.isEmpty();
-            textUpdateQueue.offer(new TextUpdateTask(propertyName, value, wasEmpty ? 0 : 1000));
+            textUpdateQueue.offer(new TextUpdateTask(propertyName, value, wasEmpty ? 50 : 1000));
             if (wasEmpty) {
                 runQueue();
             }

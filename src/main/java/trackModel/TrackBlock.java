@@ -18,6 +18,7 @@ public class TrackBlock {
      final int blockID;
      final boolean isUnderground;
      final boolean isSwitch;
+     final boolean isLight;
      final BlockType blockType;
      final Lines line;
 
@@ -54,6 +55,7 @@ public class TrackBlock {
         this.blockID = 0;
         this.isUnderground = false;
         this.isSwitch = false;
+        this.isLight = false;
         this.blockType = BlockType.REGULAR;
         this.grade = 0;
         this.elevation = 0;
@@ -82,13 +84,14 @@ public class TrackBlock {
         this.blockID = blockInfo.blockNumber();
         this.isUnderground = blockInfo.isUnderground();
         this.isSwitch = blockInfo.isSwitch();
+        this.isLight = blockInfo.isLight();
         this.blockType = blockInfo.blockType();
         this.grade = blockInfo.blockGrade();
         this.elevation = blockInfo.elevation();
         this.cumulativeElevation = blockInfo.cumulativeElevation();
         this.speedLimit = blockInfo.speedLimit();
         this.length = blockInfo.blockLength();
-        this.line =blockInfo.trackLine();
+        this.line = blockInfo.trackLine();
 
 
         if (isSwitch && blockType == BlockType.STATION) {
@@ -187,6 +190,8 @@ public class TrackBlock {
     public boolean isSwitch() {
         return isSwitch;
     }
+
+    public boolean isLight() {return isLight;}
 
     public boolean isStation() {
         return blockType == BlockType.STATION;

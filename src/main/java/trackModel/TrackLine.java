@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import trainModel.TrainModelImpl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
@@ -33,6 +34,7 @@ public class TrackLine implements TrackModel {
 
     //Object Lookups
     private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
+    private final LinkedHashSet<Integer> lightBlocks = new LinkedHashSet<>();
 
     //Occupancy Map
     private final ObservableHashMap<TrainModel, Integer> trackOccupancyMap;
@@ -64,6 +66,9 @@ public class TrackLine implements TrackModel {
         for (Integer blockIndex : blockIndices) {
             TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
             mainTrackLine.put(block.blockID, block);
+            if(block.isLight) {
+                lightBlocks.add(block.blockID);
+            }
         }
 
         //Needs more testing, but the beacon parser seems to work.
@@ -93,20 +98,12 @@ public class TrackLine implements TrackModel {
     public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(this, trainID);
         trackOccupancyMap.put(train,0);
-        asyncTrackUpdate(() -> {
-            setOccuppied(train, 0);
-            return null;
-        });
         return train;
     }
 
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
         trackOccupancyMap.put(train,0);
-        asyncTrackUpdate(() -> {
-            setOccuppied(train, 0);
-            return null;
-        });
     }
 
     /**
@@ -125,7 +122,7 @@ public class TrackLine implements TrackModel {
         }
         Integer nextBlockID = next.blockNumber();
 
-        System.out.println("Train: " + train.getTrainNumber() + " " + currentBlockID + " ->  " + nextBlockID);
+        System.out.println("T" + train.getTrainNumber() + " " + currentBlockID + " ->  " + nextBlockID);
 
         queueTrackUpdate(() -> {
             trackOccupancyMap.remove(train);
@@ -152,7 +149,7 @@ public class TrackLine implements TrackModel {
     private void handleTrainExit(TrainModel train, Integer blockID) {
         logger.info("Train {} exited block {}", train.getTrainNumber(), blockID);
         if (!mainTrackLine.get(blockID).isOccupied()) {
-            logger.warn("Block {} is not occupied", blockID);
+            logger.warn("Block {} was exited but not occupied", blockID);
         }
 
         setUnoccupied(blockID);
@@ -201,8 +198,9 @@ public class TrackLine implements TrackModel {
     @Override
     public void setLightState(int block, boolean state) {
         asyncTrackUpdate( () -> {
-            if(beaconBlocks.keySet().contains(block)) {
-                mainTrackLine.get(block).lightState = state;
+            if(lightBlocks.contains(block)) {
+                mainTrackLine.get(block).setLightState(state);
+                logger.info("Light set to: {} at block: {}", state, block);
             } else {
                 logger.error("Block {} does not have a light", block);
             }
@@ -217,6 +215,7 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate( () -> {
             if (mainTrackLine.get(block).feature.isSwitch()) {
                 mainTrackLine.get(block).setSwitchState(state);
+                logger.info("Switch set to: {} at block: {}", state, block);
             } else {
                 logger.warn("Block {} is not a switch", block);
             }
@@ -228,6 +227,7 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate(() -> {
             if (mainTrackLine.get(block).feature.isCrossing()) {
                 mainTrackLine.get(block).setCrossingState(state);
+                logger.info("Crossing set to: {} at block: {}", state, block);
             } else {
                 logger.warn("Block {} is not a crossing", block);
             }
@@ -238,7 +238,7 @@ public class TrackLine implements TrackModel {
     public void setTrainAuthority(Integer blockID, int authority){
         queueTrackUpdate( () -> {
             mainTrackLine.get(blockID).setAuthority(authority);
-            logger.info("Track set authority to: {} at block: {}", authority, blockID);
+            logger.info("Authority set to: {} at block: {}", authority, blockID);
         });
     }
 
@@ -246,7 +246,7 @@ public class TrackLine implements TrackModel {
     public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
         queueTrackUpdate( () -> {
             mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
-            logger.info("Track set commanded speed to: {} at block: {}", commandedSpeed, blockID);
+            logger.info("Command speed set to: {} at block: {}", commandedSpeed, blockID);
         });
     }
 
