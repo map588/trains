@@ -147,7 +147,7 @@ public class TrackLine implements TrackModel {
     }
 
 
-    private void handleTrainEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
+    synchronized private void handleTrainEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
 
          if (newBlockID == 0 && oldBlockID != 0) {
             logger.info("Train {} exited the track", train.getTrainNumber());
@@ -171,7 +171,7 @@ public class TrackLine implements TrackModel {
         }
     }
 
-    private void handleTrainExit(TrainModel train, Integer blockID) {
+    synchronized private void handleTrainExit(TrainModel train, Integer blockID) {
         if(blockID == 0) {
             logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
             return;
@@ -257,32 +257,40 @@ public class TrackLine implements TrackModel {
     }
 
     @Override
-    public void setTrainAuthority(Integer blockID, int authority){
-        asyncTrackUpdate( () -> {
-            mainTrackLine.get(blockID).setAuthority(authority);
-            logger.info("Authority => {} at block: {}", authority, blockID);
-            return null;
-        });
+    synchronized public void setTrainAuthority(Integer blockID, int authority){
+        try {
+            asyncTrackUpdate( () -> {
+                mainTrackLine.get(blockID).setAuthority(authority);
+                logger.info("Authority => {} at block: {}", authority, blockID);
+                return null;
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
-        asyncTrackUpdate( () -> {
-            mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
-            logger.info("Command speed => {} MPH at block: {}", commandedSpeed, blockID);
-            return null;
-        });
+    synchronized public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
+        try {
+            asyncTrackUpdate(() -> {
+                mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
+                logger.info("Command speed => {} MPH at block: {}", commandedSpeed, blockID);
+                return null;
+            }).get();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void setBrokenRail(Integer blockID, boolean state) {
        queueTrackUpdate( () -> {
-            TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
-            if (brokenBlock != null) {
-                brokenBlock.setFailure(true,false,false);
-            } else {
-                logger.error("Broken Rail called on Block: {} does not exist", blockID);
-            }
+           TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
+           if (brokenBlock != null) {
+               brokenBlock.setFailure(true, false, false);
+           } else {
+               logger.error("Broken Rail called on Block: {} does not exist", blockID);
+           }
        });
     }
 

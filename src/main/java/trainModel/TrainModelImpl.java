@@ -95,7 +95,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Transition Variables
 
-    ExecutorService GUIExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
 
     private void initializeValues() {
         this.direction = YARD_OUT_DIRECTION;
@@ -142,12 +142,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void trainModelTimeStep(Future<UpdatedTrainValues> updatedTrainValuesFuture) throws ExecutionException, InterruptedException {
         // Data Locked
         physicsUpdate();
-
         reconcileControllerValues(updatedTrainValuesFuture.get()); //Data unlocked
     }
 
-    public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
-       GUIExecutor.execute(() -> {
+    synchronized public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
            if (this.brakeFailure) {
                this.setServiceBrake(false);
            } else {
@@ -170,7 +168,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
            this.setAcceleration(acceleration);
            this.setActualSpeed(speed);
            this.setRealTemperature(newRealTemperature);
-       });
     }
 
     //Called when not running System.
@@ -285,35 +282,47 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void setCommandSpeed(double speed) {
-        this.commandSpeed = (signalFailure) ? -1 : convertVelocity(speed, MPH, MPS);
+        listeningExecutor.execute(() -> {
+            this.commandSpeed = (signalFailure) ? -1 : convertVelocity(speed, MPH, MPS);
+            logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
+        });
         notifyChange(COMMANDSPEED_PROPERTY, speed);
         controller.setCommandSpeed(speed);
     }
     public void setAuthority(int authority) {
-        this.authority = (signalFailure) ? -1 : authority;
-        controller.setAuthority(this.authority);
-        logger.info("Train {} received Authority: {}",this.trainID, this.authority);
-        notifyChange(AUTHORITY_PROPERTY, this.authority);
+        listeningExecutor.execute(() -> {
+            this.authority = (signalFailure) ? -1 : authority;
+            logger.info("Train {} <=     Authority: {}",this.trainID, authority);
+
+        });
+        controller.setAuthority(authority);
+        notifyChange(AUTHORITY_PROPERTY, authority);
     }
 
     public void setEmergencyBrake(boolean brake) {
+        listeningExecutor.execute(() -> {
             this.emergencyBrake = brake;
-            notifyChange(EMERGENCYBRAKE_PROPERTY, this.emergencyBrake);
+        });
+            notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
     }
     public void setServiceBrake(boolean brake) {
+        listeningExecutor.execute(() -> {
         this.serviceBrake = (!brakeFailure && brake);
-        notifyChange(SERVICEBRAKE_PROPERTY, this.serviceBrake);
+        });
+        notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
     }
 
     public void setPower(double power) {
-        if(power < 0) power = 0;
-        //if(power > Constants.MAX_POWER_W) power = Constants.MAX_POWER_W;
-        this.power = power;
-        notifyChange(POWER_PROPERTY, Conversion.convertPower(this.power, WATTS, HORSEPOWER));
+        listeningExecutor.execute(() -> {
+            this.power = power;
+        });
+        notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER));
     }
 
     public void setActualSpeed(double speed) {
-        this.speed = speed;
+        listeningExecutor.execute(() -> {
+            this.speed = speed;
+        });
         notifyChange(ACTUALSPEED_PROPERTY, convertVelocity(this.speed, MPS, MPH));
     }
 

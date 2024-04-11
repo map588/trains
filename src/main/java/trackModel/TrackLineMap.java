@@ -20,4 +20,8 @@ public class TrackLineMap {
     public static Collection<TrackLine> getValues() {
         return TrackLines.values();
     }
+
+    public static ConcurrentMap<Lines, TrackLine> getMap() {
+        return TrackLines;
+    }
 }

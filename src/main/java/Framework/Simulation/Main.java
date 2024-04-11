@@ -20,7 +20,7 @@ public class Main {
 
 
     public static double simTimeElapsed = 0;
-    public static long TIMESTEP = 20;
+    public static long TIMESTEP = 2;
 
     private static final int NUM_THREADS = 3;
 
