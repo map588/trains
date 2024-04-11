@@ -206,7 +206,7 @@ public class TrackLine implements TrackModel {
 //--------------------------Getters and Setters--------------------------
 
 
-
+// TODO: communicate info to subject to be updated in UI
     public TrackLineSubject getSubject() {
         return this.subject;
     }
@@ -315,7 +315,18 @@ public class TrackLine implements TrackModel {
         });
     }
 
-    //TODO: make sure occupancies are set in the map and to wayside for failures
+    @Override
+    public void fixTrackFailure(Integer blockID) {
+        queueTrackUpdate( () -> {
+            TrackBlock failedBlock = this.mainTrackLine.get(blockID);
+            if (failedBlock != null) {
+                failedBlock.setFailure(false,false,false);
+            } else {
+                logger.error("Fix Track Failure called on Block: {} does not exist", blockID);
+            }
+        });
+    }
+
     @Override
     public boolean getBrokenRail(Integer blockID) {
        return  this.mainTrackLine.get(blockID).brokenRail;

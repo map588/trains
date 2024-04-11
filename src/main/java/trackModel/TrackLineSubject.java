@@ -40,7 +40,7 @@ public class TrackLineSubject {
     private StringProperty setBeacon;
     private StringProperty nameOfStation;
     private StringProperty trackHeater;
-    private StringProperty outsideTemp;
+    private IntegerProperty outsideTemp;
 
     private ObservableList<TrackBlockSubject> blockList;
 
@@ -70,12 +70,12 @@ public class TrackLineSubject {
         tempDisplay = new SimpleStringProperty();
         setBeacon = new SimpleStringProperty();
         nameOfStation = new SimpleStringProperty();
-        trackHeater = new SimpleStringProperty("STATUS - OFF");
+        trackHeater = new SimpleStringProperty();
         trackCircuitFailure = new SimpleBooleanProperty();
         powerFailure = new SimpleBooleanProperty();
         brokenRail = new SimpleBooleanProperty();
         blockElevation = new SimpleDoubleProperty();
-        outsideTemp = new SimpleStringProperty();
+        outsideTemp = new SimpleIntegerProperty();
         direction = new SimpleStringProperty();
         blockList = FXCollections.observableArrayList();
     }
@@ -474,17 +474,6 @@ public class TrackLineSubject {
     }
 
 
-    public String getOutsideTemp() {
-        return outsideTemp.get();
-    }
-
-    public StringProperty outsideTempProperty() {
-        return outsideTemp;
-    }
-
-    public void setOutsideTemp(String outsideTemp) {
-        this.outsideTemp.set(outsideTemp);
-    }
 
     public String getDirection() {
         return direction.get();
@@ -496,5 +485,17 @@ public class TrackLineSubject {
 
     public void setDirection(String direction) {
         this.direction.set(direction);
+    }
+
+    public int getOutsideTemp() {
+        return outsideTemp.get();
+    }
+
+    public IntegerProperty outsideTempProperty() {
+        return outsideTemp;
+    }
+
+    public void setOutsideTemp(int outsideTemp) {
+        this.outsideTemp.set(outsideTemp);
     }
 }

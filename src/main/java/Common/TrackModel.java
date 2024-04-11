@@ -17,6 +17,7 @@ public interface TrackModel {
     void setBrokenRail(Integer blockID, boolean state);
     void setPowerFailure(Integer blockID, boolean state);
     void setTrackCircuitFailure(Integer blockID, boolean state);
+    void fixTrackFailure(Integer blockID);
 
     //Failure Getters
     boolean getBrokenRail(Integer blockID);

@@ -2,6 +2,7 @@ package trackModel;
 
 import Utilities.BooleanIconTableCell;
 import Utilities.Enums.Lines;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -97,6 +98,8 @@ public class TrackModelManager {
                 "Fix Track Failure"
         );
 
+        trackHeaterStatus.setText("STATUS - OFF");
+
         //set up cell value factories for table
         blockColumn.setCellValueFactory(block -> block.getValue().blockNumberProperty());
         lengthColumn.setCellValueFactory(block -> block.getValue().blockLengthProperty().asObject());
@@ -114,10 +117,6 @@ public class TrackModelManager {
                 return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24);
             }
         });
-
-        //set temperature and track heater
-        trackHeaterStatus.textProperty().bindBidirectional(subject.trackHeaterProperty());
-        outsideTemp.textProperty().bindBidirectional(subject.outsideTempProperty());
 
         //table
         lineTable.getSelectionModel().selectedItemProperty().addListener(event -> {
@@ -210,6 +209,9 @@ public class TrackModelManager {
             displayBeaconInfo.setText("NO CROSSING");
         }
 
+        //update track heaters and temperature as new blocks are selected
+        if(subject.getOutsideTemp() < 40){ trackHeaterStatus.setText("Status - ON"); }
+        outsideTemp.setText(subject.outsideTempProperty().toString());
 
     }
     private void updateTable() {
@@ -220,6 +222,7 @@ public class TrackModelManager {
         //ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
         //lineTable.setItems(tableInfo);
         //ObservableList<ParsedBasicBlocks> tableInfo = subject.getTrackInfo();
+        //ObservableList<TrackLineSubject>
         Lines line = Lines.valueOf(lineSelect);
         subject = TrackLineMap.getTrackLine(line).getSubject();
 
