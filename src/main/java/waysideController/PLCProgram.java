@@ -81,7 +81,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
     @Override
     public Value visitSet_list_value(PLCParser.Set_list_valueContext ctx) {
-        int index = visit(ctx.index()).asInteger();
+        int index = visit(ctx.getChild(2)).asInteger();
         String listName = visit(ctx.list_name()).asString();
         boolean value = visit(ctx.getChild(5)).asBoolean();
 
@@ -151,8 +151,8 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
 
     public Value visitFor_statement(PLCParser.For_statementContext ctx) {
-        int startIndex = visit(ctx.index(0)).asInteger();
-        int endIndex = visit(ctx.index(1)).asInteger();
+        int startIndex = visit(ctx.getChild(3)).asInteger();
+        int endIndex = visit(ctx.getChild(5)).asInteger();
         String varName = ctx.VARIABLE().getText();
 
 //        System.out.println("For loop: " + varName + " = " + startIndex + " to " + endIndex);
@@ -234,7 +234,7 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
     @Override
     public Value visitList_value(PLCParser.List_valueContext ctx) {
-        int index = visit(ctx.index()).asInteger();
+        int index = visit(ctx.getChild(2)).asInteger();
         String listName = visit(ctx.list_name()).asString();
 
         switch(listName) {
@@ -266,10 +266,10 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
         }
     }
 
-    @Override
-    public Value visitIndex(PLCParser.IndexContext ctx) {
-        return visit(ctx.getChild(0));
-    }
+//    @Override
+//    public Value visitIndex(PLCParser.IndexContext ctx) {
+//        return visit(ctx.getChild(0));
+//    }
 
     @Override
     public Value visitArith_expression(PLCParser.Arith_expressionContext ctx) {
