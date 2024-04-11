@@ -42,6 +42,39 @@ public class ObservableHashMap<K, V> extends ConcurrentHashMap<K, V> {
         return oldValue;
     }
 
+    public V putIfAbsent(K key, V value) {
+        V oldValue = super.putIfAbsent(key, value);
+        if (oldValue == null) {
+            notifyListenersAdded(key, value);
+        }
+        return oldValue;
+    }
+
+    public boolean remove(Object key, Object value) {
+        boolean removed = super.remove(key, value);
+        if (removed) {
+            notifyListenersRemoved((K) key, (V) value);
+        }
+        return removed;
+    }
+
+    public boolean replace(K key, V oldValue, V newValue) {
+        boolean replaced = super.replace(key, oldValue, newValue);
+        if (replaced) {
+            notifyListenersUpdated(key, oldValue, newValue);
+        }
+        return replaced;
+    }
+
+    public V replace(K key, V value) {
+        V oldValue = super.replace(key, value);
+        if (oldValue != null) {
+            notifyListenersUpdated(key, oldValue, value);
+        }
+        return oldValue;
+    }
+
+
     private void notifyListenersAdded(K key, V value) {
         listeners.forEach(listener -> listener.onAdded(key, value));
     }

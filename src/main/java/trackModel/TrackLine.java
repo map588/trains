@@ -19,6 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
+import static Utilities.Records.BasicBlock.*;
+
 import static Utilities.Constants.MAX_PASSENGERS;
 
 public class TrackLine implements TrackModel {
@@ -97,13 +99,20 @@ public class TrackLine implements TrackModel {
 
     public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(this, trainID);
-        trackOccupancyMap.put(train,0);
+        Integer alreadyPlacedID = trackOccupancyMap.putIfAbsent(train,0);
+        if(alreadyPlacedID != null) {
+            logger.error("Train {} already exists and was not dispatched.", trainID);
+            return null;
+        }
         return train;
     }
 
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
-        trackOccupancyMap.put(train,0);
+        Integer alreadyPlacedID = trackOccupancyMap.putIfAbsent(train,0);
+        if(alreadyPlacedID != null) {
+            logger.error("Train {} already exists and was not dispatched.", train.getTrainNumber());
+        }
     }
 
     /**
@@ -111,56 +120,68 @@ public class TrackLine implements TrackModel {
      * @return the block the train is moving to
      */
     public TrackBlock updateTrainLocation(TrainModel train) {
-        Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -1);
-        if (currentBlockID == -1) {
-            logger.error("Train {} cannot change location" , train.getTrainNumber());
+        Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -2);
+        if (currentBlockID == -1 || currentBlockID == -2) {
+            logger.error("![ TrainModel {}:  {} -> X ] deleted train." , train.getTrainNumber(), currentBlockID);
+            if(train != null) {
+                trackOccupancyMap.remove(train);
+            }
             return null;
         }
-        BasicBlock.Connection next = mainTrackLine.get(currentBlockID).getNextBlock(train.getDirection());
-        if (next.directionChange()) {
-            train.changeDirection();
-        }
-        Integer nextBlockID = next.blockNumber();
+        Integer nextBlockID = mainTrackLine.get(currentBlockID).getNextBlock(train.getDirection());
 
-        System.out.println("T" + train.getTrainNumber() + " " + currentBlockID + " ->  " + nextBlockID);
-
-        queueTrackUpdate(() -> {
+        if(nextBlockID == -1) {
+            logger.error("![ TrainModel {}:  {} -> {} ], deleted train." , train.getTrainNumber(), currentBlockID, nextBlockID);
             trackOccupancyMap.remove(train);
-            trackOccupancyMap.put(train, nextBlockID);
+            return null;
+        }
+
+        logger.info("    TrainModel {}:  {} -> {}  ", train.getTrainNumber(), currentBlockID , nextBlockID);
+
+        asyncTrackUpdate(() -> {
+            trackOccupancyMap.replace(train, currentBlockID, nextBlockID);
+            return null;
         });
 
         return mainTrackLine.get(nextBlockID);
     }
 
 
-    private void handleTrainEntry(TrainModel train, Integer blockID) {
-        logger.info("Train {} entered block {}", train.getTrainNumber(), blockID);
-         if (mainTrackLine.get(blockID).isOccupied()) {
-             logger.warn("Block {} is already occupied by train {} ", blockID, mainTrackLine.get(blockID).getOccupiedBy().getTrainNumber());
-         }
-            setOccuppied(train, blockID);
+    private void handleTrainEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
 
-            if(beaconBlocks.containsKey(blockID)) {
-                train.passBeacon(beaconBlocks.get(blockID));
-                logger.info("Train {} received beacon number {}", train.getTrainNumber(), blockID);
-            }
+         if (newBlockID == 0 && oldBlockID != 0) {
+            logger.info("Train {} exited the track", train.getTrainNumber());
+            trackOccupancyMap.remove(train);
+            return;
+        }else if(newBlockID == 0) {
+            logger.info("Train {} => Entry", train.getTrainNumber());
+        }
+
+         asyncTrackUpdate(() -> {
+            setUnoccupied(oldBlockID);
+            setOccuppied(train, newBlockID);
+            return null;
+         });
+
+        logger.info("  Registered T{} : {}  ->  {}  ", train.getTrainNumber(), oldBlockID, newBlockID);
+
+        if(beaconBlocks.containsKey(newBlockID)) {
+            train.passBeacon(beaconBlocks.get(newBlockID));
+            logger.info("Beacon {}: => T{}", train.getTrainNumber(), newBlockID);
+        }
     }
 
     private void handleTrainExit(TrainModel train, Integer blockID) {
-        logger.info("Train {} exited block {}", train.getTrainNumber(), blockID);
-        if (!mainTrackLine.get(blockID).isOccupied()) {
-            logger.warn("Block {} was exited but not occupied", blockID);
+        if(blockID == 0) {
+            logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
+            return;
         }
+
+        logger.error(" T{} was removed from occupancy map at block {}", train.getTrainNumber(), blockID);
+
 
         setUnoccupied(blockID);
-    }
-
-    private void handleYardEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
-        if(newBlockID == 0) {
-            train.delete();
-        }else if(newBlockID.equals(oldBlockID)) {
-            logger.warn("Error: False Occupancy Update from {} to {} ", oldBlockID , newBlockID);
-        }
+        train.delete();
     }
 
     private void setOccuppied(TrainModel train, int blockID){
@@ -212,13 +233,14 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setSwitchState(int block, boolean state) {
-        queueTrackUpdate( () -> {
+        asyncTrackUpdate( () -> {
             if (mainTrackLine.get(block).feature.isSwitch()) {
                 mainTrackLine.get(block).setSwitchState(state);
                 logger.info("Switch set to: {} at block: {}", state, block);
             } else {
                 logger.warn("Block {} is not a switch", block);
             }
+            return null;
         });
     }
 
@@ -236,17 +258,19 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setTrainAuthority(Integer blockID, int authority){
-        queueTrackUpdate( () -> {
+        asyncTrackUpdate( () -> {
             mainTrackLine.get(blockID).setAuthority(authority);
-            logger.info("Authority set to: {} at block: {}", authority, blockID);
+            logger.info("Authority => {} at block: {}", authority, blockID);
+            return null;
         });
     }
 
     @Override
     public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
-        queueTrackUpdate( () -> {
+        asyncTrackUpdate( () -> {
             mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
-            logger.info("Command speed set to: {} at block: {}", commandedSpeed, blockID);
+            logger.info("Command speed => {} MPH at block: {}", commandedSpeed, blockID);
+            return null;
         });
     }
 
@@ -370,16 +394,16 @@ public class TrackLine implements TrackModel {
     private void setupListeners() {
         ObservableHashMap.MapListener<TrainModel, Integer> trackListener = new ObservableHashMap.MapListener<>() {
             public void onAdded(TrainModel train, Integer blockID) {
-                // A train enters a new block
-                handleTrainEntry(train, blockID);
+                // A train enters the track (hopefully from the yard)
+                handleTrainEntry(train, blockID, 0);
             }
             public void onRemoved(TrainModel train, Integer blockID) {
-                // A train leaves a block
+                // A train is removed from the track
                 handleTrainExit(train, blockID);
             }
             public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
                 // A train moves from one block to another
-                handleYardEntry(train, newBlockID, oldBlockID);
+                handleTrainEntry(train, newBlockID, oldBlockID);
             }
         };
         trackOccupancyMap.addChangeListener(trackListener);

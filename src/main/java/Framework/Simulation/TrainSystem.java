@@ -46,16 +46,18 @@ public class TrainSystem {
 
     private class TrainUpdateTask implements Callable<Void> {
         private final TrainModel train;
+        private final Integer trainID;
         private final TrainController controller;
 
         TrainUpdateTask(TrainModel train, TrainController controller) {
             this.train = train;
+            this.trainID = train.getTrainNumber();
             this.controller = controller;
         }
 
         @Override
         public Void call() {
-            if(train == null || controller == null) {
+            if(train.isDeleted() || train == null || controller == null) {
                 deleteTrainTask(train);
                 return null;
             }

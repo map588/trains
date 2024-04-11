@@ -63,6 +63,7 @@ public class TrainModelSubject implements AbstractSubject{
 
     public void subjectDelete() {
         trainSubjectMap.removeSubject(model.getTrainNumber());
+        logger.info("Train Subject removed from map with ID: {}", trainID);
     }
 
 

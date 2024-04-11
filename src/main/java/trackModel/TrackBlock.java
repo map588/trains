@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import trackModel.BlockTypes.*;
 import trainModel.NullTrain;
 
+import static Utilities.Enums.Direction.NORTH;
 
 
 public class TrackBlock {
@@ -139,12 +140,15 @@ public class TrackBlock {
         return brokenRail || trackCircuitFailure || powerFailure;
     }
 
-     public Connection getNextBlock(Direction direction) {
+     public Integer getNextBlock(Direction direction) {
+        Connection nextConnection;
         if (isSwitch) {
-            return feature.getNextBlock(direction);
+             nextConnection = feature.getNextBlock(direction);
         } else {
-            return (direction == Direction.NORTH) ? northConnect : southConnect;
+            nextConnection = (direction == NORTH) ? northConnect : southConnect;
         }
+        if(nextConnection.directionChange()){this.occupiedBy.changeDirection();}
+        return nextConnection.blockNumber();
     }
 
     public double getLength() {
@@ -173,8 +177,10 @@ public class TrackBlock {
         if(!occupied){
             this.occupied = true;
             occupiedBy = train;
+            logger.info("TrackBlock {} <= T{}",blockID, occupiedBy.getTrainNumber());
+
         }else{
-            logger.warn("Block: " + blockID + " is already occupied by Train: " + occupiedBy.getTrainNumber());
+            logger.warn("TrackBlock: {} is already occupied by Train: {} ", blockID,  occupiedBy.getTrainNumber());
         }
     }
 

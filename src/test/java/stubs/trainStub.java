@@ -59,15 +59,15 @@ public class trainStub implements TrainModel {
     public trainStub(TrackLine track, int trainID) {
         this.trainID = trainID;
         this.track = track;
-        this.currentBlock = track.getTrack().get(0);
+
         this.controller = new trainControllerStub(this, trainID);
         initializeValues();
     }
 
     public trainStub() {
         this.trainID = 1;
-        this.track = new TrackLine(Lines.GREEN, basicTrackLine);
-        this.currentBlock = track.getTrack().get(0);
+        this.track = new TrackLine(Lines.GREEN);
+
         this.controller = new TrainControllerImpl(this, trainID);
         initializeValues();
     }
@@ -105,7 +105,7 @@ public class trainStub implements TrainModel {
     }
 
     public void go_Brr(){
-        for(int i = 0; i < track.getTrack().size(); i++) {
+        for(int i = 0; i < 60; i++) {
             updateLocation(currentBlock.getLength()-0.001);
         }
     }
@@ -117,6 +117,11 @@ public class trainStub implements TrainModel {
     @Override
     public void delete() {
 
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
     }
 
     @Override

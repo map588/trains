@@ -61,8 +61,8 @@ public class TrainControllerImpl implements TrainController{
     private double currentSpeed = 0.0;
     private double overrideSpeed = 0.0;
     private double speedLimit = 0.0;
-    private double Ki = 4;
-    private double Kp = 12;
+    private double Ki = 20;
+    private double Kp = 100;
     private double power = 0.0;
     private double grade = 0.0;
     private double setTemperature = 0.0;

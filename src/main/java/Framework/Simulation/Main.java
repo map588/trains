@@ -20,9 +20,9 @@ public class Main {
 
 
     public static double simTimeElapsed = 0;
-    public static long TIMESTEP = 100;
+    public static long TIMESTEP = 20;
 
-    private static final int NUM_THREADS = 2;
+    private static final int NUM_THREADS = 3;
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -39,9 +39,11 @@ public class Main {
 
         trainSystem = new TrainSystem();
         trackSystem = new TrackSystem(trainSystem);
+        CTC.setTrackSystem(trackSystem);
+
         waysideSystem = new WaysideSystem(trackSystem, CTC, false);
 
-        CTC.setTrackSystem(trackSystem);
+
 
 
         // Schedule time step functions
@@ -90,7 +92,8 @@ public class Main {
             }
 
             // Call trackSystem.update() after both update methods have finished
-            trackSystem.update();
+            synchronizationPool.submit(() -> trackSystem.update());
+            //trackSystem.update();
             simTimeElapsed += Constants.TIME_STEP_S;
         }
     }

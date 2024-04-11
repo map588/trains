@@ -101,7 +101,6 @@ public class TrainControllerManager {
         });
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
-        runQueue();
     }
 
 

@@ -53,7 +53,8 @@ public class TrainControllerSubject implements NotifierEnum {
     }
 
     void delete() {
-        TrainControllerSubjectMap.getInstance().removeSubject(controller.getID());
+        controllerSubjectMap.removeSubject(controller.getID());
+        logger.info("Train Controller Subject deleted with ID: {}", controller.getID());
     }
 
 

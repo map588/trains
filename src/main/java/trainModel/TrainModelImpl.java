@@ -17,17 +17,20 @@ import trackModel.TrackLine;
 import trainController.TrainControllerImpl;
 import trainModel.Records.UpdatedTrainValues;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 import static Utilities.Constants.*;
-import static Utilities.Conversion.accelerationUnit.*;
+import static Utilities.Conversion.accelerationUnit.FPS2;
+import static Utilities.Conversion.accelerationUnit.MPS2;
 import static Utilities.Conversion.*;
-import static Utilities.Conversion.distanceUnit.*;
-import static Utilities.Conversion.powerUnits.*;
-import static Utilities.Conversion.temperatureUnit.*;
-import static Utilities.Conversion.velocityUnit.*;
+import static Utilities.Conversion.distanceUnit.FEET;
+import static Utilities.Conversion.distanceUnit.METERS;
+import static Utilities.Conversion.powerUnits.HORSEPOWER;
+import static Utilities.Conversion.powerUnits.WATTS;
+import static Utilities.Conversion.temperatureUnit.CELSIUS;
+import static Utilities.Conversion.temperatureUnit.FAHRENHEIT;
+import static Utilities.Conversion.velocityUnit.MPH;
+import static Utilities.Conversion.velocityUnit.MPS;
 import static trainModel.Properties.*;
 
 //Actual, Real, what???
@@ -60,6 +63,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //Train Update Variables
     private double relativeDistance = 0;
     private double currentBlockLength = 0;
+    public volatile boolean deleted = false;
 
 
 
@@ -91,7 +95,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Transition Variables
 
-
+    ExecutorService GUIExecutor = Executors.newSingleThreadExecutor();
 
     private void initializeValues() {
         this.direction = YARD_OUT_DIRECTION;
@@ -128,7 +132,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void delete() {
         controller.delete();
         this.subject.subjectDelete();
-
+        this.deleted = true;
     }
 
     public void notifyChange(String property, Object newValue) {
@@ -143,31 +147,30 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
+       GUIExecutor.execute(() -> {
+           if (this.brakeFailure) {
+               this.setServiceBrake(false);
+           } else {
+               this.setServiceBrake(controllerValues.serviceBrake());
+               this.setEmergencyBrake(controllerValues.emergencyBrake());
+           }
 
-        if (this.brakeFailure) {
-            this.setServiceBrake(false);
-        }
-        else {
-            this.setServiceBrake(controllerValues.serviceBrake());
-            this.setEmergencyBrake(controllerValues.emergencyBrake());
-        }
+           if (this.powerFailure) {
+               this.setPower(0);
+           } else {
+               this.setPower(controllerValues.power() * numCars);
+           }
 
-        if (this.powerFailure) {
-            this.setPower(0);
-        }
-        else {
-            this.setPower(controllerValues.power() * numCars);
-        }
+           this.setExtLights(controllerValues.exteriorLights());
+           this.setIntLights(controllerValues.interiorLights());
+           this.setLeftDoors(controllerValues.leftDoors());
+           this.setRightDoors(controllerValues.rightDoors());
+           this.setSetTemperature(controllerValues.setTemperature());
 
-        this.setExtLights(controllerValues.exteriorLights());
-        this.setIntLights(controllerValues.interiorLights());
-        this.setLeftDoors(controllerValues.leftDoors());
-        this.setRightDoors(controllerValues.rightDoors());
-        this.setSetTemperature(controllerValues.setTemperature());
-
-        this.setAcceleration(acceleration);
-        this.setActualSpeed(speed);
-        this.setRealTemperature(newRealTemperature);
+           this.setAcceleration(acceleration);
+           this.setActualSpeed(speed);
+           this.setRealTemperature(newRealTemperature);
+       });
     }
 
     //Called when not running System.
@@ -186,7 +189,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     private void physicsUpdate() {
         //MASS CALCULATION (some redundancy here, the empty train mass is final, and the crew count is final)
-        this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
+
 
         //Check if the train is fully loaded
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
@@ -269,7 +272,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     }
 
-
+    public boolean isDeleted() {
+        return deleted;
+    }
 
     public void enteredNextBlock() {
         //System.out.println("Train Entered Next Block");
@@ -345,6 +350,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
                 this.numPassengers = Constants.MAX_PASSENGERS;
             } else this.numPassengers += passengersEmbarked - passengersDisembarked;
         }
+        this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
         return passengersDisembarked;
     }
 
