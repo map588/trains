@@ -3,6 +3,7 @@ package Framework.GUI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -79,7 +80,7 @@ public class mainMenu extends Application {
             newStage.setMinWidth(780);
             newStage.setMinHeight(700);
         }else {
-            newScene = new Scene(new VBox(content)); // Ensure the layout fits the loaded content
+            newScene = new Scene((Parent) content); // Ensure the layout fits the loaded content
             newStage.setScene(newScene);
         }
         newStage.setTitle(moduleName);
