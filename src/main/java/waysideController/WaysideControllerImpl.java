@@ -164,7 +164,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             block.setOccupied(occupied);
 
             if(ctcOffice != null)
-                ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, occupied);
+                ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, occupied);
 
 //            runPLC();
         }
@@ -192,7 +192,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             block.setBlockMaintenanceState(maintenanceState);
             block.setOccupied(!maintenanceState);
             if(ctcOffice != null)
-                ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, blockID, !maintenanceState);
+                ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, !maintenanceState);
 
 //            runPLC();
         }
@@ -206,7 +206,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                 block.setBlockMaintenanceState(true);
                 block.setOccupied(false);
                 if(ctcOffice != null)
-                    ctcOffice.setBlockOccupancy(trackLine==Lines.GREEN, block.getBlockID(), false);
+                    ctcOffice.setBlockOccupancy(Lines.GREEN, block.getBlockID(), false);
             }
         }
 //        runPLC();
@@ -220,7 +220,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(trackModel != null)
                 trackModel.setSwitchState(blockID, switchState);
             if(ctcOffice != null)
-                ctcOffice.setSwitchState(trackLine==Lines.GREEN, blockID, switchState);
+                ctcOffice.setSwitchState(Lines.GREEN, blockID, switchState);
 //            System.out.println("maintenanceSetSwitch: " + blockID + " " + switchState);
         }
     }
@@ -241,7 +241,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(trackModel != null)
                 trackModel.setLightState(blockID, lightState);
             if(ctcOffice != null)
-                ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
+                ctcOffice.setLightState(Lines.GREEN, blockID, lightState);
 //            System.out.println("maintenanceSetTrafficLight: " + blockID + " " + lightState);
         }
     }
@@ -253,7 +253,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(trackModel != null)
                 trackModel.setCrossing(blockID, crossingState);
             if(ctcOffice != null)
-                ctcOffice.setCrossingState(trackLine==Lines.GREEN, blockID, crossingState);
+                ctcOffice.setCrossingState(Lines.GREEN, blockID, crossingState);
 //            System.out.println("maintenanceSetCrossing: " + blockID + " " + crossingState);
         }
     }
@@ -289,7 +289,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(trackModel != null)
             trackModel.setSwitchState(blockID, switchState);
         if(ctcOffice != null)
-            ctcOffice.setSwitchState(trackLine==Lines.GREEN, blockID, switchState);
+            ctcOffice.setSwitchState(Lines.GREEN, blockID, switchState);
     }
 
     @Override
@@ -313,7 +313,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(trackModel != null)
             trackModel.setLightState(blockID, lightState);
         if(ctcOffice != null)
-            ctcOffice.setLightState(trackLine==Lines.GREEN, blockID, lightState);
+            ctcOffice.setLightState(Lines.GREEN, blockID, lightState);
     }
 
     @Override
@@ -337,7 +337,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(trackModel != null)
             trackModel.setCrossing(blockID, crossingState);
         if(ctcOffice != null)
-            ctcOffice.setCrossingState(trackLine==Lines.GREEN, blockID, crossingState);
+            ctcOffice.setCrossingState(Lines.GREEN, blockID, crossingState);
     }
 
     @Override

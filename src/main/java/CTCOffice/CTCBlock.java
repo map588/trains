@@ -3,6 +3,7 @@ package CTCOffice;
 import Framework.Support.BlockIDs;
 import Framework.Support.Notifier;
 import Utilities.Records.BasicBlock;
+import javafx.scene.control.TableColumn;
 
 import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
 import static Utilities.Enums.BlockType.*;
@@ -91,6 +92,7 @@ class CTCBlock implements Notifier {
         if (divergingBlockOneID.getBlockIdNum() == blockID.getBlockIdNum() || divergingBlockTwoID.getBlockIdNum() == blockID.getBlockIdNum()) {
             subMap.getSubject(convergingBlockID).setProperty("switchState", state);
         }
+        notifyChange("switchState", state);
     }
 
     /**
@@ -146,6 +148,7 @@ class CTCBlock implements Notifier {
 
     void    setOccupied     (boolean occupied) {
         this.occupied = occupied;
+        notifyChange("occupied", occupied);
     }
     boolean getOccupied     () {
         return occupied;
@@ -155,10 +158,12 @@ class CTCBlock implements Notifier {
     }
     void    setUnderMaintenance (boolean underMaintenance) {
         this.underMaintenance = underMaintenance;
+        notifyChange("underMaintenance", underMaintenance);
     }
 
     void setSwitchLightState(boolean switchLightState) {
         this.lightState = switchLightState;
+        notifyChange("lightState", switchLightState);
     }
     boolean getHasLight     () {
         return hasLight;
@@ -169,6 +174,7 @@ class CTCBlock implements Notifier {
 
     void    setCrossingState(boolean crossingState) {
         this.crossingState = crossingState;
+        notifyChange("crossingState", crossingState);
     }
     boolean getHasCrossing  () {
         return hasCrossing;
@@ -187,6 +193,8 @@ class CTCBlock implements Notifier {
         return isSwitchDiv;
     }
 
-    public void notifyChange(String property, Object newValue) {}
+    public void notifyChange(String property, Object newValue) {
+        subMap.getSubject(blockID).setProperty(property, newValue);
+    }
 }
 

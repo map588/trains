@@ -39,7 +39,7 @@ public class CTCOfficeImpl implements CTCOffice {
     public static final CTCOfficeImpl OFFICE = new CTCOfficeImpl();
 
     private static TrackSystem trackSystem;
-
+    private final CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
     /**
      * Constructor for the CTCOfficeImpl class.
      * Initializes the track blocks and the schedule.
@@ -91,35 +91,26 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.info("TrackSystem has been set");
     }
 
-    public void     setBlockOccupancy(boolean line, int blockID, boolean occupied) {
-        logger.warn("setBlockOccupancy() is not implemented");
-    }
-    public boolean  getBlockOccupancy(boolean line, int blockID) {
-        return false;
+    public void     setBlockOccupancy(Lines line, int blockID, boolean occupied) {
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(occupied);
+        logger.info("Block {} on line {} has been set to occupied: {}", blockID, line, occupied);
     }
 
-    public void     setSwitchState(boolean line, int blockID, boolean switchState) {
-        logger.warn("setSwitchState() is not implemented");
-    }
-    public boolean  getSwitchState(boolean line, int switchID) {
-        logger.warn("getSwitchState() is not implemented");
-        return false;
+    //************************************************************************************************************************************
+
+    public void     setSwitchState(Lines line, int blockID, boolean switchState) {
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchState(switchState);
+        logger.info("Switch {} on line {} has been set to {}", blockID, line, switchState);
     }
 
-    public void     setLightState(boolean line, int blockID, boolean lightState) {
-        logger.warn("setLightState() is not implemented");
-    }
-    public boolean  getLightState(boolean line, int blockID) {
-        logger.warn("getLightState() is not implemented");
-        return false;
+    public void     setLightState(Lines line, int blockID, boolean lightState) {
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchLightState(lightState);
+        logger.info("Light {} on line {} has been set to {}", blockID, line, lightState);
     }
 
-    public void     setCrossingState(boolean line, int blockID, boolean crossingState) {
-        logger.warn("setCrossingState() is not implemented");
-    }
-    public boolean  getCrossingState(boolean line, int blockID) {
-        logger.warn("getCrossingState() is not implemented");
-        return false;
+    public void     setCrossingState(Lines line, int blockID, boolean crossingState) {
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setCrossingState(crossingState);
+        logger.info("Crossing {} on line {} has been set to {}", blockID, line, crossingState);
     }
 
     void     setUnderMaintenance(boolean line, int blockID, boolean underMaintenance) {
