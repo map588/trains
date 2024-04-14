@@ -9,19 +9,19 @@ import Framework.Support.SubjectMap;
  * @see SubjectMap
  * @see CTCBlockSubject
  */
-public class CTCBlockSubjectMapGreen extends SubjectMap<Integer, CTCBlockSubject> {
-    private static final CTCBlockSubjectMapGreen INSTANCE = new CTCBlockSubjectMapGreen();
-    private CTCBlockSubjectMapGreen() {
+public class CTCBlockSubjectMap extends SubjectMap<BlockIDs, CTCBlockSubject> {
+    private static final CTCBlockSubjectMap INSTANCE = new CTCBlockSubjectMap();
+    private CTCBlockSubjectMap() {
         super();
     }
-    public static CTCBlockSubjectMapGreen getInstance() {
+    public static CTCBlockSubjectMap getInstance() {
         return INSTANCE;
     }
-    public ObservableHashMap<Integer, CTCBlockSubject> getSubjects() {
+    public ObservableHashMap<BlockIDs, CTCBlockSubject> getSubjects() {
         return super.getSubjects();
     }
 
-    public CTCBlockSubject getSubject(int ID) {
+    public CTCBlockSubject getSubject(BlockIDs ID) {
         return super.getSubject(ID);
     }
 }

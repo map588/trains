@@ -84,8 +84,7 @@ public class CTCOfficeManager {
     @FXML private Button maintenanceToggle;
 
 
-    CTCBlockSubjectMapGreen blockMapGreen = CTCBlockSubjectMapGreen.getInstance();
-    CTCBlockSubjectMapRed blockMapRed = CTCBlockSubjectMapRed.getInstance();
+    CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
 
     /**
@@ -106,11 +105,23 @@ public class CTCOfficeManager {
         setupMapChangeListener();
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
         blockTableGreen.setEditable(true);
-        Collection<CTCBlockSubject> blockListGreen = blockMapGreen.getSubjects().values();
+        blockTableRed.setEditable(true);
+        lineSelection.getItems().addAll("GREEN", "RED");
 
         //TODO: Make a data structure that sucks less for tables
         //first lane table view
-        blockTableGreen.getItems().addAll(blockListGreen);
+        //blockTableGreen.getItems().addAll(blockListGreen);
+        for(CTCBlockSubject block : blockMap.getSubjects().values()) {
+            if(block.getStringProperty(LINE_PROPERTY).getValue().equals("GREEN")) {
+                blockTableGreen.getItems().add(block);
+            }else{
+                blockTableRed.getItems().add(block);
+            }
+            if(!blockSelection.getItems().contains(block.getIntegerProperty(BLOCK_ID_PROPERTY).getValue())) {
+                blockSelection.getItems().add(block.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
+            }
+        }
+        setupMapChangeListener();
         blockNumberColumnGreen.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
         blockNumberColumnGreen.setStyle("-fx-alignment: CENTER_RIGHT;");
         blockNumberColumnGreen.setEditable(false);
@@ -134,11 +145,7 @@ public class CTCOfficeManager {
         underMaintenanceColumnGreen.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
         switchLightColumnGreen.setCellValueFactory(block -> switchColors.get(block.getValue()));
 
-        blockTableRed.setEditable(true);
-        Collection<CTCBlockSubject> blockListRed = blockMapRed.getSubjects().values();
-
         //first lane table view
-        blockTableRed.getItems().addAll(blockListRed);
         blockNumberColumnRed.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
         blockNumberColumnRed.setStyle("-fx-alignment: CENTER_RIGHT;");
         blockNumberColumnRed.setEditable(false);
@@ -164,9 +171,6 @@ public class CTCOfficeManager {
 
 
         //Table editing bar
-        blockSelection.getItems().addAll(blockMapGreen.getSubjects().keySet());
-        lineSelection.getItems().addAll("GREEN", "RED");
-
         switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
         switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
         crossingStateToggle.setOnAction(event -> toggleProperty(CROSSING_STATE_PROPERTY));
@@ -263,13 +267,9 @@ public class CTCOfficeManager {
      * @param propertyName The name of the property to be toggled.
      */
     private void toggleProperty(String propertyName) {
-        System.out.println("\n ");
+        System.out.println("toggled property " + propertyName + " for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
         CTCBlockSubject block;
-        if (lineSelection.getValue().equals("Green")) {
-            block = blockMapGreen.getSubject(blockSelection.getValue());
-        }else {
-            block = blockMapRed.getSubject(blockSelection.getValue());
-        }
+        block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
         block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
 
@@ -342,16 +342,16 @@ public class CTCOfficeManager {
     }
 
     private void setupMapChangeListener() {
-        ObservableHashMap<Integer, CTCBlockSubject> subjects = blockMapGreen.getSubjects();
+        ObservableHashMap<BlockIDs, CTCBlockSubject> subjects = blockMap.getSubjects();
 
         // Add a listener to the map of CTCBlockSubjects to add a color property for each new block is added
-        ObservableHashMap.MapListener<Integer, CTCBlockSubject> colorListener = new ObservableHashMap.MapListener<>() {
-            public void onAdded(Integer key, CTCBlockSubject value) {
+        ObservableHashMap.MapListener<BlockIDs, CTCBlockSubject> colorListener = new ObservableHashMap.MapListener<>() {
+            public void onAdded(BlockIDs key, CTCBlockSubject value) {
                 switchColorListener(value);
                 crossingColorListener(value);
                 maintenanceColorListener(value);
             }
-            public void onRemoved(Integer key, CTCBlockSubject value) {
+            public void onRemoved(BlockIDs key, CTCBlockSubject value) {
                 switchColors.remove(value);
                 crossingColors.remove(value);
                 maintenanceColors.remove(value);
