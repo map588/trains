@@ -47,10 +47,10 @@ class CTCBlock implements Notifier {
 
         if(this.isSwitchCon) {
             this.convergingBlockID = blockID;
-            this.divergingBlockOneID = BlockIDs.of(block.nextBlock().primarySwitchDirection() == NORTH ?
-                    block.nextBlock().northDefault().blockNumber() : block.nextBlock().southDefault().blockNumber(), blockID.getLine());
-            this.divergingBlockTwoID = BlockIDs.of(block.nextBlock().primarySwitchDirection() == NORTH ?
-                    block.nextBlock().northAlternate().blockNumber() : block.nextBlock().southAlternate().blockNumber(), blockID.getLine());
+            this.divergingBlockOneID = BlockIDs.of(((block.nextBlock().primarySwitchDirection() == NORTH) ?
+                    block.nextBlock().northDefault().blockNumber() : block.nextBlock().southDefault().blockNumber()), blockID.getLine());
+            this.divergingBlockTwoID = BlockIDs.of(((block.nextBlock().primarySwitchDirection() == NORTH) ?
+                    block.nextBlock().northAlternate().blockNumber() : block.nextBlock().southAlternate().blockNumber()), blockID.getLine());
         }
             subMap.registerSubject(blockID, new CTCBlockSubject(this));
     }
@@ -85,11 +85,10 @@ class CTCBlock implements Notifier {
                 subMap.getSubject(BlockIDs.of(divergingBlockOneID.getBlockIdNum(), blockID.getLine())).setProperty("switchState", state);
                 subMap.getSubject(BlockIDs.of(divergingBlockTwoID.getBlockIdNum(), blockID.getLine())).setProperty("switchState", state);
             }
-        System.out.println("Switch State: " + switchState + " \n");
         subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
         subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
         subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
-        if (divergingBlockOneID == blockID || divergingBlockTwoID == blockID) {
+        if (divergingBlockOneID.getBlockIdNum() == blockID.getBlockIdNum() || divergingBlockTwoID.getBlockIdNum() == blockID.getBlockIdNum()) {
             subMap.getSubject(convergingBlockID).setProperty("switchState", state);
         }
     }
@@ -104,23 +103,26 @@ class CTCBlock implements Notifier {
             }
         }
         else{return null;}
-        if(isSwitchCon && !switchState) {
-            return ( "( " + divergingBlockOneID + " == "  + convergingBlockID + " )  " + divergingBlockTwoID);
-        }
-        else if(isSwitchCon) {
-            return ( divergingBlockOneID +"  ( "   + convergingBlockID + " == " + divergingBlockTwoID + " )");
-        }
-        else if(isSwitchDiv && !switchState) {
-            if(divergingBlockOneID == blockID) {
-                return ( divergingBlockOneID + " ==== " + convergingBlockID);
-            }else {
-                return ( divergingBlockTwoID + "\t\t" + convergingBlockID);
+
+        if(isSwitchCon){
+            if(switchState) {
+                return ( divergingBlockOneID.getBlockIdNum() +"  ( "   + convergingBlockID.getBlockIdNum() + " == " + divergingBlockTwoID.getBlockIdNum() + " )");
+            }else{
+                return ( "( " + divergingBlockOneID.getBlockIdNum() + " == "  + convergingBlockID.getBlockIdNum() + " )  " + divergingBlockTwoID.getBlockIdNum());
             }
         }else if(isSwitchDiv) {
-            if(divergingBlockTwoID == blockID) {
-                return ( divergingBlockTwoID + " ==== " + convergingBlockID);
+            if(switchState) {
+                if(divergingBlockTwoID.getBlockIdNum() == blockID.getBlockIdNum()) {
+                    return ( divergingBlockTwoID.getBlockIdNum() + " ==== " + convergingBlockID.getBlockIdNum());
+                }else {
+                    return ( divergingBlockOneID.getBlockIdNum() + "\t\t" + convergingBlockID.getBlockIdNum());
+                }
             }else {
-                return ( divergingBlockOneID + "\t\t" + convergingBlockID);
+                if(divergingBlockOneID.getBlockIdNum() == blockID.getBlockIdNum()) {
+                    return ( divergingBlockOneID.getBlockIdNum() + " ==== " + convergingBlockID.getBlockIdNum());
+                }else {
+                    return ( divergingBlockTwoID.getBlockIdNum() + "\t\t" + convergingBlockID.getBlockIdNum());
+                }
             }
         }else {
             return "";
