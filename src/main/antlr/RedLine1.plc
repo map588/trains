@@ -13,8 +13,25 @@ if dir_assigned[23]
         endfor
         authority[9] = TRUE
         switch[9] = ALT
+        switch[16] = ALT
     endif
 endif
 
 // Allocate a direction when a train is detected
+// Since entire section must be completely abandoned in order for direction to be unbound, we can assume that the
+// direction is set based on temporary occupancy without checking for the entire section to be empty first
 if not dir_assigned[23]
+    if occupied[9] or occupied[8] or occupied[7] or occupied[6]
+        direction[23] = SOUTHBOUND
+        dir_assigned[23] = TRUE
+        switch[9] = ALT
+        switch[16] = ALT
+    else
+        if occupied[16] or occupied[17] or occupied[18] or occupied[19] or occupied[20]
+            direction[23] = NORTHBOUND
+            dir_assigned[23] = TRUE
+            switch[9] = MAIN
+            switch[16] = MAIN
+        endif
+    endif
+endif
