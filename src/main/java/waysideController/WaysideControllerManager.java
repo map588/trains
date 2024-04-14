@@ -42,7 +42,7 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<WaysideBlockSubject,Boolean> blockTableCircuitColumn;
     @FXML
-    private TableColumn<WaysideBlockSubject, Paint> blockTableLightsColumn;
+    private TableColumn<WaysideBlockSubject, Boolean> blockTableLightsColumn;
     @FXML
     private TableColumn<WaysideBlockSubject,Boolean> blockTableCrossingColumn;
     @FXML
@@ -108,7 +108,8 @@ public class WaysideControllerManager {
         // Set up cell value factories for table views
         blockTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(blockID_p).asObject());
         blockTableCircuitColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(occupied_p));
-        blockTableLightsColumn.setCellValueFactory(block -> block.getValue().getTrafficLightColor());
+//        blockTableLightsColumn.setCellValueFactory(block -> block.getValue().getTrafficLightColor());
+        blockTableLightsColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(lightState_p));
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(crossingState_p));
         blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
         blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
@@ -163,35 +164,21 @@ public class WaysideControllerManager {
      * Sets up the cell factories for the table views
      */
     private void setupTableCellFactories() {
-        blockTableCircuitColumn.setCellFactory(new Callback<TableColumn<WaysideBlockSubject, Boolean>, TableCell<WaysideBlockSubject, Boolean>>() {
-            @Override
-            public TableCell<WaysideBlockSubject, Boolean> call(TableColumn<WaysideBlockSubject, Boolean> waysideBlockSubjectBooleanTableColumn) {
-                return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24);
-            }
-        });
-        blockTableLightsColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Paint>() {
-            private final BorderPane graphic;
-            private final Circle circle;
-
-            {
-                graphic = new BorderPane();
-                circle = new Circle(8);
-                graphic.setCenter(circle);
-                setOnMouseClicked(event -> {
+        blockTableCircuitColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn ->
+                new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24)
+        );
+        blockTableLightsColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Signal_Light_Red_24.png", "/Framework.GUI.Images/Signal_Light_Green_24.png", 24, 24);
+                tabelCell.setOnMouseClicked(event -> {
                     if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
-                        if(this.getTableRow().getItem().getBlock().hasLight()) {
-                            currentSubject.getController().maintenanceSetTrafficLight(this.getTableRow().getItem().getBlock().getBlockID(), !this.getTableRow().getItem().getBlock().getLightState());
+                        if(tabelCell.getTableRow().getItem().getBlock().hasLight()) {
+                            currentSubject.getController().maintenanceSetTrafficLight(tabelCell.getTableRow().getItem().getBlock().getBlockID(), !tabelCell.getTableRow().getItem().getBlock().getLightState());
                         }
                     }
                 });
+                return tabelCell;
             }
-
-            @Override
-            public void updateItem(Paint paint, boolean empty) {
-                circle.setFill(paint);
-                setGraphic(graphic);
-            }
-        });
+        );
 
         blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override

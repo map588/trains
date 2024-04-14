@@ -19,6 +19,5 @@ public class Properties {
     public static final String hasSwitch_p = "hasSwitch";
     public static final String hasLight_p = "hasLight";
     public static final String hasCrossing_p = "hasCrossing";
-    public static final String lightColor_p = "lightColor";
     public static final String open_p = "open";
 }

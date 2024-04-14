@@ -22,7 +22,7 @@ public class Main {
 
     public static double simTimeElapsed = 0;
     public static double simTimeMultiplier = 1;
-    public static long TIMESTEP = 20;
+    public static long TIMESTEP = 100;
 
     private static final int NUM_THREADS = 3;
 
