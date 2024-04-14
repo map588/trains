@@ -166,7 +166,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(ctcOffice != null)
                 ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, occupied);
 
-//            runPLC();
+            if(occupied && !blockMap.get(blockID).getBooleanAuth()) {
+                trackModel.setCommandedSpeed(blockID, -1);
+            }
         }
     }
 
@@ -360,7 +362,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         block.setBooleanAuth(auth);
 
         if(trackModel != null && block.isOccupied() && !auth) {
-            trackModel.setTrainAuthority(blockID, -1);
+//            trackModel.setTrainAuthority(blockID, -1);
+            trackModel.setCommandedSpeed(blockID, -1);
         }
     }
 

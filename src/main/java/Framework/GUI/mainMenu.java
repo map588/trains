@@ -18,6 +18,8 @@ public class mainMenu extends Application {
 
     String[] tabNames = {"CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
 
+    public static Label timeLabel = new Label();
+
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
@@ -52,8 +54,13 @@ public class mainMenu extends Application {
         }
 
         Slider speedSlider = new Slider(0.0, 10.0, 1);
+        speedSlider.setShowTickLabels(true);
+        speedSlider.setShowTickMarks(true);
+        speedSlider.setMajorTickUnit(2.0);
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> Main.simTimeMultiplier = newVal.doubleValue());
         toolBar.getItems().add( speedSlider);
+
+        toolBar.getItems().add(timeLabel);
 
         VBox topContainer = new VBox(); // Use VBox to stack MenuBar and ToolBar
         MenuBar menuBar = new MenuBar(); // If you still want to use MenuBar for other purposes

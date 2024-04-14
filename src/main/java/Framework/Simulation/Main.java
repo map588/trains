@@ -5,6 +5,7 @@ import Framework.GUI.mainMenu;
 import Utilities.Constants;
 import Utilities.GlobalBasicBlockParser;
 import javafx.application.Application;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,6 @@ public class Main {
 
     public static double simTimeElapsed = 0;
     public static double simTimeMultiplier = 1;
-    public static double simTimestep = 0.02;
     public static long TIMESTEP = 20;
 
     private static final int NUM_THREADS = 3;
@@ -97,6 +97,9 @@ public class Main {
             synchronizationPool.submit(() -> trackSystem.update());
             //trackSystem.update();
             simTimeElapsed += getSimDeltaTime();
+            Platform.runLater(() -> {
+                mainMenu.timeLabel.setText("Time: " + simTimeElapsed + "s");
+            });
         }
     }
 
@@ -106,6 +109,6 @@ public class Main {
     }
 
     public static double getSimDeltaTime() {
-        return simTimestep * simTimeMultiplier;
+        return TIMESTEP/1000.0 * simTimeMultiplier;
     }
 }
