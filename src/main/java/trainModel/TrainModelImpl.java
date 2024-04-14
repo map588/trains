@@ -19,6 +19,8 @@ import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.*;
 
+import static Framework.Simulation.Main.getSimDeltaTime;
+import static Framework.Simulation.Main.simTimeMultiplier;
 import static Utilities.Constants.*;
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
@@ -42,7 +44,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
     private final int trainID;
-    private final double TIME_DELTA = (double)TIME_STEP_MS/1000;
 
 
     private final TrainModelSubject subject;
@@ -246,18 +247,19 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.acceleration = (netForce / this.mass);
 
         //SPEED CALCULATION
+        double TIME_DELTA = getSimDeltaTime();
         if (this.power <= MAX_POWER_W * numCars) {
-            this.speed = (this.speed + (this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
+            this.speed = (this.speed + (TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
         }
 
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
 
         //DISTANCE CALCULATION
-        this.relativeDistance += this.speed * this.TIME_DELTA;
+        this.relativeDistance += this.speed * TIME_DELTA;
 
         //TEMPERATURE CALCULATION
-        this.elapsedTime += this.TIME_DELTA;
+        this.elapsedTime += TIME_DELTA;
         if(this.elapsedTime >= 1 && (this.realTemperature < this.setTemperature)) {
             this.newRealTemperature = this.realTemperature + 1;
             this.elapsedTime = 0;

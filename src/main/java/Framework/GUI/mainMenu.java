@@ -1,5 +1,6 @@
 package Framework.GUI;
 
+import Framework.Simulation.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -49,6 +50,10 @@ public class mainMenu extends Application {
 
             toolBar.getItems().add(tabButton);
         }
+
+        Slider speedSlider = new Slider(0.0, 10.0, 1);
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> Main.simTimeMultiplier = newVal.doubleValue());
+        toolBar.getItems().add( speedSlider);
 
         VBox topContainer = new VBox(); // Use VBox to stack MenuBar and ToolBar
         MenuBar menuBar = new MenuBar(); // If you still want to use MenuBar for other purposes

@@ -20,6 +20,8 @@ public class Main {
 
 
     public static double simTimeElapsed = 0;
+    public static double simTimeMultiplier = 1;
+    public static double simTimestep = 0.02;
     public static long TIMESTEP = 20;
 
     private static final int NUM_THREADS = 3;
@@ -94,12 +96,16 @@ public class Main {
             // Call trackSystem.update() after both update methods have finished
             synchronizationPool.submit(() -> trackSystem.update());
             //trackSystem.update();
-            simTimeElapsed += Constants.TIME_STEP_S;
+            simTimeElapsed += getSimDeltaTime();
         }
     }
 
     public static void stopSimulation() {
         scheduledExecutorService.shutdown();
         synchronizationPool.shutdown();
+    }
+
+    public static double getSimDeltaTime() {
+        return simTimestep * simTimeMultiplier;
     }
 }
