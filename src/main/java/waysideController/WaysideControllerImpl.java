@@ -190,9 +190,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(currentState != maintenanceState) {
             block.setBlockMaintenanceState(maintenanceState);
-            block.setOccupied(!maintenanceState);
+            block.setOccupied(maintenanceState);
             if(ctcOffice != null)
-                ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, !maintenanceState);
+                ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, maintenanceState);
 
 //            runPLC();
         }
