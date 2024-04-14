@@ -92,24 +92,24 @@ public class CTCOfficeImpl implements CTCOffice {
     }
 
     public void     setBlockOccupancy(Lines line, int blockID, boolean occupied) {
-        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(occupied);
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
         logger.info("Block {} on line {} has been set to occupied: {}", blockID, line, occupied);
     }
 
     //************************************************************************************************************************************
 
     public void     setSwitchState(Lines line, int blockID, boolean switchState) {
-        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchState(switchState);
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchState(false, switchState);
         logger.info("Switch {} on line {} has been set to {}", blockID, line, switchState);
     }
 
     public void     setLightState(Lines line, int blockID, boolean lightState) {
-        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchLightState(lightState);
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchLightState(false, lightState);
         logger.info("Light {} on line {} has been set to {}", blockID, line, lightState);
     }
 
     public void     setCrossingState(Lines line, int blockID, boolean crossingState) {
-        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setCrossingState(crossingState);
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setCrossingState(false, crossingState);
         logger.info("Crossing {} on line {} has been set to {}", blockID, line, crossingState);
     }
 

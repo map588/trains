@@ -1,5 +1,6 @@
 package CTCOffice;
 
+import Framework.Simulation.WaysideSystem;
 import Framework.Support.BlockIDs;
 import Framework.Support.Notifier;
 import Utilities.Records.BasicBlock;
@@ -76,7 +77,7 @@ class CTCBlock implements Notifier {
     /**
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
-    void setSwitchState(boolean state) {
+    void setSwitchState(boolean GUI, boolean state) {
         this.switchState = state;
         if(!(isSwitchCon || isSwitchDiv)) {
             return;
@@ -92,7 +93,7 @@ class CTCBlock implements Notifier {
         if (divergingBlockOneID.getBlockIdNum() == blockID.getBlockIdNum() || divergingBlockTwoID.getBlockIdNum() == blockID.getBlockIdNum()) {
             subMap.getSubject(convergingBlockID).setProperty("switchState", state);
         }
-        notifyChange("switchState", state);
+        if(!GUI){notifyChange("switchState", state);}
     }
 
     /**
@@ -146,9 +147,9 @@ class CTCBlock implements Notifier {
         return blockLength;
     }
 
-    void    setOccupied     (boolean occupied) {
+    void    setOccupied     (boolean GUI, boolean occupied) {
         this.occupied = occupied;
-        notifyChange("occupied", occupied);
+        if(!GUI){notifyChange("occupied", occupied);}
     }
     boolean getOccupied     () {
         return occupied;
@@ -156,14 +157,15 @@ class CTCBlock implements Notifier {
     boolean getUnderMaintenance () {
         return underMaintenance;
     }
-    void    setUnderMaintenance (boolean underMaintenance) {
+    void    setUnderMaintenance (boolean GUI, boolean underMaintenance) {
         this.underMaintenance = underMaintenance;
-        notifyChange("underMaintenance", underMaintenance);
+        if(!GUI){notifyChange("underMaintenance", underMaintenance);}
+        else{ WaysideSystem.getController(blockID.getLine(), blockID.getBlockIdNum()).CTCChangeBlockMaintenanceState(blockID.getBlockIdNum(), !underMaintenance);}
     }
 
-    void setSwitchLightState(boolean switchLightState) {
+    void setSwitchLightState(boolean GUI, boolean switchLightState) {
         this.lightState = switchLightState;
-        notifyChange("lightState", switchLightState);
+        if(!GUI){notifyChange("lightState", switchLightState);}
     }
     boolean getHasLight     () {
         return hasLight;
@@ -172,9 +174,9 @@ class CTCBlock implements Notifier {
         return lightState;
     }
 
-    void    setCrossingState(boolean crossingState) {
+    void    setCrossingState(boolean GUI, boolean crossingState) {
         this.crossingState = crossingState;
-        notifyChange("crossingState", crossingState);
+        if(!GUI){notifyChange("crossingState", crossingState);}
     }
     boolean getHasCrossing  () {
         return hasCrossing;

@@ -305,7 +305,7 @@ public class CTCOfficeManager {
         else {switchColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>());}
 
         block.getBooleanProperty(SWITCH_LIGHT_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
-            boolean hasLight = block.getBooleanProperty(HAS_LIGHT_PROPERTY).getValue();
+            boolean hasLight = block.hasLight();
             if(newValue && hasLight)
                 switchColors.get(block).setValue(Color.GREEN);
             else if(hasLight) {
@@ -323,7 +323,7 @@ public class CTCOfficeManager {
         else {crossingColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>());}
 
         block.getBooleanProperty(CROSSING_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
-            boolean hasCrossing = block.getBooleanProperty(HAS_CROSSING_PROPERTY).getValue();
+            boolean hasCrossing = block.hasCrossing();
             if(newValue && hasCrossing)
                 crossingColors.get(block).setValue(Color.RED);
             else if(hasCrossing) {
