@@ -74,6 +74,11 @@ public class mainMenu extends Application {
         primaryStage.show();
     }
 
+    @Override
+    public void stop() {
+        System.exit(0);
+    }
+
     private void openModuleTab(TabPane tabPane, String moduleName) {
         Tab tab = new Tab(moduleName);
         Node content = createModuleContent(moduleName); // Get the complex UI for the module
