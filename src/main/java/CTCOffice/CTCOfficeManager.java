@@ -2,6 +2,7 @@ package CTCOffice;
 
 import CTCOffice.ScheduleInfo.ScheduleFileSubject;
 import CTCOffice.ScheduleInfo.ScheduleLibrary;
+import Framework.Support.BlockIDs;
 import Framework.Support.ObservableHashMap;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
@@ -17,7 +18,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -90,7 +90,6 @@ public class CTCOfficeManager {
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
      * They reflect boolean properties of the CTCBlockSubject, and are updated by listeners.
-     * @see #setupMapChangeListener()
      */
     Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors      = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors    = new ConcurrentHashMap<>();
@@ -102,7 +101,6 @@ public class CTCOfficeManager {
      */
     @FXML
     public void initialize() {
-        setupMapChangeListener();
         CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
         blockTableGreen.setEditable(true);
         blockTableRed.setEditable(true);
@@ -120,11 +118,16 @@ public class CTCOfficeManager {
             if(!blockSelection.getItems().contains(block.getIntegerProperty(BLOCK_ID_PROPERTY).getValue())) {
                 blockSelection.getItems().add(block.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
             }
+            switchColorListener(block);
+            crossingColorListener(block);
+            maintenanceColorListener(block);
         }
-        setupMapChangeListener();
         blockNumberColumnGreen.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
         blockNumberColumnGreen.setStyle("-fx-alignment: CENTER_RIGHT;");
         blockNumberColumnGreen.setEditable(false);
+        blockNumberColumnGreen.setSortType(TableColumn.SortType.ASCENDING);
+        blockTableGreen.getSortOrder().add(blockNumberColumnGreen);
+        blockTableGreen.sort();
 
         occupationLightColumnGreen.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
         occupationLightColumnGreen.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumnGreen));
@@ -145,10 +148,13 @@ public class CTCOfficeManager {
         underMaintenanceColumnGreen.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
         switchLightColumnGreen.setCellValueFactory(block -> switchColors.get(block.getValue()));
 
-        //first lane table view
+        //second lane table view
         blockNumberColumnRed.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
         blockNumberColumnRed.setStyle("-fx-alignment: CENTER_RIGHT;");
         blockNumberColumnRed.setEditable(false);
+        blockNumberColumnRed.setSortType(TableColumn.SortType.ASCENDING);
+        blockTableRed.getSortOrder().add(blockNumberColumnRed);
+        blockTableRed.sort();
 
         occupationLightColumnRed.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
         occupationLightColumnRed.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumnRed));
@@ -295,7 +301,6 @@ public class CTCOfficeManager {
     }
 
     private void switchColorListener(CTCBlockSubject block){
-
         if(block.hasLight()) {switchColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>()).setValue(Color.RED);}
         else {switchColors.computeIfAbsent(block, k -> new SimpleObjectProperty<>());}
 
@@ -340,38 +345,6 @@ public class CTCOfficeManager {
             }
         });
     }
-
-    private void setupMapChangeListener() {
-        ObservableHashMap<BlockIDs, CTCBlockSubject> subjects = blockMap.getSubjects();
-
-        // Add a listener to the map of CTCBlockSubjects to add a color property for each new block is added
-        ObservableHashMap.MapListener<BlockIDs, CTCBlockSubject> colorListener = new ObservableHashMap.MapListener<>() {
-            public void onAdded(BlockIDs key, CTCBlockSubject value) {
-                switchColorListener(value);
-                crossingColorListener(value);
-                maintenanceColorListener(value);
-            }
-            public void onRemoved(BlockIDs key, CTCBlockSubject value) {
-                switchColors.remove(value);
-                crossingColors.remove(value);
-                maintenanceColors.remove(value);
-            }
-        };
-
-        subjects.addChangeListener(colorListener);
-    }
-
-
-//    @FXML
-//    private void toggle_VBox() {
-//        if (collapsingVBox.isVisible()) {
-//            collapsingVBox.setVisible(false);
-//            collapsingVBox.setManaged(false);
-//        } else {
-//            collapsingVBox.setVisible(true);
-//            collapsingVBox.setManaged(true);
-//        }
-//    }
 
 
     //TODO Implement a Create Train Code

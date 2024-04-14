@@ -1,7 +1,7 @@
 package CTCOffice;
 
+import Framework.Support.BlockIDs;
 import Framework.Support.Notifier;
-import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 
 import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
