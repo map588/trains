@@ -21,7 +21,7 @@ public class Main {
 
     public static double simTimeElapsed = 0;
     public static double simTimeMultiplier = 1;
-    public static long TIMESTEP = 100;
+    public static long TIMESTEP = (long)Constants.TIME_STEP_MS;
 
     private static ScheduledFuture<?> scheduledTask;
 
@@ -50,7 +50,7 @@ public class Main {
     }
 
     public static void modifyTimeMultiplier(double newMultiplier) {
-        long timestep = (long)(100 / newMultiplier);
+        long timestep = (long)(Constants.TIME_STEP_MS / newMultiplier);
         logger.info("Modifying timestep to {}", timestep);
         modifyTimestep(timestep);
     }
