@@ -57,8 +57,7 @@ public class mainMenu extends Application {
         speedSlider.setShowTickLabels(true);
         speedSlider.setShowTickMarks(true);
         speedSlider.setMajorTickUnit(2.0);
-//        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> Main.simTimeMultiplier = newVal.doubleValue());
-        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> Main.modifyTimeMultiplier(newVal.doubleValue()));
+        speedSlider.setOnMouseReleased(e -> Main.modifyTimeMultiplier(speedSlider.getValue()));
         toolBar.getItems().add( speedSlider);
 
         toolBar.getItems().add(timeLabel);
