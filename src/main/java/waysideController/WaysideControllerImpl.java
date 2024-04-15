@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import static Utilities.Constants.RESUME_TRAIN_SIGNAL;
+import static Utilities.Constants.STOP_TRAIN_SIGNAL;
 import static waysideController.Properties.PLCName_p;
 import static waysideController.Properties.maintenanceMode_p;
 
@@ -120,7 +122,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                     if(!change.changeType().equals(otherChange.changeType()) ||
                             change.changeValue() != otherChange.changeValue() ||
                             change.blockID() != otherChange.blockID()) {
-                      //  throw new RuntimeException("PLC programs are not in sync");
+                        throw new RuntimeException("PLC programs are not in sync");
                     }
                 }
 
@@ -167,7 +169,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                 ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, occupied);
 
             if(occupied && !blockMap.get(blockID).getBooleanAuth()) {
-                trackModel.setCommandedSpeed(blockID, -1);
+                trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
             }
         }
     }
@@ -361,9 +363,14 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
         block.setBooleanAuth(auth);
 
-        if(trackModel != null && block.isOccupied() && !auth) {
+        if(trackModel != null && block.isOccupied()) {
+            if (!auth) {
 //            trackModel.setTrainAuthority(blockID, -1);
-            trackModel.setCommandedSpeed(blockID, -1);
+                trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
+            }
+            else {
+                trackModel.setCommandedSpeed(blockID, RESUME_TRAIN_SIGNAL);
+            }
         }
     }
 

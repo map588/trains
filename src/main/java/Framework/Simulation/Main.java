@@ -49,7 +49,7 @@ public class Main {
     }
 
     public static void modifyTimeMultiplier(double newMultiplier) {
-        long timestep = (long)(Main.TIMESTEP / newMultiplier);
+        long timestep = (long)(Constants.TIME_STEP_MS / newMultiplier);
         logger.info("Modifying timestep to {}", timestep);
         syncTask.modifyTimestep(timestep);
     }

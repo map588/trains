@@ -50,5 +50,8 @@ public class Constants {
     final public static double MAX_POWER_HP = MAX_POWER_W / 745.7; // HP
     final public static double MAX_ENGINE_FORCE = 40000; //N
     final public static int MAX_PASSENGERS = 222;
+
+    public static final int STOP_TRAIN_SIGNAL = -1;
+    public static final int RESUME_TRAIN_SIGNAL = -2;
 }
 
