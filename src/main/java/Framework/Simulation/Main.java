@@ -20,8 +20,7 @@ public class Main {
 
 
     public static double simTimeElapsed = 0;
-    public static double simTimeMultiplier = 1;
-    public static long TIMESTEP = (long)Constants.TIME_STEP_MS;
+    public static long TIMESTEP = (long) Constants.TIME_STEP_MS;
 
     private static ScheduledFuture<?> scheduledTask;
 
@@ -50,13 +49,9 @@ public class Main {
     }
 
     public static void modifyTimeMultiplier(double newMultiplier) {
-        long timestep = (long)(Constants.TIME_STEP_MS / newMultiplier);
+        long timestep = (long)(Main.TIMESTEP / newMultiplier);
         logger.info("Modifying timestep to {}", timestep);
-        modifyTimestep(timestep);
-    }
-
-    public static void modifyTimestep(long newTimestep) {
-        syncTask.modifyTimestep(newTimestep);
+        syncTask.modifyTimestep(timestep);
     }
 
     private static class TimeSynchronizationTask implements Runnable {
