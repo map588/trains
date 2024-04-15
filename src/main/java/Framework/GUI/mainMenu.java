@@ -76,6 +76,7 @@ public class mainMenu extends Application {
 
     @Override
     public void stop() {
+        Main.stopSimulation();
         System.exit(0);
     }
 

@@ -168,7 +168,7 @@ public class WaysideControllerManager {
                 new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24)
         );
         blockTableLightsColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
-                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Signal_Light_Red_24.png", "/Framework.GUI.Images/Signal_Light_Green_24.png", 24, 24);
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Signal_Light_Red_24.png", "/Framework.GUI.Images/Signal_Light_Green_24.png", 24, 24, hasLight_p);
                 tabelCell.setOnMouseClicked(event -> {
                     if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                         if(tabelCell.getTableRow().getItem().getBlock().hasLight()) {
@@ -179,35 +179,47 @@ public class WaysideControllerManager {
                 return tabelCell;
             }
         );
-
-        blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
-            @Override
-            public void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if(empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
-                    if(blockInfo.getBlock().hasCrossing()) {
-                        CheckBox checkBox;
-                        {
-                            checkBox = new CheckBox();
-                            checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
-                            checkBox.setOpacity(1.0);
-                            checkBox.setSelected(item);
-                            checkBox.setOnMouseClicked(event -> {
-                                currentSubject.getController().maintenanceSetCrossing(blockInfo.getBlock().getBlockID(), checkBox.isSelected());
-                            });
+        blockTableCrossingColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Crossing_Down_24.png", "/Framework.GUI.Images/Crossing_Up_24.png", 24, 24, hasCrossing_p);
+                tabelCell.setOnMouseClicked(event -> {
+                    if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
+                        if(tabelCell.getTableRow().getItem().getBlock().hasCrossing()) {
+                            currentSubject.getController().maintenanceSetCrossing(tabelCell.getTableRow().getItem().getBlock().getBlockID(), !tabelCell.getTableRow().getItem().getBlock().getCrossingState());
                         }
-                        setGraphic(checkBox);
-                    } else {
-                        setGraphic(null);
                     }
-                }
-
+                });
+                return tabelCell;
             }
-        });
+        );
+
+//        blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
+//            @Override
+//            public void updateItem(Boolean item, boolean empty) {
+//                super.updateItem(item, empty);
+//
+//                if(empty || item == null) {
+//                    setGraphic(null);
+//                } else {
+//                    WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
+//                    if(blockInfo.getBlock().hasCrossing()) {
+//                        CheckBox checkBox;
+//                        {
+//                            checkBox = new CheckBox();
+//                            checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
+//                            checkBox.setOpacity(1.0);
+//                            checkBox.setSelected(item);
+//                            checkBox.setOnMouseClicked(event -> {
+//                                currentSubject.getController().maintenanceSetCrossing(blockInfo.getBlock().getBlockID(), checkBox.isSelected());
+//                            });
+//                        }
+//                        setGraphic(checkBox);
+//                    } else {
+//                        setGraphic(null);
+//                    }
+//                }
+//
+//            }
+//        });
         blockTableAuthColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
