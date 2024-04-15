@@ -13,8 +13,6 @@ import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import static Framework.Simulation.Main.getSimDeltaTime;
-import static Framework.Simulation.Main.simTimeMultiplier;
 import static Utilities.Constants.*;
 import static Utilities.Conversion.*;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
@@ -50,7 +48,7 @@ import static trainController.ControllerProperty.*;
  * Finally, the speed and power of the train are updated.
  */
 public class TrainControllerImpl implements TrainController{
-//    private static final double TIME_STEP = TIME_STEP_S;
+    private static final double TIME_STEP = TIME_STEP_S;
     private static final double DEAD_BAND = 0.01;
 
     private ControllerBlock currentBlock;
@@ -169,8 +167,7 @@ public class TrainControllerImpl implements TrainController{
         double proportionalTerm = Kp * error;
 
         // Update the rolling error
-        double TIME_DELTA = getSimDeltaTime();
-        rollingError += error * TIME_DELTA;
+        rollingError += error * TIME_STEP;
 
         // Introduce an integral term to reduce steady-state error
         double integralTerm = Ki * rollingError;
@@ -472,9 +469,9 @@ public class TrainControllerImpl implements TrainController{
     public double  getAcceleration() {
         return this.train.getAcceleration();
     }
-//    public double getTimeInterval(){
-//        return TIME_STEP;
-//    }
+    public double getTimeInterval(){
+        return TIME_STEP;
+    }
     public double  getPower() {
         return this.power;
     }

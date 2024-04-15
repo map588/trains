@@ -19,8 +19,6 @@ import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.*;
 
-import static Framework.Simulation.Main.getSimDeltaTime;
-import static Framework.Simulation.Main.simTimeMultiplier;
 import static Utilities.Constants.*;
 import static Utilities.Conversion.accelerationUnit.FPS2;
 import static Utilities.Conversion.accelerationUnit.MPS2;
@@ -44,6 +42,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
     private final int trainID;
+    private final double TIME_DELTA = TIME_STEP_S;
 
 
     private final TrainModelSubject subject;
@@ -147,28 +146,28 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     synchronized public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
-           if (this.brakeFailure) {
-               this.setServiceBrake(false);
-           } else {
-               this.setServiceBrake(controllerValues.serviceBrake());
-               this.setEmergencyBrake(controllerValues.emergencyBrake());
-           }
+        if (this.brakeFailure) {
+            this.setServiceBrake(false);
+        } else {
+            this.setServiceBrake(controllerValues.serviceBrake());
+            this.setEmergencyBrake(controllerValues.emergencyBrake());
+        }
 
-           if (this.powerFailure) {
-               this.setPower(0);
-           } else {
-               this.setPower(controllerValues.power() * numCars);
-           }
+        if (this.powerFailure) {
+            this.setPower(0);
+        } else {
+            this.setPower(controllerValues.power() * numCars);
+        }
 
-           this.setExtLights(controllerValues.exteriorLights());
-           this.setIntLights(controllerValues.interiorLights());
-           this.setLeftDoors(controllerValues.leftDoors());
-           this.setRightDoors(controllerValues.rightDoors());
-           this.setSetTemperature(controllerValues.setTemperature());
+        this.setExtLights(controllerValues.exteriorLights());
+        this.setIntLights(controllerValues.interiorLights());
+        this.setLeftDoors(controllerValues.leftDoors());
+        this.setRightDoors(controllerValues.rightDoors());
+        this.setSetTemperature(controllerValues.setTemperature());
 
-           this.setAcceleration(acceleration);
-           this.setActualSpeed(speed);
-           this.setRealTemperature(newRealTemperature);
+        this.setAcceleration(acceleration);
+        this.setActualSpeed(speed);
+        this.setRealTemperature(newRealTemperature);
     }
 
     //Called when not running System.
@@ -247,19 +246,18 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.acceleration = (netForce / this.mass);
 
         //SPEED CALCULATION
-        double TIME_DELTA = getSimDeltaTime();
         if (this.power <= MAX_POWER_W * numCars) {
-            this.speed = (this.speed + (TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
+            this.speed = (this.speed + (this.TIME_DELTA / 2) * (this.acceleration + previousAcceleration));
         }
 
         if (this.speed < 0) { this.speed = 0; }
         if (this.speed > Constants.MAX_SPEED) { this.speed = Constants.MAX_SPEED; }
 
         //DISTANCE CALCULATION
-        this.relativeDistance += this.speed * TIME_DELTA;
+        this.relativeDistance += this.speed * this.TIME_DELTA;
 
         //TEMPERATURE CALCULATION
-        this.elapsedTime += TIME_DELTA;
+        this.elapsedTime += this.TIME_DELTA;
         if(this.elapsedTime >= 1 && (this.realTemperature < this.setTemperature)) {
             this.newRealTemperature = this.realTemperature + 1;
             this.elapsedTime = 0;
@@ -305,11 +303,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         listeningExecutor.execute(() -> {
             this.emergencyBrake = brake;
         });
-            notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
+        notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
     }
     public void setServiceBrake(boolean brake) {
         listeningExecutor.execute(() -> {
-        this.serviceBrake = (!brakeFailure && brake);
+            this.serviceBrake = (!brakeFailure && brake);
         });
         notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
     }

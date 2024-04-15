@@ -1,6 +1,5 @@
 package trainController;
 
-import Framework.Simulation.Main;
 import Utilities.Constants;
 import org.slf4j.Logger;
 import trackModel.TrackLine;
@@ -8,6 +7,7 @@ import trainModel.TrainModelImpl;
 
 public class KTuner {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(KTuner.class);
+    private static final double TIME_STEP = (double) Constants.TIME_STEP_MS / 1000.0;
 
     private final TrainModelImpl train;
     private final TrainControllerImpl controller;
@@ -94,7 +94,7 @@ public class KTuner {
                 overshoot = Math.max(overshoot, currentSpeed - setSpeed);
             }
 
-            time += Main.getSimDeltaTime();
+            time += TIME_STEP;
         }
 
         setKi(prevKi);

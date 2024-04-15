@@ -2,6 +2,7 @@ package Framework.Simulation;
 
 import CTCOffice.CTCOfficeImpl;
 import Framework.GUI.mainMenu;
+import Utilities.Constants;
 import Utilities.GlobalBasicBlockParser;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -46,6 +47,12 @@ public class Main {
         syncTask.startScheduling(scheduledExecutorService, TIMESTEP);
 
         Application.launch(mainMenu.class, args);
+    }
+
+    public static void modifyTimeMultiplier(double newMultiplier) {
+        long timestep = (long)(100 / newMultiplier);
+        logger.info("Modifying timestep to {}", timestep);
+        modifyTimestep(timestep);
     }
 
     public static void modifyTimestep(long newTimestep) {
@@ -108,7 +115,7 @@ public class Main {
 
             // Call trackSystem.update() after both update methods have finished
             synchronizationPool.submit(trackSystem::update);
-            simTimeElapsed += getSimDeltaTime();
+            simTimeElapsed += Constants.TIME_STEP_S;
             Platform.runLater(() -> mainMenu.timeLabel.setText("Time: " + simTimeElapsed + "s"));
         }
     }
@@ -144,9 +151,5 @@ public class Main {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    public static double getSimDeltaTime() {
-        return TIMESTEP/1000.0 * simTimeMultiplier;
     }
 }
