@@ -31,13 +31,13 @@ if_else_statement
 
 for_statement returns [int start, int end]
 locals [String name]
-    : FOR VARIABLE '='       { name = $VARIABLE.text; executor.addVariable(name); }
+    : FOR VARIABLE '='       { $name = $VARIABLE.text; }
         ( int_val            { $start = $int_val.val; }
         | arith_expression   { $start = $arith_expression.val; }
         )
       TO  (int_val           { $end = $int_val.val; }
           |arith_expression  { $end = $arith_expression.val; }
-          )
+          ){executor.addVariable($name, $start);}
       DO
       NEWLINE (statement | statement NEWLINE | NEWLINE)+
       NEWLINE ENDFOR ;
@@ -65,8 +65,8 @@ arith_expression returns [int val]
 
 
 int_term  returns [int val]
-: int_val  {      $val = int_val.int; }
-| int_variable  { $val = executor.getVariable(int_variable.text); }
+: int_val  {      $val = int_val().val; }
+| int_variable  { $val = int_variable().val; }
 ;
 
 int_val returns [int val]
