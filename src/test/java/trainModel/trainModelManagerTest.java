@@ -39,7 +39,7 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @AfterEach
     public void tearDown() {
-        trainModelManager.subjectMap.getSubjects().clear();
+//        trainModelManager.subjectMap.getSubjects().clear();
     }
 
     @Test

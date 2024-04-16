@@ -25,7 +25,7 @@ class TrainControllerSubjectTest extends BaseTest {
     @Test
     void testSetProperty() {
         subject.setProperty(COMMAND_SPEED, 50.0);
-        verify(controller).setValue(COMMAND_SPEED.getPropertyName(), 50.0);
+        verify(controller).setValue(COMMAND_SPEED, 50.0);
     }
 
     @Test
