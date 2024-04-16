@@ -107,10 +107,9 @@ class CTCBlock implements Notifier {
                 subMap.getSubject(convergingBlockID).getBlockInfo().setSwitchState(false, state);
             }
         }
-        else{WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);
+        else{WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(convergingBlockID.blockIdNum(), state);
             logger.info("Wayside called to set switch state to " + state + " for block " + convergingBlockID.blockIdNum() + " on line " + blockID.line());
         }
-
     }
 
     /**
