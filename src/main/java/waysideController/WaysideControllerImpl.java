@@ -196,10 +196,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
         boolean currentState = block.inMaintenance();
 
-        if(currentState != maintenanceState) {
+        if(currentState != maintenanceState && (!maintenanceState || !block.isOccupied())) {
             block.setBlockMaintenanceState(maintenanceState);
             block.setOccupied(maintenanceState);
-//            if(ctcOffice != null)
+            if(ctcOffice != null)
+                ctcOffice.setBlockMaintenance(trackLine, blockID, maintenanceState);
 //                ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, maintenanceState);
         }
     }
@@ -210,9 +211,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         logger.info("Put all blocks out of maintenance mode");
         for(WaysideBlock block : blockMap.values()) {
             if(!block.inMaintenance()) {
-                block.setBlockMaintenanceState(true);
+                block.setBlockMaintenanceState(false);
                 block.setOccupied(false);
-//                if(ctcOffice != null)
+                if(ctcOffice != null)
+                    ctcOffice.setBlockMaintenance(trackLine, block.getBlockID(), false);
 //                    ctcOffice.setBlockOccupancy(Lines.GREEN, block.getBlockID(), false);
             }
         }
