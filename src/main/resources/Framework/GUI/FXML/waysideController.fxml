@@ -90,6 +90,7 @@
                                        <TableColumn fx:id="blockTableLightsColumn" editable="false" prefWidth="49.0" style="-fx-alignment: CENTER;" text="Light" />
                                        <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="71.0" style="-fx-alignment: CENTER;" text="Crossing&#10;is Open?" />
                                        <TableColumn fx:id="blockTableAuthColumn" prefWidth="51.0" style="-fx-alignment: CENTER;" text="Auth" />
+                                 <TableColumn fx:id="blockTableMaintenanceCol" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Maintenance?" />
                                    </columns>
                                    <columnResizePolicy>
                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

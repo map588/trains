@@ -48,6 +48,8 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<WaysideBlockSubject, Boolean> blockTableAuthColumn;
     @FXML
+    private TableColumn<WaysideBlockSubject, Boolean> blockTableMaintenanceCol;
+    @FXML
     private TableView<WaysideBlockSubject> switchTable;
     @FXML
     private TableColumn<WaysideBlockSubject, Integer> switchTableIDColumn;
@@ -110,6 +112,7 @@ public class WaysideControllerManager {
         blockTableLightsColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(lightState_p));
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(crossingState_p));
         blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
+        blockTableMaintenanceCol.setCellValueFactory(block -> block.getValue().getBooleanProperty(inMaintenance_p));
 
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchBlockParent_p).asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
@@ -188,35 +191,6 @@ public class WaysideControllerManager {
                 return tabelCell;
             }
         );
-
-//        blockTableCrossingColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
-//            @Override
-//            public void updateItem(Boolean item, boolean empty) {
-//                super.updateItem(item, empty);
-//
-//                if(empty || item == null) {
-//                    setGraphic(null);
-//                } else {
-//                    WaysideBlockSubject blockInfo = getTableView().getItems().get(getIndex());
-//                    if(blockInfo.getBlock().hasCrossing()) {
-//                        CheckBox checkBox;
-//                        {
-//                            checkBox = new CheckBox();
-//                            checkBox.setDisable(!currentSubject.getBooleanProperty(maintenanceMode_p).get());
-//                            checkBox.setOpacity(1.0);
-//                            checkBox.setSelected(item);
-//                            checkBox.setOnMouseClicked(event -> {
-//                                currentSubject.getController().maintenanceSetCrossing(blockInfo.getBlock().getBlockID(), checkBox.isSelected());
-//                            });
-//                        }
-//                        setGraphic(checkBox);
-//                    } else {
-//                        setGraphic(null);
-//                    }
-//                }
-//
-//            }
-//        });
         blockTableAuthColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
             public void updateItem(Boolean item, boolean empty) {
@@ -239,6 +213,13 @@ public class WaysideControllerManager {
                     setGraphic(checkBox);
                 }
             }
+        });
+        blockTableMaintenanceCol.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new BooleanIconTableCell<>(null, "/Framework.GUI.Images/wrench-icon_24.png", 24, 24);
+                tabelCell.setOnMouseClicked(event -> {
+                    currentSubject.getController().CTCChangeBlockMaintenanceState(tabelCell.getTableRow().getItem().getBlock().getBlockID(), !tabelCell.getTableRow().getItem().getBlock().inMaintenance());
+                });
+                return tabelCell;
         });
         switchTableStateColumn.setCellFactory(column -> new TableCell<WaysideBlockSubject, Boolean>() {
             @Override
