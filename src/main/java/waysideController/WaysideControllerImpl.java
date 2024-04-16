@@ -168,7 +168,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         logger.info("Setting occupancy for block {} to {}", blockID, occupied);
         WaysideBlock block = blockMap.get(blockID);
-        if(block.inMaintenance() && block.isOccupied() != occupied) {
+        if(!block.inMaintenance() && block.isOccupied() != occupied) {
             block.setOccupied(occupied);
 
             if(ctcOffice != null)
