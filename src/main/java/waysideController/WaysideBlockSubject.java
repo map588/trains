@@ -5,8 +5,6 @@ import Framework.Support.Notifier;
 import Framework.Support.ObservableHashMap;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,7 +34,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
         properties.put(lightState_p, new SimpleBooleanProperty(block.getLightState()));
         properties.put(crossingState_p, new SimpleBooleanProperty(block.getCrossingState()));
         properties.put(authority_p, new SimpleBooleanProperty(block.getBooleanAuth()));
-        properties.put(open_p, new SimpleBooleanProperty(block.isOpen()));
+        properties.put(inMaintenance_p, new SimpleBooleanProperty(block.inMaintenance()));
 
         properties.put(switchBlockParent_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockParent()));
         properties.put(switchBlockDef_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockDef()));

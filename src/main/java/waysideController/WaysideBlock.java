@@ -27,7 +27,7 @@ public class WaysideBlock implements Notifier {
     private boolean lightState;
     private boolean crossingState;
     private boolean booleanAuth;
-    private boolean open;
+    private boolean inMaintenance;
 
     private boolean direction;
     private boolean dir_assigned;
@@ -39,7 +39,7 @@ public class WaysideBlock implements Notifier {
         this.hasSwitch = block.isSwitch();
         this.hasLight = block.isLight();
         this.hasCrossing = block.blockType() == CROSSING;
-        this.open = true;
+        this.inMaintenance = false;
 
         if(this.hasSwitch) {
             logger.info("Switch Block: {}", block.blockNumber());
@@ -72,7 +72,7 @@ public class WaysideBlock implements Notifier {
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
-            case open_p -> setBlockMaintenanceState((boolean) newValue);
+            case inMaintenance_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + propertyName + " not found in WaysideBlock");
         }
     }
@@ -108,7 +108,7 @@ public class WaysideBlock implements Notifier {
     public boolean isOccupied() {
         return occupied;
     }
-    public boolean isOpen() { return open; }
+    public boolean inMaintenance() { return inMaintenance; }
     public void setOccupied(boolean occupied) {
        logger.info("Wayside block: {} -> Changed occupancy to {}", this.blockID, occupied);
         this.occupied = occupied;
@@ -118,12 +118,12 @@ public class WaysideBlock implements Notifier {
     }
 
 
-    public void setBlockMaintenanceState(boolean open) {
-       // System.out.println("Block Access State: " + open);
-        this.open = open;
+    public void setBlockMaintenanceState(boolean inMaintenance) {
+       // System.out.println("Block Access State: " + inMaintenance);
+        this.inMaintenance = inMaintenance;
 
         if(subject != null)
-            subject.notifyChange(open_p, open);
+            subject.notifyChange(inMaintenance_p, inMaintenance);
     }
     public boolean getSwitchState() {
         return switchState;
@@ -194,7 +194,7 @@ public class WaysideBlock implements Notifier {
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
-            case open_p -> setBlockMaintenanceState((boolean) newValue);
+            case inMaintenance_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
     }

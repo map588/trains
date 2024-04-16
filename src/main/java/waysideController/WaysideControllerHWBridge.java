@@ -186,7 +186,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     public void CTCSendAuthority(int blockID, int blockCount) {
         System.out.println("CTCSendAuthority: " + blockID + " " + blockCount);
 
-        if(blockMap.get(blockID).isOpen() && blockMap.get(blockID).isOccupied() && trackModel != null) {
+        if(blockMap.get(blockID).inMaintenance() && blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setTrainAuthority(blockID, blockCount);
         }
     }
@@ -218,7 +218,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     @Override
     public void CTCChangeBlockMaintenanceState(int blockID, boolean maintenanceState) {
         WaysideBlock block = blockMap.get(blockID);
-        boolean currentState = block.isOpen();
+        boolean currentState = block.inMaintenance();
 
         if(currentState != maintenanceState) {
             block.setBlockMaintenanceState(maintenanceState);
@@ -229,7 +229,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     @Override
     public void CTCEnableAllBlocks() {
         for(WaysideBlock block : blockMap.values()) {
-            if(!block.isOpen()) {
+            if(!block.inMaintenance()) {
                 block.setBlockMaintenanceState(true);
                 trackModelSetOccupancy(block.getBlockID(), false);
             }

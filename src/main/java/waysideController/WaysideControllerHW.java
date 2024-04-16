@@ -50,7 +50,7 @@ public class WaysideControllerHW implements PLCRunner {
     public void setSwitchPLC(int blockID, boolean switchState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen() && block.getSwitchState() != switchState) {
+        if(block.inMaintenance() && block.getSwitchState() != switchState) {
             currentPLCResult.push(new PLCChange("switch", blockID, switchState));
 //            block.setSwitchState(switchState);
 //            System.out.println("Send: switchState="+blockID+":"+switchState);
@@ -72,7 +72,7 @@ public class WaysideControllerHW implements PLCRunner {
     public void setTrafficLightPLC(int blockID, boolean lightState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen() && block.getSwitchState() != lightState) {
+        if(block.inMaintenance() && block.getSwitchState() != lightState) {
             currentPLCResult.push(new PLCChange("light", blockID, lightState));
 //            block.setSwitchState(lightState);
 //            System.out.println("Send: trafficLight=" + blockID + ":" + lightState);
@@ -94,7 +94,7 @@ public class WaysideControllerHW implements PLCRunner {
     public void setCrossingPLC(int blockID, boolean crossingState) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen() && block.getSwitchState() != crossingState) {
+        if(block.inMaintenance() && block.getSwitchState() != crossingState) {
             currentPLCResult.push(new PLCChange("crossing", blockID, crossingState));
 //            block.setSwitchState(crossingState);
 //            System.out.println("Send: crossing=" + blockID + ":" + crossingState);
@@ -112,7 +112,7 @@ public class WaysideControllerHW implements PLCRunner {
     public void setAuthorityPLC(int blockID, boolean auth) {
         WaysideBlock block = blockMap.get(blockID);
 
-        if(block.isOpen() && block.getBooleanAuth() != auth) {
+        if(block.inMaintenance() && block.getBooleanAuth() != auth) {
             currentPLCResult.push(new PLCChange("auth", blockID, auth));
 //            block.setSwitchState(auth);
 //            System.out.println("Send: auth=" + blockID + ":" + auth);
