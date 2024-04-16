@@ -48,8 +48,6 @@ public class WaysideControllerManager {
     @FXML
     private TableColumn<WaysideBlockSubject, Boolean> blockTableAuthColumn;
     @FXML
-    private TableColumn<WaysideBlockSubject, Double> blockTableSpeedColumn;
-    @FXML
     private TableView<WaysideBlockSubject> switchTable;
     @FXML
     private TableColumn<WaysideBlockSubject, Integer> switchTableIDColumn;
@@ -112,7 +110,6 @@ public class WaysideControllerManager {
         blockTableLightsColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(lightState_p));
         blockTableCrossingColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(crossingState_p));
         blockTableAuthColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(authority_p));
-        blockTableSpeedColumn.setCellValueFactory(block -> block.getValue().getDoubleProperty(speed_p).asObject());
 
         switchTableIDColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchBlockParent_p).asObject());
         switchTableBlockOutColumn.setCellValueFactory(block -> block.getValue().getIntegerProperty(switchedBlockID_p).asObject());
@@ -180,7 +177,7 @@ public class WaysideControllerManager {
             }
         );
         blockTableCrossingColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
-                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Crossing_Down_24.png", "/Framework.GUI.Images/Crossing_Up_24.png", 24, 24, hasCrossing_p);
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Crossing_Down_24.png", "/Framework.GUI.Images/Crossing_Up_NoBar_24.png", 24, 24, hasCrossing_p);
                 tabelCell.setOnMouseClicked(event -> {
                     if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                         if(tabelCell.getTableRow().getItem().getBlock().hasCrossing()) {

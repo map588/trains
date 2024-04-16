@@ -174,8 +174,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
-        blockMap.get(blockID).setSpeed(speed);
-
         System.out.println("Send: speed="+blockID+":"+speed);
         printStream.println("speed="+blockID+":"+speed);
     }

@@ -26,10 +26,7 @@ public class WaysideBlock implements Notifier {
     private boolean switchState;
     private boolean lightState;
     private boolean crossingState;
-    private int authority;
     private boolean booleanAuth;
-    private double speed;
-    private final double speedLimit;
     private boolean open;
 
     private boolean direction;
@@ -42,7 +39,6 @@ public class WaysideBlock implements Notifier {
         this.hasSwitch = block.isSwitch();
         this.hasLight = block.isLight();
         this.hasCrossing = block.blockType() == CROSSING;
-        this.speedLimit = block.speedLimit();
         this.open = true;
 
         if(this.hasSwitch) {
@@ -76,7 +72,6 @@ public class WaysideBlock implements Notifier {
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
-            case speed_p -> setSpeed((double) newValue);
             case open_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + propertyName + " not found in WaysideBlock");
         }
@@ -175,32 +170,6 @@ public class WaysideBlock implements Notifier {
             subject.notifyChange(authority_p, booleanAuth);
     }
 
-    public int getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(int authority) {
-        this.authority = authority;
-
-        if(subject != null)
-            subject.notifyChange(booleanAuth_p, booleanAuth);
-    }
-
-    public double getSpeedLimit() {
-        return speedLimit;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-
-        if(subject != null)
-            subject.notifyChange(speed_p, speed);
-    }
-
     public boolean getDirection() {
         return direction;
     }
@@ -225,7 +194,6 @@ public class WaysideBlock implements Notifier {
             case lightState_p -> setLightState((boolean) newValue);
             case crossingState_p -> setCrossingState((boolean) newValue);
             case authority_p -> setBooleanAuth((boolean) newValue);
-            case speed_p -> setSpeed((double) newValue);
             case open_p -> setBlockMaintenanceState((boolean) newValue);
             default -> System.err.println("Property " + property + " not found in WaysideBlock");
         }
