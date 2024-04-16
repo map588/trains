@@ -88,9 +88,6 @@ class CTCBlock implements Notifier {
     void setSwitchState(boolean GUI, boolean state) {
         if(!underMaintenance && GUI){
             setUnderMaintenance(true, true);
-            subMap.getSubject(convergingBlockID).getBlockInfo().setUnderMaintenance(true, true);
-            subMap.getSubject(divergingBlockOneID).getBlockInfo().setUnderMaintenance(true, true);
-            subMap.getSubject(divergingBlockTwoID).getBlockInfo().setUnderMaintenance(true, true);
         }
         if(!GUI){
             this.switchState = state;
@@ -179,8 +176,15 @@ class CTCBlock implements Notifier {
     void    setUnderMaintenance (boolean GUI, boolean underMaintenance) {
         if(!GUI){this.underMaintenance = underMaintenance; notifyChange("underMaintenance", underMaintenance);}
         else{
-            logger.info("Wayside called to set maintenance state to " + underMaintenance + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
-            WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);
+            if(isSwitchCon || isSwitchDiv){
+                logger.info("Wayside called to set maintenance state to " + underMaintenance + " for switch from block " + convergingBlockID.blockIdNum() + " on line " + blockID.line());
+                WaysideSystem.getController(convergingBlockID.line(), convergingBlockID.blockIdNum()).CTCChangeBlockMaintenanceState(convergingBlockID.blockIdNum(), underMaintenance);
+                WaysideSystem.getController(divergingBlockOneID.line(), divergingBlockOneID.blockIdNum()).CTCChangeBlockMaintenanceState(divergingBlockOneID.blockIdNum(), underMaintenance);
+                WaysideSystem.getController(divergingBlockTwoID.line(), divergingBlockTwoID.blockIdNum()).CTCChangeBlockMaintenanceState(divergingBlockTwoID.blockIdNum(), underMaintenance);
+            } else {
+                logger.info("Wayside called to set maintenance state to " + underMaintenance + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+                WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);
+            }
         }
     }
 
