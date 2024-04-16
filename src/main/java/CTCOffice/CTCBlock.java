@@ -91,26 +91,26 @@ class CTCBlock implements Notifier {
         }
         if(!GUI){
             this.switchState = state;
-
-            notifyChange("switchState", state);}
+            notifyChange("switchState", state);if (!(isSwitchCon || isSwitchDiv)) {
+                return;
+            }
+            if ((convergingBlockID == blockID) && ((state != subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState())
+                    ||  (state != subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState()))){
+                subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).getBlockInfo().setSwitchState(false, state);
+                subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).getBlockInfo().setSwitchState(false, state);
+            }
+            subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
+            subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
+            subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
+            if ((divergingBlockOneID.blockIdNum() == blockID.blockIdNum() || divergingBlockTwoID.blockIdNum() == blockID.blockIdNum()) &&
+                    (subMap.getSubject(BlockIDs.of(convergingBlockID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState() != state)) {
+                subMap.getSubject(convergingBlockID).getBlockInfo().setSwitchState(false, state);
+            }
+        }
         else{WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);
-            logger.info("Wayside called to set switch state to " + state + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+            logger.info("Wayside called to set switch state to " + state + " for block " + convergingBlockID.blockIdNum() + " on line " + blockID.line());
         }
-        if (!(isSwitchCon || isSwitchDiv)) {
-            return;
-        }
-        if ((convergingBlockID == blockID) && ((state != subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState())
-                                           ||  (state != subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState()))){
-            subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).getBlockInfo().setSwitchState(false, state);
-            subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).getBlockInfo().setSwitchState(false, state);
-        }
-        subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
-        subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
-        subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
-        if ((divergingBlockOneID.blockIdNum() == blockID.blockIdNum() || divergingBlockTwoID.blockIdNum() == blockID.blockIdNum()) &&
-                (subMap.getSubject(BlockIDs.of(convergingBlockID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState() != state)) {
-            subMap.getSubject(convergingBlockID).getBlockInfo().setSwitchState(false, state);
-        }
+
     }
 
     /**

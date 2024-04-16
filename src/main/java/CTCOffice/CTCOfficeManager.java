@@ -35,43 +35,46 @@ public class CTCOfficeManager {
     @FXML private TableColumn<CTCBlockSubject, Integer> blockNumberColumnGreen;
     @FXML private TableColumn<CTCBlockSubject, Boolean> occupationLightColumnGreen;
     @FXML private TableColumn<CTCBlockSubject, Paint> switchLightColumnGreen;
-
-
+    @FXML private TableColumn<CTCBlockSubject, String> switchStateColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumnGreen;
+    @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumnGreen;
 
     @FXML private TableView<CTCBlockSubject> blockTableRed;
     @FXML private TableColumn<CTCBlockSubject, Integer> blockNumberColumnRed;
     @FXML private TableColumn<CTCBlockSubject, Boolean> occupationLightColumnRed;
     @FXML private TableColumn<CTCBlockSubject, Paint> switchLightColumnRed;
-
-
-
-
-
-
-    @FXML private TableColumn<CTCBlockSubject, String> switchStateColumnGreen;
-    @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumnGreen;
-    @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumnGreen;
     @FXML private TableColumn<CTCBlockSubject, String> switchStateColumnRed;
     @FXML private TableColumn<CTCBlockSubject, Paint> crossingStateColumnRed;
     @FXML private TableColumn<CTCBlockSubject, Paint> underMaintenanceColumnRed;
+
+    @FXML private ComboBox<Integer> blockSelection;
+    @FXML private ComboBox<String> lineSelection;
+    @FXML private Button switchLightToggle;
+    @FXML private Button switchStateToggle;
+    @FXML private Button crossingStateToggle;
+    @FXML private Button maintenanceToggle;
+
     @FXML private TableView<ScheduleFileSubject> scheduleTable;
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleNameColumn;
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleDateModColumn;
+
     @FXML private ComboBox<String> scheduleSelector;
     @FXML private Button selectScheduleButton;
+
     @FXML private TableView<TrainScheduleSubject> trainSelectTable;
     @FXML private ChoiceBox<Integer> lineTrainSelector;
     @FXML private ChoiceBox<Integer> trainIDSelector;
     @FXML private TableColumn<TrainScheduleSubject, String> lineColumn;
+    @FXML private TableColumn<TrainScheduleSubject, Integer> carNumberColumn;
+
+
     @FXML private TableColumn<TrainScheduleSubject, Integer> dispatchTimeColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> stationBlockIDColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> arrivalTimeColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> departureTimeColumn;
+
     @FXML private TableView<TrainScheduleSubject> scheduleEditTable;
     @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
-
-
-    @FXML private TableColumn<TrainScheduleSubject, Integer> carNumberColumn;
     @FXML private ChoiceBox<String> lineStopSelector;
     @FXML private ChoiceBox<Integer> trainStopSelector;
     @FXML private Button AddStop;
@@ -82,21 +85,13 @@ public class CTCOfficeManager {
     @FXML private ChoiceBox<Integer> stationStopSelector;
     @FXML private Button saveScheduleButton;
     @FXML private Button saveStopButton;
-
-
     @FXML private Button AddTrain;
     @FXML private Button RemoveTrain;
     @FXML private ComboBox<Integer> dispatchTimeSelector;
     @FXML private Spinner<Integer> carsSelector;
     @FXML private Button saveTrainButton;
-    @FXML private Button DispatchButton;
-    @FXML private ComboBox<Integer> blockSelection;
-    @FXML private ComboBox<String> lineSelection;
-    @FXML private Button switchLightToggle;
-    @FXML private Button switchStateToggle;
-    @FXML private Button crossingStateToggle;
-    @FXML private Button maintenanceToggle;
 
+    @FXML private Button DispatchButton;
 
     CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
