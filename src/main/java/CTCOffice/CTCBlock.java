@@ -33,7 +33,7 @@ class CTCBlock implements Notifier {
     CTCBlock(BasicBlock block) {
         this.blockID = new BlockIDs(block.blockNumber(), block.trackLine());
         this.occupied = false;
-        this.hasLight = block.blockType() == STATION;
+        this.hasLight = block.isLight();
         this.isSwitchCon = block.isSwitch();
 
         this.hasCrossing = (block.blockType() == CROSSING);
@@ -164,7 +164,7 @@ class CTCBlock implements Notifier {
 
     void setSwitchLightState(boolean GUI, boolean switchLightState) {
         this.lightState = switchLightState;
-        if(!GUI){notifyChange("lightState", switchLightState);}
+        if(!GUI){notifyChange("switchLightState", switchLightState);}
     }
     boolean getHasLight     () {
         return hasLight;
