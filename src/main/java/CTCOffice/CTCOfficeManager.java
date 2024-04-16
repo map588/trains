@@ -122,65 +122,33 @@ public class CTCOfficeManager {
             crossingColorListener(block);
             maintenanceColorListener(block);
         }
-        blockNumberColumnGreen.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
-        blockNumberColumnGreen.setStyle("-fx-alignment: CENTER_RIGHT;");
-        blockNumberColumnGreen.setEditable(false);
-        blockNumberColumnGreen.setSortType(TableColumn.SortType.ASCENDING);
-        blockTableGreen.getSortOrder().add(blockNumberColumnGreen);
-        blockTableGreen.sort();
-
-        occupationLightColumnGreen.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
-        occupationLightColumnGreen.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumnGreen));
-        occupationLightColumnGreen.setEditable(false);
-
-        switchStateColumnGreen.setCellValueFactory(block -> {
-            block.getValue().updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
-            return block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
-        });
-        switchStateColumnGreen.setStyle("-fx-alignment: CENTER;");
-
-
-        switchLightColumnGreen.setCellFactory(column -> createColoredCircleCell());
-        crossingStateColumnGreen.setCellFactory(column -> createColoredCircleCell());
-        underMaintenanceColumnGreen.setCellFactory(column -> createColoredCircleCell());
-
-        crossingStateColumnGreen.setCellValueFactory(block -> crossingColors.get(block.getValue()));
-        underMaintenanceColumnGreen.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
-        switchLightColumnGreen.setCellValueFactory(block -> switchColors.get(block.getValue()));
+        LineTableSet(blockNumberColumnGreen, blockTableGreen, occupationLightColumnGreen, switchStateColumnGreen, switchLightColumnGreen, crossingStateColumnGreen, underMaintenanceColumnGreen);
 
         //second lane table view
-        blockNumberColumnRed.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
-        blockNumberColumnRed.setStyle("-fx-alignment: CENTER_RIGHT;");
-        blockNumberColumnRed.setEditable(false);
-        blockNumberColumnRed.setSortType(TableColumn.SortType.ASCENDING);
-        blockTableRed.getSortOrder().add(blockNumberColumnRed);
-        blockTableRed.sort();
-
-        occupationLightColumnRed.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
-        occupationLightColumnRed.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumnRed));
-        occupationLightColumnRed.setEditable(false);
-
-        switchStateColumnRed.setCellValueFactory(block -> {
-            block.getValue().updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
-            return block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
-        });
-        switchStateColumnRed.setStyle("-fx-alignment: CENTER;");
-
-
-        switchLightColumnRed.setCellFactory(column -> createColoredCircleCell());
-        crossingStateColumnRed.setCellFactory(column -> createColoredCircleCell());
-        underMaintenanceColumnRed.setCellFactory(column -> createColoredCircleCell());
-
-        crossingStateColumnRed.setCellValueFactory(block -> crossingColors.get(block.getValue()));
-        underMaintenanceColumnRed.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
-        switchLightColumnRed.setCellValueFactory(block -> switchColors.get(block.getValue()));
+        LineTableSet(blockNumberColumnRed, blockTableRed, occupationLightColumnRed, switchStateColumnRed, switchLightColumnRed, crossingStateColumnRed, underMaintenanceColumnRed);
 
 
         //Table editing bar
-        switchLightToggle.setOnAction(event -> toggleProperty(SWITCH_LIGHT_STATE_PROPERTY));
-        switchStateToggle.setOnAction(event -> toggleProperty(SWITCH_STATE_PROPERTY));
-        crossingStateToggle.setOnAction(event -> toggleProperty(CROSSING_STATE_PROPERTY));
-        maintenanceToggle.setOnAction(event -> toggleProperty(UNDER_MAINTENANCE_PROPERTY));
+        switchLightToggle.setOnAction(event -> {
+            System.out.println("toggled traffic light for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+            CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
+            block.getBlockInfo().setSwitchLightState(true, !block.getBlockInfo().getSwitchLightState());
+        });
+        switchStateToggle.setOnAction(event -> {
+            System.out.println("toggled switch for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+            CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
+            block.getBlockInfo().setSwitchState(true, !block.getBlockInfo().getSwitchState());
+        });
+        crossingStateToggle.setOnAction(event -> {
+            System.out.println("toggled crossing for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+            CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
+            block.getBlockInfo().setCrossingState(true, !block.getBlockInfo().getCrossingState());
+        });
+        maintenanceToggle.setOnAction(event -> {
+            System.out.println("toggled maintenance for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+            CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
+            block.getBlockInfo().setUnderMaintenance(true, !block.getBlockInfo().getUnderMaintenance());
+        });
 
         //This is bad, because these properties don't change   // they do change Matt, the listener is for what is selected on screen
         blockTableGreen.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -264,6 +232,36 @@ public class CTCOfficeManager {
             office.sendSpeed(Lines.GREEN, 0, 40);
         });
 
+    }
+
+    private void LineTableSet(TableColumn<CTCBlockSubject, Integer> blockNumberColumn, TableView<CTCBlockSubject> blockTable, TableColumn<CTCBlockSubject, Boolean> occupationLightColumn,
+                              TableColumn<CTCBlockSubject, String> switchStateColumn, TableColumn<CTCBlockSubject, Paint> switchLightColumn, TableColumn<CTCBlockSubject, Paint> crossingStateColumn,
+                              TableColumn<CTCBlockSubject, Paint> underMaintenanceColumn) {
+        blockNumberColumn.setCellValueFactory(block -> new ReadOnlyObjectWrapper<>(block.getValue().getIntegerProperty(BLOCK_ID_PROPERTY).getValue()));
+        blockNumberColumn.setStyle("-fx-alignment: CENTER_RIGHT;");
+        blockNumberColumn.setEditable(false);
+        blockNumberColumn.setSortType(TableColumn.SortType.ASCENDING);
+        blockTable.getSortOrder().add(blockNumberColumn);
+        blockTable.sort();
+
+        occupationLightColumn.setCellValueFactory(block -> block.getValue().getBooleanProperty(OCCUPIED_PROPERTY));
+        occupationLightColumn.setCellFactory(CheckBoxTableCell.forTableColumn(occupationLightColumn));
+        occupationLightColumn.setEditable(false);
+
+        switchStateColumn.setCellValueFactory(block -> {
+            block.getValue().updateStringProperty(SWITCH_STATE_STRING_PROPERTY);
+            return block.getValue().getStringProperty(SWITCH_STATE_STRING_PROPERTY);
+        });
+        switchStateColumn.setStyle("-fx-alignment: CENTER;");
+
+
+        switchLightColumn.setCellFactory(column -> createColoredCircleCell());
+        crossingStateColumn.setCellFactory(column -> createColoredCircleCell());
+        underMaintenanceColumn.setCellFactory(column -> createColoredCircleCell());
+
+        crossingStateColumn.setCellValueFactory(block -> crossingColors.get(block.getValue()));
+        underMaintenanceColumn.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
+        switchLightColumn.setCellValueFactory(block -> switchColors.get(block.getValue()));
     }
 
     /**
