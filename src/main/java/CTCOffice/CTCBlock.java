@@ -91,23 +91,25 @@ class CTCBlock implements Notifier {
         }
         if(!GUI){
             this.switchState = state;
-            if (!(isSwitchCon || isSwitchDiv)) {
-                return;
-            }
 
-            if (convergingBlockID == blockID) {
-                subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).setProperty("switchState", state);
-                subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).setProperty("switchState", state);
-            }
-            subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
-            subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
-            subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
-            if (divergingBlockOneID.blockIdNum() == blockID.blockIdNum() || divergingBlockTwoID.blockIdNum() == blockID.blockIdNum()) {
-                subMap.getSubject(convergingBlockID).setProperty("switchState", state);
-            }
             notifyChange("switchState", state);}
-        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);
+        else{WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);
             logger.info("Wayside called to set switch state to " + state + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+        }
+        if (!(isSwitchCon || isSwitchDiv)) {
+            return;
+        }
+        if ((convergingBlockID == blockID) && ((state != subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState())
+                                           ||  (state != subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState()))){
+            subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).getBlockInfo().setSwitchState(false, state);
+            subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).getBlockInfo().setSwitchState(false, state);
+        }
+        subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
+        subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
+        subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
+        if ((divergingBlockOneID.blockIdNum() == blockID.blockIdNum() || divergingBlockTwoID.blockIdNum() == blockID.blockIdNum()) &&
+                (subMap.getSubject(BlockIDs.of(convergingBlockID.blockIdNum(), blockID.line())).getBlockInfo().getSwitchState() != state)) {
+            subMap.getSubject(convergingBlockID).getBlockInfo().setSwitchState(false, state);
         }
     }
 
@@ -174,8 +176,9 @@ class CTCBlock implements Notifier {
     }
     void    setUnderMaintenance (boolean GUI, boolean underMaintenance) {
         if(!GUI){this.underMaintenance = underMaintenance; notifyChange("underMaintenance", underMaintenance);}
-        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);
+        else{
             logger.info("Wayside called to set maintenance state to " + underMaintenance + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+            WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);
         }
     }
 
@@ -184,7 +187,10 @@ class CTCBlock implements Notifier {
             setUnderMaintenance(true, true);
         }
         if(!GUI){this.lightState = switchLightState; notifyChange("switchLightState", switchLightState);}
-        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetTrafficLight(blockID.blockIdNum(), switchLightState);}
+        else{
+            logger.info("Wayside called to set light state to " + switchLightState + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+            WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetTrafficLight(blockID.blockIdNum(), switchLightState);
+        }
     }
     boolean getHasLight     () {
         return hasLight;

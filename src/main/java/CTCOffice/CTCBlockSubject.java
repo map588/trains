@@ -40,7 +40,7 @@ public class CTCBlockSubject implements AbstractSubject {
              properties.put(SWITCH_STATE_STRING_PROPERTY, new SimpleStringProperty(this, SWITCH_STATE_STRING_PROPERTY, block.getSwitchStateString()));
              this.block = block;
          } // the initializers for the properties of a block
-
+        /*
         getBooleanProperty(OCCUPIED_PROPERTY).addListener((observable, oldValue, newValue) -> block.setOccupied(true,newValue));
         getBooleanProperty(SWITCH_LIGHT_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
             logger.info("Switch light state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
@@ -55,6 +55,7 @@ public class CTCBlockSubject implements AbstractSubject {
             logger.info("Crossing state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
             block.setCrossingState(true,newValue);
         });
+         */
     }
 
     public BooleanProperty getBooleanProperty(String propertyName) {
