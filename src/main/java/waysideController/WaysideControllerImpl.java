@@ -221,8 +221,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
-        logger.info("Setting switch {} to {}", blockID, switchState);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
+            logger.info("Setting switch {} to {}", blockID, switchState);
             blockMap.get(blockID).setSwitchState(switchState);
             if(trackModel != null)
                 trackModel.setSwitchState(blockID, switchState);
