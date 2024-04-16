@@ -42,7 +42,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
     private final int trainID;
-    private final double TIME_DELTA = (double)TIME_STEP_MS/1000;
+    private final double TIME_DELTA = TIME_STEP_S;
 
 
     private final TrainModelSubject subject;
@@ -146,28 +146,28 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     synchronized public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
-           if (this.brakeFailure) {
-               this.setServiceBrake(false);
-           } else {
-               this.setServiceBrake(controllerValues.serviceBrake());
-               this.setEmergencyBrake(controllerValues.emergencyBrake());
-           }
+        if (this.brakeFailure) {
+            this.setServiceBrake(false);
+        } else {
+            this.setServiceBrake(controllerValues.serviceBrake());
+            this.setEmergencyBrake(controllerValues.emergencyBrake());
+        }
 
-           if (this.powerFailure) {
-               this.setPower(0);
-           } else {
-               this.setPower(controllerValues.power() * numCars);
-           }
+        if (this.powerFailure) {
+            this.setPower(0);
+        } else {
+            this.setPower(controllerValues.power() * numCars);
+        }
 
-           this.setExtLights(controllerValues.exteriorLights());
-           this.setIntLights(controllerValues.interiorLights());
-           this.setLeftDoors(controllerValues.leftDoors());
-           this.setRightDoors(controllerValues.rightDoors());
-           this.setSetTemperature(controllerValues.setTemperature());
+        this.setExtLights(controllerValues.exteriorLights());
+        this.setIntLights(controllerValues.interiorLights());
+        this.setLeftDoors(controllerValues.leftDoors());
+        this.setRightDoors(controllerValues.rightDoors());
+        this.setSetTemperature(controllerValues.setTemperature());
 
-           this.setAcceleration(acceleration);
-           this.setActualSpeed(speed);
-           this.setRealTemperature(newRealTemperature);
+        this.setAcceleration(acceleration);
+        this.setActualSpeed(speed);
+        this.setRealTemperature(newRealTemperature);
     }
 
     //Called when not running System.
@@ -303,11 +303,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         listeningExecutor.execute(() -> {
             this.emergencyBrake = brake;
         });
-            notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
+        notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
     }
     public void setServiceBrake(boolean brake) {
         listeningExecutor.execute(() -> {
-        this.serviceBrake = (!brakeFailure && brake);
+            this.serviceBrake = (!brakeFailure && brake);
         });
         notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
     }

@@ -5,6 +5,7 @@ import Framework.GUI.mainMenu;
 import Utilities.Constants;
 import Utilities.GlobalBasicBlockParser;
 import javafx.application.Application;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,51 +19,67 @@ public class Main {
     private static final GlobalBasicBlockParser blockParser = GlobalBasicBlockParser.getInstance();
 
 
-
     public static double simTimeElapsed = 0;
-    public static long TIMESTEP = 20;
+    public static long TIMESTEP = (long) Constants.TIME_STEP_MS;
+
+    private static ScheduledFuture<?> scheduledTask;
+
+    private static TimeSynchronizationTask syncTask;
 
     private static final int NUM_THREADS = 3;
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
-    private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-
-    private static TrackSystem trackSystem;
-    private static WaysideSystem waysideSystem;
-    private static TrainSystem trainSystem;
+    private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
         initializeJavaFX();
-
         System.out.println("Starting simulation...");
+
         CTCOfficeImpl CTC = CTCOfficeImpl.OFFICE;
 
-        trainSystem = new TrainSystem();
-        trackSystem = new TrackSystem(trainSystem);
+        TrainSystem trainSystem = new TrainSystem();
+        TrackSystem trackSystem = new TrackSystem(trainSystem);
         CTC.setTrackSystem(trackSystem);
+        WaysideSystem waysideSystem = new WaysideSystem(trackSystem, CTC, false);
 
-        waysideSystem = new WaysideSystem(trackSystem, CTC, false);
-
-
-
-
-        // Schedule time step functions
-        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackSystem, waysideSystem, trainSystem),
-                TIMESTEP, TIMESTEP, TimeUnit.MILLISECONDS);
+        syncTask = new TimeSynchronizationTask(trackSystem, waysideSystem, trainSystem);
+        syncTask.startScheduling(scheduledExecutorService, TIMESTEP);
 
         Application.launch(mainMenu.class, args);
     }
 
-    public void changeScheduledExecutionInterval(long newIntervalMs) {
-        scheduledExecutorService.shutdown();
-        scheduledExecutorService.scheduleAtFixedRate(new TimeSynchronizationTask(trackSystem, waysideSystem, trainSystem),
-                0, newIntervalMs, TimeUnit.MILLISECONDS);
+    public static void modifyTimeMultiplier(double newMultiplier) {
+        long timestep = (long)(Constants.TIME_STEP_MS / newMultiplier);
+        logger.info("Modifying timestep to {}", timestep);
+        syncTask.modifyTimestep(timestep);
     }
 
     private static class TimeSynchronizationTask implements Runnable {
         private final TrackSystem trackSystem;
         private final WaysideSystem waysideSystem;
         private final TrainSystem trainSystem;
+
+
+        public void startScheduling(ScheduledExecutorService scheduledExecutorService, long initialTimestep) {
+            Main.scheduledExecutorService = scheduledExecutorService;
+            Main.TIMESTEP = initialTimestep;
+            scheduleTask();
+        }
+
+        public void modifyTimestep(long newTimestep) {
+            if (scheduledTask != null && !scheduledTask.isDone()) {
+                scheduledTask.cancel(false);
+            }
+            Main.TIMESTEP = newTimestep;
+            scheduleTask();
+        }
+
+        private void scheduleTask() {
+            Main.scheduledTask = scheduledExecutorService.scheduleAtFixedRate(this,
+                    0,
+                    Main.TIMESTEP,
+                    TimeUnit.MILLISECONDS);
+        }
 
         public TimeSynchronizationTask(TrackSystem trackSystem, WaysideSystem waysideController, TrainSystem trainSystem) {
             this.trackSystem = trackSystem;
@@ -92,14 +109,42 @@ public class Main {
             }
 
             // Call trackSystem.update() after both update methods have finished
-            synchronizationPool.submit(() -> trackSystem.update());
-            //trackSystem.update();
+            synchronizationPool.submit(trackSystem::update);
             simTimeElapsed += Constants.TIME_STEP_S;
+            Platform.runLater(() -> mainMenu.timeLabel.setText("Time: " + simTimeElapsed + "s"));
         }
     }
 
     public static void stopSimulation() {
-        scheduledExecutorService.shutdown();
-        synchronizationPool.shutdown();
+        // Cancel the scheduled task
+        if (scheduledTask != null && !scheduledTask.isDone()) {
+            scheduledTask.cancel(false);
+        }
+
+        // Shutdown the scheduledExecutorService
+        if (!scheduledExecutorService.isShutdown()) {
+            scheduledExecutorService.shutdown();
+            try {
+                if (!scheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                    scheduledExecutorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                scheduledExecutorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // Shutdown the synchronizationPool
+        if (!synchronizationPool.isShutdown()) {
+            synchronizationPool.shutdown();
+            try {
+                if (!synchronizationPool.awaitTermination(1, TimeUnit.SECONDS)) {
+                    synchronizationPool.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                synchronizationPool.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 }

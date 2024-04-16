@@ -36,12 +36,7 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
         properties.put(lightState_p, new SimpleBooleanProperty(block.getLightState()));
         properties.put(crossingState_p, new SimpleBooleanProperty(block.getCrossingState()));
         properties.put(authority_p, new SimpleBooleanProperty(block.getBooleanAuth()));
-        properties.put(speed_p, new SimpleDoubleProperty(block.getSpeed()));
         properties.put(open_p, new SimpleBooleanProperty(block.isOpen()));
-
-        properties.put(lightColor_p, new SimpleObjectProperty<Paint>());
-        updateLightColor();
-        properties.get(lightState_p).addListener((observable, oldValue, newValue) -> updateLightColor());
 
         properties.put(switchBlockParent_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockParent()));
         properties.put(switchBlockDef_p, new ReadOnlyIntegerWrapper(block.getSwitchBlockDef()));
@@ -54,18 +49,6 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
 
     public WaysideBlock getBlock() {
         return block;
-    }
-
-    private void updateLightColor() {
-        if(block.hasLight()) {
-            if(getBooleanProperty(lightState_p).get())
-                getTrafficLightColor().set(Color.GREEN);
-            else
-                getTrafficLightColor().set(Color.RED);
-        }
-        else {
-            getTrafficLightColor().set(Color.TRANSPARENT);
-        }
     }
 
     @Override
@@ -136,14 +119,6 @@ public class WaysideBlockSubject implements AbstractSubject, Notifier {
             return (DoubleProperty) property;
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Property " + propertyName + " is not an DoubleProperty");
-        }
-    }
-
-    public ObjectProperty<Paint> getTrafficLightColor() {
-        try {
-            return (ObjectProperty<Paint>) properties.get(lightColor_p);
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Failed to get TrafficLightState property");
         }
     }
 

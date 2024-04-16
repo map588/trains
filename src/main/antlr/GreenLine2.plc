@@ -112,3 +112,6 @@ light[76] = dir_assigned[77] and not direction[77] and switch[77]
 light[77] = dir_assigned[77] and direction[77] and not switch[77]
 light[85] = dir_assigned[77] and not direction[77] and not switch[85]
 light[100] = dir_assigned[77] and direction[77] and switch[85]
+
+// Crossing
+crossing[108] = not occupied[107] and not occupied[108] and not occupied[109]

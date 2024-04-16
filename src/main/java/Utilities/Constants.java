@@ -23,7 +23,7 @@ public class Constants {
     final public static boolean GREEN_LINE = true;
 
     //Time Step Interval
-    final public static double TIME_STEP_MS = 100;
+    final public static double TIME_STEP_MS = 125;
     final public static double TIME_STEP_S = TIME_STEP_MS / 1000;
 
     final public static Direction YARD_OUT_DIRECTION = Direction.NORTH;
@@ -50,5 +50,8 @@ public class Constants {
     final public static double MAX_POWER_HP = MAX_POWER_W / 745.7; // HP
     final public static double MAX_ENGINE_FORCE = 40000; //N
     final public static int MAX_PASSENGERS = 222;
+
+    public static final int STOP_TRAIN_SIGNAL = -2;
+    public static final int RESUME_TRAIN_SIGNAL = -3;
 }
 

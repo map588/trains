@@ -11,7 +11,7 @@ public class TrainAndTrack extends BaseTest {
 
 
     private final TrainSystem trainSystem = new TrainSystem();
-    private final TrackSystem trackSystem = new TrackSystem();
+    private final TrackSystem trackSystem = new TrackSystem(trainSystem);
 
     @Test
     public void DoesNotExplode() {

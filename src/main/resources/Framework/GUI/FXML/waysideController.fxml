@@ -21,7 +21,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="632.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="waysideController.WaysideControllerManager">
    <children>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
@@ -84,14 +83,13 @@
                                        <Font size="21.0" />
                                    </font>
                                </Label>
-                               <TableView fx:id="blockTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="331.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                               <TableView fx:id="blockTable" fixedCellSize="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="331.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                    <columns>
                                        <TableColumn fx:id="blockTableIDColumn" editable="false" prefWidth="36.0" style="-fx-alignment: CENTER;" text="ID" />
-                                       <TableColumn fx:id="blockTableCircuitColumn" editable="false" prefWidth="58.0" style="-fx-alignment: CENTER;" text="Track&#10;Circuit" />
+                                       <TableColumn fx:id="blockTableCircuitColumn" editable="false" prefWidth="58.0" style="-fx-alignment: CENTER;" text="Occupied" />
                                        <TableColumn fx:id="blockTableLightsColumn" editable="false" prefWidth="49.0" style="-fx-alignment: CENTER;" text="Light" />
                                        <TableColumn fx:id="blockTableCrossingColumn" editable="false" prefWidth="71.0" style="-fx-alignment: CENTER;" text="Crossing&#10;is Open?" />
                                        <TableColumn fx:id="blockTableAuthColumn" prefWidth="51.0" style="-fx-alignment: CENTER;" text="Auth" />
-                                       <TableColumn fx:id="blockTableSpeedColumn" prefWidth="67.0" style="-fx-alignment: CENTER;" text="Speed&#10;(mph)" />
                                    </columns>
                                    <columnResizePolicy>
                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

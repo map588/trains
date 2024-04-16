@@ -5,6 +5,8 @@
 src/main/java/waysideController/plc_parser
 /src/main/java/Framework/Simulation/csvs/
 plcFile.plc
+PLC.plc
+WaysideHW.jar
 
 ### IntelliJ IDEA ###
 .idea/

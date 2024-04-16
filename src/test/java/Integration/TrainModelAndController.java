@@ -16,7 +16,7 @@ public class TrainModelAndController extends BaseTest  {
 
     @BeforeEach
     void setUp() {
-        TrackLine line = new TrackLine(GREEN, trackLines.get(GREEN));
+        TrackLine line = new TrackLine(GREEN);
     }
 
 //    @Test

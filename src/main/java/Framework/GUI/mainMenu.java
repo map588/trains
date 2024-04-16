@@ -1,5 +1,6 @@
 package Framework.GUI;
 
+import Framework.Simulation.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,6 +17,8 @@ import java.net.URL;
 public class mainMenu extends Application {
 
     String[] tabNames = {"CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
+
+    public static Label timeLabel = new Label();
 
     @Override
     public void start(Stage primaryStage) {
@@ -50,6 +53,15 @@ public class mainMenu extends Application {
             toolBar.getItems().add(tabButton);
         }
 
+        Slider speedSlider = new Slider(0.0, 10.0, 1);
+        speedSlider.setShowTickLabels(true);
+        speedSlider.setShowTickMarks(true);
+        speedSlider.setMajorTickUnit(2.0);
+        speedSlider.setOnMouseReleased(e -> Main.modifyTimeMultiplier(speedSlider.getValue()));
+        toolBar.getItems().add( speedSlider);
+
+        toolBar.getItems().add(timeLabel);
+
         VBox topContainer = new VBox(); // Use VBox to stack MenuBar and ToolBar
         MenuBar menuBar = new MenuBar(); // If you still want to use MenuBar for other purposes
         topContainer.getChildren().addAll(menuBar, toolBar);
@@ -60,6 +72,12 @@ public class mainMenu extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        Main.stopSimulation();
+        System.exit(0);
     }
 
     private void openModuleTab(TabPane tabPane, String moduleName) {

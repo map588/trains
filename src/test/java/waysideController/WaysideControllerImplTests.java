@@ -124,19 +124,19 @@ public class WaysideControllerImplTests extends BaseTest {
         controller.maintenanceSetSwitch(13, true);
         assertTrue(controller.getBlockMap().get(13).getSwitchState());
         verify(trackModel).setSwitchState(13, true);
-        verify(ctcOffice).setSwitchState(true, 13, true);
+        verify(ctcOffice).setSwitchState(Lines.GREEN, 13, true);
 
         assertFalse(controller.getBlockMap().get(13).getLightState());
         controller.maintenanceSetTrafficLight(13, true);
         assertTrue(controller.getBlockMap().get(13).getLightState());
         verify(trackModel).setLightState(13, true);
-        verify(ctcOffice).setLightState(true, 13, true);
+        verify(ctcOffice).setLightState(Lines.GREEN, 13, true);
 
         assertFalse(controller.getBlockMap().get(13).getCrossingState());
         controller.maintenanceSetCrossing(13, true);
         assertTrue(controller.getBlockMap().get(13).getCrossingState());
         verify(trackModel).setCrossing(13, true);
-        verify(ctcOffice).setCrossingState(true, 13, true);
+        verify(ctcOffice).setCrossingState(Lines.GREEN, 13, true);
     }
 
     @Test

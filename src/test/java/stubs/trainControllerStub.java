@@ -244,7 +244,12 @@ public class trainControllerStub implements TrainController {
         return false;
     }
 
-//    @Override
+    @Override
+    public Beacon getBeacon() {
+        return null;
+    }
+
+    //    @Override
     public void setInTunnel(boolean inTunnel) {
 
     }
@@ -275,7 +280,7 @@ public class trainControllerStub implements TrainController {
     }
 
     @Override
-    public void setValue(String propertyName, Object newValue) {
+    public void setValue(Enum<?> propertyName, Object newValue) {
 
     }
 }

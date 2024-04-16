@@ -1,113 +1,37 @@
-// Handles sections A - F blocks 0 - 20
-// Accesses occupancies for blocks 1 - 24
+// Handles sections A - G blocks 0 - 23
+// Accesses occupancies for blocks 1 - 27
 
-// Upper loop A-F must move in ccw direction (unless returning to yard)
-
-// First: Check direction of upper loop A-E
-if not dir_assigned[20]
-    if occupied[1]
-        request_direction(20, INBOUND)
+// Check directionality of the blocks for upper loop
+// Setting default direction to allow trains to enter from the yard
+if dir_assigned[23]
+    if not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and not occupied[12] and not occupied[11] and not occupied[10] and not occupied[9] and not occupied[8] and not occupied[7] and not occupied[6] and not occupied[5] and not occupied[4] and not occupied[3] and not occupied[2] and not occupied[1]
+        // Unbind direction if entire section is empty
+        dir_assigned[23] = FALSE
+        direction[23] = SOUTHBOUND
+        for i = 1 to 23
+            authority[i] = FALSE
+        endfor
+        authority[9] = TRUE
+        switch[9] = ALT
+        switch[16] = ALT
     endif
-else
-    if not occupied[5] and not occupied[4] and not occupied[3] and not occupied[2] and not occupied[1]
-        release_direction(5)
+endif
+
+// Allocate a direction when a train is detected
+// Since entire section must be completely abandoned in order for direction to be unbound, we can assume that the
+// direction is set based on temporary occupancy without checking for the entire section to be empty first
+if not dir_assigned[23]
+    if occupied[9] or occupied[8] or occupied[7] or occupied[6]
+        direction[23] = SOUTHBOUND
+        dir_assigned[23] = TRUE
+        switch[9] = ALT
+        switch[16] = ALT
+    else
+        if occupied[16] or occupied[17] or occupied[18] or occupied[19] or occupied[20]
+            direction[23] = NORTHBOUND
+            dir_assigned[23] = TRUE
+            switch[9] = MAIN
+            switch[16] = MAIN
+        endif
     endif
 endif
-
-// Switch control for upper loop A-E
-if not occupied[5] and dir_assigned[5]
-    switch[5] = direction[5] == OUTBOUND
-endif
-
-// Occupancies
-if dir_assigned[20]
-     if direction[20] == INBOUND
-        // F Occupancies
-        authority[20] = not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and switch[16]
-        authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and switch[16]
-        authority[18] = not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and switch[16]
-        authority[17] = not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and switch[16]
-        authority[16] = not occupied[15] and not occupied[14] and not occupied[13] and not occupied[12] and switch[16]
-
-        // E Occupancies
-        authority[15] = not occupied[14] and not occupied[13] and not occupied[12] and not occupied[11]
-        authority[14] = not occupied[13] and not occupied[12] and not occupied[11] and not occupied[10]
-        authority[13] = not occupied[12] and not occupied[11] and not occupied[10] and not occupied[9]
-
-        // D Occupancies
-        authority[12] = not occupied[11] and not occupied[10] and not occupied[9] and not occupied[8] and switch[9]
-        authority[11] = not occupied[10] and not occupied[9] and not occupied[8] and not occupied[7] and switch[9]
-        authority[10] = not occupied[9] and not occupied[8] and not occupied[7] and not occupied[6] and switch[9]
-
-        // C Occupancies
-        authority[9] = not occupied[8] and not occupied[7] and not occupied[6] and not occupied[5]
-        authority[8] = not occupied[7] and not occupied[6] and not occupied[5] and not occupied[4]
-        authority[7] = not occupied[6] and not occupied[5] and not occupied[4] and not occupied[3]
-
-        // B Occupancies
-        authority[6] = not occupied[5] and not occupied[4] and not occupied[3] and not occupied[2]
-        authority[5] = not occupied[4] and not occupied[3] and not occupied[2] and not occupied[1]
-        authority[4] = not occupied[3] and not occupied[2] and not occupied[1] and not occupied[20] and not switch[16]
-
-        // A Occupancies
-        authority[3] = not occupied[2] and not occupied[1] and not occupied[20] and not occupied[19] and not switch[16]
-        authority[2] = not occupied[1] and not occupied[20] and not occupied[19] and not occupied[18] and not switch[16]
-        authority[1] = not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not switch[16]
-     else
-        // F Occupancies
-        authority[20] = not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24]
-        authority[19] = not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23]
-        authority[18] = not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22]
-        authority[17] = not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21]
-        authority[16] = not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20]
-
-        // E Occupancies
-        authority[15] = not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19] and not switch[16]
-        authority[14] = not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18] and not switch[16]
-        authority[13] = not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17] and not switch[16]
-
-        // D Occupancies
-        authority[12] = not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16]
-        authority[11] = not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15]
-        authority[10] = not occupied[11] and not occupied[12] and not occupied[13] and not occupied[14]
-
-        // C Occupancies
-        authority[9] = not occupied[10] and not occupied[11] and not occupied[12] and not occupied[13] and switch[9]
-        authority[8] = not occupied[9] and not occupied[10] and not occupied[11] and not occupied[12] and switch[9]
-        authority[7] = not occupied[8] and not occupied[9] and not occupied[10] and not occupied[11] and switch[9]
-
-        // B Occupancies
-        authority[6] = not occupied[7] and not occupied[8] and not occupied[9] and not occupied[10]
-        authority[5] = not occupied[6] and not occupied[7] and not occupied[8] and not occupied[9]
-        authority[4] = not occupied[5] and not occupied[6] and not occupied[7] and not occupied[8]
-
-        // A Occupancies
-        authority[3] = not occupied[4] and not occupied[5] and not occupied[6] and not occupied[7]
-        authority[2] = not occupied[3] and not occupied[4] and not occupied[5] and not occupied[6]
-        authority[1] = not occupied[2] and not occupied[3] and not occupied[4] and not occupied[5]
-     endif
-else
-    authority[20] = FALSE
-    authority[19] = FALSE
-    authority[18] = FALSE
-    authority[17] = FALSE
-    authority[16] = FALSE
-    authority[15] = FALSE
-    authority[14] = FALSE
-    authority[13] = FALSE
-    authority[12] = FALSE
-    authority[11] = FALSE
-    authority[10] = FALSE
-    authority[9] = FALSE
-    authority[8] = FALSE
-    authority[7] = FALSE
-    authority[6] = FALSE
-    authority[5] = FALSE
-    authority[4] = FALSE
-    authority[3] = FALSE
-    authority[2] = FALSE
-    authority[1] = FALSE
-endif
-
-// Crossings
-crossing[11] = not occupied[10] and not occupied[11] and not occupied[12]
