@@ -3,6 +3,7 @@ package CTCOffice;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.BlockIDs;
 import Framework.Support.Notifier;
+import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
 
 import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
@@ -88,23 +89,26 @@ class CTCBlock implements Notifier {
         if(!underMaintenance && GUI){
             setUnderMaintenance(true, true);
         }
-        this.switchState = state;
-        if(!(isSwitchCon || isSwitchDiv)) {
-            return;
-        }
+        if(!GUI){
+            this.switchState = state;
+            if (!(isSwitchCon || isSwitchDiv)) {
+                return;
+            }
 
-        if(convergingBlockID == blockID) {
+            if (convergingBlockID == blockID) {
                 subMap.getSubject(BlockIDs.of(divergingBlockOneID.blockIdNum(), blockID.line())).setProperty("switchState", state);
                 subMap.getSubject(BlockIDs.of(divergingBlockTwoID.blockIdNum(), blockID.line())).setProperty("switchState", state);
             }
-        subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
-        subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
-        subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
-        if (divergingBlockOneID.blockIdNum() == blockID.blockIdNum() || divergingBlockTwoID.blockIdNum() == blockID.blockIdNum()) {
-            subMap.getSubject(convergingBlockID).setProperty("switchState", state);
+            subMap.getSubject(convergingBlockID).updateStringProperty("switchStateString");
+            subMap.getSubject(divergingBlockOneID).updateStringProperty("switchStateString");
+            subMap.getSubject(divergingBlockTwoID).updateStringProperty("switchStateString");
+            if (divergingBlockOneID.blockIdNum() == blockID.blockIdNum() || divergingBlockTwoID.blockIdNum() == blockID.blockIdNum()) {
+                subMap.getSubject(convergingBlockID).setProperty("switchState", state);
+            }
+            notifyChange("switchState", state);}
+        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);
+            logger.info("Wayside called to set switch state to " + state + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
         }
-        if(!GUI){notifyChange("switchState", state);}
-        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);}
     }
 
     /**
@@ -179,8 +183,7 @@ class CTCBlock implements Notifier {
         if(!underMaintenance && GUI){
             setUnderMaintenance(true, true);
         }
-        this.lightState = switchLightState;
-        if(!GUI){notifyChange("switchLightState", switchLightState);}
+        if(!GUI){this.lightState = switchLightState; notifyChange("switchLightState", switchLightState);}
         else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetTrafficLight(blockID.blockIdNum(), switchLightState);}
     }
     boolean getHasLight     () {
@@ -197,7 +200,7 @@ class CTCBlock implements Notifier {
         this.crossingState = crossingState;
         if(!GUI){notifyChange("crossingState", crossingState);}
         else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetCrossing(blockID.blockIdNum(), crossingState);
-            logger.info("Wayside called to set crossing state to " + crossingState + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+        logger.info("Wayside called to set crossing state to " + crossingState + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
         }
     }
     boolean getHasCrossing  () {

@@ -90,7 +90,7 @@
                         <Font size="14.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="scheduleTable" prefHeight="200.0">
+                <TableView fx:id="scheduleTable" prefHeight="100.0">
                     <columns>
                         <TableColumn fx:id="scheduleNameColumn" editable="false"  text="File Name"/>
                         <TableColumn fx:id="scheduleDateModColumn" editable="false" text="Date Modified"/>
@@ -101,16 +101,19 @@
                     <Button fx:id="selectScheduleButton" mnemonicParsing="false" text="Select"/>
                 </HBox>
                 <TextField/>
-                <TableView fx:id="scheduleEditTable" prefHeight="200.0">
+                <TableView fx:id = "trainSelectTable" prefHeight="100.0">
                     <columns>
                         <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
                         <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
+                    </columns>
+                </TableView>
+                <TableView fx:id="scheduleEditTable" prefHeight="200.0">
+                    <columns>
                         <TableColumn fx:id="dispatchTimeColumn" prefWidth="75.0" text="Dispatch"/>
                         <TableColumn fx:id="stationBlockIDColumn" prefWidth="75.0" text="Station"/>
                         <TableColumn fx:id="arrivalTimeColumn" prefWidth="75.0" text="Arrival"/>
                         <TableColumn fx:id="departureTimeColumn" prefWidth="75.0" text="Departure"/>
                         <TableColumn fx:id="carNumberColumn" prefWidth="75.0" text="Cars"/>
-
                     </columns>
                 </TableView>
                 <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
