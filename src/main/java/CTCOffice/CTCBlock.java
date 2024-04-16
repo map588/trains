@@ -88,6 +88,9 @@ class CTCBlock implements Notifier {
     void setSwitchState(boolean GUI, boolean state) {
         if(!underMaintenance && GUI){
             setUnderMaintenance(true, true);
+            subMap.getSubject(convergingBlockID).getBlockInfo().setUnderMaintenance(true, true);
+            subMap.getSubject(divergingBlockOneID).getBlockInfo().setUnderMaintenance(true, true);
+            subMap.getSubject(divergingBlockTwoID).getBlockInfo().setUnderMaintenance(true, true);
         }
         if(!GUI){
             this.switchState = state;
