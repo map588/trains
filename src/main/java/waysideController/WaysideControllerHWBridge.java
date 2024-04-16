@@ -1,5 +1,7 @@
 package waysideController;
 
+import Common.CTCOffice;
+import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Support.Notifier;
 import Utilities.GlobalBasicBlockParser;
@@ -14,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import static Utilities.Constants.RESUME_TRAIN_SIGNAL;
+import static Utilities.Constants.STOP_TRAIN_SIGNAL;
 import static waysideController.Properties.PLCName_p;
 import static waysideController.Properties.maintenanceMode_p;
 
@@ -33,11 +37,15 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
+    private final TrackModel trackModel;
+    private final CTCOffice ctcOffice;
 
     private final SerialPort port;
     private final PrintStream printStream;
 
-    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort) {
+    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, TrackModel trackModel, CTCOffice ctcOffice) {
+        this.trackModel = trackModel;
+        this.ctcOffice = ctcOffice;
         this.id = id;
         this.trackLine = trackLine;
 
@@ -87,8 +95,8 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         printStream.println("runPLC");
     }
 
-    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, String plcPath) {
-        this(id, trackLine, blockIDList, comPort);
+    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
+        this(id, trackLine, blockIDList, comPort, trackModel, ctcOffice);
         loadPLC(new File(plcPath));
     }
 
@@ -108,6 +116,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         System.out.println("Send: switchState="+blockID+":"+switchState);
         printStream.println("switchState="+blockID+":"+switchState);
+
+        if(trackModel != null)
+            trackModel.setSwitchState(blockID, switchState);
+        if(ctcOffice != null)
+            ctcOffice.setSwitchState(Lines.GREEN, blockID, switchState);
     }
 
     @Override
@@ -124,6 +137,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         System.out.println("Send: trafficLight="+blockID+":"+lightState);
         printStream.println("trafficLight="+blockID+":"+lightState);
+
+        if(trackModel != null)
+            trackModel.setLightState(blockID, lightState);
+        if(ctcOffice != null)
+            ctcOffice.setLightState(Lines.GREEN, blockID, lightState);
     }
 
     @Override
@@ -132,6 +150,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         System.out.println("Send: crossing="+blockID+":"+crossingState);
         printStream.println("crossing="+blockID+":"+crossingState);
+
+        if(trackModel != null)
+            trackModel.setCrossing(blockID, crossingState);
+        if(ctcOffice != null)
+            ctcOffice.setCrossingState(Lines.GREEN, blockID, crossingState);
     }
 
     @Override
@@ -161,7 +184,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void CTCSendAuthority(int blockID, int blockCount) {
+        System.out.println("CTCSendAuthority: " + blockID + " " + blockCount);
 
+        if(blockMap.get(blockID).isOpen() && blockMap.get(blockID).isOccupied() && trackModel != null) {
+            trackModel.setTrainAuthority(blockID, blockCount);
+        }
     }
 
     @Override
@@ -170,12 +197,22 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         System.out.println("Send: occupancy="+blockID+":"+occupied);
         printStream.println("occupancy="+blockID+":"+occupied);
+
+        if(ctcOffice != null)
+            ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, occupied);
+
+        if(occupied && !blockMap.get(blockID).getBooleanAuth()) {
+            trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
+        }
     }
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
-        System.out.println("Send: speed="+blockID+":"+speed);
-        printStream.println("speed="+blockID+":"+speed);
+        System.out.println("CTCSendSpeed: " + blockID + " " + speed);
+
+        if(trackModel != null) {
+            trackModel.setCommandedSpeed(blockID, speed);
+        }
     }
 
     @Override
@@ -186,9 +223,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(currentState != maintenanceState) {
             block.setBlockMaintenanceState(maintenanceState);
             trackModelSetOccupancy(blockID, !maintenanceState);
-
-            System.out.println("Send: blockMaintenance="+blockID+":"+maintenanceState);
-            printStream.println("blockMaintenance="+blockID+":"+maintenanceState);
         }
     }
 
@@ -204,7 +238,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void runPLC() {
-        System.out.println("Send: runPLC");
+//        System.out.println("Send: runPLC");
         printStream.println("runPLC");
     }
 
@@ -230,23 +264,43 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     private void parseCOMMessage(String message) {
         System.out.println("Received: " + message);
         String[] values = message.split("=", 2);
+        String[] setValues = values[1].split(":");
+        int blockID = Integer.parseInt(setValues[0]);
+        boolean boolVal = Boolean.parseBoolean(setValues[1]);
 
         switch (values[0]) {
             case "switchState" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setSwitchState(Boolean.parseBoolean(setValues[1]));
+                blockMap.get(blockID).setSwitchState(boolVal);
+                if(trackModel != null)
+                    trackModel.setSwitchState(blockID, boolVal);
+                if(ctcOffice != null)
+                    ctcOffice.setSwitchState(Lines.GREEN, blockID, boolVal);
             }
             case "trafficLight" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setLightState(Boolean.parseBoolean(setValues[1]));
+                blockMap.get(blockID).setLightState(boolVal);
+                if(trackModel != null)
+                    trackModel.setLightState(blockID, boolVal);
+                if(ctcOffice != null)
+                    ctcOffice.setLightState(Lines.GREEN, blockID, boolVal);
             }
             case "crossing" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setCrossingState(Boolean.parseBoolean(setValues[1]));
+                blockMap.get(blockID).setCrossingState(boolVal);
+                if(trackModel != null)
+                    trackModel.setCrossing(blockID, boolVal);
+                if(ctcOffice != null)
+                    ctcOffice.setCrossingState(Lines.GREEN, blockID, boolVal);
             }
             case "auth" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setBooleanAuth(Boolean.parseBoolean(setValues[1]));
+                WaysideBlock block = blockMap.get(blockID);
+                block.setBooleanAuth(boolVal);
+                if(trackModel != null && block.isOccupied()) {
+                    if (!boolVal) {
+                        trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
+                    }
+                    else {
+                        trackModel.setCommandedSpeed(blockID, RESUME_TRAIN_SIGNAL);
+                    }
+                }
             }
         }
     }

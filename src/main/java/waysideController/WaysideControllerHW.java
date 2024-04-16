@@ -150,7 +150,9 @@ public class WaysideControllerHW implements PLCRunner {
     }
 
     protected void parseCOMMessage(String message) {
-        System.out.println("Received: " + message);
+        if(!message.equals("runPLC"))
+            System.out.println("Received: " + message);
+
         String[] values = message.split("=", 2);
 
         switch (values[0]) {
@@ -181,10 +183,6 @@ public class WaysideControllerHW implements PLCRunner {
             }
             case "maintenanceMode" -> {
                 maintenanceMode = Boolean.parseBoolean(values[1]);
-            }
-            case "blockMaintenance" -> {
-                String[] setValues = values[1].split(":");
-                blockMap.get(Integer.parseInt(setValues[0])).setBlockMaintenanceState(Boolean.parseBoolean(setValues[1]));
             }
             case "occupancy" -> {
                 String[] setValues = values[1].split(":");
