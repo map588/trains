@@ -24,7 +24,7 @@ import static waysideController.Properties.maintenanceMode_p;
 
 public class WaysideControllerImpl implements WaysideController, PLCRunner, Notifier {
 
-    private final Logger logger = LoggerFactory.getLogger(WaysideBlock.class);
+    private final Logger logger = LoggerFactory.getLogger(WaysideControllerImpl.class);
 
     // The ID of the wayside controller
     private final int id;
