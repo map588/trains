@@ -43,17 +43,17 @@ public class CTCBlockSubject implements AbstractSubject {
 
         getBooleanProperty(OCCUPIED_PROPERTY).addListener((observable, oldValue, newValue) -> block.setOccupied(true,newValue));
         getBooleanProperty(SWITCH_LIGHT_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            logger.info("Switch light state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
             block.setSwitchLightState(true,newValue);
-            logger.warn("CTC to Wayside update for light states not implemented");
         });
         getBooleanProperty(SWITCH_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            logger.info("Switch state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
             block.setSwitchState(true,newValue);
-            logger.warn("CTC to Wayside update for switch states not implemented");
         });
         getBooleanProperty(UNDER_MAINTENANCE_PROPERTY).addListener((observable, oldValue, newValue) -> block.setUnderMaintenance(true,newValue));
         getBooleanProperty(CROSSING_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            logger.info("Crossing state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
             block.setCrossingState(true,newValue);
-            logger.warn("CTC to Wayside update for crossing states not implemented");
         });
     }
 

@@ -6,8 +6,13 @@ import Framework.Support.Notifier;
 import Utilities.Records.BasicBlock;
 
 import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
+import static CTCOffice.Properties.BlockProperties.UNDER_MAINTENANCE_PROPERTY;
 import static Utilities.Enums.BlockType.*;
 import static Utilities.Enums.Direction.NORTH;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class represents a block of the track in the Centralized Traffic Control (CTC) system.
@@ -15,6 +20,9 @@ import static Utilities.Enums.Direction.NORTH;
  * their states, speed limit, block length, IDs of converging and diverging blocks, and the state of the switch.
  */
 class CTCBlock implements Notifier {
+
+    private static final Logger logger = LoggerFactory.getLogger(CTCBlock.class.getName());
+
     private final BlockIDs blockID;
     private final boolean hasLight, hasCrossing;
     private boolean isSwitchCon, isSwitchDiv;
@@ -77,6 +85,10 @@ class CTCBlock implements Notifier {
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean GUI, boolean state) {
+        if(underMaintenance != GUI){
+            underMaintenance = !underMaintenance;
+            notifyChange(UNDER_MAINTENANCE_PROPERTY, underMaintenance);
+        }
         this.switchState = state;
         if(!(isSwitchCon || isSwitchDiv)) {
             return;
@@ -93,6 +105,7 @@ class CTCBlock implements Notifier {
             subMap.getSubject(convergingBlockID).setProperty("switchState", state);
         }
         if(!GUI){notifyChange("switchState", state);}
+        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetSwitch(blockID.blockIdNum(), state);}
     }
 
     /**
@@ -159,12 +172,18 @@ class CTCBlock implements Notifier {
     void    setUnderMaintenance (boolean GUI, boolean underMaintenance) {
         this.underMaintenance = underMaintenance;
         if(!GUI){notifyChange("underMaintenance", underMaintenance);}
-        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);}
+        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);
+        }
     }
 
     void setSwitchLightState(boolean GUI, boolean switchLightState) {
+        if(underMaintenance != GUI){
+            underMaintenance = !underMaintenance;
+            notifyChange(UNDER_MAINTENANCE_PROPERTY, underMaintenance);
+        }
         this.lightState = switchLightState;
         if(!GUI){notifyChange("switchLightState", switchLightState);}
+        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetTrafficLight(blockID.blockIdNum(), switchLightState);}
     }
     boolean getHasLight     () {
         return hasLight;
@@ -174,8 +193,15 @@ class CTCBlock implements Notifier {
     }
 
     void    setCrossingState(boolean GUI, boolean crossingState) {
+        if(underMaintenance != GUI){
+            underMaintenance = !underMaintenance;
+            notifyChange(UNDER_MAINTENANCE_PROPERTY, underMaintenance);
+        }
         this.crossingState = crossingState;
         if(!GUI){notifyChange("crossingState", crossingState);}
+        else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).maintenanceSetCrossing(blockID.blockIdNum(), crossingState);
+            logger.info("Wayside called to set crossing state to " + crossingState + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
+        }
     }
     boolean getHasCrossing  () {
         return hasCrossing;

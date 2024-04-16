@@ -1,9 +1,6 @@
 package CTCOffice;
 
-import CTCOffice.ScheduleInfo.ScheduleFile;
-import CTCOffice.ScheduleInfo.ScheduleFileSubject;
-import CTCOffice.ScheduleInfo.ScheduleLibrary;
-import CTCOffice.ScheduleInfo.TrainStop;
+import CTCOffice.ScheduleInfo.*;
 import Common.CTCOffice;
 import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
@@ -111,14 +108,6 @@ public class CTCOfficeImpl implements CTCOffice {
     public void     setCrossingState(Lines line, int blockID, boolean crossingState) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setCrossingState(false, crossingState);
         logger.info("Crossing {} on line {} has been set to {}", blockID, line, crossingState);
-    }
-
-    void     setUnderMaintenance(boolean line, int blockID, boolean underMaintenance) {
-        logger.warn("setUnderMaintenance() is not implemented");
-    }
-    public boolean  getUnderMaintenance(boolean line, int blockID) {
-        logger.warn("getUnderMaintenance() is not implemented");
-        return false;
     }
 
     void setTime(int time) {
