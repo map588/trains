@@ -110,6 +110,11 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.info("Crossing {} on line {} has been set to {}", blockID, line, crossingState);
     }
 
+    public void setBlockMaintenance(Lines line, int blockID, boolean underMaintenance) {
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setUnderMaintenance(false, underMaintenance);
+        logger.info("Block {} on line {} has been set to under maintenance: {}", blockID, line, underMaintenance);
+    }
+
     void setTime(int time) {
         logger.warn("setTime() is not implemented");
         this.time = time;

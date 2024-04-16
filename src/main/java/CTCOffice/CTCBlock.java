@@ -85,9 +85,8 @@ class CTCBlock implements Notifier {
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean GUI, boolean state) {
-        if(underMaintenance != GUI){
-            underMaintenance = !underMaintenance;
-            notifyChange(UNDER_MAINTENANCE_PROPERTY, underMaintenance);
+        if(!underMaintenance && GUI){
+            setUnderMaintenance(true, true);
         }
         this.switchState = state;
         if(!(isSwitchCon || isSwitchDiv)) {
@@ -170,16 +169,15 @@ class CTCBlock implements Notifier {
         return underMaintenance;
     }
     void    setUnderMaintenance (boolean GUI, boolean underMaintenance) {
-        this.underMaintenance = underMaintenance;
-        if(!GUI){notifyChange("underMaintenance", underMaintenance);}
+        if(!GUI){this.underMaintenance = underMaintenance; notifyChange("underMaintenance", underMaintenance);}
         else{ WaysideSystem.getController(blockID.line(), blockID.blockIdNum()).CTCChangeBlockMaintenanceState(blockID.blockIdNum(), underMaintenance);
+            logger.info("Wayside called to set maintenance state to " + underMaintenance + " for block " + blockID.blockIdNum() + " on line " + blockID.line());
         }
     }
 
     void setSwitchLightState(boolean GUI, boolean switchLightState) {
-        if(underMaintenance != GUI){
-            underMaintenance = !underMaintenance;
-            notifyChange(UNDER_MAINTENANCE_PROPERTY, underMaintenance);
+        if(!underMaintenance && GUI){
+            setUnderMaintenance(true, true);
         }
         this.lightState = switchLightState;
         if(!GUI){notifyChange("switchLightState", switchLightState);}
@@ -193,9 +191,8 @@ class CTCBlock implements Notifier {
     }
 
     void    setCrossingState(boolean GUI, boolean crossingState) {
-        if(underMaintenance != GUI){
-            underMaintenance = !underMaintenance;
-            notifyChange(UNDER_MAINTENANCE_PROPERTY, underMaintenance);
+        if(!underMaintenance && GUI){
+            setUnderMaintenance(true, true);
         }
         this.crossingState = crossingState;
         if(!GUI){notifyChange("crossingState", crossingState);}

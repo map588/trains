@@ -106,9 +106,6 @@ public class CTCOfficeManager {
         blockTableRed.setEditable(true);
         lineSelection.getItems().addAll("GREEN", "RED");
 
-        //TODO: Make a data structure that sucks less for tables
-        //first lane table view
-        //blockTableGreen.getItems().addAll(blockListGreen);
         for(CTCBlockSubject block : blockMap.getSubjects().values()) {
             if(block.getStringProperty(LINE_PROPERTY).getValue().equals("GREEN")) {
                 blockTableGreen.getItems().add(block);
@@ -122,11 +119,9 @@ public class CTCOfficeManager {
             crossingColorListener(block);
             maintenanceColorListener(block);
         }
+
         LineTableSet(blockNumberColumnGreen, blockTableGreen, occupationLightColumnGreen, switchStateColumnGreen, switchLightColumnGreen, crossingStateColumnGreen, underMaintenanceColumnGreen);
-
-        //second lane table view
         LineTableSet(blockNumberColumnRed, blockTableRed, occupationLightColumnRed, switchStateColumnRed, switchLightColumnRed, crossingStateColumnRed, underMaintenanceColumnRed);
-
 
         //Table editing bar
         switchLightToggle.setOnAction(event -> {
@@ -150,14 +145,12 @@ public class CTCOfficeManager {
             block.getBlockInfo().setUnderMaintenance(true, !block.getBlockInfo().getUnderMaintenance());
         });
 
-        //This is bad, because these properties don't change   // they do change Matt, the listener is for what is selected on screen
         blockTableGreen.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 blockSelection.setValue(newValue.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
                 lineSelection.setValue(newValue.getStringProperty(LINE_PROPERTY).getValue());
             }
         });
-
         blockTableRed.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 blockSelection.setValue(newValue.getIntegerProperty(BLOCK_ID_PROPERTY).getValue());
@@ -167,7 +160,6 @@ public class CTCOfficeManager {
 
         blockSelection.setValue(1);
         lineSelection.setValue("GREEN");
-
 
         //schedules table
         scheduleTable.setEditable(true);
@@ -183,6 +175,7 @@ public class CTCOfficeManager {
                 scheduleEditTable.getItems().add(selectedSchedule.getSchedule().getTrainSchedule(1).getSubject());
             }
         });
+
         scheduledTrainColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(TRAIN_ID_PROPERTY).getValue()));
         lineColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(LINE_PROPERTY).getValue()));
         dispatchTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DISPATCH_TIME_PROPERTY).getValue()));
@@ -191,10 +184,7 @@ public class CTCOfficeManager {
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DEPARTURE_TIME_PROPERTY, 0).getValue()));
         carNumberColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(CAR_COUNT_PROPERTY).getValue()));
 
-
-
         // divider position listeners for the main split pane
-
         double minDividerPosition = 460.0;
         double maxDividerPosition = 300.0;
         double tableWidthAdjustment = 8.0;
@@ -212,7 +202,6 @@ public class CTCOfficeManager {
                 scheduleDateModColumn.setMinWidth(((newValue.doubleValue() * (1 - mainSplit.getDividerPositions()[0])) - tableWidthAdjustment) * 0.3);
             }
         });
-
         mainSplit.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
             if (minDividerPosition / mainAnchor.getWidth() > newValue.doubleValue()) {
                 mainSplit.setDividerPosition(0, minDividerPosition / mainAnchor.getWidth());
@@ -231,7 +220,6 @@ public class CTCOfficeManager {
             office.sendAuthority(Lines.GREEN, 0, 9);
             office.sendSpeed(Lines.GREEN, 0, 40);
         });
-
     }
 
     private void LineTableSet(TableColumn<CTCBlockSubject, Integer> blockNumberColumn, TableView<CTCBlockSubject> blockTable, TableColumn<CTCBlockSubject, Boolean> occupationLightColumn,
