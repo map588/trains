@@ -51,4 +51,8 @@ public class GlobalBasicBlockParser {
         ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = BlockParser.parseCSV(filePath);
         map.forEach(this::addLines);
     }
+
+    public boolean containsLine(Lines line) {
+        return basicBlocks.containsKey(line);
+    }
 }

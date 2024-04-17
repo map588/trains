@@ -21,4 +21,6 @@ public interface Switch {
     void setSwitchStateAuto(boolean switchStateAuto);
 
     BasicBlock.Connection getNextBlock(Direction direction);
+
+    Direction getPrimarySwitchDir();
 }

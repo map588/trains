@@ -81,7 +81,7 @@ public class TrackBlock {
         this.occupiedBy = nullTrain;
     }
 
-    TrackBlock(BasicBlock blockInfo) {
+    public TrackBlock(BasicBlock blockInfo) {
         validateBlockInfo(blockInfo);
 
         this.blockID = blockInfo.blockNumber();
@@ -128,7 +128,7 @@ public class TrackBlock {
         this.authority = 0;
         this.commandSpeed = 0;
         this.occupied = false;
-        this.occupiedBy = null;
+        this.occupiedBy = nullTrain;
     }
 
     public void setFailure(boolean brokenRail, boolean trackCircuitFailure, boolean powerFailure) {
@@ -149,7 +149,13 @@ public class TrackBlock {
         } else {
             nextConnection = (direction == NORTH) ? northConnect : southConnect;
         }
-        if(nextConnection.directionChange()){this.occupiedBy.changeDirection();}
+        if(nextConnection.directionChange()){
+            if(occupiedBy != nullTrain) {
+                this.occupiedBy.changeDirection();
+            }else{
+                NullTrain.getInstance().changeDirection();
+            }
+        }
         return nextConnection.blockNumber();
     }
 
@@ -270,6 +276,15 @@ public class TrackBlock {
             return occupiedBy;
         }else{
             return nullTrain;
+        }
+    }
+
+    public Direction getPrimarySwitchDir() {
+        if (feature.isSwitch()) {
+            return feature.getPrimarySwitchDir();
+        } else {
+            logger.warn(generateLogMessage("getPrimarySwitchDir", "switch"));
+            return null;
         }
     }
 

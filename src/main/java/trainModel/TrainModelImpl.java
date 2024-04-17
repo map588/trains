@@ -142,6 +142,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void trainModelTimeStep(Future<UpdatedTrainValues> updatedTrainValuesFuture) throws ExecutionException, InterruptedException {
         // Data Locked
         physicsUpdate();
+        elapsedTime += TIME_DELTA;
         reconcileControllerValues(updatedTrainValuesFuture.get()); //Data unlocked
     }
 
@@ -283,48 +284,53 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void setCommandSpeed(double speed) {
+
+        this.commandSpeed = (signalFailure) ? -1 : convertVelocity(speed, MPH, MPS);
+        controller.setCommandSpeed(commandSpeed);
+
         listeningExecutor.execute(() -> {
-            this.commandSpeed = (signalFailure) ? -1 : convertVelocity(speed, MPH, MPS);
-            logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
-        });
         notifyChange(COMMANDSPEED_PROPERTY, speed);
-        controller.setCommandSpeed(speed);
+        });
+
+        logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
     }
     public void setAuthority(int authority) {
-        listeningExecutor.execute(() -> {
-            this.authority = (signalFailure) ? -1 : authority;
-            logger.info("Train {} <=     Authority: {}",this.trainID, authority);
-
-        });
+        this.authority = (signalFailure) ? -1 : authority;
         controller.setAuthority(authority);
+
+
+        listeningExecutor.execute(() -> {
         notifyChange(AUTHORITY_PROPERTY, authority);
+        });
+
+        logger.info("Train {} <=     Authority: {}",this.trainID, authority);
     }
 
     public void setEmergencyBrake(boolean brake) {
+        this.emergencyBrake = brake;
         listeningExecutor.execute(() -> {
-            this.emergencyBrake = brake;
+            notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
         });
-        notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
     }
     public void setServiceBrake(boolean brake) {
+        this.serviceBrake = (!brakeFailure && brake);
         listeningExecutor.execute(() -> {
-            this.serviceBrake = (!brakeFailure && brake);
+            notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
         });
-        notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
     }
 
     public void setPower(double power) {
+        this.power = power;
         listeningExecutor.execute(() -> {
-            this.power = power;
+            notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER));
         });
-        notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER));
     }
 
     public void setActualSpeed(double speed) {
+        this.speed = speed;
         listeningExecutor.execute(() -> {
-            this.speed = speed;
+             notifyChange(ACTUALSPEED_PROPERTY, convertVelocity(this.speed, MPS, MPH));
         });
-        notifyChange(ACTUALSPEED_PROPERTY, convertVelocity(this.speed, MPS, MPH));
     }
 
     public void setBrakeFailure(boolean failure) { this.brakeFailure = failure; notifyChange(BRAKEFAILURE_PROPERTY, this.brakeFailure); }

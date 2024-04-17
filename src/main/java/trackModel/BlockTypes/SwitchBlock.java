@@ -64,6 +64,11 @@ public class SwitchBlock implements BlockFeature {
     }
 
     @Override
+    public Direction getPrimarySwitchDir() {
+        return primarySwitchDir;
+    }
+
+    @Override
     public boolean isSwitch() {
         return true;
     }

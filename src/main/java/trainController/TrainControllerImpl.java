@@ -95,7 +95,7 @@ public class TrainControllerImpl implements TrainController{
         if(train.getTrainNumber() != -1) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
         }
-        //currentBlock = blockLookup.get(0);
+        currentBlock = blockLookup.get(0);
     }
 
     public TrainControllerImpl() {
@@ -123,6 +123,7 @@ public class TrainControllerImpl implements TrainController{
         this.setPowerFailure(train.getPowerFailure());
         this.setCurrentTemperature((train.getRealTemperature()));
     }
+
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
