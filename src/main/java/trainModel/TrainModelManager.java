@@ -109,7 +109,6 @@ public class TrainModelManager {
     private void bindLabelToProperty(String property, Label label) {
         appendListener(subject.getProperty(property) ,(obs, oldValue, newValue) -> {
                 String newVal = newValue.toString();
-                //logger.info("newVal: " + newVal);
                 if(newVal.isEmpty()) {return;}
                 try {
                     label.setText(newVal);
@@ -117,6 +116,7 @@ public class TrainModelManager {
                     label.setText("");
                 }
         });
+        label.setText(subject.getProperty(property).getValue().toString());
     }
 
     private void changeTrainView(Integer trainID) {
