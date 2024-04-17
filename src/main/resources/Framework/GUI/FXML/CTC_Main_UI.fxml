@@ -107,6 +107,7 @@
                 </TableView>
                 <TableView fx:id="scheduleEditTable" prefHeight="200.0">
                     <columns>
+                        <TableColumn fx:id="stopIndexColumn" prefWidth="50.0" text="Index"/>
                         <TableColumn fx:id="stationBlockIDColumn" prefWidth="75.0" text="Station"/>
                         <TableColumn fx:id="arrivalTimeColumn" prefWidth="75.0" text="Arrival"/>
                         <TableColumn fx:id="departureTimeColumn" prefWidth="75.0" text="Departure"/>

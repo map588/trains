@@ -3,10 +3,8 @@ package CTCOffice.ScheduleInfo;
 import CTCOffice.ScheduleInfo.TrainStop;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import static Utilities.TimeConvert.*;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
@@ -16,9 +14,10 @@ public class TrainStopSubject implements AbstractSubject {
 
     TrainStopSubject(TrainStop stop) {
         this.stop = stop;
-        properties.put(DESTINATION_PROPERTY, new SimpleIntegerProperty(this, DESTINATION_PROPERTY));
-        properties.put(ARRIVAL_TIME_PROPERTY, new SimpleIntegerProperty(this, ARRIVAL_TIME_PROPERTY));
-        properties.put(DEPARTURE_TIME_PROPERTY, new SimpleIntegerProperty(this, DEPARTURE_TIME_PROPERTY));
+        properties.put(DESTINATION_PROPERTY, new SimpleIntegerProperty(this, DESTINATION_PROPERTY, stop.getStationBlockID()));
+        properties.put(ARRIVAL_TIME_PROPERTY, new SimpleStringProperty(this, ARRIVAL_TIME_PROPERTY, convertDoubleToClockTime((double)stop.getArrivalTime())));
+        properties.put(DEPARTURE_TIME_PROPERTY, new SimpleStringProperty(this, DEPARTURE_TIME_PROPERTY, convertDoubleToClockTime((double)stop.getDepartureTime())));
+        properties.put(STOP_INDEX_PROPERTY, new SimpleIntegerProperty(this, STOP_INDEX_PROPERTY, stop.getStopIndex()));
     }
 
     public void setProperty(String propertyName, Object newValue) {
@@ -27,6 +26,10 @@ public class TrainStopSubject implements AbstractSubject {
             return;
         }
         updateProperty(getProperty(propertyName), newValue);
+    }
+
+    public StringProperty getStringProperty(String propertyName) {
+        return (StringProperty) getProperty(propertyName);
     }
 
     public Property<?> getProperty(String propertyName) {

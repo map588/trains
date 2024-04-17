@@ -11,4 +11,5 @@ public class ScheduleProperties {
     public static final String SCHEDULE_FILE_NAME_PROPERTY = "scheduleFileName";
     public static final String LAST_MODIFIED_PROPERTY = "lastModified";
     public static final String NUM_TRAINS_PROPERTY = "numTrains";
+    public static final String STOP_INDEX_PROPERTY = "stopIndex";
 }

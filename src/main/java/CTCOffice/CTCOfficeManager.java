@@ -17,6 +17,7 @@ import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,9 +71,10 @@ public class CTCOfficeManager {
     @FXML private TableColumn<TrainScheduleSubject, String> dispatchTimeColumn;
 
     @FXML private TableView<TrainStopSubject> scheduleEditTable;
+    @FXML private TableColumn<TrainStopSubject, Integer> stopIndexColumn;
     @FXML private TableColumn<TrainStopSubject, Integer> stationBlockIDColumn;
-    @FXML private TableColumn<TrainStopSubject, Integer> arrivalTimeColumn;
-    @FXML private TableColumn<TrainStopSubject, Integer> departureTimeColumn;
+    @FXML private TableColumn<TrainStopSubject, String> arrivalTimeColumn;
+    @FXML private TableColumn<TrainStopSubject, String> departureTimeColumn;
 
     @FXML private ChoiceBox<String> lineTrainSelector;
     @FXML private ChoiceBox<Integer> trainIDSelector;
@@ -114,6 +116,7 @@ public class CTCOfficeManager {
     public void initialize() {
         setupLineTables();
         setupScheduleTables();
+        setupStopTable();
         setupDividers();
     }
 
@@ -335,7 +338,7 @@ public class CTCOfficeManager {
             System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.putTrainSchedule(schedule.getMultipleTrainSchedules().size() + 1, new TrainSchedule(schedule.getMultipleTrainSchedules().size() + 1,
-                    lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new ArrayList<>()));
+                    lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new HashMap<>()));
             trainSelectTable.getItems().add(schedule.getMultipleTrainScheduleSubjects().get(schedule.getMultipleTrainSchedules().size()));
             trainIDSelector.getItems().add(schedule.getMultipleTrainSchedules().size());
         });
@@ -351,36 +354,38 @@ public class CTCOfficeManager {
             TrainScheduleSubject train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue()).getSubject();
             train.setProperty(DISPATCH_TIME_PROPERTY, dispatchTimeSelector.getText());
             train.setProperty(CAR_COUNT_PROPERTY, carsSelector.getValue());
+            trainSelectTable.refresh();
         });
 
         trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 scheduleEditTable.getItems().clear();
-                for (int i = 0; i < newValue.getSchedule().getStops().size(); i++) {
+                for (int i = 1; i <= newValue.getSchedule().getStops().size(); i++) {
                     scheduleEditTable.getItems().add(newValue.getSchedule().getStop(i).getSubject());
                     trainIDSelector.setValue(newValue.getSchedule().getTrainID());
                     lineTrainSelector.setValue(newValue.getSchedule().getLine());
                 }
             }
         });
+    }
 
-        /*
-    <ToolBar fx:id="trainToolBar" prefHeight="40.0" >
-                    <ChoiceBox fx:id="lineTrainSelector" prefWidth="50.0"/>
-                    <ChoiceBox fx:id="trainIDSelector" prefWidth="50.0"/>
-                    <Spinner fx:id="carsSelector" prefWidth="50.0"/>
-                    <ComboBox fx:id="dispatchTimeSelector" prefWidth="50.0"/>
-                    <Button fx:id="AddTrain" mnemonicParsing="false" text="Add Train"/>
-                    <Button fx:id="RemoveTrain" mnemonicParsing="false" text="Remove Train"/>
-                    <Button fx:id="saveTrainButton" mnemonicParsing="false" text="Save"/>
-                </ToolBar>
-            */
-
-
+    private void setupStopTable(){
         scheduleEditTable.setEditable(true);
+        stopIndexColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(STOP_INDEX_PROPERTY).getValue()));
         stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY).getValue()));
-        arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue()));
-        departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue()));
+        arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
+        departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
+
+        scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                stopSelector.setValue(newValue.getIntegerProperty(STOP_INDEX_PROPERTY).getValue());
+                stationStopSelector.setValue(newValue.getIntegerProperty(DESTINATION_PROPERTY).getValue());
+                arrivalTimeSelector.setValue(newValue.getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue());
+                departureTimeSelector.setValue(newValue.getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue());
+            }
+        });
+
+
         /*
     @FXML private ComboBox<Integer> stopSelector;
     @FXML private ChoiceBox<Integer> stationStopSelector;
@@ -402,8 +407,8 @@ public class CTCOfficeManager {
     }
 
     private void setupDividers(){
-        double minDividerPosition = 460.0;
-        double maxDividerPosition = 300.0;
+        double minDividerPosition = 400.0;
+        double maxDividerPosition = 500.0;
         double tableWidthAdjustment = 8.0;
         mainAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
             if (mainAnchor.getWidth() > 0) {

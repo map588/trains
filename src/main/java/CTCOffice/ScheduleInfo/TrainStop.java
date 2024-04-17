@@ -16,8 +16,10 @@ public class TrainStop implements Notifier { //SubRoute
     private List<Integer> routePath; //routePath
     private List<Integer> authorityList;
     private final TrainStopSubject subject;
+    private int stopIndex;
 
-    public TrainStop(int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
+    public TrainStop(int index, int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
+        this.stopIndex = index;
         this.stationBlockID = stationBlockID;
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;
@@ -39,6 +41,13 @@ public class TrainStop implements Notifier { //SubRoute
         return departureTime;
     }
 
+    public int getStopIndex() {
+        return stopIndex;
+    }
+
+    public void setStopIndex(int index) {
+        this.stopIndex = index;
+    }
 
     public List<Integer> getSpeedList() {
         return speedList;
