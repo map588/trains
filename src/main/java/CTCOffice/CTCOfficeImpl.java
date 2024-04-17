@@ -31,7 +31,6 @@ public class CTCOfficeImpl implements CTCOffice {
     private boolean manualMode;
     private boolean maintenanceMode;
     private boolean autoMode;
-    private int numOfTrains;
 
     final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
 
@@ -40,13 +39,14 @@ public class CTCOfficeImpl implements CTCOffice {
 
     private static TrackSystem trackSystem;
     private final CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
+    Map<Integer, BlockIDs> trainLocations = new HashMap<>();
+
     /**
      * Constructor for the CTCOfficeImpl class.
      * Initializes the track blocks and the schedule.
      */
     private CTCOfficeImpl() {
         time = 0;
-        numOfTrains = 0;
 
         BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
@@ -180,7 +180,7 @@ public class CTCOfficeImpl implements CTCOffice {
     void DispatchTrain(Lines line , int trainID) {
         logger.info("CTC Dispatching train {} on line {}", trainID, line);
         trackSystem.dispatchTrain(line, trainID);
-        ++numOfTrains;
+        trainLocations.put(trainID, BlockIDs.of(0, line));
     }
 
     void sendSpeed(Lines line, int blockID, double speed) {
@@ -192,14 +192,5 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.info("CTC sending authority {} to block {} on line {}", authority, blockID, line);
         WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
     }
-
-    int getNumOfTrains() {
-        return numOfTrains;
-    }
-
-    void setNumOfTrains(int numOfTrains) {
-        this.numOfTrains = numOfTrains;
-    }
-
 }
 

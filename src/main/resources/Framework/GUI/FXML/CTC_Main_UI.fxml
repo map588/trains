@@ -11,13 +11,13 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextField?>
 <AnchorPane fx:id="mainAnchor" minHeight="400" minWidth="600" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="CTCOffice.CTCOfficeManager">
     <SplitPane fx:id="mainSplit" dividerPositions="0.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -99,8 +99,8 @@
                 </TableView>
                 <TableView fx:id = "trainSelectTable" prefHeight="100.0">
                     <columns>
-                        <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
                         <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
+                        <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
                         <TableColumn fx:id="carNumberColumn" prefWidth="75.0" text="Cars"/>
                         <TableColumn fx:id="dispatchTimeColumn" prefWidth="75.0" text="Dispatch"/>
                     </columns>
@@ -112,25 +112,25 @@
                         <TableColumn fx:id="departureTimeColumn" prefWidth="75.0" text="Departure"/>
                     </columns>
                 </TableView>
-                <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
-                    <ChoiceBox fx:id="trainStopSelector" prefWidth="50.0"/>
-                    <ChoiceBox fx:id="stationStopSelector" prefWidth="50.0"/>
-                    <Button fx:id="AddStop" mnemonicParsing="false" text="Add Stop"/>
-                    <Button fx:id="RemoveStop" mnemonicParsing="false" text="Remove Stop"/>
-                    <ComboBox fx:id="stopSelector" prefWidth="50.0"/>
-                    <ComboBox fx:id="arrivalTimeSelector" prefWidth="50.0"/>
-                    <ComboBox fx:id="departureTimeSelector" prefWidth="50.0"/>
-                    <Button fx:id="saveStopButton" mnemonicParsing="false" text="Save"/>
-                </ToolBar>
                 <ToolBar fx:id="trainToolBar" prefHeight="40.0" >
                     <ChoiceBox fx:id="lineTrainSelector" prefWidth="50.0"/>
                     <ChoiceBox fx:id="trainIDSelector" prefWidth="50.0"/>
+                    <Spinner fx:id="carsSelector" prefWidth="50.0"/>
+                    <TextField fx:id="dispatchTimeSelector" prefWidth="80.0"/>
                     <Button fx:id="AddTrain" mnemonicParsing="false" text="Add Train"/>
                     <Button fx:id="RemoveTrain" mnemonicParsing="false" text="Remove Train"/>
-                    <ComboBox fx:id="dispatchTimeSelector" prefWidth="50.0"/>
-                    <Spinner fx:id="carsSelector" prefWidth="50.0"/>
                     <Button fx:id="saveTrainButton" mnemonicParsing="false" text="Save"/>
                 </ToolBar>
+                <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
+                    <ComboBox fx:id="stopSelector" prefWidth="50.0"/>
+                    <ChoiceBox fx:id="stationStopSelector" prefWidth="50.0"/>
+                    <ComboBox fx:id="arrivalTimeSelector" prefWidth="50.0"/>
+                    <ComboBox fx:id="departureTimeSelector" prefWidth="50.0"/>
+                    <Button fx:id="AddStop" mnemonicParsing="false" text="Add Stop"/>
+                    <Button fx:id="RemoveStop" mnemonicParsing="false" text="Remove Stop"/>
+                    <Button fx:id="saveStopButton" mnemonicParsing="false" text="Save"/>
+                </ToolBar>
+
                 <Button fx:id="saveScheduleButton" mnemonicParsing="false" text="Save Schedule"/>
                 <Button fx:id="DispatchButton" alignment="BOTTOM_CENTER" mnemonicParsing="false"
                         text="Dispatch" textFill="RED">

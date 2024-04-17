@@ -1,9 +1,6 @@
 package CTCOffice;
 
-import CTCOffice.ScheduleInfo.ScheduleFileSubject;
-import CTCOffice.ScheduleInfo.ScheduleLibrary;
-import CTCOffice.ScheduleInfo.TrainScheduleSubject;
-import CTCOffice.ScheduleInfo.TrainStopSubject;
+import CTCOffice.ScheduleInfo.*;
 import Framework.Support.BlockIDs;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
@@ -19,11 +16,17 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
+import static Utilities.TimeConvert.*;
+
+import Utilities.TimeConvert;
+import org.controlsfx.control.textfield.TextFields;
+
 /**
  * This class manages the GUI for the Centralized Traffic Control (CTC) office.
  * It contains FXML annotated fields for the various GUI components and methods for handling user interactions.
@@ -60,9 +63,6 @@ public class CTCOfficeManager {
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleDateModColumn;
     @FXML private TableColumn<ScheduleFileSubject, Integer> trainNumColumn;
 
-    @FXML private ComboBox<String> scheduleSelector;
-    @FXML private Button selectScheduleButton;
-
     @FXML private TableView<TrainScheduleSubject> trainSelectTable;
     @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
     @FXML private TableColumn<TrainScheduleSubject, String> lineColumn;
@@ -74,23 +74,23 @@ public class CTCOfficeManager {
     @FXML private TableColumn<TrainStopSubject, Integer> arrivalTimeColumn;
     @FXML private TableColumn<TrainStopSubject, Integer> departureTimeColumn;
 
-    @FXML private ChoiceBox<Integer> lineTrainSelector;
+    @FXML private ChoiceBox<String> lineTrainSelector;
     @FXML private ChoiceBox<Integer> trainIDSelector;
-    @FXML private ChoiceBox<String> lineStopSelector;
-    @FXML private ChoiceBox<Integer> trainStopSelector;
-    @FXML private Button AddStop;
-    @FXML private Button RemoveStop;
-    @FXML private ComboBox<Integer> stopSelector;
-    @FXML private ComboBox<Integer> arrivalTimeSelector;
-    @FXML private ComboBox<Integer> departureTimeSelector;
-    @FXML private ChoiceBox<Integer> stationStopSelector;
-    @FXML private Button saveScheduleButton;
-    @FXML private Button saveStopButton;
+    @FXML private Spinner<Integer> carsSelector;
+    @FXML private TextField dispatchTimeSelector;
     @FXML private Button AddTrain;
     @FXML private Button RemoveTrain;
-    @FXML private ComboBox<Integer> dispatchTimeSelector;
-    @FXML private Spinner<Integer> carsSelector;
     @FXML private Button saveTrainButton;
+
+    @FXML private ComboBox<Integer> stopSelector;
+    @FXML private ChoiceBox<Integer> stationStopSelector;
+    @FXML private ComboBox<Integer> arrivalTimeSelector;
+    @FXML private ComboBox<Integer> departureTimeSelector;
+    @FXML private Button AddStop;
+    @FXML private Button RemoveStop;
+    @FXML private Button saveStopButton;
+
+    @FXML private Button saveScheduleButton; // save to a file
 
     @FXML private Button DispatchButton;
 
@@ -104,7 +104,6 @@ public class CTCOfficeManager {
     Map<CTCBlockSubject, ObjectProperty<Paint>> switchColors      = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> crossingColors    = new ConcurrentHashMap<>();
     Map<CTCBlockSubject, ObjectProperty<Paint>> maintenanceColors = new ConcurrentHashMap<>();
-    int numOfTrains = 0;
     /**
      * Initializes the GUI components.
      * This method is called after all the FXML annotated fields have been injected.
@@ -171,8 +170,6 @@ public class CTCOfficeManager {
         blockSelection.setValue(1);
         lineSelection.setValue("GREEN");
 
-
-
         //schedules table
         scheduleTable.setEditable(true);
         scheduleTable.getItems().addAll(scheduleLibrary.getSubjects().values());
@@ -185,53 +182,85 @@ public class CTCOfficeManager {
                 trainSelectTable.getItems().clear();
                 for(int i = 1; i <= newValue.getSchedule().getNumTrains(); i++) {
                     trainSelectTable.getItems().add(newValue.getSchedule().getTrainSchedule(i).getSubject());
+                    trainIDSelector.getItems().add(i);
                 }
             }
         });
 
-//        scheduleSelector.getItems().addAll(scheduleLibrary.getSubjects().keySet());
-//        selectScheduleButton.setOnAction(event -> {
-//            ScheduleFileSubject selectedSchedule = scheduleLibrary.getSubject(scheduleSelector.getValue());
-//            trainSelectTable.getItems().clear();
-//            for(int i = 0; i < office.getNumOfTrains(); i++) {
-//                trainSelectTable.getItems().add(selectedSchedule.getSchedule().getTrainSchedule(i).getSubject());
-//            }
-//        });
-
-/*
-         <TableView fx:id = "trainSelectTable" prefHeight="100.0">
-                    <columns>
-                        <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
-                        <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
-                        <TableColumn fx:id="carNumberColumn" prefWidth="75.0" text="Cars"/>
-                        <TableColumn fx:id="dispatchTimeColumn" prefWidth="75.0" text="Dispatch"/>
-                    </columns>
-                </TableView>
-                <TableView fx:id="scheduleEditTable" prefHeight="200.0">
-                    <columns>
-                        <TableColumn fx:id="stationBlockIDColumn" prefWidth="75.0" text="Station"/>
-                        <TableColumn fx:id="arrivalTimeColumn" prefWidth="75.0" text="Arrival"/>
-                        <TableColumn fx:id="departureTimeColumn" prefWidth="75.0" text="Departure"/>
-         */
         trainSelectTable.setEditable(true);
         scheduledTrainColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(TRAIN_ID_PROPERTY).getValue()));
         lineColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(LINE_PROPERTY).getValue()));
         dispatchTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DISPATCH_TIME_PROPERTY).getValue()));
         carNumberColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(CAR_COUNT_PROPERTY).getValue()));
 
+        lineTrainSelector.getItems().add(Lines.GREEN.toString()); lineTrainSelector.getItems().add(Lines.RED.toString());
+        lineTrainSelector.setValue(Lines.GREEN.toString());
+        carsSelector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 2, 1));
+        dispatchTimeSelector.setText(convertDoubleToClockTime(0.0));
+        dispatchTimeSelector.setOnAction(event -> {
+            if (!dispatchTimeSelector.getText().matches("\\d{0,2}:\\d{0,2}")) {
+                dispatchTimeSelector.setText(convertDoubleToClockTime(
+                        scheduleEditTable.getItems().get(trainSelectTable.getSelectionModel().selectedItemProperty().get().getSchedule()
+                                .getStopCount() -1).getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue() + 5.0));
+            }
+        });
+
+        AddTrain.setOnAction(event -> {
+            System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY) + "\n");
+            ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
+            schedule.putTrainSchedule(schedule.getMultipleTrainSchedules().size() + 1, new TrainSchedule(schedule.getMultipleTrainSchedules().size() + 1,
+                    lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new ArrayList<>()));
+            trainSelectTable.getItems().add(schedule.getMultipleTrainScheduleSubjects().get(schedule.getMultipleTrainSchedules().size()));
+            trainIDSelector.getItems().add(schedule.getMultipleTrainSchedules().size());
+        });
+
         trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 scheduleEditTable.getItems().clear();
-                for(int i = 0; i < newValue.getSchedule().getStops().size(); i++) {
+                for (int i = 0; i < newValue.getSchedule().getStops().size(); i++) {
                     scheduleEditTable.getItems().add(newValue.getSchedule().getStop(i).getSubject());
                 }
             }
         });
 
+        /*
+    @FXML private Button AddTrain;
+    @FXML private Button RemoveTrain;
+    @FXML private Button saveTrainButton;
+    <ToolBar fx:id="trainToolBar" prefHeight="40.0" >
+                    <ChoiceBox fx:id="lineTrainSelector" prefWidth="50.0"/>
+                    <ChoiceBox fx:id="trainIDSelector" prefWidth="50.0"/>
+                    <Spinner fx:id="carsSelector" prefWidth="50.0"/>
+                    <ComboBox fx:id="dispatchTimeSelector" prefWidth="50.0"/>
+                    <Button fx:id="AddTrain" mnemonicParsing="false" text="Add Train"/>
+                    <Button fx:id="RemoveTrain" mnemonicParsing="false" text="Remove Train"/>
+                    <Button fx:id="saveTrainButton" mnemonicParsing="false" text="Save"/>
+                </ToolBar>
+            */
+
+
         scheduleEditTable.setEditable(true);
         stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY).getValue()));
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue()));
+        /*
+    @FXML private ComboBox<Integer> stopSelector;
+    @FXML private ChoiceBox<Integer> stationStopSelector;
+    @FXML private ComboBox<Integer> arrivalTimeSelector;
+    @FXML private ComboBox<Integer> departureTimeSelector;
+    @FXML private Button AddStop;
+    @FXML private Button RemoveStop;
+    @FXML private Button saveStopButton;
+                <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
+                    <ChoiceBox fx:id="stationStopSelector" prefWidth="50.0"/>
+                    <ComboBox fx:id="arrivalTimeSelector" prefWidth="50.0"/>
+                    <ComboBox fx:id="departureTimeSelector" prefWidth="50.0"/>
+                    <Button fx:id="AddStop" mnemonicParsing="false" text="Add Stop"/>
+                    <Button fx:id="RemoveStop" mnemonicParsing="false" text="Remove Stop"/>
+                    <Button fx:id="saveStopButton" mnemonicParsing="false" text="Save"/>
+                </ToolBar>
+                @FXML private Button saveScheduleButton;
+         */
 
         // divider position listeners for the main split pane
         double minDividerPosition = 460.0;
@@ -264,8 +293,8 @@ public class CTCOfficeManager {
         });
 
         DispatchButton.setOnAction(event -> {
-            office.DispatchTrain(Lines.GREEN, ++numOfTrains);
-            System.out.println("Dispatched Train : ID " + numOfTrains + " on Line " + "GREEN");
+            office.DispatchTrain(Lines.GREEN, office.trainLocations.size() + 1);
+            System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + "GREEN");
             office.sendAuthority(Lines.GREEN, 0, 9);
             office.sendSpeed(Lines.GREEN, 0, 40);
         });

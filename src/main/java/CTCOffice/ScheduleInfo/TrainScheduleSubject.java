@@ -18,8 +18,6 @@ public class TrainScheduleSubject implements AbstractSubject {
         properties.put(CAR_COUNT_PROPERTY, new SimpleIntegerProperty(this, CAR_COUNT_PROPERTY, schedule.getCarCount()));
 
         this.schedule = schedule;
-       // ScheduleLibrary.getInstance().registerSubject(schedule.
-
     }
 
     public void setProperty(String propertyName, Object newValue) {

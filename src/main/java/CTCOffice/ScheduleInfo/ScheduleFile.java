@@ -69,4 +69,9 @@ public class ScheduleFile {
         return this.subject;
     }
 
+    public void updateTrainSchedule(int trainID, TrainSchedule schedule) {
+        multipleTrainSchedules.put(trainID, schedule);
+        multipleTrainScheduleSubjects.put(trainID, schedule.getSubject());
+    }
+
 }
