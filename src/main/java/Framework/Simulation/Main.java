@@ -19,14 +19,18 @@ public class Main {
     private static final GlobalBasicBlockParser blockParser = GlobalBasicBlockParser.getInstance();
 
 
-    public static double simTimeElapsed = 0;
+    public static double simSecond = 0;
+    public static int simMinute = 0;
+    public static int simHour = 6;
     public static long TIMESTEP = (long) Constants.TIME_STEP_MS;
 
     private static ScheduledFuture<?> scheduledTask;
+    public static TimeSynchronizationTask syncTask;
 
-    private static TimeSynchronizationTask syncTask;
+    public static double timeMultiplier = 1.0;
 
     private static final int NUM_THREADS = 3;
+
 
     private static final ExecutorService synchronizationPool = Executors.newFixedThreadPool(NUM_THREADS);
     private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -49,9 +53,19 @@ public class Main {
     }
 
     public static void modifyTimeMultiplier(double newMultiplier) {
-        long timestep = (long)(Constants.TIME_STEP_MS / newMultiplier);
-        logger.info("Modifying timestep to {}", timestep);
-        syncTask.modifyTimestep(timestep);
+        Main.timeMultiplier = Math.floor(newMultiplier*2)/2; //Intervals of 0.5
+        TIMESTEP = (long)(Constants.TIME_STEP_MS / timeMultiplier);
+        logger.info("Modifying TIMESTEP to {}", TIMESTEP);
+        Platform.runLater(() -> mainMenu.timeScaleLabel.setText(timeMultiplier + "x Speed"));
+        syncTask.modifyTimestep(TIMESTEP);
+    }
+
+    public static void stopSimulation() {
+        if (scheduledTask != null && !scheduledTask.isDone()) {
+            scheduledTask.cancel(false);
+        }
+        scheduledExecutorService.shutdown();
+        synchronizationPool.shutdown();
     }
 
     private static class TimeSynchronizationTask implements Runnable {
@@ -82,14 +96,18 @@ public class Main {
                     TimeUnit.MILLISECONDS);
         }
 
+
         public TimeSynchronizationTask(TrackSystem trackSystem, WaysideSystem waysideController, TrainSystem trainSystem, CTCOfficeImpl ctcOffice) {
             this.trackSystem = trackSystem;
             this.waysideSystem = waysideController;
             this.trainSystem = trainSystem;
             this.CTC = ctcOffice;
         }
+
+
         @Override
         public void run() {
+            long startTime = System.nanoTime();
             CTC.incrementTime();
             CountDownLatch latch = new CountDownLatch(2);
 
@@ -108,45 +126,61 @@ public class Main {
                 // Wait for both update methods to complete
                 latch.await();
             } catch (InterruptedException e) {
-                logger.error("Error in simulation at time {} : {}", simTimeElapsed,  e.getMessage());
+                logger.error("Error in simulation at time {} : {}", simSecond, e.getMessage());
             }
 
             // Call trackSystem.update() after both update methods have finished
             synchronizationPool.submit(trackSystem::update);
-            simTimeElapsed += Constants.TIME_STEP_S;
-            Platform.runLater(() -> mainMenu.timeLabel.setText("Time: " + simTimeElapsed + "s"));
-        }
-    }
-
-    public static void stopSimulation() {
-        // Cancel the scheduled task
-        if (scheduledTask != null && !scheduledTask.isDone()) {
-            scheduledTask.cancel(false);
-        }
-
-        // Shutdown the scheduledExecutorService
-        if (!scheduledExecutorService.isShutdown()) {
-            scheduledExecutorService.shutdown();
-            try {
-                if (!scheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
-                    scheduledExecutorService.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                scheduledExecutorService.shutdownNow();
-                Thread.currentThread().interrupt();
+            simSecond += Constants.TIME_STEP_S;
+            if (simSecond % 60  == 0) {
+                simMinute++;
             }
+            if (simMinute > 60) {
+                simMinute = 0;
+                simHour++;
+            }
+            if (simHour > 23) {
+                simHour = 0;
+            }
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime) / 1000; //microseconds
+            if(duration > TIMESTEP * 1000) {
+                double lag = (double)duration/1000 - TIMESTEP;
+                logger.warn("Simulation is running behind by {} ms", lag);
+            }
+            Platform.runLater(() -> mainMenu.timeLabel.setText(String.format("Time: %02d:%02d:%02d", simHour, simMinute, ((int) simSecond)%60)));
         }
 
-        // Shutdown the synchronizationPool
-        if (!synchronizationPool.isShutdown()) {
-            synchronizationPool.shutdown();
-            try {
-                if (!synchronizationPool.awaitTermination(1, TimeUnit.SECONDS)) {
-                    synchronizationPool.shutdownNow();
+        public static void stopSimulation() {
+            // Cancel the scheduled task
+            if (scheduledTask != null && !scheduledTask.isDone()) {
+                scheduledTask.cancel(false);
+            }
+
+            // Shutdown the scheduledExecutorService
+            if (!scheduledExecutorService.isShutdown()) {
+                scheduledExecutorService.shutdown();
+                try {
+                    if (!scheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                        scheduledExecutorService.shutdownNow();
+                    }
+                } catch (InterruptedException e) {
+                    scheduledExecutorService.shutdownNow();
+                    Thread.currentThread().interrupt();
                 }
-            } catch (InterruptedException e) {
-                synchronizationPool.shutdownNow();
-                Thread.currentThread().interrupt();
+            }
+
+            // Shutdown the synchronizationPool
+            if (!synchronizationPool.isShutdown()) {
+                synchronizationPool.shutdown();
+                try {
+                    if (!synchronizationPool.awaitTermination(1, TimeUnit.SECONDS)) {
+                        synchronizationPool.shutdownNow();
+                    }
+                } catch (InterruptedException e) {
+                    synchronizationPool.shutdownNow();
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }

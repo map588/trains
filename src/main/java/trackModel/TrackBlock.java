@@ -43,6 +43,8 @@ public class TrackBlock {
      boolean powerFailure;
      boolean occupied;
      TrainModel occupiedBy;
+     TrainModel nullTrain = NullTrain.getInstance();
+
     private static final Logger logger = LoggerFactory.getLogger(TrackBlock.class);
 
      BlockFeature feature;
@@ -76,7 +78,7 @@ public class TrackBlock {
         this.authority = 0;
         this.commandSpeed = 0;
         this.occupied = false;
-        this.occupiedBy = null;
+        this.occupiedBy = nullTrain;
     }
 
     TrackBlock(BasicBlock blockInfo) {
@@ -186,7 +188,7 @@ public class TrackBlock {
 
     void removeOccupation(){
         this.occupied = false;
-        this.occupiedBy = null;
+        this.occupiedBy = nullTrain;
     }
 
     public void setUnderMaintenance (boolean state){
@@ -267,7 +269,7 @@ public class TrackBlock {
         if(occupiedBy != null){
             return occupiedBy;
         }else{
-            return NullTrain.getInstance();
+            return nullTrain;
         }
     }
 

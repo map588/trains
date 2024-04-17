@@ -60,7 +60,7 @@ list_value : list_name '[' arith_expression ']' ;
 arith_expression returns [int val]
 : left=int_term OP=PLUS right=int_term { $val = $left.val + $right.val; }  #addition
 | left=int_term OP=MINUS right=int_term { $val = $left.val - $right.val; } #subtraction
-| int_term { $val = int_term().val; }  #one_term
+| int_term { $val = int_term().val; }                                      #one_term
 ;
 
 
@@ -87,9 +87,9 @@ list_name returns [String name]
         ;
 
 
-bool_literal returns [boolean val]
-            : value_true   { $val = true; }
-            | value_false  { $val = false; }
+bool_literal returns [boolean bool]
+            : value_true { $bool = true; }
+            | value_false { $bool = false; }
             ;
 
 value_false: FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;

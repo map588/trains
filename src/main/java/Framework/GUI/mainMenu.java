@@ -18,7 +18,8 @@ public class mainMenu extends Application {
 
     String[] tabNames = {"CTC_Main_UI", "trackModel", "waysideController", "trainModel", "trainController"};
 
-    public static Label timeLabel = new Label();
+    public static Label timeLabel = new Label("Time: 6:00:00");
+    public static Label timeScaleLabel = new Label("1.0x Speed");
 
     @Override
     public void start(Stage primaryStage) {
@@ -61,17 +62,18 @@ public class mainMenu extends Application {
         toolBar.getItems().add( speedSlider);
 
         toolBar.getItems().add(timeLabel);
+        toolBar.getItems().add(timeScaleLabel);
 
         VBox topContainer = new VBox(); // Use VBox to stack MenuBar and ToolBar
         MenuBar menuBar = new MenuBar(); // If you still want to use MenuBar for other purposes
         topContainer.getChildren().addAll(menuBar, toolBar);
 
         root.setTop(topContainer);
-
         Scene scene = new Scene(root,1280,720);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();
+        mainMenu.timeScaleLabel.setText("Time Scale: " + Main.timeMultiplier + "x");
     }
 
     @Override

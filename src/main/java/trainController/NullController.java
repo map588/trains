@@ -30,7 +30,7 @@ public final class NullController extends TrainControllerImpl {
 
     @Override
 
-    public void setSpeed(double speed) {
+    public void setCurrentSpeed(double speed) {
         logger.warn("NullController setSpeed called with {}", speed);
     }
 

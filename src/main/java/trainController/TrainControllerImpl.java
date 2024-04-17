@@ -68,7 +68,6 @@ public class TrainControllerImpl implements TrainController{
     private double setTemperature = 0.0;
     private double currentTemperature = 0.0;
     private double rollingError = 0.0;
-    private double prevError = 0.0;
 
 
     private int authority = 0;
@@ -137,7 +136,7 @@ public class TrainControllerImpl implements TrainController{
             passengerEngageEBrake = false;
             this.setEmergencyBrake(false);
         }
-        this.setSpeed(train.getSpeed());
+        this.setCurrentSpeed(train.getSpeed());
         this.setPower(calculatePower(this.currentSpeed));
 
         //TODO: this.authorityCheck(this.power, this.currentSpeed);  will change power if it does not align with authority
@@ -221,14 +220,13 @@ public class TrainControllerImpl implements TrainController{
         checkTunnel();
 
     }
+
     /**
      * onStation()
      */
     public void onStation(){
 
         // Get Block info
-
-
         //TODO: Stopping train in middle of a block
 
 
@@ -269,39 +267,39 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
-    // Failure Management with Steven He
-    public boolean checkBrakeFailure(){
-
-        // Failures occur when the brake states in the train controller do not match with brake states in the train model
-        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
-        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
-
-        // If true, pick a god and pray
-
-        return brakeFailure;
-    }
-    public boolean checkSignalFailure(){
-        // Failure occur when the commanded speed or commanded authority is -1
-        this.setCommandSpeed(train.getCommandSpeed());
-        this.setAuthority(train.getAuthority());
-
-        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
-
-        //If true, activate emergency brake
-        if (signalFailure) this.setEmergencyBrake(true);
-
-        return signalFailure;
-    }
-    public boolean checkPowerFailure(){
-        // Failure occurs when train model's set power equals 0 but we are outputting power
-
-        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
-
-        // If true, activate emergency brake
-        if (this.powerFailure) this.setEmergencyBrake(true);
-
-        return this.powerFailure;
-    }
+//    // Failure Management with Steven He
+//    public boolean checkBrakeFailure(){
+//
+//        // Failures occur when the brake states in the train controller do not match with brake states in the train model
+//        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
+//        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
+//
+//        // If true, pick a god and pray
+//
+//        return brakeFailure;
+//    }
+//    public boolean checkSignalFailure(){
+//        // Failure occur when the commanded speed or commanded authority is -1
+//        this.setCommandSpeed(train.getCommandSpeed());
+//        this.setAuthority(train.getAuthority());
+//
+//        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
+//
+//        //If true, activate emergency brake
+//        if (signalFailure) this.setEmergencyBrake(true);
+//
+//        return signalFailure;
+//    }
+//    public boolean checkPowerFailure(){
+//        // Failure occurs when train model's set power equals 0 but we are outputting power
+//
+//        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
+//
+//        // If true, activate emergency brake
+//        if (this.powerFailure) this.setEmergencyBrake(true);
+//
+//        return this.powerFailure;
+//    }
 
 
     //Functions called by the internal logic to notify of changes
@@ -318,7 +316,7 @@ public class TrainControllerImpl implements TrainController{
         subject.notifyChange(COMMAND_SPEED , speed);
         //calculatePower();
     }
-    public void setSpeed(double speed) {
+    public void setCurrentSpeed(double speed) {
         this.currentSpeed = speed;
         subject.notifyChange(CURRENT_SPEED , convertVelocity(speed, MPS, MPH));
     }
