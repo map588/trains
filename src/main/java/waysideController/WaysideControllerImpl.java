@@ -174,7 +174,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(ctcOffice != null)
                 ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
 
-            if(occupied && !blockMap.get(blockID).getBooleanAuth()) {
+            if(occupied && !block.getBooleanAuth()) {
                 trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
             }
         }

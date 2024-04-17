@@ -3,5 +3,18 @@ package Utilities.Enums;
 public enum Direction {
     NORTH,
     SOUTH,
-    EITHER
+    EITHER;
+
+
+    public Direction opposite() {
+        if (this == NORTH) {
+            return SOUTH;
+        } else if (this == SOUTH) {
+            return NORTH;
+        } else {
+            return EITHER;
+        }
+    }
 }
+
+

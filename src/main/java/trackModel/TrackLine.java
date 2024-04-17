@@ -59,25 +59,35 @@ public class TrackLine implements TrackModel {
         GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
 
         //maps blocks to block numbers
-        BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+        if(allTracks.containsLine(line)) {
+            BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+            //keeps track of which blocks are occupied
+            trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
+            ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
-        //keeps track of which blocks are occupied
-        trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
-        ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
-
-        for (Integer blockIndex : blockIndices) {
-            TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
-            mainTrackLine.put(block.blockID, block);
-            if(block.isLight) {
-                lightBlocks.add(block.blockID);
+            for (Integer blockIndex : blockIndices) {
+                TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
+                mainTrackLine.put(block.blockID, block);
+                if(block.isLight) {
+                    lightBlocks.add(block.blockID);
+                }
             }
+
+            //Needs more testing, but the beacon parser seems to work.
+            this.beaconBlocks = BeaconParser.parseBeacons(line);
+            this.subject = new TrackLineSubject(this, mainTrackLine);
+
+            setupListeners();
+        } else {
+            trackOccupancyMap = new ObservableHashMap<>(0);
+            beaconBlocks = new ConcurrentHashMap<>();
+            this.subject = new TrackLineSubject(this, mainTrackLine);
+            logger.warn("TrackLine {} does not exist", line);
         }
+    }
 
-        //Needs more testing, but the beacon parser seems to work.
-        this.beaconBlocks = BeaconParser.parseBeacons(line);
-        this.subject = new TrackLineSubject(this, mainTrackLine);
-
-        setupListeners();
+    public TrackLine() {
+        this(Lines.NULL);
     }
 
     public void update() {
@@ -93,9 +103,7 @@ public class TrackLine implements TrackModel {
         trackUpdateQueue.clear();
     }
 
-    public TrackLine() {
-        this(Lines.NULL);
-    }
+
 
     public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(this, trainID);
@@ -116,13 +124,15 @@ public class TrackLine implements TrackModel {
     }
 
     /**
+     * A function called by the train when it has travelled
+     * the distance of the block it is currently on.
      * Updates the location of a train on the track
      * @return the block the train is moving to
      */
     public TrackBlock updateTrainLocation(TrainModel train) {
         Integer currentBlockID = trackOccupancyMap.getOrDefault(train, -2);
         if (currentBlockID == -1 || currentBlockID == -2) {
-            logger.error("![ TrainModel {}:  {} -> X ] deleted train." , train.getTrainNumber(), currentBlockID);
+            logger.error("![ TrainModel {}:  {} -> _ ] deleted train." , train.getTrainNumber(), currentBlockID);
             if(train != null) {
                 trackOccupancyMap.remove(train);
             }
@@ -147,7 +157,7 @@ public class TrackLine implements TrackModel {
     }
 
 
-    synchronized private void handleTrainEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
+    private void handleTrainEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
 
          if (newBlockID == 0 && oldBlockID != 0) {
             logger.info("Train {} exited the track", train.getTrainNumber());
@@ -171,7 +181,7 @@ public class TrackLine implements TrackModel {
         }
     }
 
-    synchronized private void handleTrainExit(TrainModel train, Integer blockID) {
+    private void handleTrainExit(TrainModel train, Integer blockID) {
         if(blockID == 0) {
             logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
             return;

@@ -37,12 +37,12 @@ public class CrossingBlock implements BlockFeature{
 
     @Override
     public String getStationName() {
-        return null;
+        return "";
     }
 
     @Override
     public String getDoorDirection() {
-        return null;
+        return "";
     }
 
     @Override
@@ -114,6 +114,11 @@ public class CrossingBlock implements BlockFeature{
 
     @Override
     public BasicBlock.Connection getNextBlock(Direction direction) {
+        return null;
+    }
+
+    @Override
+    public Direction getPrimarySwitchDir() {
         return null;
     }
 }

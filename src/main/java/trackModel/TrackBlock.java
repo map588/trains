@@ -43,7 +43,8 @@ public class TrackBlock {
      boolean powerFailure;
      boolean occupied;
      TrainModel occupiedBy;
-     TrainModel nullTrain = NullTrain.getInstance();
+
+     NullTrain nullTrain = new NullTrain();
 
     private static final Logger logger = LoggerFactory.getLogger(TrackBlock.class);
 
@@ -81,7 +82,7 @@ public class TrackBlock {
         this.occupiedBy = nullTrain;
     }
 
-    TrackBlock(BasicBlock blockInfo) {
+    public TrackBlock(BasicBlock blockInfo) {
         validateBlockInfo(blockInfo);
 
         this.blockID = blockInfo.blockNumber();
@@ -128,7 +129,7 @@ public class TrackBlock {
         this.authority = 0;
         this.commandSpeed = 0;
         this.occupied = false;
-        this.occupiedBy = null;
+        this.occupiedBy = nullTrain;
     }
 
     public void setFailure(boolean brokenRail, boolean trackCircuitFailure, boolean powerFailure) {
@@ -149,7 +150,13 @@ public class TrackBlock {
         } else {
             nextConnection = (direction == NORTH) ? northConnect : southConnect;
         }
-        if(nextConnection.directionChange()){this.occupiedBy.changeDirection();}
+        if(nextConnection.directionChange()){
+            if(occupiedBy != nullTrain) {
+                this.occupiedBy.changeDirection();
+            }else{
+                nullTrain.changeDirection();
+            }
+        }
         return nextConnection.blockNumber();
     }
 
@@ -166,13 +173,21 @@ public class TrackBlock {
     }
 
     public void setAuthority(int authority) {
-        this.occupiedBy.setAuthority(authority);
-        this.authority = authority;
+        if(occupiedBy != nullTrain) {
+            this.occupiedBy.setAuthority(authority);
+            this.authority = authority;
+        }else{
+            logger.warn("TrackBlock: {} is not occupied, cannot set authority", blockID);
+        }
     }
 
     public void setCommandSpeed(double commandSpeed) {
-        this.occupiedBy.setCommandSpeed(commandSpeed);
-        this.commandSpeed = commandSpeed;
+        if(occupiedBy != nullTrain){
+            this.occupiedBy.setCommandSpeed(commandSpeed);
+            this.commandSpeed = commandSpeed;
+        }else{
+            logger.warn("TrackBlock: {} is not occupied, cannot set command speed", blockID);
+        }
     }
 
     void addOccupation(TrainModel train){
@@ -287,7 +302,7 @@ public class TrackBlock {
             return feature.getDoorDirection();
         } else {
             logger.warn(generateLogMessage("getDoorDirection", "station"));
-            return null;
+            return "";
         }
     }
 

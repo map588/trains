@@ -1,20 +1,36 @@
 package trainModel;
 
+import Utilities.Enums.Direction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class NullTrain extends TrainModelImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(NullTrain.class);
+
+    private Direction currentDirection = Direction.NORTH;
     
-    public static final NullTrain INSTANCE = new NullTrain();
-    
-    private NullTrain() {
+    public NullTrain() {
         super();
     }
 
-    public static NullTrain getInstance() {
-        return INSTANCE;
+    @Override
+    public void setDirection(Direction direction) {
+        this.currentDirection = direction;
+    }
+
+    @Override
+    public Direction getDirection() {
+        return currentDirection;
+    }
+
+    @Override
+    public void changeDirection() {
+        if(currentDirection == Direction.NORTH) {
+            currentDirection = Direction.SOUTH;
+        } else {
+            currentDirection = Direction.NORTH;
+        }
     }
 
     @Override

@@ -118,4 +118,9 @@ public class StandardBlock implements BlockFeature{
     public BasicBlock.Connection getNextBlock(Direction direction) {
         return null;
     }
+
+    @Override
+    public Direction getPrimarySwitchDir() {
+        return null;
+    }
 }

@@ -13,7 +13,8 @@ import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import static Utilities.Constants.*;
+import static Utilities.Constants.MAX_POWER_W;
+import static Utilities.Constants.TIME_STEP_S;
 import static Utilities.Conversion.*;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
@@ -53,6 +54,8 @@ public class TrainControllerImpl implements TrainController{
 
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;
+
+    private NullTrain nullTrain = new NullTrain();
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
@@ -95,12 +98,12 @@ public class TrainControllerImpl implements TrainController{
         if(train.getTrainNumber() != -1) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
         }
-        //currentBlock = blockLookup.get(0);
+        currentBlock = blockLookup.get(0);
     }
 
     public TrainControllerImpl() {
         this.trainID = -1;
-        this.train = NullTrain.getInstance();
+        this.train = nullTrain;
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
     }
@@ -123,6 +126,7 @@ public class TrainControllerImpl implements TrainController{
         this.setPowerFailure(train.getPowerFailure());
         this.setCurrentTemperature((train.getRealTemperature()));
     }
+
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
@@ -205,6 +209,7 @@ public class TrainControllerImpl implements TrainController{
     /**
      *  onBlock()
      */
+    @Override
     public void onBlock(){
         if(currentBeacon != null) {
             currentBlock = blockLookup.get(currentBeacon.blockIndices().poll());
@@ -256,11 +261,13 @@ public class TrainControllerImpl implements TrainController{
         // Get block information somehow
 
         if(inTunnel) {
+            logger.info("Train is in a tunnel");
             setIntLights(true);
             setExtLights(true);
 
         }
         else{
+            logger.info("Train is not in a tunnel");
             setIntLights(false);
             setExtLights(false);
 
