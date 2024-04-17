@@ -62,19 +62,21 @@ public class CTCOfficeManager {
     @FXML private Button selectScheduleButton;
 
     @FXML private TableView<TrainScheduleSubject> trainSelectTable;
-    @FXML private ChoiceBox<Integer> lineTrainSelector;
-    @FXML private ChoiceBox<Integer> trainIDSelector;
+
     @FXML private TableColumn<TrainScheduleSubject, String> lineColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> carNumberColumn;
-
-
     @FXML private TableColumn<TrainScheduleSubject, Integer> dispatchTimeColumn;
+
+
     @FXML private TableColumn<TrainScheduleSubject, Integer> stationBlockIDColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> arrivalTimeColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> departureTimeColumn;
 
     @FXML private TableView<TrainScheduleSubject> scheduleEditTable;
     @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
+
+    @FXML private ChoiceBox<Integer> lineTrainSelector;
+    @FXML private ChoiceBox<Integer> trainIDSelector;
     @FXML private ChoiceBox<String> lineStopSelector;
     @FXML private ChoiceBox<Integer> trainStopSelector;
     @FXML private Button AddStop;

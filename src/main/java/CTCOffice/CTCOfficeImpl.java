@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CTCOfficeImpl implements CTCOffice {
 
-    private int     time;
+    private long     time;
     private int     ticketSales;
     private int     mode;
     private boolean manualMode;
@@ -42,7 +42,7 @@ public class CTCOfficeImpl implements CTCOffice {
      * Initializes the track blocks and the schedule.
      */
     private CTCOfficeImpl() {
-
+        time = 0;
         BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
             ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
@@ -115,11 +115,11 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.info("Block {} on line {} has been set to under maintenance: {}", blockID, line, underMaintenance);
     }
 
-    void setTime(int time) {
+    void setTime(long time) {
         logger.warn("setTime() is not implemented");
         this.time = time;
     }
-    int getTime() {
+    long getTime() {
         logger.warn("getTime() is not implemented");
         return time;
     }

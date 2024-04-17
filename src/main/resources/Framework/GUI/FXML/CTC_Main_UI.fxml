@@ -105,19 +105,18 @@
                     <columns>
                         <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
                         <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
+                        <TableColumn fx:id="carNumberColumn" prefWidth="75.0" text="Cars"/>
+                        <TableColumn fx:id="dispatchTimeColumn" prefWidth="75.0" text="Dispatch"/>
                     </columns>
                 </TableView>
                 <TableView fx:id="scheduleEditTable" prefHeight="200.0">
                     <columns>
-                        <TableColumn fx:id="dispatchTimeColumn" prefWidth="75.0" text="Dispatch"/>
                         <TableColumn fx:id="stationBlockIDColumn" prefWidth="75.0" text="Station"/>
                         <TableColumn fx:id="arrivalTimeColumn" prefWidth="75.0" text="Arrival"/>
                         <TableColumn fx:id="departureTimeColumn" prefWidth="75.0" text="Departure"/>
-                        <TableColumn fx:id="carNumberColumn" prefWidth="75.0" text="Cars"/>
                     </columns>
                 </TableView>
                 <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
-                    <ChoiceBox fx:id="lineStopSelector" prefWidth="50.0"/>
                     <ChoiceBox fx:id="trainStopSelector" prefWidth="50.0"/>
                     <ChoiceBox fx:id="stationStopSelector" prefWidth="50.0"/>
                     <Button fx:id="AddStop" mnemonicParsing="false" text="Add Stop"/>
