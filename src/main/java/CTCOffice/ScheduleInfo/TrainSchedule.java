@@ -4,8 +4,9 @@ import Framework.Support.Notifier;
 
 import java.util.List;
 import static CTCOffice.Properties.ScheduleProperties.*;
+import static Utilities.TimeConvert.*;
 
-public class TrainSchedule implements Notifier {
+public class TrainSchedule {
     private int trainID;
     private String line;
     private int dispatchTime;
@@ -42,17 +43,14 @@ public class TrainSchedule implements Notifier {
 
     public void setTrainID(int trainID) {
         this.trainID = trainID;
-        notifyChange(TRAIN_ID_PROPERTY, trainID);
     }
 
     public void setDispatchTime(int dispatchTime) {
         this.dispatchTime = dispatchTime;
-        notifyChange(DISPATCH_TIME_PROPERTY, dispatchTime);
     }
 
     public void setCarCount(int carCount) {
         this.carCount = carCount;
-        notifyChange(CAR_COUNT_PROPERTY, carCount);
     }
 
     public void setStops(List<TrainStop> stops) {
@@ -150,8 +148,4 @@ public class TrainSchedule implements Notifier {
        return subject;
     }
 
-
-    public void notifyChange(String property, Object newValue) {
-        subject.setProperty(property, newValue);
-    }
 }

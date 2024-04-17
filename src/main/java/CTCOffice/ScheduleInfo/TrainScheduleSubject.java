@@ -26,17 +26,11 @@ public class TrainScheduleSubject implements AbstractSubject {
     }
 
     public void setProperty(String propertyName, Object newValue) {
-        if(newValue == null){
+        if (newValue == null) {
             System.err.println("Null value for property " + propertyName);
             return;
         }
-        switch (propertyName) {
-            case TRAIN_ID_PROPERTY -> updateProperty(getProperty(TRAIN_ID_PROPERTY), newValue);
-            case TRAIN_LINE_PROPERTY -> updateProperty(getProperty(TRAIN_LINE_PROPERTY), newValue);
-            case DISPATCH_TIME_PROPERTY -> updateProperty(getProperty(DISPATCH_TIME_PROPERTY), newValue);
-            case CAR_COUNT_PROPERTY -> updateProperty(getProperty(CAR_COUNT_PROPERTY), newValue);
-            default -> System.err.println("Unknown property " + propertyName);
-            }
+        updateProperty(getProperty(propertyName), newValue);
         }
 
     public Property<?> getProperty(String propertyName) {
@@ -44,22 +38,12 @@ public class TrainScheduleSubject implements AbstractSubject {
     }
 
     public StringProperty getStringProperty(String propertyName) {
-        return switch (propertyName) {
-            case TRAIN_LINE_PROPERTY -> (StringProperty) getProperty(TRAIN_LINE_PROPERTY);
-            case DISPATCH_TIME_PROPERTY -> (StringProperty) getProperty(DISPATCH_TIME_PROPERTY);
-            default -> null;
-        };
+        return (StringProperty) getProperty(propertyName);
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
-        System.out.println("Getting integer property " + propertyName);
-        return switch (propertyName) {
-            case TRAIN_ID_PROPERTY -> (IntegerProperty) getProperty(TRAIN_ID_PROPERTY);
-            case CAR_COUNT_PROPERTY -> (IntegerProperty) getProperty(CAR_COUNT_PROPERTY);
-            default -> null;
-        };
+        return (IntegerProperty) getProperty(propertyName);
     }
-
 
     public TrainSchedule getSchedule(){
         return schedule;

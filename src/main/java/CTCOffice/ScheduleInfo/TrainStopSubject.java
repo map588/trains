@@ -6,12 +6,13 @@ import Framework.Support.ObservableHashMap;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.StringProperty;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
 public class TrainStopSubject implements AbstractSubject {
     public final TrainStop stop;
-    private final ObservableHashMap<String, Object> properties = new ObservableHashMap<>();
+    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 
     TrainStopSubject(TrainStop stop) {
         this.stop = stop;
@@ -20,30 +21,19 @@ public class TrainStopSubject implements AbstractSubject {
         properties.put(DEPARTURE_TIME_PROPERTY, new SimpleIntegerProperty(this, DEPARTURE_TIME_PROPERTY));
     }
 
-
     public void setProperty(String propertyName, Object newValue) {
-        if(newValue == null){
+        if (newValue == null) {
             System.err.println("Null value for property " + propertyName);
             return;
         }
-        switch (propertyName) {
-            case DESTINATION_PROPERTY -> updateProperty(getProperty(DESTINATION_PROPERTY), newValue);
-            case ARRIVAL_TIME_PROPERTY -> updateProperty(getProperty(ARRIVAL_TIME_PROPERTY), newValue);
-            case DEPARTURE_TIME_PROPERTY -> updateProperty(getProperty(DEPARTURE_TIME_PROPERTY), newValue);
-            default -> System.err.println("Unknown property " + propertyName);
-        }
+        updateProperty(getProperty(propertyName), newValue);
     }
 
     public Property<?> getProperty(String propertyName) {
-        return (Property<?>) properties.get(propertyName);
+        return properties.get(propertyName);
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
-        return switch (propertyName) {
-            case DESTINATION_PROPERTY -> (IntegerProperty) getProperty(DESTINATION_PROPERTY);
-            case ARRIVAL_TIME_PROPERTY -> (IntegerProperty) getProperty(ARRIVAL_TIME_PROPERTY);
-            case DEPARTURE_TIME_PROPERTY -> (IntegerProperty) getProperty(DEPARTURE_TIME_PROPERTY);
-            default -> null;
-        };
+        return (IntegerProperty) getProperty(propertyName);
     }
 }

@@ -190,10 +190,12 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.info("CTC sending speed {} to block {} on line {}", speed, blockID, line);
         WaysideSystem.getController(line, blockID).CTCSendSpeed(blockID, speed);
     }
-
+ //TODO: change Send Authority to send in blocks
     void sendAuthority(Lines line, int blockID, int authority) {
         logger.info("CTC sending authority {} to block {} on line {}", authority, blockID, line);
         WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
     }
 }
 
+//TODO: send the wayside a list of blcisk to give gthe authity to instead of just one block
+//TODO: send that list by calling send authoity on the occupied block and the block with a reative auth for each block

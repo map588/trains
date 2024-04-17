@@ -21,15 +21,19 @@ public class ScheduleFileSubject implements AbstractSubject {
     }
 
     public void setProperty(String propertyName, Object newValue) {
-
+        if (newValue == null) {
+            System.err.println("Null value for property " + propertyName);
+            return;
+        }
+        updateProperty(getProperty(propertyName), newValue);
     }
 
     public StringProperty getStringProperty(String propertyName) {
-        return (StringProperty) properties.get(propertyName);
+        return (StringProperty) getProperty(propertyName);
     }
 
     public Property<?> getProperty(String propertyName) {
-        return null;
+        return properties.get(propertyName);
     }
 
     public ScheduleFile getSchedule() {
@@ -37,7 +41,7 @@ public class ScheduleFileSubject implements AbstractSubject {
     }
 
     public IntegerProperty getIntegerProperty(String propertyName) {
-        return (IntegerProperty) properties.get(propertyName);
+        return (IntegerProperty) getProperty(propertyName);
     }
 
 }

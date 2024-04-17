@@ -304,7 +304,7 @@ public class CTCOfficeManager {
         scheduleTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedSchedule = newValue.getSchedule();
-                System.out.println("selected schedule " + newValue + "\n");
+                System.out.println("selected schedule " + newValue.getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
                 trainSelectTable.getItems().clear();
                 for(int i = 1; i <= newValue.getSchedule().getNumTrains(); i++) {
                     trainSelectTable.getItems().add(newValue.getSchedule().getTrainSchedule(i).getSubject());
@@ -322,6 +322,7 @@ public class CTCOfficeManager {
         lineTrainSelector.getItems().add(Lines.GREEN.toString()); lineTrainSelector.getItems().add(Lines.RED.toString());
         lineTrainSelector.setValue(Lines.GREEN.toString());
         carsSelector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 2, 1));
+
         dispatchTimeSelector.setText(convertDoubleToClockTime(0.0));
         dispatchTimeSelector.setOnAction(event -> {
             if (!dispatchTimeSelector.getText().matches("\\d{0,2}:\\d{0,2}")) {
@@ -331,7 +332,7 @@ public class CTCOfficeManager {
             }
         });
         AddTrain.setOnAction(event -> {
-            System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY) + "\n");
+            System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.putTrainSchedule(schedule.getMultipleTrainSchedules().size() + 1, new TrainSchedule(schedule.getMultipleTrainSchedules().size() + 1,
                     lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new ArrayList<>()));
@@ -339,20 +340,18 @@ public class CTCOfficeManager {
             trainIDSelector.getItems().add(schedule.getMultipleTrainSchedules().size());
         });
         RemoveTrain.setOnAction(event -> {
-            System.out.println("removed train from schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY) + "\n");
+            System.out.println("removed train from schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.removeTrainSchedule(trainIDSelector.getValue());
             trainSelectTable.getItems().remove(trainSelectTable.getSelectionModel().getSelectedItem());
             trainIDSelector.getItems().remove(trainIDSelector.getValue());
         });
         saveTrainButton.setOnAction(event -> {
-            System.out.println("saved train to schedule " + selectedSchedule.getSubject().getProperty(SCHEDULE_FILE_NAME_PROPERTY) + "\n");
-            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
-            train.setDispatchTime((int)convertClockTimeToDouble(dispatchTimeSelector.getText()));
-            train.setLine(lineTrainSelector.getValue());
-            train.setCarCount(carsSelector.getValue());
+            System.out.println("saved train to schedule " + selectedSchedule.getSubject().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
+            TrainScheduleSubject train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue()).getSubject();
+            train.setProperty(DISPATCH_TIME_PROPERTY, dispatchTimeSelector.getText());
+            train.setProperty(CAR_COUNT_PROPERTY, carsSelector.getValue());
         });
-
 
         trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
