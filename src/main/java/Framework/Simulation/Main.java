@@ -42,7 +42,7 @@ public class Main {
         CTC.setTrackSystem(trackSystem);
         WaysideSystem waysideSystem = new WaysideSystem(trackSystem, CTC, false);
 
-        syncTask = new TimeSynchronizationTask(trackSystem, waysideSystem, trainSystem);
+        syncTask = new TimeSynchronizationTask(trackSystem, waysideSystem, trainSystem, CTC);
         syncTask.startScheduling(scheduledExecutorService, TIMESTEP);
 
         Application.launch(mainMenu.class, args);
