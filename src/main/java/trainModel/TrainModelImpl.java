@@ -276,9 +276,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public void enteredNextBlock() {
         //System.out.println("Train Entered Next Block");
         TrackBlock currentBlock = track.updateTrainLocation(this);
+        relativeDistance -= currentBlockLength;
+        this.setGrade(currentBlock.getGrade());
         currentBlockLength = currentBlock.getLength();
         //controller.onBlock();
-        relativeDistance = 0;
     }
 
     public void setCommandSpeed(double speed) {
