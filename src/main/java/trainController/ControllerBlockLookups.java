@@ -1,4 +1,4 @@
-package trainController.ControllerBlocks;
+package trainController;
 
 import Utilities.BasicTrackMap;
 import Utilities.Enums.Lines;
@@ -6,13 +6,15 @@ import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.ControllerBlocks.ControllerBlock;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class ControllerBlockLookups {
+final class ControllerBlockLookups {
     private static final Logger logger = LoggerFactory.getLogger(ControllerBlockLookups.class);
 
-    private static final ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, ControllerBlock>> lineLookups = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, ControllerBlock>> lineLookups = new ConcurrentHashMap<>();
+
 
     private ControllerBlockLookups() {
         BasicTrackMap lineMaps = GlobalBasicBlockParser.getInstance().getAllBasicLines();
@@ -27,6 +29,9 @@ public final class ControllerBlockLookups {
             logger.info("ControllerLookup: " + line + " lookup created");
         }
     }
+
+    public static ControllerBlockLookups INSTANCE = new ControllerBlockLookups();
+
 
     public static ConcurrentHashMap<Integer, ControllerBlock> getLookup(Lines line) {
         return lineLookups.get(line);

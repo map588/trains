@@ -2,7 +2,7 @@ package trackModel;
 
 public class NullTrackLine extends TrackLine {
 
-    private NullTrackLine() {
+    public NullTrackLine() {
         super();
     }
 

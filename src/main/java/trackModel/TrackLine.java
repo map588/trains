@@ -35,7 +35,7 @@ public class TrackLine implements TrackModel {
     private final TrackBlockLine mainTrackLine = new TrackBlockLine();
 
     //Object Lookups
-    private final ConcurrentHashMap<Integer, Beacon> beaconBlocks;
+    private final ConcurrentHashMap<Integer, Beacon> beaconBlocks = new ConcurrentHashMap<>();
     private final LinkedHashSet<Integer> lightBlocks = new LinkedHashSet<>();
 
     //Occupancy Map
@@ -51,38 +51,35 @@ public class TrackLine implements TrackModel {
 
     private int ticketSales = 0;
     public  int outsideTemperature = 40;
+    GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
 
     public TrackLine(Lines line) {
-
         this.line = line;
-
-        GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
-
-        //maps blocks to block numbers
         if(allTracks.containsLine(line)) {
-            BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+        BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+        trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
+
+
             //keeps track of which blocks are occupied
-            trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
+
             ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
             for (Integer blockIndex : blockIndices) {
                 TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
                 mainTrackLine.put(block.blockID, block);
-                if(block.isLight) {
+                if (block.isLight) {
                     lightBlocks.add(block.blockID);
                 }
             }
 
             //Needs more testing, but the beacon parser seems to work.
-            this.beaconBlocks = BeaconParser.parseBeacons(line);
+            beaconBlocks.putAll(BeaconParser.parseBeacons(line));
             this.subject = new TrackLineSubject(this, mainTrackLine);
 
             setupListeners();
-        } else {
-            trackOccupancyMap = new ObservableHashMap<>(0);
-            beaconBlocks = new ConcurrentHashMap<>();
-            this.subject = new TrackLineSubject(this, mainTrackLine);
-            logger.warn("TrackLine {} does not exist", line);
+        }else{
+            this.trackOccupancyMap = new ObservableHashMap<>(0);
+            this.subject = new TrackLineSubject(this, new TrackBlockLine());
         }
     }
 
@@ -107,7 +104,7 @@ public class TrackLine implements TrackModel {
 
     public TrainModel trainDispatch(int trainID) {
         TrainModel train = new TrainModelImpl(this, trainID);
-        Integer alreadyPlacedID = trackOccupancyMap.putIfAbsent(train,0);
+        Integer alreadyPlacedID = trackOccupancyMap.putIfAbsent(train, 0);
         if(alreadyPlacedID != null) {
             logger.error("Train {} already exists and was not dispatched.", trainID);
             return null;

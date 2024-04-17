@@ -1,18 +1,22 @@
 package trainModel;
 
 import Utilities.Enums.Direction;
+import Utilities.Enums.Lines;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trackModel.NullTrackLine;
 
 public final class NullTrain extends TrainModelImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(NullTrain.class);
 
     private Direction currentDirection = Direction.NORTH;
+    private Lines line = Lines.NULL;
     
     public NullTrain() {
-        super();
+        super(new NullTrackLine(), -1 );
     }
+
 
     @Override
     public void setDirection(Direction direction) {

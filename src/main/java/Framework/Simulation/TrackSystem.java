@@ -46,7 +46,7 @@ public class TrackSystem {
     public void update() {
             for (TrackLine line : TrackLineMap.getValues()) {
                 trackLineExecutor.submit(() -> {
-                    TrackLineMap.getTrackLine(Lines.GREEN).update();
+                    line.update();
                 });
             }
     }

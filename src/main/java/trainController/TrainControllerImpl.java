@@ -2,12 +2,12 @@ package trainController;
 
 import Common.TrainController;
 import Common.TrainModel;
+import Utilities.Records.BasicBlock;
 import Utilities.Records.Beacon;
 import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trainController.ControllerBlocks.ControllerBlock;
-import trainController.ControllerBlocks.ControllerBlockLookups;
 import trainModel.NullTrain;
 import trainModel.Records.UpdatedTrainValues;
 
@@ -22,6 +22,7 @@ import static Utilities.Conversion.temperatureUnit.CELSIUS;
 import static Utilities.Conversion.temperatureUnit.FAHRENHEIT;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
+import static Utilities.Enums.Lines.NULL;
 import static trainController.ControllerProperty.*;
 
 //TODO: The Subject is now entirely storing imperial units, and here we have only metric units. We convert them all here, and it is consistent.
@@ -52,10 +53,10 @@ public class TrainControllerImpl implements TrainController{
     private static final double TIME_STEP = TIME_STEP_S;
     private static final double DEAD_BAND = 0.01;
 
+    //private final NullTrain nullTrain = new NullTrain();
+
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;
-
-    private NullTrain nullTrain = new NullTrain();
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
@@ -87,7 +88,7 @@ public class TrainControllerImpl implements TrainController{
     private final int trainID;
     private final TrainControllerSubject subject;
     private final TrainModel train;
-    private static ConcurrentHashMap<Integer, ControllerBlock> blockLookup;
+    private ConcurrentHashMap<Integer, ControllerBlock> blockLookup;
 
     public TrainControllerImpl(TrainModel train, int trainID) {
         this.trainID = trainID;
@@ -95,15 +96,18 @@ public class TrainControllerImpl implements TrainController{
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
         populateTrainValues(train);
-        if(train.getTrainNumber() != -1) {
+        if(train.getTrainNumber() != -1 && train.getLine() != NULL && train.getLine() != null){
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
+            currentBlock = blockLookup.get(0);
+        }else{
+            currentBlock = new ControllerBlock(new BasicBlock());
         }
-        currentBlock = blockLookup.get(0);
+
     }
 
     public TrainControllerImpl() {
         this.trainID = -1;
-        this.train = nullTrain;
+        this.train = new NullTrain();
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
     }

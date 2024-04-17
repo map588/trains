@@ -14,6 +14,7 @@ public class TrainModelSubject implements AbstractSubject{
 
     private static final Logger logger = LoggerFactory.getLogger(TrainModelSubject.class);
 
+
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final TrainModelImpl model;
     private final TrainModelSubjectMap trainSubjectMap = TrainModelSubjectMap.getInstance();
@@ -39,7 +40,7 @@ public class TrainModelSubject implements AbstractSubject{
 
 
     public TrainModelSubject() {
-        this.model = NullTrain.getInstance();
+        this.model = new NullTrain();
         intitializeValues();
         this.trainID = -1;
         //Noteably, we do not register the NullTrain with the map
