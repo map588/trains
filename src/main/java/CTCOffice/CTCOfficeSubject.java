@@ -16,7 +16,7 @@ public class CTCOfficeSubject implements AbstractSubject{
     private BooleanProperty autoMode;
 
     CTCOfficeSubject(CTCOfficeImpl office){
-        this.time = new SimpleIntegerProperty(this, "time", office.getTime());
+        this.time = new SimpleIntegerProperty(this, "time", (int)office.getTime());
     }
 
     public void setProperty(String propertyName, Object newValue) {

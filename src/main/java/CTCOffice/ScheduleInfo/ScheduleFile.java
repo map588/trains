@@ -6,14 +6,16 @@ import java.util.HashMap;
 public class ScheduleFile {
     private final HashMap<Integer, TrainSchedule> multipleTrainSchedules = new HashMap<>();
     private final HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
+    private int trainNum;
     private final ScheduleFileSubject subject;
 
     private String scheduleFileName;
     private String lastModified;
 
-    public ScheduleFile(String scheduleFileName, String lastModified) {
+    public ScheduleFile(String scheduleFileName, String lastModified, int trainNum){
         this.scheduleFileName = scheduleFileName;
         this.lastModified = lastModified;
+        this.trainNum = trainNum;
         subject = new ScheduleFileSubject(this);
     }
 
@@ -54,4 +56,17 @@ public class ScheduleFile {
     public HashMap<Integer, TrainScheduleSubject> getMultipleTrainScheduleSubjects() {
         return this.multipleTrainScheduleSubjects;
     }
+
+    public void setNumTrains(int numTrains) {
+        this.trainNum = numTrains;
+    }
+
+    public int getNumTrains() {
+        return this.trainNum;
+    }
+
+    public ScheduleFileSubject getSubject() {
+        return this.subject;
+    }
+
 }

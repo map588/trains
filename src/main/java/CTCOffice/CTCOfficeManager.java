@@ -3,6 +3,7 @@ package CTCOffice;
 import CTCOffice.ScheduleInfo.ScheduleFileSubject;
 import CTCOffice.ScheduleInfo.ScheduleLibrary;
 import CTCOffice.ScheduleInfo.TrainScheduleSubject;
+import CTCOffice.ScheduleInfo.TrainStopSubject;
 import Framework.Support.BlockIDs;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
@@ -57,23 +58,21 @@ public class CTCOfficeManager {
     @FXML private TableView<ScheduleFileSubject> scheduleTable;
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleNameColumn;
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleDateModColumn;
+    @FXML private TableColumn<ScheduleFileSubject, Integer> trainNumColumn;
 
     @FXML private ComboBox<String> scheduleSelector;
     @FXML private Button selectScheduleButton;
 
     @FXML private TableView<TrainScheduleSubject> trainSelectTable;
-
+    @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
     @FXML private TableColumn<TrainScheduleSubject, String> lineColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> carNumberColumn;
     @FXML private TableColumn<TrainScheduleSubject, Integer> dispatchTimeColumn;
 
-
-    @FXML private TableColumn<TrainScheduleSubject, Integer> stationBlockIDColumn;
-    @FXML private TableColumn<TrainScheduleSubject, Integer> arrivalTimeColumn;
-    @FXML private TableColumn<TrainScheduleSubject, Integer> departureTimeColumn;
-
-    @FXML private TableView<TrainScheduleSubject> scheduleEditTable;
-    @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
+    @FXML private TableView<TrainStopSubject> scheduleEditTable;
+    @FXML private TableColumn<TrainStopSubject, Integer> stationBlockIDColumn;
+    @FXML private TableColumn<TrainStopSubject, Integer> arrivalTimeColumn;
+    @FXML private TableColumn<TrainStopSubject, Integer> departureTimeColumn;
 
     @FXML private ChoiceBox<Integer> lineTrainSelector;
     @FXML private ChoiceBox<Integer> trainIDSelector;
@@ -172,28 +171,67 @@ public class CTCOfficeManager {
         blockSelection.setValue(1);
         lineSelection.setValue("GREEN");
 
+
+
         //schedules table
         scheduleTable.setEditable(true);
         scheduleTable.getItems().addAll(scheduleLibrary.getSubjects().values());
         scheduleNameColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(SCHEDULE_FILE_NAME_PROPERTY));
+        scheduleDateModColumn.setCellValueFactory(schedule -> schedule.getValue().getStringProperty(LAST_MODIFIED_PROPERTY));
+        trainNumColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(NUM_TRAINS_PROPERTY).getValue()));
 
-        scheduleSelector.getItems().addAll(scheduleLibrary.getSubjects().keySet());
-
-        selectScheduleButton.setOnAction(event -> {
-            ScheduleFileSubject selectedSchedule = scheduleLibrary.getSubject(scheduleSelector.getValue());
-            scheduleEditTable.getItems().clear();
-            for(int i = 0; i < selectedSchedule.getSchedule().getTrainSchedule(1).getStops().size(); i++) {
-                scheduleEditTable.getItems().add(selectedSchedule.getSchedule().getTrainSchedule(1).getSubject());
+        scheduleTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                trainSelectTable.getItems().clear();
+                for(int i = 1; i <= newValue.getSchedule().getNumTrains(); i++) {
+                    trainSelectTable.getItems().add(newValue.getSchedule().getTrainSchedule(i).getSubject());
+                }
             }
         });
 
+//        scheduleSelector.getItems().addAll(scheduleLibrary.getSubjects().keySet());
+//        selectScheduleButton.setOnAction(event -> {
+//            ScheduleFileSubject selectedSchedule = scheduleLibrary.getSubject(scheduleSelector.getValue());
+//            trainSelectTable.getItems().clear();
+//            for(int i = 0; i < office.getNumOfTrains(); i++) {
+//                trainSelectTable.getItems().add(selectedSchedule.getSchedule().getTrainSchedule(i).getSubject());
+//            }
+//        });
+
+/*
+         <TableView fx:id = "trainSelectTable" prefHeight="100.0">
+                    <columns>
+                        <TableColumn fx:id="scheduledTrainColumn" prefWidth="75.0" text="Train #"/>
+                        <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
+                        <TableColumn fx:id="carNumberColumn" prefWidth="75.0" text="Cars"/>
+                        <TableColumn fx:id="dispatchTimeColumn" prefWidth="75.0" text="Dispatch"/>
+                    </columns>
+                </TableView>
+                <TableView fx:id="scheduleEditTable" prefHeight="200.0">
+                    <columns>
+                        <TableColumn fx:id="stationBlockIDColumn" prefWidth="75.0" text="Station"/>
+                        <TableColumn fx:id="arrivalTimeColumn" prefWidth="75.0" text="Arrival"/>
+                        <TableColumn fx:id="departureTimeColumn" prefWidth="75.0" text="Departure"/>
+         */
+        trainSelectTable.setEditable(true);
         scheduledTrainColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(TRAIN_ID_PROPERTY).getValue()));
         lineColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(LINE_PROPERTY).getValue()));
         dispatchTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DISPATCH_TIME_PROPERTY).getValue()));
-        stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY, 0).getValue()));
-        arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(ARRIVAL_TIME_PROPERTY, 0).getValue()));
-        departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DEPARTURE_TIME_PROPERTY, 0).getValue()));
         carNumberColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(CAR_COUNT_PROPERTY).getValue()));
+
+        trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                scheduleEditTable.getItems().clear();
+                for(int i = 0; i < newValue.getSchedule().getStops().size(); i++) {
+                    scheduleEditTable.getItems().add(newValue.getSchedule().getStop(i).getSubject());
+                }
+            }
+        });
+
+        scheduleEditTable.setEditable(true);
+        stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY).getValue()));
+        arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue()));
+        departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue()));
 
         // divider position listeners for the main split pane
         double minDividerPosition = 460.0;

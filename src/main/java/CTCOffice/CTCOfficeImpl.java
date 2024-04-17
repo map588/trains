@@ -13,7 +13,9 @@ import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ public class CTCOfficeImpl implements CTCOffice {
     private boolean manualMode;
     private boolean maintenanceMode;
     private boolean autoMode;
+    private int numOfTrains;
 
     final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
 
@@ -43,6 +46,8 @@ public class CTCOfficeImpl implements CTCOffice {
      */
     private CTCOfficeImpl() {
         time = 0;
+        numOfTrains = 0;
+
         BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
             ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
@@ -73,8 +78,8 @@ public class CTCOfficeImpl implements CTCOffice {
         }
 
 
-        new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
-        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, "BlueLine", 0, 2, new ArrayList<>() {{
+        new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019", 1));
+        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, Lines.GREEN.toString(), 0, 2, new ArrayList<>() {{
             add(new TrainStop(5, 5, 6, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add(new TrainStop(7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add(new TrainStop(10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
@@ -175,6 +180,7 @@ public class CTCOfficeImpl implements CTCOffice {
     void DispatchTrain(Lines line , int trainID) {
         logger.info("CTC Dispatching train {} on line {}", trainID, line);
         trackSystem.dispatchTrain(line, trainID);
+        ++numOfTrains;
     }
 
     void sendSpeed(Lines line, int blockID, double speed) {
@@ -185,6 +191,14 @@ public class CTCOfficeImpl implements CTCOffice {
     void sendAuthority(Lines line, int blockID, int authority) {
         logger.info("CTC sending authority {} to block {} on line {}", authority, blockID, line);
         WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
+    }
+
+    int getNumOfTrains() {
+        return numOfTrains;
+    }
+
+    void setNumOfTrains(int numOfTrains) {
+        this.numOfTrains = numOfTrains;
     }
 
 }

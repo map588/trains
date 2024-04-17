@@ -3,6 +3,7 @@ package CTCOffice.ScheduleInfo;
 import CTCOffice.ScheduleInfo.TrainStop;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -14,9 +15,9 @@ public class TrainStopSubject implements AbstractSubject {
 
     TrainStopSubject(TrainStop stop) {
         this.stop = stop;
-        properties.put(DESTINATION_PROPERTY, new SimpleIntegerProperty(this, DESTINATION_PROPERTY, stop.getStationBlockID()));
-        properties.put(ARRIVAL_TIME_PROPERTY, new SimpleIntegerProperty(this, ARRIVAL_TIME_PROPERTY, stop.getArrivalTime()));
-        properties.put(DEPARTURE_TIME_PROPERTY, new SimpleIntegerProperty(this, DEPARTURE_TIME_PROPERTY, stop.getDepartureTime()));
+        properties.put(DESTINATION_PROPERTY, new SimpleIntegerProperty(this, DESTINATION_PROPERTY));
+        properties.put(ARRIVAL_TIME_PROPERTY, new SimpleIntegerProperty(this, ARRIVAL_TIME_PROPERTY));
+        properties.put(DEPARTURE_TIME_PROPERTY, new SimpleIntegerProperty(this, DEPARTURE_TIME_PROPERTY));
     }
 
 
@@ -37,11 +38,11 @@ public class TrainStopSubject implements AbstractSubject {
         return (Property<?>) properties.get(propertyName);
     }
 
-    public Integer getIntegerProperty(String propertyName) {
+    public IntegerProperty getIntegerProperty(String propertyName) {
         return switch (propertyName) {
-            case DESTINATION_PROPERTY -> (Integer) getProperty(DESTINATION_PROPERTY).getValue();
-            case ARRIVAL_TIME_PROPERTY -> (Integer) getProperty(ARRIVAL_TIME_PROPERTY).getValue();
-            case DEPARTURE_TIME_PROPERTY -> (Integer) getProperty(DEPARTURE_TIME_PROPERTY).getValue();
+            case DESTINATION_PROPERTY -> (IntegerProperty) getProperty(DESTINATION_PROPERTY);
+            case ARRIVAL_TIME_PROPERTY -> (IntegerProperty) getProperty(ARRIVAL_TIME_PROPERTY);
+            case DEPARTURE_TIME_PROPERTY -> (IntegerProperty) getProperty(DEPARTURE_TIME_PROPERTY);
             default -> null;
         };
     }
