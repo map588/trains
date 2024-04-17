@@ -132,6 +132,14 @@ public class Main {
             // Call trackSystem.update() after both update methods have finished
             synchronizationPool.submit(trackSystem::update);
             simSecond += Constants.TIME_STEP_S;
+
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime) / 1000; //microseconds
+            if(duration > TIMESTEP * 1000) {
+                double lag = (double)(duration/1000) - TIMESTEP; //milliseconds
+                logger.warn("Simulation is running behind by {} ms", lag);
+            }
+
             if (simSecond % 60  == 0) {
                 simMinute++;
             }
@@ -142,12 +150,7 @@ public class Main {
             if (simHour > 23) {
                 simHour = 0;
             }
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime) / 1000; //microseconds
-            if(duration > TIMESTEP * 1000) {
-                double lag = (double)duration/1000 - TIMESTEP;
-                logger.warn("Simulation is running behind by {} ms", lag);
-            }
+
             Platform.runLater(() -> mainMenu.timeLabel.setText(String.format("Time: %02d:%02d:%02d", simHour, simMinute, ((int) simSecond)%60)));
         }
 
