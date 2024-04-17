@@ -20,9 +20,10 @@ public class Main {
 
 
     public static double simSecond = 0;
-    public static int simMinute = 0;
-    public static int simHour = 6;
-    public static long TIMESTEP = (long) Constants.TIME_STEP_MS;
+    public static int    simMinute = 0;
+    public static int    simHour   = 6;
+    public static long   TIMESTEP  = (long) Constants.TIME_STEP_MS;
+    public static double updatesPerSimSecond = 1/(Constants.TIME_STEP_S);
 
     private static ScheduledFuture<?> scheduledTask;
     public static TimeSynchronizationTask syncTask;
@@ -55,6 +56,7 @@ public class Main {
     public static void modifyTimeMultiplier(double newMultiplier) {
         Main.timeMultiplier = Math.floor(newMultiplier*2)/2; //Intervals of 0.5
         TIMESTEP = (long)(Constants.TIME_STEP_MS / timeMultiplier);
+
         logger.info("Modifying TIMESTEP to {}", TIMESTEP);
         Platform.runLater(() -> mainMenu.timeScaleLabel.setText(timeMultiplier + "x Speed"));
         syncTask.modifyTimestep(TIMESTEP);
@@ -68,11 +70,15 @@ public class Main {
         synchronizationPool.shutdown();
     }
 
+
+
+
     private static class TimeSynchronizationTask implements Runnable {
         private final TrackSystem trackSystem;
         private final WaysideSystem waysideSystem;
         private final TrainSystem trainSystem;
         private final CTCOfficeImpl CTC;
+        private int timeIndex = 0;
 
 
         public void startScheduling(ScheduledExecutorService scheduledExecutorService, long initialTimestep) {
@@ -108,6 +114,7 @@ public class Main {
         @Override
         public void run() {
             long startTime = System.nanoTime();
+
             CTC.incrementTime();
             CountDownLatch latch = new CountDownLatch(2);
 
@@ -133,26 +140,36 @@ public class Main {
             synchronizationPool.submit(trackSystem::update);
             simSecond += Constants.TIME_STEP_S;
 
+
+            if(++timeIndex >= updatesPerSimSecond) { //We only need to update the time label once per simulated second
+                timeIndex = 0;
+
+                if (simSecond % 60 == 0) {
+                    simMinute++;
+                }
+                if (simMinute > 60) {
+                    simMinute = 0;
+                    simHour++;
+                }
+                if (simHour > 23) {
+                    simHour = 0;
+                }
+
+                Platform.runLater(() -> mainMenu.timeLabel.setText(String.format("Time: %02d:%02d:%02d", simHour, simMinute, ((int) simSecond) % 60)));
+
+            }
+
+
             long endTime = System.nanoTime();
+
             long duration = (endTime - startTime) / 1000; //microseconds
             if(duration > TIMESTEP * 1000) {
                 double lag = (double)(duration/1000) - TIMESTEP; //milliseconds
                 logger.warn("Simulation is running behind by {} ms", lag);
             }
 
-            if (simSecond % 60  == 0) {
-                simMinute++;
-            }
-            if (simMinute > 60) {
-                simMinute = 0;
-                simHour++;
-            }
-            if (simHour > 23) {
-                simHour = 0;
-            }
-
-            Platform.runLater(() -> mainMenu.timeLabel.setText(String.format("Time: %02d:%02d:%02d", simHour, simMinute, ((int) simSecond)%60)));
         }
+
 
         public static void stopSimulation() {
             // Cancel the scheduled task
