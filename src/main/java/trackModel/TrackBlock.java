@@ -43,7 +43,8 @@ public class TrackBlock {
      boolean powerFailure;
      boolean occupied;
      TrainModel occupiedBy;
-     TrainModel nullTrain = NullTrain.getInstance();
+
+     NullTrain nullTrain = new NullTrain();
 
     private static final Logger logger = LoggerFactory.getLogger(TrackBlock.class);
 
@@ -153,7 +154,7 @@ public class TrackBlock {
             if(occupiedBy != nullTrain) {
                 this.occupiedBy.changeDirection();
             }else{
-                NullTrain.getInstance().changeDirection();
+                nullTrain.changeDirection();
             }
         }
         return nextConnection.blockNumber();
@@ -172,13 +173,21 @@ public class TrackBlock {
     }
 
     public void setAuthority(int authority) {
-        this.occupiedBy.setAuthority(authority);
-        this.authority = authority;
+        if(occupiedBy != nullTrain) {
+            this.occupiedBy.setAuthority(authority);
+            this.authority = authority;
+        }else{
+            logger.warn("TrackBlock: {} is not occupied, cannot set authority", blockID);
+        }
     }
 
     public void setCommandSpeed(double commandSpeed) {
-        this.occupiedBy.setCommandSpeed(commandSpeed);
-        this.commandSpeed = commandSpeed;
+        if(occupiedBy != nullTrain){
+            this.occupiedBy.setCommandSpeed(commandSpeed);
+            this.commandSpeed = commandSpeed;
+        }else{
+            logger.warn("TrackBlock: {} is not occupied, cannot set command speed", blockID);
+        }
     }
 
     void addOccupation(TrainModel train){
@@ -279,15 +288,6 @@ public class TrackBlock {
         }
     }
 
-    public Direction getPrimarySwitchDir() {
-        if (feature.isSwitch()) {
-            return feature.getPrimarySwitchDir();
-        } else {
-            logger.warn(generateLogMessage("getPrimarySwitchDir", "switch"));
-            return null;
-        }
-    }
-
     String getStationName() {
         if (feature.isStation()) {
             return feature.getStationName();
@@ -302,7 +302,7 @@ public class TrackBlock {
             return feature.getDoorDirection();
         } else {
             logger.warn(generateLogMessage("getDoorDirection", "station"));
-            return null;
+            return "";
         }
     }
 

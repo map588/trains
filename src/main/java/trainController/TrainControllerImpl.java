@@ -13,7 +13,8 @@ import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import static Utilities.Constants.*;
+import static Utilities.Constants.MAX_POWER_W;
+import static Utilities.Constants.TIME_STEP_S;
 import static Utilities.Conversion.*;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
@@ -53,6 +54,8 @@ public class TrainControllerImpl implements TrainController{
 
     private ControllerBlock currentBlock;
     private Beacon currentBeacon = null;
+
+    private NullTrain nullTrain = new NullTrain();
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
@@ -100,7 +103,7 @@ public class TrainControllerImpl implements TrainController{
 
     public TrainControllerImpl() {
         this.trainID = -1;
-        this.train = NullTrain.getInstance();
+        this.train = nullTrain;
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
     }

@@ -8,16 +8,10 @@ public final class NullTrain extends TrainModelImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(NullTrain.class);
 
-    public static final NullTrain INSTANCE = new NullTrain();
-
     private Direction currentDirection = Direction.NORTH;
     
-    private NullTrain() {
+    public NullTrain() {
         super();
-    }
-
-    public static NullTrain getInstance() {
-        return INSTANCE;
     }
 
     @Override
