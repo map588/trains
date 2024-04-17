@@ -1,8 +1,11 @@
 package CTCOffice.ScheduleInfo;
 
-import java.util.List;
+import Framework.Support.Notifier;
 
-public class TrainSchedule {
+import java.util.List;
+import static CTCOffice.Properties.ScheduleProperties.*;
+
+public class TrainSchedule implements Notifier {
     private int trainID;
     private String line;
     private int dispatchTime;
@@ -39,14 +42,17 @@ public class TrainSchedule {
 
     public void setTrainID(int trainID) {
         this.trainID = trainID;
+        notifyChange(TRAIN_ID_PROPERTY, trainID);
     }
 
     public void setDispatchTime(int dispatchTime) {
         this.dispatchTime = dispatchTime;
+        notifyChange(DISPATCH_TIME_PROPERTY, dispatchTime);
     }
 
     public void setCarCount(int carCount) {
         this.carCount = carCount;
+        notifyChange(CAR_COUNT_PROPERTY, carCount);
     }
 
     public void setStops(List<TrainStop> stops) {
@@ -145,4 +151,7 @@ public class TrainSchedule {
     }
 
 
+    public void notifyChange(String property, Object newValue) {
+        subject.setProperty(property, newValue);
+    }
 }

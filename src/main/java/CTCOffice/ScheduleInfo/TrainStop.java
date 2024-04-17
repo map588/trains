@@ -1,10 +1,14 @@
 package CTCOffice.ScheduleInfo;
 
+import Framework.Support.Notifier;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static CTCOffice.Properties.ScheduleProperties.*;
+
 // A path in between two stations, a schedule is mostly just a list of these.
-public class TrainStop { //SubRoute
+public class TrainStop implements Notifier { //SubRoute
     private int stationBlockID;
     private int arrivalTime;
     private int departureTime;
@@ -50,14 +54,17 @@ public class TrainStop { //SubRoute
 
     public void setStationBlockID(int stationBlockID) {
         this.stationBlockID = stationBlockID;
+        notifyChange(DESTINATION_PROPERTY, stationBlockID);
     }
 
     public void setArrivalTime(int arrivalTime) {
         this.arrivalTime = arrivalTime;
+        notifyChange(ARRIVAL_TIME_PROPERTY, arrivalTime);
     }
 
     public void setDepartureTime(int departureTime) {
         this.departureTime = departureTime;
+        notifyChange(DEPARTURE_TIME_PROPERTY, departureTime);
     }
 
     public void setSpeedList(List<Integer> speedList) {
@@ -88,4 +95,7 @@ public class TrainStop { //SubRoute
         return subject;
     }
 
+    public void notifyChange(String property, Object newValue) {
+        subject.setProperty(property, newValue);
+    }
 }
