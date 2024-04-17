@@ -6,16 +6,16 @@ import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.BlockIDs;
 import Utilities.BasicTrackMap;
+import Utilities.Constants;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CTCOfficeImpl implements CTCOffice {
 
-    private long     time;
+    private double  time; // in seconds
     private int     ticketSales;
     private int     mode;
     private boolean manualMode;
@@ -115,12 +115,15 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.info("Block {} on line {} has been set to under maintenance: {}", blockID, line, underMaintenance);
     }
 
-    void setTime(long time) {
-        logger.warn("setTime() is not implemented");
+    public void setTime(double time) {
         this.time = time;
     }
-    long getTime() {
-        logger.warn("getTime() is not implemented");
+
+    public void incrementTime() {
+        time += Constants.TIME_STEP_S;
+    }
+
+    double getTime() {
         return time;
     }
 

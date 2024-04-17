@@ -58,6 +58,7 @@ public class Main {
         private final TrackSystem trackSystem;
         private final WaysideSystem waysideSystem;
         private final TrainSystem trainSystem;
+        private final CTCOfficeImpl CTC;
 
 
         public void startScheduling(ScheduledExecutorService scheduledExecutorService, long initialTimestep) {
@@ -81,13 +82,15 @@ public class Main {
                     TimeUnit.MILLISECONDS);
         }
 
-        public TimeSynchronizationTask(TrackSystem trackSystem, WaysideSystem waysideController, TrainSystem trainSystem) {
+        public TimeSynchronizationTask(TrackSystem trackSystem, WaysideSystem waysideController, TrainSystem trainSystem, CTCOfficeImpl ctcOffice) {
             this.trackSystem = trackSystem;
             this.waysideSystem = waysideController;
             this.trainSystem = trainSystem;
+            this.CTC = ctcOffice;
         }
         @Override
         public void run() {
+            CTC.incrementTime();
             CountDownLatch latch = new CountDownLatch(2);
 
             // Submit tasks to the thread pool for waysideSystem and trainSystem
