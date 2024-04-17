@@ -206,6 +206,7 @@ public class TrainControllerImpl implements TrainController{
     /**
      *  onBlock()
      */
+    @Override
     public void onBlock(){
         if(currentBeacon != null) {
             currentBlock = blockLookup.get(currentBeacon.blockIndices().poll());
@@ -257,11 +258,13 @@ public class TrainControllerImpl implements TrainController{
         // Get block information somehow
 
         if(inTunnel) {
+            logger.info("Train is in a tunnel");
             setIntLights(true);
             setExtLights(true);
 
         }
         else{
+            logger.info("Train is not in a tunnel");
             setIntLights(false);
             setExtLights(false);
 

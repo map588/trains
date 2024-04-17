@@ -247,6 +247,11 @@ public class HWTrainControllerImpl implements TrainController {
         return null;
     }
 
+    @Override
+    public void onBlock() {
+
+    }
+
 
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {

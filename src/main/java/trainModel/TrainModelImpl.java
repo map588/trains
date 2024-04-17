@@ -280,7 +280,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         relativeDistance -= currentBlockLength;
         this.setGrade(currentBlock.getGrade());
         currentBlockLength = currentBlock.getLength();
-        //controller.onBlock();
+        controller.onBlock();
     }
 
     public void setCommandSpeed(double speed) {

@@ -80,4 +80,6 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
     boolean getInTunnel();
 
     Beacon getBeacon();
+
+    void onBlock();
 }
