@@ -2,15 +2,22 @@ package trackModel;
 
 import Utilities.BooleanIconTableCell;
 import Utilities.Enums.Lines;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.TransformationList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
+import waysideController.SignalLightTableCell;
 import waysideController.WaysideBlockSubject;
 
+import javax.sound.midi.Track;
 import java.io.File;
+
+import static waysideController.Properties.*;
+import static waysideController.Properties.maintenanceMode_p;
 
 
 public class TrackModelManager {
@@ -68,28 +75,36 @@ public class TrackModelManager {
     @FXML
     private TableView<TrackLineSubject> lineTable;
     @FXML
-    private TableColumn<TrackLineSubject, String> directionColumn, failureColumn, blockColumn;
+    private TableColumn<TrackLineSubject, String> failureColumn, blockColumn;
     @FXML
     private TableColumn<TrackLineSubject, Integer> lengthColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> occupiedColumn;
+    private TableColumn<TrackLineSubject, Boolean> occupiedColumn, directionColumn;
     @FXML
     private TableColumn<TrackLineSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
 
 
     //subject
     private TrackLineSubject subject;
+    private ObservableList<TrackLineSubject> subjectList;
 
     @FXML
     public void initialize(){
+
+        //initialize subject and list
+        subject = new TrackLineSubject();
+        subjectList = FXCollections.observableArrayList(subject);
+
+
         //initialize buttons and user inputs
         chooseFile.setOnAction(event -> chooseFolder());
         trackUpload.setOnAction(event -> uploadTrack());
         murphyEnter.setOnAction(event -> murphyEnter());
-        pickLine.setOnAction(event -> updateTable());
         simSpeedInput.setOnAction(event -> setSimSpeed(simSpeedInput.getValue()));
         lineNameInput.setOnAction(event -> addLineName(lineNameInput.getText()));
 
+        //initialize combo boxes
+        pickLine.getItems().addAll("GREEN","RED");
         simSpeedInput.getItems().addAll("1x","2x","3x","4x","5x","6x","7x","8x","9x","10x");
         chooseFailureMode.getItems().addAll(
                 "Broken Rail",
@@ -110,11 +125,18 @@ public class TrackModelManager {
         occupiedColumn.setCellValueFactory(block -> block.getValue().isOccupiedProperty());
         directionColumn.setCellValueFactory(block -> block.getValue().directionProperty());
 
-        //set up factories for occupied column and direction column
+        // set up factories for occupied column and direction column
         occupiedColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
             @Override
             public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
                 return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24);
+            }
+        });
+
+        directionColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
+            @Override
+            public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
+                return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/arrow_24.png", 24, 24);
             }
         });
 
@@ -123,6 +145,7 @@ public class TrackModelManager {
             selectBlock(lineTable.getSelectionModel().getSelectedItem());
         });
     }
+
 
     //change values based on selection in table
     public void selectBlock(TrackLineSubject newProperties){
@@ -214,15 +237,13 @@ public class TrackModelManager {
         outsideTemp.setText(subject.outsideTempProperty().toString());
 
     }
-    private void updateTable() {
+    private void updateTable(String lineSelect){
         //get the line
-        String lineSelect = pickLine.getValue();
-        //send the line to the track model
-        //currTrackModel.getLine(line);
-        //ObservableList<TrackLayoutInfo> tableInfo = FXCollections.observableArrayList(currTrackModel.getTrackInfo());
-        //lineTable.setItems(tableInfo);
-        //ObservableList<ParsedBasicBlocks> tableInfo = subject.getTrackInfo();
-        //ObservableList<TrackLineSubject>
+
+        ObservableList<TrackLineSubject> currentLine = FXCollections.observableArrayList(subjectList);
+// TODO: Hardcode the lines in the UI and read from the table to switch between lines
+
+
         Lines line = Lines.valueOf(lineSelect);
         subject = TrackLineMap.getTrackLine(line).getSubject();
 

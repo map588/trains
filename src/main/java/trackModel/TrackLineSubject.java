@@ -26,7 +26,7 @@ public class TrackLineSubject {
     private BooleanProperty isOccupied;
 
     //labels
-    private StringProperty direction;
+    private BooleanProperty direction;
     private StringProperty passEmbarked;
     private StringProperty passDisembarked;
     private StringProperty ticketSales;
@@ -76,7 +76,7 @@ public class TrackLineSubject {
         brokenRail = new SimpleBooleanProperty();
         blockElevation = new SimpleDoubleProperty();
         outsideTemp = new SimpleIntegerProperty();
-        direction = new SimpleStringProperty();
+        direction = new SimpleBooleanProperty();
         blockList = FXCollections.observableArrayList();
     }
 
@@ -474,19 +474,6 @@ public class TrackLineSubject {
     }
 
 
-
-    public String getDirection() {
-        return direction.get();
-    }
-
-    public StringProperty directionProperty() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction.set(direction);
-    }
-
     public int getOutsideTemp() {
         return outsideTemp.get();
     }
@@ -497,5 +484,17 @@ public class TrackLineSubject {
 
     public void setOutsideTemp(int outsideTemp) {
         this.outsideTemp.set(outsideTemp);
+    }
+
+    public boolean isDirection() {
+        return direction.get();
+    }
+
+    public BooleanProperty directionProperty() {
+        return direction;
+    }
+
+    public void setDirection(boolean direction) {
+        this.direction.set(direction);
     }
 }
