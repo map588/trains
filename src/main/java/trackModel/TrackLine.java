@@ -44,6 +44,9 @@ public class TrackLine implements TrackModel {
     //Task Queue
     private final ConcurrentLinkedQueue<Callable<Object>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
+    //Subject Map
+    private static final LineSubjectMap trackSubjectMap = LineSubjectMap.getInstance();
+
     private long time = 0;
 
 
@@ -75,7 +78,7 @@ public class TrackLine implements TrackModel {
             //Needs more testing, but the beacon parser seems to work.
             beaconBlocks.putAll(BeaconParser.parseBeacons(line));
             this.subject = new TrackLineSubject(this, mainTrackLine);
-
+            trackSubjectMap.getInstance().addLineSubject(line.toString(), subject);
             setupListeners();
         }else{
             this.trackOccupancyMap = new ObservableHashMap<>(0);
