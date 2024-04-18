@@ -175,7 +175,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                 ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
 
             if(occupied && !block.getBooleanAuth()) {
-                trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
+                trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
             }
         }
     }
@@ -237,9 +237,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void maintenanceSetAuthority(int blockID, boolean auth) {
         logger.info("Setting authority for block {} to {}", blockID, auth);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
-            blockMap.get(blockID).setBooleanAuth(auth);
-//            trackModel.setTrainAuthority(blockID, auth);
-//            System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
+            WaysideBlock block = blockMap.get(blockID);
+            block.setBooleanAuth(auth);
+
+            if(trackModel != null && block.isOccupied()) {
+                if (!auth) {
+                    trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
+                }
+                else {
+                    trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
+                }
+            }
         }
     }
 
@@ -355,10 +363,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(trackModel != null && block.isOccupied()) {
             if (!auth) {
-                trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
+                trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
             }
             else {
-                trackModel.setCommandedSpeed(blockID, RESUME_TRAIN_SIGNAL);
+                trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
             }
         }
     }
