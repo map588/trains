@@ -3,16 +3,13 @@ package CTCOffice;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.BlockIDs;
 import Framework.Support.Notifier;
-import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;
-
-import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
-import static CTCOffice.Properties.BlockProperties.UNDER_MAINTENANCE_PROPERTY;
-import static Utilities.Enums.BlockType.*;
-import static Utilities.Enums.Direction.NORTH;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static CTCOffice.Properties.BlockProperties.SWITCH_STATE_STRING_PROPERTY;
+import static Utilities.Enums.BlockType.CROSSING;
+import static Utilities.Enums.Direction.NORTH;
 
 
 /**
@@ -86,6 +83,10 @@ class CTCBlock implements Notifier {
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean GUI, boolean state) {
+        if(!this.isSwitchCon){
+            logger.warn("Set switch state called on non-switch block: {}  on line {}", this.blockID, blockID.line());
+            return;
+        }
         if(!underMaintenance && GUI){
             setUnderMaintenance(true, true);
         }
