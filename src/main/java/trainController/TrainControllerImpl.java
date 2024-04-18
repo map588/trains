@@ -52,7 +52,7 @@ import static trainController.ControllerProperty.*;
  */
 public class TrainControllerImpl implements TrainController{
     private static final double TIME_STEP = TIME_STEP_S;
-    private static final double DEAD_BAND = 0.1;
+    private static final double DEAD_BAND = 0.05;
 
     //private final NullTrain nullTrain = new NullTrain();
 
@@ -195,11 +195,9 @@ public class TrainControllerImpl implements TrainController{
 
 
         // Apply brakes if the power is negative or if the train is overshooting
-        if (pow < 0 || currentSpeed > setSpeed) {
+        if (pow < 0 || (currentSpeed > setSpeed && automaticMode)) {
             pow = 0;
             setServiceBrake(true);
-        } else if(automaticMode && currentSpeed < setSpeed) {
-            setServiceBrake(false);
         }
 
 
