@@ -11,6 +11,7 @@ import trainController.ControllerBlocks.ControllerBlock;
 import trainModel.NullTrain;
 import trainModel.Records.UpdatedTrainValues;
 
+import java.util.ArrayDeque;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static Utilities.Constants.MAX_POWER_W;
@@ -51,7 +52,7 @@ import static trainController.ControllerProperty.*;
  */
 public class TrainControllerImpl implements TrainController{
     private static final double TIME_STEP = TIME_STEP_S;
-    private static final double DEAD_BAND = 0.01;
+    private static final double DEAD_BAND = 0.1;
 
     //private final NullTrain nullTrain = new NullTrain();
 
@@ -82,8 +83,10 @@ public class TrainControllerImpl implements TrainController{
             brakeFailure = false, powerFailure = false, leftPlatform = false,
             rightPlatform = false, inTunnel = false, passengerEngageEBrake = false;
 
-    private String nextStationName;
+    private boolean ascendingSection = false;
 
+    private ArrayDeque<String> followingStations = new ArrayDeque<>();
+    private String nextStationName;
 
     private final int trainID;
     private final TrainControllerSubject subject;
@@ -183,28 +186,28 @@ public class TrainControllerImpl implements TrainController{
         double controlOutput = proportionalTerm + integralTerm;
 
         // Limit the control output to a reasonable range
-        controlOutput = Math.max(-1, Math.min(MAX_POWER_W, controlOutput));
+        pow = Math.max(-1, Math.min(MAX_POWER_W, controlOutput));
 
         // Apply a deadband to avoid oscillations around the setpoint
         if (Math.abs(error) < DEAD_BAND) {
-            controlOutput = 0.0;
+            pow = 0.0;
         }
 
-        // Adjust the power based on the control output
-        pow = controlOutput;
 
         // Apply brakes if the power is negative or if the train is overshooting
-        if (automaticMode && (pow < 0 || currentSpeed > setSpeed)) {
+        if (pow < 0 || currentSpeed > setSpeed) {
             pow = 0;
             setServiceBrake(true);
-        } else if (serviceBrake && (pow > 0)) {
+        } else if(automaticMode && currentSpeed < setSpeed) {
             setServiceBrake(false);
         }
+
 
         // Cut off power if brakes are engaged or there's a failure
         if (emergencyBrake || serviceBrake || powerFailure) {
             pow = 0;
         }
+
 
         return pow;
     }
@@ -215,18 +218,19 @@ public class TrainControllerImpl implements TrainController{
      */
     @Override
     public void onBlock(){
-        if(currentBeacon != null) {
-            currentBlock = blockLookup.get(currentBeacon.blockIndices().poll());
+        if(currentBeacon != null && blockLookup != null) {
+            currentBlock = (ascendingSection) ? blockLookup.get(currentBeacon.blockIndices().pollFirst()) : blockLookup.get(currentBeacon.blockIndices().pollLast());
+
+            setNextStationName(currentBlock.stationName());
+            setSpeedLimit(currentBlock.speedLimit());
+            setInTunnel(currentBlock.isUnderground());
+            //.... proof of concept
+
+            // Update Block by Block
+
+            // Get Specific Block Info
+            checkTunnel();
         }
-        setNextStationName(currentBlock.stationName());
-        setSpeedLimit(currentBlock.speedLimit());
-        setInTunnel(currentBlock.isUnderground());
-        //.... proof of concept
-
-        // Update Block by Block
-
-        // Get Specific Block Info
-        checkTunnel();
 
     }
 
@@ -574,8 +578,34 @@ public class TrainControllerImpl implements TrainController{
 
     @Override
     public void updateBeacon(Beacon beacon) {
+        if (this.currentBeacon != null) {
+            this.ascendingSection = (currentBlock.blockNumber() == beacon.startId());
+            currentBlock = (ascendingSection) ? blockLookup.get(beacon.startId()) : blockLookup.get(beacon.endId());
+        }else{
+            currentBlock = blockLookup.get(beacon.startId());
+        }
         this.currentBeacon = beacon;
+
+        // Update the upcoming station array
+        ControllerBlock potentialStation;
+        if(ascendingSection){
+            for(int i = beacon.startId(); i <= beacon.endId(); i++){
+                potentialStation = blockLookup.get(i);
+                if(potentialStation.isStation()){
+                    followingStations.addFirst(potentialStation.stationName());
+                }
+            }
+        }else{
+            for(int i = beacon.endId(); i >= beacon.startId(); i--){
+                potentialStation = blockLookup.get(i);
+                if(potentialStation.isStation()){
+                    followingStations.addFirst(potentialStation.stationName());
+                }
+            }
+        }
+        this.setNextStationName(followingStations.pollFirst());
     }
+
 
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {
