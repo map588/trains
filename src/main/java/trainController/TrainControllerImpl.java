@@ -219,7 +219,7 @@ public class TrainControllerImpl implements TrainController{
         if(currentBeacon != null && blockLookup != null) {
             currentBlock = (ascendingSection) ? blockLookup.get(currentBeacon.blockIndices().pollFirst()) : blockLookup.get(currentBeacon.blockIndices().pollLast());
 
-            setNextStationName(currentBlock.stationName());
+            //setNextStationName(currentBlock.stationName());
             setSpeedLimit(currentBlock.speedLimit());
             setInTunnel(currentBlock.isUnderground());
             //.... proof of concept
@@ -601,6 +601,8 @@ public class TrainControllerImpl implements TrainController{
                 }
             }
         }
+
+        // Im 90% sure this code can't really set the next station name cause based off of followingStation bc the if only runs when following station is empty
         if(followingStations.isEmpty()) {
             this.setNextStationName("N/A");
             this.setNextStationName(followingStations.pollFirst().stationName());
