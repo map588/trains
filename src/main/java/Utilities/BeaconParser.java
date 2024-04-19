@@ -60,8 +60,8 @@ public class BeaconParser {
         int startBlockNumber = startBlock.blockNumber();
         int endBlockNumber = traverseTrack(startBlockNumber, trackLine, blockIndices, switchBlockNumber, visitedBlocks, entryDirection);
 
-        if (endBlockNumber != -1) {
-            Beacon beacon = new Beacon(startBlockNumber, endBlockNumber, blockIndices);
+        if (endBlockNumber != -1 && blockIndices.size() > 1) {
+            Beacon beacon = new Beacon(switchBlockNumber, endBlockNumber, blockIndices);
             beacons.put(startBlockNumber, beacon);
         }
     }
@@ -76,16 +76,14 @@ public class BeaconParser {
         }
 
         visitedBlocks.add(currentBlockNumber);
+
         BasicBlock currentBlock = trackLine.get(currentBlockNumber);
-        blockIndices.add(currentBlockNumber);
 
         if (currentBlock.isSwitch()) {
-            if (currentBlock.blockNumber() == parentSwitch) {
-                return blockIndices.removeLast();
-            } else {
-                return currentBlock.blockNumber();
-            }
+            return currentBlock.blockNumber();
         }
+
+        blockIndices.add(currentBlockNumber);
 
         Connection nextConnection = getNextConnection(currentBlock, entryDirection);
 

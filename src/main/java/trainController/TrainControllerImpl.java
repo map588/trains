@@ -85,7 +85,7 @@ public class TrainControllerImpl implements TrainController{
 
     private boolean ascendingSection = false;
 
-    private ArrayDeque<String> followingStations = new ArrayDeque<>();
+    private ArrayDeque<ControllerBlock> followingStations = new ArrayDeque<>();
     private String nextStationName;
 
     private final int trainID;
@@ -590,18 +590,21 @@ public class TrainControllerImpl implements TrainController{
             for(int i = beacon.startId(); i <= beacon.endId(); i++){
                 potentialStation = blockLookup.get(i);
                 if(potentialStation.isStation()){
-                    followingStations.addFirst(potentialStation.stationName());
+                    followingStations.addFirst(potentialStation);
                 }
             }
         }else{
             for(int i = beacon.endId(); i >= beacon.startId(); i--){
                 potentialStation = blockLookup.get(i);
                 if(potentialStation.isStation()){
-                    followingStations.addFirst(potentialStation.stationName());
+                    followingStations.addFirst(potentialStation);
                 }
             }
         }
-        this.setNextStationName(followingStations.pollFirst());
+        if(followingStations.isEmpty()) {
+            this.setNextStationName("N/A");
+            this.setNextStationName(followingStations.pollFirst().stationName());
+        }
     }
 
 

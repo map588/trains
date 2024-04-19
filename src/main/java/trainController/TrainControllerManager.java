@@ -52,7 +52,7 @@ public class TrainControllerManager {
     private ChoiceBox<Integer> trainNoChoiceBox;
 
     private final TrainControllerSubjectMap subjectMap = TrainControllerSubjectMap.getInstance();
-    private final TrainControllerSubject nullSubject = NullController.getInstance().getSubject();
+    private final TrainControllerSubject   nullSubject = NullController.getInstance().getSubject();
 
     private TrainControllerSubject currentSubject;
 
@@ -248,14 +248,12 @@ public class TrainControllerManager {
             updateIndicator(Color.LIGHTGREEN, stationSideRightStatus, newVal);
   //          logger.info("Right platform status updated to {}", newVal);
         }));
-        bindStringText(nextStationText, NEXT_STATION);
+        bindStringText(nextStationText);
 
     }
 
-    private void bindStringText(Text text, ControllerProperty propertyName){
-        appendListener(currentSubject.getProperty(propertyName),(obs,oldVal,newVal) -> {
-            Platform.runLater(()-> text.setText((String)newVal));
-        });
+    private void bindStringText(Text text){
+        appendListener(currentSubject.getProperty(ControllerProperty.NEXT_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> text.setText((String)newVal)));
     }
 
     private void updateIndicator(Color color, Circle indicator, boolean isActive) {

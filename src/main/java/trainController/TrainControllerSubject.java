@@ -47,7 +47,7 @@ public class TrainControllerSubject implements NotifierEnum {
 
     public void setProperty(ControllerProperty propertyName, Object newValue) {
         Platform.runLater(() -> {
-            Property<?> property = properties.get((ControllerProperty)propertyName);
+            Property<?> property = properties.get(propertyName);
             updateProperty(property, newValue);
             controller.setValue(propertyName, newValue);
         });
@@ -114,7 +114,7 @@ public class TrainControllerSubject implements NotifierEnum {
         properties.put(IN_TUNNEL, new SimpleBooleanProperty(false));
         properties.put(LEFT_PLATFORM, new SimpleBooleanProperty(false));
         properties.put(RIGHT_PLATFORM, new SimpleBooleanProperty(false));
-        properties.put(NEXT_STATION, new SimpleStringProperty("N/A"));
+        properties.put(NEXT_STATION, new SimpleStringProperty(""));
         properties.put(TRAIN_ID, new SimpleIntegerProperty(controller.getID()));
         properties.put(GRADE, new SimpleDoubleProperty(controller.getGrade()));
         properties.put(ERROR, new SimpleStringProperty(""));
