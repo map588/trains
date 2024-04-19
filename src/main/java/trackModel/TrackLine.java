@@ -213,8 +213,6 @@ public class TrackLine implements TrackModel {
 
 //--------------------------Getters and Setters--------------------------
 
-
-// TODO: communicate info to subject to be updated in UI
     public TrackLineSubject getSubject() {
         return this.subject;
     }
@@ -387,12 +385,12 @@ public class TrackLine implements TrackModel {
         }).join();
     }
 
-    //TODO: make sure to reset ticket sales when needed
     //every tick is a second to ticket sales will reset every 3600 seconds
     @Override
     public int getTicketSales() {
             if (time % 3600 == 0) {
                 this.ticketSales = 0;
+                newTemperature();
             }
             return ticketSales;
     }
@@ -410,6 +408,7 @@ public class TrackLine implements TrackModel {
     public void newTemperature(){
         queueTrackUpdate(() -> {
             int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
+            subject.setOutsideTemp(newTemp);
             this.outsideTemperature += newTemp;
         });
     }
