@@ -39,23 +39,7 @@ public class CTCBlockSubject implements AbstractSubject {
              properties.put(UNDER_MAINTENANCE_PROPERTY, new SimpleBooleanProperty(this, UNDER_MAINTENANCE_PROPERTY, block.getUnderMaintenance()));
              properties.put(SWITCH_STATE_STRING_PROPERTY, new SimpleStringProperty(this, SWITCH_STATE_STRING_PROPERTY, block.getSwitchStateString()));
              this.block = block;
-         } // the initializers for the properties of a block
-        /*
-        getBooleanProperty(OCCUPIED_PROPERTY).addListener((observable, oldValue, newValue) -> block.setOccupied(true,newValue));
-        getBooleanProperty(SWITCH_LIGHT_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
-            logger.info("Switch light state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
-            block.setSwitchLightState(true,newValue);
-        });
-        getBooleanProperty(SWITCH_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
-            logger.info("Switch state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
-            block.setSwitchState(true,newValue);
-        });
-        getBooleanProperty(UNDER_MAINTENANCE_PROPERTY).addListener((observable, oldValue, newValue) -> block.setUnderMaintenance(true,newValue));
-        getBooleanProperty(CROSSING_STATE_PROPERTY).addListener((observable, oldValue, newValue) -> {
-            logger.info("Crossing state changed to " + newValue + " for block " + block.getBlockID() + " on line " + block.getLine());
-            block.setCrossingState(true,newValue);
-        });
-         */
+         }
     }
 
     public BooleanProperty getBooleanProperty(String propertyName) {

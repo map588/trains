@@ -9,6 +9,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -85,9 +89,9 @@ public class CTCOfficeManager {
     @FXML private Button saveTrainButton;
 
     @FXML private ComboBox<Integer> stopSelector;
-    @FXML private ChoiceBox<Integer> stationStopSelector;
-    @FXML private ComboBox<Integer> arrivalTimeSelector;
-    @FXML private ComboBox<Integer> departureTimeSelector;
+    @FXML private TextField stationStopSelector;
+    @FXML private TextField arrivalTimeSelector;
+    @FXML private TextField departureTimeSelector;
     @FXML private Button AddStop;
     @FXML private Button RemoveStop;
     @FXML private Button saveStopButton;
@@ -360,10 +364,13 @@ public class CTCOfficeManager {
         trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 scheduleEditTable.getItems().clear();
+                selectedSchedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
+                stopSelector.getItems().clear();
+                trainIDSelector.setValue(newValue.getSchedule().getTrainID());
+                lineTrainSelector.setValue(newValue.getSchedule().getLine());
                 for (int i = 1; i <= newValue.getSchedule().getStops().size(); i++) {
                     scheduleEditTable.getItems().add(newValue.getSchedule().getStop(i).getSubject());
-                    trainIDSelector.setValue(newValue.getSchedule().getTrainID());
-                    lineTrainSelector.setValue(newValue.getSchedule().getLine());
+                    stopSelector.getItems().add(i);
                 }
             }
         });
@@ -376,14 +383,51 @@ public class CTCOfficeManager {
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
 
-        scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                stopSelector.setValue(newValue.getIntegerProperty(STOP_INDEX_PROPERTY).getValue());
-                stationStopSelector.setValue(newValue.getIntegerProperty(DESTINATION_PROPERTY).getValue());
-                arrivalTimeSelector.setValue(newValue.getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue());
-                departureTimeSelector.setValue(newValue.getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue());
+
+
+        AddStop.setOnAction(event -> {
+            if(selectedSchedule == null) {
+                return;
             }
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            if(stationStopSelector.getText().isEmpty()) {
+                stationStopSelector.setText("0");
+            }
+            if(train.getStop(train.getStopCount()) == null) {
+                arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.02));
+                departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.03));
+            }else{
+                if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= (double)train.getStop(train.getStopCount()).getArrivalTime())) {
+                    arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount()).getDepartureTime() + 5.0));
+                }
+                if (departureTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(departureTimeSelector.getText()) <= (double)train.getStop(train.getStopCount()).getDepartureTime())) {
+                    departureTimeSelector.setText(convertDoubleToClockTime(convertClockTimeToDouble(arrivalTimeSelector.getText()) + 1));
+                }
+            }
+            train.addStop(Integer.parseInt(stationStopSelector.getText()),  (int)convertClockTimeToDouble(arrivalTimeSelector.getText()), (int)convertClockTimeToDouble(departureTimeSelector.getText()));
+            scheduleEditTable.getItems().add(train.getStop(train.getStopCount()).getSubject());
+            stopSelector.getItems().add(train.getStopCount());
         });
+        RemoveStop.setOnAction(event -> {
+            if(selectedSchedule == null) {
+                return;
+            }
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            train.removeStop(stopSelector.getValue());
+            scheduleEditTable.getItems().remove(scheduleEditTable.getSelectionModel().getSelectedItem());
+            stopSelector.getItems().remove(stopSelector.getValue());
+        });
+        saveStopButton.setOnAction(event -> {
+            if(selectedSchedule == null) {
+                return;
+            }
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            TrainStopSubject stop = train.getStop(stopSelector.getValue()).getSubject();
+            stop.setProperty(DESTINATION_PROPERTY, Integer.parseInt(stationStopSelector.getText()));
+            stop.setProperty(ARRIVAL_TIME_PROPERTY, (int)convertClockTimeToDouble(arrivalTimeSelector.getText()));
+            stop.setProperty(DEPARTURE_TIME_PROPERTY, (int)convertClockTimeToDouble(departureTimeSelector.getText()));
+        });
+
 
 
         /*
@@ -445,10 +489,62 @@ public class CTCOfficeManager {
     }
 
 
+    public class TableViewDragRows{
 
+        private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
+        @Override
+        public void start() {
+            TableView<TrainStopSubject> tableView = new TableView<>();
 
+            tableView.setRowFactory(stop -> {
+                TableRow<TrainStopSubject> row = new TableRow<>();
 
+                row.setOnDragDetected(event -> {
+                    if (!row.isEmpty()) {
+                        Integer index = row.getIndex();
+                        Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                        db.setDragView(row.snapshot(null, null));
+                        ClipboardContent cc = new ClipboardContent();
+                        cc.put(SERIALIZED_MIME_TYPE, index);
+                        db.setContent(cc);
+                        event.consume();
+                    }
+                });
 
+                row.setOnDragOver(event -> {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                        if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                            event.consume();
+                        }
+                    }
+                });
 
+                row.setOnDragDropped(event -> {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                        int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                        TrainStopSubject draggedStop = tableView.getItems().remove(draggedIndex);
 
+                        int dropIndex;
+
+                        if (row.isEmpty()) {
+                            dropIndex = tableView.getItems().size();
+                        } else {
+                            dropIndex = row.getIndex();
+                        }
+
+                        tableView.getItems().add(dropIndex, draggedStop);
+
+                        event.setDropCompleted(true);
+                        tableView.getSelectionModel().select(dropIndex);
+                        event.consume();
+                    }
+                });
+
+                return row;
+            });
+        }
+    }
 }
