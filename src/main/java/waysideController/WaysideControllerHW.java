@@ -135,6 +135,11 @@ public class WaysideControllerHW implements PLCRunner {
     }
 
     @Override
+    public boolean getOutsideSwitch(int blockID) {
+        return false;
+    }
+
+    @Override
     public Map<Integer, WaysideBlock> getBlockMap() {
         return blockMap;
     }

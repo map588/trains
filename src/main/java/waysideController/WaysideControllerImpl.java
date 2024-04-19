@@ -378,6 +378,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     @Override
+    public boolean getOutsideSwitch(int blockID) {
+        WaysideController controller = WaysideSystem.getController(trackLine, blockID);
+        return controller.getBlockMap().get(blockID).getSwitchState();
+    }
+
+    @Override
     public Map<Integer, WaysideBlock> getBlockMap() {
         return blockMap;
     }
