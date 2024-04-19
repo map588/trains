@@ -14,8 +14,7 @@ import trainModel.Records.UpdatedTrainValues;
 import java.util.ArrayDeque;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static Utilities.Constants.MAX_POWER_W;
-import static Utilities.Constants.TIME_STEP_S;
+import static Utilities.Constants.*;
 import static Utilities.Conversion.*;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
@@ -73,6 +72,8 @@ public class TrainControllerImpl implements TrainController{
     private double setTemperature = 0.0;
     private double currentTemperature = 0.0;
     private double rollingError = 0.0;
+
+    private boolean waysideStop;
 
 
     private int authority = 0;
@@ -165,49 +166,57 @@ public class TrainControllerImpl implements TrainController{
     }
 
     public double calculatePower(double currentSpeed) {
+
         double setSpeed, pow;
 
-        if (automaticMode) {
-            setSpeed = commandSpeed;
-        } else {
-            setSpeed = overrideSpeed;
-        }
-
-        double error = setSpeed - currentSpeed;
-        double proportionalTerm = Kp * error;
-
-        // Update the rolling error
-        rollingError += error * TIME_STEP;
-
-        // Introduce an integral term to reduce steady-state error
-        double integralTerm = Ki * rollingError;
-
-        // Calculate the control output
-        double controlOutput = proportionalTerm + integralTerm;
-
-        // Limit the control output to a reasonable range
-        pow = Math.max(-1, Math.min(MAX_POWER_W, controlOutput));
-
-        // Apply a deadband to avoid oscillations around the setpoint
-        if (Math.abs(error) < DEAD_BAND) {
-            pow = 0.0;
-        }
-
-
-        // Apply brakes if the power is negative or if the train is overshooting
-        if (pow < 0 || (currentSpeed > setSpeed && automaticMode)) {
-            pow = 0;
+        if (waysideStop){
             setServiceBrake(true);
+            return 0;
         }
+        else {
+
+            if (automaticMode) {
+                setSpeed = commandSpeed;
+            } else {
+                setSpeed = overrideSpeed;
+            }
+
+            double error = setSpeed - currentSpeed;
+            double proportionalTerm = Kp * error;
+
+            // Update the rolling error
+            rollingError += error * TIME_STEP;
+
+            // Introduce an integral term to reduce steady-state error
+            double integralTerm = Ki * rollingError;
+
+            // Calculate the control output
+            double controlOutput = proportionalTerm + integralTerm;
+
+            // Limit the control output to a reasonable range
+            pow = Math.max(-1, Math.min(MAX_POWER_W, controlOutput));
+
+            // Apply a deadband to avoid oscillations around the setpoint
+            if (Math.abs(error) < DEAD_BAND) {
+                pow = 0.0;
+            }
 
 
-        // Cut off power if brakes are engaged or there's a failure
-        if (emergencyBrake || serviceBrake || powerFailure) {
-            pow = 0;
+            // Apply brakes if the power is negative or if the train is overshooting
+            if (pow < 0 || (currentSpeed > setSpeed && automaticMode)) {
+                pow = 0;
+                setServiceBrake(true);
+            }
+
+
+            // Cut off power if brakes are engaged or there's a failure
+            if (emergencyBrake || serviceBrake || powerFailure) {
+                pow = 0;
+            }
+
+
+            return pow;
         }
-
-
-        return pow;
     }
 
 
@@ -321,8 +330,19 @@ public class TrainControllerImpl implements TrainController{
         subject.notifyChange(AUTOMATIC_MODE, mode);
     }
     public void setAuthority(int authority) {
-        this.authority = authority;
-        subject.notifyChange(AUTHORITY , authority);
+
+        if (authority == STOP_TRAIN_SIGNAL) {
+            waysideStop = true;
+            // Make a message on the logger
+        }
+        else if (authority == RESUME_TRAIN_SIGNAL){
+            waysideStop = false;
+            // Make a message on the logger
+        }
+        else {
+            this.authority = authority;
+            subject.notifyChange(AUTHORITY, authority);
+        }
     }
     public void setCommandSpeed(double speed) {
         this.commandSpeed = convertVelocity(speed, MPS, MPH);
