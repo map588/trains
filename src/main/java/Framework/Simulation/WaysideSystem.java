@@ -66,9 +66,8 @@ public class WaysideSystem {
 
     ExecutorService waysideExecutor;
 
-    public WaysideSystem(TrackSystem trackSystem, CTCOffice ctcOffice, boolean useHardware) {
+    public WaysideSystem(CTCOffice ctcOffice, boolean useHardware) {
         TrackLine greenLine = TrackLineMap.getTrackLine(Lines.GREEN);
-//        TrackModel greenLine = null;
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
                 1, 2, 3,
                 4, 5, 6,
@@ -121,6 +120,37 @@ public class WaysideSystem {
                     greenLine, ctcOffice,
                     "src/main/antlr/GreenLine3.plc"), Lines.GREEN);
         }
+
+        TrackLine redLine = TrackLineMap.getTrackLine(Lines.RED);
+        addController(new WaysideControllerImpl(1, Lines.RED, new int[]{
+                0,
+                1, 2, 3,
+                4, 5, 6,
+                7, 8, 9,
+                10, 11, 12,
+                13, 14, 15,
+                16, 17, 18, 19, 20,
+                21, 23, 23},
+                redLine, ctcOffice), Lines.RED);
+
+        addController(new WaysideControllerImpl(2, Lines.RED, new int[]{
+                24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+                67,
+                68, 69, 70,
+                71,
+                72,
+                73, 74, 75,
+                76},
+                redLine, ctcOffice), Lines.RED);
+
+        addController(new WaysideControllerImpl(3, Lines.RED, new int[]{
+                46, 47, 48,
+                49, 50, 51, 52,
+                53, 54, 55, 56, 57,
+                58, 59, 60,
+                61, 62, 63,
+                64, 65, 66},
+                redLine, ctcOffice), Lines.RED);
 
         waysideExecutor = Executors.newFixedThreadPool(size());
     }

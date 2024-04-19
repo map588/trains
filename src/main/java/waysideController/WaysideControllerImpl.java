@@ -383,7 +383,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     public String toString() {
-        return "SW Wayside Controller #" + id;
+        return trackLine.toString() + " line SW Wayside Controller #" + id;
     }
 
     /**

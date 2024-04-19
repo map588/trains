@@ -310,7 +310,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     public String toString() {
-        return "HW Wayside Controller #" + getID();
+        return trackLine.toString() + " line HW Wayside Controller #" + id;
     }
 
     public void notifyChange(String propertyName, Object newValue) {
