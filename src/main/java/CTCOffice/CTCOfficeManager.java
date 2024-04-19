@@ -2,7 +2,6 @@ package CTCOffice;
 
 import CTCOffice.ScheduleInfo.*;
 import Framework.Support.BlockIDs;
-import Utilities.Conversion;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -10,34 +9,34 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
-import static Utilities.Conversion.velocityUnit.MPH;
-import static Utilities.Conversion.velocityUnit.MPS;
-import static Utilities.TimeConvert.convertClockTimeToDouble;
-import static Utilities.TimeConvert.convertDoubleToClockTime;
+import static Utilities.TimeConvert.*;
+
+import Utilities.TimeConvert;
+import org.controlsfx.control.textfield.TextFields;
 
 /**
  * This class manages the GUI for the Centralized Traffic Control (CTC) office.
  * It contains FXML annotated fields for the various GUI components and methods for handling user interactions.
  */
 public class CTCOfficeManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(CTCOfficeManager.class);
-
     @FXML private SplitPane mainSplit;
     @FXML private AnchorPane mainAnchor;
 
@@ -90,9 +89,9 @@ public class CTCOfficeManager {
     @FXML private Button saveTrainButton;
 
     @FXML private ComboBox<Integer> stopSelector;
-    @FXML private ChoiceBox<String> stationStopSelector;
-    @FXML private ComboBox<Integer> arrivalTimeSelector;
-    @FXML private ComboBox<Integer> departureTimeSelector;
+    @FXML private TextField stationStopSelector;
+    @FXML private TextField arrivalTimeSelector;
+    @FXML private TextField departureTimeSelector;
     @FXML private Button AddStop;
     @FXML private Button RemoveStop;
     @FXML private Button saveStopButton;
@@ -101,11 +100,11 @@ public class CTCOfficeManager {
 
     @FXML private Button DispatchButton;
 
+    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
+
     CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     ScheduleFile selectedSchedule = null;
-
-    double initCommandSpeed = Conversion.convertVelocity(45.0, MPH, MPS);
 
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
@@ -119,7 +118,7 @@ public class CTCOfficeManager {
      * This method is called after all the FXML annotated fields have been injected.
      */
     CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
-    @FXML
+
     public void initialize() {
         setupLineTables();
         setupScheduleTables();
@@ -266,22 +265,22 @@ public class CTCOfficeManager {
 
         //Table editing bar
         switchLightToggle.setOnAction(event -> {
-            logger.info("toggled traffic light for block {} on line {}\n", blockSelection.getValue(), lineSelection.getValue());
+            System.out.println("toggled traffic light for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setSwitchLightState(true, !block.getBlockInfo().getSwitchLightState());
         });
         switchStateToggle.setOnAction(event -> {
-            logger.info("toggled switch for block {} on line {}\n", blockSelection.getValue(), lineSelection.getValue());
+            System.out.println("toggled switch for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setSwitchState(true, !block.getBlockInfo().getSwitchState());
         });
         crossingStateToggle.setOnAction(event -> {
-            logger.info("toggled crossing for block {} on line {}\n", blockSelection.getValue(), lineSelection.getValue());
+            System.out.println("toggled crossing for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setCrossingState(true, !block.getBlockInfo().getCrossingState());
         });
         maintenanceToggle.setOnAction(event -> {
-            logger.info("toggled maintenance for block {} on line {}\n", blockSelection.getValue(), lineSelection.getValue());
+            System.out.println("toggled maintenance for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setUnderMaintenance(true, !block.getBlockInfo().getUnderMaintenance());
         });
@@ -314,7 +313,7 @@ public class CTCOfficeManager {
         scheduleTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedSchedule = newValue.getSchedule();
-                logger.info("Selected schedule {}\n",newValue.getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
+                System.out.println("selected schedule " + newValue.getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
                 trainSelectTable.getItems().clear();
                 for(int i = 1; i <= newValue.getSchedule().getNumTrains(); i++) {
                     trainSelectTable.getItems().add(newValue.getSchedule().getTrainSchedule(i).getSubject());
@@ -342,7 +341,7 @@ public class CTCOfficeManager {
             }
         });
         AddTrain.setOnAction(event -> {
-            logger.info("added train to schedule {}\n ", scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
+            System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.putTrainSchedule(schedule.getMultipleTrainSchedules().size() + 1, new TrainSchedule(schedule.getMultipleTrainSchedules().size() + 1,
                     lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new HashMap<>()));
@@ -350,14 +349,14 @@ public class CTCOfficeManager {
             trainIDSelector.getItems().add(schedule.getMultipleTrainSchedules().size());
         });
         RemoveTrain.setOnAction(event -> {
-            logger.info("removed train from schedule {}\n", scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
+            System.out.println("removed train from schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.removeTrainSchedule(trainIDSelector.getValue());
             trainSelectTable.getItems().remove(trainSelectTable.getSelectionModel().getSelectedItem());
             trainIDSelector.getItems().remove(trainIDSelector.getValue());
         });
         saveTrainButton.setOnAction(event -> {
-            logger.info("saved train to schedule {}\n", selectedSchedule.getSubject().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
+            System.out.println("saved train to schedule " + selectedSchedule.getSubject().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             TrainScheduleSubject train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue()).getSubject();
             train.setProperty(DISPATCH_TIME_PROPERTY, dispatchTimeSelector.getText());
             train.setProperty(CAR_COUNT_PROPERTY, carsSelector.getValue());
@@ -367,10 +366,13 @@ public class CTCOfficeManager {
         trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 scheduleEditTable.getItems().clear();
+                selectedSchedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
+                stopSelector.getItems().clear();
+                trainIDSelector.setValue(newValue.getSchedule().getTrainID());
+                lineTrainSelector.setValue(newValue.getSchedule().getLine());
                 for (int i = 1; i <= newValue.getSchedule().getStops().size(); i++) {
                     scheduleEditTable.getItems().add(newValue.getSchedule().getStop(i).getSubject());
-                    trainIDSelector.setValue(newValue.getSchedule().getTrainID());
-                    lineTrainSelector.setValue(newValue.getSchedule().getLine());
+                    stopSelector.getItems().add(i);
                 }
             }
         });
@@ -383,14 +385,100 @@ public class CTCOfficeManager {
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
 
-        scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                stopSelector.setValue(newValue.getIntegerProperty(STOP_INDEX_PROPERTY).getValue());
-                stationStopSelector.setValue(newValue.getStringProperty(DESTINATION_PROPERTY).getValue());
-                arrivalTimeSelector.setValue(newValue.getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue());
-                departureTimeSelector.setValue(newValue.getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue());
-            }
+        TableView<TrainStopSubject> tableView = scheduleEditTable;
+        tableView.getColumns().add(stopIndexColumn);
+        tableView.getColumns().add(stationBlockIDColumn);
+        tableView.getColumns().add(arrivalTimeColumn);
+        tableView.getColumns().add(departureTimeColumn);
+
+        tableView.setRowFactory( obj -> {
+            TableRow<TrainStopSubject> row = new TableRow<>();
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(SERIALIZED_MIME_TYPE, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                    TrainStopSubject draggedStop = tableView.getItems().remove(draggedIndex);
+                    int dropIndex;
+                    if (row.isEmpty()) {
+                        dropIndex = tableView.getItems().size();
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+                    tableView.getItems().add(dropIndex, draggedStop);
+                    event.setDropCompleted(true);
+                    tableView.getSelectionModel().select(dropIndex);
+                    event.consume();
+                    TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+                    train.moveStop(draggedIndex + 1, dropIndex + 1);
+                }
+            });
+            return row;
         });
+
+
+        AddStop.setOnAction(event -> {
+            if(selectedSchedule == null) {
+                return;
+            }
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            if(stationStopSelector.getText().isEmpty()) {
+                stationStopSelector.setText("0");
+            }
+            if(train.getStop(train.getStopCount()) == null) {
+                arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.02));
+                departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.03));
+            }else{
+                if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= (double)train.getStop(train.getStopCount()).getArrivalTime())) {
+                    arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount()).getDepartureTime() + 5.0));
+                }
+                if (departureTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(departureTimeSelector.getText()) <= (double)train.getStop(train.getStopCount()).getDepartureTime())) {
+                    departureTimeSelector.setText(convertDoubleToClockTime(convertClockTimeToDouble(arrivalTimeSelector.getText()) + 1));
+                }
+            }
+            train.addStop(Integer.parseInt(stationStopSelector.getText()),  (int)convertClockTimeToDouble(arrivalTimeSelector.getText()), (int)convertClockTimeToDouble(departureTimeSelector.getText()));
+            scheduleEditTable.getItems().add(train.getStop(train.getStopCount()).getSubject());
+            stopSelector.getItems().add(train.getStopCount());
+        });
+        RemoveStop.setOnAction(event -> {
+            if(selectedSchedule == null) {
+                return;
+            }
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            train.removeStop(stopSelector.getValue());
+            scheduleEditTable.getItems().remove(scheduleEditTable.getSelectionModel().getSelectedItem());
+            stopSelector.getItems().remove(stopSelector.getValue());
+        });
+        saveStopButton.setOnAction(event -> {
+            if(selectedSchedule == null) {
+                return;
+            }
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            TrainStopSubject stop = train.getStop(stopSelector.getValue()).getSubject();
+            stop.setProperty(DESTINATION_PROPERTY, Integer.parseInt(stationStopSelector.getText()));
+            stop.setProperty(ARRIVAL_TIME_PROPERTY, (int)convertClockTimeToDouble(arrivalTimeSelector.getText()));
+            stop.setProperty(DEPARTURE_TIME_PROPERTY, (int)convertClockTimeToDouble(departureTimeSelector.getText()));
+        });
+
 
 
         /*
@@ -445,17 +533,10 @@ public class CTCOfficeManager {
 
         DispatchButton.setOnAction(event -> {
             office.DispatchTrain(Lines.GREEN, office.trainLocations.size() + 1);
-            logger.info("Dispatched Train ID: {} on Line: {}\n",office.trainLocations.size() , lineTrainSelector.getValue());
+            System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + "GREEN");
             office.sendAuthority(Lines.GREEN, 0, 9);
-            office.sendSpeed(Lines.GREEN, 0, initCommandSpeed);
+            office.sendSpeed(Lines.GREEN, 0, 40);
         });
     }
-
-
-
-
-
-
-
 
 }

@@ -139,10 +139,6 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.warn("setTicketSales() is not implemented");
         this.ticketSales = ticketSales;
     }
-    int getTicketSales() {
-        logger.warn("getTicketSales() is not implemented");
-        return ticketSales;
-    }
 
     void setMode(int mode) {
         logger.warn("setMode() is not implemented");
@@ -157,6 +153,7 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.warn("setManualMode() is not implemented");
         this.manualMode = manualMode;
     }
+
     boolean getManualMode() {
         logger.warn("getManualMode() is not implemented");
         return manualMode;
@@ -166,6 +163,7 @@ public class CTCOfficeImpl implements CTCOffice {
         logger.warn("setMaintenanceMode() is not implemented");
         this.maintenanceMode = maintenanceMode;
     }
+
     boolean getMaintenanceMode() {
         logger.warn("getMaintenanceMode() is not implemented");
         return maintenanceMode;
@@ -199,3 +197,8 @@ public class CTCOfficeImpl implements CTCOffice {
 
 //TODO: send the wayside a list of blcisk to give gthe authity to instead of just one block
 //TODO: send that list by calling send authoity on the occupied block and the block with a reative auth for each block
+
+//TODO: send speed as meters per second
+
+//TODO: make sure switch is shown currectly
+
