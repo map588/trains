@@ -69,29 +69,29 @@ public class TrackModelManager {
 
     //table
     @FXML
-    private TableView<TrackLineSubject> lineTable;
+    private TableView<TrackBlockSubject> lineTable;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> directionColumn;
+    private TableColumn<TrackBlockSubject, Boolean> directionColumn;
     @FXML
-    private TableColumn<TrackLineSubject, String> failureColumn;
+    private TableColumn<TrackBlockSubject, String> failureColumn;
     @FXML
-    private TableColumn<TrackLineSubject, String> blockColumn;
+    private TableColumn<TrackBlockSubject, String> blockColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Integer> lengthColumn;
+    private TableColumn<TrackBlockSubject, Integer> lengthColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> occupiedColumn;
+    private TableColumn<TrackBlockSubject, Boolean> occupiedColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
+    private TableColumn<TrackBlockSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
 
 
 
     //Subject Map
     private LineSubjectMap subjectMap = LineSubjectMap.getInstance();
     //subject
-    private TrackLineSubject subject;
+    private TrackBlockSubject subject;
 
 
-    ObservableList<TrackLineSubject> selectedTrackLineSubject = FXCollections.observableArrayList(subjectMap.getLineSubject("GREEN"));
+    ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(subjectMap.getLineSubject("GREEN"));
 
     @FXML
     public void initialize() {
@@ -150,28 +150,28 @@ public class TrackModelManager {
 
 
         // set up factories for occupied column and direction column
-        occupiedColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
+        occupiedColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
             @Override
-            public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
+            public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
                 return new BooleanIconTableCell<>("/Framework.GUI.Images/train_rail_24.png", "/Framework.GUI.Images/train_24.png", 24, 24);
             }
         });
 
-        directionColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
+        directionColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
             @Override
-            public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
+            public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
                 return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/Crossing_Down_24.png", 24, 24);
             }
         });
 
         // Set the items of the table to this subject
-        lineTable.setItems(selectedTrackLineSubject);
+        lineTable.setItems(selectedTrackBlockSubject);
 
         lineTable.refresh();
     }
 
     //change values based on selection in table
-    public void selectBlock(TrackLineSubject newProperties) {
+    public void selectBlock(TrackBlockSubject newProperties) {
         System.out.println("Selected block");
         if (subject != null) {
             // Unbind stuff here
@@ -266,11 +266,11 @@ public class TrackModelManager {
                 return;
             }
 
-            TrackLineSubject subject = subjectMap.getLineSubject(lineSelect);
+            TrackBlockSubject subject = subjectMap.getLineSubject(lineSelect);
 
             // Clear the selectedTrackLineSubject list and add the new TrackLineSubject object
-            selectedTrackLineSubject.clear();
-            selectedTrackLineSubject.add(subject);
+            selectedTrackBlockSubject.clear();
+            selectedTrackBlockSubject.add(subject);
 
             // Update the table
             lineTable.refresh();

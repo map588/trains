@@ -48,7 +48,7 @@ public class TrackLine implements TrackModel {
 
     private final BeaconParser beaconParser = new BeaconParser();
 
-    private final TrackLineSubject subject;
+    private final TrackBlockSubject subject;
 
     private int ticketSales = 0;
     public  int outsideTemperature = 40;
@@ -75,12 +75,12 @@ public class TrackLine implements TrackModel {
 
             //Needs more testing, but the beacon parser seems to work.
             beaconBlocks.putAll(beaconParser.parseBeacons(line));
-            this.subject = new TrackLineSubject(this, mainTrackLine);
+            this.subject = new TrackBlockSubject(this, mainTrackLine);
             trackSubjectMap.getInstance().addLineSubject(line.toString(), subject);
             setupListeners();
         }else{
             this.trackOccupancyMap = new ObservableHashMap<>(0);
-            this.subject = new TrackLineSubject(this, new TrackBlockLine());
+            this.subject = new TrackBlockSubject(this, new TrackBlockLine());
         }
     }
 
@@ -213,7 +213,7 @@ public class TrackLine implements TrackModel {
 
 //--------------------------Getters and Setters--------------------------
 
-    public TrackLineSubject getSubject() {
+    public TrackBlockSubject getSubject() {
         return this.subject;
     }
 
