@@ -39,4 +39,8 @@ public class TrainStopSubject implements AbstractSubject {
     public IntegerProperty getIntegerProperty(String propertyName) {
         return (IntegerProperty) getProperty(propertyName);
     }
+
+    public TrainStop getStop() {
+        return stop;
+    }
 }

@@ -100,6 +100,8 @@ public class CTCOfficeManager {
 
     @FXML private Button DispatchButton;
 
+    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
+
     CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     ScheduleFile selectedSchedule = null;
@@ -116,7 +118,7 @@ public class CTCOfficeManager {
      * This method is called after all the FXML annotated fields have been injected.
      */
     CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
-    @FXML
+
     public void initialize() {
         setupLineTables();
         setupScheduleTables();
@@ -383,6 +385,55 @@ public class CTCOfficeManager {
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
 
+        TableView<TrainStopSubject> tableView = scheduleEditTable;
+        tableView.getColumns().add(stopIndexColumn);
+        tableView.getColumns().add(stationBlockIDColumn);
+        tableView.getColumns().add(arrivalTimeColumn);
+        tableView.getColumns().add(departureTimeColumn);
+
+        tableView.setRowFactory( obj -> {
+            TableRow<TrainStopSubject> row = new TableRow<>();
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(SERIALIZED_MIME_TYPE, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                    TrainStopSubject draggedStop = tableView.getItems().remove(draggedIndex);
+                    int dropIndex;
+                    if (row.isEmpty()) {
+                        dropIndex = tableView.getItems().size();
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+                    tableView.getItems().add(dropIndex, draggedStop);
+                    event.setDropCompleted(true);
+                    tableView.getSelectionModel().select(dropIndex);
+                    event.consume();
+                    TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+                    train.moveStop(draggedIndex + 1, dropIndex + 1);
+                }
+            });
+            return row;
+        });
 
 
         AddStop.setOnAction(event -> {
@@ -488,63 +539,4 @@ public class CTCOfficeManager {
         });
     }
 
-
-    public class TableViewDragRows{
-
-        private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
-        @Override
-        public void start() {
-            TableView<TrainStopSubject> tableView = new TableView<>();
-
-            tableView.setRowFactory(stop -> {
-                TableRow<TrainStopSubject> row = new TableRow<>();
-
-                row.setOnDragDetected(event -> {
-                    if (!row.isEmpty()) {
-                        Integer index = row.getIndex();
-                        Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
-                        db.setDragView(row.snapshot(null, null));
-                        ClipboardContent cc = new ClipboardContent();
-                        cc.put(SERIALIZED_MIME_TYPE, index);
-                        db.setContent(cc);
-                        event.consume();
-                    }
-                });
-
-                row.setOnDragOver(event -> {
-                    Dragboard db = event.getDragboard();
-                    if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                        if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
-                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                            event.consume();
-                        }
-                    }
-                });
-
-                row.setOnDragDropped(event -> {
-                    Dragboard db = event.getDragboard();
-                    if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                        int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
-                        TrainStopSubject draggedStop = tableView.getItems().remove(draggedIndex);
-
-                        int dropIndex;
-
-                        if (row.isEmpty()) {
-                            dropIndex = tableView.getItems().size();
-                        } else {
-                            dropIndex = row.getIndex();
-                        }
-
-                        tableView.getItems().add(dropIndex, draggedStop);
-
-                        event.setDropCompleted(true);
-                        tableView.getSelectionModel().select(dropIndex);
-                        event.consume();
-                    }
-                });
-
-                return row;
-            });
-        }
-    }
 }

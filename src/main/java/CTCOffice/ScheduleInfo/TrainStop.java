@@ -58,6 +58,7 @@ public class TrainStop implements Notifier { //SubRoute
 
     public void setStopIndex(int index) {
         this.stopIndex = index;
+        notifyChange(STOP_INDEX_PROPERTY, index);
     }
 
     public List<Integer> getSpeedList() {
