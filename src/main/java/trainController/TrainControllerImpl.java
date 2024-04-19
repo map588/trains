@@ -325,7 +325,7 @@ public class TrainControllerImpl implements TrainController{
         subject.notifyChange(AUTHORITY , authority);
     }
     public void setCommandSpeed(double speed) {
-        this.commandSpeed = convertVelocity(speed, MPH, MPS);
+        this.commandSpeed = convertVelocity(speed, MPS, MPH);
         subject.notifyChange(COMMAND_SPEED , speed);
         //calculatePower();
     }

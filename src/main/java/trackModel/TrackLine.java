@@ -8,7 +8,6 @@ import Utilities.BasicTrackLine;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
-import Utilities.Records.BasicBlock;
 import Utilities.Records.Beacon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +17,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
-
-import static Utilities.Records.BasicBlock.*;
 
 import static Utilities.Constants.MAX_PASSENGERS;
 
@@ -49,6 +46,7 @@ public class TrackLine implements TrackModel {
 
     private long time = 0;
 
+    private final BeaconParser beaconParser = new BeaconParser();
 
     private final TrackLineSubject subject;
 
@@ -76,7 +74,7 @@ public class TrackLine implements TrackModel {
             }
 
             //Needs more testing, but the beacon parser seems to work.
-            beaconBlocks.putAll(BeaconParser.parseBeacons(line));
+            beaconBlocks.putAll(beaconParser.parseBeacons(line));
             this.subject = new TrackLineSubject(this, mainTrackLine);
             trackSubjectMap.getInstance().addLineSubject(line.toString(), subject);
             setupListeners();

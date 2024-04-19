@@ -152,6 +152,7 @@ test {
 
 run {
     println "Running application"
+    systemProperty "logback.configurationFile", "logger_configs/logback-run.xml"
     doFirst {
         def javafxLibPath = getJavaFXLibPath()
         jvmArgs = [

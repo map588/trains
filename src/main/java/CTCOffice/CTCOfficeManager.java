@@ -2,6 +2,7 @@ package CTCOffice;
 
 import CTCOffice.ScheduleInfo.*;
 import Framework.Support.BlockIDs;
+import Utilities.Conversion;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -24,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
+import static Utilities.Conversion.velocityUnit.MPH;
+import static Utilities.Conversion.velocityUnit.MPS;
 import static Utilities.TimeConvert.convertClockTimeToDouble;
 import static Utilities.TimeConvert.convertDoubleToClockTime;
 
@@ -87,7 +90,7 @@ public class CTCOfficeManager {
     @FXML private Button saveTrainButton;
 
     @FXML private ComboBox<Integer> stopSelector;
-    @FXML private ChoiceBox<Integer> stationStopSelector;
+    @FXML private ChoiceBox<String> stationStopSelector;
     @FXML private ComboBox<Integer> arrivalTimeSelector;
     @FXML private ComboBox<Integer> departureTimeSelector;
     @FXML private Button AddStop;
@@ -101,6 +104,8 @@ public class CTCOfficeManager {
     CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     ScheduleFile selectedSchedule = null;
+
+    double initCommandSpeed = Conversion.convertVelocity(45.0, MPH, MPS);
 
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
@@ -381,7 +386,7 @@ public class CTCOfficeManager {
         scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 stopSelector.setValue(newValue.getIntegerProperty(STOP_INDEX_PROPERTY).getValue());
-                stationStopSelector.setValue(newValue.getIntegerProperty(DESTINATION_PROPERTY).getValue());
+                stationStopSelector.setValue(newValue.getStringProperty(DESTINATION_PROPERTY).getValue());
                 arrivalTimeSelector.setValue(newValue.getIntegerProperty(ARRIVAL_TIME_PROPERTY).getValue());
                 departureTimeSelector.setValue(newValue.getIntegerProperty(DEPARTURE_TIME_PROPERTY).getValue());
             }
@@ -442,7 +447,7 @@ public class CTCOfficeManager {
             office.DispatchTrain(Lines.GREEN, office.trainLocations.size() + 1);
             logger.info("Dispatched Train ID: {} on Line: {}\n",office.trainLocations.size() , lineTrainSelector.getValue());
             office.sendAuthority(Lines.GREEN, 0, 9);
-            office.sendSpeed(Lines.GREEN, 0, 40);
+            office.sendSpeed(Lines.GREEN, 0, initCommandSpeed);
         });
     }
 
