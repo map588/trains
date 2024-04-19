@@ -3,72 +3,70 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.Beacon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import trainModel.Records.UpdatedTrainValues;
-import com.fazecast.jSerialComm.SerialPort;
 
-public class HWTrainControllerImpl implements TrainController {
-    private SerialPort raspberryPiPort;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Objects;
 
+public class RemoteTrainControllerImpl implements TrainController {
 
-    public HWTrainControllerImpl() {
-        // Find the Raspberry Pi serial port
-        SerialPort[] ports = SerialPort.getCommPorts();
-        for (SerialPort port : ports) {
-            if (port.getDescriptivePortName().contains("Raspberry Pi")) {
-                raspberryPiPort = port;
-                break;
-            }
-        }
+    private static final Logger logger = LoggerFactory.getLogger(RemoteTrainControllerImpl.class);
 
-        if (raspberryPiPort != null) {
-            raspberryPiPort.openPort();
-            raspberryPiPort.setComPortParameters(115200, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
-        } else {
-            System.out.println("Raspberry Pi not found.");
-        }
-    }
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
 
-    private void sendCommand(String command) {
-        if (raspberryPiPort != null && raspberryPiPort.isOpen()) {
-            raspberryPiPort.writeBytes((command + "\n").getBytes(), command.length() + 1);
+    public RemoteTrainControllerImpl() {
+        try {
+            socket = new Socket("raspberrypi.local", 1234); // Replace with the Raspberry Pi's IP address and port
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-    //Non-vital variables can be held by the software controller
-    //Vital calculations will be done by the hardware controller
-    int ID;
-    boolean intLights;
-    boolean extLights;
-    boolean leftDoors;
-    boolean rightDoors;
-
-    boolean serviceBrake;
-    boolean emergencyBrake;
-
-    boolean automaticMode;
-
-    double powerOutput;
-
 
     @Override
     public void setAuthority(int authority) {
-        sendCommand("setAuthority:" + authority);
+        sendCommand("setAuthority " + authority);
+        receiveResponse();
     }
 
     @Override
     public void setCommandSpeed(double speed) {
-        sendCommand("setCommandSpeed:" + speed);
+        sendCommand("setCommandSpeed " + speed);
+        receiveResponse();
+    }
+
+    @Override
+    public void setCurrentTemperature(double temp) {
+        sendCommand("setCurrentTemperature " + temp);
+        receiveResponse();
     }
 
     @Override
     public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake = brake;
-        sendCommand("setEmergencyBrake:" + brake);
+        sendCommand("setEmergencyBrake " + brake);
+        receiveResponse();
+    }
+
+    @Override
+    public TrainControllerSubject getSubject() {
+        // Implement this method based on your requirements
+        // You may need to modify the TrainControllerSubject class to support remote communication
+        return null;
     }
 
     @Override
     public int getID() {
-        return this.ID;
+        sendCommand("getID");
+        return Integer.parseInt(Objects.requireNonNull(receiveResponse()));
     }
 
     @Override
@@ -132,12 +130,12 @@ public class HWTrainControllerImpl implements TrainController {
     }
 
     @Override
-    public double getCurrentTemperature() {
+    public double getSetTemperature() {
         return 0;
     }
 
     @Override
-    public double getSetTemperature() {
+    public double getCurrentTemperature() {
         return 0;
     }
 
@@ -153,17 +151,7 @@ public class HWTrainControllerImpl implements TrainController {
 
     @Override
     public void setSetTemperature(double newTemperature) {
-        
-    }
 
-    @Override
-    public void setCurrentTemperature(double newTemperature) {
-
-    }
-
-    @Override
-    public TrainControllerSubject getSubject() {
-        return null;
     }
 
     @Override
@@ -186,9 +174,29 @@ public class HWTrainControllerImpl implements TrainController {
         return false;
     }
 
+    // Implement the remaining methods from the TrainController interface
+    // These methods will send commands to the Raspberry Pi and receive responses
+
+    private void sendCommand(String command) {
+        out.println(command);
+    }
+
+    private String receiveResponse() {
+        try {
+            return in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     public void delete() {
-        
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -201,16 +209,15 @@ public class HWTrainControllerImpl implements TrainController {
         return 0;
     }
 
-    // Implement the remaining methods of the TrainController interface
-    // ...
-
     @Override
     public void updateBeacon(Beacon beacon) {
-        // Implement the logic to update the beacon information
-        // ...
+
     }
+
     @Override
-    public UpdatedTrainValues sendUpdatedTrainValues(){ return null;}
+    public UpdatedTrainValues sendUpdatedTrainValues() {
+        return null;
+    }
 
     @Override
     public TrainModel getTrain() {
@@ -224,7 +231,7 @@ public class HWTrainControllerImpl implements TrainController {
 
     @Override
     public String getNextStationName() {
-        return null;
+        return "";
     }
 
     @Override
@@ -251,7 +258,6 @@ public class HWTrainControllerImpl implements TrainController {
     public void onBlock() {
 
     }
-
 
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {

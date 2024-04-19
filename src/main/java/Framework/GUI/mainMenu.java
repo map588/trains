@@ -6,12 +6,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.net.URL;
 
 public class mainMenu extends Application {
@@ -69,7 +74,12 @@ public class mainMenu extends Application {
         topContainer.getChildren().addAll(menuBar, toolBar);
 
         root.setTop(topContainer);
-        Scene scene = new Scene(root,1280,720);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) (screenSize.getWidth() * 0.75);
+        int height = (int) (screenSize.getHeight() * 0.75);
+
+
+        Scene scene = new Scene(root,width,height);
         primaryStage.setScene(scene);
         primaryStage.setTitle("J.A.M.E.S - Train Management System");
         primaryStage.show();

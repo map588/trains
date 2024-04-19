@@ -249,6 +249,11 @@ public class trainControllerStub implements TrainController {
         return null;
     }
 
+    @Override
+    public void onBlock() {
+
+    }
+
     //    @Override
     public void setInTunnel(boolean inTunnel) {
 
