@@ -120,7 +120,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(trackModel != null)
             trackModel.setSwitchState(blockID, switchState);
         if(ctcOffice != null)
-            ctcOffice.setSwitchState(Lines.GREEN, blockID, switchState);
+            ctcOffice.setSwitchState(trackLine, blockID, switchState);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(trackModel != null)
             trackModel.setLightState(blockID, lightState);
         if(ctcOffice != null)
-            ctcOffice.setLightState(Lines.GREEN, blockID, lightState);
+            ctcOffice.setLightState(trackLine, blockID, lightState);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(trackModel != null)
             trackModel.setCrossing(blockID, crossingState);
         if(ctcOffice != null)
-            ctcOffice.setCrossingState(Lines.GREEN, blockID, crossingState);
+            ctcOffice.setCrossingState(trackLine, blockID, crossingState);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         printStream.println("occupancy="+blockID+":"+occupied);
 
         if(ctcOffice != null)
-            ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, occupied);
+            ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
 
         if(occupied && !blockMap.get(blockID).getBooleanAuth()) {
             trackModel.setCommandedSpeed(blockID, STOP_TRAIN_SIGNAL);
@@ -274,21 +274,21 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
                 if(trackModel != null)
                     trackModel.setSwitchState(blockID, boolVal);
                 if(ctcOffice != null)
-                    ctcOffice.setSwitchState(Lines.GREEN, blockID, boolVal);
+                    ctcOffice.setSwitchState(trackLine, blockID, boolVal);
             }
             case "trafficLight" -> {
                 blockMap.get(blockID).setLightState(boolVal);
                 if(trackModel != null)
                     trackModel.setLightState(blockID, boolVal);
                 if(ctcOffice != null)
-                    ctcOffice.setLightState(Lines.GREEN, blockID, boolVal);
+                    ctcOffice.setLightState(trackLine, blockID, boolVal);
             }
             case "crossing" -> {
                 blockMap.get(blockID).setCrossingState(boolVal);
                 if(trackModel != null)
                     trackModel.setCrossing(blockID, boolVal);
                 if(ctcOffice != null)
-                    ctcOffice.setCrossingState(Lines.GREEN, blockID, boolVal);
+                    ctcOffice.setCrossingState(trackLine, blockID, boolVal);
             }
             case "auth" -> {
                 WaysideBlock block = blockMap.get(blockID);
