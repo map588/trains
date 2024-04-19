@@ -289,7 +289,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.setCommandSpeed(commandSpeed);
 
         listeningExecutor.execute(() -> {
-        notifyChange(COMMANDSPEED_PROPERTY, speed);
+        notifyChange(COMMANDSPEED_PROPERTY, commandSpeed);
         });
 
         logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
