@@ -8,6 +8,6 @@ public class TrackLineSubject {
     private ObservableList<TrackBlockSubject> blockList;
 
     public TrackLineSubject(TrackLine trackLine) {
-        ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(subjectMap.getLineSubject("GREEN"));
+        ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(trackLine.getSubject());
     }
 }

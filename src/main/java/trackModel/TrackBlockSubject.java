@@ -42,8 +42,6 @@ public class TrackBlockSubject {
     private StringProperty trackHeater;
     private IntegerProperty outsideTemp;
 
-    private ObservableList<TrackBlockSubjectOLD> blockList;
-
 
     private void initializeValues() {
         blockNumber = new SimpleStringProperty();
@@ -77,7 +75,6 @@ public class TrackBlockSubject {
         blockElevation = new SimpleDoubleProperty();
         outsideTemp = new SimpleIntegerProperty();
         direction = new SimpleBooleanProperty();
-        blockList = FXCollections.observableArrayList();
     }
 
     private TrackLine trackLine;
@@ -91,9 +88,9 @@ public class TrackBlockSubject {
         this.trackLine = line;
         initializeValues();
         initializeListeners();
-        trackBlockLine.forEach((blockID, block) -> {
-            blockList.add(new TrackBlockSubjectOLD(block));
-        });
+//        trackBlockLine.forEach((blockID, block) -> {
+//            blockList.add(new TrackBlockSubjectOLD(block));
+//        });
     }
 
 
