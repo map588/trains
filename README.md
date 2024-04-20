@@ -6,12 +6,21 @@ TODO: Description of system
 ## Use Guides
 
 ### Table of Contents
+1. [Simulation Setup](#simulation-setup)
 1. [CTC](#ctc)
 2. [Software Wayside Controller](#software-wayside-controller)
 3. [Track Model](#track-model)
 4. [Train Model](#train-model)
 5. [Software Train Controller](#software-train-controller)
 6. [Hardware Train Controller](#hardware-train-controller)
+
+### Simulation Setup
+
+To run the simulation, a csv file needs to be uploaded to represent all of the properties of the track.  The csv should be formatted as follows:
+
+*Format*
+
+The simulation is set to run at 1 second intervals.  The slide bar at the top of the menu allows the simulation to run up to 10x speed.  This can be seen in the time display also in the main menu.
 
 ### CTC
 
@@ -25,6 +34,11 @@ While the status of the track blocks is displayed in the Wayside Controller GUI,
 #### <i>Hardware Wayside Controller</i>
 
 ### Track Model
+To access the Track Model GUI, first run the main program. Then, left-click the "trackModel" button. The Track Model GUI will open. The Track Model GUI displays the current state of the track, including the current state of the switches, lights, crossings, failures, track circuits, track heaters, and beacon information. All of the details about the track are displayed in the table for every block in a line.  To view other lines use the combo box located above the line table.
+
+The number of lines will be determined by the uploaded csv file explained early in these instructions. When a train is dispatched onto the track, the block occupancies of that train will be displayed in the occupied column.  To view properties of a block, select the block in the table and the information on the left hand side will update based on the type of block.  If it is a station, passenger information will be updated accordingly.  If it is a switch, the switch states will be displayed as well as the block numbers of the switches.  Similarly, signal states are displayed as well as crossing states.  The beacon information will appear when a beacon block is selected in the table.  Finally, the track heaters automatically turn on based on the internally set environmental temperature.
+
+To set a failure use the Murphy tab on the left hand side.  Here you can set different types of track failures to occur on the selected block.  The three types of failures are broken rail, track circuit failure, and power failure.  Pressing enter with the selected error will set the failure on that block in the table.  To undo a failure, there is an option to fix track failure in the combo box in the Murphy tab.  This will remove any failures on the selected block. 
 
 ### Train Model
 To access the Train Model GUI, first run the main program. Then, left-click the "trainModel" button. The Train Model GUI will open. The Train Model GUI displays the current state of whichever train is selected, including the current speed, authority, and power. The Train Model GUI also displays the current state of the doors, lights, and brakes. If no train has been dispatched, the GUI will be filled with empty values until a train is dispatched.  Upon initial dispatch, the GUI will automatically update to display the values of the dispatched train.
