@@ -73,3 +73,6 @@ if dir_assigned[27]
         authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[1]
     endif
 endif
+
+// Yard switch
+switch[9] = ALT

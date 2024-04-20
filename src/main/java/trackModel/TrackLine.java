@@ -160,6 +160,10 @@ public class TrackLine implements TrackModel {
          if (newBlockID == 0 && oldBlockID != 0) {
             logger.info("Train {} exited the track", train.getTrainNumber());
             trackOccupancyMap.remove(train);
+             asyncTrackUpdate(() -> {
+                 setUnoccupied(oldBlockID);
+                 return null;
+             });
             return;
         }else if(newBlockID == 0) {
             logger.info("Train {} => Entry", train.getTrainNumber());

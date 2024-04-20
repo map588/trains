@@ -37,7 +37,7 @@
                          <Font size="16.0" />
                        </font>
                    </Label>
-                   <ComboBox fx:id="changeControllerComboBox" prefHeight="26.0" prefWidth="199.0" promptText="Change Controller" />
+                   <ComboBox fx:id="changeControllerComboBox" promptText="Change Controller" />
                </children>
             </VBox>
             <Label fx:id="changeControllerLabel1" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="104.0" text="Beta v.3.1" textAlignment="RIGHT" HBox.hgrow="NEVER">
