@@ -42,12 +42,6 @@ public class WaysideBlock implements Notifier {
         this.inMaintenance = false;
 
         if(this.hasSwitch) {
-            logger.info("Switch Block: {}", block.blockNumber());
-            logger.info("NorthDef: {}", block.nextBlock().northDefault());
-            logger.info("NorthAlt: {}", block.nextBlock().northAlternate());
-            logger.info("SouthDef: {}", block.nextBlock().southDefault());
-            logger.info("SouthAlt: {}", block.nextBlock().southAlternate());
-
             this.switchBlockParent = this.blockID;
 
             if(block.nextBlock().primarySwitchDirection() == Direction.NORTH) {

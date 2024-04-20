@@ -165,7 +165,6 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             }
         }
 
-        intVarMap.remove(varName);
         return Value.VOID;
     }
 

@@ -130,7 +130,7 @@ public class WaysideSystem {
                 10, 11, 12,
                 13, 14, 15,
                 16, 17, 18, 19, 20,
-                21, 23, 23,
+                21, 22, 23,
                 24, 25, 26, 27},
                 redLine, ctcOffice,
                 "src/main/antlr/RedLine1.plc"), Lines.RED);
