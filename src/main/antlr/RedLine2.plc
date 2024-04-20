@@ -1,0 +1,65 @@
+// Handles sections H - N blocks 44 - 66
+// Accesses occupancies for blocks 40 - 70
+
+// Check directionality for entrance to loop
+if dir_assigned[44]
+    if not occupied[44] and not occupied[45] and not occupied[46] and not occupied[47] and not occupied[48] and not occupied[49] and not occupied[50] and not occupied[51] and not occupied[52] and not occupied[61] and not occupied[62] and not occupied[63] and not occupied[64] and not occupied[65] and not occupied[66]
+        dir_assigned[44] = FALSE
+        switch[44] = MAIN
+        switch[52] = MAIN
+        for i = 44 to 52 do
+            authority[i] = FALSE
+        endfor
+    endif
+endif
+
+// Check directionality for entrance to loop
+if not dir_assigned[44]
+    if occupied[44] or occupied[45] or occupied[46] or occupied[47]
+        dir_assigned[44] = TRUE
+        direction[44] = SOUTHBOUND
+        switch[52] = MAIN
+        switch[44] = MAIN
+    else
+        if occupied[63] or occupied[64] or occupied[65] or occupied[66]
+            dir_assigned[44] = TRUE
+            direction[44] = NORTHBOUND
+            switch[52] = ALT
+            switch[44] = ALT
+        endif
+    endif
+endif
+
+// Prepare authorities
+if dir_assigned[44]
+    if direction[44] == SOUTHBOUND
+        for i = 44 to 52 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[52] == MAIN
+        endfor
+    else
+        if direction[44] == NORTHBOUND
+            for i = 48 to 52 do
+                authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
+            endfor
+            authority[47] = not occupied[46] and not occupied[45] and not occupied[44] and not occupied[67] and switch[44] == ALT
+            authority[46] = not occupied[45] and not occupied[44] and not occupied[67] and not occupied[68] and switch[44] == ALT
+            authority[45] = not occupied[44] and not occupied[67] and not occupied[68] and not occupied[69] and switch[44] == ALT
+            authority[44] = not occupied[67] and not occupied[68] and not occupied[69] and not occupied[70] and switch[44] == ALT
+        endif
+    endif
+endif
+
+// Generic Authorities (K-M)
+for i = 53 to 62 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+
+// Authorities for Switch section (end of M - N)
+authority[63] = not occupied[64] and not occupied[65] and not occupied[66] and not occupied[52] and switch[52] == ALT
+authority[64] = not occupied[65] and not occupied[66] and not occupied[52] and not occupied[51] and switch[52] == ALT
+authority[65] = not occupied[66] and not occupied[52] and not occupied[51] and not occupied[50] and switch[52] == ALT
+authority[66] = not occupied[52] and not occupied[51] and not occupied[50] and not occupied[49] and switch[52] == ALT
+
+// Crossing control
+crossing[47] = not occupied[46] and not occupied[47] and not occupied[48]
+
