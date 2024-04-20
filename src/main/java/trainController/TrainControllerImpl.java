@@ -167,13 +167,15 @@ public class TrainControllerImpl implements TrainController{
 
     public double calculatePower(double currentSpeed) {
 
-        double setSpeed, pow;
-
         if (waysideStop){
             setServiceBrake(true);
+            rollingError = 0.0;
             return 0;
         }
         else {
+
+            double setSpeed, pow;
+            boolean serviceBrake = false;
 
             if (automaticMode) {
                 setSpeed = commandSpeed;
@@ -201,20 +203,18 @@ public class TrainControllerImpl implements TrainController{
                 pow = 0.0;
             }
 
-
             // Apply brakes if the power is negative or if the train is overshooting
             if (pow < 0 || (currentSpeed > setSpeed && automaticMode)) {
                 pow = 0;
-                setServiceBrake(true);
+                serviceBrake = true;
             }
-
 
             // Cut off power if brakes are engaged or there's a failure
             if (emergencyBrake || serviceBrake || powerFailure) {
                 pow = 0;
             }
 
-
+            setServiceBrake(serviceBrake);
             return pow;
         }
     }
@@ -334,10 +334,12 @@ public class TrainControllerImpl implements TrainController{
         if (authority == STOP_TRAIN_SIGNAL) {
             waysideStop = true;
             // Make a message on the logger
+            logger.info("Train {} has been stopped by wayside", trainID);
         }
         else if (authority == RESUME_TRAIN_SIGNAL){
             waysideStop = false;
             // Make a message on the logger
+            logger.info("Train {} has been resumed by wayside", trainID);
         }
         else {
             this.authority = authority;

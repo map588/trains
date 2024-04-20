@@ -4,11 +4,11 @@
 // Check directionality of the blocks for upper loop
 // Setting default direction to allow trains to enter from the yard
 if dir_assigned[27]
-    if not occupied[27] and not occupied[26] and not occupied[25] and not occupied[24] and not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[16
+    if not occupied[27] and not occupied[26] and not occupied[25] and not occupied[24] and not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[16]
         // Unbind direction if entire section is empty
         dir_assigned[27] = FALSE
         direction[27] = SOUTHBOUND
-        for i = 16 to 27
+        for i = 16 to 27 do
             authority[i] = FALSE
         endfor
     endif
@@ -22,7 +22,7 @@ if not dir_assigned[27]
     if occupied[31] or occupied[30] or occupied[29] or occupied[28]
         dir_assigned[27] = TRUE
         direction[27] = NORTHBOUND
-    elsif
+    else
         if occupied[16] or occupied[17] or occupied[18] or occupied[19]
             dir_assigned[27] = TRUE
             direction[27] = SOUTHBOUND
@@ -31,15 +31,15 @@ if not dir_assigned[27]
 endif
 
 // Sections for A - E are not directional
-for i = 1 to 6
+for i = 1 to 6 do
     authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
 endfor
 authority[7] = not occupied[8] and not occupied[9]
 authority[8] = not occupied[9]
 authority[10] = TRUE
 authority[11] = not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15]
-for i = 12 to 15
-    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[16] == ALT
+for i = 12 to 15 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and not switch[16]
 endfor
 
 
@@ -50,7 +50,7 @@ if dir_assigned[27]
     if direction[27] == SOUTHBOUND
         switch[16] = MAIN
         switch[27] = ALT
-        for i = 16 to 23
+        for i = 16 to 23 do
             authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
         endfor
         authority[27] = not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73]
@@ -61,7 +61,7 @@ if dir_assigned[27]
         if direction[23] == NORTHBOUND
             switch[16] = ALT
             switch[27] = MAIN
-            for i = 20 to 27
+            for i = 20 to 27 do
                 authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
             endfor
             authority[16] = not occupied[1] and not occupied[2] and not occupied[3] and not occupied[4]
@@ -70,3 +70,4 @@ if dir_assigned[27]
             authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[1]
         endif
     endif
+endif
