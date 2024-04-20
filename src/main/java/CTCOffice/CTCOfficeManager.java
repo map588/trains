@@ -386,11 +386,6 @@ public class CTCOfficeManager {
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
 
         TableView<TrainStopSubject> tableView = scheduleEditTable;
-        tableView.getColumns().add(stopIndexColumn);
-        tableView.getColumns().add(stationBlockIDColumn);
-        tableView.getColumns().add(arrivalTimeColumn);
-        tableView.getColumns().add(departureTimeColumn);
-
         tableView.setRowFactory( obj -> {
             TableRow<TrainStopSubject> row = new TableRow<>();
             row.setOnDragDetected(event -> {
@@ -407,7 +402,7 @@ public class CTCOfficeManager {
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                    if (row.getIndex() != (Integer) db.getContent(SERIALIZED_MIME_TYPE)) {
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                         event.consume();
                     }
@@ -430,11 +425,12 @@ public class CTCOfficeManager {
                     event.consume();
                     TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
                     train.moveStop(draggedIndex + 1, dropIndex + 1);
+                    System.out.println("moved stop " + draggedIndex + " to " + dropIndex + "\nrow index: " + row.getIndex());
+
                 }
             });
             return row;
         });
-
 
         AddStop.setOnAction(event -> {
             if(selectedSchedule == null) {
@@ -478,25 +474,7 @@ public class CTCOfficeManager {
             stop.setProperty(ARRIVAL_TIME_PROPERTY, (int)convertClockTimeToDouble(arrivalTimeSelector.getText()));
             stop.setProperty(DEPARTURE_TIME_PROPERTY, (int)convertClockTimeToDouble(departureTimeSelector.getText()));
         });
-
-
-
         /*
-    @FXML private ComboBox<Integer> stopSelector;
-    @FXML private ChoiceBox<Integer> stationStopSelector;
-    @FXML private ComboBox<Integer> arrivalTimeSelector;
-    @FXML private ComboBox<Integer> departureTimeSelector;
-    @FXML private Button AddStop;
-    @FXML private Button RemoveStop;
-    @FXML private Button saveStopButton;
-                <ToolBar fx:id="stopsToolBar" prefHeight="40.0" >
-                    <ChoiceBox fx:id="stationStopSelector" prefWidth="50.0"/>
-                    <ComboBox fx:id="arrivalTimeSelector" prefWidth="50.0"/>
-                    <ComboBox fx:id="departureTimeSelector" prefWidth="50.0"/>
-                    <Button fx:id="AddStop" mnemonicParsing="false" text="Add Stop"/>
-                    <Button fx:id="RemoveStop" mnemonicParsing="false" text="Remove Stop"/>
-                    <Button fx:id="saveStopButton" mnemonicParsing="false" text="Save"/>
-                </ToolBar>
                 @FXML private Button saveScheduleButton;
          */
     }

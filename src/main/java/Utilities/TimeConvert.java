@@ -48,4 +48,27 @@ public class TimeConvert {
         return (hours*60) + minutes;
     }
 
+    public static String convertClockTimeToTimeStamp(String clockTime) {
+        String[] time = clockTime.split(":");
+        int hours = Integer.parseInt(time[0]);
+        int minutes = Integer.parseInt(time[1]);
+        int seconds = 0;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public static String convertTimeStampToClockTime(String timeStamp) {
+        String[] time = timeStamp.split(":");
+        int hours = Integer.parseInt(time[0]);
+        int minutes = Integer.parseInt(time[1]);
+        return String.format("%02d:%02d", hours, minutes);
+    }
+
+    public static int convertClockTimeToInt(String clockTime) {
+        return (int)convertClockTimeToDouble(clockTime);
+    }
+
+    public static String convertIntToClockTime(int time) {
+        return convertDoubleToClockTime((double)time);
+    }
+
 }

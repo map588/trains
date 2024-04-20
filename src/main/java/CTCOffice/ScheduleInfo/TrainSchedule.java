@@ -58,8 +58,15 @@ public class TrainSchedule {
     }
 
     public void removeStop(int index) {
-        stops.remove(index);
-        shiftStopsLeft(index);
+        if(index < 1 || index > stops.size()) {
+            return;
+        }
+        for (int i = index; i < stops.size(); i++) {
+            stops.get(i + 1).setStopIndex(i);
+            stops.get(i + 1).setArrivalTime(stops.get(i).getArrivalTime());
+            stops.get(i + 1).setDepartureTime(stops.get(i).getDepartureTime());
+            stops.put(i, stops.get(i + 1));
+        }
     }
 
     public String getLine() {
@@ -74,24 +81,36 @@ public class TrainSchedule {
        return subject;
     }
 
-    public void shiftStopsLeft(int index) {
-        for (int i = index; i < stops.size(); i++) {
-            stops.get(i + 1).setStopIndex(i);
-        }
-    }
-
     public void moveStop(int stopCurrentIndex, int stopNewIndex) {
+        for(int i = 1; i <= stops.size(); i++) {
+            System.out.println("stop " + i + ": index : " + stops.get(i).getStopIndex());
+        }
         if(stopCurrentIndex == stopNewIndex) {
             return;
         }else if(stopCurrentIndex < stopNewIndex) {
-            TrainStop temp = stops.get(stopCurrentIndex);
+            /*
+             TrainStop temp = stops.get(stopCurrentIndex);
             for(int i = stopCurrentIndex; i < stopNewIndex; i++) {
                 stops.put(i, stops.get(i + 1));
                 stops.get(i).setStopIndex(i);
             }
             stops.put(stopNewIndex, temp);
             stops.get(stopNewIndex).setStopIndex(stopNewIndex);
+             */
+            int tempStationBlockID = stops.get(stopCurrentIndex).getStationBlockID();
+            int tempArrivalTime = stops.get(stopNewIndex).getArrivalTime();
+            int tempDepartureTime = stops.get(stopNewIndex).getDepartureTime();
+            for(int i = stopNewIndex; i > stopCurrentIndex; i--) {
+                stops.get(i).setArrivalTime(stops.get(i-1).getArrivalTime());
+                stops.get(i).setDepartureTime(stops.get(i-1).getDepartureTime());
+                stops.get(i).setStopIndex(i);
+            }
+            for(int i = stopCurrentIndex + 1; i < stopNewIndex; i++) {stops.put(i, stops.get(i + 1));}
+            stops.get(stopNewIndex).setStationBlockID(tempStationBlockID);
+            stops.get(stopNewIndex).setArrivalTime(tempArrivalTime);
+            stops.get(stopNewIndex).setDepartureTime(tempDepartureTime);
         } else {
+            /*
             TrainStop temp = stops.get(stopCurrentIndex);
             for (int i = stopCurrentIndex; i > stopNewIndex; i--) {
                 stops.put(i, stops.get(i - 1));
@@ -99,6 +118,7 @@ public class TrainSchedule {
             }
             stops.put(stopNewIndex, temp);
             stops.get(stopNewIndex).setStopIndex(stopNewIndex);
+             */
         }
     }
 }
