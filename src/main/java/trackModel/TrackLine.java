@@ -186,6 +186,7 @@ public class TrackLine implements TrackModel {
     private void handleTrainExit(TrainModel train, Integer blockID) {
         if(blockID == 0) {
             logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
+            train.delete();
             return;
         }
 
