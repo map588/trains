@@ -214,6 +214,9 @@ public class WaysideControllerHW implements PLCRunner {
                     runPLC();
                 }
             }
+            case "ping" -> {
+                outputStream.println("WaysideHW");
+            }
         }
     }
 

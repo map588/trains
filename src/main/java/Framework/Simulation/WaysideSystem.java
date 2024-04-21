@@ -3,6 +3,7 @@ package Framework.Simulation;
 import Common.CTCOffice;
 import Common.WaysideController;
 import Utilities.Enums.Lines;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +15,9 @@ import trackModel.TrackLineMap;
 import waysideController.WaysideControllerHWBridge;
 import waysideController.WaysideControllerImpl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,23 +109,32 @@ public class WaysideSystem {
                 "src/main/antlr/GreenLine2.plc"), Lines.GREEN);
 
         if(useHardware) {
-            hwController = new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
-                    69, 70, 71, 72, 73,
-                    74, 75, 76,
-                    77, 78, 79, 80, 81, 82, 83, 84, 85,
-                    86, 87, 88,
-                    89, 90, 91, 92, 93, 94, 95, 96, 97,
-                    98, 99, 100,
-                    101,
-                    102, 103, 104,
-                    105, 106, 107, 108, 109},
-                    new int[] {110, 111, 112, 113},
-                    "COM6",
-                    greenLine, ctcOffice,
-                    "src/main/antlr/GreenLine3.plc");
-            addController(hwController, Lines.GREEN);
+            String port = findHardwareCOMPort();
+
+            if(port != null) {
+                logger.info("Found COM Port: {}", port);
+                hwController = new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
+                        69, 70, 71, 72, 73,
+                        74, 75, 76,
+                        77, 78, 79, 80, 81, 82, 83, 84, 85,
+                        86, 87, 88,
+                        89, 90, 91, 92, 93, 94, 95, 96, 97,
+                        98, 99, 100,
+                        101,
+                        102, 103, 104,
+                        105, 106, 107, 108, 109},
+                        new int[]{110, 111, 112, 113},
+                        "COM6",
+                        greenLine, ctcOffice,
+                        "src/main/antlr/GreenLine3.plc");
+                addController(hwController, Lines.GREEN);
+            }
+            else {
+                useHardware = false;
+                logger.error("Could not find Wayside Hardware Controller");
+            }
         }
-        else {
+        if(!useHardware) {
             addController(new WaysideControllerImpl(3, Lines.GREEN, new int[]{
                     69, 70, 71, 72, 73,
                     74, 75, 76,
@@ -188,6 +201,38 @@ public class WaysideSystem {
 //        for(Callable<Void> task : waysideQueue) {
 //            waysideExecutor.submit(task);
 //        }
+    }
+
+    private String findHardwareCOMPort() {
+        SerialPort[] ports = SerialPort.getCommPorts();
+        for(SerialPort port : ports) {
+            if(port.getDescriptivePortName().contains("USB Serial Port")) {
+                try {
+                    port.setComPortParameters(19200, 8, 1, 0);
+                    port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 500, 0); // block until bytes can be written
+                    port.openPort();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(port.getInputStream()));
+                    PrintStream outputStream = new PrintStream(port.getOutputStream(), true);
+
+                    logger.info("Opened COM Port: {}", port.getSystemPortName());
+
+                    outputStream.println("ping");
+                    String response = bufferedReader.readLine();
+
+                    logger.info("Received response: {}", response);
+
+                    if (response != null && response.equals("WaysideHW")) {
+                        return port.getSystemPortName();
+                    }
+                }
+                catch (Exception e) {
+                    logger.error("Error opening COM Port: {}", port.getSystemPortName());
+                    System.err.println(e.getMessage());
+                    continue;
+                }
+            }
+        }
+        return null;
     }
 
     private record WaysideUpdate(WaysideController controller) implements Callable<Void> {
