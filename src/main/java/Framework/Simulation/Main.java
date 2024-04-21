@@ -45,7 +45,7 @@ public class Main {
         TrainSystem trainSystem = new TrainSystem();
         TrackSystem trackSystem = new TrackSystem(trainSystem);
         CTC.setTrackSystem(trackSystem);
-        WaysideSystem waysideSystem = new WaysideSystem(CTC, false);
+        WaysideSystem waysideSystem = new WaysideSystem(CTC, true);
 
         syncTask = new TimeSynchronizationTask(trackSystem, waysideSystem, trainSystem, CTC);
         syncTask.startScheduling(scheduledExecutorService, TIMESTEP);

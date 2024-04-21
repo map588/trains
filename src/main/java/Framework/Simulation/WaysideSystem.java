@@ -112,7 +112,7 @@ public class WaysideSystem {
             String port = findHardwareCOMPort();
 
             if(port != null) {
-                logger.info("Found COM Port: {}", port);
+                logger.info("Found WaysideHW COM Port: {}", port);
                 hwController = new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
                         69, 70, 71, 72, 73,
                         74, 75, 76,
@@ -124,14 +124,14 @@ public class WaysideSystem {
                         102, 103, 104,
                         105, 106, 107, 108, 109},
                         new int[]{110, 111, 112, 113},
-                        "COM6",
+                        port,
                         greenLine, ctcOffice,
                         "src/main/antlr/GreenLine3.plc");
                 addController(hwController, Lines.GREEN);
             }
             else {
                 useHardware = false;
-                logger.error("Could not find Wayside Hardware Controller");
+                logger.warn("Could not find Wayside Hardware Controller");
             }
         }
         if(!useHardware) {
@@ -221,14 +221,15 @@ public class WaysideSystem {
 
                     logger.info("Received response: {}", response);
 
+                    port.closePort();
                     if (response != null && response.equals("WaysideHW")) {
                         return port.getSystemPortName();
                     }
                 }
                 catch (Exception e) {
-                    logger.error("Error opening COM Port: {}", port.getSystemPortName());
-                    System.err.println(e.getMessage());
-                    continue;
+                    port.closePort();
+                    logger.warn("Error opening COM Port: {}", port.getSystemPortName());
+                    logger.warn(e.getMessage());
                 }
             }
         }
