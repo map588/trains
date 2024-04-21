@@ -136,7 +136,7 @@ public class WaysideSystem {
                 "src/main/antlr/RedLine1.plc"), Lines.RED);
 
         addController(new WaysideControllerImpl(2, Lines.RED, new int[]{
-                28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+                28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
                 67,
                 68, 69, 70,
                 71,
@@ -146,14 +146,15 @@ public class WaysideSystem {
                 redLine, ctcOffice), Lines.RED);
 
         addController(new WaysideControllerImpl(3, Lines.RED, new int[]{
-                43, 44, 45,
+                44, 45,
                 46, 47, 48,
                 49, 50, 51, 52,
                 53, 54, 55, 56, 57,
                 58, 59, 60,
                 61, 62, 63,
                 64, 65, 66},
-                redLine, ctcOffice), Lines.RED);
+                redLine, ctcOffice,
+                "src/main/antlr/RedLine2.plc"), Lines.RED);
 
         waysideExecutor = Executors.newFixedThreadPool(size());
     }

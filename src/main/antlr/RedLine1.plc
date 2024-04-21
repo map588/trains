@@ -76,3 +76,6 @@ endif
 
 // Yard switch
 switch[9] = ALT
+
+// Crossings
+crossing[11] = not occupied[10] and not occupied[11] and not occupied[12]
