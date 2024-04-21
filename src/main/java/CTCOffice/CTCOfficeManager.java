@@ -425,8 +425,6 @@ public class CTCOfficeManager {
                     event.consume();
                     TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
                     train.moveStop(draggedIndex + 1, dropIndex + 1);
-                    System.out.println("moved stop " + draggedIndex + " to " + dropIndex + "\nrow index: " + row.getIndex());
-
                 }
             });
             return row;
@@ -461,8 +459,8 @@ public class CTCOfficeManager {
             }
             TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
             train.removeStop(stopSelector.getValue());
-            scheduleEditTable.getItems().remove(scheduleEditTable.getSelectionModel().getSelectedItem());
-            stopSelector.getItems().remove(stopSelector.getValue());
+            scheduleEditTable.getItems().remove(scheduleEditTable.getItems().get(stopSelector.getValue() - 1));
+            stopSelector.getItems().remove(train.getStops().size() - 1);
         });
         saveStopButton.setOnAction(event -> {
             if(selectedSchedule == null) {
