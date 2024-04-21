@@ -3,7 +3,7 @@
 
 // Check directionality for entrance to loop
 if dir_assigned[44]
-    if not occupied[44] and not occupied[45] and not occupied[46] and not occupied[47] and not occupied[48] and not occupied[49] and not occupied[50] and not occupied[51] and not occupied[52] and not occupied[61] and not occupied[62] and not occupied[63] and not occupied[64] and not occupied[65] and not occupied[66]
+    if not occupied[40] and not occupied[41] and not occupied[42] and not occupied[43] and not occupied[44] and not occupied[45] and not occupied[46] and not occupied[47] and not occupied[48] and not occupied[49] and not occupied[50] and not occupied[51] and not occupied[52] and not occupied[61] and not occupied[62] and not occupied[63] and not occupied[64] and not occupied[65] and not occupied[66]
         dir_assigned[44] = FALSE
         switch[44] = MAIN
         switch[52] = MAIN
@@ -15,7 +15,7 @@ endif
 
 // Check directionality for entrance to loop
 if not dir_assigned[44]
-    if occupied[44] or occupied[45] or occupied[46] or occupied[47]
+    if occupied[43] or occupied[42] or occupied[41] or occupied[40]
         dir_assigned[44] = TRUE
         direction[44] = SOUTHBOUND
         switch[52] = MAIN
@@ -63,3 +63,8 @@ authority[66] = not occupied[52] and not occupied[51] and not occupied[50] and n
 // Crossing control
 crossing[47] = not occupied[46] and not occupied[47] and not occupied[48]
 
+// Lights
+light[44] = dir_assigned[44] and direction[44] and switch[44]
+light[52] = dir_assigned[44] and not direction[44] and not switch[52]
+light[53] = RED
+light[66] = dir_assigned[44] and direction[44] and switch[52]

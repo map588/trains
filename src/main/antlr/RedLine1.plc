@@ -39,6 +39,7 @@ for i = 1 to 6 do
 endfor
 authority[7] = not occupied[8] and not occupied[9]
 authority[8] = not occupied[9]
+authority[9] = TRUE
 authority[10] = TRUE
 authority[11] = not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15]
 for i = 12 to 15 do
@@ -79,3 +80,11 @@ switch[9] = ALT
 
 // Crossings
 crossing[11] = not occupied[10] and not occupied[11] and not occupied[12]
+
+// Lights
+light[1] = RED
+light[9] = GREEN
+light[10] = RED
+light[15] = dir_assigned[27] and not direction[27] and not switch[16]
+light[16] = dir_assigned[27] and direction[27] and switch[16]
+light[27] = dir_assigned[27] and not direction[27] and switch[27]
