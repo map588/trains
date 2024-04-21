@@ -96,7 +96,10 @@ public class CTCOfficeManager {
     @FXML private Button RemoveStop;
     @FXML private Button saveStopButton;
 
+    @FXML private Button AddSchedule;
+    @FXML private Button RemoveSchedule;
     @FXML private Button saveScheduleButton; // save to a file
+    @FXML private Button checkScheduleButton; // check for errors
 
     @FXML private Button DispatchButton;
 
@@ -105,6 +108,7 @@ public class CTCOfficeManager {
     CTCBlockSubjectMap blockMap = CTCBlockSubjectMap.getInstance();
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     ScheduleFile selectedSchedule = null;
+    TrainSchedule selectedTrain = null;
 
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
@@ -123,6 +127,7 @@ public class CTCOfficeManager {
         setupLineTables();
         setupScheduleTables();
         setupStopTable();
+        setupScheduleButtons();
         setupDividers();
     }
 
@@ -154,19 +159,6 @@ public class CTCOfficeManager {
         crossingStateColumn.setCellValueFactory(block -> crossingColors.get(block.getValue()));
         underMaintenanceColumn.setCellValueFactory(block -> maintenanceColors.get(block.getValue()));
         switchLightColumn.setCellValueFactory(block -> switchColors.get(block.getValue()));
-    }
-
-    /**
-     * Toggles the value of a property of a block.
-     * The property to be toggled and the block are specified by the user.
-     *
-     * @param propertyName The name of the property to be toggled.
-     */
-    private void toggleProperty(String propertyName) {
-        System.out.println("toggled property " + propertyName + " for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
-        CTCBlockSubject block;
-        block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
-        block.setProperty(propertyName, !block.getBooleanProperty(propertyName).getValue());
     }
 
 
@@ -241,6 +233,7 @@ public class CTCOfficeManager {
     public void createTrain(){
 
     }
+
     private void setupLineTables(){
         blockTableGreen.setEditable(true);
         blockTableRed.setEditable(true);
@@ -366,7 +359,7 @@ public class CTCOfficeManager {
         trainSelectTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 scheduleEditTable.getItems().clear();
-                selectedSchedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
+                selectedTrain = newValue.getSchedule();
                 stopSelector.getItems().clear();
                 trainIDSelector.setValue(newValue.getSchedule().getTrainID());
                 lineTrainSelector.setValue(newValue.getSchedule().getLine());
@@ -384,6 +377,15 @@ public class CTCOfficeManager {
         stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY).getValue()));
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
+
+        scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                stopSelector.setValue(newValue.getStop().getStopIndex());
+                stationStopSelector.setText("" + newValue.getStop().getStationBlockID());
+                arrivalTimeSelector.setText(convertIntToClockTime(newValue.getStop().getArrivalTime()));
+                departureTimeSelector.setText(convertIntToClockTime(newValue.getStop().getDepartureTime()));
+            }
+        });
 
         TableView<TrainStopSubject> tableView = scheduleEditTable;
         tableView.setRowFactory( obj -> {
@@ -463,18 +465,40 @@ public class CTCOfficeManager {
             stopSelector.getItems().remove(train.getStops().size() - 1);
         });
         saveStopButton.setOnAction(event -> {
-            if(selectedSchedule == null) {
+            if(selectedSchedule == null || selectedTrain == null) {
                 return;
             }
             TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
             TrainStopSubject stop = train.getStop(stopSelector.getValue()).getSubject();
-            stop.setProperty(DESTINATION_PROPERTY, Integer.parseInt(stationStopSelector.getText()));
-            stop.setProperty(ARRIVAL_TIME_PROPERTY, (int)convertClockTimeToDouble(arrivalTimeSelector.getText()));
-            stop.setProperty(DEPARTURE_TIME_PROPERTY, (int)convertClockTimeToDouble(departureTimeSelector.getText()));
+            stop.getStop().setStationBlockID(Integer.parseInt(stationStopSelector.getText()));
+            stop.getStop().setArrivalTime((int)convertClockTimeToDouble(arrivalTimeSelector.getText()));
+            stop.getStop().setDepartureTime((int)convertClockTimeToDouble(departureTimeSelector.getText()));
+            scheduleEditTable.refresh();
         });
         /*
                 @FXML private Button saveScheduleButton;
          */
+
+
+    }
+
+    private void setupScheduleButtons(){
+        AddSchedule.setOnAction(event -> {
+            System.out.println("added schedule\n");
+           new ScheduleFile("Schedule " + (scheduleLibrary.getSubjects().size() + 1), "4/25/2021");
+              scheduleTable.getItems().add(scheduleLibrary.getSubjects().get(scheduleLibrary.getSubjects().size()));
+        });
+
+        RemoveSchedule.setOnAction(event -> {
+            System.out.println("removed schedule\n");
+            scheduleLibrary.removeScheduleFile(scheduleTable.getSelectionModel().getSelectedItem().getStringProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
+            scheduleTable.getItems().remove(scheduleTable.getSelectionModel().getSelectedItem());
+        });
+
+        checkScheduleButton.setOnAction(event -> {
+            selectedTrain.fixSchedule();
+            scheduleEditTable.refresh();
+        });
     }
 
     private void setupDividers(){

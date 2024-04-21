@@ -14,4 +14,7 @@ public class ScheduleLibrary extends SubjectMap<String, ScheduleFileSubject> {
     public ObservableHashMap<String, ScheduleFileSubject> getSubjects() {
         return super.getSubjects();
     }
+    public void removeScheduleFile(String scheduleFileName) {
+        super.removeSubject(scheduleFileName);
+    }
 }

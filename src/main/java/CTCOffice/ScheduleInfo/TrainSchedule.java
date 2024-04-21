@@ -1,11 +1,10 @@
 package CTCOffice.ScheduleInfo;
 
-import Framework.Support.Notifier;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
-import static CTCOffice.Properties.ScheduleProperties.*;
+import static CTCOffice.CTCOfficeImpl.GreenTrackLayout;
 import static Utilities.TimeConvert.*;
 
 public class TrainSchedule {
@@ -118,6 +117,55 @@ public class TrainSchedule {
             stops.get(stopNewIndex).setStopIndex(stopNewIndex);
             stops.get(stopNewIndex).setArrivalTime(tempArrival);
             stops.get(stopNewIndex).setDepartureTime(tempDeparture);
+        }
+    }
+    public int checkSchedule() {
+        int visited = 0;
+        for (int i = 1; i <= stops.size(); i++) {
+            // Check if arrival time is before departure time of previous stop
+            if (i > 1) {
+                if (stops.get(i).getArrivalTime() < stops.get(i - 1).getDepartureTime()) {
+                    stops.get(i).setArrivalTime(stops.get(i - 1).getDepartureTime() + 2);
+                }
+            }
+            // Check if arrival time is before departure time
+            if (stops.get(i).getArrivalTime() > stops.get(i).getDepartureTime()) {
+                stops.get(i).setDepartureTime(stops.get(i).getArrivalTime() + 1);
+            }
+            // Check if stop is at the same station as last stop
+            if (i > 1) {
+                if (stops.get(i).getStationBlockID() == stops.get(i - 1).getStationBlockID()) {
+                    removeStop(i);
+                    return -1;
+                }
+            }
+            // Check if station is out of order
+            if (i > 1) {
+                if (GreenTrackLayout.indexOf(stops.get(i).getStationBlockID()) > visited) {
+                    visited = GreenTrackLayout.indexOf(stops.get(i).getStationBlockID());
+                }else if (GreenTrackLayout.lastIndexOf(stops.get(i).getStationBlockID()) > visited) {
+                    visited = GreenTrackLayout.lastIndexOf(stops.get(i).getStationBlockID());
+                }else{
+                    return i;
+                }
+            }
+            else{
+                visited = GreenTrackLayout.indexOf(stops.get(i).getStationBlockID());
+            }
+        }
+        return 0;
+    }
+
+    public void fixSchedule() {
+        int fixed = -2;
+        while(fixed != 0) {
+            fixed = checkSchedule();
+            if(fixed == 0) {
+                break;
+            }
+            if(fixed > 0) {
+                moveStop(fixed, fixed - 1);
+            }
         }
     }
 }
