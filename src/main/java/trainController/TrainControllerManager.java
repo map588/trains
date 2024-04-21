@@ -131,7 +131,8 @@ public class TrainControllerManager {
 
     private void updateChoiceBoxItems() {
         List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
-        trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
+
+       Platform.runLater(()-> {trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
 
         if (!trainIDs.isEmpty()) {
             if(trainIDs.size() == 1){
@@ -144,6 +145,7 @@ public class TrainControllerManager {
             logger.info("No trains available after update.");
             changeTrainView(-1); // Explicitly handle no selection
         }
+        });
     }
 
 
