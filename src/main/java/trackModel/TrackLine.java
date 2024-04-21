@@ -41,14 +41,11 @@ public class TrackLine implements TrackModel {
     //Task Queue
     private final ConcurrentLinkedQueue<Callable<Object>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
-    //Subject Map
-    private static final LineSubjectMap trackSubjectMap = LineSubjectMap.getInstance();
-
     private long time = 0;
 
     private final BeaconParser beaconParser = new BeaconParser();
 
-    private final TrackBlockSubject subject;
+    private TrackBlockSubject subject;
 
     private int ticketSales = 0;
     public  int outsideTemperature = 40;
@@ -71,16 +68,15 @@ public class TrackLine implements TrackModel {
                 if (block.isLight) {
                     lightBlocks.add(block.blockID);
                 }
+                TrackBlockSubject subject = new TrackBlockSubject(this, block);
+                LineSubjectMap.addLineSubject(line, subject);
             }
 
             //Needs more testing, but the beacon parser seems to work.
             beaconBlocks.putAll(beaconParser.parseBeacons(line));
-            this.subject = new TrackBlockSubject(this, mainTrackLine);
-            trackSubjectMap.getInstance().addLineSubject(line.toString(), subject);
             setupListeners();
         }else{
             this.trackOccupancyMap = new ObservableHashMap<>(0);
-            this.subject = new TrackBlockSubject(this, new TrackBlockLine());
         }
     }
 

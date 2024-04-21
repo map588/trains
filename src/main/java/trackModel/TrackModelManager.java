@@ -1,6 +1,7 @@
 package trackModel;
 
 import Utilities.BooleanIconTableCell;
+import Utilities.Enums.Lines;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,7 +10,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -75,23 +75,20 @@ public class TrackModelManager {
     @FXML
     private TableColumn<TrackBlockSubject, String> failureColumn;
     @FXML
-    private TableColumn<TrackBlockSubject, String> blockColumn;
+    private TableColumn<TrackBlockSubject, Integer> blockColumn;
     @FXML
-    private TableColumn<TrackBlockSubject, Integer> lengthColumn;
+    private TableColumn<TrackBlockSubject, Double> lengthColumn;
     @FXML
     private TableColumn<TrackBlockSubject, Boolean> occupiedColumn;
     @FXML
     private TableColumn<TrackBlockSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
 
 
-
-    //Subject Map
-    private LineSubjectMap subjectMap = LineSubjectMap.getInstance();
     //subject
     private TrackBlockSubject subject;
 
 
-    ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(subjectMap.getLineSubject("GREEN"));
+    ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(LineSubjectMap.getLineSubject(Lines.GREEN));
 
     @FXML
     public void initialize() {
@@ -131,13 +128,13 @@ public class TrackModelManager {
     }
 
     private void updateLineChoiceBox() {
-        List<String> lineNames = new ArrayList<>(subjectMap.getLineSubjects().keySet());
+        List<String> lineNames = LineSubjectMap.getLineNames();
         pickLine.setItems(FXCollections.observableArrayList(lineNames));
     }
 
     private void initializeTable() {
         // Bind TableView columns to the properties of the TrackLineSubject object
-        blockColumn.setCellValueFactory(cellData -> cellData.getValue().blockNumberProperty());
+        blockColumn.setCellValueFactory(cellData -> cellData.getValue().blockNumberProperty().asObject());
         lengthColumn.setCellValueFactory(cellData -> cellData.getValue().blockLengthProperty().asObject());
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().blockGradeProperty().asObject());
         elevationColumn.setCellValueFactory(cellData -> cellData.getValue().blockElevationProperty().asObject());
@@ -198,7 +195,7 @@ public class TrackModelManager {
 
             if (subject.isIsBeacon()) {
                 displayBeaconInfo.textProperty().unbindBidirectional(subject.setBeaconProperty());
-                beaconBlockNumber.textProperty().unbindBidirectional(subject.blockNumberProperty());
+                beaconBlockNumber.textProperty().unbind();
             }
             elevationColumn.textProperty().unbindBidirectional(subject.blockElevationProperty().asObject());
             occupiedColumn.textProperty().unbindBidirectional(subject.isOccupiedProperty());
@@ -243,7 +240,7 @@ public class TrackModelManager {
 
         if (subject.isIsBeacon()) {
             displayBeaconInfo.textProperty().bindBidirectional(subject.setBeaconProperty());
-            beaconBlockNumber.textProperty().bindBidirectional(subject.blockNumberProperty());
+            beaconBlockNumber.textProperty().bind(subject.blockNumberProperty().asString());
         } else {
             displayBeaconInfo.setText("NO CROSSING");
         }
@@ -260,17 +257,13 @@ public class TrackModelManager {
 
 //TODO update table based on line selection
     private void updateTable() {
-            String lineSelect = pickLine.getSelectionModel().getSelectedItem().toString().toUpperCase();
-
-            if(lineSelect == null) {
-                return;
-            }
-
-            TrackBlockSubject subject = subjectMap.getLineSubject(lineSelect);
+            Lines lineSelect = Lines.valueOf(pickLine.getSelectionModel().getSelectedItem());
+            System.out.println("Selected line: " + lineSelect);
 
             // Clear the selectedTrackLineSubject list and add the new TrackLineSubject object
-            selectedTrackBlockSubject.clear();
-            selectedTrackBlockSubject.add(subject);
+            ObservableList<TrackBlockSubject> blockList = LineSubjectMap.getLineSubject(lineSelect);
+            System.out.println("Block list: " + blockList.size());
+            lineTable.setItems(blockList);
 
             // Update the table
             lineTable.refresh();

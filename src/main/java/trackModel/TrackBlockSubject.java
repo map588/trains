@@ -5,8 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class TrackBlockSubject {
-    private StringProperty blockNumber;
-    private IntegerProperty blockLength;
+    private IntegerProperty blockNumber;
+    private DoubleProperty blockLength;
     private DoubleProperty blockGrade;
     private DoubleProperty speedLimit;
     private DoubleProperty blockElevation;
@@ -43,18 +43,18 @@ public class TrackBlockSubject {
     private IntegerProperty outsideTemp;
 
 
-    private void initializeValues() {
-        blockNumber = new SimpleStringProperty();
-        blockLength = new SimpleIntegerProperty();
-        blockGrade = new SimpleDoubleProperty();
-        speedLimit = new SimpleDoubleProperty();
-        isCrossing = new SimpleBooleanProperty();
-        isUnderground = new SimpleBooleanProperty();
-        isSignal = new SimpleBooleanProperty();
-        isSwitch = new SimpleBooleanProperty();
-        isStation = new SimpleBooleanProperty();
-        isBeacon = new SimpleBooleanProperty();
-        isOccupied = new SimpleBooleanProperty();
+    private void initializeValues(TrackBlock trackBlock) {
+        blockNumber = new SimpleIntegerProperty(trackBlock.getBlockID());
+        blockLength = new SimpleDoubleProperty(trackBlock.getLength());
+        blockGrade = new SimpleDoubleProperty(trackBlock.getGrade());
+        speedLimit = new SimpleDoubleProperty(trackBlock.getSpeedLimit());
+        isCrossing = new SimpleBooleanProperty(trackBlock.isCrossing());
+        isUnderground = new SimpleBooleanProperty(trackBlock.isUnderground());
+        isSignal = new SimpleBooleanProperty(trackBlock.isLight());
+        isSwitch = new SimpleBooleanProperty(trackBlock.isSwitch());
+        isStation = new SimpleBooleanProperty(trackBlock.isStation());
+        isBeacon = new SimpleBooleanProperty(false);
+        isOccupied = new SimpleBooleanProperty(trackBlock.isOccupied());
         failure = new SimpleStringProperty();
         passEmbarked = new SimpleStringProperty();
         passDisembarked = new SimpleStringProperty();
@@ -79,14 +79,9 @@ public class TrackBlockSubject {
 
     private TrackLine trackLine;
 
-    public TrackBlockSubject() {
-        initializeValues();
-        initializeListeners();
-    }
-
-    public TrackBlockSubject(TrackLine line, TrackBlockLine trackBlockLine) {
+    public TrackBlockSubject(TrackLine line, TrackBlock trackBlock) {
         this.trackLine = line;
-        initializeValues();
+        initializeValues(trackBlock);
         initializeListeners();
 //        trackBlockLine.forEach((blockID, block) -> {
 //            blockList.add(new TrackBlockSubjectOLD(block));
@@ -118,23 +113,23 @@ public class TrackBlockSubject {
 //        );
     }
 
-    public String getBlockNumber() {
+    public int getBlockNumber() {
         return blockNumber.get();
     }
 
-    public StringProperty blockNumberProperty() {
+    public IntegerProperty blockNumberProperty() {
         return blockNumber;
     }
 
-    public void setBlockNumber(String blockNumber) {
+    public void setBlockNumber(int blockNumber) {
         this.blockNumber.set(blockNumber);
     }
 
-    public int getBlockLength() {
+    public double getBlockLength() {
         return blockLength.get();
     }
 
-    public IntegerProperty blockLengthProperty() {
+    public DoubleProperty blockLengthProperty() {
         return blockLength;
     }
 
