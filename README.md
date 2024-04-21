@@ -47,8 +47,21 @@ To switch between different train models on a track, click the "Train No." dropd
 
 To enable a Brake Failure, Power Failure, or Signal Pickup Failure, click the corresponding button. To disable a failure state, click the corresponding button again. The failure states are disabled by default. The failure states can be enabled and disabled at any time, even while the simulation is running. The failure states can be enabled and disabled in any combination and order.
 
-To enable the Emergency Brake, click the Passenger Emergency Brake Button. The Emergency Brake cannot be disabled from the Train Model's GUI. The Emergency Brake can be enabled at any time, even while the simulation is running. The Emergency Brake can be enabled even in the case of brake failue.  The Emergency Brake cuts power to the engine and provides a negative acceleration to the train.
+To enable the Emergency Brake, click the Passenger Emergency Brake Button. The Emergency Brake cannot be disabled from the Train Model's GUI. The Emergency Brake can be enabled at any time, even while the simulation is running. The Emergency Brake can be enabled even in the case of brake failure.  The Emergency Brake cuts power to the engine and provides a negative acceleration to the train.
 
 ### Software Train Controller
+To access the Train Controller GUI, first run the main program. Then, left-click the "trainController" button. The Train Controller GUI will open. The Train Controller GUI displays the current state of whatever train is selected, showcasing the current speed, authority, and power. The Train Controller GUI also displays the current states of the brakes, temperature, the name of the next station, whether the train is inside a tunnel, and the indicator lights for failure states. If no train is selected, the GUI will be un-interactable and will display empty values until a train is dispatched. Upon the initial dispatch of a train (the first train dispatched), the GUI will automatically update to reflect the values of the dispatched train.
+
+To switch between train controllers for different trains, click the "Train No." dropdown menu and select the desired train. The GUI will automatically reflect the new values, and will subsequently change if a user selects a new train.
+
+By default, the train controller is in Auto Mode, meaning the train will automatically adjust its power based on the commanded speed. Users can disable Auto Mode by unchecking the "Auto Mode" checkbox. When unchecked, the user can set a new setpoint speed for the train by either typing a double into a text field or by moving a slider to their desired speed. The power of the system would adjust accordingly.
+
+By default, the Left and Right Doors, the Interior and Exterior lights, and the Service Brake are unchecked, users can check their respective checkboxes to enable the features. To disable the features, just uncheck the checkbox. In Auto Mode, these features would be automatically enabled and disabled depending on the scenario. Users can freely manipulate these values regardless of Auto Mode or not.
+
+An "Announce" button is available to announce the arrival at a station. This will be automatically triggered in Auto Mode but can be manually triggered as well. 
+
+The Ki, Kp, and SetTemperature text fields are set to their default values. The users can freely input a new double-value to change the current temperature or power output. Users can change these values during the simulation.
+
+An indicator will light up showing whether the Emergency Brake is enabled or not. To enable the Emergency Brake, click on the Emergency Brake Button, the indicator light will light up.  To disable the Emergency Brake, simply click on the button again, and the indicator light will turn off. The Emergency Brake can be enabled at any time, even in the simulation. The Emergency Brake can be enabled in the case of a brake failure. The Emergency Brake cuts power and provides a negative acceleration to the train.
 
 ### Hardware Train Controller
