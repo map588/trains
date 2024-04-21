@@ -10,6 +10,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BeaconParser {
+
+    /**A map of switch block numbers to the indices(directional next blocks) of the beacons that are created for that switch*/
     private static final HashMap<Integer, ArrayList<Integer>> switchBeaconIndices = new HashMap<>();
 
     public static ConcurrentHashMap<Integer, Beacon> parseBeacons(Lines line) {

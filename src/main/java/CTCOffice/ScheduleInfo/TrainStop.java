@@ -74,11 +74,6 @@ public class TrainStop implements Notifier { //SubRoute
         return authorityList;
     }
 
-    public void setStationBlockID(int stationBlockID) {
-        this.stationBlockID = stationBlockID;
-        notifyChange(DESTINATION_PROPERTY, stationBlockID);
-    }
-
     public void setArrivalTime(int arrivalTime) {
         this.arrivalTime = arrivalTime;
         notifyChange(ARRIVAL_TIME_PROPERTY, convertIntToClockTime(arrivalTime));
