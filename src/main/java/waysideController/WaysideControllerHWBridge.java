@@ -10,6 +10,8 @@ import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.HashMap;
@@ -22,6 +24,8 @@ import static waysideController.Properties.PLCName_p;
 import static waysideController.Properties.maintenanceMode_p;
 
 public class WaysideControllerHWBridge implements WaysideController, Notifier {
+
+    private final Logger logger = LoggerFactory.getLogger(WaysideControllerHWBridge.class);
 
     // The ID of the wayside controller
     private final int id;
@@ -45,7 +49,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     private final SerialPort port;
     private final PrintStream printStream;
 
-    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, TrackModel trackModel, CTCOffice ctcOffice) {
+    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, int[] outsideOccupancyBlockList, String comPort, TrackModel trackModel, CTCOffice ctcOffice) {
         this.trackModel = trackModel;
         this.ctcOffice = ctcOffice;
         this.id = id;
@@ -85,18 +89,21 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
         printStream.println("setLine="+trackLine);
         printStream.print("blockList=");
-        for(int i = 0; i < blockIDList.length-1; i++) {
-            printStream.print(blockIDList[i]);
-            if(i < blockIDList.length - 1) {
+        for(int i = 0; i < blockIDList.length; i++) {
+            printStream.print(blockIDList[i] + ",");
+        }
+        for(int i = 0; i < outsideOccupancyBlockList.length-1; i++) {
+            printStream.print(outsideOccupancyBlockList[i]);
+            if(i < outsideOccupancyBlockList.length - 1) {
                 printStream.print(",");
             }
         }
-        printStream.println(blockIDList[blockIDList.length-1]);
+        printStream.println(outsideOccupancyBlockList[outsideOccupancyBlockList.length-1]);
 
     }
 
-    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
-        this(id, trackLine, blockIDList, comPort, trackModel, ctcOffice);
+    public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, int[] outsideOccupancyBlockList, String comPort, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
+        this(id, trackLine, blockIDList, outsideOccupancyBlockList, comPort, trackModel, ctcOffice);
         loadPLC(new File(plcPath));
     }
 
@@ -106,7 +113,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         notifyChange(maintenanceMode_p, maintenanceMode);
         subject.updateActivePLCProp();
 
-        System.out.println("Send: maintenanceMode="+maintenanceMode);
+        logger.info("Send: maintenanceMode="+maintenanceMode);
         printStream.println("maintenanceMode="+maintenanceMode);
     }
 
@@ -115,7 +122,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setSwitchState(switchState);
 
-            System.out.println("Send: switchState=" + blockID + ":" + switchState);
+            logger.info("Send: switchState=" + blockID + ":" + switchState);
             printStream.println("switchState=" + blockID + ":" + switchState);
 
             if (trackModel != null)
@@ -131,16 +138,16 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(maintenanceMode || block.inMaintenance()) {
             block.setBooleanAuth(auth);
 
-            System.out.println("Send: auth=" + blockID + ":" + auth);
+            logger.info("Send: auth=" + blockID + ":" + auth);
             printStream.println("auth=" + blockID + ":" + auth);
 
             if(trackModel != null && block.isOccupied()) {
                 if (!auth) {
-                    System.out.println("Stoppping train");
+                    logger.info("Stoppping train");
                     trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
                 }
                 else {
-                    System.out.println("Resuming train");
+                    logger.info("Resuming train");
                     trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
                 }
             }
@@ -152,7 +159,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setLightState(lightState);
 
-            System.out.println("Send: trafficLight=" + blockID + ":" + lightState);
+            logger.info("Send: trafficLight=" + blockID + ":" + lightState);
             printStream.println("trafficLight=" + blockID + ":" + lightState);
 
             if (trackModel != null)
@@ -167,7 +174,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setCrossingState(crossingState);
 
-            System.out.println("Send: crossing=" + blockID + ":" + crossingState);
+            logger.info("Send: crossing=" + blockID + ":" + crossingState);
             printStream.println("crossing=" + blockID + ":" + crossingState);
 
             if (trackModel != null)
@@ -204,7 +211,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void CTCSendAuthority(int blockID, int blockCount) {
-        System.out.println("CTCSendAuthority: " + blockID + " " + blockCount);
+        logger.info("CTCSendAuthority: " + blockID + " " + blockCount);
 
         if(blockMap.get(blockID).inMaintenance() && blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setTrainAuthority(blockID, blockCount);
@@ -217,7 +224,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         if(!block.inMaintenance() && block.isOccupied() != occupied) {
             blockMap.get(blockID).setOccupied(occupied);
 
-            System.out.println("Send: occupancy=" + blockID + ":" + occupied);
+            logger.info("Send: occupancy=" + blockID + ":" + occupied);
             printStream.println("occupancy=" + blockID + ":" + occupied);
 
             if (ctcOffice != null)
@@ -231,7 +238,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
-        System.out.println("CTCSendSpeed: " + blockID + " " + speed);
+        logger.info("CTCSendSpeed: " + blockID + " " + speed);
 
         if(trackModel != null) {
             trackModel.setCommandedSpeed(blockID, speed);
@@ -273,6 +280,9 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
             isReady = false;
             printStream.println("runPLC");
         }
+//        else {
+//            logger.info("PLC not ready");
+//        }
     }
 
     @Override
@@ -295,19 +305,25 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     public void sendExternalOccupancy(int blockID, boolean occupied) {
-        System.out.println("Send: occupancy="+blockID+":"+occupied);
+        logger.info("Send: occupancy="+blockID+":"+occupied);
         printStream.println("occupancy="+blockID+":"+occupied);
     }
 
     private void parseCOMMessage(String message) {
-        System.out.println("Received: " + message);
+        if(message.equals("ready")) {
+            isReady = true;
+            return;
+        }
+
+        logger.info("Received: " + message);
+
         String[] values = message.split("=", 2);
         String[] setValues = values[1].split(":");
         int blockID = Integer.parseInt(setValues[0]);
-        boolean boolVal = Boolean.parseBoolean(setValues[1]);
 
         switch (values[0]) {
             case "switchState" -> {
+                boolean boolVal = Boolean.parseBoolean(setValues[1]);
                 blockMap.get(blockID).setSwitchState(boolVal);
                 if(trackModel != null)
                     trackModel.setSwitchState(blockID, boolVal);
@@ -315,6 +331,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
                     ctcOffice.setSwitchState(trackLine, blockID, boolVal);
             }
             case "trafficLight" -> {
+                boolean boolVal = Boolean.parseBoolean(setValues[1]);
                 blockMap.get(blockID).setLightState(boolVal);
                 if(trackModel != null)
                     trackModel.setLightState(blockID, boolVal);
@@ -322,6 +339,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
                     ctcOffice.setLightState(trackLine, blockID, boolVal);
             }
             case "crossing" -> {
+                boolean boolVal = Boolean.parseBoolean(setValues[1]);
                 blockMap.get(blockID).setCrossingState(boolVal);
                 if(trackModel != null)
                     trackModel.setCrossing(blockID, boolVal);
@@ -329,6 +347,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
                     ctcOffice.setCrossingState(trackLine, blockID, boolVal);
             }
             case "auth" -> {
+                boolean boolVal = Boolean.parseBoolean(setValues[1]);
                 WaysideBlock block = blockMap.get(blockID);
                 block.setBooleanAuth(boolVal);
                 if(trackModel != null && block.isOccupied()) {
@@ -339,9 +358,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
                         trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
                     }
                 }
-            }
-            case "ready" -> {
-                isReady = true;
             }
         }
     }
@@ -355,7 +371,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     public void notifyChange(String propertyName, Object newValue) {
-        System.out.println("Variable: " + propertyName + " changed to " + newValue);
+        logger.info("Variable: " + propertyName + " changed to " + newValue);
         if(!subject.isGUIUpdate) {
             subject.notifyChange(propertyName, newValue);
         }

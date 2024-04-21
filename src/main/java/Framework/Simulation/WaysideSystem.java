@@ -114,8 +114,8 @@ public class WaysideSystem {
                     98, 99, 100,
                     101,
                     102, 103, 104,
-                    105, 106, 107, 108, 109,
-                    110, 111, 112, 113},
+                    105, 106, 107, 108, 109},
+                    new int[] {110, 111, 112, 113},
                     "COM6",
                     greenLine, ctcOffice,
                     "src/main/antlr/GreenLine3.plc");
