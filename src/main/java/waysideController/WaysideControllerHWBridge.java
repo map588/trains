@@ -40,6 +40,8 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     private final TrackModel trackModel;
     private final CTCOffice ctcOffice;
 
+    private boolean isReady = true;
+
     private final SerialPort port;
     private final PrintStream printStream;
 
@@ -91,8 +93,6 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         }
         printStream.println(blockIDList[blockIDList.length-1]);
 
-        System.out.println("Send: runPLC");
-        printStream.println("runPLC");
     }
 
     public WaysideControllerHWBridge(int id, Lines trackLine, int[] blockIDList, String comPort, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
@@ -269,8 +269,10 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 
     @Override
     public void runPLC() {
-//        System.out.println("Send: runPLC");
-        printStream.println("runPLC");
+        if(isReady) {
+            isReady = false;
+            printStream.println("runPLC");
+        }
     }
 
     @Override
@@ -337,6 +339,9 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
                         trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
                     }
                 }
+            }
+            case "ready" -> {
+                isReady = true;
             }
         }
     }

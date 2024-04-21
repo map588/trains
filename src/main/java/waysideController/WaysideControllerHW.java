@@ -247,6 +247,8 @@ public class WaysideControllerHW implements PLCRunner {
                 default -> throw new RuntimeException("Invalid PLC change type");
             }
         }
+
+        outputStream.println("ready");
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
