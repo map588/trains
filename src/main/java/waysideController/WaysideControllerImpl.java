@@ -37,6 +37,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     // The map of blocks that the wayside controller controls
     protected final Map<Integer, WaysideBlock> blockMap = new HashMap<>();
+    private final int[] hwBlockSendList;
 
 
     // The PLC program that the wayside controller is running
@@ -54,11 +55,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      * Constructor for the wayside controller
      * @param id The ID of the wayside controller (used mainly for internal identification)
      */
-    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, TrackModel trackModel, CTCOffice ctcOffice) {
+    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, int[] hwBlockSendList, TrackModel trackModel, CTCOffice ctcOffice) {
         this.trackModel = trackModel;
         this.ctcOffice = ctcOffice;
         this.id = id;
         this.trackLine = trackLine;
+        this.hwBlockSendList = hwBlockSendList;
 
         subject = new WaysideControllerSubject(this);
 
@@ -81,8 +83,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         plcResults[1] = new Stack<>();
     }
 
-    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
-        this(id, trackLine, blockIDList, trackModel, ctcOffice);
+    public WaysideControllerImpl(int id, Lines trackLine, int[] blockIDList, int[] hwBlockSendList, TrackModel trackModel, CTCOffice ctcOffice, String plcPath) {
+        this(id, trackLine, blockIDList, hwBlockSendList, trackModel, ctcOffice);
         File plcFile = new File(plcPath);
         this.loadPLC(plcFile);
     }
@@ -170,6 +172,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
         if(!block.inMaintenance() && block.isOccupied() != occupied) {
             block.setOccupied(occupied);
+            sendHWOccupancy(blockID, occupied);
 
             if(ctcOffice != null)
                 ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
@@ -199,6 +202,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         if(currentState != maintenanceState && (!maintenanceState || !block.isOccupied())) {
             block.setBlockMaintenanceState(maintenanceState);
             block.setOccupied(maintenanceState);
+            sendHWOccupancy(blockID, maintenanceState);
             if(ctcOffice != null)
                 ctcOffice.setBlockMaintenance(trackLine, blockID, maintenanceState);
 //                ctcOffice.setBlockOccupancy(Lines.GREEN, blockID, maintenanceState);
@@ -213,6 +217,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             if(!block.inMaintenance()) {
                 block.setBlockMaintenanceState(false);
                 block.setOccupied(false);
+                sendHWOccupancy(block.getBlockID(), false);
                 if(ctcOffice != null)
                     ctcOffice.setBlockMaintenance(trackLine, block.getBlockID(), false);
 //                    ctcOffice.setBlockOccupancy(Lines.GREEN, block.getBlockID(), false);
@@ -393,6 +398,17 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     public String toString() {
         return trackLine.toString() + " line SW Wayside Controller #" + id;
+    }
+
+    private void sendHWOccupancy(int blockID, boolean occupied) {
+        if(hwBlockSendList != null) {
+            for (int block : hwBlockSendList) {
+                if (block == blockID) {
+                    WaysideSystem.sendOccupancyToHW(blockID, occupied);
+                    return;
+                }
+            }
+        }
     }
 
     /**

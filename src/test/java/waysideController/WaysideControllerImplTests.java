@@ -38,6 +38,7 @@ public class WaysideControllerImplTests extends BaseTest {
                 144, 145, 146,
                 147, 148, 149,
                 150},
+                null,
                 trackModel, ctcOffice, "src/main/antlr/GreenLine1.plc");
     }
 
