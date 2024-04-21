@@ -165,7 +165,6 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             }
         }
 
-        intVarMap.remove(varName);
         return Value.VOID;
     }
 
@@ -239,9 +238,9 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
 
         switch(listName) {
             case "occupied":
-                WaysideBlock block = blockMap.get(index);
-                if(block != null)
-                    return new Value(block.isOccupied());
+                WaysideBlock occupancyBlock = blockMap.get(index);
+                if(occupancyBlock != null)
+                    return new Value(occupancyBlock.isOccupied());
                 else {
                     return new Value(controller.getOutsideOccupancy(index));
                 }
@@ -250,7 +249,12 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
             case "light":
                 return new Value(blockMap.get(index).getLightState());
             case "switch":
-                return new Value(blockMap.get(index).getSwitchState());
+                WaysideBlock switchBlock = blockMap.get(index);
+                if(switchBlock != null)
+                    return new Value(switchBlock.getSwitchState());
+                else {
+                    return new Value(controller.getOutsideSwitch(index));
+                }
             case "authority":
                 return new Value(blockMap.get(index).getBooleanAuth());
             case "direction":

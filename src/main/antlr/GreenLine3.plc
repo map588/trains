@@ -1,34 +1,117 @@
-// Controls Sections I-K and U-W, blocks 0, 36-68 and 110-143
-// Can see authorities 32-72 and 106-147
+// Controls sections L - T, blocks 69 - 109
+// Accesses occupancies of blocks 65 - 105
 
-authority[0] = TRUE
+// Handling bi-directional N block
 
-// I Occupancies
-for i = 36 to 57 do
+// Remove direction assignment if adjacent block occupations don't support the assigned direction
+if dir_assigned[77]
+    if not occupied[76] and not occupied[101] and not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
+        if direction[77] and not occupied[95] and not occupied[96] and not occupied[97] and not occupied[98] and not occupied[99] and not occupied[100] or not direction[77] and not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71]
+            dir_assigned[77] = FALSE
+            switch[77] = MAIN
+            switch[85] = MAIN
+            for i = 76 to 85 do
+                authority[i] = FALSE
+            endfor
+        endif
+    endif
+endif
+
+// Assign a direction if adjacent block occupations support the assigned direction
+if not dir_assigned[77]
+    if occupied[74] or occupied[73] or occupied[72] or occupied[71]
+        if not occupied[77] and not occupied[78] and not occupied[79] and not occupied[80] and not occupied[81] and not occupied[82] and not occupied[83] and not occupied[84] and not occupied[85]
+            dir_assigned[77] = TRUE
+            direction[77] = SOUTHBOUND
+            switch[77] = ALT
+            switch[85] = MAIN
+        endif
+    else
+        if occupied[98] or occupied[97] or occupied[96] or occupied[95]
+            if not occupied[77] and not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72] and not occupied[71]
+                dir_assigned[77] = TRUE
+                direction[77] = NORTHBOUND
+                switch[77] = MAIN
+                switch[85] = ALT
+            endif
+        endif
+    endif
+endif
+
+
+// Directional Occupancies for Section N
+if dir_assigned[77]
+    if direction[77] == NORTHBOUND
+        authority[77] = not occupied[101] and not occupied[102] and not occupied[103] and not occupied[104] and not switch[77]
+        authority[78] = not occupied[77] and not occupied[101] and not occupied[102] and not occupied[103] and not switch[77]
+        authority[79] = not occupied[78] and not occupied[77] and not occupied[101] and not occupied[102] and not switch[77]
+        authority[80] = not occupied[79] and not occupied[78] and not occupied[77] and not occupied[101] and not switch[77]
+
+        for i = 81 to 85 do
+            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
+        endfor
+    else
+        for i = 77 to 81 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+        endfor
+
+        authority[82] = not occupied[83] and not occupied[84] and not occupied[85] and not occupied[86] and not switch[85]
+        authority[83] = not occupied[84] and not occupied[85] and not occupied[86] and not occupied[78] and not switch[85]
+        authority[84] = not occupied[85] and not occupied[86] and not occupied[87] and not occupied[88] and not switch[85]
+        authority[85] = not occupied[86] and not occupied[87] and not occupied[89] and not occupied[89] and not switch[85]
+    endif
+else
+    for i = 77 to 85 do
+        authority[i] = FALSE
+    endfor
+endif
+
+
+// O Occupancies
+for i = 86 to 88 do
     authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
 endfor
 
-// J Occupancies
-for i = 58 to 62 do
+// P Occupancies
+for i = 89 to 96 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+authority[97] = not occupied[98] and not occupied[99] and not occupied[100] and not occupied[85] and switch[85]
+
+// Q Occupancies
+authority[98] = not occupied[99] and not occupied[100] and not occupied[85] and not occupied[84] and switch[85]
+authority[99] = not occupied[100] and not occupied[85] and not occupied[84] and not occupied[83] and switch[85]
+authority[100] = not occupied[85] and not occupied[84] and not occupied[83] and not occupied[82] and switch[85]
+
+// L Occupancies
+for i = 69 to 73 do
     authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
 endfor
 
-// K Occupancies
-for i = 63 to 68 do
+// M Occupancies
+for i = 74 to 76 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and switch[77]
+endfor
+
+// R Occupancy
+authority[101] = not occupied[102] and not occupied[103] and not occupied[104] and not occupied[105]
+
+// S Occupancies
+for i = 102 to 104 do
     authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
 endfor
 
-// U Occupancies
-for i = 110 to 116 do
+// T Occupancies
+for i = 105 to 109 do
     authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
 endfor
 
-// V Occupancies
-for i = 117 to 121 do
-    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
-endfor
 
-// W Occupancies
-for i = 122 to 143 do
-    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
-endfor
+// Lights
+light[76] = dir_assigned[77] and not direction[77] and switch[77]
+light[77] = dir_assigned[77] and direction[77] and not switch[77]
+light[85] = dir_assigned[77] and not direction[77] and not switch[85]
+light[100] = dir_assigned[77] and direction[77] and switch[85]
+
+// Crossing
+crossing[108] = not occupied[107] and not occupied[108] and not occupied[109]

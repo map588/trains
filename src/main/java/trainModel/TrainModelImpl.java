@@ -232,7 +232,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
         //SLOPE FORCE
-        double currentAngle = Math.atan(this.grade / 100);
+        double currentAngle = Math.atan(this.grade / 100) * (this.direction == Direction.NORTH ? 1 : -1);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
         //System.out.println("Gravity Force: " + gravityForce);
 
@@ -289,7 +289,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.setCommandSpeed(commandSpeed);
 
         listeningExecutor.execute(() -> {
-        notifyChange(COMMANDSPEED_PROPERTY, speed);
+        notifyChange(COMMANDSPEED_PROPERTY, commandSpeed);
         });
 
         logger.info("Train {} <= Command Speed: {}",this.trainID, speed);

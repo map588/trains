@@ -3,7 +3,6 @@
 
 if dir_assigned[13]
     if not occupied[1] and not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and not occupied[150]
-
         if direction[13] and not occupied[149] and not occupied[148] and not occupied[147] and not occupied[146] and not occupied[145] and not occupied[144] or not direction[13] and not occupied[2] and not occupied[3] and not occupied[4] and not occupied[5] and not occupied[6] and not occupied[7]
             dir_assigned[13] = FALSE
             switch[13] = MAIN
@@ -34,11 +33,6 @@ if not dir_assigned[13]
         endif
     endif
 endif
-
-// Switch 1-13-12
-//if not occupied[13] and dir_assigned[20]
-//    switch[12] = direction[20] == OUTBOUND
-//endif
 
 // General occupancies A
 authority[1] = not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16] and switch[13]

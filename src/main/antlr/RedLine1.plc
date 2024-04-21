@@ -1,37 +1,78 @@
-// Handles sections A - G blocks 0 - 23
-// Accesses occupancies for blocks 1 - 27
+// Handles sections A - H blocks 0 - 27
+// Accesses occupancies for blocks 1 - 31 and 73-76
 
 // Check directionality of the blocks for upper loop
 // Setting default direction to allow trains to enter from the yard
-if dir_assigned[23]
-    if not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and not occupied[12] and not occupied[11] and not occupied[10] and not occupied[9] and not occupied[8] and not occupied[7] and not occupied[6] and not occupied[5] and not occupied[4] and not occupied[3] and not occupied[2] and not occupied[1]
+if dir_assigned[27]
+    if not occupied[31] and not occupied[30] and not occupied[29] and not occupied[28] and not occupied[27] and not occupied[26] and not occupied[25] and not occupied[24] and not occupied[23] and not occupied[22] and not occupied[21] and not occupied[20] and not occupied[19] and not occupied[18] and not occupied[17] and not occupied[16] and not occupied[15] and not occupied[14] and not occupied[13] and not occupied[12]
         // Unbind direction if entire section is empty
-        dir_assigned[23] = FALSE
-        direction[23] = SOUTHBOUND
-        for i = 1 to 23
+        dir_assigned[27] = FALSE
+        switch[16] = MAIN
+        switch[27] = MAIN
+        for i = 16 to 27 do
             authority[i] = FALSE
         endfor
-        authority[9] = TRUE
-        switch[9] = ALT
-        switch[16] = ALT
     endif
 endif
+
 
 // Allocate a direction when a train is detected
 // Since entire section must be completely abandoned in order for direction to be unbound, we can assume that the
 // direction is set based on temporary occupancy without checking for the entire section to be empty first
-if not dir_assigned[23]
-    if occupied[9] or occupied[8] or occupied[7] or occupied[6]
-        direction[23] = SOUTHBOUND
-        dir_assigned[23] = TRUE
-        switch[9] = ALT
-        switch[16] = ALT
+if not dir_assigned[27]
+    if occupied[12] or occupied[13] or occupied[14] or occupied[15]
+        dir_assigned[27] = TRUE
+        direction[27] = SOUTHBOUND
     else
-        if occupied[16] or occupied[17] or occupied[18] or occupied[19] or occupied[20]
-            direction[23] = NORTHBOUND
-            dir_assigned[23] = TRUE
-            switch[9] = MAIN
-            switch[16] = MAIN
+        if occupied[31] or occupied[30] or occupied[29] or occupied[28]
+            dir_assigned[27] = TRUE
+            direction[27] = NORTHBOUND
         endif
     endif
 endif
+
+
+// Sections for A - E are not directional
+authority[0] = TRUE
+for i = 1 to 6 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+endfor
+authority[7] = not occupied[8] and not occupied[9]
+authority[8] = not occupied[9]
+authority[10] = TRUE
+authority[11] = not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15]
+for i = 12 to 15 do
+    authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4] and not switch[16]
+endfor
+
+
+// Sets authorities based on directionality
+// Assuming upper loop is always "yard-bound" and blocks E and D are not used (except if yard is already occupied)
+// Trains from the yard will teleport straight from 0 into D, thus the entire loop is CW only.
+if dir_assigned[27]
+    if direction[27] == SOUTHBOUND
+        switch[16] = MAIN
+        switch[27] = ALT
+        for i = 16 to 23 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+        endfor
+
+        authority[27] = not occupied[76] and not occupied[75] and not occupied[74] and not occupied[73]
+        authority[26] = not occupied[75] and not occupied[74] and not occupied[73] and not occupied[27]
+        authority[25] = not occupied[74] and not occupied[73] and not occupied[27] and not occupied[26]
+        authority[24] = not occupied[73] and not occupied[27] and not occupied[26] and not occupied[25]
+    else
+        switch[16] = ALT
+        switch[27] = MAIN
+        for i = 20 to 27 do
+            authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
+        endfor
+        authority[16] = not occupied[1] and not occupied[2] and not occupied[3] and not occupied[4]
+        authority[17] = not occupied[16] and not occupied[1] and not occupied[2] and not occupied[3]
+        authority[18] = not occupied[17] and not occupied[16] and not occupied[1] and not occupied[2]
+        authority[19] = not occupied[18] and not occupied[17] and not occupied[16] and not occupied[1]
+    endif
+endif
+
+// Yard switch
+switch[9] = ALT

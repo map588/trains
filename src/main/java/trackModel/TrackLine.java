@@ -160,6 +160,10 @@ public class TrackLine implements TrackModel {
          if (newBlockID == 0 && oldBlockID != 0) {
             logger.info("Train {} exited the track", train.getTrainNumber());
             trackOccupancyMap.remove(train);
+             asyncTrackUpdate(() -> {
+                 setUnoccupied(oldBlockID);
+                 return null;
+             });
             return;
         }else if(newBlockID == 0) {
             logger.info("Train {} => Entry", train.getTrainNumber());
@@ -182,6 +186,7 @@ public class TrackLine implements TrackModel {
     private void handleTrainExit(TrainModel train, Integer blockID) {
         if(blockID == 0) {
             logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
+            train.delete();
             return;
         }
 
@@ -213,8 +218,6 @@ public class TrackLine implements TrackModel {
 
 //--------------------------Getters and Setters--------------------------
 
-
-// TODO: communicate info to subject to be updated in UI
     public TrackLineSubject getSubject() {
         return this.subject;
     }
@@ -387,12 +390,12 @@ public class TrackLine implements TrackModel {
         }).join();
     }
 
-    //TODO: make sure to reset ticket sales when needed
     //every tick is a second to ticket sales will reset every 3600 seconds
     @Override
     public int getTicketSales() {
             if (time % 3600 == 0) {
                 this.ticketSales = 0;
+                newTemperature();
             }
             return ticketSales;
     }
@@ -410,6 +413,7 @@ public class TrackLine implements TrackModel {
     public void newTemperature(){
         queueTrackUpdate(() -> {
             int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
+            subject.setOutsideTemp(newTemp);
             this.outsideTemperature += newTemp;
         });
     }

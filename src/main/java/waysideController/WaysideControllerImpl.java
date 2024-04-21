@@ -236,15 +236,18 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
         logger.info("Setting authority for block {} to {}", blockID, auth);
+        System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             WaysideBlock block = blockMap.get(blockID);
             block.setBooleanAuth(auth);
 
             if(trackModel != null && block.isOccupied()) {
                 if (!auth) {
+                    System.out.println("Stoppping train");
                     trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
                 }
                 else {
+                    System.out.println("Resuming train");
                     trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
                 }
             }
@@ -378,12 +381,18 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     @Override
+    public boolean getOutsideSwitch(int blockID) {
+        WaysideController controller = WaysideSystem.getController(trackLine, blockID);
+        return controller.getBlockMap().get(blockID).getSwitchState();
+    }
+
+    @Override
     public Map<Integer, WaysideBlock> getBlockMap() {
         return blockMap;
     }
 
     public String toString() {
-        return "SW Wayside Controller #" + id;
+        return trackLine.toString() + " line SW Wayside Controller #" + id;
     }
 
     /**

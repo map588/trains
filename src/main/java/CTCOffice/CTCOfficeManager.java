@@ -508,10 +508,11 @@ public class CTCOfficeManager {
         });
 
         DispatchButton.setOnAction(event -> {
-            office.DispatchTrain(Lines.GREEN, office.trainLocations.size() + 1);
-            System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + "GREEN");
-            office.sendAuthority(Lines.GREEN, 0, 9);
-            office.sendSpeed(Lines.GREEN, 0, 40);
+            Lines dispatchLine = Enum.valueOf(Lines.class, lineTrainSelector.getValue());
+            office.DispatchTrain(dispatchLine, office.trainLocations.size() + 1);
+            System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + dispatchLine);
+            office.sendAuthority(dispatchLine, 0, 9);
+            office.sendSpeed(dispatchLine, 0, 40);
         });
     }
 
