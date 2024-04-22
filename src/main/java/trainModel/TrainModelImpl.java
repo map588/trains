@@ -79,9 +79,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private boolean intLights  = false;
     private boolean rightDoors = false;
     private boolean leftDoors  = false;
-    private double  realTemperature = 70;
-    private double  setTemperature = 70;
-    private double  newRealTemperature = 70;
+    private double  realTemperature = 21;
+    private double  setTemperature = 21;
+    private double  newRealTemperature = 21;
     private int     numCars = 1;
     private int     numPassengers = 1;
     private int     crewCount = 2;

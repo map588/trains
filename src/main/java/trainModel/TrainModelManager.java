@@ -5,6 +5,7 @@ import Framework.Support.ObservableHashMap;
 import eu.hansolo.medusa.Gauge;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -111,12 +112,20 @@ public class TrainModelManager {
                 String newVal = newValue.toString();
                 if(newVal.isEmpty()) {return;}
                 try {
+                    if(property.equals(MASS_PROPERTY) || property.equals(LENGTH_PROPERTY) || property.equals(GRADE_PROPERTY)) {
+                        newVal = String.format("%.2f", Double.parseDouble(newVal));
+                    }
                     label.setText(newVal);
                 } catch (NumberFormatException e) {
                     label.setText("");
                 }
         });
-        label.setText(subject.getProperty(property).getValue().toString());
+        if(property.equals(MASS_PROPERTY) || property.equals(LENGTH_PROPERTY) || property.equals(GRADE_PROPERTY)) {
+            DoubleProperty prop = subject.getDoubleProperty(property);
+            label.setText(String.format("%.2f", prop.getValue()));
+        } else {
+            label.setText(subject.getProperty(property).getValue().toString());
+        }
     }
 
     private void changeTrainView(Integer trainID) {
