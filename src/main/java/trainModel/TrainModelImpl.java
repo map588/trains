@@ -37,6 +37,18 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //TODO: None of your failures work properly, and/or are not properly communicated to the controller @John
 
+    //TODO: Your Units are questionable, the only conversion should pretty much be when you call notifyChange
+
+    //TODO: I took the speed limit off, because if your calculations are correct, we should need a speed limiter, thats just the fastest the thing can move.
+
+    //TODO: Maybe make your friction in relation to the max speed, so that friction force exponentially increases as you approach max speed, something, it doesn't
+    //      matter, as long as the speed doesn't just hit 46.5, and then no matter what, it just stays there.  If it is a maximum speed, it should require maximum
+    //      force to maintain it, and if you can't provide that force, you should slow down.
+
+    //TODO: If you don't think Proffeta will grill you for this, I don't know what to tell you.  You need to have a good reason for why you are doing what you are doing
+    //      when he asks, other than just "It was easier that way".
+
+
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
     private final int trainID;
