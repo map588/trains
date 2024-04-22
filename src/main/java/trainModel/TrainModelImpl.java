@@ -246,6 +246,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         //SLOPE FORCE
 
         //TODO: Check if this is the correct way to calculate the angle @John, I don't think it is, the direction is not real.
+        //  This is why the cumulative elevation exists, which you have access to via your currentTrackBlock reference.
         double currentAngle = Math.atan(this.grade / 100) * (this.direction == Direction.NORTH ? 1 : -1);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
         //System.out.println("Gravity Force: " + gravityForce);
