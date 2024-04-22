@@ -499,11 +499,7 @@ public class TrainControllerManager {
 
         if (autoModeCheckBox.isSelected()){ // Runs in Auto Mode
 
-            boolean inTunnel = inTunnelStatus.getFill().equals(Color.YELLOW); // Get tunnel state
-
-            // Set the Light states according to in tunnel status
-            intLightCheckBox.setSelected(inTunnel);
-            extLightCheckBox.setSelected(inTunnel);
+            boolean inTunnel = currentSubject.getBooleanProperty(IN_TUNNEL).get(); // Get tunnel state
 
             // Set the Color of the Background
             String colorFormat = inTunnel ? "-fx-background-color: #000033;" : "-fx-background-color: #FFFFFF;";
