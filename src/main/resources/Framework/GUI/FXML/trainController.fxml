@@ -261,6 +261,11 @@
                 <Font name="System Bold" size="13.0" />
             </font>
         </CheckBox>
+        <CheckBox fx:id="HWTrainCheckBox" layoutX="110.0" layoutY="71.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="124.0" text="HW">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </CheckBox>
     </AnchorPane>
     <AnchorPane layoutX="62.0" layoutY="78.0" prefHeight="106.0" prefWidth="230.0">
         <Rectangle fx:id="stationInfo" arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="295.0" />

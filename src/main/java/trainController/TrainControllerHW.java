@@ -14,15 +14,20 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Objects;
 
-public class RemoteTrainControllerImpl implements TrainController {
+public class TrainControllerHW implements TrainController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RemoteTrainControllerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TrainControllerHW.class);
 
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
 
-    public RemoteTrainControllerImpl() {
+    private final TrainModel train;
+    private final int id;
+
+    public TrainControllerHW(TrainModel m, int id) {
+        this.train = m;
+        this.id = id;
         try {
             socket = new Socket("raspberrypi.local", 1234); // Replace with the Raspberry Pi's IP address and port
             out = new PrintWriter(socket.getOutputStream(), true);

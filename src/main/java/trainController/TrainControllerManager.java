@@ -27,7 +27,8 @@ import java.util.function.Consumer;
 import static trainController.ControllerProperty.*;
 
 public class TrainControllerManager {
-
+    @FXML
+    public CheckBox HWTrainCheckBox;
     @FXML
     AnchorPane masterTrainControllerPane;
     @FXML

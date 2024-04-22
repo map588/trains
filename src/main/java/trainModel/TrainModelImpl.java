@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trackModel.TrackBlock;
 import trackModel.TrackLine;
-import trainController.TrainControllerImpl;
+import trainController.TrainControllerFactory;
 import trainModel.Records.UpdatedTrainValues;
 
 import java.util.concurrent.*;
@@ -34,6 +34,8 @@ import static trainModel.Properties.*;
 //Actual, Real, what???
 
 public class TrainModelImpl implements TrainModel, Notifier {
+
+    //TODO: None of your failures work properly, and/or are not properly communicated to the controller @John
 
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
@@ -93,6 +95,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
 
+    private TrainControllerFactory controllerFactory = TrainControllerFactory.getInstance();
+
     private void initializeValues() {
         this.direction = YARD_OUT_DIRECTION;
         this.mass = (Constants.EMPTY_TRAIN_MASS * numCars) + (Constants.PASSENGER_MASS * (crewCount + numPassengers));
@@ -112,7 +116,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public TrainModelImpl() {
         this.trainID = -1;
         this.track = new TrackLine();
-        this.controller = new TrainControllerImpl(this, -1);
+        this.controller = controllerFactory.createTrainController(this, -1);
         initializeValues();
         this.subject = new TrainModelSubject(this);
     }
@@ -121,7 +125,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         initializeValues();
         this.trainID = trainID;
         this.track = track;
-        this.controller = new TrainControllerImpl(this, trainID);
+        this.controller = controllerFactory.createTrainController(this, trainID);
         this.subject = new TrainModelSubject(this);
     }
 
