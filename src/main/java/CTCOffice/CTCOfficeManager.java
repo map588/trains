@@ -511,7 +511,7 @@ public class CTCOfficeManager {
             Lines dispatchLine = Enum.valueOf(Lines.class, lineTrainSelector.getValue());
             office.DispatchTrain(dispatchLine, office.trainLocations.size() + 1);
             System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + dispatchLine);
-            office.sendAuthority(dispatchLine, 0, 9);
+            office.sendAuthority(dispatchLine, 0, 1900);
             office.sendSpeed(dispatchLine, 0, 40);
         });
     }
