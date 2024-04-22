@@ -34,6 +34,7 @@ public class WaysideControllerHWTests extends BaseTest {
                 144, 145, 146,
                 147, 148, 149,
                 150},
+                new int[] {0,1},
                 "COM8",
                 null, null,
                 "src/main/antlr/GreenLine1.plc");

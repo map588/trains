@@ -85,7 +85,7 @@ public class TrainModelManager {
             }
         });
 
-
+        //This information was temporary, now its just wasted screen space.
         maxPowerLabel.setText("643.68");
         maxVelocityLabel.setText("43.48");
         medAccelerationLabel.setText("1.64");
@@ -156,9 +156,11 @@ public class TrainModelManager {
         authorityDisp.setValue(subject.getIntegerProperty(AUTHORITY_PROPERTY).get());
         setTempDisp.setValue(subject.getDoubleProperty(SETTEMPERATURE_PROPERTY).get());
         realTempDisp.setValue(subject.getDoubleProperty(REALTEMPERATURE_PROPERTY).get());
+
         brakeFailureBtn.setSelected(subject.getBooleanProperty(BRAKEFAILURE_PROPERTY).get());
         powerFailureBtn.setSelected(subject.getBooleanProperty(POWERFAILURE_PROPERTY).get());
         signalFailureBtn.setSelected(subject.getBooleanProperty(SIGNALFAILURE_PROPERTY).get());
+
         updateEBrakeIndicator(subject.getBooleanProperty(EMERGENCYBRAKE_PROPERTY).get());
         updateSBrakeIndicator(subject.getBooleanProperty(SERVICEBRAKE_PROPERTY).get());
         updateExtLightsIndicator(subject.getBooleanProperty(EXTLIGHTS_PROPERTY).get());

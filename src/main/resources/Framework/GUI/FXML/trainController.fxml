@@ -16,8 +16,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="masterTrainControllerPane" maxHeight="747.0" maxWidth="1024" prefHeight="747.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainController.TrainControllerManager">
-    <AnchorPane id="cabinSettingsPane" layoutX="59.0" layoutY="196.0" prefHeight="300.0" prefWidth="228.8">
+<AnchorPane id="masterTrainControllerPane" maxHeight="747.0" maxWidth="1024" prefHeight="747.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainController.TrainControllerManager">
+    <AnchorPane fx:id="cabinSettingsPane" layoutX="59.0" layoutY="196.0" prefHeight="300.0" prefWidth="228.8">
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="370.0" layoutX="2.0" stroke="BLACK" strokeType="INSIDE" width="226.0" />
         <Text layoutX="21.6" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cabin Settings">
             <font>
@@ -117,7 +117,7 @@
         <TextField fx:id="setKiTextField" layoutX="147.2" layoutY="55.2" prefHeight="20.8" prefWidth="41.6" />
         <TextField fx:id="setKpTextField" layoutX="147.2" layoutY="88.0" prefHeight="20.8" prefWidth="41.6" />
     </AnchorPane>
-    <AnchorPane id="speedControllerPane" layoutX="304.0" layoutY="195.0" prefHeight="300.0" prefWidth="396.8">
+    <AnchorPane fx:id="speedControllerPane" layoutX="304.0" layoutY="195.0" prefHeight="300.0" prefWidth="396.8">
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#dddddd" height="370.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" width="397.0" />
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="62.4" layoutX="17.0" layoutY="242.0" stroke="BLACK" strokeType="INSIDE" width="363.2" />
         <Slider fx:id="setSpeedSlider" layoutX="41.0" layoutY="254.0" majorTickUnit="10.0" max="50.0" minorTickCount="5" prefHeight="39.2" prefWidth="314.4" showTickLabels="true" showTickMarks="true" />
@@ -149,7 +149,7 @@
             </customFont>
         </Gauge>
     </AnchorPane>
-    <AnchorPane id="brakePane" layoutX="722.0" layoutY="196.0" prefHeight="372.0" prefWidth="229.0">
+    <AnchorPane fx:id="brakePane" layoutX="722.0" layoutY="196.0" prefHeight="372.0" prefWidth="229.0">
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="372.0" layoutX="1.0" stroke="BLACK" strokeType="INSIDE" width="227.0" />
         <Button fx:id="emergencyBrakeButton" contentDisplay="TOP" layoutX="15.0" layoutY="253.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="202.0" text="Emergency Brake" textAlignment="CENTER">
             <font>
@@ -261,9 +261,14 @@
                 <Font name="System Bold" size="13.0" />
             </font>
         </CheckBox>
+        <CheckBox fx:id="HWTrainCheckBox" layoutX="110.0" layoutY="71.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="124.0" text="HW">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </CheckBox>
     </AnchorPane>
-    <AnchorPane layoutX="62.0" layoutY="78.0" prefHeight="106.0" prefWidth="230.0">
-        <Rectangle fx:id="stationInfo" arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="295.0" />
+    <AnchorPane fx:id="stationStatusPane" layoutX="62.0" layoutY="78.0" prefHeight="106.0" prefWidth="230.0">
+        <Rectangle id="stationInfo" arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="100.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="295.0" />
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="WHITE" height="51.0" layoutX="156.0" layoutY="37.0" stroke="BLACK" strokeType="INSIDE" width="130.0" />
         <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Station">
             <font>
@@ -290,7 +295,7 @@
             </font>
         </Text>
     </AnchorPane>
-    <AnchorPane id="controllerStatusPane" layoutX="59.0" layoutY="580.0" prefHeight="136.0" prefWidth="228.8">
+    <AnchorPane fx:id="controllerStatusPane" layoutX="59.0" layoutY="580.0" prefHeight="136.0" prefWidth="228.8">
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#bcbcbc" height="136.0" layoutX="1.6" stroke="BLACK" strokeType="INSIDE" width="226.4" />
         <Text layoutX="20.8" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Controller Status">
           <font>

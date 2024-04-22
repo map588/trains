@@ -19,9 +19,13 @@ public class TrainControllerSubject implements NotifierEnum {
 
     private final TrainControllerSubjectMap controllerSubjectMap = TrainControllerSubjectMap.getInstance();
 
+    private final boolean isHWController;
+
     public TrainControllerSubject(TrainController controller) {
         this.controller = controller;
         int controllerID = controller.getID();
+
+        isHWController = controller.getClass().getSimpleName().equals("TrainControllerHW");
 
         initializeProperties();
         if(controller.getID() == -1){
@@ -146,8 +150,8 @@ public class TrainControllerSubject implements NotifierEnum {
     }
 
 
-    public TrainControllerImpl getController() {
-        return  (TrainControllerImpl) controller;
+    public TrainController getController() {
+        return controller;
     }
 
 }

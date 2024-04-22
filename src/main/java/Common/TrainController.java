@@ -62,6 +62,8 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
 
     void delete();
 
+    boolean isHW();
+
     double calculatePower(double currentVelocity);
 
     double getGrade();
@@ -69,15 +71,8 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
     UpdatedTrainValues sendUpdatedTrainValues();
     TrainModel getTrain();
 
-    boolean getLeftPlatform();
-
-    String getNextStationName();
 
     double getSpeed();
-
-    boolean getRightPlatform();
-
-    boolean getInTunnel();
 
     Beacon getBeacon();
 

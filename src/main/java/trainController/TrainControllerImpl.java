@@ -11,7 +11,7 @@ import trainController.ControllerBlocks.ControllerBlock;
 import trainModel.NullTrain;
 import trainModel.Records.UpdatedTrainValues;
 
-import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static Utilities.Constants.*;
@@ -86,7 +86,6 @@ public class TrainControllerImpl implements TrainController{
 
     private boolean ascendingSection = false;
 
-    private ArrayDeque<ControllerBlock> followingStations = new ArrayDeque<>();
     private String nextStationName;
 
     private final int trainID;
@@ -129,14 +128,20 @@ public class TrainControllerImpl implements TrainController{
         this.setExtLights(train.getExtLights());
         this.setLeftDoors(train.getLeftDoors());
         this.setRightDoors(train.getRightDoors());
-        this.setSignalFailure(train.getSignalFailure());
-        this.setBrakeFailure(train.getBrakeFailure());
-        this.setPowerFailure(train.getPowerFailure());
+//        this.setSignalFailure(train.getSignalFailure());
+//        this.setBrakeFailure(train.getBrakeFailure());
+//        this.setPowerFailure(train.getPowerFailure());
         this.setCurrentTemperature((train.getRealTemperature()));
     }
 
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
+
+        // Check for failures
+        checkBrakeFailure(train.getServiceBrake());
+        checkPowerFailure();
+        checkSignalFailure(train.getCommandSpeed());
+
 
         //This is a bandaged solution
         this.setCurrentTemperature(train.getRealTemperature());
@@ -219,6 +224,10 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
+    // Function that calculates the stopping distance where the train needs to start stopping
+    public double calculateStoppingDistance(double currentSpeed){
+        return Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION);
+    }
 
     /**
      *  onBlock()
@@ -228,12 +237,21 @@ public class TrainControllerImpl implements TrainController{
         if(currentBeacon != null && blockLookup != null) {
             currentBlock = (ascendingSection) ? blockLookup.get(currentBeacon.blockIndices().pollFirst()) : blockLookup.get(currentBeacon.blockIndices().pollLast());
 
+            if(currentBlock.isStation()){
+                this.setNextStationName(currentBlock.stationName());
+            }
             //setNextStationName(currentBlock.stationName());
             setSpeedLimit(currentBlock.speedLimit());
             setInTunnel(currentBlock.isUnderground());
             //.... proof of concept
 
             // Update Block by Block
+
+
+            if (this.getAuthority() <= this.calculateStoppingDistance(this.getSpeed())){
+                // Train starts slowing
+                setServiceBrake(true);
+            }
 
             // Get Specific Block Info
             checkTunnel();
@@ -289,40 +307,40 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
-//    // Failure Management with Steven He
-//    public boolean checkBrakeFailure(){
-//
-//        // Failures occur when the brake states in the train controller do not match with brake states in the train model
-//        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
-//        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
-//
-//        // If true, pick a god and pray
-//
-//        return brakeFailure;
-//    }
-//    public boolean checkSignalFailure(){
-//        // Failure occur when the commanded speed or commanded authority is -1
-//        this.setCommandSpeed(train.getCommandSpeed());
-//        this.setAuthority(train.getAuthority());
-//
-//        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
-//
-//        //If true, activate emergency brake
-//        if (signalFailure) this.setEmergencyBrake(true);
-//
-//        return signalFailure;
-//    }
-//    public boolean checkPowerFailure(){
-//        // Failure occurs when train model's set power equals 0 but we are outputting power
-//
-//        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
-//
-//        // If true, activate emergency brake
-//        if (this.powerFailure) this.setEmergencyBrake(true);
-//
-//        return this.powerFailure;
-//    }
+    // Failure Management with Steven He
+    public boolean checkBrakeFailure(boolean trainServiceBrake){
 
+        // Failures occur when the brake states in the train controller do not match with brake states in the train model
+        if (this.serviceBrake && !trainServiceBrake) this.setBrakeFailure(true);
+
+        // If true, pick a god and pray
+        if (this.getBrakeFailure()){
+            setEmergencyBrake(true);
+        }
+
+        return this.getBrakeFailure();
+    }
+
+    // Value can be either authority or signal failure
+    public boolean checkSignalFailure(double value){
+        // Failure occur when the commanded speed or commanded authority is -1
+        if (value == -1) this.setSignalFailure(true);
+
+        //If true, activate emergency brake
+        if (signalFailure) this.setEmergencyBrake(true);
+
+        return signalFailure;
+    }
+    public boolean checkPowerFailure(){
+        // Failure occurs when train model's set power equals 0 but we are outputting power
+
+        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
+
+        // If true, activate emergency brake
+        if (this.powerFailure) this.setEmergencyBrake(true);
+
+        return this.powerFailure;
+    }
 
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
@@ -331,7 +349,10 @@ public class TrainControllerImpl implements TrainController{
     }
     public void setAuthority(int authority) {
 
-        if (authority == STOP_TRAIN_SIGNAL) {
+        if (checkSignalFailure(authority)){
+            logger.info("A Signal Failure has been detected");
+        }
+        else if (authority == STOP_TRAIN_SIGNAL) {
             waysideStop = true;
             // Make a message on the logger
             logger.info("Train {} has been stopped by wayside", trainID);
@@ -347,8 +368,13 @@ public class TrainControllerImpl implements TrainController{
         }
     }
     public void setCommandSpeed(double speed) {
-        this.commandSpeed = convertVelocity(speed, MPS, MPH);
-        subject.notifyChange(COMMAND_SPEED , speed);
+        if (checkSignalFailure(speed)){
+            logger.info("A Signal Failure has been detected");
+        }
+        else {
+            this.commandSpeed = speed;
+            subject.notifyChange(COMMAND_SPEED, convertVelocity(speed, MPS, MPH));
+        }
         //calculatePower();
     }
     public void setCurrentSpeed(double speed) {
@@ -428,8 +454,8 @@ public class TrainControllerImpl implements TrainController{
         subject.notifyChange(RIGHT_PLATFORM ,platform);
     }
     public void setSpeedLimit(double limit){
-        this.speedLimit = convertVelocity(limit, MPH, MPS);
-        subject.notifyChange(SPEED_LIMIT , limit);
+        this.speedLimit = limit;
+        subject.notifyChange(SPEED_LIMIT , convertVelocity(limit, MPS, MPH));
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
@@ -462,7 +488,7 @@ public class TrainControllerImpl implements TrainController{
             case EMERGENCY_BRAKE -> this.emergencyBrake = (boolean) newValue;
             case KI -> this.Ki = (double) newValue;
             case KP -> this.Kp = (double) newValue;
-            case POWER -> this.power = convertPower((double) newValue, WATTS, HORSEPOWER);
+            case POWER -> this.power = convertPower((double) newValue, HORSEPOWER, WATTS);
             case INT_LIGHTS -> this.internalLights = (boolean) newValue;
             case EXT_LIGHTS -> this.externalLights = (boolean) newValue;
             case LEFT_DOORS -> this.leftDoors = (boolean) newValue;
@@ -559,6 +585,11 @@ public class TrainControllerImpl implements TrainController{
         this.subject.delete();
     }
 
+    @Override
+    public boolean isHW() {
+        return false;
+    }
+
     public double  getSpeedLimit() {
         return this.speedLimit;
     }
@@ -598,6 +629,7 @@ public class TrainControllerImpl implements TrainController{
 
     @Override
     public void updateBeacon(Beacon beacon) {
+        logger.info("Updating Beacon: {}", beacon);
         if (this.currentBeacon != null) {
             this.ascendingSection = (currentBlock.blockNumber() == beacon.startId());
             currentBlock = (ascendingSection) ? blockLookup.get(beacon.startId()) : blockLookup.get(beacon.endId());
@@ -606,28 +638,29 @@ public class TrainControllerImpl implements TrainController{
         }
         this.currentBeacon = beacon;
 
+        String currentStation = this.nextStationName;
         // Update the upcoming station array
         ControllerBlock potentialStation;
         if(ascendingSection){
             for(int i = beacon.startId(); i <= beacon.endId(); i++){
                 potentialStation = blockLookup.get(i);
                 if(potentialStation.isStation()){
-                    followingStations.addFirst(potentialStation);
+                    this.setNextStationName(potentialStation.stationName());
+                    break;
                 }
             }
         }else{
             for(int i = beacon.endId(); i >= beacon.startId(); i--){
                 potentialStation = blockLookup.get(i);
                 if(potentialStation.isStation()){
-                    followingStations.addFirst(potentialStation);
+                    this.setNextStationName(potentialStation.stationName());
+                    break;
                 }
             }
         }
 
-        // Im 90% sure this code can't really set the next station name cause based off of followingStation bc the if only runs when following station is empty
-        if(followingStations.isEmpty()) {
-            this.setNextStationName("N/A");
-            this.setNextStationName(followingStations.pollFirst().stationName());
+        if(Objects.equals(currentStation, this.nextStationName)) {
+            this.setNextStationName("Awaiting Beacon..");
         }
     }
 
