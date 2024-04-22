@@ -299,35 +299,36 @@ public class TrainControllerImpl implements TrainController{
 
     //This is broken, all it takes is a small amount of time, and they aren't synced in a normal case
     public void checkBrakeFailure(boolean trainServiceBrake){
-//
-//        // Failures occur when the brake states in the train controller do not match with brake states in the train model
-//        if (this.serviceBrake && !trainServiceBrake) this.setBrakeFailure(true);
-//
-//        // If true, pick a god and pray
-//        if (this.getBrakeFailure()){
-//            setEmergencyBrake(true);
-//        }
-//
-//        return this.getBrakeFailure();
+
+        // Failures occur when the brake states in the train controller do not match with brake states in the train model
+        if (this.serviceBrake && !trainServiceBrake){
+            this.setBrakeFailure(true);
+            this.setEmergencyBrake(true);
+        }else {
+            this.setBrakeFailure(false);
+        }
     }
 
     // Value can be either authority or signal failure
     public boolean checkSignalFailure(double value){
         // Failure occur when the commanded speed or commanded authority is -1
-        if (value == -1) this.setSignalFailure(true);
-
-        //If true, activate emergency brake
-        if (signalFailure) this.setEmergencyBrake(true);
+        if (value == -1){
+            this.setSignalFailure(true);
+            this.setEmergencyBrake(true);
+        } else{
+            this.setSignalFailure(false);
+        }
 
         return signalFailure;
     }
     public void checkPowerFailure(){
-        // Failure occurs when train model's set power equals 0 but we are outputting power
 
-        if (this.power > 1 && train.getPower() == 0) this.setPowerFailure(true);
-
-        // If true, activate emergency brake
-        if (this.powerFailure) this.setEmergencyBrake(true);
+        if (this.power > 1 && train.getPower() == 0) {
+            this.setPowerFailure(true);
+            this.setEmergencyBrake(true);
+        }else{
+            this.setPowerFailure(false);
+        }
 
     }
 
