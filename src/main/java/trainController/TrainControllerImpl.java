@@ -218,6 +218,10 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
+    // Function that calculates the stopping distance where the train needs to start stopping
+    public double calculateStoppingDistance(double currentSpeed){
+        return Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION);
+    }
 
     /**
      *  onBlock()
@@ -236,6 +240,12 @@ public class TrainControllerImpl implements TrainController{
             //.... proof of concept
 
             // Update Block by Block
+
+
+            if (this.getAuthority() <= this.calculateStoppingDistance(this.getSpeed())){
+                // Train starts slowing
+                setServiceBrake(true);
+            }
 
             // Get Specific Block Info
             checkTunnel();
@@ -291,39 +301,6 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
-//    // Failure Management with Steven He
-//    public boolean checkBrakeFailure(){
-//
-//        // Failures occur when the brake states in the train controller do not match with brake states in the train model
-//        if (this.serviceBrake && !train.getServiceBrake()) this.setBrakeFailure(true);
-//        if (this.emergencyBrake && !train.getEmergencyBrake()) this.setBrakeFailure(true);
-//
-//        // If true, pick a god and pray
-//
-//        return brakeFailure;
-//    }
-//    public boolean checkSignalFailure(){
-//        // Failure occur when the commanded speed or commanded authority is -1
-//        this.setCommandSpeed(train.getCommandSpeed());
-//        this.setAuthority(train.getAuthority());
-//
-//        if (commandSpeed == -1 && authority == -1) this.setSignalFailure(true);
-//
-//        //If true, activate emergency brake
-//        if (signalFailure) this.setEmergencyBrake(true);
-//
-//        return signalFailure;
-//    }
-//    public boolean checkPowerFailure(){
-//        // Failure occurs when train model's set power equals 0 but we are outputting power
-//
-//        if (this.power > 0 && train.getPower() == 0) this.setPowerFailure(true);
-//
-//        // If true, activate emergency brake
-//        if (this.powerFailure) this.setEmergencyBrake(true);
-//
-//        return this.powerFailure;
-//    }
 
 
     //Functions called by the internal logic to notify of changes
