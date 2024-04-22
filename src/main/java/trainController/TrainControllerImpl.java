@@ -248,6 +248,8 @@ public class TrainControllerImpl implements TrainController{
 
     // Function that calculates the stopping distance where the train needs to start stopping
     public double calculateStoppingDistance(double currentSpeed){
+        logger.info("Stopping Distance is {}",Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION));
+
         return Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION);
     }
 
@@ -266,16 +268,20 @@ public class TrainControllerImpl implements TrainController{
             setSpeedLimit(currentBlock.speedLimit());
             setInTunnel(currentBlock.isUnderground());
 
-
             // Get Specific Block Info
             checkTunnel();
         }
-        this.setAuthority(this.getAuthority()-1);
+        this.setAuthority(this.getAuthority()-(int)currentBlock.blockLength());
 
         if (this.authority <= this.calculateStoppingDistance(this.currentSpeed)){
             // Train starts slowing
             setServiceBrake(true);
         }
+
+//        this.setAuthority(this.getAuthority()-1);
+//        if (this.authority <= 4){
+//            setServiceBrake(true);
+//        }
 
 
     }
