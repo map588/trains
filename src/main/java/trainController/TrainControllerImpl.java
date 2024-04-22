@@ -267,17 +267,16 @@ public class TrainControllerImpl implements TrainController{
             setInTunnel(currentBlock.isUnderground());
 
 
-
-
-
-            if (this.authority <= this.calculateStoppingDistance(this.currentSpeed)){
-                // Train starts slowing
-                setServiceBrake(true);
-            }
-
             // Get Specific Block Info
             checkTunnel();
         }
+        this.setAuthority(this.getAuthority()-1);
+
+        if (this.authority <= this.calculateStoppingDistance(this.currentSpeed)){
+            // Train starts slowing
+            setServiceBrake(true);
+        }
+
 
     }
 
