@@ -152,12 +152,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     synchronized public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
-        if (this.brakeFailure) {
-            this.setServiceBrake(false);
-        } else {
-            this.setServiceBrake(controllerValues.serviceBrake());
-            this.setEmergencyBrake(controllerValues.emergencyBrake());
-        }
 
         if (this.powerFailure) {
             this.setPower(0);
@@ -331,10 +325,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         });
     }
     public void setServiceBrake(boolean brake) {
-
         this.serviceBrake = (!brakeFailure && brake);
         listeningExecutor.execute(() -> {
-            notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
+            notifyChange(SERVICEBRAKE_PROPERTY, this.serviceBrake);
         });
     }
 
@@ -459,7 +452,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             //case Properties.ACCELERATION_PROPERTY -> this.acceleration = convertAcceleration((double)newValue, FPS2, MPS2);
             //case Properties.POWER_PROPERTY -> this.power = convertPower((double)newValue, HORSEPOWER, WATTS);
             //case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
-            //case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
+            case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
             case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
             case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
             case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
