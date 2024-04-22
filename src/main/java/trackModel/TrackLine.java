@@ -121,6 +121,11 @@ public class TrackLine implements TrackModel {
         }
     }
 
+    public TrackBlock getBlock(int blockID) {
+        return mainTrackLine.get(blockID);
+    }
+
+
     /**
      * A function called by the train when it has travelled
      * the distance of the block it is currently on.
