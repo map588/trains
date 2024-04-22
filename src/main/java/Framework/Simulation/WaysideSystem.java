@@ -78,7 +78,7 @@ public class WaysideSystem {
 
     ExecutorService waysideExecutor;
 
-    public WaysideSystem(CTCOffice ctcOffice, boolean useHardware) {
+    public WaysideSystem(CTCOffice ctcOffice) {
         TrackLine greenLine = TrackLineMap.getTrackLine(Lines.GREEN);
         addController(new WaysideControllerImpl(1, Lines.GREEN, new int[]{
                 1, 2, 3,
@@ -108,33 +108,28 @@ public class WaysideSystem {
                 greenLine, ctcOffice,
                 "src/main/antlr/GreenLine2.plc"), Lines.GREEN);
 
-        if(useHardware) {
-            String port = findHardwareCOMPort();
+        String port = findHardwareCOMPort();
 
-            if(port != null) {
-                logger.info("Found WaysideHW COM Port: {}", port);
-                hwController = new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
-                        69, 70, 71, 72, 73,
-                        74, 75, 76,
-                        77, 78, 79, 80, 81, 82, 83, 84, 85,
-                        86, 87, 88,
-                        89, 90, 91, 92, 93, 94, 95, 96, 97,
-                        98, 99, 100,
-                        101,
-                        102, 103, 104,
-                        105, 106, 107, 108, 109},
-                        new int[]{110, 111, 112, 113},
-                        port,
-                        greenLine, ctcOffice,
-                        "src/main/antlr/GreenLine3.plc");
-                addController(hwController, Lines.GREEN);
-            }
-            else {
-                useHardware = false;
-                logger.warn("Could not find Wayside Hardware Controller");
-            }
+        if(port != null) {
+            logger.info("Found WaysideHW COM Port: {}", port);
+            hwController = new WaysideControllerHWBridge(3, Lines.GREEN, new int[]{
+                    69, 70, 71, 72, 73,
+                    74, 75, 76,
+                    77, 78, 79, 80, 81, 82, 83, 84, 85,
+                    86, 87, 88,
+                    89, 90, 91, 92, 93, 94, 95, 96, 97,
+                    98, 99, 100,
+                    101,
+                    102, 103, 104,
+                    105, 106, 107, 108, 109},
+                    new int[]{110, 111, 112, 113},
+                    port,
+                    greenLine, ctcOffice,
+                    "src/main/antlr/GreenLine3.plc");
+            addController(hwController, Lines.GREEN);
         }
-        if(!useHardware) {
+        else {
+            logger.warn("Could not find Wayside Hardware Controller");
             addController(new WaysideControllerImpl(3, Lines.GREEN, new int[]{
                     69, 70, 71, 72, 73,
                     74, 75, 76,
