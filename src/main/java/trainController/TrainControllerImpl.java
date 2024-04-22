@@ -76,6 +76,7 @@ public class TrainControllerImpl implements TrainController{
     private double rollingError = 0.0;
 
     private boolean waysideStop;
+    private boolean eBrakeGUI = false;
 
 
     private int authority = 0;
@@ -171,6 +172,7 @@ public class TrainControllerImpl implements TrainController{
 
         if (waysideStop){
             setServiceBrake(true);
+            rollingError = 0;
             return 0;
         }
         else {
@@ -182,6 +184,8 @@ public class TrainControllerImpl implements TrainController{
             // Update the rolling error
             if(!powerFailure) {
                 rollingError += error * TIME_STEP;
+            }else{
+                rollingError = 0;
             }
 
             // Introduce an integral term to reduce steady-state error
@@ -208,6 +212,37 @@ public class TrainControllerImpl implements TrainController{
                 pow = 0;
             }
             return pow;
+        }
+    }
+
+    @Override
+    public void checkFailures(double trainPower) {
+        boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();
+        boolean badPower  =  this.power > 1 && trainPower == 0;
+
+        setSignalFailure(commandSpeed == -1 || authority == -1);
+
+
+
+        if(powerFailure){
+            train.setPower(3);
+            setPowerFailure(!(train.getPower() == 3));
+        }else {
+            setPowerFailure(badPower);
+        }
+
+        if(brakeFailure){
+            train.setServiceBrake(true);
+            setBrakeFailure(!train.getServiceBrake());
+            train.setServiceBrake(false);
+        }else {
+            setBrakeFailure(badBrakes);
+        }
+
+        if(brakeFailure || powerFailure || signalFailure){
+            setEmergencyBrake(true);
+        }else{
+            setEmergencyBrake(eBrakeGUI);
         }
     }
 
@@ -288,36 +323,8 @@ public class TrainControllerImpl implements TrainController{
         }
     }
 
-    @Override
-    public void checkFailures(double power, double commandSpeed, int authority) {
-        boolean badBrakes = checkBrakeFailure();
-        boolean badPower  = checkPowerFailure(power);
-
-        setSignalFailure(commandSpeed == -1 || authority == -1);
-
-        if(badBrakes || badPower){
-            setEmergencyBrake(true);
-        }
-
-        setPowerFailure(badPower);
-
-        if(brakeFailure){
-            train.setServiceBrake(true);
-            setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(false);
-        }else {
-            setBrakeFailure(badBrakes);
-        }
-    }
-
-    boolean checkBrakeFailure(){
-        return this.serviceBrake ^ train.getServiceBrake();
-    }
 
 
-    boolean checkPowerFailure(double pow){
-        return (this.power > 2 && pow == 0);
-    }
 
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
@@ -403,15 +410,29 @@ public class TrainControllerImpl implements TrainController{
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        notificationExecutor.execute( ()-> subject.notifyChange(SIGNAL_FAILURE , signalFailure));
+        if(signalFailure){
+            logger.warn("Signal Failure detected");
+        }
+        notificationExecutor.execute( ()-> {subject.notifyChange(SIGNAL_FAILURE , signalFailure);
+        });
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        notificationExecutor.execute( ()-> subject.notifyChange(BRAKE_FAILURE , brakeFailure));
+        notificationExecutor.execute( ()-> {
+            if(brakeFailure){
+                logger.warn("Brake Failure detected");
+            }
+            subject.notifyChange(BRAKE_FAILURE , brakeFailure);
+        });
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        notificationExecutor.execute( ()-> subject.notifyChange(POWER_FAILURE , powerFailure));
+        notificationExecutor.execute( ()-> {
+            if(powerFailure){
+                logger.warn("Power Failure detected");
+            }
+            subject.notifyChange(POWER_FAILURE , powerFailure);
+        });
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
@@ -457,7 +478,7 @@ public class TrainControllerImpl implements TrainController{
             case COMMAND_SPEED -> this.commandSpeed = convertVelocity((double) newValue, MPH, MPS);
             case CURRENT_SPEED -> this.currentSpeed = convertVelocity((double) newValue, MPH, MPS);
             case SERVICE_BRAKE -> this.serviceBrake = (boolean) newValue;
-            case EMERGENCY_BRAKE -> this.emergencyBrake = (boolean) newValue;
+            case EMERGENCY_BRAKE -> {this.emergencyBrake = (boolean) newValue; eBrakeGUI = (boolean) newValue;}
             case KI -> this.Ki = (double) newValue;
             case KP -> this.Kp = (double) newValue;
             case POWER -> this.power = convertPower((double) newValue, HORSEPOWER, WATTS);

@@ -161,7 +161,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             this.setPower(controllerValues.power() * numCars);
         }
 
-        controller.checkFailures(power, commandSpeed, authority);
+        controller.checkFailures(power);
 
         this.setExtLights(controllerValues.exteriorLights());
         this.setIntLights(controllerValues.interiorLights());
@@ -207,15 +207,14 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
         //BRAKE FORCES
+        brakeForce = 0;
         if (this.serviceBrake && !this.emergencyBrake) {
             this.brakeForce = SERVICE_BRAKE_FORCE;
         }
         if (this.emergencyBrake) {
             this.brakeForce = EMERGENCY_BRAKE_FORCE;
         }
-        if (!this.serviceBrake && !this.emergencyBrake) {
-            this.brakeForce = 0;
-        }
+
 
         //ENGINE FORCE
         double engineForce;
@@ -315,6 +314,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
         listeningExecutor.execute(() -> {
+            logger.warn("Train Authority: {}", authority);
         notifyChange(AUTHORITY_PROPERTY, authority);
         });
 
@@ -336,10 +336,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     public void setPower(double power) {
-        this.power = power;
-
+        this.power = (powerFailure) ? 0 : power;
         listeningExecutor.execute(() -> {
-            notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER));
+            notifyChange(POWER_PROPERTY, Conversion.convertPower(this.power, WATTS, HORSEPOWER));
         });
     }
 

@@ -71,7 +71,7 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
     UpdatedTrainValues sendUpdatedTrainValues();
     TrainModel getTrain();
 
-    void checkFailures(double power, double commandSpeed, int authority);
+    void checkFailures(double power);
 
     double getSpeed();
 
