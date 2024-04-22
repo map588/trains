@@ -35,19 +35,6 @@ import static trainModel.Properties.*;
 
 public class TrainModelImpl implements TrainModel, Notifier {
 
-    //TODO: None of your failures work properly, and/or are not properly communicated to the controller @John
-
-    //TODO: Your Units are questionable, the only conversion should pretty much be when you call notifyChange
-
-    //TODO: I took the speed limit off, because if your calculations are correct, we should need a speed limiter, thats just the fastest the thing can move.
-
-    //TODO: Maybe make your friction in relation to the max speed, so that friction force exponentially increases as you approach max speed, something, it doesn't
-    //      matter, as long as the speed doesn't just hit 46.5, and then no matter what, it just stays there.  If it is a maximum speed, it should require maximum
-    //      force to maintain it, and if you can't provide that force, you should slow down.
-
-    //TODO: If you don't think Proffeta will grill you for this, I don't know what to tell you.  You need to have a good reason for why you are doing what you are doing
-    //      when he asks, other than just "It was easier that way".
-
 
     private static final Logger logger = LoggerFactory.getLogger(TrainModelImpl.class);
 
@@ -58,6 +45,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private final TrainModelSubject subject;
     private final TrainController controller;
     private final TrackLine track;
+    private TrackBlock currentBlock;
 
     //Passed Variables
     private int authority = 0;
@@ -137,6 +125,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         initializeValues();
         this.trainID = trainID;
         this.track = track;
+        this.currentBlock = track.getBlock(0);
         this.controller = controllerFactory.createTrainController(this, trainID);
         this.subject = new TrainModelSubject(this);
     }
@@ -245,9 +234,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //SLOPE FORCE
 
-        //TODO: Check if this is the correct way to calculate the angle @John, I don't think it is, the direction is not real.
-        //  This is why the cumulative elevation exists, which you have access to via your currentTrackBlock reference.
-        double currentAngle = Math.atan(this.grade / 100) * (this.direction == Direction.NORTH ? 1 : -1);
+        double currentAngle = Math.atan(this.grade / 100);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
         //System.out.println("Gravity Force: " + gravityForce);
 
@@ -294,11 +281,18 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return deleted;
     }
 
-    //TODO: Add Comments
+
     public void enteredNextBlock() {
-        TrackBlock currentBlock = track.updateTrainLocation(this);
+        double previousElevation = currentBlock.getElevation();
+        currentBlock = track.updateTrainLocation(this);
+        if(previousElevation < currentBlock.getElevation()) {
+            this.setGrade(currentBlock.getGrade());
+        }
+        else {
+            this.setGrade(-currentBlock.getGrade());
+        }
+
         relativeDistance -= currentBlockLength;
-        this.setGrade(currentBlock.getGrade());
         currentBlockLength = currentBlock.getLength();
         controller.onBlock();
     }
