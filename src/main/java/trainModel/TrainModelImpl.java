@@ -92,6 +92,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private double  speed = 0;
     private double  acceleration = 0;
     private double  distanceTraveled = 0;
+
+    private double distanceTraveledLastTick = 0;
     private double  length = Constants.TRAIN_LENGTH * numCars;
     private double  brakeForce = 0;
 
@@ -259,7 +261,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
 //        }
 
         //DISTANCE CALCULATION
-        this.relativeDistance += this.speed * this.TIME_DELTA;
+        distanceTraveledLastTick = this.speed * this.TIME_DELTA;
+        this.relativeDistance += distanceTraveledLastTick;
+
 
         //TEMPERATURE CALCULATION
         this.elapsedTime += this.TIME_DELTA;
@@ -291,6 +295,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         relativeDistance -= currentBlockLength;
         currentBlockLength = currentBlock.getLength();
         controller.onBlock();
+    }
+
+    public double getDistanceTraveledLastTick(){
+        return this.distanceTraveledLastTick;
     }
 
     public void setCommandSpeed(double speed) {

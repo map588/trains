@@ -90,4 +90,6 @@ public interface  TrainModel {
     void trainModelPhysics() throws ExecutionException, InterruptedException;
 
     Lines getLine();
+
+    double getDistanceTraveledLastTick();
 }

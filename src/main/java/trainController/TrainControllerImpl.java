@@ -168,7 +168,11 @@ public class TrainControllerImpl implements TrainController{
         );
     }
 
+    private double distanceTraveledFromLastTick = 0;
+
     public double calculatePower(double currentSpeed) {
+
+        distanceTraveledFromLastTick = train.getDistanceTraveledLastTick();
 
         if (waysideStop){
             setServiceBrake(true);
@@ -222,8 +226,6 @@ public class TrainControllerImpl implements TrainController{
 
         setSignalFailure(commandSpeed == -1 || authority == -1);
 
-
-
         if(powerFailure){
             train.setPower(3);
             setPowerFailure(!(train.getPower() == 3));
@@ -258,6 +260,7 @@ public class TrainControllerImpl implements TrainController{
      */
     @Override
     public void onBlock(){
+
         if(currentBeacon != null && blockLookup != null) {
             currentBlock = (ascendingSection) ? blockLookup.get(currentBeacon.blockIndices().pollFirst()) : blockLookup.get(currentBeacon.blockIndices().pollLast());
 
@@ -271,12 +274,13 @@ public class TrainControllerImpl implements TrainController{
             // Get Specific Block Info
             checkTunnel();
         }
-        this.setAuthority(this.getAuthority()-(int)currentBlock.blockLength());
 
-        if (this.authority <= this.calculateStoppingDistance(this.currentSpeed)){
-            // Train starts slowing
-            setServiceBrake(true);
-        }
+        //this.setAuthority(this.getAuthority()-(int)this.distanceTraveledFromLastTick);
+
+//        if (this.authority <= this.calculateStoppingDistance(this.currentSpeed)){
+//            // Train starts slowing
+//            setServiceBrake(true);
+//        }
 
 //        this.setAuthority(this.getAuthority()-1);
 //        if (this.authority <= 4){
