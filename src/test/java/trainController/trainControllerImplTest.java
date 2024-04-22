@@ -104,7 +104,25 @@ class trainControllerImplTest extends BaseTest {
     }
 
     @Test
-    void testFailures(){
+    void testSignalFailures(){
+
+        // Testing out signal failure for command speed
+        controller.setCommandSpeed(40);
+        assertTrue(controller.getCommandSpeed() == 40);
+        controller.setCommandSpeed(-1);
+        assertTrue(controller.checkSignalFailure(-1));
+        assertTrue(controller.getSignalFailure());
+        assertFalse(controller.getCommandSpeed() == -1);
+        assertTrue(controller.getCommandSpeed() == 40);
+
+        // Testing out signal failure for authority
+        controller.setCommandSpeed(40);
+        assertTrue(controller.getCommandSpeed() == 40);
+        controller.setCommandSpeed(-1);
+        assertTrue(controller.checkSignalFailure(-1));
+        assertTrue(controller.getSignalFailure());
+        assertFalse(controller.getCommandSpeed() == -1);
+        assertTrue(controller.getCommandSpeed() == 40);
 
     }
 }
