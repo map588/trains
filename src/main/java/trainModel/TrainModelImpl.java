@@ -148,18 +148,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
      private void reconcileControllerValues(UpdatedTrainValues controllerValues) {
-        if (this.brakeFailure) {
-            this.setServiceBrake(false);
-        } else {
-            this.setServiceBrake(controllerValues.serviceBrake());
-            this.setEmergencyBrake(controllerValues.emergencyBrake());
-        }
 
-        if (this.powerFailure) {
-            this.setPower(0);
-        } else {
-            this.setPower(controllerValues.power() * numCars);
-        }
+        this.setServiceBrake(controllerValues.serviceBrake());
+        this.setEmergencyBrake(controllerValues.emergencyBrake());
+        this.setPower(controllerValues.power() * numCars);
 
         controller.checkFailures(power);
 
