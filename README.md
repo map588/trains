@@ -11,8 +11,7 @@ TODO: Description of system
 2. [Wayside Controller](#wayside-controller)
 3. [Track Model](#track-model)
 4. [Train Model](#train-model)
-5. [Software Train Controller](#software-train-controller)
-6. [Hardware Train Controller](#hardware-train-controller)
+5. [Train Controller](#software-train-controller)
 
 ### Simulation Setup
 
@@ -83,5 +82,6 @@ The Ki, Kp, and SetTemperature text fields are set to their default values. The 
 
 An indicator will light up showing whether the Emergency Brake is enabled or not. To enable the Emergency Brake, click on the Emergency Brake Button, the indicator light will light up.  To disable the Emergency Brake, simply click on the button again, and the indicator light will turn off. The Emergency Brake can be enabled at any time, even in the simulation. The Emergency Brake can be enabled in the case of a brake failure. The Emergency Brake cuts power and provides a negative acceleration to the train.
 
-### Hardware Train Controller
-To access the Hardware Train Controller GUI, first run the main program.Then, left-click the "trainController" button.  The Train Controller GUI will open. The Train Controller GUI displays the current state of the train, including the current speed, authority, and power. The Train Controller GUI also displays the current state of the doors, lights, and brakes. If no train has been dispatched, the GUI will be filled with empty values until a train is dispatched.
+#### <i>Hardware Train Controller</i>
+To access the Hardware Train Controller GUI, first run the main program.Then, left-click the "trainController" button.  The Train Controller GUI will open.  The Train Controller GUI displays the current state of the train, including the current speed, authority, and power. The Train Controller GUI also displays the current state of the doors, lights, and brakes. If no train has been dispatched, the GUI will be filled with empty values until a train is dispatched.  In order for the next train, and only the next train, to be controlled by hardware, the “HW Controller” toggle must be selected.  Upon launching a train, this toggle will be unselected and the following train will be a SW Controlled train.  
+	Once a HW Train is launched, the same GUI will open on the hardware’s touch screen, offering information which is identical to the SW variant.  Be aware that latency may be greater in between the standard software system, and the HW implementation, as the information has much more latency in transmission.  Expect errors at higher simulation speeds, as the system will be waiting for responses from the train controller within a shorter time interval, and that latency will have a larger effect.
