@@ -2,6 +2,7 @@ package trainController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.Enums.ControllerProperty;
 
 public final class NullController extends TrainControllerImpl {
 
@@ -18,6 +19,7 @@ public final class NullController extends TrainControllerImpl {
     }
 
 
+
     @Override
     public void setValue(ControllerProperty property, Object value) {
         logger.warn("NullController setProperty called with {} and {}", property, value);
@@ -28,11 +30,6 @@ public final class NullController extends TrainControllerImpl {
         logger.warn("NullController setPower called with {}", power);
     }
 
-    @Override
-
-    public void setCurrentSpeed(double speed) {
-        logger.warn("NullController setSpeed called with {}", speed);
-    }
 
     @Override
 

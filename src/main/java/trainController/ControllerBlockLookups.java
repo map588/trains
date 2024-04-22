@@ -6,14 +6,14 @@ import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import trainController.ControllerBlocks.ControllerBlock;
+import trainController.Records.ControllerBlock;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 final class ControllerBlockLookups {
     private static final Logger logger = LoggerFactory.getLogger(ControllerBlockLookups.class);
 
-    private static ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, ControllerBlock>> lineLookups = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, ControllerBlock>> lineLookups = new ConcurrentHashMap<>();
 
 
     private ControllerBlockLookups() {
@@ -30,8 +30,11 @@ final class ControllerBlockLookups {
         }
     }
 
-    public static ControllerBlockLookups INSTANCE = new ControllerBlockLookups();
+    private static final ControllerBlockLookups INSTANCE = new ControllerBlockLookups();
 
+    public static ControllerBlockLookups getInstance() {
+        return INSTANCE;
+    }
 
     public static ConcurrentHashMap<Integer, ControllerBlock> getLookup(Lines line) {
         return lineLookups.get(line);

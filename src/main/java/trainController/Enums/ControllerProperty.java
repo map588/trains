@@ -1,4 +1,4 @@
-package trainController;
+package trainController.Enums;
 
 //TODO: Change this to an enum in the future
 //public class Properties {

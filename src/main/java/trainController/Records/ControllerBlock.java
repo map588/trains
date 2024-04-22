@@ -1,4 +1,4 @@
-package trainController.ControllerBlocks;
+package trainController.Records;
 
 import Utilities.Enums.BlockType;
 import Utilities.Records.BasicBlock;
@@ -7,7 +7,7 @@ public record ControllerBlock(int blockNumber,
                               double blockLength,
                               double speedLimit,
                               boolean isUnderground,
-                              String Doorside,
+                              String  Doorside,
                               String stationName,
                               boolean isStation,
                               boolean isCrossing,
@@ -17,7 +17,8 @@ public record ControllerBlock(int blockNumber,
     public ControllerBlock(BasicBlock block) {
         this(block.blockNumber(), block.blockLength(),
                 block.speedLimit(), block.isUnderground(),
-                block.doorDirection().orElse("..."), block.stationName().orElse("No Station"),
+                block.doorDirection().orElse("..."),
+                block.stationName().orElse("No Station"),
                 block.blockType() == BlockType.STATION,
                 block.blockType() == BlockType.CROSSING,
                 block.isSwitch());

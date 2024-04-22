@@ -240,8 +240,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        logger.info("Setting authority for block {} to {}", blockID, auth);
-        System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
+        logger.warn("Maintainence Setting authority for block {} to {}", blockID, auth);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             WaysideBlock block = blockMap.get(blockID);
             block.setBooleanAuth(auth);
@@ -261,7 +260,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
-        logger.info("Setting traffic light for block {} to {}", blockID, lightState);
+        logger.warn("Setting traffic light for block {} to {}", blockID, lightState);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setLightState(lightState);
             if(trackModel != null)
@@ -274,7 +273,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetCrossing(int blockID, boolean crossingState) {
-        logger.info("Setting crossing for block {} to {}", blockID, crossingState);
+        logger.warn("Maintenance setting crossing for block {} to {}", blockID, crossingState);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setCrossingState(crossingState);
             if(trackModel != null)
@@ -305,7 +304,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     private void outputSwitchPLC(int blockID, boolean switchState) {
-        logger.info("Setting switch {} to {}", blockID, switchState);
+        logger.info("PLC setting switch {} to {}", blockID, switchState);
         WaysideBlock block = blockMap.get(blockID);
         block.setSwitchState(switchState);
         if(trackModel != null)
@@ -431,9 +430,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     // TODO: implement these functions
     @Override
     public void CTCSendAuthority(int blockID, int blockCount) {
-        logger.info("Sending authority for block {} to {}", blockID, blockCount);
+        logger.info("CTC sending authority for block {} to {}", blockID, blockCount);
 
-        if(blockMap.get(blockID).inMaintenance() && blockMap.get(blockID).isOccupied() && trackModel != null) {
+        if(blockMap.get(blockID).isOccupied() && trackModel != null) {  //This was causing issues with dispatching trains
             trackModel.setTrainAuthority(blockID, blockCount);
         }
     }

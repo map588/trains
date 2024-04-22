@@ -45,9 +45,7 @@ public class TrackSystem {
 
     public void update() {
             for (TrackLine line : TrackLineMap.getValues()) {
-                trackLineExecutor.submit(() -> {
-                    line.update();
-                });
+                trackLineExecutor.submit(line::update);
             }
     }
 

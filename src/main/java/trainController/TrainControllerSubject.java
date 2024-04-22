@@ -7,8 +7,9 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.Enums.ControllerProperty;
 
-import static trainController.ControllerProperty.*;
+import static trainController.Enums.ControllerProperty.*;
 
 public class TrainControllerSubject implements NotifierEnum {
     private final ObservableHashMap<ControllerProperty, Property<?>> properties = new ObservableHashMap<>();

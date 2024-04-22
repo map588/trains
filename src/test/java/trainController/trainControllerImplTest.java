@@ -4,6 +4,8 @@ import Common.TrainModel;
 import Integration.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import trainController.Enums.ControllerProperty;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

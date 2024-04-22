@@ -3,7 +3,7 @@ package Common;
 
 import Framework.Support.GUIModifiableEnum;
 import Utilities.Records.Beacon;
-import trainController.ControllerProperty;
+import trainController.Enums.ControllerProperty;
 import trainController.TrainControllerSubject;
 import trainModel.Records.UpdatedTrainValues;
 

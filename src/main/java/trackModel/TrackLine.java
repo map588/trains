@@ -121,6 +121,10 @@ public class TrackLine implements TrackModel {
         }
     }
 
+    public TrackBlock getBlock(int blockID) {
+        return mainTrackLine.get(blockID);
+    }
+
     /**
      * A function called by the train when it has travelled
      * the distance of the block it is currently on.
@@ -268,8 +272,8 @@ public class TrackLine implements TrackModel {
     synchronized public void setTrainAuthority(Integer blockID, int authority){
         try {
             asyncTrackUpdate( () -> {
-                mainTrackLine.get(blockID).setAuthority(authority);
                 logger.info("Authority => {} at block: {}", authority, blockID);
+                mainTrackLine.get(blockID).setAuthority(authority);
                 return null;
             }).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -281,10 +285,11 @@ public class TrackLine implements TrackModel {
     synchronized public void setCommandedSpeed(Integer blockID, double commandedSpeed) {
         try {
             asyncTrackUpdate(() -> {
-                mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
                 logger.info("Command speed => {} MPH at block: {}", commandedSpeed, blockID);
+                mainTrackLine.get(blockID).setCommandSpeed(commandedSpeed);
                 return null;
             }).get();
+
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

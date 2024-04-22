@@ -5,6 +5,7 @@ import Common.TrainModel;
 import Utilities.Records.Beacon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.Enums.ControllerProperty;
 import trainModel.Records.UpdatedTrainValues;
 
 import java.io.BufferedReader;

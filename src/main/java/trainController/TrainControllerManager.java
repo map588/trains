@@ -16,6 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import trainController.Enums.ControllerProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
-import static trainController.ControllerProperty.*;
+import static trainController.Enums.ControllerProperty.*;
 
 public class TrainControllerManager {
     @FXML
@@ -300,7 +301,7 @@ public class TrainControllerManager {
     private void bindCheckBox(CheckBox checkBox, ControllerProperty property) {
         appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
                 currentSubject.setProperty(property, newVal);
-                queueNotification(property,String.valueOf(checkBox.isSelected()));
+                sendNotification(property,String.valueOf(checkBox.isSelected()));
         });
     }
 
@@ -326,10 +327,10 @@ public class TrainControllerManager {
 
     private void setupButtonActions() {
         emergencyBrakeButton.setOnAction(event -> {
-            BooleanProperty eBrakeProp = currentSubject.getBooleanProperty(EMERGENCY_BRAKE);
-            currentSubject.setProperty(EMERGENCY_BRAKE, !eBrakeProp.get());
-            queueNotification(EMERGENCY_BRAKE, String.valueOf(eBrakeProp.get()));
-            logger.info("Emergency button toggled to {}", !eBrakeProp.get());
+            boolean ebrake = currentSubject.getBooleanProperty(EMERGENCY_BRAKE).get();
+            currentSubject.setProperty(EMERGENCY_BRAKE, !ebrake);
+            sendNotification(EMERGENCY_BRAKE, String.valueOf(ebrake));
+            logger.info("Emergency button toggled to {}", !ebrake);
         });
         makeAnnouncementsButton.setOnAction(event -> {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
@@ -498,12 +499,7 @@ public class TrainControllerManager {
     private void inTunnelUpdates(){
 
         if (autoModeCheckBox.isSelected()){ // Runs in Auto Mode
-
-            boolean inTunnel = inTunnelStatus.getFill().equals(Color.YELLOW); // Get tunnel state
-
-            // Set the Light states according to in tunnel status
-            intLightCheckBox.setSelected(inTunnel);
-            extLightCheckBox.setSelected(inTunnel);
+            boolean inTunnel = currentSubject.getBooleanProperty(IN_TUNNEL).get(); // Get tunnel state
 
             // Set the Color of the Background
             String colorFormat = inTunnel ? "-fx-background-color: #000033;" : "-fx-background-color: #FFFFFF;";

@@ -57,7 +57,7 @@ public class TrainSystem {
 
         @Override
         public Void call() {
-            if(train.isDeleted() || train == null || controller == null) {
+            if(train.isDeleted() || controller == null) {
                 deleteTrainTask(train);
                 return null;
             }

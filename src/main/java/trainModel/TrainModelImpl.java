@@ -59,6 +59,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private final TrainController controller;
     private final TrackLine track;
 
+    private TrackBlock currentTrackBlock;
+
     //Passed Variables
     private int authority = 0;
     private double commandSpeed = 0;
@@ -105,7 +107,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Transition Variables
 
-    ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService notificationExecutor = Executors.newSingleThreadExecutor();
 
     private final TrainControllerFactory controllerFactory = TrainControllerFactory.getInstance();
 
@@ -137,6 +139,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         initializeValues();
         this.trainID = trainID;
         this.track = track;
+        this.currentTrackBlock = track.getBlock(0);
         this.controller = controllerFactory.createTrainController(this, trainID);
         this.subject = new TrainModelSubject(this);
     }
@@ -198,7 +201,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     private void physicsUpdate() {
-        //MASS CALCULATION (some redundancy here, the empty train mass is final, and the crew count is final)
 
 
         //Check if the train is fully loaded
@@ -244,10 +246,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
         //SLOPE FORCE
-
-        //TODO: Check if this is the correct way to calculate the angle @John, I don't think it is, the direction is not real.
-        //  This is why the cumulative elevation exists, which you have access to via your currentTrackBlock reference.
-        double currentAngle = Math.atan(this.grade / 100) * (this.direction == Direction.NORTH ? 1 : -1);
+        double currentAngle = Math.atan(this.grade / 100);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
         //System.out.println("Gravity Force: " + gravityForce);
 
@@ -296,10 +295,20 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //TODO: Add Comments
     public void enteredNextBlock() {
-        TrackBlock currentBlock = track.updateTrainLocation(this);
-        relativeDistance -= currentBlockLength;
-        this.setGrade(currentBlock.getGrade());
-        currentBlockLength = currentBlock.getLength();
+        double previousElevation = 0;
+
+        if(currentTrackBlock == null) {
+            previousElevation = currentTrackBlock.getCumulativeElevation();
+        }
+        currentTrackBlock = track.updateTrainLocation(this);
+        if(currentTrackBlock.getCumulativeElevation() > previousElevation) {
+            this.setGrade(currentTrackBlock.getGrade());
+        }
+        else {
+            this.setGrade(currentTrackBlock.getGrade() * -1);
+        }
+
+        currentBlockLength = currentTrackBlock.getLength();
         controller.onBlock();
     }
 
@@ -308,55 +317,47 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.commandSpeed = (signalFailure) ? -1 : speed;
         controller.setCommandSpeed(commandSpeed);
 
-        listeningExecutor.execute(() -> {
+        notificationExecutor.execute(() -> {
         notifyChange(COMMANDSPEED_PROPERTY, commandSpeed);
         });
 
         logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
     }
-    public void setAuthority(int authority) {
-        this.authority = (signalFailure) ? -1 : authority;
-        controller.setAuthority(authority);
+    public void setAuthority(int auth) {
+        this.authority = (signalFailure) ? -1 : auth;
+        controller.setAuthority(auth);
 
 
-        listeningExecutor.execute(() -> {
-        notifyChange(AUTHORITY_PROPERTY, authority);
-        });
+        notificationExecutor.execute(() -> notifyChange(AUTHORITY_PROPERTY, auth));
 
         logger.info("Train {} <=     Authority: {}",this.trainID, authority);
     }
 
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        listeningExecutor.execute(() -> {
-            notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
-        });
+        notificationExecutor.execute(() -> notifyChange(EMERGENCYBRAKE_PROPERTY, brake));
     }
     public void setServiceBrake(boolean brake) {
 
         this.serviceBrake = (!brakeFailure && brake);
-        listeningExecutor.execute(() -> {
-            notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
-        });
+
+        notificationExecutor.execute(() -> notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake));
     }
 
     public void setPower(double power) {
         this.power = power;
 
-        listeningExecutor.execute(() -> {
-            notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER));
-        });
+        notificationExecutor.execute(() -> notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER)));
     }
 
     public void setActualSpeed(double speed) {
         this.speed = speed;
 
-        listeningExecutor.execute(() -> {
-             notifyChange(ACTUALSPEED_PROPERTY, convertVelocity(this.speed, MPS, MPH));
-        });
+        notificationExecutor.execute(() -> notifyChange(ACTUALSPEED_PROPERTY, convertVelocity(this.speed, MPS, MPH)));
     }
 
-    public void setBrakeFailure(boolean failure) { this.brakeFailure = failure;
+    public void setBrakeFailure(boolean failure) {
+        this.brakeFailure = failure;
         notifyChange(BRAKEFAILURE_PROPERTY, this.brakeFailure);
     }
 
@@ -402,12 +403,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.intLights = lights;
         notifyChange(INTLIGHTS_PROPERTY, this.intLights);
     }
-    //TODO: Check your units @John
     public void setSetTemperature(double temp) {
         this.setTemperature = temp;
         notifyChange(SETTEMPERATURE_PROPERTY, this.setTemperature);
     }
-    //TODO: Check your units @John
     public void setRealTemperature(double temp) {
         this.realTemperature = temp;
         notifyChange(REALTEMPERATURE_PROPERTY, this.realTemperature);
@@ -416,7 +415,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.acceleration = acceleration;
         notifyChange(ACCELERATION_PROPERTY, Conversion.convertAcceleration(this.acceleration, MPS2, FPS2));
     }
-    //TODO: Check your units @John
     public void setMass(double mass) {
         this.mass = mass;
         notifyChange(MASS_PROPERTY, mass);
@@ -433,7 +431,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.announcement = announcement;
     }
 
-
+    //TODO: Figure out passengers with Max
     public int updatePassengers(int passengersEmbarked) {
         int passengersDisembarked;
         if(this.numPassengers <= 0) {
@@ -481,6 +479,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
     }
 
+    //TODO: This doesn't need to exist
     @Override
     public void changeTimeDelta(int v) {
         logger.info("Cannot change time delta at runtime");

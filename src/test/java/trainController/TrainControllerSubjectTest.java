@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static trainController.ControllerProperty.AUTHORITY;
-import static trainController.ControllerProperty.COMMAND_SPEED;
+import static trainController.Enums.ControllerProperty.AUTHORITY;
+import static trainController.Enums.ControllerProperty.COMMAND_SPEED;
 
 class TrainControllerSubjectTest extends BaseTest {
     private TrainControllerSubject subject;
