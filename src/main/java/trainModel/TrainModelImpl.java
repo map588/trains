@@ -25,8 +25,12 @@ import static Utilities.Conversion.accelerationUnit.MPS2;
 import static Utilities.Conversion.convertVelocity;
 import static Utilities.Conversion.distanceUnit.FEET;
 import static Utilities.Conversion.distanceUnit.METERS;
+import static Utilities.Conversion.massUnits.KILOGRAMS;
+import static Utilities.Conversion.massUnits.TONS;
 import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
+import static Utilities.Conversion.temperatureUnit.CELSIUS;
+import static Utilities.Conversion.temperatureUnit.FAHRENHEIT;
 import static Utilities.Conversion.velocityUnit.MPH;
 import static Utilities.Conversion.velocityUnit.MPS;
 import static trainModel.Properties.*;
@@ -405,12 +409,12 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //TODO: Check your units @John
     public void setSetTemperature(double temp) {
         this.setTemperature = temp;
-        notifyChange(SETTEMPERATURE_PROPERTY, this.setTemperature);
+        notifyChange(SETTEMPERATURE_PROPERTY, Conversion.convertTemperature(this.setTemperature, CELSIUS, FAHRENHEIT));
     }
     //TODO: Check your units @John
     public void setRealTemperature(double temp) {
         this.realTemperature = temp;
-        notifyChange(REALTEMPERATURE_PROPERTY, this.realTemperature);
+        notifyChange(REALTEMPERATURE_PROPERTY, Conversion.convertTemperature(this.realTemperature, CELSIUS, FAHRENHEIT));
     }
     public void setAcceleration(double acceleration) {
         this.acceleration = acceleration;
@@ -419,7 +423,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     //TODO: Check your units @John
     public void setMass(double mass) {
         this.mass = mass;
-        notifyChange(MASS_PROPERTY, mass);
+        notifyChange(MASS_PROPERTY, Conversion.convertMass(this.mass, KILOGRAMS, TONS));
     }
     public void setDistanceTraveled(double distance) {
         this.distanceTraveled = distance;
