@@ -107,7 +107,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
 
-    private TrainControllerFactory controllerFactory = TrainControllerFactory.getInstance();
+    private final TrainControllerFactory controllerFactory = TrainControllerFactory.getInstance();
 
     private void initializeValues() {
         this.direction = YARD_OUT_DIRECTION;

@@ -8,11 +8,8 @@ import org.slf4j.LoggerFactory;
 import trainModel.Records.UpdatedTrainValues;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Objects;
 
 public class TrainControllerHW implements TrainController {
 
@@ -25,133 +22,162 @@ public class TrainControllerHW implements TrainController {
     private final TrainModel train;
     private final int id;
 
+    private Beacon beacon;
+
+    private double power;
+    private double ki;
+    private double kp;
+    private double overrideSpeed;
+    private double speedLimit;
+    private boolean serviceBrake;
+    private boolean emergencyBrake;
+    private boolean automaticMode;
+    private boolean extLights;
+    private boolean intLights;
+    private boolean leftDoors;
+    private boolean rightDoors;
+    private double setTemperature;
+    private double currentTemperature;
+    private double commandSpeed;
+    private int authority;
+    private boolean announcements;
+    private boolean signalFailure;
+    private boolean brakeFailure;
+    private boolean powerFailure;
+
+    private final TrainControllerSubject subject;
+
     public TrainControllerHW(TrainModel m, int id) {
         this.train = m;
         this.id = id;
-        try {
-            socket = new Socket("raspberrypi.local", 1234); // Replace with the Raspberry Pi's IP address and port
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            socket = new Socket("raspberrypi.local", 1234); // Replace with the Raspberry Pi's IP address and port
+//            out = new PrintWriter(socket.getOutputStream(), true);
+//            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        this.subject = new TrainControllerSubject(this);
     }
 
     @Override
     public void setAuthority(int authority) {
-        sendCommand("setAuthority " + authority);
-        receiveResponse();
+        this.authority = authority;
+//        sendCommand("setAuthority " + authority);
+//        receiveResponse();
     }
 
     @Override
     public void setCommandSpeed(double speed) {
+        this.commandSpeed = speed;
         sendCommand("setCommandSpeed " + speed);
         receiveResponse();
     }
 
     @Override
     public void setCurrentTemperature(double temp) {
-        sendCommand("setCurrentTemperature " + temp);
-        receiveResponse();
+        this.currentTemperature = temp;
+//        sendCommand("setCurrentTemperature " + temp);
+//        receiveResponse();
     }
 
     @Override
     public void setEmergencyBrake(boolean brake) {
-        sendCommand("setEmergencyBrake " + brake);
-        receiveResponse();
+        this.emergencyBrake = brake;
+//        sendCommand("setEmergencyBrake " + brake);
+//        receiveResponse();
     }
 
     @Override
     public TrainControllerSubject getSubject() {
-        // Implement this method based on your requirements
-        // You may need to modify the TrainControllerSubject class to support remote communication
-        return null;
+        return subject;
     }
 
     @Override
     public int getID() {
-        sendCommand("getID");
-        return Integer.parseInt(Objects.requireNonNull(receiveResponse()));
+//        sendCommand("getID");
+//        return Integer.parseInt(Objects.requireNonNull(receiveResponse()));
+        return id;
     }
 
     @Override
     public double getPower() {
-        return 0;
+        return power;
     }
 
     @Override
     public double getKi() {
-        return 0;
+        return ki;
     }
 
     @Override
     public double getKp() {
-        return 0;
+        return kp;
     }
 
     @Override
     public double getOverrideSpeed() {
-        return 0;
+        return overrideSpeed;
     }
 
     @Override
     public double getSpeedLimit() {
-        return 0;
+        return speedLimit;
     }
 
     @Override
     public boolean getServiceBrake() {
-        return false;
+        return serviceBrake;
     }
 
     @Override
     public boolean getEmergencyBrake() {
-        return false;
+        return emergencyBrake;
     }
 
     @Override
     public boolean getAutomaticMode() {
-        return false;
+        return automaticMode;
     }
 
     @Override
     public boolean getExtLights() {
-        return false;
+        return extLights;
     }
 
     @Override
     public boolean getIntLights() {
-        return false;
+        return intLights;
     }
 
     @Override
     public boolean getLeftDoors() {
-        return false;
+        return leftDoors;
     }
 
     @Override
     public boolean getRightDoors() {
-        return false;
+        return rightDoors;
     }
 
     @Override
     public double getSetTemperature() {
-        return 0;
+        return setTemperature;
     }
 
     @Override
     public double getCurrentTemperature() {
-        return 0;
+        return currentTemperature;
     }
 
     @Override
     public double getCommandSpeed() {
-        return 0;
+        return commandSpeed;
     }
 
     @Override
     public int getAuthority() {
-        return 0;
+        return authority;
     }
 
     @Override
@@ -161,47 +187,55 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public boolean getAnnouncements() {
-        return false;
+        return announcements;
     }
 
     @Override
     public boolean getSignalFailure() {
-        return false;
+        return signalFailure;
     }
 
     @Override
     public boolean getBrakeFailure() {
-        return false;
+        return brakeFailure;
     }
 
     @Override
     public boolean getPowerFailure() {
-        return false;
+        return powerFailure;
     }
 
     // Implement the remaining methods from the TrainController interface
     // These methods will send commands to the Raspberry Pi and receive responses
 
     private void sendCommand(String command) {
-        out.println(command);
+        logger.warn("Sending command: {}", command);
+       // out.println(command);
     }
 
     private String receiveResponse() {
-        try {
-            return in.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        logger.warn("Receiving response {}", "not implemented");
+//        try {
+//            return in.readLine();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+        return "unimplemented response";
     }
 
     @Override
     public void delete() {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            socket.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @Override
+    public boolean isHW() {
+        return true;
     }
 
     @Override
@@ -216,7 +250,7 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public void updateBeacon(Beacon beacon) {
-
+        this.beacon = beacon;
     }
 
     @Override
@@ -226,17 +260,7 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public TrainModel getTrain() {
-        return null;
-    }
-
-    @Override
-    public boolean getLeftPlatform() {
-        return false;
-    }
-
-    @Override
-    public String getNextStationName() {
-        return "";
+        return train;
     }
 
     @Override
@@ -244,19 +268,10 @@ public class TrainControllerHW implements TrainController {
         return 0;
     }
 
-    @Override
-    public boolean getRightPlatform() {
-        return false;
-    }
-
-    @Override
-    public boolean getInTunnel() {
-        return false;
-    }
 
     @Override
     public Beacon getBeacon() {
-        return null;
+        return beacon;
     }
 
     @Override
@@ -266,6 +281,27 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {
-
+        switch ((ControllerProperty) propertyName) {
+            case POWER -> power = (double) newValue;
+            case KI -> ki = (double) newValue;
+            case KP -> kp = (double) newValue;
+            case OVERRIDE_SPEED -> overrideSpeed = (double) newValue;
+            case SPEED_LIMIT -> speedLimit = (double) newValue;
+            case SERVICE_BRAKE -> serviceBrake = (boolean) newValue;
+            case EMERGENCY_BRAKE -> emergencyBrake = (boolean) newValue;
+            case AUTOMATIC_MODE -> automaticMode = (boolean) newValue;
+            case EXT_LIGHTS -> extLights = (boolean) newValue;
+            case INT_LIGHTS -> intLights = (boolean) newValue;
+            case LEFT_DOORS -> leftDoors = (boolean) newValue;
+            case RIGHT_DOORS -> rightDoors = (boolean) newValue;
+            case SET_TEMPERATURE -> setTemperature = (double) newValue;
+            case CURRENT_TEMPERATURE -> currentTemperature = (double) newValue;
+            case COMMAND_SPEED -> commandSpeed = (double) newValue;
+            case AUTHORITY -> authority = (int) newValue;
+            case ANNOUNCEMENTS -> announcements = (boolean) newValue;
+            case SIGNAL_FAILURE -> signalFailure = (boolean) newValue;
+            case BRAKE_FAILURE -> brakeFailure = (boolean) newValue;
+            case POWER_FAILURE -> powerFailure = (boolean) newValue;
+        }
     }
 }

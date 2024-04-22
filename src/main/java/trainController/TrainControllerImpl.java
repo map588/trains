@@ -585,6 +585,11 @@ public class TrainControllerImpl implements TrainController{
         this.subject.delete();
     }
 
+    @Override
+    public boolean isHW() {
+        return false;
+    }
+
     public double  getSpeedLimit() {
         return this.speedLimit;
     }

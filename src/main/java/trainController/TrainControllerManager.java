@@ -13,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +28,17 @@ import static trainController.ControllerProperty.*;
 public class TrainControllerManager {
     @FXML
     public CheckBox HWTrainCheckBox;
+    public AnchorPane controllerStatusPane;
+    public AnchorPane stationStatusPane;
+    public AnchorPane cabinSettingsPane;
+    public AnchorPane speedControllerPane;
+    public AnchorPane brakePane;
     @FXML
     AnchorPane masterTrainControllerPane;
     @FXML
     public TextArea statusLog;
     @FXML
     private Text nextStationText;
-    @FXML
-    private Rectangle stationInf, blockInfo;
     @FXML
     private CheckBox intLightCheckBox, extLightCheckBox, openDoorLeftCheckBox, openDoorRightCheckBox, toggleServiceBrakeCheckBox, autoModeCheckBox;
     @FXML
@@ -99,6 +101,18 @@ public class TrainControllerManager {
             }else{
                 changeTrainView(newSelection);
             }
+        });
+
+
+        HWTrainCheckBox.setOnAction(event -> {
+            if(TrainControllerFactory.getTrainLock()){
+                HWTrainCheckBox.setSelected(false);
+                logger.warn("Train Controller is locked, unable to change hardware mode");
+                return;
+            }
+
+            TrainControllerFactory.HWController = HWTrainCheckBox.isSelected();
+            logger.info("Hardware Train Controller set to {}", HWTrainCheckBox.isSelected());
         });
 
         emergencyBrakeButton.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
@@ -427,10 +441,21 @@ public class TrainControllerManager {
         logger.info("UI reset for null subject");
     }
 
+    private void setHWMode(boolean isHW){
+        HWTrainCheckBox.setSelected(isHW);
+        controllerStatusPane.disableProperty().setValue(isHW);
+        stationStatusPane.disableProperty().setValue(isHW);
+        cabinSettingsPane.disableProperty().setValue(isHW);
+        speedControllerPane.disableProperty().setValue(isHW);
+        brakePane.disableProperty().setValue(isHW);
+    }
 
 
     //Called when controller is switched, updates state of all UI elements
     private void updateView() {
+    setHWMode(currentSubject.getController().isHW());
+
+        // Update gauges
             currentSpeedGauge.setValue(currentSubject.getDoubleProperty(CURRENT_SPEED).get());
             commandedSpeedGauge.setValue(currentSubject.getDoubleProperty(COMMAND_SPEED).get());
             speedLimitGauge.setValue(currentSubject.getDoubleProperty(SPEED_LIMIT).get());

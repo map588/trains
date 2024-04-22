@@ -16,6 +16,10 @@ public class TrainControllerFactory {
         return INSTANCE;
     }
 
+    public static boolean getTrainLock() {
+        return trainControllerLock;
+    }
+
     public TrainController createTrainController(TrainModel m, int id) {
         if(HWController && !trainControllerLock) {
             HWController = false;
