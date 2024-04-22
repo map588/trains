@@ -13,6 +13,8 @@ import trainModel.Records.UpdatedTrainValues;
 
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static Utilities.Constants.*;
 import static Utilities.Conversion.*;
@@ -92,6 +94,7 @@ public class TrainControllerImpl implements TrainController{
     private final TrainControllerSubject subject;
     private final TrainModel train;
     private ConcurrentHashMap<Integer, ControllerBlock> blockLookup;
+    private static final ExecutorService notificationExecutor = Executors.newSingleThreadExecutor();
 
     public TrainControllerImpl(TrainModel train, int trainID) {
         this.trainID = trainID;
@@ -138,7 +141,7 @@ public class TrainControllerImpl implements TrainController{
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
         // Check for failures
-        checkBrakeFailure(train.getServiceBrake());
+        checkBrakeFailure();
         checkPowerFailure();
         checkSignalFailure(train.getCommandSpeed());
 
@@ -183,7 +186,9 @@ public class TrainControllerImpl implements TrainController{
             double proportionalTerm = Kp * error;
 
             // Update the rolling error
-            rollingError += error * TIME_STEP;
+            if(!powerFailure) {
+                rollingError += error * TIME_STEP;
+            }
 
             // Introduce an integral term to reduce steady-state error
             double integralTerm = Ki * rollingError;
@@ -206,7 +211,7 @@ public class TrainControllerImpl implements TrainController{
             }
 
             // Cut off power if brakes are engaged or there's a failure
-            if (emergencyBrake || serviceBrake || powerFailure) {
+            if (emergencyBrake || serviceBrake) {
                 pow = 0;
             }
 
@@ -298,14 +303,14 @@ public class TrainControllerImpl implements TrainController{
     }
 
     //This is broken, all it takes is a small amount of time, and they aren't synced in a normal case
-    public void checkBrakeFailure(boolean trainServiceBrake){
-
+    public void checkBrakeFailure(){
         // Failures occur when the brake states in the train controller do not match with brake states in the train model
-        if (this.serviceBrake && !trainServiceBrake){
-            this.setBrakeFailure(true);
-            this.setEmergencyBrake(true);
-        }else {
-            this.setBrakeFailure(false);
+        if(train.getServiceBrake() && !serviceBrake){
+                this.setBrakeFailure(true);
+                this.setEmergencyBrake(true);
+        }else if(brakeFailure) {
+                this.setBrakeFailure(false);
+                this.setEmergencyBrake(false);
         }
     }
 
@@ -315,8 +320,9 @@ public class TrainControllerImpl implements TrainController{
         if (value == -1){
             this.setSignalFailure(true);
             this.setEmergencyBrake(true);
-        } else{
+        } else if(signalFailure){
             this.setSignalFailure(false);
+            this.setEmergencyBrake(false);
         }
 
         return signalFailure;
@@ -326,8 +332,9 @@ public class TrainControllerImpl implements TrainController{
         if (this.power > 1 && train.getPower() == 0) {
             this.setPowerFailure(true);
             this.setEmergencyBrake(true);
-        }else{
-            this.setPowerFailure(false);
+        }else if(powerFailure) {
+                this.setPowerFailure(false);
+                this.setEmergencyBrake(false);
         }
 
     }
@@ -335,7 +342,8 @@ public class TrainControllerImpl implements TrainController{
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        subject.notifyChange(AUTOMATIC_MODE, mode);
+        notificationExecutor.execute( ()->
+            subject.notifyChange(AUTOMATIC_MODE, mode));
     }
     public void setAuthority(int authority) {
 
@@ -354,7 +362,8 @@ public class TrainControllerImpl implements TrainController{
         }
         else {
             this.authority = authority;
-            subject.notifyChange(AUTHORITY, authority);
+            notificationExecutor.execute( ()->
+	            subject.notifyChange(AUTHORITY, authority));
         }
     }
     public void setCommandSpeed(double speed) {
@@ -363,97 +372,122 @@ public class TrainControllerImpl implements TrainController{
         }
         else {
             this.commandSpeed = speed;
-            subject.notifyChange(COMMAND_SPEED, convertVelocity(speed, MPS, MPH));
+            notificationExecutor.execute( ()->
+			subject.notifyChange(COMMAND_SPEED, convertVelocity(speed, MPS, MPH)));
         }
-        //calculatePower();
+        //calculatePower());
     }
     public void setCurrentSpeed(double speed) {
         this.currentSpeed = speed;
-        subject.notifyChange(CURRENT_SPEED , convertVelocity(speed, MPS, MPH));
+        notificationExecutor.execute( ()->
+				subject.notifyChange(CURRENT_SPEED , convertVelocity(speed, MPS, MPH)));
     }
     private void setServiceBrake(boolean brake) {
         this.serviceBrake = brake;
-        subject.notifyChange(SERVICE_BRAKE , brake);
+        train.setServiceBrake(brake);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(SERVICE_BRAKE , brake));
     }
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
-        subject.notifyChange(EMERGENCY_BRAKE , brake);
+        train.setEmergencyBrake(brake);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(EMERGENCY_BRAKE , brake));
     }
     public void setKi(double Ki) {
         this.Ki = Ki;
-        subject.notifyChange(KI , Ki);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(KI , Ki));
     }
     public void setKp(double Kp) {
         this.Kp = Kp;
-        subject.notifyChange(KP , Kp);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(KP , Kp));
     }
     public void setPower(double power) {
         this.power = power;
-        subject.notifyChange(POWER , convertPower(power, WATTS, HORSEPOWER));
+        notificationExecutor.execute( ()->
+				subject.notifyChange(POWER , convertPower(power, WATTS, HORSEPOWER)));
     }
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        subject.notifyChange(INT_LIGHTS , lights); // This might've been the issue interiorLights -> intLights
+        notificationExecutor.execute( ()->
+				subject.notifyChange(INT_LIGHTS , lights)); // This might've been the issue interiorLights -> intLights
     }
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
-        subject.notifyChange(EXT_LIGHTS , lights); // This might've been the issue exteriorLights -> extLights
+        notificationExecutor.execute( ()->
+				subject.notifyChange(EXT_LIGHTS , lights));// This might've been the issue exteriorLights -> extLights
     }
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        subject.notifyChange(LEFT_DOORS , doors);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(LEFT_DOORS , doors));
     }
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        subject.notifyChange(RIGHT_DOORS , doors);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(RIGHT_DOORS , doors));
     }
     public void setSetTemperature(double temp) {
         this.setTemperature = temp;
-        subject.notifyChange(SET_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT));
+        notificationExecutor.execute( ()->
+				subject.notifyChange(SET_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT)));
     }
     public void setCurrentTemperature(double temp){
         this.currentTemperature = temp;
-        subject.notifyChange(CURRENT_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT));
+        notificationExecutor.execute( ()->
+				subject.notifyChange(CURRENT_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT)));
     }
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        subject.notifyChange(ANNOUNCEMENTS , announcements);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(ANNOUNCEMENTS , announcements));
     }
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        subject.notifyChange(SIGNAL_FAILURE , signalFailure);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(SIGNAL_FAILURE , signalFailure));
     }
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        subject.notifyChange(BRAKE_FAILURE , brakeFailure);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(BRAKE_FAILURE , brakeFailure));
     }
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        subject.notifyChange(POWER_FAILURE , powerFailure);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(POWER_FAILURE , powerFailure));
     }
     public void setInTunnel(boolean tunnel){
         this.inTunnel = tunnel;
-        subject.notifyChange(IN_TUNNEL ,tunnel);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(IN_TUNNEL ,tunnel));
     }
     public void setLeftPlatform(boolean platform){
         this.leftPlatform = platform;
-        subject.notifyChange(LEFT_PLATFORM ,platform);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(LEFT_PLATFORM ,platform));
     }
     public void setRightPlatform(boolean platform){
         this.rightPlatform = platform;
-        subject.notifyChange(RIGHT_PLATFORM ,platform);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(RIGHT_PLATFORM ,platform));
     }
     public void setSpeedLimit(double limit){
         this.speedLimit = limit;
-        subject.notifyChange(SPEED_LIMIT , convertVelocity(limit, MPS, MPH));
+        notificationExecutor.execute( ()->
+				subject.notifyChange(SPEED_LIMIT , convertVelocity(limit, MPS, MPH)));
     }
     public void setNextStationName(String name){
         this.nextStationName = name;
-        subject.notifyChange(NEXT_STATION ,name);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(NEXT_STATION ,name));
     }
     public void setGrade(double newValue) {
         this.grade = newValue;
-        subject.notifyChange(GRADE ,newValue);
+        notificationExecutor.execute( ()->
+				subject.notifyChange(GRADE ,newValue));
     }
 
     /**
