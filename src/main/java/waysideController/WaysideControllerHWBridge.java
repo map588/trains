@@ -213,7 +213,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     public void CTCSendAuthority(int blockID, int blockCount) {
         logger.info("CTCSendAuthority: " + blockID + " " + blockCount);
 
-        if(blockMap.get(blockID).inMaintenance() && blockMap.get(blockID).isOccupied() && trackModel != null) {
+        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setTrainAuthority(blockID, blockCount);
         }
     }
@@ -240,7 +240,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     public void CTCSendSpeed(int blockID, double speed) {
         logger.info("CTCSendSpeed: " + blockID + " " + speed);
 
-        if(trackModel != null) {
+        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setCommandedSpeed(blockID, speed);
         }
     }

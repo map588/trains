@@ -97,7 +97,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Transition Variables
 
-    ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
+    private static final ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
 
     private final TrainControllerFactory controllerFactory = TrainControllerFactory.getInstance();
 
@@ -151,13 +151,13 @@ public class TrainModelImpl implements TrainModel, Notifier {
         reconcileControllerValues(updatedTrainValuesFuture.get()); //Data unlocked
     }
 
-    synchronized public void reconcileControllerValues(UpdatedTrainValues controllerValues) {
+     private void reconcileControllerValues(UpdatedTrainValues controllerValues) {
 
-        if (this.powerFailure) {
-            this.setPower(0);
-        } else {
-            this.setPower(controllerValues.power() * numCars);
-        }
+        this.setServiceBrake(controllerValues.serviceBrake());
+        this.setEmergencyBrake(controllerValues.emergencyBrake());
+        this.setPower(controllerValues.power() * numCars);
+
+        controller.checkFailures(power);
 
         this.setExtLights(controllerValues.exteriorLights());
         this.setIntLights(controllerValues.interiorLights());
@@ -203,15 +203,14 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
         //BRAKE FORCES
+        brakeForce = 0;
         if (this.serviceBrake && !this.emergencyBrake) {
             this.brakeForce = SERVICE_BRAKE_FORCE;
         }
         if (this.emergencyBrake) {
             this.brakeForce = EMERGENCY_BRAKE_FORCE;
         }
-        if (!this.serviceBrake && !this.emergencyBrake) {
-            this.brakeForce = 0;
-        }
+
 
         //ENGINE FORCE
         double engineForce;
@@ -279,7 +278,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         return deleted;
     }
 
-
+    //TODO: Add Comments
     public void enteredNextBlock() {
         double previousElevation = currentBlock.getElevation();
         currentBlock = track.updateTrainLocation(this);
@@ -289,7 +288,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         else {
             this.setGrade(-currentBlock.getGrade());
         }
-
         relativeDistance -= currentBlockLength;
         currentBlockLength = currentBlock.getLength();
         controller.onBlock();
@@ -312,6 +310,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
 
         listeningExecutor.execute(() -> {
+            logger.warn("Train Authority: {}", authority);
         notifyChange(AUTHORITY_PROPERTY, authority);
         });
 
@@ -325,17 +324,17 @@ public class TrainModelImpl implements TrainModel, Notifier {
         });
     }
     public void setServiceBrake(boolean brake) {
+
         this.serviceBrake = (!brakeFailure && brake);
         listeningExecutor.execute(() -> {
-            notifyChange(SERVICEBRAKE_PROPERTY, this.serviceBrake);
+            notifyChange(SERVICEBRAKE_PROPERTY, !brakeFailure && brake);
         });
     }
 
     public void setPower(double power) {
-        this.power = power;
-
+        this.power = (powerFailure) ? 0 : power;
         listeningExecutor.execute(() -> {
-            notifyChange(POWER_PROPERTY, Conversion.convertPower(power, WATTS, HORSEPOWER));
+            notifyChange(POWER_PROPERTY, Conversion.convertPower(this.power, WATTS, HORSEPOWER));
         });
     }
 
@@ -452,7 +451,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             //case Properties.ACCELERATION_PROPERTY -> this.acceleration = convertAcceleration((double)newValue, FPS2, MPS2);
             //case Properties.POWER_PROPERTY -> this.power = convertPower((double)newValue, HORSEPOWER, WATTS);
             //case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
-            case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
+            //case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
             case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
             case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
             case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
