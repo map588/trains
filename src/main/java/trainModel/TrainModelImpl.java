@@ -285,7 +285,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     public void setCommandSpeed(double speed) {
 
-        this.commandSpeed = (signalFailure) ? -1 : convertVelocity(speed, MPH, MPS);
+        this.commandSpeed = (signalFailure) ? -1 : speed;
         controller.setCommandSpeed(commandSpeed);
 
         listeningExecutor.execute(() -> {
