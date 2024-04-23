@@ -347,6 +347,7 @@ public class TrainControllerImpl implements TrainController{
         }
         else if (authority == RESUME_TRAIN_SIGNAL){
             waysideStop = false;
+             setServiceBrake(false);
             // Make a message on the logger
             logger.info("Train {} has been resumed by wayside", trainID);
         }
