@@ -76,7 +76,7 @@ public class TrackModelManager {
 
 
     //subject
-    private TrackBlockSubject subject;
+    TrackBlockSubject subject;
 
     //subject list for table
     ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(LineSubjectMap.getLineSubject(Lines.GREEN));
@@ -152,6 +152,10 @@ public class TrackModelManager {
     //change values based on selection in table
     public void selectBlock(TrackBlockSubject newProperties) {
         System.out.println("Selected block");
+
+        int selectedBlock = newProperties.getBlockNumber();
+        subject = selectedTrackBlockSubject.get(selectedBlock);
+
         if (subject != null) {
             // Unbind stuff here
             if (subject.isIsStation()) {
@@ -250,9 +254,12 @@ public class TrackModelManager {
 
     private void murphyEnter() {
         //get the line and block
-        subject.setBrokenRail(false);
-        subject.setTrackCircuitFailure(false);
-        subject.setPowerFailure(false);
+        int blockSelect = lineTable.getSelectionModel().getSelectedItem().getBlockNumber();
+        TrackBlockSubject selectedSubject = selectedTrackBlockSubject.get(blockSelect);
+
+        selectedSubject.setBrokenRail(false);
+        selectedSubject.setTrackCircuitFailure(false);
+        selectedSubject.setPowerFailure(false);
 
         String failure = chooseFailureMode.getValue();
 
@@ -262,18 +269,18 @@ public class TrackModelManager {
 
         switch(failure) {
             case "Broken Rail" :
-                subject.setBrokenRail(true);
+                selectedSubject.setBrokenRail(true);
                 break;
             case "Track Circuit Failure" :
-                subject.setTrackCircuitFailure(true);
+                selectedSubject.setTrackCircuitFailure(true);
                 break;
             case "Power Failure" :
-                subject.setPowerFailure(true);
+                selectedSubject.setPowerFailure(true);
                 break;
             case "Fix Track Failure" :
-                subject.setBrokenRail(false);
-                subject.setTrackCircuitFailure(false);
-                subject.setPowerFailure(false);
+                selectedSubject.setBrokenRail(false);
+                selectedSubject.setTrackCircuitFailure(false);
+                selectedSubject.setPowerFailure(false);
             default:
                 break;
         }

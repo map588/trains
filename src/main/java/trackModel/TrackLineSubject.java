@@ -5,9 +5,9 @@ import javafx.collections.ObservableList;
 
 public class TrackLineSubject {
 
-    private ObservableList<TrackBlockSubject> blockList;
+    private ObservableList<TrackLine> lineList;
 
     public TrackLineSubject(TrackLine trackLine) {
-        ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(trackLine.getSubject());
+        lineList = FXCollections.observableArrayList(trackLine);
     }
 }
