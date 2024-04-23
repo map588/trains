@@ -94,6 +94,7 @@ public class TrainModelManager {
         trainWidthLabel.setText("8.69");
 
         setUpCircleColors();
+        eBrakeBtn.setStyle("-fx-background-color: #ff3333; -fx-text-fill: #ffffff;");
         logger.info("Finished TrainModelManager initialize");
     }
 
