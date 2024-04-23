@@ -4,6 +4,7 @@ import Common.CTCOffice;
 import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.BlockIDs;
+import Framework.Support.Notifier;
 import Utilities.BasicTrackMap;
 import Utilities.Constants;
 import Utilities.Enums.Lines;
@@ -12,6 +13,7 @@ import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static Utilities.TimeConvert.*;
+import static CTCOffice.Properties.OfficeProperties.*;
 import java.util.*;
 
 /**
@@ -20,7 +22,7 @@ import java.util.*;
  */
 
 
-public class CTCOfficeImpl implements CTCOffice {
+public class CTCOfficeImpl implements CTCOffice, Notifier {
     public final static ArrayList<Integer> GreenTrackLayout = new ArrayList<>(List.of(
             63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
             78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92,
@@ -51,7 +53,11 @@ public class CTCOfficeImpl implements CTCOffice {
     private static TrackSystem trackSystem;
     private final CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
     Map<Integer, BlockIDs> trainLocations = new HashMap<>();
+    ArrayList<Integer> trainIDs = new ArrayList<>();
+    Map<Double, TrainIdentity> trainSchedule = new HashMap<>();
+    ArrayList<Double> dispatchTimes = new ArrayList<>();
 
+    CTCOfficeSubject subject = new CTCOfficeSubject(this);
     /**
      * Constructor for the CTCOfficeImpl class.
      * Initializes the track blocks and the schedule.
@@ -136,6 +142,7 @@ public class CTCOfficeImpl implements CTCOffice {
 
     public void setTime(double time) {
         this.time = time;
+        notifyChange(TIME_PROPERTY, time);
     }
 
     public void incrementTime() {
@@ -149,6 +156,10 @@ public class CTCOfficeImpl implements CTCOffice {
     void setTicketSales(int ticketSales) {
         logger.warn("setTicketSales() is not implemented");
         this.ticketSales = ticketSales;
+    }
+    int getTicketSales() {
+        logger.warn("getTicketSales() is not implemented");
+        return ticketSales;
     }
 
     void setMode(int mode) {
@@ -189,9 +200,27 @@ public class CTCOfficeImpl implements CTCOffice {
         return autoMode;
     }
 
-    void DispatchTrain(Lines line , int trainID) {
+    void runSchedule(String scheduleName) {
+        logger.info("Running schedule {}", scheduleName);
+        ScheduleFile scheduleFile = scheduleLibrary.getSubject(scheduleName).getSchedule();
+        for (TrainSchedule schedule : scheduleFile.getMultipleTrainSchedules().values()) {
+           trainSchedule.put(schedule.getDispatchTime(), new TrainIdentity(schedule.getTrainID(), Enum.valueOf(Lines.class, schedule.getLine()), schedule.getDispatchTime(), schedule.getCarCount()));
+           dispatchTimes.add(schedule.getDispatchTime());
+           dispatchTimes.sort(Comparator.naturalOrder());
+        }
+
+    }
+    public void notifyTrainReturn(int trainID) {
+        logger.info("Train {} has returned to the yard", trainID);
+        trainLocations.remove(trainID);
+        trainIDs.remove(trainID);
+    }
+    void DispatchTrain(Lines line , int trainID, int carCount, double dispatchTime){
         logger.info("CTC Dispatching train {} on line {}", trainID, line);
         trackSystem.dispatchTrain(line, trainID);
+        trainSchedule.remove(dispatchTime);
+        dispatchTimes.remove(0);
+        trainIDs.add(trainID);
         trainLocations.put(trainID, BlockIDs.of(0, line));
     }
 
@@ -203,6 +232,11 @@ public class CTCOfficeImpl implements CTCOffice {
     void sendAuthority(Lines line, int blockID, int authority) {
         logger.info("CTC sending authority {} to block {} on line {}", authority, blockID, line);
         WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
+    }
+
+    public void notifyChange(String property, Object newValue) {
+        logger.info("Property {} has been changed to {}", property, newValue);
+        subject.setProperty(property, newValue);
     }
 }
 

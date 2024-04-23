@@ -1,47 +1,54 @@
 package CTCOffice;
 
 import Framework.Support.AbstractSubject;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleIntegerProperty;
+import Framework.Support.ObservableHashMap;
+import Utilities.Enums.Lines;
+import javafx.beans.property.*;
+import static CTCOffice.Properties.OfficeProperties.*;
+import static Utilities.TimeConvert.*;
+
 
 
 public class CTCOfficeSubject implements AbstractSubject{
-    private final IntegerProperty time;
-    private IntegerProperty ticketSales;
-    private IntegerProperty mode;
-    private BooleanProperty manualMode;
-    private BooleanProperty maintenanceMode;
-    private BooleanProperty autoMode;
+    public final CTCOfficeImpl office;
+    private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 
     CTCOfficeSubject(CTCOfficeImpl office){
-        this.time = new SimpleIntegerProperty(this, "time", (int)office.getTime());
+        properties.put(TIME_PROPERTY, new SimpleStringProperty(this, TIME_PROPERTY, convertDoubleToClockTime(office.getTime())));
+        properties.put(TICKET_SALES_PROPERTY, new SimpleIntegerProperty(this, TICKET_SALES_PROPERTY, office.getTicketSales()));
+        properties.put(MODE_PROPERTY, new SimpleIntegerProperty(this, MODE_PROPERTY, office.getMode()));
+        properties.put(MANUAL_MODE_PROPERTY, new SimpleBooleanProperty(this, MANUAL_MODE_PROPERTY, office.getManualMode()));
+        properties.put(MAINTENANCE_MODE_PROPERTY, new SimpleBooleanProperty(this, MAINTENANCE_MODE_PROPERTY, office.getMaintenanceMode()));
+        properties.put(AUTO_MODE_PROPERTY, new SimpleBooleanProperty(this, AUTO_MODE_PROPERTY, office.getAutoMode()));
+        this.office = office;
+        properties.get(TIME_PROPERTY).addListener((observable, oldValue, newValue) -> {
+            if(office.dispatchTimes.get(0) <= convertClockTimeToDouble((String) newValue)){
+                TrainIdentity train = office.trainSchedule.get(office.dispatchTimes.get(0));
+                office.DispatchTrain(train.line(), train.trainID(), train.carCount(), train.dispatchTime());
+            }
+        });
     }
 
     public void setProperty(String propertyName, Object newValue) {
-        switch (propertyName) {
-            case "time": updateProperty(time, newValue);
-            case "ticketSales": updateProperty(ticketSales, newValue);
-            case "mode": updateProperty(mode, newValue);
-            case "manualMode": updateProperty(manualMode, newValue);
-            case "maintenanceMode": updateProperty(maintenanceMode, newValue);
-            case "autoMode": updateProperty(autoMode, newValue);
-
+        if (newValue == null) {
+            System.err.println("Null value for property " + propertyName);
+            return;
         }
+        updateProperty(getProperty(propertyName), newValue);
     }
 
     public Property<?> getProperty(String propertyName) {
-        return switch (propertyName) {
-            case "time" -> time;
-            case "ticketSales" -> ticketSales;
-            case "mode" -> mode;
-            case "manualMode" -> manualMode;
-            case "maintenanceMode" -> maintenanceMode;
-            case "autoMode" -> autoMode;
-            default -> null;
-        };
+        return properties.get(propertyName);
     }
+
+    public StringProperty getStringProperty(String propertyName) {
+        return (StringProperty) getProperty(propertyName);
+    }
+
+    public IntegerProperty getIntegerProperty(String propertyName) {
+        return (IntegerProperty) getProperty(propertyName);
+    }
+
 }
 
 

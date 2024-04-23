@@ -226,12 +226,6 @@ class CTCBlock implements Notifier {
     public boolean getSwitchState           () {
         return switchState;
     }
-    boolean getSwitchCon() {
-        return isSwitchCon;
-    }
-    boolean getSwitchDiv() {
-        return isSwitchDiv;
-    }
 
     public void notifyChange(String property, Object newValue) {
         subMap.getSubject(blockID).setProperty(property, newValue);

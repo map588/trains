@@ -29,7 +29,7 @@ public class TrainScheduleSubject implements AbstractSubject {
             return;
         }
         updateProperty(getProperty(propertyName), newValue);
-        }
+    }
 
     public Property<?> getProperty(String propertyName) {
         return properties.get(propertyName);
