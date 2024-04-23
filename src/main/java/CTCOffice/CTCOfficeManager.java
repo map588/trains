@@ -1,12 +1,10 @@
 package CTCOffice;
 
-import CTCOffice.ScheduleInfo.*;
 import Framework.Support.BlockIDs;
 import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -22,17 +20,12 @@ import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
 import static Utilities.TimeConvert.*;
-
-import Utilities.TimeConvert;
-import org.controlsfx.control.textfield.TextFields;
 
 /**
  * This class manages the GUI for the Centralized Traffic Control (CTC) office.
@@ -383,8 +376,8 @@ public class CTCOfficeManager {
             if (newValue != null) {
                 stopSelector.setValue(newValue.getStop().getStopIndex());
                 stationStopSelector.setText("" + newValue.getStop().getStationBlockID());
-                arrivalTimeSelector.setText(convertIntToClockTime(newValue.getStop().getArrivalTime()));
-                departureTimeSelector.setText(convertIntToClockTime(newValue.getStop().getDepartureTime()));
+                arrivalTimeSelector.setText(convertDoubleToClockTime(newValue.getStop().getArrivalTime()));
+                departureTimeSelector.setText(convertDoubleToClockTime(newValue.getStop().getDepartureTime()));
             }
         });
 
@@ -442,14 +435,14 @@ public class CTCOfficeManager {
                 stationStopSelector.setText("0");
             }
             if(train.getStop(train.getStopCount() - 1) == null) {
-                arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.02));
-                departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.03));
+                arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + (300)));
+                departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 60));
             }else{
-                if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= (double)train.getStop(train.getStopCount() - 1).getArrivalTime())) {
-                    arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount() - 1).getDepartureTime() + 5.0));
+                if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= train.getStop(train.getStopCount() - 1).getArrivalTime())) {
+                    arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount() - 1).getDepartureTime() + 300));
                 }
-                if (departureTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(departureTimeSelector.getText()) <= (double)train.getStop(train.getStopCount() - 1).getDepartureTime())) {
-                    departureTimeSelector.setText(convertDoubleToClockTime(convertClockTimeToDouble(arrivalTimeSelector.getText()) + 1));
+                if (departureTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(departureTimeSelector.getText()) <= train.getStop(train.getStopCount() - 1).getDepartureTime())) {
+                    departureTimeSelector.setText(convertDoubleToClockTime(convertClockTimeToDouble(arrivalTimeSelector.getText()) + 60));
                 }
             }
             train.addStop(Integer.parseInt(stationStopSelector.getText()),  (int)convertClockTimeToDouble(arrivalTimeSelector.getText()), (int)convertClockTimeToDouble(departureTimeSelector.getText()));

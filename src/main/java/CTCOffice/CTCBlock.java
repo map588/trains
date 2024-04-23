@@ -160,7 +160,7 @@ class CTCBlock implements Notifier {
     double     getSpeedLimit   () {
         return speedLimit;
     }
-    double     getBlockLength  () {
+    double     getLength  () {
         return blockLength;
     }
 

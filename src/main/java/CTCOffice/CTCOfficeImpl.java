@@ -1,6 +1,5 @@
 package CTCOffice;
 
-import CTCOffice.ScheduleInfo.*;
 import Common.CTCOffice;
 import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
@@ -12,12 +11,8 @@ import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import static Utilities.TimeConvert.*;
+import java.util.*;
 
 /**
  * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).
@@ -26,8 +21,20 @@ import java.util.Map;
 
 
 public class CTCOfficeImpl implements CTCOffice {
-    public final static ArrayList<Integer> GreenTrackLayout = new ArrayList<>();
-    public final static ArrayList<Integer> RedTrackLayout = new ArrayList<>();
+    public final static ArrayList<Integer> GreenTrackLayout = new ArrayList<>(List.of(
+            63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
+            78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92,
+            93, 94, 95, 96, 97, 98, 99, 100, 85, 84, 83, 82, 81, 80, 79,
+            78, 77, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113,
+            114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128,
+            129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143,
+            144, 145, 146, 147, 148, 149, 150, 28, 27, 26, 25, 24, 23, 22, 21,
+            20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6,
+            5, 4, 3, 2, 1, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
+            38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+            53, 54, 55, 56, 57));
+    public final static ArrayList<Integer> RedTrackLayout = new ArrayList<>(List.of(54,3,5));
 
     private double  time; // in seconds
     private int     ticketSales;
@@ -51,22 +58,6 @@ public class CTCOfficeImpl implements CTCOffice {
      */
     private CTCOfficeImpl() {
         time = 0;
-        int[] blocks = {
-                63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
-                78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92,
-                93, 94, 95, 96, 97, 98, 99, 100, 85, 84, 83, 82, 81, 80, 79,
-                78, 77, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113,
-                114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128,
-                129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143,
-                144, 145, 146, 147, 148, 149, 150, 28, 27, 26, 25, 24, 23, 22, 21,
-                20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6,
-                5, 4, 3, 2, 1, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-                23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
-                38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
-                53, 54, 55, 56, 57};
-        for (int j : blocks) {
-            GreenTrackLayout.add(j);
-        }
 
         BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
@@ -100,9 +91,9 @@ public class CTCOfficeImpl implements CTCOffice {
 
         new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
         scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, Lines.GREEN.toString(), 0, 2, new ArrayList<>() {{
-            add( new TrainStop(0, 5, 5, 6, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-            add( new TrainStop(1, 7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-            add( new TrainStop(2, 10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(0, 65, convertClockTimeToDouble("6:05"), convertClockTimeToDouble("6:06"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(1, 73, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(2, 9, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
 
         new ScheduleFileSubject(new ScheduleFile("Schedule2", "12/12/2019"));

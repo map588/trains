@@ -1,4 +1,4 @@
-package CTCOffice.ScheduleInfo;
+package CTCOffice;
 
 import Framework.Support.Notifier;
 
@@ -11,15 +11,15 @@ import static Utilities.TimeConvert.*;
 // A path in between two stations, a schedule is mostly just a list of these.
 public class TrainStop implements Notifier { //SubRoute
     private int stationBlockID;
-    private int arrivalTime;
-    private int departureTime;
-    private List<Integer> speedList;
+    private double arrivalTime;
+    private double departureTime;
+    private List<Double> speedList;
     private List<Integer> routePath; //routePath
-    private List<Integer> authorityList;
+    private List<Double> authorityList;
     private final TrainStopSubject subject;
     private int stopIndex;
 
-    public TrainStop(int index, int stationBlockID, int arrivalTime, int departureTime, List<Integer> speedList, List<Integer> routePath, List<Integer> authorityList) {
+    public TrainStop(int index, int stationBlockID, double arrivalTime, double departureTime, List<Double> speedList, List<Integer> routePath, List<Double> authorityList) {
         this.stopIndex = index;
         this.stationBlockID = stationBlockID;
         this.arrivalTime = arrivalTime;
@@ -30,7 +30,7 @@ public class TrainStop implements Notifier { //SubRoute
         subject = new TrainStopSubject(this);
     }
 
-    public TrainStop(int index, int stationBlockID, int arrivalTime, int departureTime) {
+    public TrainStop(int index, int stationBlockID, double arrivalTime, double departureTime) {
         this.stopIndex = index;
         this.stationBlockID = stationBlockID;
         this.arrivalTime = arrivalTime;
@@ -40,16 +40,16 @@ public class TrainStop implements Notifier { //SubRoute
         this.authorityList = new ArrayList<>();
         subject = new TrainStopSubject(this);
     }
-
+    //<editor-fold desc="Getters and Setters">
     public int getStationBlockID() {
         return stationBlockID;
     }
 
-    public int getArrivalTime() {
+    public double getArrivalTime() {
         return arrivalTime;
     }
 
-    public int getDepartureTime() {
+    public double getDepartureTime() {
         return departureTime;
     }
 
@@ -62,7 +62,7 @@ public class TrainStop implements Notifier { //SubRoute
         notifyChange(STOP_INDEX_PROPERTY, index);
     }
 
-    public List<Integer> getSpeedList() {
+    public List<Double> getSpeedList() {
         return speedList;
     }
 
@@ -70,7 +70,7 @@ public class TrainStop implements Notifier { //SubRoute
         return routePath;
     }
 
-    public List<Integer> getAuthorityList() {
+    public List<Double> getAuthorityList() {
         return authorityList;
     }
 
@@ -79,17 +79,17 @@ public class TrainStop implements Notifier { //SubRoute
         notifyChange(DESTINATION_PROPERTY, stationBlockID);
     }
 
-    public void setArrivalTime(int arrivalTime) {
+    public void setArrivalTime(double arrivalTime) {
         this.arrivalTime = arrivalTime;
-        notifyChange(ARRIVAL_TIME_PROPERTY, convertIntToClockTime(arrivalTime));
+        notifyChange(ARRIVAL_TIME_PROPERTY, convertDoubleToClockTime(arrivalTime));
     }
 
-    public void setDepartureTime(int departureTime) {
+    public void setDepartureTime(double departureTime) {
         this.departureTime = departureTime;
-        notifyChange(DEPARTURE_TIME_PROPERTY, convertIntToClockTime(departureTime));
+        notifyChange(DEPARTURE_TIME_PROPERTY, convertDoubleToClockTime(departureTime));
     }
 
-    public void setSpeedList(List<Integer> speedList) {
+    public void setSpeedList(List<Double> speedList) {
         this.speedList = new ArrayList<>(speedList);
     }
 
@@ -97,11 +97,11 @@ public class TrainStop implements Notifier { //SubRoute
         this.routePath = new ArrayList<>(routePath);
     }
 
-    public void setAuthorityList(List<Integer> authorityList) {
+    public void setAuthorityList(List<Double> authorityList) {
         this.authorityList = new ArrayList<>(authorityList);
     }
 
-    public void updateSpeedList(int index, int speed) {
+    public void updateSpeedList(int index, double speed) {
         speedList.set(index, speed);
     }
 
@@ -109,14 +109,14 @@ public class TrainStop implements Notifier { //SubRoute
         routePath.set(index, block);
     }
 
-    public void updateAuthorityList(int index, int authority) {
+    public void updateAuthorityList(int index, double authority) {
         authorityList.set(index, authority);
     }
 
     public TrainStopSubject getSubject() {
         return subject;
     }
-
+    //</editor-fold>
     public void notifyChange(String property, Object newValue) {
         subject.setProperty(property, newValue);
     }
