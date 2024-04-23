@@ -6,6 +6,7 @@ import Utilities.Enums.Lines;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -21,6 +22,7 @@ import javafx.scene.shape.Circle;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -337,7 +339,7 @@ public class CTCOfficeManager {
             System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.putTrainSchedule(schedule.getMultipleTrainSchedules().size() + 1, new TrainSchedule(schedule.getMultipleTrainSchedules().size() + 1,
-                    lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new HashMap<>()));
+                    lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new ArrayList<>()));
             trainSelectTable.getItems().add(schedule.getMultipleTrainScheduleSubjects().get(schedule.getMultipleTrainSchedules().size()));
             trainIDSelector.getItems().add(schedule.getMultipleTrainSchedules().size());
         });
@@ -363,10 +365,8 @@ public class CTCOfficeManager {
                 stopSelector.getItems().clear();
                 trainIDSelector.setValue(newValue.getSchedule().getTrainID());
                 lineTrainSelector.setValue(newValue.getSchedule().getLine());
-                for (int i = 1; i <= newValue.getSchedule().getStops().size(); i++) {
-                    scheduleEditTable.getItems().add(newValue.getSchedule().getStop(i).getSubject());
-                    stopSelector.getItems().add(i);
-                }
+                scheduleEditTable.getItems().addAll(newValue.getSchedule().stopList);
+                stopSelector.getItems().addAll(newValue.getSchedule().stopIndices);
             }
         });
     }
@@ -378,6 +378,7 @@ public class CTCOfficeManager {
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
 
+        stationStopSelector.setText("63");
         scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 stopSelector.setValue(newValue.getStop().getStopIndex());
@@ -440,20 +441,20 @@ public class CTCOfficeManager {
             if(stationStopSelector.getText().isEmpty()) {
                 stationStopSelector.setText("0");
             }
-            if(train.getStop(train.getStopCount()) == null) {
+            if(train.getStop(train.getStopCount() - 1) == null) {
                 arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.02));
                 departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 0.03));
             }else{
-                if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= (double)train.getStop(train.getStopCount()).getArrivalTime())) {
-                    arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount()).getDepartureTime() + 5.0));
+                if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= (double)train.getStop(train.getStopCount() - 1).getArrivalTime())) {
+                    arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount() - 1).getDepartureTime() + 5.0));
                 }
-                if (departureTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(departureTimeSelector.getText()) <= (double)train.getStop(train.getStopCount()).getDepartureTime())) {
+                if (departureTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(departureTimeSelector.getText()) <= (double)train.getStop(train.getStopCount() - 1).getDepartureTime())) {
                     departureTimeSelector.setText(convertDoubleToClockTime(convertClockTimeToDouble(arrivalTimeSelector.getText()) + 1));
                 }
             }
             train.addStop(Integer.parseInt(stationStopSelector.getText()),  (int)convertClockTimeToDouble(arrivalTimeSelector.getText()), (int)convertClockTimeToDouble(departureTimeSelector.getText()));
-            scheduleEditTable.getItems().add(train.getStop(train.getStopCount()).getSubject());
-            stopSelector.getItems().add(train.getStopCount());
+            scheduleEditTable.getItems().add(train.getStop(train.getStopCount() - 1).getSubject());
+            stopSelector.getItems().add(train.getStopCount() - 1);
         });
         RemoveStop.setOnAction(event -> {
             if(selectedSchedule == null) {
@@ -497,7 +498,10 @@ public class CTCOfficeManager {
 
         checkScheduleButton.setOnAction(event -> {
             selectedTrain.fixSchedule();
-            scheduleEditTable.refresh();
+            scheduleEditTable.getItems().clear();
+            stopSelector.getItems().clear();
+            scheduleEditTable.getItems().addAll(selectedTrain.stopList);
+            stopSelector.getItems().addAll(selectedTrain.stopIndices);
         });
     }
 

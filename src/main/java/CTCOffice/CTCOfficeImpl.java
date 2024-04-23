@@ -99,10 +99,10 @@ public class CTCOfficeImpl implements CTCOffice {
 
 
         new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
-        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, Lines.GREEN.toString(), 0, 2, new HashMap<>() {{
-            put(1, new TrainStop(1, 5, 5, 6, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-            put(2, new TrainStop(2, 7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-            put(3, new TrainStop(3, 10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, Lines.GREEN.toString(), 0, 2, new ArrayList<>() {{
+            add( new TrainStop(0, 5, 5, 6, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(1, 7, 9, 10, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(2, 10, 12, 13, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
 
         new ScheduleFileSubject(new ScheduleFile("Schedule2", "12/12/2019"));
