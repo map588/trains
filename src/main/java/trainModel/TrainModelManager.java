@@ -86,7 +86,7 @@ public class TrainModelManager {
             }
         });
 
-        //This information was temporary, now its just wasted screen space.
+        //This information is required to be presented in the GUI.
         maxPowerLabel.setText("643.68");
         maxVelocityLabel.setText("43.48");
         medAccelerationLabel.setText("1.64");
