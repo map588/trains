@@ -141,13 +141,16 @@ public class TrainControllerImpl implements TrainController{
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
-        //This is a bandaged solution
+        // Temperature Manager
+
         this.setCurrentTemperature(train.getRealTemperature());
-        if (train.getEmergencyBrake() && !passengerEngageEBrake){
+
+
+
+        if (train.getEmergencyBrake() && !passengerEngageEBrake) {
             passengerEngageEBrake = true;
             this.setEmergencyBrake(true);
-        }
-        else if (!emergencyBrake){
+        } else if (!emergencyBrake) {
             passengerEngageEBrake = false;
             this.setEmergencyBrake(false);
         }
@@ -222,8 +225,6 @@ public class TrainControllerImpl implements TrainController{
 
         setSignalFailure(commandSpeed == -1 || authority == -1);
 
-
-
         if(powerFailure){
             train.setPower(3);
             setPowerFailure(!(train.getPower() == 3));
@@ -241,7 +242,7 @@ public class TrainControllerImpl implements TrainController{
 
         if(brakeFailure || powerFailure || signalFailure){
             setEmergencyBrake(true);
-        }else{
+        }else if (!this.passengerEngageEBrake){
             setEmergencyBrake(eBrakeGUI);
         }
     }
