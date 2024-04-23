@@ -1,371 +1,248 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
-<?import javafx.scene.control.ChoiceBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="747.0"
-            prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trackModel.TrackModelManager">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="662.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trackModel.TrackModelManager">
     <AnchorPane prefHeight="62.0" prefWidth="1024.0">
-        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#d9d9d9" height="62.0" layoutX="-1.0" stroke="BLACK"
-                   strokeType="INSIDE" width="1026.0"/>
+        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#d9d9d9" height="62.0" layoutX="-1.0" stroke="BLACK" strokeType="INSIDE" width="1026.0" />
         <Label layoutX="416.0" layoutY="16.0" text="Track Model Interface">
             <font>
-                <Font size="20.0"/>
+                <Font size="20.0" />
             </font>
         </Label>
         <Label layoutX="855.0" layoutY="14.0" text="Beta v0.3.1">
             <font>
-                <Font size="20.0"/>
+                <Font size="20.0" />
             </font>
         </Label>
         <Label fx:id="logo" layoutX="59.0" layoutY="8.0" prefHeight="46.0" prefWidth="142.0" text="J.A.M.E.S.">
             <font>
-                <Font name="Papyrus" size="22.5"/>
+                <Font name="Papyrus" size="22.5" />
             </font>
         </Label>
     </AnchorPane>
-    <AnchorPane layoutY="83.0" minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="1024.0">
-        <TableView fx:id="lineTable" layoutX="384.0" layoutY="55.0" prefHeight="574.0" prefWidth="637.0">
+    <AnchorPane layoutY="83.0" minHeight="0.0" minWidth="0.0" prefHeight="565.0" prefWidth="1024.0">
+        <TableView fx:id="lineTable" layoutX="384.0" layoutY="47.0" prefHeight="515.0" prefWidth="637.0">
             <columns>
-                <TableColumn fx:id="occupiedColumn" editable="false" prefWidth="70.5" text="Occupied"/>
-                <TableColumn fx:id="blockColumn" editable="false" prefWidth="43.5" text="Block"/>
-                <TableColumn fx:id="lengthColumn" editable="false" prefWidth="59.5" text="Length"/>
-                <TableColumn fx:id="gradeColumn" editable="false" prefWidth="55.5" text="Grade"/>
-                <TableColumn fx:id="elevationColumn"  editable="false" prefWidth="69.0" text="Elevation"/>
-                <TableColumn fx:id="speedLimitColumn" editable="false" prefWidth="71.5" text="Sp. Limit"/>
-                <TableColumn fx:id="directionColumn" editable="false" prefWidth="106.0" text="Direction"/>
-                <TableColumn fx:id="failureColumn" editable="false" prefWidth="149.5" text="Failure"/>
+                <TableColumn fx:id="occupiedColumn" editable="false" prefWidth="70.5" text="Occupied" />
+                <TableColumn fx:id="blockColumn" editable="false" prefWidth="43.5" text="Block" />
+                <TableColumn fx:id="lengthColumn" editable="false" prefWidth="59.5" text="Length" />
+                <TableColumn fx:id="gradeColumn" editable="false" prefWidth="55.5" text="Grade" />
+                <TableColumn fx:id="elevationColumn" editable="false" prefWidth="69.0" text="Elevation" />
+                <TableColumn fx:id="speedLimitColumn" editable="false" prefWidth="71.5" text="Sp. Limit" />
+                <TableColumn fx:id="directionColumn" editable="false" prefWidth="106.0" text="Direction" />
+                <TableColumn fx:id="failureColumn" editable="false" prefWidth="149.5" text="Failure" />
             </columns>
         </TableView>
         <Label fx:id="sectionsLabel" layoutX="756.0" layoutY="13.5" text="Select a Line">
             <font>
-                <Font size="18.0"/>
+                <Font size="18.0" />
             </font>
         </Label>
-        <ChoiceBox fx:id="pickLine" layoutX="866.0" layoutY="13.0" prefHeight="26.0" prefWidth="72.0"/>
-        <ScrollPane layoutX="20.25" layoutY="0.75">
-            <AnchorPane translateX="-1.0">
-                <VBox>
-                    <TitledPane fx:id="simulationInformationSec" animated="false" prefHeight="113.25"
-                                prefWidth="354.75" text="SIMULATION INFORMATION">
-                        <font>
-                            <Font size="18.0"/>
-                        </font>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="106.5"
-                                    prefWidth="354.75">
-                            <Label fx:id="simSpeedLabel" layoutX="10.5" layoutY="6.75"
-                                   text="Sim. Speed">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <ComboBox fx:id="simSpeedInput" layoutX="4.0" layoutY="34.0"
-                                      prefHeight="24.75" prefWidth="79.5" promptText="1x"/>
-                            <Label fx:id="uploadLayoutLabel" layoutX="111.0" layoutY="7.5"
-                                   text="Upload Layout:">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="pathLabel" layoutX="111.75" layoutY="39.0"
-                                   text="Path:">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <TextField fx:id="trackFilePath" layoutX="150.0" layoutY="37.0"
-                                       prefHeight="24.75" prefWidth="120.0"
-                                       promptText="/path/to/csv/layout">
-                                <font>
-                                    <Font size="11.0"/>
-                                </font>
-                            </TextField>
-                            <Button fx:id="trackUpload" layoutX="278.0" layoutY="5.0"
-                                    mnemonicParsing="false" prefHeight="22.0" prefWidth="63.0"
-                                    text="UPLOAD">
-                                <font>
-                                    <Font size="10.0"/>
-                                </font>
-                            </Button>
-                            <Button fx:id="chooseFile" layoutX="277.0" layoutY="35.0"
-                                    minHeight="-Infinity" mnemonicParsing="false"
-                                    prefHeight="26.0" prefWidth="65.0" text="Choose File">
-                                <font>
-                                    <Font size="10.0"/>
-                                </font>
-                            </Button>
-                            <TextField fx:id="lineNameInput" layoutX="201.0" layoutY="5.0"
-                                       prefHeight="24.75" prefWidth="66.0"
-                                       promptText="Line Name">
-                                <font>
-                                    <Font size="11.0"/>
-                                </font>
-                            </TextField>
-                        </AnchorPane>
-                    </TitledPane>
-                    <TitledPane fx:id="murphySec" animated="false" prefHeight="129.75"
-                                prefWidth="354.75" text="MURPHY">
-                        <font>
-                            <Font size="18.0"/>
-                        </font>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="102.0"
-                                    prefWidth="354.75">
-                            <Button fx:id="murphyEnter" layoutX="268.0" layoutY="54.0"
-                                    mnemonicParsing="false" text="ENTER"/>
-                            <ComboBox fx:id="chooseFailureMode" layoutX="18.0" layoutY="54.0"
-                                      prefHeight="24.75" prefWidth="220.5"
-                                      promptText="Choose Failure Mode"/>
-                            <Label fx:id="nameOfStationLabel1" layoutX="20.0" layoutY="19.0"
-                                   text="SET FAILURE ON SELECTED BLOCK">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                        </AnchorPane>
-                    </TitledPane>
-                    <TitledPane fx:id="trackHeaterSec" animated="false" prefHeight="77.25"
-                                prefWidth="354.75" text="TRACK HEATER">
-                        <font>
-                            <Font size="18.0"/>
-                        </font>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="69.0"
-                                    prefWidth="184.5">
-                            <Label fx:id="tempLabel" layoutX="179.25" layoutY="12.75"
-                                   text="Outside Temp:">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="degF" layoutX="318.0" layoutY="12.75"
-                                   prefHeight="13.5" prefWidth="35.25" text="º F">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="outsideTemp" layoutX="285.0" layoutY="12.75" text="0">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="trackHeaterStatus" layoutX="10.5" layoutY="12.75"
-                                   text="Status - ON">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                        </AnchorPane>
-                    </TitledPane>
-                    <TitledPane fx:id="sssSec" animated="false" prefHeight="193.5" prefWidth="354.75"
-                                text="STATION, SIGNAL, SWITCH">
-                        <font>
-                            <Font size="18.0"/>
-                        </font>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="139.5"
-                                    prefWidth="354.75">
-                            <TabPane fx:id="sssTabs" layoutX="1.5" layoutY="-0.75"
-                                     prefHeight="160.5" prefWidth="352.5"
-                                     tabClosingPolicy="UNAVAILABLE">
-                                <Tab fx:id="stationTab" text="STATION">
-                                    <AnchorPane minHeight="0.0" minWidth="0.0"
-                                                prefHeight="135.0" prefWidth="150.0">
-                                        <Label fx:id="passEmbarkedLabel"
-                                               layoutX="6.75" layoutY="49.5"
-                                               text="Passengers Embarked :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="passDisembarkLabel"
-                                               layoutX="6.0" layoutY="80.25"
-                                               text="Passengers Disembarked :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="locationLabel" layoutX="6.0"
-                                               layoutY="13.5" text="Location - ">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="ticketSalesLabel"
-                                               layoutX="226.5" layoutY="80.25"
-                                               text="Ticket Sales :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="passEmbarkedValue"
-                                               layoutX="183.75" layoutY="49.5"
-                                               text="0">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="passDisembarkedValue"
-                                               layoutX="183.75" layoutY="80.25"
-                                               text="0">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="ticketSalesValue"
-                                               layoutX="326.25" layoutY="80.25"
-                                               text="0">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="nameOfStationLabel"
-                                               layoutX="111.0" layoutY="13.5"
-                                               text="NOT A  STATION BLOCK">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="undergroundLabel"
-                                               layoutX="226.5" layoutY="49.5"
-                                               text="Underground :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="undergroundValue"
-                                               layoutX="326.25" layoutY="49.5"
-                                               text="NO">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                    </AnchorPane>
-                                </Tab>
-                                <Tab fx:id="switchTab" text="SWITCH">
-                                    <AnchorPane minHeight="0.0" minWidth="0.0"
-                                                prefHeight="135.0" prefWidth="150.0">
-                                        <Label fx:id="switchBlockNumbersLabel"
-                                               layoutX="10.5" layoutY="30.75"
-                                               text="Switch Block Numbers :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="switchStateLabel"
-                                               layoutX="10.5" layoutY="68.25"
-                                               prefHeight="17.25" prefWidth="94.5"
-                                               text="Switch State :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="switchBlockNumbersDisplay"
-                                               layoutX="189.0" layoutY="31.5"
-                                               text="NOT A SWITCH BLOCK"/>
-                                        <Label fx:id="switchStateDisplay"
-                                               layoutX="189.0" layoutY="68.25"
-                                               text="NONE"/>
-                                    </AnchorPane>
-                                </Tab>
-                                <Tab fx:id="signalTab" text="SIGNAL &amp; CROSSINGS">
-                                    <AnchorPane minHeight="0.0" minWidth="0.0"
-                                                prefHeight="135.0" prefWidth="150.0">
-                                        <Label fx:id="signalBlockNumberLabel"
-                                               layoutX="10.5" layoutY="30.75"
-                                               text="Signal Block Number :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="signalStateLabel"
-                                               layoutX="10.5" layoutY="68.25"
-                                               prefHeight="17.25" prefWidth="94.5"
-                                               text="Signal State :">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="signalBlockNumberDisplay"
-                                               layoutX="142.0" layoutY="31.0"
-                                               text="NO SIGNAL">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="signalStateDisplay"
-                                               layoutX="142.0" layoutY="69.0"
-                                               text="NONE">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="crossingLabel"
-                                               layoutX="257.25" layoutY="30.75"
-                                               text="Crossing State">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="crossingState"
-                                               layoutX="252.75" layoutY="68.25"
-                                               text="NO CROSSING">
-                                            <font>
-                                                <Font size="13.5"/>
-                                            </font>
-                                        </Label>
-                                    </AnchorPane>
-                                </Tab>
-                            </TabPane>
-                        </AnchorPane>
-                    </TitledPane>
-                    <TitledPane fx:id="beaconInfoSec" animated="false" prefHeight="112.5"
-                                prefWidth="354.75" text="BEACON INFORMATION">
-                        <font>
-                            <Font size="18.0"/>
-                        </font>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="72.0"
-                                    prefWidth="354.75">
-                            <Label fx:id="beaconInfoLabel" layoutX="8.25" layoutY="15.0"
-                                   text="Beacon Block:">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="displayBeaconInfo" layoutX="8.25" layoutY="39.75"
-                                   text="NO CURRENT BEACON INFORMATION">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                            <Label fx:id="beaconBlockNumber" layoutX="118.5" layoutY="15.0"
-                                   text="NOT A BEACON BLOCK">
-                                <font>
-                                    <Font size="13.5"/>
-                                </font>
-                            </Label>
-                        </AnchorPane>
-                    </TitledPane>
-                </VBox>
-            </AnchorPane>
-        </ScrollPane>
-        <Label fx:id="lineInfoLabel" layoutX="450.75" layoutY="15.0" text="LINE INFORMATION">
+        <ChoiceBox fx:id="pickLine" layoutX="866.0" layoutY="13.0" prefHeight="26.0" prefWidth="72.0" />
+         <AnchorPane layoutX="20.25" layoutY="0.75" prefHeight="590.0" prefWidth="355.0" translateX="-1.0">
+             <VBox layoutY="47.0" prefHeight="515.0" prefWidth="355.0">
+                 <TitledPane fx:id="murphySec" animated="false" prefHeight="129.75" prefWidth="354.75" text="MURPHY">
+                     <font>
+                         <Font size="18.0" />
+                     </font>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="102.0" prefWidth="354.75">
+                         <Button fx:id="murphyEnter" layoutX="268.0" layoutY="54.0" mnemonicParsing="false" text="ENTER" />
+                         <ComboBox fx:id="chooseFailureMode" layoutX="18.0" layoutY="54.0" prefHeight="24.75" prefWidth="220.5" promptText="Choose Failure Mode" />
+                         <Label fx:id="nameOfStationLabel1" layoutX="20.0" layoutY="19.0" text="SET FAILURE ON SELECTED BLOCK">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                     </AnchorPane>
+                 </TitledPane>
+                 <TitledPane fx:id="trackHeaterSec" animated="false" prefHeight="77.25" prefWidth="354.75" text="TRACK HEATER">
+                     <font>
+                         <Font size="18.0" />
+                     </font>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="69.0" prefWidth="184.5">
+                         <Label fx:id="tempLabel" layoutX="179.25" layoutY="12.75" text="Outside Temp:">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                         <Label fx:id="degF" layoutX="318.0" layoutY="12.75" prefHeight="13.5" prefWidth="35.25" text="º F">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                         <Label fx:id="outsideTemp" layoutX="285.0" layoutY="12.75" text="0">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                         <Label fx:id="trackHeaterStatus" layoutX="10.5" layoutY="12.75" text="Status - ON">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                     </AnchorPane>
+                 </TitledPane>
+                 <TitledPane fx:id="sssSec" animated="false" prefHeight="193.5" prefWidth="354.75" text="STATION, SIGNAL, SWITCH">
+                     <font>
+                         <Font size="18.0" />
+                     </font>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="139.5" prefWidth="354.75">
+                         <TabPane fx:id="sssTabs" layoutX="1.5" layoutY="-0.75" prefHeight="160.5" prefWidth="352.5" tabClosingPolicy="UNAVAILABLE">
+                             <Tab fx:id="stationTab" text="STATION">
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="135.0" prefWidth="150.0">
+                                     <Label fx:id="passEmbarkedLabel" layoutX="6.75" layoutY="49.5" text="Passengers Embarked :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="passDisembarkLabel" layoutX="6.0" layoutY="80.25" text="Passengers Disembarked :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="locationLabel" layoutX="6.0" layoutY="13.5" text="Location - ">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="ticketSalesLabel" layoutX="226.5" layoutY="80.25" text="Ticket Sales :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="passEmbarkedValue" layoutX="183.75" layoutY="49.5" text="0">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="passDisembarkedValue" layoutX="183.75" layoutY="80.25" text="0">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="ticketSalesValue" layoutX="326.25" layoutY="80.25" text="0">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="nameOfStationLabel" layoutX="111.0" layoutY="13.5" text="NOT A  STATION BLOCK">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="undergroundLabel" layoutX="226.5" layoutY="49.5" text="Underground :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="undergroundValue" layoutX="326.25" layoutY="49.5" text="NO">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                 </AnchorPane>
+                             </Tab>
+                             <Tab fx:id="switchTab" text="SWITCH">
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="135.0" prefWidth="150.0">
+                                     <Label fx:id="switchBlockNumbersLabel" layoutX="10.5" layoutY="30.75" text="Switch Block Numbers :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="switchStateLabel" layoutX="10.5" layoutY="68.25" prefHeight="17.25" prefWidth="94.5" text="Switch State :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="switchBlockNumbersDisplay" layoutX="189.0" layoutY="31.5" text="NOT A SWITCH BLOCK" />
+                                     <Label fx:id="switchStateDisplay" layoutX="189.0" layoutY="68.25" text="NONE" />
+                                 </AnchorPane>
+                             </Tab>
+                             <Tab fx:id="signalTab" text="SIGNAL &amp; CROSSINGS">
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="135.0" prefWidth="150.0">
+                                     <Label fx:id="signalBlockNumberLabel" layoutX="10.5" layoutY="30.75" text="Signal Block Number :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="signalStateLabel" layoutX="10.5" layoutY="68.25" prefHeight="17.25" prefWidth="94.5" text="Signal State :">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="signalBlockNumberDisplay" layoutX="142.0" layoutY="31.0" text="NO SIGNAL">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="signalStateDisplay" layoutX="142.0" layoutY="69.0" text="NONE">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="crossingLabel" layoutX="257.25" layoutY="30.75" text="Crossing State">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                     <Label fx:id="crossingState" layoutX="252.75" layoutY="68.25" text="NO CROSSING">
+                                         <font>
+                                             <Font size="13.5" />
+                                         </font>
+                                     </Label>
+                                 </AnchorPane>
+                             </Tab>
+                         </TabPane>
+                     </AnchorPane>
+                 </TitledPane>
+                 <TitledPane fx:id="beaconInfoSec" animated="false" prefHeight="112.5" prefWidth="354.75" text="BEACON INFORMATION">
+                     <font>
+                         <Font size="18.0" />
+                     </font>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="72.0" prefWidth="354.75">
+                         <Label fx:id="beaconInfoLabel" layoutX="8.25" layoutY="15.0" text="Beacon Block:">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                         <Label fx:id="displayBeaconInfo" layoutX="8.25" layoutY="39.75" text="NO CURRENT BEACON INFORMATION">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                         <Label fx:id="beaconBlockNumber" layoutX="118.5" layoutY="15.0" text="NOT A BEACON BLOCK">
+                             <font>
+                                 <Font size="13.5" />
+                             </font>
+                         </Label>
+                     </AnchorPane>
+                 </TitledPane>
+             </VBox>
+         <Label fx:id="lineInfoLabel1" layoutX="85.0" layoutY="11.0" text="TRACK INFORMATION">
             <font>
-                <Font size="18.0"/>
+               <Font size="18.0" />
+            </font>
+         </Label>
+         </AnchorPane>
+        <Label fx:id="lineInfoLabel" layoutX="468.0" layoutY="14.0" text="LINE INFORMATION">
+            <font>
+                <Font size="18.0" />
             </font>
         </Label>
     </AnchorPane>
-    <ImageGridCell layoutX="10.0" layoutY="10.0"/>
+    <ImageGridCell layoutX="10.0" layoutY="10.0" />
 </AnchorPane>

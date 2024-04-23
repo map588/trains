@@ -18,24 +18,17 @@ public class TrackModelManager {
     @FXML
     public Label ticketSalesLabel, locationLabel, passDisembarkLabel, passEmbarkedLabel;
     @FXML
-    public Label tempLabel, uploadLayoutLabel, pathLabel, simSpeedLabel, switchBlockNumbersLabel;
+    public Label tempLabel, switchBlockNumbersLabel;
     @FXML
     public Label switchStateLabel, signalBlockNumberLabel, signalStateLabel, crossingLabel;
     @FXML
     public Label beaconInfoLabel, lineInfoLabel, degF, sectionsLabel, logo;
     @FXML
-    public TitledPane sssSec, trackHeaterSec, murphySec, simulationInformationSec, beaconInfoSec;
+    public TitledPane sssSec, trackHeaterSec, murphySec, beaconInfoSec;
     @FXML
-    public Tab layoutTab, switchTab, signalTab, stationTab;
+    public Tab switchTab, signalTab, stationTab;
     @FXML
     public TabPane sssTabs;
-
-    @FXML
-    private Button trackUpload, chooseFile;
-    @FXML
-    private TextField trackFilePath, lineNameInput;
-    @FXML
-    private ComboBox<String> simSpeedInput;
 
     //murphy
     @FXML
@@ -87,22 +80,17 @@ public class TrackModelManager {
     //subject
     private TrackBlockSubject subject;
 
-
+    //subject list for table
     ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(LineSubjectMap.getLineSubject(Lines.GREEN));
 
     @FXML
     public void initialize() {
         //initialize buttons and user inputs
-        chooseFile.setOnAction(event -> chooseFolder());
-        trackUpload.setOnAction(event -> uploadTrack());
         murphyEnter.setOnAction(event -> murphyEnter());
-        simSpeedInput.setOnAction(event -> setSimSpeed(simSpeedInput.getValue()));
-        lineNameInput.setOnAction(event -> addLineName(lineNameInput.getText()));
 
         //initialize combo boxes
         updateLineChoiceBox();
 
-        simSpeedInput.getItems().addAll("1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x");
         chooseFailureMode.getItems().addAll(
                 "Broken Rail",
                 "Track Circuit Failure",
@@ -143,9 +131,6 @@ public class TrackModelManager {
         occupiedColumn.setCellValueFactory(cellData -> cellData.getValue().isOccupiedProperty());
         directionColumn.setCellValueFactory(cellData -> cellData.getValue().directionProperty());
 
-
-
-
         // set up factories for occupied column and direction column
         occupiedColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
             @Override
@@ -163,7 +148,6 @@ public class TrackModelManager {
 
         // Set the items of the table to this subject
         lineTable.setItems(selectedTrackBlockSubject);
-
         lineTable.refresh();
     }
 
@@ -253,9 +237,6 @@ public class TrackModelManager {
 
     }
 
-
-
-//TODO update table based on line selection
     private void updateTable() {
             Lines lineSelect = Lines.valueOf(pickLine.getSelectionModel().getSelectedItem());
             System.out.println("Selected line: " + lineSelect);
@@ -268,8 +249,6 @@ public class TrackModelManager {
             // Update the table
             lineTable.refresh();
     }
-
-
 
     private void murphyEnter() {
         //get the line and block
@@ -301,53 +280,5 @@ public class TrackModelManager {
                 break;
         }
 
-    }
-
-    private void addLineName(String text) {
-        pickLine.getItems().add(text);
-    }
-
-    private void uploadTrack() {
-        //parse the csv file
-        File file = new File(trackFilePath.getText());
-        //TODO: uploading csv from track model
-        //send file to parser
-        this.addLineName(lineNameInput.getText());
-    }
-
-    private void setSimSpeed(String value) {
-        //set the simulation speed
-        //TODO: figure out changing sim speed
-        switch(value){
-            case "1x":
-                break;
-            case "2x":
-                break;
-            case "3x":
-                break;
-            case "4x":
-                break;
-            case "5x":
-                break;
-            case "6x":
-                break;
-            case "7x":
-                break;
-            case "8x":
-                break;
-            case "9x":
-                break;
-            case "10x":
-                break;
-            default:
-                break;
-        }
-    }
-
-    //user input for track layout
-    private void chooseFolder() {
-        DirectoryChooser dirChooser = new DirectoryChooser();
-        File dir = dirChooser.showDialog(chooseFile.getScene().getWindow());
-        if(dir != null){ trackFilePath.setText(dir.getPath()); }
     }
 }
