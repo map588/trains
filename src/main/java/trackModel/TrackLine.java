@@ -4,10 +4,11 @@ import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.ObservableHashMap;
-import Utilities.BasicTrackLine;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
+import Utilities.HelperObjects.TrackBlockLine;
 import Utilities.Records.Beacon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class TrackLine implements TrackModel {
 
     private int ticketSales = 0;
     public  int outsideTemperature = 40;
-    GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
+    BasicBlockParser allTracks = BasicBlockParser.getInstance();
 
     public TrackLine(Lines line) {
         this.line = line;
@@ -68,7 +69,7 @@ public class TrackLine implements TrackModel {
                 if (block.isLight) {
                     lightBlocks.add(block.blockID);
                 }
-                TrackBlockSubject subject = new TrackBlockSubject(this, block);
+                TrackBlockSubject subject = new TrackBlockSubject(line, block);
                 LineSubjectMap.addLineSubject(line, subject);
             }
 

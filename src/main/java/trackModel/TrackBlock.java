@@ -48,6 +48,8 @@ public class TrackBlock {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackBlock.class);
 
+    private final TrackBlockSubject subject;
+
      BlockFeature feature;
 
     /**
@@ -80,6 +82,7 @@ public class TrackBlock {
         this.commandSpeed = 0;
         this.occupied = false;
         this.occupiedBy = nullTrain;
+        this.subject = new TrackBlockSubject(line,this);
     }
 
     public TrackBlock(BasicBlock blockInfo) {
@@ -130,6 +133,8 @@ public class TrackBlock {
         this.commandSpeed = 0;
         this.occupied = false;
         this.occupiedBy = nullTrain;
+        this.subject = new TrackBlockSubject(line,this);
+
     }
 
     public void setFailure(boolean brokenRail, boolean trackCircuitFailure, boolean powerFailure) {

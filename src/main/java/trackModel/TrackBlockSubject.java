@@ -1,8 +1,7 @@
 package trackModel;
 
+import Utilities.Enums.Lines;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class TrackBlockSubject {
     private IntegerProperty blockNumber;
@@ -77,10 +76,10 @@ public class TrackBlockSubject {
         direction = new SimpleBooleanProperty();
     }
 
-    private TrackLine trackLine;
+    private Lines line;
 
-    public TrackBlockSubject(TrackLine line, TrackBlock trackBlock) {
-        this.trackLine = line;
+    public TrackBlockSubject(Lines line, TrackBlock trackBlock) {
+        this.line = line;
         initializeValues(trackBlock);
         initializeListeners();
 //        trackBlockLine.forEach((blockID, block) -> {

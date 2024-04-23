@@ -1,8 +1,8 @@
 package trainController;
 
-import Utilities.BasicTrackMap;
+import Utilities.HelperObjects.BasicTrackMap;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ final class ControllerBlockLookups {
 
 
     private ControllerBlockLookups() {
-        BasicTrackMap lineMaps = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+        BasicTrackMap lineMaps = BasicBlockParser.getInstance().getAllBasicLines();
         for(Lines line : lineMaps.keySet()){
             ConcurrentHashMap<Integer, ControllerBlock> lookup = new ConcurrentHashMap<>();
             for(Integer blockID : lineMaps.get(line).keySet()){

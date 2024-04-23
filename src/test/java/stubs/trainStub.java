@@ -2,11 +2,11 @@ package stubs;
 
 import Common.TrainController;
 import Common.TrainModel;
-import Utilities.BasicTrackMap;
-import Utilities.BasicTrackLine;
+import Utilities.HelperObjects.BasicTrackMap;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.Beacon;
 import trainModel.Records.UpdatedTrainValues;
 import trackModel.TrackBlock;
@@ -53,7 +53,7 @@ public class trainStub implements TrainModel {
 
     TrackLine track;
     TrackBlock currentBlock;
-    BasicTrackMap trackMap = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+    BasicTrackMap trackMap = BasicBlockParser.getInstance().getAllBasicLines();
     BasicTrackLine basicTrackLine = trackMap.get(Lines.GREEN);
 
     public trainStub(TrackLine track, int trainID) {

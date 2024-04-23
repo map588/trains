@@ -2,11 +2,11 @@ package Framework.Simulation;
 
 import Common.TrainModel;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trackModel.TrackLine;
-import trackModel.TrackLineMap;
+import Utilities.HelperObjects.TrackLineMap;
 
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 public class TrackSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackSystem.class);
-    private static final GlobalBasicBlockParser blockParser = GlobalBasicBlockParser.getInstance();
+    private static final BasicBlockParser blockParser = BasicBlockParser.getInstance();
     private static final HashSet<Lines> lines = blockParser.getLines();
 
     private final ExecutorService trackLineExecutor;

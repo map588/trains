@@ -1,11 +1,9 @@
 package trackModel;
 
 import Integration.BaseTest;
-import Utilities.BasicTrackLine;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.Constants;
-import Utilities.Enums.BlockType;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

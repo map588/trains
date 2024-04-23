@@ -1,16 +1,9 @@
 package waysideController;
 
-import Common.CTCOffice;
-import Common.TrackModel;
 import Integration.BaseTest;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
-import Utilities.Records.BasicBlock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

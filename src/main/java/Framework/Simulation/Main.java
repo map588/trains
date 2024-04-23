@@ -3,7 +3,7 @@ package Framework.Simulation;
 import CTCOffice.CTCOfficeImpl;
 import Framework.GUI.mainMenu;
 import Utilities.Constants;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import javafx.application.Application;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import static Framework.Simulation.BaseApplication.initializeJavaFX;
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private static final GlobalBasicBlockParser blockParser = GlobalBasicBlockParser.getInstance();
+    private static final BasicBlockParser blockParser = BasicBlockParser.getInstance();
 
 
     public static double simSecond = 0;

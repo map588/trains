@@ -1,4 +1,4 @@
-package Utilities;
+package Utilities.HelperObjects;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;

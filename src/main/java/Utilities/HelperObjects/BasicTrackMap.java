@@ -1,4 +1,4 @@
-package Utilities;
+package Utilities.HelperObjects;
 
 import Utilities.Enums.Lines;
 import Utilities.Records.BasicBlock;

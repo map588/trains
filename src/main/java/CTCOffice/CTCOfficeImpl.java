@@ -5,17 +5,15 @@ import Common.CTCOffice;
 import Framework.Simulation.TrackSystem;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.BlockIDs;
-import Utilities.BasicTrackMap;
+import Utilities.HelperObjects.BasicTrackMap;
 import Utilities.Constants;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +46,7 @@ public class CTCOfficeImpl implements CTCOffice {
     private CTCOfficeImpl() {
         time = 0;
 
-        BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+        BasicTrackMap trackLineBlocks = BasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
             ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
             for(BasicBlock block : trackLineBlocks.get(Lines.GREEN).values()) {

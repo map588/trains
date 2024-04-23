@@ -1,19 +1,21 @@
 package Utilities;
 
 import Utilities.Enums.Lines;
+import Utilities.HelperObjects.BasicTrackLine;
+import Utilities.HelperObjects.BasicTrackMap;
 import Utilities.Records.BasicBlock;
 
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class GlobalBasicBlockParser {
+public class BasicBlockParser {
 
-    private static final GlobalBasicBlockParser INSTANCE = new GlobalBasicBlockParser();
+    private static final BasicBlockParser INSTANCE = new BasicBlockParser();
 
     private final ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> basicBlocks = new ConcurrentHashMap<>();
 
-    private GlobalBasicBlockParser() {
+    private BasicBlockParser() {
         ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = BlockParser.parseCSV();
         map.forEach(this::addLines);
     }
@@ -26,7 +28,7 @@ public class GlobalBasicBlockParser {
         return basicBlocks.size();
     }
 
-    public static GlobalBasicBlockParser getInstance() {
+    public static BasicBlockParser getInstance() {
         return INSTANCE;
     }
 

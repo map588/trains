@@ -1,15 +1,13 @@
 package trackModel;
 
-import Utilities.BooleanIconTableCell;
+import Utilities.HelperObjects.BooleanIconTableCell;
 import Utilities.Enums.Lines;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
-import java.io.File;
 import java.util.List;
 
 

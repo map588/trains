@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trackModel.TrackLine;
-import trackModel.TrackLineMap;
+import Utilities.HelperObjects.TrackLineMap;
 import waysideController.WaysideControllerHWBridge;
 import waysideController.WaysideControllerImpl;
 
