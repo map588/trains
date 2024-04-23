@@ -78,3 +78,14 @@ if dir_assigned[43]
 endif
 
 
+// Lights
+light[28] = switch[27] == MAIN
+light[33] = RED
+light[34] = switch[33] == MAIN
+light[38] = switch[38] == MAIN
+light[39] = RED
+light[43] = switch[44] == MAIN
+light[67] = RED
+light[71] = switch[38] == ALT
+light[72] = switch[33] == ALT
+light[76] = RED
