@@ -331,9 +331,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
     // Method to set the value of the emergency brake
     public void setEmergencyBrake(boolean brake) {
         this.emergencyBrake = brake;
+
         listeningExecutor.execute(() -> {
             notifyChange(EMERGENCYBRAKE_PROPERTY, brake);
         });
+
     }
 
     // Method to set the value of the service brake
