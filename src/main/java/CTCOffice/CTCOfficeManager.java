@@ -127,6 +127,7 @@ public class CTCOfficeManager {
         scheduleTable.getSelectionModel().select(0);
         trainSelectTable.getSelectionModel().select(0);
         scheduleEditTable.getSelectionModel().select(0);
+        checkScheduleButton.fire();
     }
 
     private void LineTableSet(TableColumn<CTCBlockSubject, Integer> blockNumberColumn, TableView<CTCBlockSubject> blockTable, TableColumn<CTCBlockSubject, Boolean> occupationLightColumn,

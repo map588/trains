@@ -21,7 +21,7 @@ public class TrainSchedule {
     TrainScheduleSubject subject;
     CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
 
-    private static ArrayList<Integer> TrackLayout = new ArrayList<>();
+    private final ArrayList<Integer> TrackLayout;
 
     public TrainSchedule(int trainID, String line, int dispatchTime, int carCount, ArrayList<TrainStop> stops) {
         this.trainID = trainID;
