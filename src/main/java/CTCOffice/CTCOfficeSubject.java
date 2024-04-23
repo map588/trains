@@ -22,10 +22,11 @@ public class CTCOfficeSubject implements AbstractSubject{
         properties.put(AUTO_MODE_PROPERTY, new SimpleBooleanProperty(this, AUTO_MODE_PROPERTY, office.getAutoMode()));
         this.office = office;
         properties.get(TIME_PROPERTY).addListener((observable, oldValue, newValue) -> {
-            if(office.dispatchTimes.get(0) <= convertClockTimeToDouble((String) newValue)){
+            if(!office.dispatchTimes.isEmpty() && office.dispatchTimes.get(0) <= convertClockTimeToDouble((String) newValue)){
                 TrainIdentity train = office.trainSchedule.get(office.dispatchTimes.get(0));
                 office.DispatchTrain(train.line(), train.trainID(), train.carCount(), train.dispatchTime());
             }
+
         });
     }
 

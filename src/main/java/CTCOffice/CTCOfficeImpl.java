@@ -36,7 +36,9 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
             38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
             53, 54, 55, 56, 57));
-    public final static ArrayList<Integer> RedTrackLayout = new ArrayList<>(List.of(54,3,5));
+    public final static ArrayList<Integer> RedTrackLayout = new ArrayList<>(List.of(
+            9, 8, 7, 6, 5, 4, 3, 2, 1, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25));
 
     private double  time; // in seconds
     private int     ticketSales;
@@ -45,6 +47,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     private boolean maintenanceMode;
     private boolean autoMode;
 
+    private static final Logger logger = LoggerFactory.getLogger(CTCOfficeImpl.class.getName());
     final static Map<String, ArrayList<CTCBlockSubject>> track = new HashMap<>();
 
     public static final ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
@@ -52,6 +55,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
     private static TrackSystem trackSystem;
     private final CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
+
     Map<Integer, BlockIDs> trainLocations = new HashMap<>();
     ArrayList<Integer> trainIDs = new ArrayList<>();
     Map<Double, TrainIdentity> trainSchedule = new HashMap<>();
@@ -96,17 +100,19 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
 
         new ScheduleFileSubject(new ScheduleFile("Schedule1", "12/12/2019"));
-        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, Lines.GREEN.toString(), 0, 2, new ArrayList<>() {{
+        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(1, new TrainSchedule(1, Lines.GREEN.toString(), 240, 2, new ArrayList<>() {{
             add( new TrainStop(0, 65, convertClockTimeToDouble("6:05"), convertClockTimeToDouble("6:06"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(1, 73, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(2, 9, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
+        scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(2, new TrainSchedule(2, Lines.RED.toString(), 300, 1, new ArrayList<>() {{
+            add( new TrainStop(0, 7, convertClockTimeToDouble("6:05"), convertClockTimeToDouble("6:06"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(1, 21, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            add( new TrainStop(2, 25, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        }}));
 
-        new ScheduleFileSubject(new ScheduleFile("Schedule2", "12/12/2019"));
 
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(CTCOfficeImpl.class.getName());
 
     public void setTrackSystem(TrackSystem trackSystem) {
         CTCOfficeImpl.trackSystem = trackSystem;
@@ -142,11 +148,12 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
     public void setTime(double time) {
         this.time = time;
-        notifyChange(TIME_PROPERTY, time);
+        notifyChange(TIME_PROPERTY, convertDoubleToClockTime(time));
     }
 
     public void incrementTime() {
         time += Constants.TIME_STEP_S;
+        notifyChange(TIME_PROPERTY, convertDoubleToClockTime(time));
     }
 
     double getTime() {
@@ -222,6 +229,8 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         dispatchTimes.remove(0);
         trainIDs.add(trainID);
         trainLocations.put(trainID, BlockIDs.of(0, line));
+        sendAuthority(line, 0, 1900);
+        sendSpeed(line, 0, 40);
     }
 
     void sendSpeed(Lines line, int blockID, double speed) {
@@ -235,7 +244,9 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     }
 
     public void notifyChange(String property, Object newValue) {
-        logger.info("Property {} has been changed to {}", property, newValue);
+        if(!Objects.equals(property, TIME_PROPERTY)) {
+            logger.info("Property {} has been changed to {}", property, newValue);
+        }
         subject.setProperty(property, newValue);
     }
 }

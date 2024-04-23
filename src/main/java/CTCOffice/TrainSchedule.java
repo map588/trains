@@ -221,11 +221,11 @@ public class TrainSchedule {
 
     public void setSpeeds() {
         for (TrainStop stop : stops) {
-            Double scheduledTraversalTime =
+            double scheduledTraversalTime =
                     (stop.getStopIndex() == 0) ?
                             (stop.getArrivalTime() - dispatchTime) :
                             (stop.getArrivalTime() - stops.get(stop.getStopIndex() - 1).getDepartureTime());
-            Double minTraversalTime = 0.0;
+            double minTraversalTime = 0.0;
             stop.getSpeedList().clear();
             for (int j = 0; j < stop.getRoutePath().size(); j++) {
                 stop.getSpeedList().add(blockSubjectMap.getSubject(BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getSpeedLimit());
