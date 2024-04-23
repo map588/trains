@@ -225,8 +225,6 @@ public class TrainControllerImpl implements TrainController{
 
         setSignalFailure(commandSpeed == -1 || authority == -1);
 
-
-
         if(powerFailure){
             train.setPower(3);
             setPowerFailure(!(train.getPower() == 3));
