@@ -11,7 +11,6 @@ import trainController.ControllerBlocks.ControllerBlock;
 import trainModel.NullTrain;
 import trainModel.Records.UpdatedTrainValues;
 
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,9 +76,11 @@ public class TrainControllerImpl implements TrainController{
 
     private boolean waysideStop;
     private boolean eBrakeGUI = false;
+    private boolean sBrakeGUI = false;
 
 
     private int authority = 0;
+    private double internalAuthority = 0;
 
     private boolean serviceBrake = false, emergencyBrake = false, automaticMode = true,
             internalLights = false, externalLights = false, leftDoors = false,
@@ -87,7 +88,6 @@ public class TrainControllerImpl implements TrainController{
             brakeFailure = false, powerFailure = false, leftPlatform = false,
             rightPlatform = false, inTunnel = false, passengerEngageEBrake = false;
 
-    private boolean ascendingSection = false;
 
     private String nextStationName;
 
@@ -142,20 +142,12 @@ public class TrainControllerImpl implements TrainController{
     public UpdatedTrainValues sendUpdatedTrainValues(){
 
         // Temperature Manager
-
+        double trainSpeed = train.getSpeed();
         this.setCurrentTemperature(train.getRealTemperature());
+        this.setCurrentSpeed(trainSpeed);
 
 
-
-        if (train.getEmergencyBrake() && !passengerEngageEBrake) {
-            passengerEngageEBrake = true;
-            this.setEmergencyBrake(true);
-        } else if (!emergencyBrake) {
-            passengerEngageEBrake = false;
-            this.setEmergencyBrake(false);
-        }
-        this.setCurrentSpeed(train.getSpeed());
-        this.setPower(calculatePower(this.currentSpeed));
+        this.setPower(calculatePower(trainSpeed));
 
         //TODO: this.authorityCheck(this.power, this.currentSpeed);  will change power if it does not align with authority
 
@@ -179,6 +171,8 @@ public class TrainControllerImpl implements TrainController{
             return 0;
         }
         else {
+
+            internalAuthority -= currentSpeed * TIME_STEP;
 
             double setSpeed = automaticMode? commandSpeed : overrideSpeed;
             double error = setSpeed - currentSpeed;
@@ -221,15 +215,16 @@ public class TrainControllerImpl implements TrainController{
     @Override
     public void checkFailures(double trainPower) {
         boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();
-        boolean badPower  =  this.power > 1 && trainPower == 0;
+        boolean badPower  =  this.power > 0 && trainPower == 0;
 
-        setSignalFailure(commandSpeed == -1 || authority == -1);
+        setSignalFailure(this.commandSpeed == -1 || this.authority == -1);
 
         if(powerFailure){
             train.setPower(3);
-            setPowerFailure(!(train.getPower() == 3));
+            setPowerFailure((train.getPower() < 3));
         }else {
             setPowerFailure(badPower);
+            setEmergencyBrake(powerFailure || this.eBrakeGUI || this.passengerEngageEBrake);
         }
 
         if(brakeFailure){
@@ -242,15 +237,20 @@ public class TrainControllerImpl implements TrainController{
 
         if(brakeFailure || powerFailure || signalFailure){
             setEmergencyBrake(true);
-        }else if (!this.passengerEngageEBrake){
-            setEmergencyBrake(eBrakeGUI);
+        }else{
+            setEmergencyBrake(this.eBrakeGUI || this.passengerEngageEBrake);
+        }
+
+
+        if (this.internalAuthority <= this.calculateStoppingDistance(this.currentSpeed)){
+            setServiceBrake(true);
         }
     }
 
     // Function that calculates the stopping distance where the train needs to start stopping
     public double calculateStoppingDistance(double currentSpeed){
-        logger.info("Stopping Distance is {}",Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION));
 
+        //logger.info("Stopping Distance is {}", stoppingDistance);
         return Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION);
     }
 
@@ -259,38 +259,39 @@ public class TrainControllerImpl implements TrainController{
      */
     @Override
     public void onBlock(){
-        if(currentBeacon != null && blockLookup != null) {
-            currentBlock = (ascendingSection) ? blockLookup.get(currentBeacon.blockIndices().pollFirst()) : blockLookup.get(currentBeacon.blockIndices().pollLast());
+        if(currentBeacon != null) {
+            Integer blockID = currentBeacon.blockIndices().pollFirst();
 
-            if(currentBlock.isStation()){
-                this.setNextStationName(currentBlock.stationName());
+            if(blockID == null){
+                currentBlock = blockLookup.get(currentBeacon.endId());
+            }else{
+                currentBlock = blockLookup.get(blockID);
+            }
+
+            logger.warn("Controller thinks its on block {}", currentBlock.blockNumber());
+
+
+            if(currentBlock.isStation() && power == 0) {
                 onStation();
             }
+
+            setAuthority((int) internalAuthority);
             setSpeedLimit(currentBlock.speedLimit());
             setInTunnel(currentBlock.isUnderground());
 
             // Get Specific Block Info
             checkTunnel();
+        }else{
+            logger.warn("Controller entered a block blind");
         }
-        this.setAuthority(this.getAuthority()-(int)currentBlock.blockLength());
-
-        if (this.authority <= this.calculateStoppingDistance(this.currentSpeed)){
-            // Train starts slowing
-            setServiceBrake(true);
-        }
-
-//        this.setAuthority(this.getAuthority()-1);
-//        if (this.authority <= 4){
-//            setServiceBrake(true);
-//        }
-
-
+        setAuthority((int) internalAuthority);
     }
 
     /**
      * onStation()
      */
     public void onStation(){
+
         if (train.getSpeed() == 0){                             // Check if train is stopped
 
             // Hopefully won't affect make announcment implementation in manager
@@ -303,13 +304,13 @@ public class TrainControllerImpl implements TrainController{
             if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
             if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
 
+            logger.warn("Train stopping at station {}", nextStationName);
             //wait(60000);
 
             this.setLeftDoors(false);
             this.setRightDoors(false);
         }
     }
-
 
     // Implement Crossing tunnel
     public void checkTunnel(){
@@ -322,38 +323,46 @@ public class TrainControllerImpl implements TrainController{
 
         }
         else{
-            logger.info("Train is not in a tunnel");
             setIntLights(false);
             setExtLights(false);
-
         }
     }
-
 
 
 
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        notificationExecutor.execute( ()->
-            subject.notifyChange(AUTOMATIC_MODE, mode));
+        notificationExecutor.execute( ()-> subject.notifyChange(AUTOMATIC_MODE, mode));
     }
-    public void setAuthority(int authority) {
 
+
+    @Override
+    public void setPassengerEBrake() {
+        this.passengerEngageEBrake = true;
+        this.emergencyBrake = true;
+        notificationExecutor.execute( ()-> subject.notifyChange(EMERGENCY_BRAKE , true));
+    }
+
+    private void clearPassengerEBrake(){
+        this.passengerEngageEBrake = false;
+    }
+
+    public void setAuthority(int authority) {
 
          if (authority == STOP_TRAIN_SIGNAL) {
             waysideStop = true;
-            // Make a message on the logger
-            logger.info("Train {} has been stopped by wayside", trainID);
+            setServiceBrake(true);
+            logger.warn("Wayside Stop: T{}", trainID);
         }
         else if (authority == RESUME_TRAIN_SIGNAL){
             waysideStop = false;
-             setServiceBrake(false);
-            // Make a message on the logger
-            logger.info("Train {} has been resumed by wayside", trainID);
+             setServiceBrake(sBrakeGUI);
+            logger.warn("Wayside Resume: T{}", trainID);
         }
         else {
             this.authority = authority;
+            this.internalAuthority = authority;
             notificationExecutor.execute(()->
 	            subject.notifyChange(AUTHORITY, authority));
         }
@@ -375,6 +384,9 @@ public class TrainControllerImpl implements TrainController{
         this.emergencyBrake = brake;
         notificationExecutor.execute( ()-> subject.notifyChange(EMERGENCY_BRAKE , brake));
     }
+
+
+
     public void setKi(double Ki) {
         this.Ki = Ki;
         notificationExecutor.execute( ()-> subject.notifyChange(KI , Ki));
@@ -484,8 +496,8 @@ public class TrainControllerImpl implements TrainController{
             case OVERRIDE_SPEED -> this.overrideSpeed = convertVelocity((double) newValue, MPH, MPS);
             case COMMAND_SPEED -> this.commandSpeed = convertVelocity((double) newValue, MPH, MPS);
             case CURRENT_SPEED -> this.currentSpeed = convertVelocity((double) newValue, MPH, MPS);
-            case SERVICE_BRAKE -> this.serviceBrake = (boolean) newValue;
-            case EMERGENCY_BRAKE -> {this.emergencyBrake = (boolean) newValue; eBrakeGUI = (boolean) newValue;}
+            case SERVICE_BRAKE -> {this.serviceBrake = (boolean) newValue; sBrakeGUI = (boolean) newValue;}
+            case EMERGENCY_BRAKE -> {this.emergencyBrake = (boolean) newValue; eBrakeGUI = (boolean) newValue; clearPassengerEBrake();}
             case KI -> this.Ki = (double) newValue;
             case KP -> this.Kp = (double) newValue;
             case POWER -> this.power = convertPower((double) newValue, HORSEPOWER, WATTS);
@@ -630,19 +642,10 @@ public class TrainControllerImpl implements TrainController{
 
     private String findNextStationName(){
         ControllerBlock potentialStation;
-        if(ascendingSection){
-            for(int i = currentBeacon.startId(); i <= currentBeacon.endId(); i++){
-                potentialStation = blockLookup.get(i);
-                if(potentialStation.isStation()){
-                    return potentialStation.stationName();
-                }
-            }
-        }else{
-            for(int i = currentBeacon.endId(); i >= currentBeacon.startId(); i--){
-                potentialStation = blockLookup.get(i);
-                if(potentialStation.isStation()){
-                    return potentialStation.stationName();
-                }
+        for(Integer i : currentBeacon.blockIndices()){
+            potentialStation = blockLookup.get(i);
+            if(potentialStation.isStation()){
+                return potentialStation.stationName();
             }
         }
         return "Awaiting Beacon..";
@@ -650,22 +653,34 @@ public class TrainControllerImpl implements TrainController{
 
     @Override
     public void updateBeacon(Beacon beacon) {
-        logger.info("Updating Beacon: {}", beacon);
-        if (this.currentBeacon != null) {
-            this.ascendingSection = (currentBlock.blockNumber() == beacon.startId());
-            currentBlock = (ascendingSection) ? blockLookup.get(beacon.startId()) : blockLookup.get(beacon.endId());
-        }else{
-            currentBlock = blockLookup.get(beacon.startId());
-        }
+        logger.warn("Updating Beacon: {}", beacon);
+        ControllerBlock thisStationOrSwitch = blockLookup.get(beacon.startId());
+        ControllerBlock nextStationOrSwitch = blockLookup.get(beacon.endId());
+        ControllerBlock nextBeaconBlock = blockLookup.get(beacon.blockIndices().peekFirst());
         this.currentBeacon = beacon;
+        boolean entryBeacon = (currentBlock == nextBeaconBlock);
 
-        String currentStation = this.nextStationName;
-        // Update the upcoming station array
-        this.setNextStationName(findNextStationName());
 
-        if(Objects.equals(currentStation, this.nextStationName)) {
-            this.setNextStationName("Awaiting Beacon..");
+        if(entryBeacon){ //Block is the same, next block will be startID
+            this.currentBlock = thisStationOrSwitch;
+            if(thisStationOrSwitch.isStation()) {
+                //Arriving at <next station name>
+
+                logger.info("Arriving at {}", thisStationOrSwitch.stationName());
+            }else{
+                this.setNextStationName(findNextStationName());
+            }
+        }else{ //Exiting wherever we were
+
+            if(nextStationOrSwitch.isStation()){
+                logger.info("Leaving {}", thisStationOrSwitch.stationName());
+                this.setNextStationName(nextStationOrSwitch.stationName());
+                this.setAnnouncements(true);
+            }else{ //We just left a switch block
+                this.setNextStationName(findNextStationName());
+            }
         }
+        beacon.blockIndices().pollFirst();
     }
 
 

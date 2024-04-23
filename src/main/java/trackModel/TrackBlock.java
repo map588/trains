@@ -20,6 +20,7 @@ public class TrackBlock {
      final boolean isUnderground;
      final boolean isSwitch;
      final boolean isLight;
+     boolean isBeacon;
      final BlockType blockType;
      final Lines line;
 
@@ -55,32 +56,7 @@ public class TrackBlock {
      *
      * @throws IllegalArgumentException if the provided block information is invalid
      */
-    public TrackBlock(){
-        this.blockID = 0;
-        this.isUnderground = false;
-        this.isSwitch = false;
-        this.isLight = false;
-        this.blockType = BlockType.REGULAR;
-        this.grade = 0;
-        this.elevation = 0;
-        this.cumulativeElevation = 0;
-        this.speedLimit = 0;
-        this.length = 0;
-        this.line = Lines.GREEN;
-        this.northConnect = null;
-        this.southConnect = null;
-        this.feature = new StandardBlock();
-        this.hasFailure = false;
-        this.brokenRail = false;
-        this.trackCircuitFailure = false;
-        this.powerFailure = false;
-        this.maintenanceMode = false;
-        this.lightState = false;
-        this.authority = 0;
-        this.commandSpeed = 0;
-        this.occupied = false;
-        this.occupiedBy = nullTrain;
-    }
+
 
     public TrackBlock(BasicBlock blockInfo) {
         validateBlockInfo(blockInfo);
@@ -96,6 +72,7 @@ public class TrackBlock {
         this.speedLimit = blockInfo.speedLimit();
         this.length = blockInfo.blockLength();
         this.line = blockInfo.trackLine();
+//        this.isBeacon = blockInfo.isBeacon();
 
 
         if (isSwitch && blockType == BlockType.STATION) {
@@ -132,16 +109,80 @@ public class TrackBlock {
         this.occupiedBy = nullTrain;
     }
 
-    public void setFailure(boolean brokenRail, boolean trackCircuitFailure, boolean powerFailure) {
-        this.brokenRail = brokenRail;
-        this.trackCircuitFailure = trackCircuitFailure;
-        this.powerFailure = powerFailure;
-        this.hasFailure = brokenRail || trackCircuitFailure || powerFailure;
+    /**
+     * Constructs a new TrackBlock object with default values.
+     */
+    public TrackBlock(){
+        this.blockID = 0;
+        this.isUnderground = false;
+        this.isSwitch = false;
+        this.isLight = false;
+        this.blockType = BlockType.REGULAR;
+        this.grade = 0;
+        this.elevation = 0;
+        this.cumulativeElevation = 0;
+        this.speedLimit = 0;
+        this.length = 0;
+        this.line = Lines.GREEN;
+        this.northConnect = null;
+        this.southConnect = null;
+        this.feature = new StandardBlock();
+        this.hasFailure = false;
+        this.brokenRail = false;
+        this.trackCircuitFailure = false;
+        this.powerFailure = false;
+        this.maintenanceMode = false;
+        this.lightState = false;
+        this.authority = 0;
+        this.commandSpeed = 0;
+        this.occupied = false;
+        this.occupiedBy = nullTrain;
     }
 
     public boolean hasFailure() {
         return brokenRail || trackCircuitFailure || powerFailure;
     }
+
+     void clearFailures() {
+         brokenRail = false;
+         trackCircuitFailure = false;
+         powerFailure = false;
+         hasFailure = false;
+     }
+
+
+     void setCircuitFailure(boolean trackCircuitFailure) {
+        this.trackCircuitFailure = trackCircuitFailure;
+        this.hasFailure = brokenRail || trackCircuitFailure || powerFailure;
+    }
+
+     void setPowerFailure(boolean powerFailure) {
+        this.powerFailure = powerFailure;
+        this.hasFailure = brokenRail || trackCircuitFailure || powerFailure;
+    }
+
+     void setRailFailure(boolean brokenRail) {
+        this.brokenRail = brokenRail;
+        this.hasFailure = brokenRail || trackCircuitFailure || powerFailure;
+    }
+
+    void setBeacon(boolean hasBeacon) {
+        this.isBeacon = hasBeacon;
+    }
+
+
+    public boolean hasBrokenRail() {
+        return brokenRail;
+    }
+
+    public boolean hasCircuitFailure() {
+        return trackCircuitFailure;
+    }
+
+    public boolean hasPowerFailure() {
+        return powerFailure;
+    }
+
 
      public Integer getNextBlock(Direction direction) {
         Connection nextConnection;
@@ -427,5 +468,9 @@ public class TrackBlock {
 
     private String generateLogMessage(String methodName, String blockType) {
         return methodName + " called on Block: " + this.blockID + ", which is not a " + blockType + " block";
+    }
+
+    public boolean isBeacon() {
+        return false;
     }
 }

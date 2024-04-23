@@ -49,7 +49,12 @@ public class trainControllerStub implements TrainController {
 
     }
 
-//    @Override
+    @Override
+    public void setPassengerEBrake() {
+
+    }
+
+    //    @Override
     public void setKi(double Ki) {
 
     }
@@ -214,6 +219,11 @@ public class trainControllerStub implements TrainController {
 
     }
 
+    @Override
+    public boolean isHW() {
+        return false;
+    }
+
     //    @Override
     public boolean getLeftPlatform() {
         return false;
@@ -282,6 +292,11 @@ public class trainControllerStub implements TrainController {
     @Override
     public TrainModel getTrain() {
         return null;
+    }
+
+    @Override
+    public void checkFailures(double power) {
+
     }
 
     @Override

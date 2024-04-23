@@ -20,10 +20,11 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
     //Called by the train based on information from the track model
     void setCommandSpeed(double speed);
     void setCurrentTemperature(double temp);
+    void updateBeacon(Beacon beacon);
 
     //-----Functions called by the controller function or the train controller UI
     void setEmergencyBrake(boolean brake);
-
+    void setPassengerEBrake();
     TrainControllerSubject getSubject();
 
     //The train cannot store its own ID, so the train controller must store it
@@ -67,7 +68,7 @@ public interface TrainController extends GUIModifiableEnum<ControllerProperty> {
     double calculatePower(double currentVelocity);
 
     double getGrade();
-    void updateBeacon(Beacon beacon);
+
     UpdatedTrainValues sendUpdatedTrainValues();
     TrainModel getTrain();
 

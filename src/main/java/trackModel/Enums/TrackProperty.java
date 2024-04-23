@@ -1,4 +1,4 @@
-package trackModel;
+package trackModel.Enums;
 
 
 public enum TrackProperty {
@@ -33,10 +33,10 @@ public enum TrackProperty {
  TEMPDISPLAY,
  SETBEACON,
  NAMEOFSTATION,
-    LIGHT_STATE,
+ LIGHT_STATE,
  TRACKHEATER;
 
- public String toString() {
+ public String string() {
      return switch (this) {
          case SECTION -> "Section";
          case BLOCKNUMBER -> "Block Number";
@@ -67,7 +67,6 @@ public enum TrackProperty {
          case NAMEOFSTATION -> "Name of Station";
          case TRACKHEATER -> "Track Heater";
          case LIGHT_STATE -> "Light State";
-         default -> "Unknown";
      };
  }
 }

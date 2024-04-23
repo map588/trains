@@ -46,27 +46,36 @@ public class TrackLine implements TrackModel {
 
     private long time = 0;
 
-    private final BeaconParser beaconParser = new BeaconParser();
+
 
     private final TrackLineSubject subject;
 
     private int ticketSales = 0;
     public  int outsideTemperature = 40;
+
     GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
+
+    BeaconParser beaconParser = BeaconParser.getInstance();
 
     public TrackLine(Lines line) {
         this.line = line;
         if(allTracks.containsLine(line)) {
         BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+
+        beaconBlocks.putAll(beaconParser.getBeaconLine(line));
+
         trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
 
 
-            //keeps track of which blocks are occupied
 
             ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
             for (Integer blockIndex : blockIndices) {
                 TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
+                if(beaconBlocks.containsKey(block.blockID)) {
+                    block.setBeacon(true);
+                }
+
                 mainTrackLine.put(block.blockID, block);
                 if (block.isLight) {
                     lightBlocks.add(block.blockID);
@@ -74,7 +83,7 @@ public class TrackLine implements TrackModel {
             }
 
             //Needs more testing, but the beacon parser seems to work.
-            beaconBlocks.putAll(beaconParser.parseBeacons(line));
+
             this.subject = new TrackLineSubject(this, mainTrackLine);
             trackSubjectMap.getInstance().addLineSubject(line.toString(), subject);
             setupListeners();
@@ -195,7 +204,7 @@ public class TrackLine implements TrackModel {
             return;
         }
 
-        logger.error(" T{} was removed from occupancy map at block {}", train.getTrainNumber(), blockID);
+        logger.error(" T{} was removed at block {}", train.getTrainNumber(), blockID);
 
 
         setUnoccupied(blockID);
@@ -300,7 +309,7 @@ public class TrackLine implements TrackModel {
        queueTrackUpdate( () -> {
            TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
            if (brokenBlock != null) {
-               brokenBlock.setFailure(true, false, false);
+               brokenBlock.setRailFailure(state);
            } else {
                logger.error("Broken Rail called on Block: {} does not exist", blockID);
            }
@@ -312,7 +321,7 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setFailure(false,false,true);
+                failedBlock.setPowerFailure(state);
             } else {
                 logger.error("Power Failure called on Block: {} does not exist", blockID);
             }
@@ -324,7 +333,7 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setFailure(false,true,false);
+                failedBlock.setCircuitFailure(state);
             } else {
                 logger.error("Circuit Failure called on Block: {} does not exist", blockID);
             }
@@ -336,7 +345,7 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setFailure(false,false,false);
+                failedBlock.clearFailures();
             } else {
                 logger.error("Fix Track Failure called on Block: {} does not exist", blockID);
             }
@@ -400,7 +409,7 @@ public class TrackLine implements TrackModel {
     public int getTicketSales() {
             if (time % 3600 == 0) {
                 this.ticketSales = 0;
-                newTemperature();
+                //newTemperature();
             }
             return ticketSales;
     }
@@ -415,13 +424,13 @@ public class TrackLine implements TrackModel {
     }
 
 
-    public void newTemperature(){
-        queueTrackUpdate(() -> {
-            int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
-            subject.setOutsideTemp(newTemp);
-            this.outsideTemperature += newTemp;
-        });
-    }
+//    public void newTemperature(){
+//        queueTrackUpdate(() -> {
+//            int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
+//            subject.. (newTemp);
+//            this.outsideTemperature += newTemp;
+//        });
+//    }
 
 
     private void setupListeners() {

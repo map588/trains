@@ -89,6 +89,12 @@ public class TrainControllerHW implements TrainController {
     }
 
     @Override
+    public void setPassengerEBrake() {
+        sendCommand("setPassengerEBrake");
+        receiveResponse();
+    }
+
+    @Override
     public TrainControllerSubject getSubject() {
         return subject;
     }

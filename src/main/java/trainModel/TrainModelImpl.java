@@ -97,6 +97,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Transition Variables
 
+
     private static final ExecutorService listeningExecutor = Executors.newSingleThreadExecutor();
 
     private final TrainControllerFactory controllerFactory = TrainControllerFactory.getInstance();
@@ -163,8 +164,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setEmergencyBrake(controllerValues.emergencyBrake());
         this.setPower(controllerValues.power() * numCars);
 
-        controller.checkFailures(power);
-
         this.setExtLights(controllerValues.exteriorLights());
         this.setIntLights(controllerValues.interiorLights());
         this.setLeftDoors(controllerValues.leftDoors());
@@ -174,6 +173,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setAcceleration(acceleration);
         this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);
+
+         controller.checkFailures(power);
     }
 
     //Called when not running System.
@@ -197,7 +198,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //Check if the train is fully loaded
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
-            this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
+            this.setMass (Constants.LOADED_TRAIN_MASS * this.numCars);
         }
 
         //NEXT BLOCK NOTICE
@@ -222,7 +223,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
         //ENGINE FORCE
         double engineForce;
         if (this.power > 0.0001 && this.speed < 0.0001) {
-            this.speed = 0.1; //if train is not moving, division by 0 occurs, set small amount of speed so we can get ball rolling
             engineForce = this.power / 0.1;
         }
         else {
@@ -260,6 +260,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         if (this.speed < 0) {
             this.speed = 0;
         }
+
+        if(this.speed == 0 && this.acceleration < 0) {
+            this.acceleration = 0;
+        }
+
         //TODO: If we can go faster than the "maximum speed" in simulation, we are doing something wrong
 //        if (this.speed > Constants.MAX_SPEED) {
 //            this.speed = Constants.MAX_SPEED;
@@ -288,6 +293,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     // Method to handle when the train enters the next block
     public void enteredNextBlock() {
+        listeningExecutor.submit(controller::onBlock);
         double previousElevation = currentBlock.getElevation();
         currentBlock = track.updateTrainLocation(this);
         if(previousElevation < currentBlock.getElevation()) {
@@ -296,9 +302,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         else {
             this.setGrade(-currentBlock.getGrade());
         }
-        relativeDistance -= currentBlockLength;
+        relativeDistance = 0;
         currentBlockLength = currentBlock.getLength();
-        controller.onBlock();
+
     }
 
     // Method to set the commanded of the train model and pass the value to the train controller
@@ -308,7 +314,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.setCommandSpeed(commandSpeed);
 
         listeningExecutor.execute(() -> {
-        notifyChange(COMMANDSPEED_PROPERTY, commandSpeed);
+        notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(commandSpeed,MPS,MPH));
         });
 
         logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
@@ -316,9 +322,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     // Method to set the authority of the train model and pass the value to the train controller
     public void setAuthority(int authority) {
-        this.authority = (signalFailure) ? -1 : authority;
+        this.authority = (signalFailure) ?  -1 : authority;
         controller.setAuthority(authority);
-
 
         listeningExecutor.execute(() -> {
             logger.warn("Train Authority: {}", authority);
@@ -464,7 +469,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
             //case Properties.POWER_PROPERTY -> this.power = convertPower((double)newValue, HORSEPOWER, WATTS);
             //case Properties.GRADE_PROPERTY -> this.grade = (double)newValue;
             //case Properties.SERVICEBRAKE_PROPERTY -> this.serviceBrake = (boolean)newValue;
-            case Properties.EMERGENCYBRAKE_PROPERTY -> this.emergencyBrake = (boolean)newValue;
+            case Properties.EMERGENCYBRAKE_PROPERTY -> {this.emergencyBrake = (boolean)newValue; this.controller.setPassengerEBrake();}
             case Properties.BRAKEFAILURE_PROPERTY -> this.brakeFailure = (boolean)newValue;
             case Properties.POWERFAILURE_PROPERTY -> this.powerFailure = (boolean)newValue;
             case Properties.SIGNALFAILURE_PROPERTY -> this.signalFailure = (boolean)newValue;

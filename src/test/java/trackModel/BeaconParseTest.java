@@ -1,8 +1,11 @@
 package trackModel;
 
 import Integration.BaseTest;
+import Utilities.BasicTrackLine;
 import Utilities.BeaconParser;
+import Utilities.Enums.BeaconType;
 import Utilities.Enums.Lines;
+import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.Beacon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +32,19 @@ public class BeaconParseTest extends BaseTest {
         for (Lines line : Lines.values()) {
             System.out.println("Line: " + line);
             ConcurrentHashMap<Integer, Beacon> beacons = beaconMap.get(line);
+            BasicTrackLine trackLine = GlobalBasicBlockParser.getInstance().getBasicLine(line);
 
 
             System.out.println("Number of Beacons: " + beacons.size());
-            for (Beacon beacon : beacons.values()) {
-                System.out.println("Start Block: " + beacon.startId());
-                System.out.println("End Block: " + beacon.endId());
-                System.out.println("Block Indices: " + beacon.blockIndices());
+            for (Integer beaconID : beacons.keySet()) {
+                Beacon beacon = beacons.get(beaconID);
+                System.out.print( beaconID + " ");
+                if (beacon.type() == BeaconType.STATION) {
+                    System.out.println(trackLine.get(beacon.startId()).stationName().get() + ": " + beacon.startId() + " -> " + beacon.endId());
+                } else {
+                    System.out.println("SW: " + beacon.startId() + " -> " + beacon.endId());
+                }
+                System.out.println("Blocks: " + beacon.blockIndices());
                 System.out.println();
             }
         }

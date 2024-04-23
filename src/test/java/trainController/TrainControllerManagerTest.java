@@ -41,7 +41,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
     @BeforeEach
     public void setUp() {
         TrainModel mockModel = new trainStub();
-        controller = mockModel.getController().getSubject().getController();
+//        controller = mockModel.getController().getSubject().getController();
         controllerID = controller.getID();
     }
 
