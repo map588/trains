@@ -472,6 +472,7 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate(() -> {
             int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
             this.outsideTemperature += newTemp;
+            subjectList.forEach(subject -> subject.setOutsideTemp(this.outsideTemperature));
         });
     }
 
