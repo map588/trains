@@ -187,7 +187,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void CTCSendSpeed(int blockID, double speed) {
         logger.info("Sending speed {} to block {}", speed, blockID);
 
-        if(trackModel != null) {
+        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setCommandedSpeed(blockID, speed);
         }
     }
@@ -433,7 +433,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void CTCSendAuthority(int blockID, int blockCount) {
         logger.info("Sending authority for block {} to {}", blockID, blockCount);
 
-        if(blockMap.get(blockID).inMaintenance() && blockMap.get(blockID).isOccupied() && trackModel != null) {
+        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setTrainAuthority(blockID, blockCount);
         }
     }

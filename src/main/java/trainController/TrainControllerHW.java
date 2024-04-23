@@ -264,6 +264,11 @@ public class TrainControllerHW implements TrainController {
     }
 
     @Override
+    public void checkFailures(double power) {
+
+    }
+
+    @Override
     public double getSpeed() {
         return 0;
     }

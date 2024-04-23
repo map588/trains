@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
@@ -40,16 +39,10 @@ public class mainMenu extends Application {
             Button tabButton = new Button(tabNames[i]);
             final int moduleId = i;
 
-            // Right-click menu for opening in a new window
-          ContextMenu contextMenu = new ContextMenu();
-          MenuItem openInTab = new MenuItem("Open in a tab.");
-          openInTab.setOnAction(e -> openModuleTab(tabPane, tabNames[moduleId]));
-          contextMenu.getItems().add(openInTab);
 
             // Consolidate event handling for right and left clicks
             tabButton.setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.SECONDARY) {
-                    contextMenu.show(tabButton, e.getScreenX(), e.getScreenY());
                     openModuleTab(tabPane, tabNames[moduleId]);
                 } else if (e.getButton() == MouseButton.PRIMARY) {
                     openInNewWindow(tabNames[moduleId]);

@@ -29,7 +29,8 @@ public class Conversion {
     }
     public enum massUnits {
         KILOGRAMS,
-        POUNDS
+        POUNDS,
+        TONS
     }
     public enum timeUnits {
         SECONDS,
@@ -230,6 +231,16 @@ public class Conversion {
         if (from == massUnits.POUNDS) {
             if (to == massUnits.KILOGRAMS) {
                 return mass / 2.20462;
+            }
+        }
+        if (from == massUnits.TONS) {
+            if (to == massUnits.KILOGRAMS) {
+                return mass / 907.185;
+            }
+        }
+        if (from == massUnits.KILOGRAMS) {
+            if (to == massUnits.TONS) {
+                return mass / 907.185;
             }
         }
         return 0;

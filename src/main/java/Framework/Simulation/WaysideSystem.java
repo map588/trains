@@ -169,7 +169,8 @@ public class WaysideSystem {
                 73, 74, 75,
                 76},
                 null,
-                redLine, ctcOffice), Lines.RED);
+                redLine, ctcOffice,
+                "src/main/antlr/RedLine3.plc"), Lines.RED);
 
         addController(new WaysideControllerImpl(3, Lines.RED, new int[]{
                 44, 45,

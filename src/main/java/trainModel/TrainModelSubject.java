@@ -3,6 +3,7 @@ package trainModel;
 import Common.TrainModel;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
+import Utilities.Conversion;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import org.slf4j.Logger;
@@ -89,9 +90,9 @@ public class TrainModelSubject implements AbstractSubject{
         properties.put(NUMCARS_PROPERTY, new SimpleIntegerProperty(model.getNumCars()));
         properties.put(NUMPASSENGERS_PROPERTY, new SimpleIntegerProperty(model.getPassengerCount()));
         properties.put(CREWCOUNT_PROPERTY, new SimpleIntegerProperty(model.getCrewCount()));
-        properties.put(MASS_PROPERTY, new SimpleDoubleProperty(model.getMass()));
+        properties.put(MASS_PROPERTY, new SimpleDoubleProperty(Conversion.convertMass(model.getMass(), Conversion.massUnits.KILOGRAMS, Conversion.massUnits.TONS)));
         properties.put(DISTANCETRAVELED_PROPERTY, new SimpleDoubleProperty(model.getDistanceTraveled()));
-        properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(model.getlength()));
+        properties.put(LENGTH_PROPERTY, new SimpleDoubleProperty(Conversion.convertDistance(model.getLength(), Conversion.distanceUnit.METERS, Conversion.distanceUnit.FEET)));
         properties.put(ANNOUNCEMENT_PROPERTY, new SimpleStringProperty(model.getAnnouncement()));
     }
 

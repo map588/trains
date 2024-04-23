@@ -1,0 +1,91 @@
+// Handles sections H and O - T, blocks 28 - 43 and 67 - 76
+// Accesses occupancies for blocks 24 - 47 and 63 - 76
+
+// Debinds directionality when track is empty
+if dir_assigned[43]
+    if not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and not occupied[30] and not occupied[31] and not occupied[32] and not occupied[33] and not occupied[34] and not occupied[35] and not occupied[36] and not occupied[37] and not occupied[38] and not occupied[39] and not occupied[40] and not occupied[41] and not occupied[42] and not occupied[43] and not occupied[44] and not occupied[45] and not occupied[46] and not occupied[47] and not occupied[67] and not occupied[68] and not occupied[69] and not occupied[70] and not occupied[71] and not occupied[72] and not occupied[73] and not occupied[74] and not occupied[75] and not occupied[76]
+        dir_assigned[43] = FALSE
+        switch[33] = MAIN
+        switch[38] = MAIN
+    endif
+endif
+
+// Defines a direction for the track when a train is present
+if not dir_assigned[43]
+    if occupied[72] or occupied[73] or occupied[74] or occupied[75]
+        dir_assigned[43] = TRUE
+        direction[43] = SOUTHBOUND
+        switch[33] = ALT
+        switch[38] = MAIN
+    else
+        if occupied[71] or occupied[70] or occupied[69] or occupied[68]
+            dir_assigned[43] = TRUE
+            direction[43] = NORTHBOUND
+            switch[33] = MAIN
+            switch[38] = ALT
+        endif
+    endif
+endif
+
+// Directional switching if train is present but in wrong direction
+if dir_assigned[43]
+    if not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and not occupied[30] and not occupied[31] and not occupied[32] and not occupied[33] and not occupied[34] and not occupied[35] and not occupied[36] and not occupied[37] and not occupied[38] and not occupied[39] and not occupied[40] and not occupied[41] and not occupied[42] and not occupied[43] and not occupied[44] and not occupied[45] and not occupied[46] and not occupied[47]
+        if direction[43] == SOUTHBOUND
+            if occupied[71] or occupied[70] or occupied[69] or occupied[68]
+                direction[43] = NORTHBOUND
+                switch[33] = MAIN
+                switch[38] = ALT
+            endif
+        else
+            if direction[43] == NORTHBOUND
+                if occupied[72] or occupied[73] or occupied[74] or occupied[75]
+                    direction[43] = SOUTHBOUND
+                    switch[33] = ALT
+                    switch[38] = MAIN
+                endif
+            endif
+        endif
+    endif
+endif
+
+
+// Authority control for side sections
+authority[67] = not occupied[68] and not occupied[69] and not occupied[70] and not occupied[71]
+authority[68] = not occupied[69] and not occupied[70] and not occupied[71] and not occupied[38] and switch[38] == ALT
+authority[69] = not occupied[70] and not occupied[71] and not occupied[38] and not occupied[37] and switch[38] == ALT
+authority[70] = not occupied[71] and not occupied[38] and not occupied[37] and not occupied[36] and switch[38] == ALT
+authority[71] = not occupied[38] and not occupied[37] and not occupied[36] and not occupied[35] and switch[38] == ALT
+
+authority[72] = not occupied[33] and not occupied[34] and not occupied[35] and not occupied[36] and switch[33] == ALT
+authority[73] = not occupied[72] and not occupied[33] and not occupied[34] and not occupied[35] and switch[33] == ALT
+authority[74] = not occupied[73] and not occupied[72] and not occupied[33] and not occupied[34] and switch[33] == ALT
+authority[75] = not occupied[74] and not occupied[73] and not occupied[72] and not occupied[33] and switch[33] == ALT
+authority[76] = not occupied[75] and not occupied[74] and not occupied[73] and not occupied[72]
+
+// Directional control for H section
+if dir_assigned[43]
+    if direction[43] == SOUTHBOUND
+        for i = 28 to 43 do
+            authority[i] = not occupied[i+1] and not occupied[i+2] and not occupied[i+3] and not occupied[i+4]
+        endfor
+    else
+        if direction[43] == NORTHBOUND
+            for i = 28 to 43 do
+                authority[i] = not occupied[i-1] and not occupied[i-2] and not occupied[i-3] and not occupied[i-4]
+            endfor
+        endif
+    endif
+endif
+
+
+// Lights
+light[28] = switch[27] == MAIN
+light[33] = RED
+light[34] = switch[33] == MAIN
+light[38] = switch[38] == MAIN
+light[39] = RED
+light[43] = switch[44] == MAIN
+light[67] = RED
+light[71] = switch[38] == ALT
+light[72] = switch[33] == ALT
+light[76] = RED
