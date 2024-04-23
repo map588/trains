@@ -1,15 +1,12 @@
 package trackModel;
 
 import Common.TrackModel;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
-import Framework.Support.Notifier;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import trackModel.Enums.TrackProperty;
 
-import static trackModel.TrackProperty.*;
+import static trackModel.Enums.TrackProperty.*;
 
 public class TrackModelSubject {
     private final StringProperty tempProperty = new SimpleStringProperty();
