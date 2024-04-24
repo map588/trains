@@ -45,10 +45,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final Stack<PLCChange>[] plcResults;
     private Stack<PLCChange> currentPLCResult;
     private boolean isRunningPLC;
-    private Stack<Integer> occupancyBlockIDStack;
-    private Stack<Boolean> occupancyValStack;
-    private Map<Integer, Integer> authorityMap = new HashMap<>();
-    private Map<Integer, Double> speedMap = new HashMap<>();
+    private final Stack<Integer> occupancyBlockIDStack = new Stack<>();
+    private final Stack<Boolean> occupancyValStack = new Stack<>();
+    private final Map<Integer, Integer> authorityMap = new HashMap<>();
+    private final Map<Integer, Double> speedMap = new HashMap<>();
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
@@ -198,13 +198,13 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
-//        if(isRunningPLC()) {
-//            occupancyBlockIDStack.push(blockID);
-//            occupancyValStack.push(occupied);
-//        }
-//        else {
+        if(isRunningPLC()) {
+            occupancyBlockIDStack.push(blockID);
+            occupancyValStack.push(occupied);
+        }
+        else {
             setOccupancy(blockID, occupied);
-//        }
+        }
 
         if(occupied) {
             if(authorityMap.containsKey(blockID)) {
