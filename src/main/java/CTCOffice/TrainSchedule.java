@@ -240,7 +240,13 @@ public class TrainSchedule {
                                 .getBlockInfo().getLength();
                 stop.getAuthorityList().add(metersAuthority - blockDistance);
                 stop.getRoutePath().add(TrackLayout.get(visited + j));
-                System.out.println("Authority : " + stop.getAuthorityList().get(j) + " set for the " + j + "th block of stop " + stop.getStopIndex() + " of train " + trainID + " with block " + TrackLayout.get(visited + j));
+                System.out.println("Authority : "
+                        + stop.getAuthorityList().get(j)
+                        + " set for the " + j + "th block of stop "
+                        + stop.getStopIndex() + " of train "
+                        + trainID + " with block "
+                        + TrackLayout.get(visited + j)
+                );
                 metersAuthority -= blockDistance;
             }
 //            int blocks = blocksAuthority;
@@ -262,7 +268,7 @@ public class TrainSchedule {
             double minTraversalTime = 0.0;
             stop.getSpeedList().clear();
             for (int j = 0; j < stop.getRoutePath().size(); j++) {
-                stop.getSpeedList().add(blockSubjectMap.getSubject(BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getSpeedLimit());
+                stop.getSpeedList().add((blockSubjectMap.getSubject(BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getSpeedLimit() * 0.277778));
                 minTraversalTime +=
                         (blockSubjectMap.getSubject(
                                   BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line)))
