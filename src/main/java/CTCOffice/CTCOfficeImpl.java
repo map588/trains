@@ -24,7 +24,7 @@ import java.util.*;
 
 public class CTCOfficeImpl implements CTCOffice, Notifier {
     public final static ArrayList<Integer> GreenTrackLayout = new ArrayList<>(List.of(
-            63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
+            0, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
             78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92,
             93, 94, 95, 96, 97, 98, 99, 100, 85, 84, 83, 82, 81, 80, 79,
             78, 77, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113,
@@ -37,7 +37,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
             53, 54, 55, 56, 57));
     public final static ArrayList<Integer> RedTrackLayout = new ArrayList<>(List.of(
-            9, 8, 7, 6, 5, 4, 3, 2, 1, 16, 17, 18, 19, 20, 21, 22,
+            0, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
             23, 24, 25));
 
     private double  time; // in seconds
@@ -303,7 +303,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         BlockIDs location = trainLocations.get(train);
         TrainSchedule schedule = trainSchedules.get(train);
         TrainStop scheduledStop = schedule.getStop(schedule.getStopsCompleted());
-        double authority = scheduledStop.getAuthorityList().get(scheduledStop.getPassedBlocks());
+        double authority = scheduledStop.getAuthorityList().get(scheduledStop.getPassedBlocks()) /*+ blockSubjectMap.getSubject(location).getBlockInfo().getLength()*/;
         logger.info("CTC sending authority {} to train {}", authority, trainID);
         WaysideSystem.getController(location.line(), location.blockIdNum()).CTCSendAuthority(location.blockIdNum(), (int) authority);
     }
@@ -335,5 +335,6 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
 //TODO: make sure switch is shown currectly with divering nodes
 //TODO: make train tracking and increment passed blocks and completed stops
+//TODO: speed  unit convertion km/h to m/s
 
 
