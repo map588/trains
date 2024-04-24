@@ -13,11 +13,14 @@ public class TrainStop implements Notifier { //SubRoute
     private int stationBlockID;
     private double arrivalTime;
     private double departureTime;
-    private List<Double> speedList;
-    private List<Integer> routePath; //routePath
-    private List<Double> authorityList;
+    private final List<Double> speedList;
+    private final List<Integer> routePath; //routePath
+    private final List<Double> authorityList;
+    private final List<Integer> TrackReferences = new ArrayList<>();
     private final TrainStopSubject subject;
     private int stopIndex;
+
+    private int passedBlocks = 0;
 
     public TrainStop(int index, int stationBlockID, double arrivalTime, double departureTime, List<Double> speedList, List<Integer> routePath, List<Double> authorityList) {
         this.stopIndex = index;
@@ -89,28 +92,14 @@ public class TrainStop implements Notifier { //SubRoute
         notifyChange(DEPARTURE_TIME_PROPERTY, convertDoubleToClockTime(departureTime));
     }
 
-    public void setSpeedList(List<Double> speedList) {
-        this.speedList = new ArrayList<>(speedList);
+    public boolean incrementPassedBlocks() {
+        if(passedBlocks == routePath.size() -1 ) return true;
+        passedBlocks++;
+        return passedBlocks == routePath.size();
     }
 
-    public void setRoutePath(List<Integer> routePath) {
-        this.routePath = new ArrayList<>(routePath);
-    }
-
-    public void setAuthorityList(List<Double> authorityList) {
-        this.authorityList = new ArrayList<>(authorityList);
-    }
-
-    public void updateSpeedList(int index, double speed) {
-        speedList.set(index, speed);
-    }
-
-    public void updateBlockList(int index, int block) {
-        routePath.set(index, block);
-    }
-
-    public void updateAuthorityList(int index, double authority) {
-        authorityList.set(index, authority);
+    public int getPassedBlocks() {
+        return passedBlocks;
     }
 
     public TrainStopSubject getSubject() {

@@ -12,12 +12,9 @@ import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import static Utilities.TimeConvert.*;
+import static CTCOffice.Properties.OfficeProperties.*;
 import java.util.*;
-
-import static CTCOffice.Properties.OfficeProperties.TIME_PROPERTY;
-import static Utilities.TimeConvert.convertClockTimeToDouble;
-import static Utilities.TimeConvert.convertDoubleToClockTime;
 
 /**
  * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).
@@ -59,12 +56,15 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     private static TrackSystem trackSystem;
     private final CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
 
-    Map<Integer, BlockIDs> trainLocations = new HashMap<>();
-    ArrayList<Integer> trainIDs = new ArrayList<>();
-    Map<Double, TrainIdentity> trainSchedule = new HashMap<>();
-    ArrayList<Double> dispatchTimes = new ArrayList<>();
+    Map<TrainIdentity, BlockIDs>        trainLocations = new HashMap<>();
+    Map<BlockIDs, TrainIdentity>        antiTrainLocations = new HashMap<>();
+    Map<TrainIdentity, TrainSchedule>   trainSchedules = new HashMap<>();   //schedules indexed by their train identity
+    Map<Double, TrainIdentity>          trainDispatches = new HashMap<>();  //trains indexed by their dispatch time
+    ArrayList<Double>                   dispatchTimes = new ArrayList<>();  //dispatch times of the trains
+    Map<Integer, TrainIdentity>         trainIDs = new HashMap<>();         //trains indexed by their train ID
 
     CTCOfficeSubject subject = new CTCOfficeSubject(this);
+
     /**
      * Constructor for the CTCOfficeImpl class.
      * Initializes the track blocks and the schedule.
@@ -113,6 +113,8 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             add( new TrainStop(1, 21, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(2, 25, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
+
+
     }
 
     public void setTrackSystem(TrackSystem trackSystem) {
@@ -120,12 +122,54 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         logger.info("TrackSystem has been set");
     }
 
-    public void    setBlockOccupancy(Lines line, int blockID, boolean occupied) {
-        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
-        logger.info("Block {} on line {} has been set to occupied: {}", blockID, line, occupied);
+    public void changeTrainLocation(int oldBlock, int blockID, Lines line) {
+        TrainIdentity train = antiTrainLocations.get(BlockIDs.of(oldBlock, line));
+        trainLocations.put(train, BlockIDs.of(blockID, line));
+        antiTrainLocations.remove(BlockIDs.of(oldBlock, line));
+        antiTrainLocations.put(BlockIDs.of(blockID, line), train);
+        logger.info("Train {} has moved from block {} to block {}", train.trainID(), oldBlock, blockID);
+        if(trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).incrementPassedBlocks()){
+            logger.info("Train {} should be stopping at block {}", train.trainID(), blockID);
+            trainSchedules.get(train).incrementStopsCompleted();
+        }
+        sendAuthority(train.trainID());
+        sendSpeed(train.trainID());
     }
 
-    //************************************************************************************************************************************
+    public void     setBlockOccupancy(Lines line, int blockID, boolean occupied) {
+        blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
+        logger.info("Block {} on line {} has been set to occupied: {}", blockID, line, occupied);
+        if(blockID == 0) {
+            return;
+        }
+        ArrayList<Integer> trackLayout = (line == Lines.GREEN) ? GreenTrackLayout : RedTrackLayout;
+        int blockIndex = trackLayout.indexOf(blockID);
+        if(blockIndex == -1) {
+            logger.warn("Block {} on line {} does not exist", blockID, line);
+            return;
+        }
+        if( blockIndex == 0 ) { //if the block is the first block then pull location and info from yard
+            changeTrainLocation(0, blockID, line);
+        }
+        //if the block is only visited once in the track layout
+        else if(blockIndex == trackLayout.lastIndexOf(blockID)) {
+            // and the block before is occupied then the train is moving forward and move its location to this block
+            if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
+                changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
+            }else{
+                logger.warn("Train out of nowhere on block {} on line {}", blockID, line);
+            }
+        }else{ //block is visited more than once in the track layout
+            //if the block is visited more than once in the track layout then find if this is the first visit
+            if(trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
+                changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
+            } else if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex + 1), line))) {
+                changeTrainLocation(trackLayout.get(blockIndex + 1), blockID, line);
+            } else {
+                logger.warn("Train out of nowhere on block {} on line {}", blockID, line);
+            }
+        }
+    }
 
     public void     setSwitchState(Lines line, int blockID, boolean switchState) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchState(false, switchState);
@@ -212,46 +256,70 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         logger.info("Running schedule {}", scheduleName);
         ScheduleFile scheduleFile = scheduleLibrary.getSubject(scheduleName).getSchedule();
         for (TrainSchedule schedule : scheduleFile.getMultipleTrainSchedules().values()) {
-           trainSchedule.put(schedule.getDispatchTime(), new TrainIdentity(schedule.getTrainID(), Enum.valueOf(Lines.class, schedule.getLine()), schedule.getDispatchTime(), schedule.getCarCount()));
+           trainDispatches.put(schedule.getDispatchTime(), new TrainIdentity(schedule.getTrainID(), Enum.valueOf(Lines.class, schedule.getLine()),
+                   schedule.getDispatchTime(), schedule.getCarCount()));
            dispatchTimes.add(schedule.getDispatchTime());
            dispatchTimes.sort(Comparator.naturalOrder());
+           trainSchedules.put(TrainIdentity.of(schedule.getTrainID(), Enum.valueOf(Lines.class, schedule.getLine()),
+                   schedule.getDispatchTime(), schedule.getCarCount()), schedule);
         }
 
     }
+
     public void notifyTrainReturn(int trainID) {
         logger.info("Train {} has returned to the yard", trainID);
-        trainLocations.remove(trainID);
+        TrainIdentity train = trainIDs.get(trainID);
+        antiTrainLocations.remove(trainLocations.get(train));
+        trainLocations.remove(train);
+        trainSchedules.remove(train);
         trainIDs.remove(trainID);
+
     }
-    //TODO : WIP
+
     void DispatchTrain(Lines line , int trainID, int carCount, double dispatchTime){
         logger.info("CTC Dispatching train {} on line {}", trainID, line);
         trackSystem.dispatchTrain(line, trainID);
-        //trainSchedule.remove(dispatchTime);
-        //dispatchTimes.remove(0);
-        trainIDs.add(trainID);
-        trainLocations.put(trainID, BlockIDs.of(0, line));
-        sendAuthority(line, 0, 1900);
-        sendSpeed(line, 0, 40);
+        trainDispatches.remove(dispatchTime);
+        dispatchTimes.remove(0);
+        trainIDs.put(trainID, TrainIdentity.of(trainID, line, dispatchTime, carCount));
+        trainLocations.put(trainIDs.get(trainID), BlockIDs.of(0, line));
+        antiTrainLocations.put(BlockIDs.of(0, line), trainIDs.get(trainID));
+        sendAuthority(trainID);
+        sendSpeed(trainID);
     }
 
-    void DispatchTrain(Lines line , int trainID){
-        logger.info("CTC Dispatching train {} on line {}", trainID, line);
-        trackSystem.dispatchTrain(line, trainID);
-        trainIDs.add(trainID);
-        trainLocations.put(trainID, BlockIDs.of(0, line));
-        sendAuthority(line, 0, 20000);
-        sendSpeed(line, 0, 19.6);
+    void sendSpeed(int trainID) {
+        TrainIdentity train = trainIDs.get(trainID);
+        BlockIDs location = trainLocations.get(train);
+        TrainSchedule schedule = trainSchedules.get(train);
+        TrainStop scheduledStop = schedule.getStop(schedule.getStopsCompleted());
+        double speed = scheduledStop.getSpeedList().get(scheduledStop.getPassedBlocks());
+        logger.info("CTC sending speed {} to block {} on line {}", speed, location.blockIdNum(), location.line());
+        WaysideSystem.getController(location.line(), location.blockIdNum()).CTCSendSpeed(location.blockIdNum(), speed);
     }
 
-    void sendSpeed(Lines line, int blockID, double speed) {
-        logger.info("CTC sending speed {} to block {} on line {}", speed, blockID, line);
+    void sendAuthority(int trainID) {
+        TrainIdentity train = trainIDs.get(trainID);
+        BlockIDs location = trainLocations.get(train);
+        TrainSchedule schedule = trainSchedules.get(train);
+        TrainStop scheduledStop = schedule.getStop(schedule.getStopsCompleted());
+        double authority = scheduledStop.getAuthorityList().get(scheduledStop.getPassedBlocks());
+        logger.info("CTC sending authority {} to train {}", authority, trainID);
+        WaysideSystem.getController(location.line(), location.blockIdNum()).CTCSendAuthority(location.blockIdNum(), (int) authority);
+    }
+
+    //TODO: Remove these methods
+    void sendDumbAuthority(int trainID, Lines line, int blockID, int authority) {
+        logger.info("CTC sending dumb authority to train {} on block {} on line {}", trainID, blockID, line);
+        WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
+    }
+    void sendDumbSpeed(int trainID, Lines line, int blockID, double speed) {
+        logger.info("CTC sending dumb speed to train {} on block {} on line {}", trainID, blockID, line);
         WaysideSystem.getController(line, blockID).CTCSendSpeed(blockID, speed);
     }
- //TODO: change Send Authority to send in blocks
-    void sendAuthority(Lines line, int blockID, int authority) {
-        logger.info("CTC sending authority {} to block {} on line {}", authority, blockID, line);
-        WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
+    void dispatchDumbTrain(int trainID, Lines line) {
+        logger.info("CTC dispatching dumb train {} on line {}", trainID, line);
+        trackSystem.dispatchTrain(line, trainID);
     }
 
     public void notifyChange(String property, Object newValue) {
@@ -265,9 +333,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 //TODO: send the wayside a list of blcisk to give gthe authity to instead of just one block
 //TODO: send that list by calling send authoity on the occupied block and the block with a reative auth for each block
 
-//TODO: send speed as meters per second
-
 //TODO: make sure switch is shown currectly with divering nodes
-
+//TODO: make train tracking and increment passed blocks and completed stops
 
 

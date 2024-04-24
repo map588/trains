@@ -18,6 +18,9 @@ public class TrainSchedule {
     private final ArrayList<TrainStop> stops;
     public final ObservableList<Integer> stopIndices = FXCollections.observableArrayList();
     public final ObservableList<TrainStopSubject> stopList;
+
+    private int stopsCompleted = 0;
+
     TrainScheduleSubject subject;
     CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
 
@@ -102,6 +105,14 @@ public class TrainSchedule {
 
     public TrainScheduleSubject getSubject() {
         return subject;
+    }
+
+    public int getStopsCompleted() {
+        return stopsCompleted;
+    }
+
+    public void incrementStopsCompleted() {
+        stopsCompleted++;
     }
 
     public void moveStop(int stopCurrentIndex, int stopNewIndex) {
@@ -212,10 +223,13 @@ public class TrainSchedule {
                         .getBlockInfo().getLength();
             }
             for (int j = 0; j < blocksAuthority; j++) {
-                stop.getAuthorityList().add(
-                        metersAuthority - blockSubjectMap.getSubject(BlockIDs.of(TrackLayout.get(visited + j), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength());
+                double blockDistance = blockSubjectMap.getSubject(BlockIDs.of(TrackLayout.get(visited + j), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength();
+                stop.getAuthorityList().add(metersAuthority - blockDistance);
                 stop.getRoutePath().add(TrackLayout.get(visited + j));
+                System.out.println("Authority : " + stop.getAuthorityList().get(j) + " set for the " + j + "th block of stop " + stop.getStopIndex() + " of train " + trainID);
+                metersAuthority -= blockDistance;
             }
+            visited += blocksAuthority - 1;
         }
     }
 
@@ -248,4 +262,5 @@ public class TrainSchedule {
             }
         }
     }
+
 }

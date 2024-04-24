@@ -97,6 +97,7 @@ public class CTCOfficeManager {
     @FXML private Button checkScheduleButton; // check for errors
 
     @FXML private Button DispatchButton;
+    @FXML private Button DumbDispatchButton;
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
@@ -104,6 +105,9 @@ public class CTCOfficeManager {
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     ScheduleFile selectedSchedule = null;
     TrainSchedule selectedTrain = null;
+
+    //TODO Remove this
+    int trainID = 1;
 
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
@@ -124,6 +128,10 @@ public class CTCOfficeManager {
         setupStopTable();
         setupScheduleButtons();
         setupDividers();
+        scheduleTable.getSelectionModel().select(0);
+        trainSelectTable.getSelectionModel().select(0);
+        scheduleEditTable.getSelectionModel().select(0);
+        checkScheduleButton.fire();
     }
 
     private void LineTableSet(TableColumn<CTCBlockSubject, Integer> blockNumberColumn, TableView<CTCBlockSubject> blockTable, TableColumn<CTCBlockSubject, Boolean> occupationLightColumn,
@@ -476,11 +484,11 @@ public class CTCOfficeManager {
 
     }
 
-    private void setupScheduleButtons(){
+    private void setupScheduleButtons() {
         AddSchedule.setOnAction(event -> {
             System.out.println("added schedule\n");
-           new ScheduleFile("Schedule " + (scheduleLibrary.getSubjects().size() + 1), "4/25/2021");
-              scheduleTable.getItems().add(scheduleLibrary.getSubjects().get(scheduleLibrary.getSubjects().size()));
+            new ScheduleFile("Schedule " + (scheduleLibrary.getSubjects().size() + 1), "4/25/2021");
+            scheduleTable.getItems().add(scheduleLibrary.getSubjects().get(scheduleLibrary.getSubjects().size()));
         });
 
         RemoveSchedule.setOnAction(event -> {
@@ -490,7 +498,9 @@ public class CTCOfficeManager {
         });
 
         checkScheduleButton.setOnAction(event -> {
-            selectedTrain.fixSchedule();
+            for (TrainScheduleSubject train : trainSelectTable.getItems()) {
+                train.getSchedule().fixSchedule();
+            }
             scheduleEditTable.getItems().clear();
             stopSelector.getItems().clear();
             scheduleEditTable.getItems().addAll(selectedTrain.stopList);
@@ -529,12 +539,16 @@ public class CTCOfficeManager {
         });
 
         DispatchButton.setOnAction(event -> {
-            Lines dispatchLine = Enum.valueOf(Lines.class, lineTrainSelector.getValue());
-            office.DispatchTrain(dispatchLine, office.trainLocations.size() + 1);
-            System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + dispatchLine);
-//            office.sendAuthority(dispatchLine, 0, 20000);
-//            office.sendSpeed(dispatchLine, 0, 19.6);
+            checkScheduleButton.fire();
+            office.runSchedule(selectedSchedule.getScheduleFileName());
+        });
+
+
+        DumbDispatchButton.setOnAction(event -> {
+            Lines line = lineTrainSelector.getValue().equals("GREEN") ? Lines.GREEN : Lines.RED;
+            office.dispatchDumbTrain(trainID++, line);
+            office.sendDumbAuthority(trainID, line, 0, 20000);
+            office.sendDumbSpeed(trainID, line, 0, 19.6);
         });
     }
-
 }

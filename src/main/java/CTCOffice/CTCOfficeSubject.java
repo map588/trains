@@ -2,7 +2,6 @@ package CTCOffice;
 
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
-import Utilities.Enums.Lines;
 import javafx.beans.property.*;
 import static CTCOffice.Properties.OfficeProperties.*;
 import static Utilities.TimeConvert.*;
@@ -23,7 +22,7 @@ public class CTCOfficeSubject implements AbstractSubject{
         this.office = office;
         properties.get(TIME_PROPERTY).addListener((observable, oldValue, newValue) -> {
             if(!office.dispatchTimes.isEmpty() && office.dispatchTimes.get(0) <= convertClockTimeToDouble((String) newValue)){
-                TrainIdentity train = office.trainSchedule.get(office.dispatchTimes.get(0));
+                TrainIdentity train = office.trainDispatches.get(office.dispatchTimes.get(0));
                 office.DispatchTrain(train.line(), train.trainID(), train.carCount(), train.dispatchTime());
             }
 

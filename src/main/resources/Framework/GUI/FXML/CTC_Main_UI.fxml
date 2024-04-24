@@ -137,11 +137,19 @@
                 <Button fx:id="saveScheduleButton" mnemonicParsing="false" text="Save Schedule"/>
                 <Button fx:id="checkScheduleButton" mnemonicParsing="false" text="Check Schedule"/>
             </ToolBar>
-
                 <Button fx:id="DispatchButton" alignment="BOTTOM_CENTER" mnemonicParsing="false"
                         text="Dispatch" textFill="RED">
                     <font>
-                        <Font size="64.0"/>
+                        <Font size="32.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="20.0"/>
+                    </VBox.margin>
+                </Button>
+                <Button fx:id="DumbDispatchButton" alignment="BOTTOM_CENTER" mnemonicParsing="false"
+                        text="Dumb Dispatch" textFill="RED">
+                    <font>
+                        <Font size="32.0"/>
                     </font>
                     <VBox.margin>
                         <Insets top="20.0"/>
