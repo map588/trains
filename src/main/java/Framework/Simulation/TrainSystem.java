@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public class TrainSystem {
     private final static Logger logger = LoggerFactory.getLogger(TrainSystem.class);
 
-    ExecutorService trainExecutor = Executors.newWorkStealingPool();
+    ExecutorService trainExecutor = Executors.newWorkStealingPool(4);
 
     private final ConcurrentHashMap<TrainModel, TrainUpdateTask> updateTasks = new ConcurrentHashMap<>();
 

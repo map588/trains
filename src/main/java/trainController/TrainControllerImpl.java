@@ -216,11 +216,18 @@ public class TrainControllerImpl implements TrainController {
             return pow;
         }
     }
-
+    int brakeCount = 0;
     @Override
     public void checkFailures(double trainPower) {
         boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();
         boolean badPower = this.power > 0 && trainPower == 0;
+
+        if(badBrakes) {
+            badBrakes = ++brakeCount > 6;
+        }else {
+            brakeCount = 0;
+        }
+
 
         setSignalFailure(this.commandSpeed == -1 || this.authority == -1);
 
@@ -235,7 +242,7 @@ public class TrainControllerImpl implements TrainController {
         if (brakeFailure) {
             setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(false);
+            setServiceBrake(this.sBrakeGUI);
         } else {
             setBrakeFailure(badBrakes);
         }
@@ -398,14 +405,14 @@ public class TrainControllerImpl implements TrainController {
     }
 
     private void setServiceBrake(boolean brake) {
-        this.serviceBrake = brake;
         this.train.setServiceBrake(brake);
+        this.serviceBrake = brake;
         notificationExecutor.execute(() -> subject.notifyChange(SERVICE_BRAKE, brake));
     }
 
     public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake = brake;
         this.train.setEmergencyBrake(brake);
+        this.emergencyBrake = brake;
         notificationExecutor.execute(() -> subject.notifyChange(EMERGENCY_BRAKE, brake));
     }
 
@@ -555,8 +562,7 @@ public class TrainControllerImpl implements TrainController {
             case LEFT_DOORS -> this.leftDoors = (boolean) newValue;
             case RIGHT_DOORS -> this.rightDoors = (boolean) newValue;
             case SET_TEMPERATURE -> this.setTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
-            case CURRENT_TEMPERATURE ->
-                    this.currentTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
+            case CURRENT_TEMPERATURE -> this.currentTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
             case ANNOUNCEMENTS -> this.announcements = (boolean) newValue;
             case SIGNAL_FAILURE -> this.signalFailure = (boolean) newValue;
             case BRAKE_FAILURE -> this.brakeFailure = (boolean) newValue;

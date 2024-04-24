@@ -210,11 +210,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //BRAKE FORCES
         brakeForce = 0;
-        if (this.serviceBrake && !this.emergencyBrake) {
-            this.brakeForce = SERVICE_BRAKE_FORCE;
-        }
         if (this.emergencyBrake) {
             this.brakeForce = EMERGENCY_BRAKE_FORCE;
+        } else if (this.serviceBrake) {
+            this.brakeForce = SERVICE_BRAKE_FORCE;
         }
 
 
@@ -324,11 +323,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         controller.setAuthority(authority);
 
         listeningExecutor.execute(() -> {
-            logger.warn("Train Authority: {}", authority);
+        logger.info("Train {} <=     Authority: {}",this.trainID, authority);
         notifyChange(AUTHORITY_PROPERTY, authority);
         });
 
-        logger.info("Train {} <=     Authority: {}",this.trainID, authority);
+
     }
 
     // Method to set the value of the emergency brake
