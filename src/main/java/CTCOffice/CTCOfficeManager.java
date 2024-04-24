@@ -530,7 +530,7 @@ public class CTCOfficeManager {
 
         DispatchButton.setOnAction(event -> {
             Lines dispatchLine = Enum.valueOf(Lines.class, lineTrainSelector.getValue());
-            office.DispatchTrain(dispatchLine, office.trainLocations.size() + 1);
+            office.DispatchTrain(dispatchLine, office.trainLocations.size() + 1, carsSelector.getValue(), convertClockTimeToDouble(dispatchTimeSelector.getText()));
             System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + dispatchLine);
             office.sendAuthority(dispatchLine, 0, 200000);
             office.sendSpeed(dispatchLine, 0, 40);
