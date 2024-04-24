@@ -76,6 +76,7 @@ public class TrainControllerImpl implements TrainController {
     private boolean waysideStop;
     private boolean eBrakeGUI = false;
     private boolean sBrakeGUI = false;
+    private double  setSpeed = 0;
 
 
     private int authority = 0;
@@ -172,11 +173,17 @@ public class TrainControllerImpl implements TrainController {
 
             internalAuthority -= currentSpeed * TIME_STEP;
 
+            setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+
+
             if (power == 0 && currentSpeed > 0 && currentSpeed < 1) {
                 setAuthority((int) internalAuthority);
+                if(internalAuthority > 10){
+                    this.setSpeed = 5;
+                }
             }
 
-            double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+
             double error = setSpeed - currentSpeed;
             double proportionalTerm = Kp * error;
 

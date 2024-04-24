@@ -290,16 +290,22 @@ public class TrainModelManager {
         // Create a listener that reacts to any change (add, remove, update) by updating choice box items
         ObservableHashMap.MapListener<Integer, TrainModelSubject> genericListener = new ObservableHashMap.MapListener<>() {
             public void onAdded(Integer key, TrainModelSubject value) {
-                    updateChoiceBoxItems();
-                    trainDropDown.getSelectionModel().select(value.getModel().getTrainNumber());
+                   Platform.runLater(() -> {
+                       updateChoiceBoxItems();
+                       trainDropDown.getSelectionModel().select(value.getModel().getTrainNumber());
+                   });
             }
             public void onRemoved(Integer key, TrainModelSubject value) {
+                Platform.runLater(() -> {
                     updateChoiceBoxItems();
                     // Additional logic can be added here to select another item if the current selection was removed
+                });
             }
             public void onUpdated(Integer key, TrainModelSubject oldValue, TrainModelSubject newValue) {
+                Platform.runLater(() -> {
                  updateChoiceBoxItems();
                 trainDropDown.getSelectionModel().select(newValue.getModel().getTrainNumber());
+                });
             }
         };
         subjects.addChangeListener(genericListener);

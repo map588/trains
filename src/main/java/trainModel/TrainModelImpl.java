@@ -172,7 +172,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);
 
-         controller.checkFailures(power);
+
+        controller.checkFailures(power);
     }
 
     //Called when not running System.
