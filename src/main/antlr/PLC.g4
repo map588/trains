@@ -35,7 +35,7 @@ not_operator : NOT list_value ;
 list_value : list_name '[' (int_val | int_variable | arith_expression) ']' ;
 arith_expression : (int_val | int_variable) ARITH_OP (int_val | int_variable) ;
 int_val : INT_VAL ;
-int_variable : VARIABLE ;
+int_variable : VARIABLE  ;
 list_name : (OCCUPANCY | SWITCH | LIGHT | CROSSING | AUTHORITY | DIRECTION | DIR_ASSIGNED) ;
 value_false : FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;
 value_true : TRUE | GREEN | ALT | OPEN | NORTHBOUND ;

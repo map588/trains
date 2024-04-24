@@ -170,6 +170,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.setRightDoors(controllerValues.rightDoors());
         this.setSetTemperature(controllerValues.setTemperature());
 
+        this.setServiceBrake(controllerValues.serviceBrake());
+        this.setEmergencyBrake(controllerValues.emergencyBrake());
+
         this.setAcceleration(acceleration);
         this.setActualSpeed(speed);
         this.setRealTemperature(newRealTemperature);

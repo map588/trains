@@ -10,7 +10,7 @@ grammar PLC_example;
 program[WaysideExecutor executor]
     : START statement_list END EOF
     {
-        this.executor = executor;
+      this.executor = executor;
     }
     ;
 
@@ -64,14 +64,17 @@ arith_expression returns [int val]
 ;
 
 
+
+
 int_term  returns [int val]
 : int_val       { $val = int_val().val; }          #int_literal
 | int_variable  { $val = int_variable().val; }     #int_var
 ;
 
 int_val returns [int val]
-: INT_VAL  { $val = Integer.parseInt($INT_VAL.text); }
+: INT_VAL  { $val = $INT_VAL.int; }
 ;
+
 int_variable returns [int val]
 : VARIABLE  { $val = executor.getVariable($VARIABLE.text);}
 ;
@@ -95,6 +98,9 @@ bool_literal returns [boolean bool]
 value_false: FALSE | RED | MAIN | CLOSED | SOUTHBOUND ;
 value_true : TRUE | GREEN | ALT | OPEN | NORTHBOUND ;
 
+
+fragment DIGIT : [0-9] ;
+fragment LETTER : [a-zA-Z] ;
 
 
 AND : 'and' | 'AND' ;
@@ -135,5 +141,5 @@ MINUS : '-' ;
 NEWLINE : ('\r'? '\n' | '\r')+ ;
 WS : (' ' | '\t') -> skip ;
 
-INT_VAL : [0-9]+ ;
-VARIABLE : [a-zA-Z]+ | [a-zA-Z0-9]+ ;
+INT_VAL : DIGIT+ ;
+VARIABLE : LETTER+ ;

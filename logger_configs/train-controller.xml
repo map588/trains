@@ -7,7 +7,7 @@
 
     <logger name="trackModel" level="WARN"/>
     <logger name="CTCOffice" level="ERROR"/>
-    <logger name="trainModel" level="INFO"/>
+    <logger name="trainModel" level="WARN"/>
     <logger name="trainController" level="INFO"/>
     <logger name="waysideController" level="ERROR"/>
 

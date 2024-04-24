@@ -4,7 +4,6 @@ import Common.TrainController;
 import Common.TrainModel;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.Beacon;
-import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trainController.ControllerBlocks.ControllerBlock;
@@ -69,8 +68,8 @@ public class TrainControllerImpl implements TrainController {
     private double currentTemperature = 0.0;
     private boolean eBrakeGUI = false;
     private boolean sBrakeGUI = false;
-    private boolean waysideStop;
-    private boolean trainStop = false;
+    private boolean waysideStop = false;
+    private int stopTime = 0;
 
     private double Ki = 20;
     private double Kp = 100;
@@ -185,7 +184,7 @@ public class TrainControllerImpl implements TrainController {
                     setServiceBrake(sBrakeGUI);
                 }
                 rollingError = 0;
-            }else if (currentBlock.isStation() && power == 0 && currentSpeed == 0) {
+            }else if (currentBlock != null && currentBlock.isStation() && power == 0 && currentSpeed == 0) {
                 String platformValues = currentBlock.Doorside();
 
                 setLeftPlatform(platformValues.contains("LEFT"));
@@ -241,7 +240,7 @@ public class TrainControllerImpl implements TrainController {
         boolean badPower = this.power > 0 && trainPower == 0;
 
         if(badBrakes) {
-            badBrakes = ++brakeCount > 6;
+            badBrakes = ++brakeCount > 2;
         }else {
             brakeCount = 0;
         }
@@ -257,7 +256,7 @@ public class TrainControllerImpl implements TrainController {
         if (brakeFailure) {
             setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(false);
+            setServiceBrake(this.sBrakeGUI);
         } else {
             setBrakeFailure(badBrakes);
         }
@@ -317,7 +316,7 @@ public class TrainControllerImpl implements TrainController {
                 logger.warn("FRESH OUT OF BEACON AT {}!", currentBlock.blockNumber());
             }
 
-            logger.warn("Controller thinks its on block {}", currentBlock.blockNumber());
+            logger.info("Controller thinks its on block {}", currentBlock.blockNumber());
 
 
             setAuthority((int) internalAuthority);
@@ -339,12 +338,6 @@ public class TrainControllerImpl implements TrainController {
 
         if (train.getSpeed() == 0) {                             // Check if train is stopped
 
-            // Hopefully won't affect make announcment implementation in manager
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Arrival");
-            alert.setHeaderText(null);
-            alert.setContentText("Arriving at " + nextStationName); // Note that nextStationName will be updated at some point
-            alert.showAndWait();
 
             if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
             if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
@@ -405,8 +398,8 @@ public class TrainControllerImpl implements TrainController {
                 break;
             case RESUME_TRAIN_SIGNAL:
                 waysideStop = false;
-                setServiceBrake(false);
-                logger.debug("Wayside Resume: T{}", trainID);
+                setServiceBrake(this.sBrakeGUI);
+                logger.warn("Wayside Resume: T{}", trainID);
                 break;
             default:
                 if (signalFailure) {
@@ -505,7 +498,7 @@ public class TrainControllerImpl implements TrainController {
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
         if (signalFailure) {
-            logger.warn("Signal Failure detected");
+            logger.info("Signal Failure detected");
         }
         notificationExecutor.execute(() -> {
             subject.notifyChange(SIGNAL_FAILURE, signalFailure);
@@ -516,7 +509,7 @@ public class TrainControllerImpl implements TrainController {
         this.brakeFailure = brakeFailure;
         notificationExecutor.execute(() -> {
             if (brakeFailure) {
-                logger.warn("Brake Failure detected");
+                logger.info("Brake Failure detected");
             }
             subject.notifyChange(BRAKE_FAILURE, brakeFailure);
         });
@@ -526,7 +519,7 @@ public class TrainControllerImpl implements TrainController {
         this.powerFailure = powerFailure;
         notificationExecutor.execute(() -> {
             if (powerFailure) {
-                logger.warn("Power Failure detected");
+                logger.info("Power Failure detected");
             }
             subject.notifyChange(POWER_FAILURE, powerFailure);
         });
