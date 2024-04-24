@@ -201,6 +201,7 @@ public class TrackModelManager {
             passEmbarkedValue.setText("0");
             passDisembarkedValue.setText("0");
             ticketSalesValue.setText("0");
+            nameOfStationLabel.setText("");
         }
 
         if (currentBlockSubject.isIsSwitch()) {
@@ -267,18 +268,22 @@ public class TrackModelManager {
 
         switch(failure) {
             case "Broken Rail" :
-                selectedSubject.setBrokenRail(true);
+//                currentBlockSubject.setBrokenRail(true);
+                TrackLineMap.getTrackLine(line).setBrokenRail(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Track Circuit Failure" :
-                selectedSubject.setTrackCircuitFailure(true);
+//                currentBlockSubject.setTrackCircuitFailure(true);
+                TrackLineMap.getTrackLine(line).setTrackCircuitFailure(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Power Failure" :
-                selectedSubject.setPowerFailure(true);
+//                currentBlockSubject.setPowerFailure(true);
+                TrackLineMap.getTrackLine(line).setPowerFailure(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Fix Track Failure" :
-                selectedSubject.setBrokenRail(false);
-                selectedSubject.setTrackCircuitFailure(false);
-                selectedSubject.setPowerFailure(false);
+//                currentBlockSubject.setBrokenRail(false);
+//                currentBlockSubject.setTrackCircuitFailure(false);
+//                currentBlockSubject.setPowerFailure(false);
+                TrackLineMap.getTrackLine(line).fixTrackFailure(currentBlockSubject.getBlockNumber());
             default:
                 break;
         }
