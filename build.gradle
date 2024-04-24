@@ -152,7 +152,7 @@ test {
 
 run {
     println "Running application"
-    systemProperty "logback.configurationFile", "logger_configs/train-controller.xml"
+    systemProperty "logback.configurationFile", "logger_configs/train-controller.xml" //CTC-info.xml, train-controller.xml
     doFirst {
         def javafxLibPath = getJavaFXLibPath()
         jvmArgs = [

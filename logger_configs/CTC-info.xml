@@ -5,11 +5,11 @@
         </encoder>
     </appender>
 
-    <logger name="trackModel" level="WARN"/>
+    <logger name="trackModel" level="INFO"/>
     <logger name="CTCOffice" level="INFO"/>
-    <logger name="trainModel" level="INFO"/>
-    <logger name="trainController" level="INFO"/>
-    <logger name="waysideController" level="ERROR"/>
+    <logger name="trainModel" level="ERROR"/>
+    <logger name="trainController" level="ERROR"/>
+    <logger name="waysideController" level="INFO"/>
 
     <root level="WARN">
         <appender-ref ref="STDOUT" />
