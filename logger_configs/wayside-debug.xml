@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern> [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+        <logger name="Trains.trackModel" level="INFO"/>
+        <logger name="CTCOffice" level="INFO"/>
+        <logger name="Trains.trainModel" level="ERROR"/>
+        <logger name="Trains.trainController" level="ERROR"/>
+        <logger name="waysideController" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

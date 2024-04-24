@@ -65,18 +65,18 @@ public class TrainControllerImpl implements TrainController {
     private double currentSpeed = 0.0;
     private double overrideSpeed = 0.0;
     private double speedLimit = 0.0;
+    private double setTemperature = 0.0;
+    private double currentTemperature = 0.0;
+    private boolean eBrakeGUI = false;
+    private boolean sBrakeGUI = false;
+    private boolean waysideStop;
+
     private double Ki = 20;
     private double Kp = 100;
     private double power = 0.0;
     private double grade = 0.0;
-    private double setTemperature = 0.0;
-    private double currentTemperature = 0.0;
     private double rollingError = 0.0;
 
-    private boolean waysideStop;
-    private boolean eBrakeGUI = false;
-    private boolean sBrakeGUI = false;
-    private double  setSpeed = 0;
 
 
     private int authority = 0;
@@ -173,13 +173,13 @@ public class TrainControllerImpl implements TrainController {
 
             internalAuthority -= currentSpeed * TIME_STEP;
 
-            setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+            double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
 
 
             if (power == 0 && currentSpeed > 0 && currentSpeed < 1) {
                 setAuthority((int) internalAuthority);
                 if(internalAuthority > 10){
-                    this.setSpeed = 5;
+                    setSpeed = 5;
                 }
             }
 
@@ -222,7 +222,10 @@ public class TrainControllerImpl implements TrainController {
             return pow;
         }
     }
+
+
     int brakeCount = 0;
+
     @Override
     public void checkFailures(double trainPower) {
         boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();

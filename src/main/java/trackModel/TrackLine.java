@@ -118,7 +118,7 @@ public class TrackLine implements TrackModel {
 
     //Note: Train could be on different Line
     public void trainDispatch(TrainModel train) {
-        Integer alreadyPlacedID = trackOccupancyMap.putIfAbsent(train,0);
+        Integer alreadyPlacedID = trackOccupancyMap.putIfAbsent(train, 0);
         if(alreadyPlacedID != null) {
             logger.error("Train {} already exists and was not dispatched.", train.getTrainNumber());
         }
@@ -153,7 +153,6 @@ public class TrackLine implements TrackModel {
             trackOccupancyMap.replace(train, currentBlockID, nextBlockID);
             return null;
         });
-
         return mainTrackLine.get(nextBlockID);
     }
 
@@ -163,7 +162,6 @@ public class TrackLine implements TrackModel {
         if (newBlockID == 0 && oldBlockID != 0) {
             logger.info("Train {} exited the track", train.getTrainNumber());
             trackOccupancyMap.remove(train);
-            return;
         }else if(newBlockID == 0) {
             logger.info("Train {} => Entry", train.getTrainNumber());
         }
@@ -185,11 +183,9 @@ public class TrackLine implements TrackModel {
     private void handleTrainExit(TrainModel train, Integer blockID) {
         if(blockID == 0) {
             logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
-            return;
+        }else {
+            logger.error(" T{} was removed from occupancy map at block {}", train.getTrainNumber(), blockID);
         }
-
-        logger.error(" T{} was removed from occupancy map at block {}", train.getTrainNumber(), blockID);
-
 
         setUnoccupied(blockID);
         train.delete();

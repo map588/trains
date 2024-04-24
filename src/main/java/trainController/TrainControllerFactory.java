@@ -3,6 +3,9 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
+
 public class TrainControllerFactory {
     private static final TrainControllerFactory INSTANCE = new TrainControllerFactory();
 

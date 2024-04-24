@@ -17,6 +17,8 @@ import trackModel.TrackLine;
 import trainController.TrainControllerFactory;
 import trainModel.Records.UpdatedTrainValues;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.util.concurrent.*;
 
 import static Utilities.Constants.*;
@@ -119,7 +121,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private final ThreadLocalRandom r = ThreadLocalRandom.current();
 
     // Constructor for TrainModelImpl when no parameters are provided
-    public TrainModelImpl() {
+    public TrainModelImpl() throws NotBoundException, IOException {
         this.trainID = -1;
         this.track = new TrackLine();
         initializeValues();
@@ -128,7 +130,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
     // Constructor for TrainModelImpl when track and trainID are provided
-    public TrainModelImpl(TrackLine track, int trainID) {
+    public TrainModelImpl(TrackLine track, int trainID){
         initializeValues();
         this.trainID = trainID;
         this.track = track;
@@ -405,7 +407,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
     public void setExtLights(boolean lights) {
         this.extLights = lights;
-        notifyChange(EXTLIGHTS_PROPERTY, this.extLights);
+        listeningExecutor.execute(() -> {
+            notifyChange(EXTLIGHTS_PROPERTY, this.extLights);
+        });
     }
     public void setIntLights(boolean lights) {
         this.intLights = lights;
