@@ -14,8 +14,8 @@ program[WaysideExecutor executor]
     }
     ;
 
-statement_list: (statement | NEWLINE)+ ;
 
+statement_list: (statement | NEWLINE)+ ;
 statement : set_list_value | if_statement | if_else_statement | for_statement ;
 
 set_list_value : list_name '['  arith_expression ']' '=' (equality_check | compound_value | bool_literal) ;

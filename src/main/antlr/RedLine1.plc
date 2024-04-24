@@ -1,6 +1,8 @@
 // Handles sections A - H blocks 0 - 27
 // Accesses occupancies for blocks 1 - 31 and 73-76
 
+START PLC
+
 // Check directionality of the blocks for upper loop
 // Setting default direction to allow trains to enter from the yard
 if dir_assigned[27]
@@ -88,3 +90,5 @@ light[10] = RED
 light[15] = dir_assigned[27] and not direction[27] and not switch[16]
 light[16] = dir_assigned[27] and direction[27] and switch[16]
 light[27] = dir_assigned[27] and not direction[27] and switch[27]
+
+END PLC

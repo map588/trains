@@ -1,6 +1,8 @@
 // Controls Sections I-K and U-W, blocks 0, 36-68 and 110-143
 // Can see occupancies 36-72 and 110-147
 
+START PLC
+
 authority[0] = TRUE
 
 // I Occupancies
@@ -35,3 +37,5 @@ endfor
 
 // Yard switch
 switch[57] = ALT
+
+END PLC

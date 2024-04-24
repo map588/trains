@@ -1,6 +1,8 @@
 // Controls sections A, B, C, D, E, F, G, H, X, Y, Z blocks 1-35, 144-150
 // Accesses occupancies from blocks 1-39, 144-150
 
+START PLC
+
 if dir_assigned[13]
     if not occupied[1] and not occupied[12] and not occupied[13] and not occupied[14] and not occupied[15] and not occupied[16] and not occupied[17] and not occupied[18] and not occupied[19] and not occupied[20] and not occupied[21] and not occupied[22] and not occupied[23] and not occupied[24] and not occupied[25] and not occupied[26] and not occupied[27] and not occupied[28] and not occupied[29] and not occupied[150]
         if direction[13] and not occupied[149] and not occupied[148] and not occupied[147] and not occupied[146] and not occupied[145] and not occupied[144] or not direction[13] and not occupied[2] and not occupied[3] and not occupied[4] and not occupied[5] and not occupied[6] and not occupied[7]
@@ -101,3 +103,5 @@ light[1] = dir_assigned[13] and not direction[13] and switch[13]
 light[13] = dir_assigned[13] and direction[13] and not switch[13]
 light[28] = dir_assigned[13] and not direction[13] and not switch[28]
 light[150] = dir_assigned[13] and direction[13] and switch[28]
+
+END PLC

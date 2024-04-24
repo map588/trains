@@ -4,21 +4,21 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
+import waysideController.plc_parser.PLCBaseVisitor;
 import waysideController.plc_parser.PLCLexer;
 import waysideController.plc_parser.PLCParser;
 import waysideController.plc_parser.PLCVisitor;
-import waysideController.plc_parser.Value;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVisitor<Value> {
+public class PLCProgram extends PLCBaseVisitor<Boolean> implements PLCVisitor<Boolean> {
 
     private final Map<Integer, WaysideBlock> blockMap;
     private final PLCRunner controller;
     private ParseTree PLCTree;
-    private final Map<String, Integer> intVarMap;
+    private Map<String, Integer> intVarMap;
     private final Map<Integer, Boolean> dir_assignedMap;
     private final Map<Integer, Boolean> directionMap;
 
@@ -26,16 +26,17 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
         this.controller = controller;
         this.blockMap = controller.getBlockMap();
 
-        intVarMap = new HashMap<>();
         dir_assignedMap = new HashMap<>();
         directionMap = new HashMap<>();
     }
 
     public void loadPLC(String filename) {
+        intVarMap = new HashMap<>();
+        intVarMap.put("i", 1);
         try {
             PLCLexer lexer = new PLCLexer(CharStreams.fromFileName(filename));
             PLCParser parser = new PLCParser(new CommonTokenStream(lexer));
-            PLCTree = parser.program();
+            PLCTree = parser.program(intVarMap);
 //            run();
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,20 +71,25 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
     }
 
     @Override
-    public Value visitProgram(PLCParser.ProgramContext ctx) {
+    public Boolean visitProgram(PLCParser.ProgramContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public Value visitStatement(PLCParser.StatementContext ctx) {
+    public Boolean visitStatement_list(PLCParser.Statement_listContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public Value visitSet_list_value(PLCParser.Set_list_valueContext ctx) {
-        int index = visit(ctx.getChild(2)).asInteger();
-        String listName = visit(ctx.list_name()).asString();
-        boolean value = visit(ctx.getChild(5)).asBoolean();
+    public Boolean visitStatement(PLCParser.StatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Boolean visitSet_list_value(PLCParser.Set_list_valueContext ctx) {
+        int index = ctx.arith_expression().val;
+        String listName = ctx.list_name().name;
+        boolean value = visit(ctx.getChild(5));
 
 //        System.out.println(listName + "[" + index + "] = " + value);
 
@@ -110,24 +116,22 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
                 throw new RuntimeException("Unknown list name: " + listName);
         }
 
-        return new Value(value);
+        return value;
     }
 
     @Override
-    public Value visitIf_statement(PLCParser.If_statementContext ctx) {
-        boolean conditional = visit(ctx.getChild(1)).asBoolean();
+    public Boolean visitIf_statement(PLCParser.If_statementContext ctx) {
+        boolean conditional = visit(ctx.getChild(1));
 
         if(conditional) {
-            for(PLCParser.StatementContext statement : ctx.statement()) {
-                visit(statement);
-            }
+            visit(ctx.statement_list());
         }
-        return new Value(conditional);
+        return conditional;
     }
 
     @Override
-    public Value visitIf_else_statement(PLCParser.If_else_statementContext ctx) {
-        boolean conditional = visit(ctx.getChild(1)).asBoolean();
+    public Boolean visitIf_else_statement(PLCParser.If_else_statementContext ctx) {
+        boolean conditional = visit(ctx.getChild(1));
 
         int index = 2;
         for(; index < ctx.getChildCount(); index++) {
@@ -145,177 +149,162 @@ public class PLCProgram extends AbstractParseTreeVisitor<Value> implements PLCVi
                     visit(statement);
             }
         }
-        return new Value(conditional);
+        return conditional;
     }
 
 
 
-    public Value visitFor_statement(PLCParser.For_statementContext ctx) {
-        int startIndex = visit(ctx.getChild(3)).asInteger();
-        int endIndex = visit(ctx.getChild(5)).asInteger();
-        String varName = ctx.VARIABLE().getText();
+    public Boolean visitFor_statement(PLCParser.For_statementContext ctx) {
 
 //        System.out.println("For loop: " + varName + " = " + startIndex + " to " + endIndex);
 
-        for (int i = startIndex; i <= endIndex; i++) {
-            intVarMap.put(varName, i);
-            for (PLCParser.StatementContext statementCtx : ctx.statement()) {
-//                System.out.println("Executing statement: " + statementCtx.getText());
-                visit(statementCtx);
-            }
+        for (int i = ctx.start; i <= ctx.end; i++) {
+            intVarMap.put(ctx.name, i);
+            visit(ctx.statement_list());
         }
 
-        return Value.VOID;
+        return false;
     }
 
     @Override
-    public Value visitEquality_check(PLCParser.Equality_checkContext ctx) {
+    public Boolean visitEquality_check(PLCParser.Equality_checkContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public Value visitEquals_statement(PLCParser.Equals_statementContext ctx) {
-        boolean left = visit(ctx.compound_value(0)).asBoolean();
-        boolean right = visit(ctx.getChild(2)).asBoolean();
-        return new Value(left == right);
+    public Boolean visitEquals_statement(PLCParser.Equals_statementContext ctx) {
+        boolean left = visit(ctx.compound_value(0));
+        boolean right = visit(ctx.getChild(2));
+        return left == right;
     }
 
     @Override
-    public Value visitNot_equals_statement(PLCParser.Not_equals_statementContext ctx) {
-        boolean left = visit(ctx.compound_value(0)).asBoolean();
-        boolean right = visit(ctx.getChild(2)).asBoolean();
-        return new Value(left != right);
+    public Boolean visitNot_equals_statement(PLCParser.Not_equals_statementContext ctx) {
+        boolean left = visit(ctx.compound_value(0));
+        boolean right = visit(ctx.getChild(2));
+        return left != right;
     }
 
     @Override
-    public Value visitCompound_value(PLCParser.Compound_valueContext ctx) {
+    public Boolean visitCompound_value(PLCParser.Compound_valueContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public Value visitOr_operator(PLCParser.Or_operatorContext ctx) {
+    public Boolean visitOr_operator(PLCParser.Or_operatorContext ctx) {
         for(int i = 0; i < ctx.getChildCount(); i++) {
             ParseTree child = ctx.getChild(i);
             if(child instanceof PLCParser.Single_valContext | child instanceof PLCParser.Compound_valueContext | child instanceof PLCParser.And_operatorContext) {
-                if (visit(child).asBoolean()) {
-                    return new Value(true);
+                if (visit(child)) {
+                    return true;
                 }
             }
         }
 
-        return new Value(false);
+        return false;
     }
 
     @Override
-    public Value visitAnd_operator(PLCParser.And_operatorContext ctx) {
+    public Boolean visitAnd_operator(PLCParser.And_operatorContext ctx) {
         for(int i = 0; i < ctx.getChildCount(); i++) {
             ParseTree child = ctx.getChild(i);
             if(child instanceof PLCParser.Single_valContext | child instanceof PLCParser.Compound_valueContext) {
-                if (!visit(child).asBoolean()) {
-                    return new Value(false);
+                if (!visit(child)) {
+                    return false;
                 }
             }
         }
 
-        return new Value(true);
+        return true;
     }
 
     @Override
-    public Value visitSingle_val(PLCParser.Single_valContext ctx) {
+    public Boolean visitSingle_val(PLCParser.Single_valContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public Value visitNot_operator(PLCParser.Not_operatorContext ctx) {
-        Boolean right = visit(ctx.list_value()).asBoolean();
-        return new Value(!right);
+    public Boolean visitNot_operator(PLCParser.Not_operatorContext ctx) {
+        Boolean right = visit(ctx.list_value());
+        return !right;
     }
 
     @Override
-    public Value visitList_value(PLCParser.List_valueContext ctx) {
-        int index = visit(ctx.getChild(2)).asInteger();
-        String listName = visit(ctx.list_name()).asString();
+    public Boolean visitList_value(PLCParser.List_valueContext ctx) {
+        int index = ctx.arith_expression().val;
+        String listName = ctx.list_name().name;
 
         switch(listName) {
             case "occupied":
                 WaysideBlock occupancyBlock = blockMap.get(index);
                 if(occupancyBlock != null)
-                    return new Value(occupancyBlock.isOccupied());
+                    return occupancyBlock.isOccupied();
                 else {
-                    return new Value(controller.getOutsideOccupancy(index));
+                    return controller.getOutsideOccupancy(index);
                 }
             case "crossing":
-                return new Value(blockMap.get(index).getCrossingState());
+                return blockMap.get(index).getCrossingState();
             case "light":
-                return new Value(blockMap.get(index).getLightState());
+                return blockMap.get(index).getLightState();
             case "switch":
                 WaysideBlock switchBlock = blockMap.get(index);
                 if(switchBlock != null)
-                    return new Value(switchBlock.getSwitchState());
+                    return switchBlock.getSwitchState();
                 else {
-                    return new Value(controller.getOutsideSwitch(index));
+                    return controller.getOutsideSwitch(index);
                 }
             case "authority":
-                return new Value(blockMap.get(index).getBooleanAuth());
+                return blockMap.get(index).getBooleanAuth();
             case "direction":
                 if(!directionMap.containsKey(index))
                     directionMap.put(index, false);
-                return new Value(directionMap.get(index));
+                return directionMap.get(index);
             case "dir_assigned":
                 if(!dir_assignedMap.containsKey(index))
                     dir_assignedMap.put(index, false);
-                return new Value(dir_assignedMap.get(index));
+                return dir_assignedMap.get(index);
             default:
                 throw new RuntimeException("Unknown list name: " + listName);
         }
     }
 
+    @Override
+    public Boolean visitArith_expression(PLCParser.Arith_expressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Boolean visitInt_term(PLCParser.Int_termContext ctx) {
+        return null;
+    }
+
 //    @Override
-//    public Value visitIndex(PLCParser.IndexContext ctx) {
-//        return visit(ctx.getChild(0));
+//    public Boolean visitInt_val(PLCParser.Int_valContext ctx) {
+//        return null;
 //    }
 
     @Override
-    public Value visitArith_expression(PLCParser.Arith_expressionContext ctx) {
-        int left = visit(ctx.getChild(0)).asInteger();
-        int right = visit(ctx.getChild(2)).asInteger();
-
-        if(ctx.getChild(1).getText().equals("+")) {
-            return new Value(left + right);
-        }
-        else {
-            return new Value(left - right);
-        }
+    public Boolean visitInt_variable(PLCParser.Int_variableContext ctx) {
+        return null;
     }
 
     @Override
-    public Value visitInt_val(PLCParser.Int_valContext ctx) {
-        return new Value(Integer.parseInt(ctx.getText()));
+    public Boolean visitList_name(PLCParser.List_nameContext ctx) {
+        return null;
     }
 
     @Override
-    public Value visitInt_variable(PLCParser.Int_variableContext ctx) {
-        String varName = ctx.getText();
-        if(intVarMap.containsKey(varName)) {
-            return new Value(intVarMap.get(varName));
-        }
-        else {
-            throw new RuntimeException("Variable " + varName + " not found");
-        }
+    public Boolean visitBool_literal(PLCParser.Bool_literalContext ctx) {
+        return null;
     }
 
     @Override
-    public Value visitList_name(PLCParser.List_nameContext ctx) {
-        return new Value(ctx.getText());
+    public Boolean visitValue_false(PLCParser.Value_falseContext ctx) {
+        return null;
     }
 
     @Override
-    public Value visitValue_false(PLCParser.Value_falseContext ctx) {
-        return new Value(false);
-    }
-
-    @Override
-    public Value visitValue_true(PLCParser.Value_trueContext ctx) {
-        return new Value(true);
+    public Boolean visitValue_true(PLCParser.Value_trueContext ctx) {
+        return null;
     }
 }

@@ -1,6 +1,9 @@
 // Controls sections L - T, blocks 69 - 109
 // Accesses occupancies of blocks 69 - 113
 
+
+START PLC
+
 // Handling bi-directional N block
 
 // Remove direction assignment if adjacent block occupations don't support the assigned direction
@@ -115,3 +118,5 @@ light[100] = dir_assigned[77] and direction[77] and switch[85]
 
 // Crossing
 crossing[108] = not occupied[107] and not occupied[108] and not occupied[109]
+
+END PLC
