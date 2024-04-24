@@ -1,6 +1,7 @@
 package Utilities;
 
 import Utilities.Enums.Lines;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.Records.BasicBlock;
 
 import java.util.concurrent.ConcurrentHashMap;

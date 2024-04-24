@@ -57,7 +57,6 @@ public class TrainControllerImpl implements TrainController {
     private ControllerBlock currentBlock;
 
     private Beacon currentBeacon = null;
-    private Integer lastBeaconID = 0;
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
@@ -288,8 +287,7 @@ public class TrainControllerImpl implements TrainController {
             if (blockID != null) {
                 currentBlock = blockLookup.get(blockID);
                 if(currentBeacon.blockIndices().peekFirst() == null){
-                    lastBeaconID = blockID;
-                    logger.info("I RAN OUT OF BEACON! {}", lastBeaconID);
+                    logger.info("I RAN OUT OF BEACON! {}", blockID);
                 }
             }else {
                 currentBlock = blockLookup.get(currentBeacon.endId());

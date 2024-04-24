@@ -1,10 +1,10 @@
 package trackModel;
 
 import Integration.BaseTest;
-import Utilities.BasicTrackLine;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.Beacon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class BeaconParseTest extends BaseTest {
         for (Lines line : Lines.values()) {
             System.out.println("Line: " + line);
             ConcurrentHashMap<Integer, Beacon> beacons = beaconMap.get(line);
-            BasicTrackLine trackLine = GlobalBasicBlockParser.getInstance().getBasicLine(line);
+            BasicTrackLine trackLine = BasicBlockParser.getInstance().getBasicLine(line);
             HashMap<Integer, Integer> totalSourceBeacons = new HashMap<>();
 
             System.out.println("Number of Beacons: " + beacons.size());

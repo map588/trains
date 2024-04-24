@@ -4,7 +4,7 @@ import Common.CTCOffice;
 import Common.TrackModel;
 import Integration.BaseTest;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,7 @@ public class WaysideControllerImplTests extends BaseTest {
             assertEquals(blockMap.get(i).getBlockID(), i);
         }
 
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = GlobalBasicBlockParser.getInstance().getBasicLine(Lines.GREEN);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BasicBlockParser.getInstance().getBasicLine(Lines.GREEN);
         int blockID = 62;
         boolean direction = true;
         for(int i = 0; i < 100; i++) {

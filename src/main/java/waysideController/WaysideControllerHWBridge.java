@@ -4,7 +4,7 @@ import Common.CTCOffice;
 import Common.TrackModel;
 import Common.WaysideController;
 import Framework.Support.Notifier;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import Utilities.Enums.Lines;
 import com.fazecast.jSerialComm.SerialPort;
@@ -58,7 +58,7 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
         subject = new WaysideControllerSubject(this);
 
         // Parse the CSV file to get the blocks that the wayside controls
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = GlobalBasicBlockParser.getInstance().getBasicLine(trackLine).toConcurrentSkipListMap();
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BasicBlockParser.getInstance().getBasicLine(trackLine).toConcurrentSkipListMap();
         for(int blockID : blockIDList) {
             WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);

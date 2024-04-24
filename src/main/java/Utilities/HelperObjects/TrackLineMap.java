@@ -1,6 +1,7 @@
-package trackModel;
+package Utilities.HelperObjects;
 
 import Utilities.Enums.Lines;
+import trackModel.TrackLine;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;

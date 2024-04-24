@@ -1,9 +1,6 @@
 package waysideController;
 
-import Utilities.BooleanIconTableCell;
-import javafx.beans.property.BooleanProperty;
-
-import static waysideController.Properties.hasLight_p;
+import Utilities.HelperObjects.BooleanIconTableCell;
 
 public class SignalLightTableCell extends BooleanIconTableCell<WaysideBlockSubject> {
 

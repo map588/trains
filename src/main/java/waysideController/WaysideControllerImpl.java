@@ -6,7 +6,7 @@ import Common.WaysideController;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.Notifier;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         subject = new WaysideControllerSubject(this);
 
         // Parse the CSV file to get the blocks that the wayside controls
-        ConcurrentSkipListMap<Integer, BasicBlock> blockList = GlobalBasicBlockParser.getInstance().getBasicLine(trackLine);
+        ConcurrentSkipListMap<Integer, BasicBlock> blockList = BasicBlockParser.getInstance().getBasicLine(trackLine);
         for(int blockID : blockIDList) {
             WaysideBlock block = new WaysideBlock(blockList.get(blockID));
             blockMap.put(blockID, block);

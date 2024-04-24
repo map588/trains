@@ -1,5 +1,6 @@
 package trackModel;
 
+import Utilities.HelperObjects.TrackBlockLine;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

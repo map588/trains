@@ -11,7 +11,6 @@ import Utilities.BasicBlockParser;
 import Utilities.HelperObjects.TrackBlockLine;
 import Utilities.Records.Beacon;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class TrackLine implements TrackModel {
 
     private long time = 0;
 
-    private final BeaconParser beaconParser = new BeaconParser();
+    private final BeaconParser beaconParser = BeaconParser.getInstance();
 
     TrackBlockSubject subject;
     //    ObservableList<TrackBlockSubject> subjectList = FXCollections.observableArrayList();
@@ -79,7 +78,7 @@ public class TrackLine implements TrackModel {
             }
 
             //Needs more testing, but the beacon parser seems to work.
-            beaconBlocks.putAll(beaconParser.parseBeacons(line));
+            beaconBlocks.putAll(beaconParser.getBeaconLine(line));
             setupListeners();
 
             subjectList = LineSubjectMap.getLineSubject(line);
@@ -500,4 +499,7 @@ public class TrackLine implements TrackModel {
         trackOccupancyMap.addChangeListener(trackListener);
     }
 
+    public TrackBlock getBlock(int i) {
+        return mainTrackLine.get(i);
+    }
 }

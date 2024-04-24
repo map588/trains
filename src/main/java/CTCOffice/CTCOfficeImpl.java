@@ -8,7 +8,7 @@ import Framework.Support.Notifier;
 import Utilities.BasicTrackMap;
 import Utilities.Constants;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     private CTCOfficeImpl() {
         time = 0;
 
-        BasicTrackMap trackLineBlocks = GlobalBasicBlockParser.getInstance().getAllBasicLines();
+        BasicTrackMap trackLineBlocks = BasicBlockParser.getInstance().getAllBasicLines();
         ArrayList<CTCBlock> greenBlockSwitches = new ArrayList<>();
             ArrayList<CTCBlockSubject> greenBlockSubjects = new ArrayList<>();
             for(BasicBlock block : trackLineBlocks.get(Lines.GREEN).values()) {

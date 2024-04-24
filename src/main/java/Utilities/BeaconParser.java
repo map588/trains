@@ -2,6 +2,7 @@ package Utilities;
 
 import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.Records.BasicBlock;
 import Utilities.Records.BasicBlock.Connection;
 import Utilities.Records.Beacon;
@@ -37,7 +38,7 @@ public class BeaconParser {
 
 
     private static ConcurrentHashMap<Integer, Beacon> parseBeacons(Lines line) {
-        BasicTrackLine trackLine = GlobalBasicBlockParser.getInstance().getBasicLine(line);
+        BasicTrackLine trackLine = BasicBlockParser.getInstance().getBasicLine(line);
         ConcurrentHashMap<Integer, Beacon> beacons = new ConcurrentHashMap<>();
 
         createBeacons(trackLine, beacons);
