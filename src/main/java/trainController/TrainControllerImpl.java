@@ -406,7 +406,7 @@ public class TrainControllerImpl implements TrainController {
             case RESUME_TRAIN_SIGNAL:
                 waysideStop = false;
                 setServiceBrake(false);
-                logger.warn("Wayside Resume: T{}", trainID);
+                logger.debug("Wayside Resume: T{}", trainID);
                 break;
             default:
                 if (signalFailure) {
