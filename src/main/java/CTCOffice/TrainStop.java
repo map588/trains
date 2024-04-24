@@ -16,7 +16,6 @@ public class TrainStop implements Notifier { //SubRoute
     private final List<Double> speedList;
     private final List<Integer> routePath; //routePath
     private final List<Double> authorityList;
-    private final List<Integer> TrackReferences = new ArrayList<>();
     private final TrainStopSubject subject;
     private int stopIndex;
 
@@ -93,9 +92,10 @@ public class TrainStop implements Notifier { //SubRoute
     }
 
     public boolean incrementPassedBlocks() {
-        if(passedBlocks == routePath.size() -1 ) return true;
+        if(passedBlocks >= (routePath.size() -1) ) return true;
+
         passedBlocks++;
-        return passedBlocks == routePath.size();
+        return passedBlocks == routePath.size() - 1;
     }
 
     public int getPassedBlocks() {

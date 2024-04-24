@@ -20,6 +20,7 @@ public class TrainSchedule {
     public final ObservableList<TrainStopSubject> stopList;
 
     private int stopsCompleted = 0;
+    private int currentBlockIndex = 0;
 
     TrainScheduleSubject subject;
     CTCBlockSubjectMap blockSubjectMap = CTCBlockSubjectMap.getInstance();
@@ -113,6 +114,14 @@ public class TrainSchedule {
 
     public void incrementStopsCompleted() {
         stopsCompleted++;
+    }
+
+    public int getCurrentBlockIndex() {
+        return currentBlockIndex;
+    }
+
+    public void setCurrentBlockIndex(int index) {
+        currentBlockIndex = index;
     }
 
     public void moveStop(int stopCurrentIndex, int stopNewIndex) {
@@ -212,6 +221,7 @@ public class TrainSchedule {
         int visited = 0;
         for (TrainStop stop : stops) {
             stop.getAuthorityList().clear();
+            stop.getRoutePath().clear();
             int blocksAuthority = ((TrackLayout.indexOf(stop.getStationBlockID()) < visited) ?
                     (TrackLayout.lastIndexOf(stop.getStationBlockID()) - visited) :
                     (TrackLayout.indexOf(stop.getStationBlockID()) - visited));

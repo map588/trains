@@ -133,27 +133,29 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         trainLocations.put(train, BlockIDs.of(blockID, line));
         antiTrainLocations.remove(BlockIDs.of(oldBlock, line));
         antiTrainLocations.put(BlockIDs.of(blockID, line), train);
+        int currentLocation = trainSchedules.get(train).getCurrentBlockIndex();
+        trainSchedules.get(train).setCurrentBlockIndex(
+                (getTrackLayout(line).indexOf(blockID) > currentLocation)
+                        ? getTrackLayout(line).indexOf(blockID)
+                        : getTrackLayout(line).lastIndexOf(blockID));
         logger.info("Train {} has moved from block {} to block {}", train.trainID(), oldBlock, blockID);
         if(oldBlock == 0){
-            logger.info("Train {} should be on block {}", train.trainID(), blockID);
             sendAuthority(train.trainID());
             sendSpeed(train.trainID());
         }else{
             if (trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).incrementPassedBlocks()) {
-                logger.info("Train {} should be at block {}", train.trainID(), blockID);
                 trainSchedules.get(train).incrementStopsCompleted();
-                stopCallbacks.add(new StopCallback(train, time
+                System.out.println(stopCallbacks.add(new StopCallback(train, time
                         + (trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).getDepartureTime()
-                        - trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).getArrivalTime())));
+                        - trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).getArrivalTime()))));
             }
-        sendAuthority(train.trainID());
-        sendSpeed(train.trainID());
+            sendAuthority(train.trainID());
+            sendSpeed(train.trainID());
         }
     }
 
     public void     setBlockOccupancy(Lines line, int blockID, boolean occupied) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
-        logger.info("Block {} on line {} has been set to occupied: {}", blockID, line, occupied);
         //if the block is on the yard then do nothing
         if(blockID == 0) {
             return;
@@ -161,7 +163,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         ArrayList<Integer> trackLayout = (line.equals(Lines.GREEN)) ? GreenTrackLayout : RedTrackLayout;
         int blockIndex = trackLayout.indexOf(blockID);
         if(blockIndex == -1) {
-            logger.warn("Block {} on line {} does not exist", blockID, line);
+            logger.error("Block {} on line {} does not exist", blockID, line);
             return;
         }
         if( blockIndex == 0 ) { //if the block is the first block then pull location and info from yard
@@ -172,16 +174,29 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             // and the block before is occupied then the train is moving forward and move its location to this block
             if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
                 changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
+
             }else{
-                logger.warn("Train out of nowhere on block {} on line {}", blockID, line);
+                boolean found = false;
+                for(int i = blockIndex - 1; i >= 0; i--) {
+                    if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(i), line))) {
+                        changeTrainLocation(trackLayout.get(i), blockID, line);
+                        logger.warn("Train lost then found from block {} to block {} on line {}", trackLayout.get(i), blockID, line);
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) {
+                    logger.error("Train out of nowhere on non-loop block {} on line {}", blockID, line);
+                }
             }
         }else{ //block is visited more than once in the track layout
             //if the block is visited more than once in the track layout then find if this is the first visit
             if(trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
                 changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
-            } else if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex + 1), line))) {
+            } else if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(trackLayout.lastIndexOf(blockID) - 1), line))) {
                 changeTrainLocation(trackLayout.get(blockIndex + 1), blockID, line);
             } else {
+
                 logger.warn("Train out of nowhere on block {} on line {}", blockID, line);
             }
         }
@@ -194,17 +209,15 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
     public void     setLightState(Lines line, int blockID, boolean lightState) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setSwitchLightState(false, lightState);
-        logger.info("Light {} on line {} has been set to {}", blockID, line, lightState);
     }
 
     public void     setCrossingState(Lines line, int blockID, boolean crossingState) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setCrossingState(false, crossingState);
-        logger.info("Crossing {} on line {} has been set to {}", blockID, line, crossingState);
     }
 
     public void setBlockMaintenance(Lines line, int blockID, boolean underMaintenance) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setUnderMaintenance(false, underMaintenance);
-        logger.info("Block {} on line {} has been set to under maintenance: {}", blockID, line, underMaintenance);
+       // logger.info("Block {} on line {} has been set to under maintenance: {}", blockID, line, underMaintenance);
     }
 
     public void setTime(double time) {
@@ -215,7 +228,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     public void incrementTime() {
         time += Constants.TIME_STEP_S;
         notifyChange(TIME_PROPERTY, convertDoubleToClockTime(time));
-        if(stopCallbacks.peek() != null && time >= stopCallbacks.peek().disembarkTime()) {
+        if((stopCallbacks.peek() != null) && (time >= stopCallbacks.peek().disembarkTime())) {
             StopCallback stopCallback = stopCallbacks.poll();
             TrainIdentity train = stopCallback.train();
             sendAuthority(train.trainID());
@@ -347,6 +360,10 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             logger.info("Property {} has been changed to {}", property, newValue);
         }
         subject.setProperty(property, newValue);
+    }
+
+    public ArrayList<Integer> getTrackLayout(Lines line){
+        return (line.equals(Lines.GREEN)) ? GreenTrackLayout : RedTrackLayout;
     }
 }
 
