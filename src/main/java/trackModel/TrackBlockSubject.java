@@ -28,7 +28,7 @@ public class TrackBlockSubject {
     private BooleanProperty direction;
     private StringProperty passEmbarked;
     private StringProperty passDisembarked;
-    private StringProperty ticketSales;
+    private IntegerProperty ticketSales;
     private StringProperty status;
     private StringProperty switchBlockID;
     private StringProperty switchState;
@@ -57,7 +57,7 @@ public class TrackBlockSubject {
         failure = new SimpleStringProperty("NONE");
         passEmbarked = new SimpleStringProperty();
         passDisembarked = new SimpleStringProperty();
-        ticketSales = new SimpleStringProperty();
+        ticketSales = new SimpleIntegerProperty();
         status = new SimpleStringProperty();
         switchBlockID = new SimpleStringProperty();
         switchState = new SimpleStringProperty();
@@ -294,17 +294,7 @@ public class TrackBlockSubject {
         this.passDisembarked.set(passDisembarked);
     }
 
-    public String getTicketSales() {
-        return ticketSales.get();
-    }
 
-    public StringProperty ticketSalesProperty() {
-        return ticketSales;
-    }
-
-    public void setTicketSales(String ticketSales) {
-        this.ticketSales.set(ticketSales);
-    }
 
     public String getStatus() {
         return status.get();
@@ -499,5 +489,17 @@ public class TrackBlockSubject {
 
     public void setDirection(boolean direction) {
         this.direction.set(direction);
+    }
+
+    public int getTicketSales() {
+        return ticketSales.get();
+    }
+
+    public IntegerProperty ticketSalesProperty() {
+        return ticketSales;
+    }
+
+    public void setTicketSales(int ticketSales) {
+        this.ticketSales.set(ticketSales);
     }
 }

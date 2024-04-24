@@ -416,6 +416,10 @@ public class TrackLine implements TrackModel {
                 if (block.feature.isStation()) {
                     block.feature.setPassengersDisembarked(disembarked);
                     Integer newTotal = train.getPassengerCount() - disembarked;
+
+                    // TODO: set subject for passengers
+                    //Platform.runLater(() -> subjectList.get(block.blockID).setPassengersDisembark(newTotal));
+
                 } else {
                     logger.warn("Train: {} is not on a STATION block", train.getTrainNumber());
                 }
@@ -433,6 +437,10 @@ public class TrackLine implements TrackModel {
                 TrackBlock block = mainTrackLine.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
                     return random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
+
+                    // TODO: set subject for passengers
+                    //Platform.runLater(() -> subjectList.get(block.blockID).setPassengersDisembark(newTotal));
+
                 } else {
                     logger.warn("Train: {} is not on a station block", train.getTrainNumber());
                     return 0;
@@ -445,11 +453,16 @@ public class TrackLine implements TrackModel {
     }
 
     //every tick is a second to ticket sales will reset every 3600 seconds
+
+    // TODO: need to figure out how to do ticket sales in the UI
+
     @Override
     public int getTicketSales() {
         if (time % 3600 == 0) {
+            Platform.runLater(() -> subjectList.forEach(subject -> subject.setTicketSales(this.ticketSales)));
             this.ticketSales = 0;
             newTemperature();
+
         }
         return ticketSales;
     }
