@@ -547,8 +547,8 @@ public class CTCOfficeManager {
         DumbDispatchButton.setOnAction(event -> {
             Lines line = lineTrainSelector.getValue().equals("GREEN") ? Lines.GREEN : Lines.RED;
             office.dispatchDumbTrain(trainID++, line);
-            office.sendDumbAuthority(trainID, line, 0, 50000);
-            office.sendDumbSpeed(trainID, line, 0, 19.6);
+            office.sendDumbAuthority(trainID, line, line == Lines.GREEN ? 63 : 10, 50000);
+            office.sendDumbSpeed(trainID, line, line == Lines.GREEN ? 63 : 10, 19.6);
         });
     }
 }

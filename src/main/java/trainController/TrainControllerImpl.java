@@ -402,7 +402,7 @@ public class TrainControllerImpl implements TrainController {
         } else if (auth == RESUME_TRAIN_SIGNAL) {
             waysideStop = false;
             setServiceBrake(false);
-            logger.warn("Wayside Resume: T{}", trainID);
+            logger.debug("Wayside Resume: T{}", trainID);
         } else {
             this.authority = auth;
             this.internalAuthority = authority;

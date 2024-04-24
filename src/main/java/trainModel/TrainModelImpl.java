@@ -320,8 +320,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.authority = authority;
 
         listeningExecutor.execute(() -> {
-        logger.info("Train {} <=     Authority: {}",this.trainID, authority);
-        notifyChange(AUTHORITY_PROPERTY, authority);
+            if(authority == -3)
+                logger.debug("Train {} <=     Authority: {}",this.trainID, authority);
+            else
+                logger.info("Train {} <=     Authority: {}",this.trainID, authority);
+            notifyChange(AUTHORITY_PROPERTY, authority);
         });
 
 
