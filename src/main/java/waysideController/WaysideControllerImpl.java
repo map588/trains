@@ -163,6 +163,15 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         for(WaysideBlock block : blockMap.values()) {
             if(block.isOccupied()) {
                 trackModel.setTrainAuthority(block.getBlockID(), block.getBooleanAuth() ? RESUME_TRAIN_SIGNAL : STOP_TRAIN_SIGNAL);
+
+                if(authorityMap.containsKey(block.getBlockID())) {
+                    CTCSendAuthority(block.getBlockID(), authorityMap.get(block.getBlockID()));
+                    authorityMap.remove(block.getBlockID());
+                }
+                if(speedMap.containsKey(block.getBlockID())) {
+                    CTCSendSpeed(block.getBlockID(), speedMap.get(block.getBlockID()));
+                    speedMap.remove(block.getBlockID());
+                }
             }
         }
     }
@@ -204,17 +213,6 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         }
         else {
             setOccupancy(blockID, occupied);
-        }
-
-        if(occupied) {
-            if(authorityMap.containsKey(blockID)) {
-                CTCSendAuthority(blockID, authorityMap.get(blockID));
-                authorityMap.remove(blockID);
-            }
-            if(speedMap.containsKey(blockID)) {
-                CTCSendSpeed(blockID, speedMap.get(blockID));
-                speedMap.remove(blockID);
-            }
         }
     }
 
@@ -487,8 +485,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     public void CTCSendAuthority(int blockID, int blockCount) {
         logger.info("Sending authority for block {} to {}", blockID, blockCount);
 
-        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
-            trackModel.setTrainAuthority(blockID, blockCount);
+        if(blockMap.get(blockID).isOccupied()) {
+            if(trackModel != null)
+                trackModel.setTrainAuthority(blockID, blockCount);
+            else
+                logger.error("Track Model is null");
         }
         else {
             authorityMap.put(blockID, blockCount);
