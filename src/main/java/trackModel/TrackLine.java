@@ -4,11 +4,15 @@ import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.ObservableHashMap;
-import Utilities.BasicTrackLine;
+import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.BeaconParser;
 import Utilities.Enums.Lines;
-import Utilities.GlobalBasicBlockParser;
+import Utilities.BasicBlockParser;
+import Utilities.HelperObjects.TrackBlockLine;
 import Utilities.Records.Beacon;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import trainModel.TrainModelImpl;
@@ -41,55 +45,46 @@ public class TrackLine implements TrackModel {
     //Task Queue
     private final ConcurrentLinkedQueue<Callable<Object>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
-    //Subject Map
-    private static final LineSubjectMap trackSubjectMap = LineSubjectMap.getInstance();
-
     private long time = 0;
 
+    private final BeaconParser beaconParser = new BeaconParser();
 
-
-    private final TrackLineSubject subject;
+    TrackBlockSubject subject;
+    //    ObservableList<TrackBlockSubject> subjectList = FXCollections.observableArrayList();
+    ObservableList<TrackBlockSubject> subjectList;
 
     private int ticketSales = 0;
     public  int outsideTemperature = 40;
-
-    GlobalBasicBlockParser allTracks = GlobalBasicBlockParser.getInstance();
-
-    BeaconParser beaconParser = BeaconParser.getInstance();
+    BasicBlockParser allTracks = BasicBlockParser.getInstance();
 
     public TrackLine(Lines line) {
         this.line = line;
         if(allTracks.containsLine(line)) {
-        BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
-
-        beaconBlocks.putAll(beaconParser.getBeaconLine(line));
-
-        trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
+            BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
+            trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
 
 
+            //keeps track of which blocks are occupied
 
             ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
             for (Integer blockIndex : blockIndices) {
                 TrackBlock block = new TrackBlock(basicBlocks.get(blockIndex));
-                if(beaconBlocks.containsKey(block.blockID)) {
-                    block.setBeacon(true);
-                }
-
                 mainTrackLine.put(block.blockID, block);
                 if (block.isLight) {
                     lightBlocks.add(block.blockID);
                 }
+                TrackBlockSubject subject = new TrackBlockSubject(line, block);
+                LineSubjectMap.addLineSubject(line, subject);
             }
 
             //Needs more testing, but the beacon parser seems to work.
-
-            this.subject = new TrackLineSubject(this, mainTrackLine);
-            trackSubjectMap.getInstance().addLineSubject(line.toString(), subject);
+            beaconBlocks.putAll(beaconParser.parseBeacons(line));
             setupListeners();
+
+            subjectList = LineSubjectMap.getLineSubject(line);
         }else{
             this.trackOccupancyMap = new ObservableHashMap<>(0);
-            this.subject = new TrackLineSubject(this, new TrackBlockLine());
         }
     }
 
@@ -130,11 +125,6 @@ public class TrackLine implements TrackModel {
         }
     }
 
-    public TrackBlock getBlock(int blockID) {
-        return mainTrackLine.get(blockID);
-    }
-
-
     /**
      * A function called by the train when it has travelled
      * the distance of the block it is currently on.
@@ -171,23 +161,19 @@ public class TrackLine implements TrackModel {
 
     private void handleTrainEntry(TrainModel train, Integer newBlockID, Integer oldBlockID) {
 
-         if (newBlockID == 0 && oldBlockID != 0) {
+        if (newBlockID == 0 && oldBlockID != 0) {
             logger.info("Train {} exited the track", train.getTrainNumber());
             trackOccupancyMap.remove(train);
-             asyncTrackUpdate(() -> {
-                 setUnoccupied(oldBlockID);
-                 return null;
-             });
             return;
         }else if(newBlockID == 0) {
             logger.info("Train {} => Entry", train.getTrainNumber());
         }
 
-         asyncTrackUpdate(() -> {
+        asyncTrackUpdate(() -> {
             setUnoccupied(oldBlockID);
             setOccuppied(train, newBlockID);
             return null;
-         });
+        });
 
         logger.info("  Registered T{} : {}  ->  {}  ", train.getTrainNumber(), oldBlockID, newBlockID);
 
@@ -200,11 +186,10 @@ public class TrackLine implements TrackModel {
     private void handleTrainExit(TrainModel train, Integer blockID) {
         if(blockID == 0) {
             logger.info("  Registered T{} exit at {}", train.getTrainNumber(), blockID);
-            train.delete();
             return;
         }
 
-        logger.error(" T{} was removed at block {}", train.getTrainNumber(), blockID);
+        logger.error(" T{} was removed from occupancy map at block {}", train.getTrainNumber(), blockID);
 
 
         setUnoccupied(blockID);
@@ -213,11 +198,13 @@ public class TrackLine implements TrackModel {
 
     private void setOccuppied(TrainModel train, int blockID){
         mainTrackLine.get(blockID).addOccupation(train);
+        Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(true));
         WaysideSystem.getController(this.line,blockID).trackModelSetOccupancy(blockID, true);
     }
 
     private void setUnoccupied(int blockID){
         mainTrackLine.get(blockID).removeOccupation();
+        Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(false));
         WaysideSystem.getController(this.line,blockID).trackModelSetOccupancy(blockID, false);
     }
 
@@ -232,8 +219,8 @@ public class TrackLine implements TrackModel {
 
 //--------------------------Getters and Setters--------------------------
 
-    public TrackLineSubject getSubject() {
-        return this.subject;
+    public TrackBlockSubject getSubject(int block) {
+        return this.subjectList.get(block);
     }
 
     //------------------From interface------------------
@@ -242,10 +229,14 @@ public class TrackLine implements TrackModel {
     //false red, true is green
     @Override
     public void setLightState(int block, boolean state) {
+        logger.info("Setting light state to: {} at block: {}", state, block);
         asyncTrackUpdate( () -> {
+            logger.info("Setting light state to: {} at block: {} in async", state, block);
             if(lightBlocks.contains(block)) {
                 mainTrackLine.get(block).setLightState(state);
-                logger.info("Light set to: {} at block: {}", state, block);
+
+                Platform.runLater(() -> subjectList.get(block).setSignalState(state ? "GREEN" : "RED"));
+
             } else {
                 logger.error("Block {} does not have a light", block);
             }
@@ -258,6 +249,13 @@ public class TrackLine implements TrackModel {
         asyncTrackUpdate( () -> {
             if (mainTrackLine.get(block).feature.isSwitch()) {
                 mainTrackLine.get(block).setSwitchState(state);
+
+                if (state) {
+                    Platform.runLater(() -> subjectList.get(block).setSwitchState("ALTERNATE"));
+                } else {
+                    Platform.runLater(() -> subjectList.get(block).setSwitchState("MAIN"));
+                }
+
                 logger.info("Switch set to: {} at block: {}", state, block);
             } else {
                 logger.warn("Block {} is not a switch", block);
@@ -271,6 +269,14 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate(() -> {
             if (mainTrackLine.get(block).feature.isCrossing()) {
                 mainTrackLine.get(block).setCrossingState(state);
+
+                if (state) {
+                    Platform.runLater(() -> subjectList.get(block).setCrossingState("DOWN"));
+                } else {
+                    Platform.runLater(() -> subjectList.get(block).setCrossingState("UP"));
+                }
+
+
                 logger.info("Crossing set to: {} at block: {}", state, block);
             } else {
                 logger.warn("Block {} is not a crossing", block);
@@ -306,22 +312,42 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setBrokenRail(Integer blockID, boolean state) {
-       queueTrackUpdate( () -> {
-           TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
-           if (brokenBlock != null) {
-               brokenBlock.setRailFailure(state);
-           } else {
-               logger.error("Broken Rail called on Block: {} does not exist", blockID);
-           }
-       });
+        logger.info("Broken Rail called on Block: {} with state: {}", blockID, state);
+        queueTrackUpdate( () -> {
+            TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
+            if (brokenBlock != null) {
+                brokenBlock.setRailFailure(true);
+            } else {
+                logger.error("Broken Rail called on Block: {} does not exist", blockID);
+            }
+
+            TrackBlockSubject subject = this.subjectList.get(blockID);
+            if(subject != null) {
+                Platform.runLater(() -> subject.setBrokenRail(state));
+                Platform.runLater(() -> subject.setFailure("BROKEN RAIL"));
+            } else {
+                logger.error("Broken Rail called on Block: {} does not exist", blockID);
+            }
+
+
+        });
     }
 
     @Override
     public void setPowerFailure(Integer blockID, boolean state) {
+        logger.info("Power Failure called on Block: {} with state: {}", blockID, state);
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setPowerFailure(state);
+                failedBlock.setPowerFailure(true);
+            } else {
+                logger.error("Power Failure called on Block: {} does not exist", blockID);
+            }
+
+            TrackBlockSubject subject = this.subjectList.get(blockID);
+            if(subject != null) {
+                Platform.runLater(() -> subject.setPowerFailure(state));
+                Platform.runLater(() -> subject.setFailure("POWER FAILURE"));
             } else {
                 logger.error("Power Failure called on Block: {} does not exist", blockID);
             }
@@ -330,12 +356,21 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setTrackCircuitFailure(Integer blockID, boolean state) {
+        logger.info("Track Circuit Failure called on Block: {} with state: {}", blockID, state);
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
-                failedBlock.setCircuitFailure(state);
+                failedBlock.setCircuitFailure(true);
             } else {
                 logger.error("Circuit Failure called on Block: {} does not exist", blockID);
+            }
+
+            TrackBlockSubject subject = this.subjectList.get(blockID);
+            if(subject != null) {
+                Platform.runLater(() -> subject.setTrackCircuitFailure(state));
+                Platform.runLater(() -> subject.setFailure("TRACK CIRCUIT FAILURE"));
+            } else {
+                logger.error("Track Circuit Failure called on Block: {} does not exist", blockID);
             }
         });
     }
@@ -349,12 +384,22 @@ public class TrackLine implements TrackModel {
             } else {
                 logger.error("Fix Track Failure called on Block: {} does not exist", blockID);
             }
+
+            TrackBlockSubject subject = this.subjectList.get(blockID);
+            if(subject != null) {
+                Platform.runLater(() -> subject.setTrackCircuitFailure(false));
+                Platform.runLater(() -> subject.setPowerFailure(false));
+                Platform.runLater(() -> subject.setBrokenRail(false));
+                Platform.runLater(() -> subject.setFailure("NONE"));
+            } else {
+                logger.error("Fix Track Failure called on Block: {} does not exist", blockID);
+            }
         });
     }
 
     @Override
     public boolean getBrokenRail(Integer blockID) {
-       return  this.mainTrackLine.get(blockID).brokenRail;
+        return  this.mainTrackLine.get(blockID).brokenRail;
     }
 
     @Override
@@ -388,7 +433,7 @@ public class TrackLine implements TrackModel {
     @Override
     public int embarkPassengers(TrainModel train) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-       return asyncTrackUpdate(() -> {
+        return asyncTrackUpdate(() -> {
             if(trackOccupancyMap.containsKey(train)){
                 TrackBlock block = mainTrackLine.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
@@ -407,11 +452,11 @@ public class TrackLine implements TrackModel {
     //every tick is a second to ticket sales will reset every 3600 seconds
     @Override
     public int getTicketSales() {
-            if (time % 3600 == 0) {
-                this.ticketSales = 0;
-                //newTemperature();
-            }
-            return ticketSales;
+        if (time % 3600 == 0) {
+            this.ticketSales = 0;
+            newTemperature();
+        }
+        return ticketSales;
     }
 
     @Override
@@ -424,13 +469,13 @@ public class TrackLine implements TrackModel {
     }
 
 
-//    public void newTemperature(){
-//        queueTrackUpdate(() -> {
-//            int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
-//            subject.. (newTemp);
-//            this.outsideTemperature += newTemp;
-//        });
-//    }
+    public void newTemperature(){
+        queueTrackUpdate(() -> {
+            int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
+            this.outsideTemperature += newTemp;
+            Platform.runLater(() -> subjectList.forEach(subject -> subject.setOutsideTemp(this.outsideTemperature)));
+        });
+    }
 
 
     private void setupListeners() {
@@ -438,14 +483,18 @@ public class TrackLine implements TrackModel {
             public void onAdded(TrainModel train, Integer blockID) {
                 // A train enters the track (hopefully from the yard)
                 handleTrainEntry(train, blockID, 0);
+                Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(true));
             }
             public void onRemoved(TrainModel train, Integer blockID) {
                 // A train is removed from the track
                 handleTrainExit(train, blockID);
+                Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(false));
             }
             public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
                 // A train moves from one block to another
                 handleTrainEntry(train, newBlockID, oldBlockID);
+                Platform.runLater(() -> subjectList.get(oldBlockID).setIsOccupied(false));
+                Platform.runLater(() -> subjectList.get(newBlockID).setIsOccupied(true));
             }
         };
         trackOccupancyMap.addChangeListener(trackListener);

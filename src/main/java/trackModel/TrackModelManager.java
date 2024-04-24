@@ -1,15 +1,14 @@
 package trackModel;
 
-import Utilities.BooleanIconTableCell;
+import Utilities.HelperObjects.BooleanIconTableCell;
+import Utilities.Enums.Lines;
+import Utilities.HelperObjects.TrackLineMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,24 +17,17 @@ public class TrackModelManager {
     @FXML
     public Label ticketSalesLabel, locationLabel, passDisembarkLabel, passEmbarkedLabel;
     @FXML
-    public Label tempLabel, uploadLayoutLabel, pathLabel, simSpeedLabel, switchBlockNumbersLabel;
+    public Label tempLabel, switchBlockNumbersLabel;
     @FXML
     public Label switchStateLabel, signalBlockNumberLabel, signalStateLabel, crossingLabel;
     @FXML
     public Label beaconInfoLabel, lineInfoLabel, degF, sectionsLabel, logo;
     @FXML
-    public TitledPane sssSec, trackHeaterSec, murphySec, simulationInformationSec, beaconInfoSec;
+    public TitledPane sssSec, trackHeaterSec, murphySec, beaconInfoSec;
     @FXML
-    public Tab layoutTab, switchTab, signalTab, stationTab;
+    public Tab switchTab, signalTab, stationTab;
     @FXML
     public TabPane sssTabs;
-
-    @FXML
-    private Button trackUpload, chooseFile;
-    @FXML
-    private TextField trackFilePath, lineNameInput;
-    @FXML
-    private ComboBox<String> simSpeedInput;
 
     //murphy
     @FXML
@@ -69,43 +61,36 @@ public class TrackModelManager {
 
     //table
     @FXML
-    private TableView<TrackLineSubject> lineTable;
+    private TableView<TrackBlockSubject> lineTable;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> directionColumn;
+    private TableColumn<TrackBlockSubject, Boolean> directionColumn;
     @FXML
-    private TableColumn<TrackLineSubject, String> failureColumn;
+    private TableColumn<TrackBlockSubject, String> failureColumn;
     @FXML
-    private TableColumn<TrackLineSubject, String> blockColumn;
+    private TableColumn<TrackBlockSubject, Integer> blockColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Integer> lengthColumn;
+    private TableColumn<TrackBlockSubject, Double> lengthColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Boolean> occupiedColumn;
+    private TableColumn<TrackBlockSubject, Boolean> occupiedColumn;
     @FXML
-    private TableColumn<TrackLineSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
+    private TableColumn<TrackBlockSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
 
 
-
-    //Subject Map
-    private LineSubjectMap subjectMap = LineSubjectMap.getInstance();
-    //subject
-    private TrackLineSubject subject;
+    //subject list for table
+    Lines line = Lines.GREEN;
+    ObservableList<TrackBlockSubject> selectedTrackSubjectList = LineSubjectMap.getLineSubject(line);
 
 
-    ObservableList<TrackLineSubject> selectedTrackLineSubject = FXCollections.observableArrayList(subjectMap.getLineSubject("GREEN"));
+    TrackBlockSubject currentBlockSubject;
 
     @FXML
     public void initialize() {
         //initialize buttons and user inputs
-        chooseFile.setOnAction(event -> chooseFolder());
-        trackUpload.setOnAction(event -> uploadTrack());
         murphyEnter.setOnAction(event -> murphyEnter());
-        simSpeedInput.setOnAction(event -> setSimSpeed(simSpeedInput.getValue()));
-        lineNameInput.setOnAction(event -> addLineName(lineNameInput.getText()));
 
         //initialize combo boxes
         updateLineChoiceBox();
 
-        simSpeedInput.getItems().addAll("1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x");
         chooseFailureMode.getItems().addAll(
                 "Broken Rail",
                 "Track Circuit Failure",
@@ -131,13 +116,13 @@ public class TrackModelManager {
     }
 
     private void updateLineChoiceBox() {
-        List<String> lineNames = new ArrayList<>(subjectMap.getLineSubjects().keySet());
+        List<String> lineNames = LineSubjectMap.getLineNames();
         pickLine.setItems(FXCollections.observableArrayList(lineNames));
     }
 
     private void initializeTable() {
         // Bind TableView columns to the properties of the TrackLineSubject object
-        blockColumn.setCellValueFactory(cellData -> cellData.getValue().blockNumberProperty());
+        blockColumn.setCellValueFactory(cellData -> cellData.getValue().blockNumberProperty().asObject());
         lengthColumn.setCellValueFactory(cellData -> cellData.getValue().blockLengthProperty().asObject());
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().blockGradeProperty().asObject());
         elevationColumn.setCellValueFactory(cellData -> cellData.getValue().blockElevationProperty().asObject());
@@ -146,143 +131,134 @@ public class TrackModelManager {
         occupiedColumn.setCellValueFactory(cellData -> cellData.getValue().isOccupiedProperty());
         directionColumn.setCellValueFactory(cellData -> cellData.getValue().directionProperty());
 
-
-
-
         // set up factories for occupied column and direction column
-        occupiedColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
+        occupiedColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
             @Override
-            public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
+            public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
                 return new BooleanIconTableCell<>("/Framework.GUI.Images/train_rail_24.png", "/Framework.GUI.Images/train_24.png", 24, 24);
             }
         });
 
-        directionColumn.setCellFactory(new Callback<TableColumn<TrackLineSubject, Boolean>, TableCell<TrackLineSubject, Boolean>>() {
+        directionColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
             @Override
-            public TableCell<TrackLineSubject, Boolean> call(TableColumn<TrackLineSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
+            public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
                 return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/Crossing_Down_24.png", 24, 24);
             }
         });
 
         // Set the items of the table to this subject
-        lineTable.setItems(selectedTrackLineSubject);
-
+        lineTable.setItems(selectedTrackSubjectList);
         lineTable.refresh();
     }
 
     //change values based on selection in table
-    public void selectBlock(TrackLineSubject newProperties) {
-        System.out.println("Selected block");
-        if (subject != null) {
+    public void selectBlock(TrackBlockSubject newSubject) {
+        System.out.println("Selected block: " + newSubject.getBlockNumber());
+        System.out.println("Signal: " + newSubject.isIsSignal());
+
+        if (currentBlockSubject != null) {
             // Unbind stuff here
-            if (subject.isIsStation()) {
-                passEmbarkedValue.textProperty().unbindBidirectional(subject.passEmbarkedProperty());
-                passDisembarkedValue.textProperty().unbindBidirectional(subject.passDisembarkedProperty());
-                ticketSalesValue.textProperty().unbindBidirectional(subject.ticketSalesProperty());
-                nameOfStationLabel.textProperty().unbindBidirectional(subject.nameOfStationProperty());
+            if (currentBlockSubject.isIsStation()) {
+                passEmbarkedValue.textProperty().unbindBidirectional(currentBlockSubject.passEmbarkedProperty());
+                passDisembarkedValue.textProperty().unbindBidirectional(currentBlockSubject.passDisembarkedProperty());
+                ticketSalesValue.textProperty().unbindBidirectional(currentBlockSubject.ticketSalesProperty());
+                nameOfStationLabel.textProperty().unbindBidirectional(currentBlockSubject.nameOfStationProperty());
             }
 
-            if (subject.isIsSwitch()) {
-                switchBlockNumbersDisplay.textProperty().unbindBidirectional(subject.switchBlockIDProperty());
-                switchStateDisplay.textProperty().unbindBidirectional(subject.switchStateProperty());
+            if (currentBlockSubject.isIsSwitch()) {
+                switchBlockNumbersDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchBlockIDProperty());
+                switchStateDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchStateProperty());
             }
 
-            if (subject.isIsSignal()) {
-                signalStateDisplay.textProperty().unbindBidirectional(subject.signalStateProperty());
-                signalBlockNumberDisplay.textProperty().unbindBidirectional(subject.signalIDProperty());
+            if (currentBlockSubject.isIsSignal()) {
+                signalStateDisplay.textProperty().unbindBidirectional(currentBlockSubject.signalStateProperty());
+                signalBlockNumberDisplay.textProperty().unbindBidirectional(currentBlockSubject.signalIDProperty());
             }
 
-            if (subject.isIsCrossing()) {
-                crossingState.textProperty().unbindBidirectional(subject.crossingStateProperty());
+            if (currentBlockSubject.isIsCrossing()) {
+                crossingState.textProperty().unbindBidirectional(currentBlockSubject.crossingStateProperty());
             }
 
-            if (subject.isIsBeacon()) {
-                displayBeaconInfo.textProperty().unbindBidirectional(subject.setBeaconProperty());
-                beaconBlockNumber.textProperty().unbindBidirectional(subject.blockNumberProperty());
+            if (currentBlockSubject.isIsBeacon()) {
+                displayBeaconInfo.textProperty().unbindBidirectional(currentBlockSubject.setBeaconProperty());
+                beaconBlockNumber.textProperty().unbind();
             }
-            elevationColumn.textProperty().unbindBidirectional(subject.blockElevationProperty().asObject());
-            occupiedColumn.textProperty().unbindBidirectional(subject.isOccupiedProperty());
-            gradeColumn.textProperty().unbindBidirectional(subject.blockGradeProperty().asObject());
-            failureColumn.textProperty().unbindBidirectional(subject.failureProperty());
+            elevationColumn.textProperty().unbindBidirectional(currentBlockSubject.blockElevationProperty().asObject());
+            occupiedColumn.textProperty().unbindBidirectional(currentBlockSubject.isOccupiedProperty());
+            gradeColumn.textProperty().unbindBidirectional(currentBlockSubject.blockGradeProperty().asObject());
+            failureColumn.textProperty().unbindBidirectional(currentBlockSubject.failureProperty());
         }
 
+        currentBlockSubject = newSubject;
 
         // Bind stuff here
-        if (subject.isIsStation()) {
-            passEmbarkedValue.textProperty().bindBidirectional(subject.passEmbarkedProperty());
-            passDisembarkedValue.textProperty().bindBidirectional(subject.passDisembarkedProperty());
-            ticketSalesValue.textProperty().bindBidirectional(subject.ticketSalesProperty());
-            nameOfStationLabel.textProperty().bindBidirectional(subject.nameOfStationProperty());
+        if (currentBlockSubject.isIsStation()) {
+            passEmbarkedValue.textProperty().bindBidirectional(currentBlockSubject.passEmbarkedProperty());
+            passDisembarkedValue.textProperty().bindBidirectional(currentBlockSubject.passDisembarkedProperty());
+            ticketSalesValue.textProperty().bindBidirectional(currentBlockSubject.ticketSalesProperty());
+            nameOfStationLabel.textProperty().bindBidirectional(currentBlockSubject.nameOfStationProperty());
         } else {
             passEmbarkedValue.setText("0");
             passDisembarkedValue.setText("0");
             ticketSalesValue.setText("0");
+            nameOfStationLabel.setText("");
         }
 
-        if (subject.isIsSwitch()) {
-            switchBlockNumbersDisplay.textProperty().bindBidirectional(subject.switchBlockIDProperty());
-            switchStateDisplay.textProperty().bindBidirectional(subject.switchStateProperty());
+        if (currentBlockSubject.isIsSwitch()) {
+            switchBlockNumbersDisplay.textProperty().bindBidirectional(currentBlockSubject.switchBlockIDProperty());
+            switchStateDisplay.textProperty().bindBidirectional(currentBlockSubject.switchStateProperty());
         } else {
             switchBlockNumbersDisplay.setText("NOT A SWITCH BLOCK");
             switchStateDisplay.setText("NONE");
         }
 
-        if (subject.isIsSignal()) {
-            signalStateDisplay.textProperty().bindBidirectional(subject.signalStateProperty());
-            signalBlockNumberDisplay.textProperty().bindBidirectional(subject.signalIDProperty());
+        if (currentBlockSubject.isIsSignal()) {
+            signalStateDisplay.textProperty().bindBidirectional(currentBlockSubject.signalStateProperty());
+            signalBlockNumberDisplay.textProperty().bindBidirectional(currentBlockSubject.signalIDProperty());
         } else {
             signalStateDisplay.setText("NONE");
             signalBlockNumberDisplay.setText("NO SIGNAL");
         }
 
-        if (subject.isIsCrossing()) {
-            crossingState.textProperty().bindBidirectional(subject.crossingStateProperty());
+        if (currentBlockSubject.isIsCrossing()) {
+            crossingState.textProperty().bindBidirectional(currentBlockSubject.crossingStateProperty());
         } else {
             crossingState.setText("NONE");
         }
 
-        if (subject.isIsBeacon()) {
-            displayBeaconInfo.textProperty().bindBidirectional(subject.setBeaconProperty());
-            beaconBlockNumber.textProperty().bindBidirectional(subject.blockNumberProperty());
+        if (currentBlockSubject.isIsBeacon()) {
+            displayBeaconInfo.textProperty().bindBidirectional(currentBlockSubject.setBeaconProperty());
+            beaconBlockNumber.textProperty().bind(currentBlockSubject.blockNumberProperty().asString());
         } else {
             displayBeaconInfo.setText("NO CROSSING");
         }
 
         //update track heaters and temperature as new blocks are selected
-        if (subject.getOutsideTemp() < 40) {
+        if (currentBlockSubject.getOutsideTemp() < 40) {
             trackHeaterStatus.setText("Status - ON");
         }
-        outsideTemp.setText(subject.outsideTempProperty().toString());
+        outsideTemp.setText(currentBlockSubject.outsideTempProperty().toString());
 
     }
 
-
-
-//TODO update table based on line selection
     private void updateTable() {
-            String lineSelect = pickLine.getSelectionModel().getSelectedItem().toString().toUpperCase();
+        Lines line = Lines.valueOf(pickLine.getSelectionModel().getSelectedItem());
+        System.out.println("Selected line: " + line);
 
-            if(lineSelect == null) {
-                return;
-            }
+        // Clear the selectedTrackLineSubject list and add the new TrackLineSubject object
+        selectedTrackSubjectList = LineSubjectMap.getLineSubject(line);
+        System.out.println("Block list: " + selectedTrackSubjectList.size());
+        lineTable.setItems(selectedTrackSubjectList);
 
-            TrackLineSubject subject = subjectMap.getLineSubject(lineSelect);
-
-            // Clear the selectedTrackLineSubject list and add the new TrackLineSubject object
-            selectedTrackLineSubject.clear();
-            selectedTrackLineSubject.add(subject);
-
-            // Update the table
-            lineTable.refresh();
+        // Update the table
+        lineTable.refresh();
     }
-
-
 
     private void murphyEnter() {
-        //get the line and block
-        subject.setBrokenRail(false);
-        subject.setTrackCircuitFailure(false);
-        subject.setPowerFailure(false);
+
+        currentBlockSubject.setBrokenRail(false);
+        currentBlockSubject.setTrackCircuitFailure(false);
+        currentBlockSubject.setPowerFailure(false);
 
         String failure = chooseFailureMode.getValue();
 
@@ -292,69 +268,25 @@ public class TrackModelManager {
 
         switch(failure) {
             case "Broken Rail" :
-                subject.setBrokenRail(true);
+//                currentBlockSubject.setBrokenRail(true);
+                TrackLineMap.getTrackLine(line).setBrokenRail(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Track Circuit Failure" :
-                subject.setTrackCircuitFailure(true);
+//                currentBlockSubject.setTrackCircuitFailure(true);
+                TrackLineMap.getTrackLine(line).setTrackCircuitFailure(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Power Failure" :
-                subject.setPowerFailure(true);
+//                currentBlockSubject.setPowerFailure(true);
+                TrackLineMap.getTrackLine(line).setPowerFailure(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Fix Track Failure" :
-                subject.setBrokenRail(false);
-                subject.setTrackCircuitFailure(false);
-                subject.setPowerFailure(false);
+//                currentBlockSubject.setBrokenRail(false);
+//                currentBlockSubject.setTrackCircuitFailure(false);
+//                currentBlockSubject.setPowerFailure(false);
+                TrackLineMap.getTrackLine(line).fixTrackFailure(currentBlockSubject.getBlockNumber());
             default:
                 break;
         }
 
-    }
-
-    private void addLineName(String text) {
-        pickLine.getItems().add(text);
-    }
-
-    private void uploadTrack() {
-        //parse the csv file
-        File file = new File(trackFilePath.getText());
-        //TODO: uploading csv from track model
-        //send file to parser
-        this.addLineName(lineNameInput.getText());
-    }
-
-    private void setSimSpeed(String value) {
-        //set the simulation speed
-        //TODO: figure out changing sim speed
-        switch(value){
-            case "1x":
-                break;
-            case "2x":
-                break;
-            case "3x":
-                break;
-            case "4x":
-                break;
-            case "5x":
-                break;
-            case "6x":
-                break;
-            case "7x":
-                break;
-            case "8x":
-                break;
-            case "9x":
-                break;
-            case "10x":
-                break;
-            default:
-                break;
-        }
-    }
-
-    //user input for track layout
-    private void chooseFolder() {
-        DirectoryChooser dirChooser = new DirectoryChooser();
-        File dir = dirChooser.showDialog(chooseFile.getScene().getWindow());
-        if(dir != null){ trackFilePath.setText(dir.getPath()); }
     }
 }

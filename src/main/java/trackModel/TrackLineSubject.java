@@ -92,7 +92,7 @@ public class TrackLineSubject {
         initializeValues();
         initializeListeners();
         trackBlockLine.forEach((blockID, block) -> {
-            blockList.add(new TrackBlockSubject(block));
+//            blockList.add(new TrackBlockSubject(block));
         });
     }
 
