@@ -312,6 +312,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setBrokenRail(Integer blockID, boolean state) {
+        logger.info("Broken Rail called on Block: {} with state: {}", blockID, state);
        queueTrackUpdate( () -> {
            TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
            if (brokenBlock != null) {
@@ -334,6 +335,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setPowerFailure(Integer blockID, boolean state) {
+        logger.info("Power Failure called on Block: {} with state: {}", blockID, state);
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
@@ -354,6 +356,7 @@ public class TrackLine implements TrackModel {
 
     @Override
     public void setTrackCircuitFailure(Integer blockID, boolean state) {
+        logger.info("Track Circuit Failure called on Block: {} with state: {}", blockID, state);
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {

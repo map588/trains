@@ -54,7 +54,7 @@ public class TrackBlockSubject {
         isStation = new SimpleBooleanProperty(trackBlock.isStation());
         isBeacon = new SimpleBooleanProperty(false);
         isOccupied = new SimpleBooleanProperty(trackBlock.isOccupied());
-        failure = new SimpleStringProperty();
+        failure = new SimpleStringProperty("NONE");
         passEmbarked = new SimpleStringProperty();
         passDisembarked = new SimpleStringProperty();
         ticketSales = new SimpleStringProperty();

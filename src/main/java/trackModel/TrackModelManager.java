@@ -2,6 +2,7 @@ package trackModel;
 
 import Utilities.HelperObjects.BooleanIconTableCell;
 import Utilities.Enums.Lines;
+import Utilities.HelperObjects.TrackLineMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -76,7 +77,9 @@ public class TrackModelManager {
 
 
     //subject list for table
-    ObservableList<TrackBlockSubject> selectedTrackSubjectList = LineSubjectMap.getLineSubject(Lines.GREEN);
+    Lines line = Lines.GREEN;
+    ObservableList<TrackBlockSubject> selectedTrackSubjectList = LineSubjectMap.getLineSubject(line);
+
 
     TrackBlockSubject currentBlockSubject;
 
@@ -238,11 +241,11 @@ public class TrackModelManager {
     }
 
     private void updateTable() {
-            Lines lineSelect = Lines.valueOf(pickLine.getSelectionModel().getSelectedItem());
-            System.out.println("Selected line: " + lineSelect);
+            Lines line = Lines.valueOf(pickLine.getSelectionModel().getSelectedItem());
+            System.out.println("Selected line: " + line);
 
             // Clear the selectedTrackLineSubject list and add the new TrackLineSubject object
-            selectedTrackSubjectList = LineSubjectMap.getLineSubject(lineSelect);
+            selectedTrackSubjectList = LineSubjectMap.getLineSubject(line);
             System.out.println("Block list: " + selectedTrackSubjectList.size());
             lineTable.setItems(selectedTrackSubjectList);
 
