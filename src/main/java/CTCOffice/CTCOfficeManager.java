@@ -124,10 +124,6 @@ public class CTCOfficeManager {
         setupStopTable();
         setupScheduleButtons();
         setupDividers();
-        scheduleTable.getSelectionModel().select(0);
-        trainSelectTable.getSelectionModel().select(0);
-        scheduleEditTable.getSelectionModel().select(0);
-        checkScheduleButton.fire();
     }
 
     private void LineTableSet(TableColumn<CTCBlockSubject, Integer> blockNumberColumn, TableView<CTCBlockSubject> blockTable, TableColumn<CTCBlockSubject, Boolean> occupationLightColumn,
@@ -533,8 +529,11 @@ public class CTCOfficeManager {
         });
 
         DispatchButton.setOnAction(event -> {
-            office.runSchedule(selectedSchedule.getScheduleFileName());
-            System.out.println("Running schedule " + selectedSchedule.getScheduleFileName());
+            Lines dispatchLine = Enum.valueOf(Lines.class, lineTrainSelector.getValue());
+            office.DispatchTrain(dispatchLine, office.trainLocations.size() + 1);
+            System.out.println("Dispatched Train : ID " + office.trainLocations.size() + " on Line " + dispatchLine);
+            office.sendAuthority(dispatchLine, 0, 200000);
+            office.sendSpeed(dispatchLine, 0, 40);
         });
     }
 

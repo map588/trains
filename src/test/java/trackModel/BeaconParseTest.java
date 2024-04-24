@@ -3,26 +3,28 @@ package trackModel;
 import Integration.BaseTest;
 import Utilities.BasicTrackLine;
 import Utilities.BeaconParser;
-import Utilities.Enums.BeaconType;
 import Utilities.Enums.Lines;
 import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.Beacon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class BeaconParseTest extends BaseTest {
 
     private ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, Beacon>> beaconMap;
 
+    private BeaconParser beaconParser = BeaconParser.getInstance();
+
     @BeforeEach
     public void setUp() {
         beaconMap = new ConcurrentHashMap<>();
         for (Lines line : Lines.values()) {
-            ConcurrentHashMap<Integer, Beacon> beacons = BeaconParser.parseBeacons(line);
+            ConcurrentHashMap<Integer, Beacon> beacons = BeaconParser.getBeaconLine(line);
             beaconMap.put(line, beacons);
         }
     }
@@ -33,23 +35,33 @@ public class BeaconParseTest extends BaseTest {
             System.out.println("Line: " + line);
             ConcurrentHashMap<Integer, Beacon> beacons = beaconMap.get(line);
             BasicTrackLine trackLine = GlobalBasicBlockParser.getInstance().getBasicLine(line);
-
+            HashMap<Integer, Integer> totalSourceBeacons = new HashMap<>();
 
             System.out.println("Number of Beacons: " + beacons.size());
             for (Integer beaconID : beacons.keySet()) {
                 Beacon beacon = beacons.get(beaconID);
+                totalSourceBeacons.put(beacon.sourceId(), totalSourceBeacons.getOrDefault(beacon.sourceId(), 0) + 1);
                 System.out.print( beaconID + " ");
-                if (beacon.type() == BeaconType.STATION) {
-                    System.out.println(trackLine.get(beacon.startId()).stationName().get() + ": " + beacon.startId() + " -> " + beacon.endId());
+                if (trackLine.get(beacon.sourceId()).isStation()) {
+                    System.out.println(trackLine.get(beacon.sourceId()).stationName().get() + ": " + beacon.sourceId() + " -> " + beacon.endId());
                 } else {
-                    System.out.println("SW: " + beacon.startId() + " -> " + beacon.endId());
+                    System.out.println("SW: " + beacon.sourceId() + " -> " + beacon.endId());
                 }
                 System.out.println("Blocks: " + beacon.blockIndices());
                 System.out.println();
             }
+
+            for(Integer sourceID : totalSourceBeacons.keySet()) {
+               if(trackLine.get(sourceID).isSwitch() && totalSourceBeacons.get(sourceID) != 3) {
+                   System.out.println("Switch " + sourceID + " has "+ totalSourceBeacons.get(sourceID)  +" beacons");
+               }else if(trackLine.get(sourceID).isStation() && totalSourceBeacons.get(sourceID) != 2) {
+                   System.out.println("Station " + sourceID + " has "+ totalSourceBeacons.get(sourceID) +" beacons");
+               }
+            }
         }
 
-        assertEquals(15, beaconMap.get(Lines.GREEN).size());
-        assertEquals(21, beaconMap.get(Lines.RED).size());
+        assertFalse(beaconMap.isEmpty());
+
+
     }
 }

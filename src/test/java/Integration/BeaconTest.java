@@ -13,10 +13,10 @@ public class BeaconTest extends BaseTest {
 
     @Test
     public void setUp() {
-        ConcurrentHashMap<Integer, Beacon> beacons = BeaconParser.parseBeacons(Lines.GREEN);
+        ConcurrentHashMap<Integer, Beacon> beacons = BeaconParser.getBeaconLine(Lines.GREEN);
         beacons.forEach((k, v) -> {
             System.out.println("Beacon: " + k);
-            System.out.println("Switch: " + v.startId());
+            System.out.println("Switch: " + v.sourceId());
             v.blockIndices().forEach((i) -> System.out.println("Block: " + i.toString()));
             System.out.println("End: " + v.endId());
             System.out.println();

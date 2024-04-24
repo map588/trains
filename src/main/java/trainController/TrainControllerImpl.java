@@ -21,8 +21,7 @@ import static Utilities.Conversion.powerUnits.HORSEPOWER;
 import static Utilities.Conversion.powerUnits.WATTS;
 import static Utilities.Conversion.temperatureUnit.CELSIUS;
 import static Utilities.Conversion.temperatureUnit.FAHRENHEIT;
-import static Utilities.Conversion.velocityUnit.MPH;
-import static Utilities.Conversion.velocityUnit.MPS;
+import static Utilities.Conversion.velocityUnit.*;
 import static Utilities.Enums.Lines.NULL;
 import static trainController.ControllerProperty.*;
 
@@ -50,14 +49,15 @@ import static trainController.ControllerProperty.*;
  * If the current speed is less than 0, it is set to 0.
  * Finally, the speed and power of the train are updated.
  */
-public class TrainControllerImpl implements TrainController{
+public class TrainControllerImpl implements TrainController {
     private static final double TIME_STEP = TIME_STEP_S;
     private static final double DEAD_BAND = 0.05;
 
     //private final NullTrain nullTrain = new NullTrain();
-
     private ControllerBlock currentBlock;
+
     private Beacon currentBeacon = null;
+    private Integer lastBeaconID = 0;
 
     private static final Logger logger = LoggerFactory.getLogger(TrainControllerImpl.class);
 
@@ -103,10 +103,10 @@ public class TrainControllerImpl implements TrainController{
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
         populateTrainValues(train);
-        if(train.getTrainNumber() != -1 && train.getLine() != NULL && train.getLine() != null){
+        if (train.getTrainNumber() != -1 && train.getLine() != NULL && train.getLine() != null) {
             blockLookup = ControllerBlockLookups.getLookup(train.getLine());
             currentBlock = blockLookup.get(0);
-        }else{
+        } else {
             currentBlock = new ControllerBlock(new BasicBlock());
         }
 
@@ -118,12 +118,13 @@ public class TrainControllerImpl implements TrainController{
         this.subject = new TrainControllerSubject(this);
         this.nextStationName = "Yard";
     }
+
     /**
      * This method is used to assign a TrainModel object to the trainControllerImpl.
      * It first assigns the passed TrainModel object to the train variable of the trainControllerImpl.
      * Then it sets the service brake, emergency brake, internal lights, external lights, left doors, right doors, temperature, signal failure, brake failure, and power failure of the trainControllerImpl to the corresponding values of the passed TrainModel object.
      *
-     * @param train  The TrainModel object to be assigned to the trainControllerImpl.
+     * @param train The TrainModel object to be assigned to the trainControllerImpl.
      */
     void populateTrainValues(TrainModel train) {
         this.setServiceBrake(train.getServiceBrake());
@@ -139,17 +140,16 @@ public class TrainControllerImpl implements TrainController{
     }
 
     @Override
-    public UpdatedTrainValues sendUpdatedTrainValues(){
+    public UpdatedTrainValues sendUpdatedTrainValues() {
 
-        // Temperature Manager
         double trainSpeed = train.getSpeed();
+
         this.setCurrentTemperature(train.getRealTemperature());
         this.setCurrentSpeed(trainSpeed);
 
 
         this.setPower(calculatePower(trainSpeed));
 
-        //TODO: this.authorityCheck(this.power, this.currentSpeed);  will change power if it does not align with authority
 
         return new UpdatedTrainValues(
                 this.power,
@@ -165,23 +165,26 @@ public class TrainControllerImpl implements TrainController{
 
     public double calculatePower(double currentSpeed) {
 
-        if (waysideStop){
+        if (waysideStop) {
             setServiceBrake(true);
             rollingError = 0;
             return 0;
-        }
-        else {
+        } else {
 
             internalAuthority -= currentSpeed * TIME_STEP;
 
-            double setSpeed = automaticMode? commandSpeed : overrideSpeed;
+            if (power == 0 && currentSpeed > 0 && currentSpeed < 1) {
+                setAuthority((int) internalAuthority);
+            }
+
+            double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
             double error = setSpeed - currentSpeed;
             double proportionalTerm = Kp * error;
 
             // Update the rolling error
-            if(!powerFailure) {
+            if (!powerFailure) {
                 rollingError += error * TIME_STEP;
-            }else{
+            } else {
                 rollingError = 0;
             }
 
@@ -208,6 +211,8 @@ public class TrainControllerImpl implements TrainController{
             if (emergencyBrake || serviceBrake) {
                 pow = 0;
             }
+
+
             return pow;
         }
     }
@@ -215,63 +220,80 @@ public class TrainControllerImpl implements TrainController{
     @Override
     public void checkFailures(double trainPower) {
         boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();
-        boolean badPower  =  this.power > 0 && trainPower == 0;
+        boolean badPower = this.power > 0 && trainPower == 0;
 
         setSignalFailure(this.commandSpeed == -1 || this.authority == -1);
 
-        if(powerFailure){
+        if (powerFailure) {
             train.setPower(3);
             setPowerFailure((train.getPower() < 3));
-        }else {
+        } else {
             setPowerFailure(badPower);
             setEmergencyBrake(powerFailure || this.eBrakeGUI || this.passengerEngageEBrake);
         }
 
-        if(brakeFailure){
-            train.setServiceBrake(true);
+        if (brakeFailure) {
+            setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            train.setServiceBrake(false);
-        }else {
+            setServiceBrake(false);
+        } else {
             setBrakeFailure(badBrakes);
         }
 
-        if(brakeFailure || powerFailure || signalFailure){
+        if (brakeFailure || powerFailure || signalFailure) {
             setEmergencyBrake(true);
-        }else{
+        } else {
             setEmergencyBrake(this.eBrakeGUI || this.passengerEngageEBrake);
         }
 
+        calculateStoppingDistance(this.currentSpeed);
 
-        if (this.internalAuthority <= this.calculateStoppingDistance(this.currentSpeed)){
+        if (this.internalAuthority < emergencyDistance) {
+            setEmergencyBrake(true);
+        } else if (this.internalAuthority < serviceDistance) {
             setServiceBrake(true);
         }
+
     }
+
+    private double emergencyDistance;
+    private double serviceDistance;
 
     // Function that calculates the stopping distance where the train needs to start stopping
-    public double calculateStoppingDistance(double currentSpeed){
+     void calculateStoppingDistance(double currentSpeed) {
 
         //logger.info("Stopping Distance is {}", stoppingDistance);
-        return Math.pow(currentSpeed,2) / (2*SERVICE_BRAKE_DECELERATION);
+        emergencyDistance =  Math.pow(currentSpeed, 2) / (2 * EMERGENCY_BRAKE_DECELERATION);
+        serviceDistance = Math.pow(currentSpeed, 2) / (2 * SERVICE_BRAKE_DECELERATION);
     }
 
+
+
     /**
-     *  onBlock()
+     * onBlock()
      */
     @Override
-    public void onBlock(){
-        if(currentBeacon != null) {
+    public void onBlock() {
+        if (currentBeacon != null) {
+
             Integer blockID = currentBeacon.blockIndices().pollFirst();
 
-            if(blockID == null){
-                currentBlock = blockLookup.get(currentBeacon.endId());
-            }else{
+            if (blockID != null) {
                 currentBlock = blockLookup.get(blockID);
+                if(currentBeacon.blockIndices().peekFirst() == null){
+                    lastBeaconID = blockID;
+                    logger.info("I RAN OUT OF BEACON! {}", lastBeaconID);
+                }
+            }else {
+                currentBlock = blockLookup.get(currentBeacon.endId());
             }
+
+
 
             logger.warn("Controller thinks its on block {}", currentBlock.blockNumber());
 
 
-            if(currentBlock.isStation() && power == 0) {
+            if (currentBlock.isStation() && power == 0) {
                 onStation();
             }
 
@@ -281,7 +303,7 @@ public class TrainControllerImpl implements TrainController{
 
             // Get Specific Block Info
             checkTunnel();
-        }else{
+        } else {
             logger.warn("Controller entered a block blind");
         }
         setAuthority((int) internalAuthority);
@@ -290,9 +312,9 @@ public class TrainControllerImpl implements TrainController{
     /**
      * onStation()
      */
-    public void onStation(){
+    public void onStation() {
 
-        if (train.getSpeed() == 0){                             // Check if train is stopped
+        if (train.getSpeed() == 0) {                             // Check if train is stopped
 
             // Hopefully won't affect make announcment implementation in manager
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -313,27 +335,25 @@ public class TrainControllerImpl implements TrainController{
     }
 
     // Implement Crossing tunnel
-    public void checkTunnel(){
+    public void checkTunnel() {
         // Get block information somehow
 
-        if(inTunnel) {
+        if (inTunnel) {
             logger.info("Train is in a tunnel");
             setIntLights(true);
             setExtLights(true);
 
-        }
-        else{
+        } else {
             setIntLights(false);
             setExtLights(false);
         }
     }
 
 
-
     //Functions called by the internal logic to notify of changes
     public void setAutomaticMode(boolean mode) {
         this.automaticMode = mode;
-        notificationExecutor.execute( ()-> subject.notifyChange(AUTOMATIC_MODE, mode));
+        notificationExecutor.execute(() -> subject.notifyChange(AUTOMATIC_MODE, mode));
     }
 
 
@@ -341,141 +361,163 @@ public class TrainControllerImpl implements TrainController{
     public void setPassengerEBrake() {
         this.passengerEngageEBrake = true;
         this.emergencyBrake = true;
-        notificationExecutor.execute( ()-> subject.notifyChange(EMERGENCY_BRAKE , true));
+        notificationExecutor.execute(() -> subject.notifyChange(EMERGENCY_BRAKE, true));
     }
 
-    private void clearPassengerEBrake(){
+    private void clearPassengerEBrake() {
         this.passengerEngageEBrake = false;
     }
 
-    public void setAuthority(int authority) {
+    public void setAuthority(int auth) {
 
-         if (authority == STOP_TRAIN_SIGNAL) {
+        if (auth == STOP_TRAIN_SIGNAL) {
             waysideStop = true;
             setServiceBrake(true);
             logger.warn("Wayside Stop: T{}", trainID);
-        }
-        else if (authority == RESUME_TRAIN_SIGNAL){
+        } else if (auth == RESUME_TRAIN_SIGNAL) {
             waysideStop = false;
-             setServiceBrake(sBrakeGUI);
+            setServiceBrake(false);
             logger.warn("Wayside Resume: T{}", trainID);
-        }
-        else {
-            this.authority = authority;
+        } else {
+            this.authority = auth;
             this.internalAuthority = authority;
-            notificationExecutor.execute(()->
-	            subject.notifyChange(AUTHORITY, authority));
+            notificationExecutor.execute(() ->
+                    subject.notifyChange(AUTHORITY, authority));
         }
-    }
-    public void setCommandSpeed(double speed) {
-            this.commandSpeed = speed;
-            notificationExecutor.execute( ()-> subject.notifyChange(COMMAND_SPEED, convertVelocity(speed, MPS, MPH)));
-        //calculatePower());
-    }
-    public void setCurrentSpeed(double speed) {
-        this.currentSpeed = speed;
-        notificationExecutor.execute( ()-> subject.notifyChange(CURRENT_SPEED , convertVelocity(speed, MPS, MPH)));
-    }
-    private void setServiceBrake(boolean brake) {
-        this.serviceBrake = brake;
-        notificationExecutor.execute( ()-> subject.notifyChange(SERVICE_BRAKE , brake));
-    }
-    public void setEmergencyBrake(boolean brake) {
-        this.emergencyBrake = brake;
-        notificationExecutor.execute( ()-> subject.notifyChange(EMERGENCY_BRAKE , brake));
     }
 
+    public void setCommandSpeed(double speed) {
+        this.commandSpeed = speed;
+        notificationExecutor.execute(() -> subject.notifyChange(COMMAND_SPEED, convertVelocity(speed, MPS, MPH)));
+        //calculatePower());
+    }
+
+    public void setCurrentSpeed(double speed) {
+        this.currentSpeed = speed;
+        notificationExecutor.execute(() -> subject.notifyChange(CURRENT_SPEED, convertVelocity(speed, MPS, MPH)));
+    }
+
+    private void setServiceBrake(boolean brake) {
+        this.serviceBrake = brake;
+        this.train.setServiceBrake(brake);
+        notificationExecutor.execute(() -> subject.notifyChange(SERVICE_BRAKE, brake));
+    }
+
+    public void setEmergencyBrake(boolean brake) {
+        this.emergencyBrake = brake;
+        this.train.setEmergencyBrake(brake);
+        notificationExecutor.execute(() -> subject.notifyChange(EMERGENCY_BRAKE, brake));
+    }
 
 
     public void setKi(double Ki) {
         this.Ki = Ki;
-        notificationExecutor.execute( ()-> subject.notifyChange(KI , Ki));
+        notificationExecutor.execute(() -> subject.notifyChange(KI, Ki));
     }
+
     public void setKp(double Kp) {
         this.Kp = Kp;
-        notificationExecutor.execute( ()-> subject.notifyChange(KP , Kp));
+        notificationExecutor.execute(() -> subject.notifyChange(KP, Kp));
     }
+
     public void setPower(double power) {
         this.power = power;
-        notificationExecutor.execute( ()-> subject.notifyChange(POWER , convertPower(power, WATTS, HORSEPOWER)));
+        notificationExecutor.execute(() -> subject.notifyChange(POWER, convertPower(power, WATTS, HORSEPOWER)));
     }
+
     public void setIntLights(boolean lights) {
         this.internalLights = lights;
-        notificationExecutor.execute( ()-> subject.notifyChange(INT_LIGHTS , lights)); // This might've been the issue interiorLights -> intLights
+        notificationExecutor.execute(() -> subject.notifyChange(INT_LIGHTS, lights)); // This might've been the issue interiorLights -> intLights
     }
+
     public void setExtLights(boolean lights) {
         this.externalLights = lights;
-        notificationExecutor.execute( ()-> subject.notifyChange(EXT_LIGHTS , lights));// This might've been the issue exteriorLights -> extLights
+        notificationExecutor.execute(() -> subject.notifyChange(EXT_LIGHTS, lights));// This might've been the issue exteriorLights -> extLights
     }
+
     public void setLeftDoors(boolean doors) {
         this.leftDoors = doors;
-        notificationExecutor.execute( ()-> subject.notifyChange(LEFT_DOORS , doors));
+        notificationExecutor.execute(() -> subject.notifyChange(LEFT_DOORS, doors));
     }
+
     public void setRightDoors(boolean doors) {
         this.rightDoors = doors;
-        notificationExecutor.execute( ()-> subject.notifyChange(RIGHT_DOORS , doors));
+        notificationExecutor.execute(() -> subject.notifyChange(RIGHT_DOORS, doors));
     }
+
     public void setSetTemperature(double temp) {
         this.setTemperature = temp;
-        notificationExecutor.execute( ()-> subject.notifyChange(SET_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT)));
+        notificationExecutor.execute(() -> subject.notifyChange(SET_TEMPERATURE, convertTemperature(temp, CELSIUS, FAHRENHEIT)));
     }
-    public void setCurrentTemperature(double temp){
+
+    public void setCurrentTemperature(double temp) {
         this.currentTemperature = temp;
-        notificationExecutor.execute( ()-> subject.notifyChange(CURRENT_TEMPERATURE , convertTemperature(temp, CELSIUS, FAHRENHEIT)));
+        notificationExecutor.execute(() -> subject.notifyChange(CURRENT_TEMPERATURE, convertTemperature(temp, CELSIUS, FAHRENHEIT)));
     }
+
     public void setAnnouncements(boolean announcements) {
         this.announcements = announcements;
-        notificationExecutor.execute( ()-> subject.notifyChange(ANNOUNCEMENTS , announcements));
+        notificationExecutor.execute(() -> subject.notifyChange(ANNOUNCEMENTS, announcements));
     }
+
     public void setSignalFailure(boolean signalFailure) {
         this.signalFailure = signalFailure;
-        if(signalFailure){
+        if (signalFailure) {
             logger.warn("Signal Failure detected");
         }
-        notificationExecutor.execute( ()-> {subject.notifyChange(SIGNAL_FAILURE , signalFailure);
+        notificationExecutor.execute(() -> {
+            subject.notifyChange(SIGNAL_FAILURE, signalFailure);
         });
     }
+
     public void setBrakeFailure(boolean brakeFailure) {
         this.brakeFailure = brakeFailure;
-        notificationExecutor.execute( ()-> {
-            if(brakeFailure){
+        notificationExecutor.execute(() -> {
+            if (brakeFailure) {
                 logger.warn("Brake Failure detected");
             }
-            subject.notifyChange(BRAKE_FAILURE , brakeFailure);
+            subject.notifyChange(BRAKE_FAILURE, brakeFailure);
         });
     }
+
     public void setPowerFailure(boolean powerFailure) {
         this.powerFailure = powerFailure;
-        notificationExecutor.execute( ()-> {
-            if(powerFailure){
+        notificationExecutor.execute(() -> {
+            if (powerFailure) {
                 logger.warn("Power Failure detected");
             }
-            subject.notifyChange(POWER_FAILURE , powerFailure);
+            subject.notifyChange(POWER_FAILURE, powerFailure);
         });
     }
-    public void setInTunnel(boolean tunnel){
+
+    public void setInTunnel(boolean tunnel) {
         this.inTunnel = tunnel;
-        notificationExecutor.execute( ()-> subject.notifyChange(IN_TUNNEL ,tunnel));
+        notificationExecutor.execute(() -> subject.notifyChange(IN_TUNNEL, tunnel));
     }
-    public void setLeftPlatform(boolean platform){
+
+    public void setLeftPlatform(boolean platform) {
         this.leftPlatform = platform;
-        notificationExecutor.execute( ()-> subject.notifyChange(LEFT_PLATFORM ,platform));
+        notificationExecutor.execute(() -> subject.notifyChange(LEFT_PLATFORM, platform));
     }
-    public void setRightPlatform(boolean platform){
+
+    public void setRightPlatform(boolean platform) {
         this.rightPlatform = platform;
-        notificationExecutor.execute( ()-> subject.notifyChange(RIGHT_PLATFORM ,platform));
+        notificationExecutor.execute(() -> subject.notifyChange(RIGHT_PLATFORM, platform));
     }
-    public void setSpeedLimit(double limit){
+
+    public void setSpeedLimit(double limit) {
         this.speedLimit = limit;
-        notificationExecutor.execute( ()-> subject.notifyChange(SPEED_LIMIT , convertVelocity(limit, MPS, MPH)));
+        notificationExecutor.execute(() -> subject.notifyChange(SPEED_LIMIT, convertVelocity(limit, KPH, MPH)));
     }
-    public void setNextStationName(String name){
+
+    public void setNextStationName(String name) {
         this.nextStationName = name;
-        notificationExecutor.execute( ()-> subject.notifyChange(NEXT_STATION ,name));
+        notificationExecutor.execute(() -> subject.notifyChange(NEXT_STATION, name));
     }
+
     public void setGrade(double newValue) {
         this.grade = newValue;
-        notificationExecutor.execute( ()-> subject.notifyChange(GRADE ,newValue));
+        notificationExecutor.execute(() -> subject.notifyChange(GRADE, newValue));
     }
 
     /**
@@ -485,8 +527,8 @@ public class TrainControllerImpl implements TrainController{
      * If the property name is not found, it prints an error message to the console.
      * After setting the property, it does not calculate power.
      *
-     * @param propertyName  The name of the property to be set.
-     * @param newValue      The new value to be set for the property.
+     * @param propertyName The name of the property to be set.
+     * @param newValue     The new value to be set for the property.
      */
 
     public void setValue(ControllerProperty propertyName, Object newValue) {
@@ -496,8 +538,15 @@ public class TrainControllerImpl implements TrainController{
             case OVERRIDE_SPEED -> this.overrideSpeed = convertVelocity((double) newValue, MPH, MPS);
             case COMMAND_SPEED -> this.commandSpeed = convertVelocity((double) newValue, MPH, MPS);
             case CURRENT_SPEED -> this.currentSpeed = convertVelocity((double) newValue, MPH, MPS);
-            case SERVICE_BRAKE -> {this.serviceBrake = (boolean) newValue; sBrakeGUI = (boolean) newValue;}
-            case EMERGENCY_BRAKE -> {this.emergencyBrake = (boolean) newValue; eBrakeGUI = (boolean) newValue; clearPassengerEBrake();}
+            case SERVICE_BRAKE -> {
+                this.serviceBrake = (boolean) newValue;
+                sBrakeGUI = (boolean) newValue;
+            }
+            case EMERGENCY_BRAKE -> {
+                this.emergencyBrake = (boolean) newValue;
+                eBrakeGUI = (boolean) newValue;
+                clearPassengerEBrake();
+            }
             case KI -> this.Ki = (double) newValue;
             case KP -> this.Kp = (double) newValue;
             case POWER -> this.power = convertPower((double) newValue, HORSEPOWER, WATTS);
@@ -506,7 +555,8 @@ public class TrainControllerImpl implements TrainController{
             case LEFT_DOORS -> this.leftDoors = (boolean) newValue;
             case RIGHT_DOORS -> this.rightDoors = (boolean) newValue;
             case SET_TEMPERATURE -> this.setTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
-            case CURRENT_TEMPERATURE ->  this.currentTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
+            case CURRENT_TEMPERATURE ->
+                    this.currentTemperature = convertTemperature((double) newValue, FAHRENHEIT, CELSIUS);
             case ANNOUNCEMENTS -> this.announcements = (boolean) newValue;
             case SIGNAL_FAILURE -> this.signalFailure = (boolean) newValue;
             case BRAKE_FAILURE -> this.brakeFailure = (boolean) newValue;
@@ -521,7 +571,7 @@ public class TrainControllerImpl implements TrainController{
             case ERROR -> System.out.println("Error is a read-only property");
             default -> System.err.println("Property " + propertyName + " not found");
         }
-        logger.info("TrainController Value {} set to {} from GUI.",propertyName,newValue);
+        logger.info("TrainController Value {} set to {} from GUI.", propertyName, newValue);
     }
 
 
@@ -532,63 +582,82 @@ public class TrainControllerImpl implements TrainController{
         return train;
     }
 
-    public int  getID() {
+    public int getID() {
         return this.trainID;
     }
-    public double  getSpeed() {
+
+    public double getSpeed() {
         return this.currentSpeed;
     }
-    public double  getAcceleration() {
+
+    public double getAcceleration() {
         return this.train.getAcceleration();
     }
-    public double getTimeInterval(){
+
+    public double getTimeInterval() {
         return TIME_STEP;
     }
-    public double  getPower() {
+
+    public double getPower() {
         return this.power;
     }
+
     public boolean getServiceBrake() {
         return this.serviceBrake;
     }
+
     public boolean getEmergencyBrake() {
         return this.emergencyBrake;
     }
-    public double  getCommandSpeed() {
+
+    public double getCommandSpeed() {
         return this.commandSpeed;
     }
-    public int     getAuthority() {
+
+    public int getAuthority() {
         return this.authority;
     }
-    public double  getKi() {
+
+    public double getKi() {
         return this.Ki;
     }
-    public double  getKp() {
+
+    public double getKp() {
         return this.Kp;
     }
-    public double  getOverrideSpeed() {
+
+    public double getOverrideSpeed() {
         return this.overrideSpeed;
     }
+
     public boolean getAutomaticMode() {
         return this.automaticMode;
     }
+
     public TrainControllerSubject getSubject() {
         return this.subject;
     }
+
     public boolean getExtLights() {
         return this.externalLights;
     }
+
     public boolean getIntLights() {
         return this.internalLights;
     }
+
     public boolean getAnnouncements() {
         return this.announcements;
     }
+
     public boolean getSignalFailure() {
         return this.signalFailure;
     }
+
     public boolean getBrakeFailure() {
         return this.brakeFailure;
     }
+
     public boolean getPowerFailure() {
         return this.powerFailure;
     }
@@ -603,31 +672,39 @@ public class TrainControllerImpl implements TrainController{
         return false;
     }
 
-    public double  getSpeedLimit() {
+    public double getSpeedLimit() {
         return this.speedLimit;
     }
+
     public boolean getLeftDoors() {
         return this.leftDoors;
     }
+
     public boolean getRightDoors() {
         return this.rightDoors;
     }
-    public double  getSetTemperature() {
+
+    public double getSetTemperature() {
         return this.setTemperature;
     }
-    public double  getCurrentTemperature() {
+
+    public double getCurrentTemperature() {
         return this.currentTemperature;
     }
-    public String getNextStationName(){
+
+    public String getNextStationName() {
         return this.nextStationName;
     }
-    public boolean getLeftPlatform(){
+
+    public boolean getLeftPlatform() {
         return this.leftPlatform;
     }
-    public boolean getRightPlatform(){
+
+    public boolean getRightPlatform() {
         return this.rightPlatform;
     }
-    public boolean getInTunnel(){
+
+    public boolean getInTunnel() {
         return this.inTunnel;
     }
 
@@ -636,54 +713,113 @@ public class TrainControllerImpl implements TrainController{
         return this.currentBeacon;
     }
 
-    public double getGrade(){
+    public double getGrade() {
         return this.grade;
     }
 
-    private String findNextStationName(){
-        ControllerBlock potentialStation;
-        for(Integer i : currentBeacon.blockIndices()){
-            potentialStation = blockLookup.get(i);
-            if(potentialStation.isStation()){
-                return potentialStation.stationName();
-            }
+    private String findNextStationName() {
+        ControllerBlock nextBlock = getBlock(currentBeacon.endId());
+        if(currentBeacon != null && nextBlock != null && nextBlock.isStation()){
+            return nextBlock.stationName();
         }
         return "Awaiting Beacon..";
     }
 
+
+
+
+    private Beacon previousBeacon;
+
+//    @Override
+//    public void updateBeacon(Beacon beacon) {
+//        logger.warn("Updating Beacon: {}", beacon);
+//        if (currentBeacon == null) {
+//            currentBeacon = beacon;
+//        } else {
+//            ControllerBlock currentSourceBlock = getBlock(currentBeacon.sourceId());
+//            ControllerBlock updatedSourceBlock = getBlock(beacon.sourceId());
+//
+//            if (previousBeacon != null) {
+//                ControllerBlock previousSourceBlock = getBlock(previousBeacon.sourceId());
+//
+//                if (previousSourceBlock.blockNumber() == updatedSourceBlock.blockNumber()) {
+//                    // Entering a switch or station
+//                    if (updatedSourceBlock.isStation()) {
+//                        logger.info("Arriving at station: {}", updatedSourceBlock.stationName());
+//                    } else {
+//                        logger.info("Entering switch: {}", updatedSourceBlock.blockNumber());
+//                    }
+//                } else if (currentSourceBlock.blockNumber() == previousSourceBlock.blockNumber()) {
+//                    // Exiting a switch or station
+//                    if (previousSourceBlock.isStation()) {
+//                        logger.info("Leaving station: {}", previousSourceBlock.stationName());
+//                    } else {
+//                        logger.info("Exiting switch: {}", previousSourceBlock.blockNumber());
+//                    }
+//                }
+//            }
+//
+//            this.previousBeacon = currentBeacon;
+//            this.currentBeacon = beacon;
+//            this.setNextStationName(findNextStationName());
+//        }
+//        currentBeacon.blockIndices().pollFirst();
+//    }
+
+
     @Override
     public void updateBeacon(Beacon beacon) {
         logger.warn("Updating Beacon: {}", beacon);
-        ControllerBlock thisStationOrSwitch = blockLookup.get(beacon.startId());
-        ControllerBlock nextStationOrSwitch = blockLookup.get(beacon.endId());
-        ControllerBlock nextBeaconBlock = blockLookup.get(beacon.blockIndices().peekFirst());
-        this.currentBeacon = beacon;
-        boolean entryBeacon = (currentBlock == nextBeaconBlock);
+        if (currentBeacon != null) {
+            boolean isEnteringJunction = currentBeacon.endId().equals(beacon.sourceId());
+            boolean isExitingJunction = currentBeacon.sourceId().equals(beacon.sourceId());
 
 
-        if(entryBeacon){ //Block is the same, next block will be startID
-            this.currentBlock = thisStationOrSwitch;
-            if(thisStationOrSwitch.isStation()) {
-                //Arriving at <next station name>
+            boolean backWardsBeacon = currentBeacon.sourceId().equals(beacon.endId());
 
-                logger.info("Arriving at {}", thisStationOrSwitch.stationName());
-            }else{
+
+            ControllerBlock block =  getBlock(beacon.sourceId());
+
+            if (isEnteringJunction && !backWardsBeacon) {
+               if(block.isStation()) {
+                    logger.warn("Arriving at station: {}", block.stationName());
+                }else{
+                    logger.warn("ENTERING SWITCH: {}", block.blockNumber());
+                }
+                currentBeacon = beacon;
                 this.setNextStationName(findNextStationName());
-            }
-        }else{ //Exiting wherever we were
-
-            if(nextStationOrSwitch.isStation()){
-                logger.info("Leaving {}", thisStationOrSwitch.stationName());
-                this.setNextStationName(nextStationOrSwitch.stationName());
-                this.setAnnouncements(true);
-            }else{ //We just left a switch block
+                currentBeacon.blockIndices().pollFirst();
+            } else if (isExitingJunction) {
+                if(block.isStation()) {
+                    logger.warn("Departing from {}", block.stationName());
+                }else{
+                    logger.warn("EXITING SWITCH: {}", block.blockNumber());
+                }
+                beacon.blockIndices().pollFirst();
                 this.setNextStationName(findNextStationName());
+                currentBeacon = beacon;
+
+            } else if (backWardsBeacon) {
+
+                currentBlock = getBlock(currentBeacon.sourceId());
+
+                logger.warn("Wrong beacon direction, rejecting beacon: {}", beacon);
+            }else {
+                logger.warn("Beacon is not related to current block: {}", beacon);
+                currentBeacon = beacon;
+                currentBeacon.blockIndices().pollFirst();
             }
+        }else{
+            currentBeacon = beacon;
+            currentBeacon.blockIndices().pollFirst();
+            this.setNextStationName(findNextStationName());
+            logger.warn("First Beacon: {}", currentBeacon);
         }
-        beacon.blockIndices().pollFirst();
     }
 
-
+    private ControllerBlock getBlock(Integer i) {
+        return blockLookup.get(i);
+    }
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {
         setValue((ControllerProperty) propertyName, newValue);

@@ -122,9 +122,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
     public TrainModelImpl() {
         this.trainID = -1;
         this.track = new TrackLine();
-        this.controller = controllerFactory.createTrainController(this, -1);
         initializeValues();
         this.subject = new TrainModelSubject(this);
+        this.controller = controllerFactory.createTrainController(this, -1);
     }
 
     // Constructor for TrainModelImpl when track and trainID are provided
@@ -133,8 +133,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.trainID = trainID;
         this.track = track;
         this.currentBlock = track.getBlock(0);
-        this.controller = controllerFactory.createTrainController(this, trainID);
         this.subject = new TrainModelSubject(this);
+        this.controller = controllerFactory.createTrainController(this, trainID);
     }
 
     // Method to delete the train
@@ -160,8 +160,6 @@ public class TrainModelImpl implements TrainModel, Notifier {
     // Method to reconcile the train controller values with the train model values
      private void reconcileControllerValues(UpdatedTrainValues controllerValues) {
 
-        this.setServiceBrake(controllerValues.serviceBrake());
-        this.setEmergencyBrake(controllerValues.emergencyBrake());
         this.setPower(controllerValues.power() * numCars);
 
         this.setExtLights(controllerValues.exteriorLights());

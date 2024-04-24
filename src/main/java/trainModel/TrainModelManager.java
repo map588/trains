@@ -306,6 +306,7 @@ public class TrainModelManager {
     }
 
     private void updateChoiceBoxItems() {
+        Platform.runLater(() -> {
         List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
             trainDropDown.setItems(FXCollections.observableArrayList(trainIDs));
 
@@ -319,6 +320,7 @@ public class TrainModelManager {
                 logger.info("No trains available to select");
                 changeTrainView(-1);
             }
+        });
     }
 
     private void setUpCircleColors() {
