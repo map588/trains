@@ -274,16 +274,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.relativeDistance += this.speed * this.TIME_DELTA;
 
         //TEMPERATURE CALCULATION
-        this.elapsedTime += this.TIME_DELTA;
-        if(this.elapsedTime >= 1 && (this.realTemperature < this.setTemperature)) {
-            this.newRealTemperature = this.realTemperature + 1;
-            this.elapsedTime = 0;
-        }
-        else if(this.elapsedTime >= 1 && (this.realTemperature > this.setTemperature)) {
-            this.newRealTemperature = this.realTemperature - 1;
-            this.elapsedTime = 0;
-        }
+        double k = 0.1; // heat transfer coefficient
 
+        double dT = k * (this.setTemperature - this.realTemperature) * this.TIME_DELTA;
+        this.newRealTemperature = this.realTemperature + dT;
     }
 
     // Method to check if the train model is deleted
