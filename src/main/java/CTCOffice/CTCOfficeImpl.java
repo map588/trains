@@ -12,9 +12,12 @@ import Utilities.GlobalBasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static Utilities.TimeConvert.*;
-import static CTCOffice.Properties.OfficeProperties.*;
+
 import java.util.*;
+
+import static CTCOffice.Properties.OfficeProperties.TIME_PROPERTY;
+import static Utilities.TimeConvert.convertClockTimeToDouble;
+import static Utilities.TimeConvert.convertDoubleToClockTime;
 
 /**
  * This class implements the CTCOffice interface and represents the office of the Centralized Traffic Control (CTC).
@@ -110,8 +113,6 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             add( new TrainStop(1, 21, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(2, 25, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
-
-
     }
 
     public void setTrackSystem(TrackSystem trackSystem) {
@@ -119,7 +120,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         logger.info("TrackSystem has been set");
     }
 
-    public void     setBlockOccupancy(Lines line, int blockID, boolean occupied) {
+    public void    setBlockOccupancy(Lines line, int blockID, boolean occupied) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
         logger.info("Block {} on line {} has been set to occupied: {}", blockID, line, occupied);
     }
@@ -222,15 +223,25 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         trainLocations.remove(trainID);
         trainIDs.remove(trainID);
     }
+    //TODO : WIP
     void DispatchTrain(Lines line , int trainID, int carCount, double dispatchTime){
         logger.info("CTC Dispatching train {} on line {}", trainID, line);
         trackSystem.dispatchTrain(line, trainID);
-        trainSchedule.remove(dispatchTime);
-        dispatchTimes.remove(0);
+        //trainSchedule.remove(dispatchTime);
+        //dispatchTimes.remove(0);
         trainIDs.add(trainID);
         trainLocations.put(trainID, BlockIDs.of(0, line));
         sendAuthority(line, 0, 1900);
         sendSpeed(line, 0, 40);
+    }
+
+    void DispatchTrain(Lines line , int trainID){
+        logger.info("CTC Dispatching train {} on line {}", trainID, line);
+        trackSystem.dispatchTrain(line, trainID);
+        trainIDs.add(trainID);
+        trainLocations.put(trainID, BlockIDs.of(0, line));
+        sendAuthority(line, 0, 20000);
+        sendSpeed(line, 0, 19.6);
     }
 
     void sendSpeed(Lines line, int blockID, double speed) {
