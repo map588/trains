@@ -116,6 +116,7 @@
         </ImageView>
         <TextField fx:id="setKiTextField" layoutX="147.2" layoutY="55.2" prefHeight="20.8" prefWidth="41.6" />
         <TextField fx:id="setKpTextField" layoutX="147.2" layoutY="88.0" prefHeight="20.8" prefWidth="41.6" />
+        <Button fx:id="killTrain" layoutX="240.0" layoutY="55.2" mnemonicParsing="false" prefHeight="20.8" prefWidth="41.6" text="Kill"/>
     </AnchorPane>
     <AnchorPane fx:id="speedControllerPane" layoutX="304.0" layoutY="195.0" prefHeight="300.0" prefWidth="396.8">
         <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#dddddd" height="370.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" width="397.0" />

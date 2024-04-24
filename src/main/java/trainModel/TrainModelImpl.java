@@ -139,9 +139,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     // Method to delete the train
     public void delete() {
-        controller.delete();
         this.subject.subjectDelete();
         this.deleted = true;
+        controller.delete();
     }
 
     // Method to notify Subject and GUI of changes in the train model

@@ -664,6 +664,9 @@ public class TrainControllerImpl implements TrainController {
 
     @Override
     public void delete() {
+        if(!this.train.isDeleted()){
+            this.train.delete();
+        }
         this.subject.delete();
     }
 

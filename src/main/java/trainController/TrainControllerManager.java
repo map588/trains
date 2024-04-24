@@ -33,6 +33,7 @@ public class TrainControllerManager {
     public AnchorPane cabinSettingsPane;
     public AnchorPane speedControllerPane;
     public AnchorPane brakePane;
+    public Button killTrain;
     @FXML
     AnchorPane masterTrainControllerPane;
     @FXML
@@ -343,6 +344,15 @@ public class TrainControllerManager {
                 alert.setContentText("Arriving at " + nextStationText.getText());
                 alert.showAndWait();
             }
+        });
+
+        killTrain.setOnAction(event -> {
+            if(TrainControllerFactory.getTrainLock()){
+                logger.warn("Train Controller is locked, unable to kill train");
+                return;
+            }
+            logger.warn("Killing Train Controller for train ID: {}", currentSubject.getController().getID());
+            currentSubject.getController().delete();
         });
     }
 
