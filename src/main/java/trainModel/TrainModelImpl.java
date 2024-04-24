@@ -497,13 +497,13 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     //Vital Getters
     public int getAuthority() {
-        return this.authority;
+        return (signalFailure)? -1 : this.authority;
     }
     public int getTrainNumber() {
         return this.trainID;
     }
     public double getCommandSpeed() {
-        return this.commandSpeed;
+        return (signalFailure)? -1 : this.commandSpeed;
     }
     public double getSpeed() {
         return this.speed;

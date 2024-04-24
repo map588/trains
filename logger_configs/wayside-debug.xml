@@ -5,10 +5,10 @@
         </encoder>
     </appender>
 
-        <logger name="Trains.trackModel" level="INFO"/>
+        <logger name="trackModel" level="INFO"/>
         <logger name="CTCOffice" level="INFO"/>
-        <logger name="Trains.trainModel" level="ERROR"/>
-        <logger name="Trains.trainController" level="ERROR"/>
+        <logger name="trainModel" level="ERROR"/>
+        <logger name="trainController" level="ERROR"/>
         <logger name="waysideController" level="INFO"/>
 
     <root level="INFO">

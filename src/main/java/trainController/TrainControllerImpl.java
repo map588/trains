@@ -304,18 +304,16 @@ public class TrainControllerImpl implements TrainController {
             if (blockID != null) {
                 currentBlock = blockLookup.get(blockID);
                 if(currentBeacon.blockIndices().peekFirst() == null){
-                    logger.info("I RAN OUT OF BEACON! {}", blockID);
+                    logger.info("1 Block until Train Controller is blind. {}", blockID);
                 }
             }else {
                 currentBlock = blockLookup.get(currentBeacon.endId());
             }
 
-
-
             logger.warn("Controller thinks its on block {}", currentBlock.blockNumber());
 
-
             if (currentBlock.isStation() && power == 0) {
+
                 onStation();
             }
 
