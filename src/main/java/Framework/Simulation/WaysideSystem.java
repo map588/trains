@@ -189,14 +189,14 @@ public class WaysideSystem {
 
     public void update() {
          //For each WaysideController in the controllerList, run its PLC
-//        try {
-//            waysideExecutor.invokeAll(waysideQueue);
-//        } catch (InterruptedException e) {
-//            logger.error("Wayside Update Interrupted", e);
-//        }
-        for(Callable<Void> task : waysideQueue) {
-            waysideExecutor.submit(task);
+        try {
+            waysideExecutor.invokeAll(waysideQueue);
+        } catch (InterruptedException e) {
+            logger.error("Wayside Update Interrupted", e);
         }
+//        for(Callable<Void> task : waysideQueue) {
+//            waysideExecutor.submit(task);
+//        }
     }
 
     private String findHardwareCOMPort() {
