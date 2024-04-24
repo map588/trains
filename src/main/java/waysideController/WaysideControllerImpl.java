@@ -44,6 +44,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final PLCProgram[] plcPrograms;
     private final Stack<PLCChange>[] plcResults;
     private Stack<PLCChange> currentPLCResult;
+    private boolean isRunningPLC;
+    private Stack<Integer> occupancyBlockIDStack;
+    private Stack<Boolean> occupancyValStack;
+    private Map<Integer, Integer> authorityMap = new HashMap<>();
+    private Map<Integer, Double> speedMap = new HashMap<>();
 
     // The subject that the wayside controller is attached to for GUI updates
     private final WaysideControllerSubject subject;
@@ -110,12 +115,16 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      */
     @Override
     public void runPLC() {
-        if(!maintenanceMode) {
-
+        if(!maintenanceMode && !isRunningPLC()) {
+            setRunningPLC(true);
             for(int plcIndex = 0; plcIndex < plcPrograms.length; plcIndex++) {
                 currentPLCResult = plcResults[plcIndex];
+                currentPLCResult.clear();
                 plcPrograms[plcIndex].run();
 //                System.out.println("PLC Results[" + plcIndex + "]: " + plcResults[plcIndex].size() + " " + currentPLCResult.size());
+                if(plcResults[plcIndex].size() > 0) {
+                    logger.info("PLC changes size: {}, {}", plcResults[plcIndex].size(), this);
+                }
             }
 
             int changeSize = plcResults[0].size();
@@ -123,6 +132,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                 PLCChange change = plcResults[0].pop();
 
 //                System.out.println("PLC Change: " + change.changeType + " " + change.blockID + " " + change.changeValue + " " + plcResults[0].size());
+                logger.info("PLC Change: {} {} {}", change.changeType(), change.blockID(), change.changeValue());
 
                 for(int plcIndex = 1; plcIndex < plcResults.length; plcIndex++) {
                     PLCChange otherChange = plcResults[plcIndex].pop();
@@ -142,7 +152,27 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                     default -> throw new RuntimeException("Invalid PLC change type");
                 }
             }
+            setRunningPLC(false);
+
+            while(!occupancyBlockIDStack.empty()) {
+                logger.info("Setting occupancy for block {} to {}", occupancyBlockIDStack.peek(), occupancyValStack.peek());
+                setOccupancy(occupancyBlockIDStack.pop(), occupancyValStack.pop());
+            }
         }
+
+        for(WaysideBlock block : blockMap.values()) {
+            if(block.isOccupied()) {
+                trackModel.setTrainAuthority(block.getBlockID(), block.getBooleanAuth() ? RESUME_TRAIN_SIGNAL : STOP_TRAIN_SIGNAL);
+            }
+        }
+    }
+
+    private synchronized boolean isRunningPLC() {
+        return isRunningPLC;
+    }
+
+    private synchronized void setRunningPLC(boolean runningPLC) {
+        isRunningPLC = runningPLC;
     }
 
     /**
@@ -168,6 +198,27 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
+//        if(isRunningPLC()) {
+//            occupancyBlockIDStack.push(blockID);
+//            occupancyValStack.push(occupied);
+//        }
+//        else {
+            setOccupancy(blockID, occupied);
+//        }
+
+        if(occupied) {
+            if(authorityMap.containsKey(blockID)) {
+                CTCSendAuthority(blockID, authorityMap.get(blockID));
+                authorityMap.remove(blockID);
+            }
+            if(speedMap.containsKey(blockID)) {
+                CTCSendSpeed(blockID, speedMap.get(blockID));
+                speedMap.remove(blockID);
+            }
+        }
+    }
+
+    private void setOccupancy(int blockID, boolean occupied) {
         logger.info("Setting occupancy for block {} to {}", blockID, occupied);
         WaysideBlock block = blockMap.get(blockID);
         if(!block.inMaintenance() && block.isOccupied() != occupied) {
@@ -189,6 +240,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setCommandedSpeed(blockID, speed);
+        }
+        else {
+            speedMap.put(blockID, speed);
         }
     }
 
@@ -246,16 +300,16 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             WaysideBlock block = blockMap.get(blockID);
             block.setBooleanAuth(auth);
 
-            if(trackModel != null && block.isOccupied()) {
-                if (!auth) {
-                    System.out.println("Stoppping train");
-                    trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
-                }
-                else {
-                    System.out.println("Resuming train");
-                    trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
-                }
-            }
+//            if(trackModel != null && block.isOccupied()) {
+//                if (!auth) {
+//                    System.out.println("Stoppping train");
+//                    trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
+//                }
+//                else {
+//                    System.out.println("Resuming train");
+//                    trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
+//                }
+//            }
         }
     }
 
@@ -359,7 +413,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
 
         if(!block.inMaintenance() && block.getBooleanAuth() != auth) {
-//            System.out.println("setAuthorityPLC: " + blockID + " " + auth);
+//            logger.info("setAuthorityPLC: " + blockID + " " + auth);
             currentPLCResult.push(new PLCChange("auth", blockID, auth));
         }
     }
@@ -369,14 +423,14 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         WaysideBlock block = blockMap.get(blockID);
         block.setBooleanAuth(auth);
 
-        if(trackModel != null && block.isOccupied()) {
-            if (!auth) {
-                trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
-            }
-            else {
-                trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
-            }
-        }
+//        if(trackModel != null && block.isOccupied()) {
+//            if (!auth) {
+//                trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
+//            }
+//            else {
+//                trackModel.setTrainAuthority(blockID, RESUME_TRAIN_SIGNAL);
+//            }
+//        }
     }
 
     @Override
@@ -435,6 +489,9 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
         if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setTrainAuthority(blockID, blockCount);
+        }
+        else {
+            authorityMap.put(blockID, blockCount);
         }
     }
 
