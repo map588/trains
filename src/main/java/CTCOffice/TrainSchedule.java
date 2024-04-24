@@ -215,46 +215,33 @@ public class TrainSchedule {
             int blocksAuthority = ((TrackLayout.indexOf(stop.getStationBlockID()) < visited) ?
                     (TrackLayout.lastIndexOf(stop.getStationBlockID()) - visited) :
                     (TrackLayout.indexOf(stop.getStationBlockID()) - visited));
-            blocksAuthority += 1;
-            int stationLength = TrackLayout.indexOf(stop.getStationBlockID());
-            Double metersAuthority =  blockSubjectMap.getSubject(
-                    BlockIDs.of(TrackLayout.get(stationLength), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength();
+
+            //blocksAuthority += 1;
+            int station = TrackLayout.indexOf(stop.getStationBlockID());
+            double metersAuthority =  (blockSubjectMap.getSubject(
+                    BlockIDs.of(TrackLayout.get(station), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength() / 2);
             //making meters authority
-            for (int j = visited; j < TrackLayout.indexOf(stop.getStationBlockID()); j++) {
-                if (j == -1) {
-                    continue;
+                for (int j = visited; j < TrackLayout.indexOf(stop.getStationBlockID()); j++) {
+                    double blockLength = blockSubjectMap.getSubject(
+                            BlockIDs.of(TrackLayout.get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength();
+                    metersAuthority += blockLength;
+                    System.out.println("Adding " + blockLength + " to authority of stop " + stop.getStopIndex() + " of train " + trainID);
                 }
-                metersAuthority += blockSubjectMap.getSubject(
-                        BlockIDs.of(TrackLayout.get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength();
-                    System.out.println("Adding " +
-                            blockSubjectMap.getSubject(BlockIDs.of(TrackLayout.get(j), Enum.valueOf(Lines.class, line)))
-                                    .getBlockInfo().getLength()
-                            + " to authority of stop " + stop.getStopIndex() + " of train " + trainID);
-            }
-            for (int j = 0; j < blocksAuthority; j++) {
-                if(visited + j == -1) {
-                    continue;
-                }
+            for (int j = 0; j <= blocksAuthority; j++) {
                 double blockDistance =
                         blockSubjectMap.getSubject(BlockIDs.of(TrackLayout.get(visited + j), Enum.valueOf(Lines.class, line)))
                                 .getBlockInfo().getLength();
-                stop.getAuthorityList().add(metersAuthority - blockDistance);
+                stop.getAuthorityList().add(metersAuthority);
                 stop.getRoutePath().add(TrackLayout.get(visited + j));
                 System.out.println("Authority : "
                         + stop.getAuthorityList().get(j)
                         + " set for the " + j + "th block of stop "
                         + stop.getStopIndex() + " of train "
                         + trainID + " with block "
-                        + TrackLayout.get(visited + j)
+                        + stop.getRoutePath().get(j)
                 );
                 metersAuthority -= blockDistance;
             }
-//            int blocks = blocksAuthority;
-//            for (int j = 0; j < blocksAuthority; j++) {
-//                stop.getAuthorityList().add((double)blocks--);
-//                stop.getRoutePath().add(TrackLayout.get(visited + j));
-//            }
-
             visited += blocksAuthority;
         }
     }
