@@ -271,7 +271,12 @@ public class TrainControllerManager {
     }
 
     private void bindStringText(Text text){
-        appendListener(currentSubject.getProperty(ControllerProperty.NEXT_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> text.setText((String)newVal)));
+        appendListener(currentSubject.getProperty(NEXT_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> text.setText((String)newVal)));
+        appendListener(currentSubject.getProperty(ARRIVAL_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> {
+            if(newVal != null){
+                sendAlert("Arriving at " + newVal);
+            }
+        }));
     }
 
     private void updateIndicator(Color color, Circle indicator, boolean isActive) {

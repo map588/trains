@@ -119,13 +119,14 @@ public class Main {
             CountDownLatch latch = new CountDownLatch(2);
 
             // Submit tasks to the thread pool for waysideSystem and trainSystem
+
             synchronizationPool.submit(() -> {
-                waysideSystem.update();
+                trainSystem.update();
                 latch.countDown();
             });
 
             synchronizationPool.submit(() -> {
-                trainSystem.update();
+                waysideSystem.update();
                 latch.countDown();
             });
 

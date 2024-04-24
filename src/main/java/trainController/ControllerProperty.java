@@ -33,7 +33,8 @@ public enum ControllerProperty {
      NEXT_STATION("next_Station"),
      GRADE("grade"),
      TRAIN_ID("train_ID"),
-     ERROR("error");
+     ERROR("error"),
+     ARRIVAL_STATION("arrival_Station");
 
      private final String propertyName;
 

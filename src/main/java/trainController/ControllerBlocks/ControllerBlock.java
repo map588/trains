@@ -4,11 +4,11 @@ import Utilities.Enums.BlockType;
 import Utilities.Records.BasicBlock;
 
 public record ControllerBlock(int blockNumber,
-                              double blockLength,
-                              double speedLimit,
+                              double  blockLength,
+                              double  speedLimit,
                               boolean isUnderground,
-                              String Doorside,
-                              String stationName,
+                              String  Doorside,
+                              String  stationName,
                               boolean isStation,
                               boolean isCrossing,
                               boolean isSwitch

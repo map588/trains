@@ -122,6 +122,7 @@ public class TrainControllerSubject implements NotifierEnum {
         properties.put(TRAIN_ID, new SimpleIntegerProperty(controller.getID()));
         properties.put(GRADE, new SimpleDoubleProperty(controller.getGrade()));
         properties.put(ERROR, new SimpleStringProperty(""));
+        properties.put(ARRIVAL_STATION, new SimpleStringProperty(""));
     }
 
 

@@ -91,6 +91,7 @@ public class TrainControllerImpl implements TrainController {
 
 
     private String nextStationName;
+    private String arrivalStation;
 
     private final int trainID;
     private final TrainControllerSubject subject;
@@ -184,8 +185,13 @@ public class TrainControllerImpl implements TrainController {
                     setServiceBrake(sBrakeGUI);
                 }
                 rollingError = 0;
-            }
+            }else if (currentBlock.isStation() && power == 0 && currentSpeed == 0) {
+                String platformValues = currentBlock.Doorside();
 
+                setLeftPlatform(platformValues.contains("LEFT"));
+                setRightPlatform(platformValues.contains("RIGHT"));
+                onStation();
+            }
 
             double error = setSpeed - currentSpeed;
             double proportionalTerm = Kp * error;
@@ -251,7 +257,7 @@ public class TrainControllerImpl implements TrainController {
         if (brakeFailure) {
             setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(this.sBrakeGUI);
+            setServiceBrake(false);
         } else {
             setBrakeFailure(badBrakes);
         }
@@ -303,19 +309,16 @@ public class TrainControllerImpl implements TrainController {
 
             if (blockID != null) {
                 currentBlock = blockLookup.get(blockID);
-                if(currentBeacon.blockIndices().peekFirst() == null){
-                    logger.info("1 Block until Train Controller is blind. {}", blockID);
+                if(currentBeacon.blockIndices().peekFirst() == null) {
+                    logger.warn("Runnin low on Beacon..");
                 }
             }else {
                 currentBlock = blockLookup.get(currentBeacon.endId());
+                logger.warn("FRESH OUT OF BEACON AT {}!", currentBlock.blockNumber());
             }
 
             logger.warn("Controller thinks its on block {}", currentBlock.blockNumber());
 
-            if (currentBlock.isStation() && power == 0) {
-
-                onStation();
-            }
 
             setAuthority((int) internalAuthority);
             setSpeedLimit(currentBlock.speedLimit());
@@ -389,25 +392,30 @@ public class TrainControllerImpl implements TrainController {
     }
 
     public void setAuthority(int auth) {
-        if(auth == -1){
-            setSignalFailure(true);
-        }else if(signalFailure){
-            setSignalFailure(false);
-        }
 
-        if (auth == STOP_TRAIN_SIGNAL) {
-            waysideStop = true;
-            setServiceBrake(true);
-            logger.warn("Wayside Stop: T{}", trainID);
-        } else if (auth == RESUME_TRAIN_SIGNAL) {
-            waysideStop = false;
-            setServiceBrake(false);
-            logger.debug("Wayside Resume: T{}", trainID);
-        } else {
-            this.authority = auth;
-            this.internalAuthority = authority;
-            notificationExecutor.execute(() ->
-                    subject.notifyChange(AUTHORITY, authority));
+
+        switch(auth) {
+            case -1:
+                setSignalFailure(true);
+                break;
+            case STOP_TRAIN_SIGNAL:
+                waysideStop = true;
+                setServiceBrake(true);
+                logger.warn("Wayside Stop: T{}", trainID);
+                break;
+            case RESUME_TRAIN_SIGNAL:
+                waysideStop = false;
+                setServiceBrake(false);
+                logger.warn("Wayside Resume: T{}", trainID);
+                break;
+            default:
+                if (signalFailure) {
+                    setSignalFailure(false);
+                }
+                this.authority = auth;
+                this.internalAuthority = authority;
+                notificationExecutor.execute(() -> subject.notifyChange(AUTHORITY, authority));
+                break;
         }
     }
 
@@ -439,6 +447,10 @@ public class TrainControllerImpl implements TrainController {
         notificationExecutor.execute(() -> subject.notifyChange(EMERGENCY_BRAKE, brake));
     }
 
+    public void setArrivalStation(String arrivalStation) {
+        this.arrivalStation = arrivalStation;
+        notificationExecutor.execute(() -> subject.notifyChange(ARRIVAL_STATION, arrivalStation));
+    }
 
     public void setKi(double Ki) {
         this.Ki = Ki;
