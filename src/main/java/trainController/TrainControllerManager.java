@@ -336,13 +336,8 @@ public class TrainControllerManager {
             BooleanProperty announceProp = currentSubject.getBooleanProperty(ANNOUNCEMENTS);
             currentSubject.setProperty(ANNOUNCEMENTS, !announceProp.get());
 
-            queueNotification(ANNOUNCEMENTS,"");
             if (!nextStationText.getText().contains("yard") && !nextStationText.getText().contains("Yard")) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Arrival");
-                alert.setHeaderText(null);
-                alert.setContentText("Arriving at " + nextStationText.getText());
-                alert.showAndWait();
+                sendAlert("Arriving at " + nextStationText.getText());
             }
         });
 
@@ -354,6 +349,15 @@ public class TrainControllerManager {
             logger.warn("Killing Train Controller for train ID: {}", currentSubject.getController().getID());
             currentSubject.getController().delete();
         });
+    }
+
+    private void sendAlert(String alertMessage){
+        queueNotification(ANNOUNCEMENTS,alertMessage);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Arrival");
+        alert.setHeaderText(null);
+        alert.setContentText(alertMessage);
+        alert.showAndWait();
     }
 
 
@@ -532,7 +536,7 @@ public class TrainControllerManager {
             case SET_TEMPERATURE -> "\nTemperature set to \n" + value + " \u00B0F";
             case KI -> "\nKi set to \n" + value;
             case KP -> "\nKp set to \n" + value;
-            case ANNOUNCEMENTS -> "\nAnnouncements Created\n";
+            case ANNOUNCEMENTS -> "\nAnnouncement: " + value +"\n";
             default -> "\nTrain is running";
         };
 
@@ -586,7 +590,9 @@ public class TrainControllerManager {
     private final Object lock = new Object();
     private Future<?> scheduledFuture = null;
     private Future<?> debounceFuture = null;
+
     private final long debounceDelay = 100; // Debounce delay in milliseconds for sendNotification
+
     private final LinkedBlockingDeque<TextUpdateTask> textUpdateQueue = new LinkedBlockingDeque<>();
 
     private void runQueue() {

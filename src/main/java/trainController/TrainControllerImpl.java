@@ -70,6 +70,7 @@ public class TrainControllerImpl implements TrainController {
     private boolean eBrakeGUI = false;
     private boolean sBrakeGUI = false;
     private boolean waysideStop;
+    private boolean trainStop = false;
 
     private double Ki = 20;
     private double Kp = 100;
@@ -162,7 +163,7 @@ public class TrainControllerImpl implements TrainController {
                 this.rightDoors
         );
     }
-
+    //  Calculate power -> (train does shit) ->  check failures -> repeat
     public double calculatePower(double currentSpeed) {
 
         if (waysideStop) {
@@ -175,12 +176,14 @@ public class TrainControllerImpl implements TrainController {
 
             double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
 
-
-            if (power == 0 && currentSpeed > 0 && currentSpeed < 1) {
+            //If the train is coming to a stop and its intentional
+            if (power == 0 && currentSpeed > 0 && currentSpeed <= 2) {
                 setAuthority((int) internalAuthority);
-                if(internalAuthority > 10){
-                    setSpeed = 5;
+                if(internalAuthority > 5 && !waysideStop){
+                    setSpeed = 2;
+                    setServiceBrake(sBrakeGUI);
                 }
+                rollingError = 0;
             }
 
 
