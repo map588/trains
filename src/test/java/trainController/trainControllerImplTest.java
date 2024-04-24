@@ -103,6 +103,7 @@ class trainControllerImplTest extends BaseTest {
         assertFalse(controller.getServiceBrake());
     }
 
+    // This No longer Works and should fail
     @Test
     void testSignalFailures(){
 
@@ -124,5 +125,13 @@ class trainControllerImplTest extends BaseTest {
         assertFalse(controller.getCommandSpeed() == -1);
         assertTrue(controller.getCommandSpeed() == 40);
 
+    }
+
+    @Test
+    void testFailureCasesControllerOnly(){
+        controller.setPower(400);
+        controller.checkFailures(0);
+        
+        assertTrue(controller.getPowerFailure());
     }
 }

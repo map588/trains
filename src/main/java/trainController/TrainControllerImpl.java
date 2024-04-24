@@ -237,9 +237,6 @@ public class TrainControllerImpl implements TrainController {
             brakeCount = 0;
         }
 
-
-        setSignalFailure(this.commandSpeed == -1 || this.authority == -1);
-
         if (powerFailure) {
             train.setPower(3);
             setPowerFailure((train.getPower() < 3));
@@ -254,6 +251,13 @@ public class TrainControllerImpl implements TrainController {
             setServiceBrake(this.sBrakeGUI);
         } else {
             setBrakeFailure(badBrakes);
+        }
+
+        if(signalFailure){
+            if(train.getCommandSpeed() != -1 && train.getAuthority() != -1){
+                setCommandSpeed(train.getCommandSpeed());
+                setAuthority(train.getAuthority());
+            }
         }
 
         if (brakeFailure || powerFailure || signalFailure) {
@@ -384,6 +388,11 @@ public class TrainControllerImpl implements TrainController {
     }
 
     public void setAuthority(int auth) {
+        if(auth == -1){
+            setSignalFailure(true);
+        }else if(signalFailure){
+            setSignalFailure(false);
+        }
 
         if (auth == STOP_TRAIN_SIGNAL) {
             waysideStop = true;
@@ -402,6 +411,11 @@ public class TrainControllerImpl implements TrainController {
     }
 
     public void setCommandSpeed(double speed) {
+        if(speed == -1){
+            setSignalFailure(true);
+        }else if(signalFailure){
+            setSignalFailure(false);
+        }
         this.commandSpeed = speed;
         notificationExecutor.execute(() -> subject.notifyChange(COMMAND_SPEED, convertVelocity(speed, MPS, MPH)));
         //calculatePower());

@@ -68,8 +68,8 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int) (screenSize.getWidth() * 0.75);
-        int height = (int) (screenSize.getHeight() * 0.75);
+        int width = (int) (screenSize.getWidth() * 0.65);
+        int height = (int) (screenSize.getHeight() * 0.65);
 
 
         Scene scene = new Scene(root,width,height);

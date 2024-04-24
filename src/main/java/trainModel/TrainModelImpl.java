@@ -309,9 +309,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     // Method to set the commanded of the train model and pass the value to the train controller
     public void setCommandSpeed(double speed) {
-
-        this.commandSpeed = (signalFailure) ? -1 : speed;
-        controller.setCommandSpeed(commandSpeed);
+        controller.setCommandSpeed((signalFailure) ? -1 : speed);
+        this.commandSpeed =  speed;
 
         listeningExecutor.execute(() -> {
         notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(commandSpeed,MPS,MPH));
@@ -322,8 +321,9 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     // Method to set the authority of the train model and pass the value to the train controller
     public void setAuthority(int authority) {
-        this.authority = (signalFailure) ?  -1 : authority;
-        controller.setAuthority(authority);
+
+        controller.setAuthority((signalFailure) ?  -1 : authority);
+        this.authority = authority;
 
         listeningExecutor.execute(() -> {
         logger.info("Train {} <=     Authority: {}",this.trainID, authority);
