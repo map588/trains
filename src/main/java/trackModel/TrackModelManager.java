@@ -75,11 +75,10 @@ public class TrackModelManager {
     private TableColumn<TrackBlockSubject, Double> gradeColumn, elevationColumn, speedLimitColumn;
 
 
-    //subject
-    TrackBlockSubject subject;
-
     //subject list for table
-    ObservableList<TrackBlockSubject> selectedTrackBlockSubject = FXCollections.observableArrayList(LineSubjectMap.getLineSubject(Lines.GREEN));
+    ObservableList<TrackBlockSubject> selectedTrackSubjectList = LineSubjectMap.getLineSubject(Lines.GREEN);
+
+    TrackBlockSubject currentBlockSubject;
 
     @FXML
     public void initialize() {
@@ -145,97 +144,96 @@ public class TrackModelManager {
         });
 
         // Set the items of the table to this subject
-        lineTable.setItems(selectedTrackBlockSubject);
+        lineTable.setItems(selectedTrackSubjectList);
         lineTable.refresh();
     }
 
     //change values based on selection in table
-    public void selectBlock(TrackBlockSubject newProperties) {
-        System.out.println("Selected block");
+    public void selectBlock(TrackBlockSubject newSubject) {
+        System.out.println("Selected block: " + newSubject.getBlockNumber());
+        System.out.println("Signal: " + newSubject.isIsSignal());
 
-        int selectedBlock = newProperties.getBlockNumber();
-        subject = selectedTrackBlockSubject.get(selectedBlock);
-
-        if (subject != null) {
+        if (currentBlockSubject != null) {
             // Unbind stuff here
-            if (subject.isIsStation()) {
-                passEmbarkedValue.textProperty().unbindBidirectional(subject.passEmbarkedProperty());
-                passDisembarkedValue.textProperty().unbindBidirectional(subject.passDisembarkedProperty());
-                ticketSalesValue.textProperty().unbindBidirectional(subject.ticketSalesProperty());
-                nameOfStationLabel.textProperty().unbindBidirectional(subject.nameOfStationProperty());
+            if (currentBlockSubject.isIsStation()) {
+                passEmbarkedValue.textProperty().unbindBidirectional(currentBlockSubject.passEmbarkedProperty());
+                passDisembarkedValue.textProperty().unbindBidirectional(currentBlockSubject.passDisembarkedProperty());
+                ticketSalesValue.textProperty().unbindBidirectional(currentBlockSubject.ticketSalesProperty());
+                nameOfStationLabel.textProperty().unbindBidirectional(currentBlockSubject.nameOfStationProperty());
             }
 
-            if (subject.isIsSwitch()) {
-                switchBlockNumbersDisplay.textProperty().unbindBidirectional(subject.switchBlockIDProperty());
-                switchStateDisplay.textProperty().unbindBidirectional(subject.switchStateProperty());
+            if (currentBlockSubject.isIsSwitch()) {
+                switchBlockNumbersDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchBlockIDProperty());
+                switchStateDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchStateProperty());
             }
 
-            if (subject.isIsSignal()) {
-                signalStateDisplay.textProperty().unbindBidirectional(subject.signalStateProperty());
-                signalBlockNumberDisplay.textProperty().unbindBidirectional(subject.signalIDProperty());
+            if (currentBlockSubject.isIsSignal()) {
+                signalStateDisplay.textProperty().unbindBidirectional(currentBlockSubject.signalStateProperty());
+                signalBlockNumberDisplay.textProperty().unbindBidirectional(currentBlockSubject.signalIDProperty());
             }
 
-            if (subject.isIsCrossing()) {
-                crossingState.textProperty().unbindBidirectional(subject.crossingStateProperty());
+            if (currentBlockSubject.isIsCrossing()) {
+                crossingState.textProperty().unbindBidirectional(currentBlockSubject.crossingStateProperty());
             }
 
-            if (subject.isIsBeacon()) {
-                displayBeaconInfo.textProperty().unbindBidirectional(subject.setBeaconProperty());
+            if (currentBlockSubject.isIsBeacon()) {
+                displayBeaconInfo.textProperty().unbindBidirectional(currentBlockSubject.setBeaconProperty());
                 beaconBlockNumber.textProperty().unbind();
             }
-            elevationColumn.textProperty().unbindBidirectional(subject.blockElevationProperty().asObject());
-            occupiedColumn.textProperty().unbindBidirectional(subject.isOccupiedProperty());
-            gradeColumn.textProperty().unbindBidirectional(subject.blockGradeProperty().asObject());
-            failureColumn.textProperty().unbindBidirectional(subject.failureProperty());
+            elevationColumn.textProperty().unbindBidirectional(currentBlockSubject.blockElevationProperty().asObject());
+            occupiedColumn.textProperty().unbindBidirectional(currentBlockSubject.isOccupiedProperty());
+            gradeColumn.textProperty().unbindBidirectional(currentBlockSubject.blockGradeProperty().asObject());
+            failureColumn.textProperty().unbindBidirectional(currentBlockSubject.failureProperty());
         }
 
+        currentBlockSubject = newSubject;
 
         // Bind stuff here
-        if (subject.isIsStation()) {
-            passEmbarkedValue.textProperty().bindBidirectional(subject.passEmbarkedProperty());
-            passDisembarkedValue.textProperty().bindBidirectional(subject.passDisembarkedProperty());
-            ticketSalesValue.textProperty().bindBidirectional(subject.ticketSalesProperty());
-            nameOfStationLabel.textProperty().bindBidirectional(subject.nameOfStationProperty());
+        if (currentBlockSubject.isIsStation()) {
+            passEmbarkedValue.textProperty().bindBidirectional(currentBlockSubject.passEmbarkedProperty());
+            passDisembarkedValue.textProperty().bindBidirectional(currentBlockSubject.passDisembarkedProperty());
+            ticketSalesValue.textProperty().bindBidirectional(currentBlockSubject.ticketSalesProperty());
+            nameOfStationLabel.textProperty().bindBidirectional(currentBlockSubject.nameOfStationProperty());
         } else {
             passEmbarkedValue.setText("0");
             passDisembarkedValue.setText("0");
             ticketSalesValue.setText("0");
         }
 
-        if (subject.isIsSwitch()) {
-            switchBlockNumbersDisplay.textProperty().bindBidirectional(subject.switchBlockIDProperty());
-            switchStateDisplay.textProperty().bindBidirectional(subject.switchStateProperty());
+        if (currentBlockSubject.isIsSwitch()) {
+            switchBlockNumbersDisplay.textProperty().bindBidirectional(currentBlockSubject.switchBlockIDProperty());
+            switchStateDisplay.textProperty().bindBidirectional(currentBlockSubject.switchStateProperty());
         } else {
             switchBlockNumbersDisplay.setText("NOT A SWITCH BLOCK");
             switchStateDisplay.setText("NONE");
         }
 
-        if (subject.isIsSignal()) {
-            signalStateDisplay.textProperty().bindBidirectional(subject.signalStateProperty());
-            signalBlockNumberDisplay.textProperty().bindBidirectional(subject.signalIDProperty());
+        if (currentBlockSubject.isIsSignal()) {
+            signalStateDisplay.textProperty().bindBidirectional(currentBlockSubject.signalStateProperty());
+            signalBlockNumberDisplay.textProperty().bindBidirectional(currentBlockSubject.signalIDProperty());
         } else {
             signalStateDisplay.setText("NONE");
             signalBlockNumberDisplay.setText("NO SIGNAL");
         }
 
-        if (subject.isIsCrossing()) {
-            crossingState.textProperty().bindBidirectional(subject.crossingStateProperty());
+        if (currentBlockSubject.isIsCrossing()) {
+            crossingState.textProperty().bindBidirectional(currentBlockSubject.crossingStateProperty());
         } else {
             crossingState.setText("NONE");
         }
 
-        if (subject.isIsBeacon()) {
-            displayBeaconInfo.textProperty().bindBidirectional(subject.setBeaconProperty());
-            beaconBlockNumber.textProperty().bind(subject.blockNumberProperty().asString());
+        if (currentBlockSubject.isIsBeacon()) {
+            displayBeaconInfo.textProperty().bindBidirectional(currentBlockSubject.setBeaconProperty());
+            beaconBlockNumber.textProperty().bind(currentBlockSubject.blockNumberProperty().asString());
         } else {
             displayBeaconInfo.setText("NO CROSSING");
         }
 
         //update track heaters and temperature as new blocks are selected
-        if (subject.getOutsideTemp() < 40) {
+        if (currentBlockSubject.getOutsideTemp() < 40) {
             trackHeaterStatus.setText("Status - ON");
         }
-        outsideTemp.setText(subject.outsideTempProperty().toString());
+        outsideTemp.setText(currentBlockSubject.outsideTempProperty().toString());
 
     }
 
@@ -244,22 +242,19 @@ public class TrackModelManager {
             System.out.println("Selected line: " + lineSelect);
 
             // Clear the selectedTrackLineSubject list and add the new TrackLineSubject object
-            ObservableList<TrackBlockSubject> blockList = LineSubjectMap.getLineSubject(lineSelect);
-            System.out.println("Block list: " + blockList.size());
-            lineTable.setItems(blockList);
+            selectedTrackSubjectList = LineSubjectMap.getLineSubject(lineSelect);
+            System.out.println("Block list: " + selectedTrackSubjectList.size());
+            lineTable.setItems(selectedTrackSubjectList);
 
             // Update the table
             lineTable.refresh();
     }
 
     private void murphyEnter() {
-        //get the line and block
-        int blockSelect = lineTable.getSelectionModel().getSelectedItem().getBlockNumber();
-        TrackBlockSubject selectedSubject = selectedTrackBlockSubject.get(blockSelect);
 
-        selectedSubject.setBrokenRail(false);
-        selectedSubject.setTrackCircuitFailure(false);
-        selectedSubject.setPowerFailure(false);
+        currentBlockSubject.setBrokenRail(false);
+        currentBlockSubject.setTrackCircuitFailure(false);
+        currentBlockSubject.setPowerFailure(false);
 
         String failure = chooseFailureMode.getValue();
 

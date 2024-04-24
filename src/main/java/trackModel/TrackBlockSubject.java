@@ -66,14 +66,26 @@ public class TrackBlockSubject {
         crossingState = new SimpleStringProperty();
         tempDisplay = new SimpleStringProperty();
         setBeacon = new SimpleStringProperty();
-        nameOfStation = new SimpleStringProperty();
+        nameOfStation = new SimpleStringProperty(trackBlock.getStationName());
         trackHeater = new SimpleStringProperty();
         trackCircuitFailure = new SimpleBooleanProperty();
         powerFailure = new SimpleBooleanProperty();
         brokenRail = new SimpleBooleanProperty();
-        blockElevation = new SimpleDoubleProperty();
+        blockElevation = new SimpleDoubleProperty(trackBlock.getElevation());
         outsideTemp = new SimpleIntegerProperty();
         direction = new SimpleBooleanProperty();
+
+        if(trackBlock.isSwitch()) {
+            switchState.set(trackBlock.getSwitchState() ? "ALTERNATE" : "MAIN");
+        }
+
+        if(trackBlock.isLight()) {
+            signalState.set(trackBlock.getLightState() ? "GREEN" : "RED");
+        }
+
+        if(trackBlock.isCrossing()) {
+            crossingState.set(trackBlock.getCrossingState() ? "DOWN" : "UP");
+        }
     }
 
     private Lines line;
