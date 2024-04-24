@@ -124,6 +124,10 @@ public class TrackLine implements TrackModel {
         }
     }
 
+    public int trainCount() {
+        return trackOccupancyMap.size();
+    }
+
     /**
      * A function called by the train when it has travelled
      * the distance of the block it is currently on.
@@ -436,11 +440,12 @@ public class TrackLine implements TrackModel {
             if(trackOccupancyMap.containsKey(train)){
                 TrackBlock block = mainTrackLine.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
-                    return random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
 
                     // TODO: set subject for passengers
                     //Platform.runLater(() -> subjectList.get(block.blockID).setPassengersDisembark(newTotal));
+                    this.ticketSales += train.getPassengerCount();
 
+                    return random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
                 } else {
                     logger.warn("Train: {} is not on a station block", train.getTrainNumber());
                     return 0;

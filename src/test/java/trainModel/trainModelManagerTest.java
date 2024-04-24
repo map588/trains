@@ -33,7 +33,7 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @BeforeEach
     public void setup() {
-        trainModel = new TrainModelImpl();
+        //trainModel = new TrainModelImpl();
 
     }
 
@@ -100,7 +100,7 @@ public class trainModelManagerTest extends ApplicationTest {
 
     @Test
     public void testTrainDropDown() {
-        TrainModelImpl newTrainModel = new TrainModelImpl();
+        //TrainModelImpl newTrainModel = new TrainModelImpl();
 //        trainModelManager.subjectMap.getSubjects().put(1, newTrainModel);
 
         ChoiceBox<Integer> trainDropDown = lookup("#trainDropDown").queryAs(ChoiceBox.class);

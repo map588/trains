@@ -7,8 +7,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -28,6 +30,13 @@ public class TrackModelManager {
     public Tab switchTab, signalTab, stationTab;
     @FXML
     public TabPane sssTabs;
+
+    //add line
+
+    @FXML
+    public TextField lineNameInput, trackFilePath;
+    @FXML
+    public Button chooseFile, trackUpload;
 
     //murphy
     @FXML
@@ -87,6 +96,8 @@ public class TrackModelManager {
     public void initialize() {
         //initialize buttons and user inputs
         murphyEnter.setOnAction(event -> murphyEnter());
+        trackUpload.setOnAction(event -> uploadTrack());
+        chooseFile.setOnAction(event -> fileOpen());
 
         //initialize combo boxes
         updateLineChoiceBox();
@@ -113,6 +124,22 @@ public class TrackModelManager {
         });
 
         //pickLine.getSelectionModel().selectNext();
+    }
+
+    private void uploadTrack(){
+        String trackFile = trackFilePath.getText();
+        pickLine.getItems().add(trackFile);
+        updateLineChoiceBox();
+    }
+
+    private void fileOpen() {
+        System.out.println("File picker!");
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        File dir = dirChooser.showDialog(chooseFile.getScene().getWindow());
+
+        if (dir != null) {
+            trackFilePath.setText(dir.getPath());
+        }
     }
 
     private void updateLineChoiceBox() {
@@ -205,7 +232,7 @@ public class TrackModelManager {
         }
 
         if (currentBlockSubject.isIsSwitch()) {
-            switchBlockNumbersDisplay.textProperty().bindBidirectional(currentBlockSubject.switchBlockIDProperty());
+            switchBlockNumbersDisplay.setText("SWITCH BLOCK SELECTED");
             switchStateDisplay.textProperty().bindBidirectional(currentBlockSubject.switchStateProperty());
         } else {
             switchBlockNumbersDisplay.setText("NOT A SWITCH BLOCK");
@@ -214,7 +241,7 @@ public class TrackModelManager {
 
         if (currentBlockSubject.isIsSignal()) {
             signalStateDisplay.textProperty().bindBidirectional(currentBlockSubject.signalStateProperty());
-            signalBlockNumberDisplay.textProperty().bindBidirectional(currentBlockSubject.signalIDProperty());
+            signalBlockNumberDisplay.setText("SIGNAL DETECTED");
         } else {
             signalStateDisplay.setText("NONE");
             signalBlockNumberDisplay.setText("NO SIGNAL");
@@ -230,13 +257,16 @@ public class TrackModelManager {
             displayBeaconInfo.textProperty().bindBidirectional(currentBlockSubject.setBeaconProperty());
             beaconBlockNumber.textProperty().bind(currentBlockSubject.blockNumberProperty().asString());
         } else {
-            displayBeaconInfo.setText("NO CROSSING");
+            displayBeaconInfo.setText("");
         }
 
         //update track heaters and temperature as new blocks are selected
         if (currentBlockSubject.getOutsideTemp() < 40) {
             trackHeaterStatus.setText("Status - ON");
+        } else {
+            trackHeaterStatus.setText("Status - OFF");
         }
+
         outsideTemp.setText(currentBlockSubject.outsideTempProperty().toString());
 
     }

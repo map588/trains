@@ -20,7 +20,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trackModel.TrackModelManager">
    <children>
       <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="62.0" prefWidth="1025.0" style="-fx-background-color: #d9d9d9; -fx-border-color: #000000;">
@@ -79,43 +78,37 @@
               </Label>
               <ScrollPane prefHeight="615.0" prefWidth="370.0" GridPane.rowSpan="2">
                    <VBox>
-                       <TitledPane fx:id="simulationInformationSec" animated="false" prefWidth="354.75" text="SIMULATION INFORMATION">
+                       <TitledPane fx:id="simulationInformationSec" animated="false" prefWidth="354.75" text="ADD LINE">
                            <font>
                                <Font size="18.0" />
                            </font>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="80.0" prefWidth="353.0">
-                               <Label fx:id="simSpeedLabel" layoutX="10.5" layoutY="6.75" text="Sim. Speed">
+                               <Label fx:id="uploadLayoutLabel" layoutX="10.0" layoutY="13.5" text="Line Name:">
                                    <font>
                                        <Font size="13.5" />
                                    </font>
                                </Label>
-                               <ComboBox fx:id="simSpeedInput" layoutX="4.0" layoutY="34.0" prefHeight="24.75" prefWidth="79.5" promptText="1x" />
-                               <Label fx:id="uploadLayoutLabel" layoutX="111.0" layoutY="7.5" text="Upload Layout:">
+                               <Label fx:id="pathLabel" layoutX="10.75" layoutY="45.0" text="Path:">
                                    <font>
                                        <Font size="13.5" />
                                    </font>
                                </Label>
-                               <Label fx:id="pathLabel" layoutX="111.75" layoutY="39.0" text="Path:">
-                                   <font>
-                                       <Font size="13.5" />
-                                   </font>
-                               </Label>
-                               <TextField fx:id="trackFilePath" layoutX="150.0" layoutY="37.0" prefHeight="24.75" prefWidth="120.0" promptText="/path/to/csv/layout">
+                               <TextField fx:id="trackFilePath" layoutX="106.0" layoutY="43.0" prefHeight="24.75" prefWidth="120.0" promptText="/path/to/csv/layout">
                                    <font>
                                        <Font size="11.0" />
                                    </font>
                                </TextField>
-                               <Button fx:id="trackUpload" layoutX="278.0" layoutY="5.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="63.0" text="UPLOAD">
+                               <Button fx:id="trackUpload" layoutX="266.0" layoutY="11.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="63.0" text="UPLOAD">
                                    <font>
                                        <Font size="10.0" />
                                    </font>
                                </Button>
-                               <Button fx:id="chooseFile" layoutX="277.0" layoutY="35.0" minHeight="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="65.0" text="Choose File">
+                               <Button fx:id="chooseFile" layoutX="265.0" layoutY="41.0" minHeight="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="65.0" text="Choose File">
                                    <font>
                                        <Font size="10.0" />
                                    </font>
                                </Button>
-                               <TextField fx:id="lineNameInput" layoutX="201.0" layoutY="5.0" prefHeight="24.75" prefWidth="66.0" promptText="Line Name">
+                               <TextField fx:id="lineNameInput" layoutX="157.0" layoutY="11.0" prefHeight="24.75" prefWidth="66.0" promptText="Line Name">
                                    <font>
                                        <Font size="11.0" />
                                    </font>
