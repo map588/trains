@@ -204,16 +204,6 @@
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="undergroundLabel" layoutX="226.5" layoutY="49.5" text="Underground :">
-                                               <font>
-                                                   <Font size="13.5" />
-                                               </font>
-                                           </Label>
-                                           <Label fx:id="undergroundValue" layoutX="326.25" layoutY="49.5" text="NO">
-                                               <font>
-                                                   <Font size="13.5" />
-                                               </font>
-                                           </Label>
                                        </AnchorPane>
                                    </Tab>
                                    <Tab fx:id="switchTab" text="SWITCH">
@@ -254,12 +244,12 @@
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="crossingLabel" layoutX="257.25" layoutY="30.75" text="Crossing State">
+                                           <Label fx:id="crossingLabel" layoutX="261.25" layoutY="32.75" text="Crossing State">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="crossingState" layoutX="252.75" layoutY="68.25" text="NO CROSSING">
+                                           <Label fx:id="crossingState" layoutX="263.75" layoutY="70.25" text="NO CROSSING">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
