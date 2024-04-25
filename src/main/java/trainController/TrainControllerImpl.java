@@ -86,7 +86,6 @@ public class TrainControllerImpl implements TrainController {
     private int authority = 0;
 
     private double internalAuthority = 0;
-    private double setSpeed = 0;
 
     private boolean serviceBrake = false, emergencyBrake = false, automaticMode = true,
             internalLights = false, externalLights = false, leftDoors = false,
@@ -181,7 +180,7 @@ public class TrainControllerImpl implements TrainController {
 
             internalAuthority -= currentSpeed * TIME_STEP;
 
-            setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+            double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
 
             setSpeed = Math.min(setSpeed, speedLimit);
 
@@ -265,9 +264,8 @@ public class TrainControllerImpl implements TrainController {
         if (brakeFailure) {
             // setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            // setServiceBrake(this.sBrakeGUI);
+            setServiceBrake(this.sBrakeGUI && !brakeFailure);
         } else {
-            setServiceBrake(this.sBrakeGUI);
             setBrakeFailure(badBrakes);
             if (badBrakes) {
                 logger.warn("Brake Failure detected {}", brakeCount);
