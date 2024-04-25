@@ -496,9 +496,9 @@ public class TrackLine implements TrackModel {
             logger.info("Temperature: {}", this.outsideTemperature);
             Platform.runLater(() -> subjectList.forEach(subject -> subject.setOutsideTemp(this.outsideTemperature)));
             if(outsideTemperature < 40) {
-                Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("ON")));
+                Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("STATUS - ON")));
             } else {
-                Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("OFF")));
+                Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("STATUS - OFF")));
             }
         });
     }

@@ -221,6 +221,7 @@ public class TrackModelManager {
             gradeColumn.textProperty().unbindBidirectional(currentBlockSubject.blockGradeProperty().asObject());
             failureColumn.textProperty().unbindBidirectional(currentBlockSubject.failureProperty());
             outsideTemp.textProperty().unbindBidirectional(currentBlockSubject.outsideTempProperty());
+            trackHeaterStatus.textProperty().unbindBidirectional(currentBlockSubject.trackHeaterProperty());
         }
 
         currentBlockSubject = newSubject;
@@ -274,6 +275,7 @@ public class TrackModelManager {
         }
 
         outsideTemp.textProperty().bindBidirectional(currentBlockSubject.outsideTempProperty());
+        trackHeaterStatus.textProperty().bindBidirectional(currentBlockSubject.trackHeaterProperty());
 
     }
 
