@@ -80,7 +80,9 @@ public class TrainControllerImpl implements TrainController {
 
 
     private int authority = 0;
+
     private double internalAuthority = 0;
+    private double setSpeed = 0;
 
     private boolean serviceBrake = false, emergencyBrake = false, automaticMode = true,
             internalLights = false, externalLights = false, leftDoors = false,
@@ -175,7 +177,9 @@ public class TrainControllerImpl implements TrainController {
 
             internalAuthority -= currentSpeed * TIME_STEP;
 
-            double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+            setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+
+            setSpeed = Math.min(setSpeed, speedLimit);
 
             //If the train is coming to a stop and its intentional
             if (power == 0 && currentSpeed > 0 && currentSpeed <= 2) {

@@ -121,14 +121,17 @@ public class Main {
             // Submit tasks to the thread pool for waysideSystem and trainSystem
 
             synchronizationPool.submit(() -> {
+                waysideSystem.update();
+                latch.countDown();
+            });
+
+
+            synchronizationPool.submit(() -> {
                 trainSystem.update();
                 latch.countDown();
             });
 
-            synchronizationPool.submit(() -> {
-                waysideSystem.update();
-                latch.countDown();
-            });
+
 
             try {
                 // Wait for both update methods to complete

@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
+
 import static Utilities.Constants.MAX_PASSENGERS;
 
 public class TrackLine implements TrackModel {
@@ -30,7 +31,7 @@ public class TrackLine implements TrackModel {
     Lines line;
 
     private final ThreadLocal<TrackLine> thisLineThread = new ThreadLocal<>();
-    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(4);
+    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     //map of dynamic Track Blocks
     private final TrackBlockLine mainTrackLine = new TrackBlockLine();
@@ -105,6 +106,8 @@ public class TrackLine implements TrackModel {
         }
         trackUpdateQueue.clear();
     }
+
+
 
 
 
