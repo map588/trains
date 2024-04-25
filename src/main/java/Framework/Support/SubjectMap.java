@@ -1,6 +1,8 @@
 package Framework.Support;
 
-public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S>{
+import java.io.Serializable;
+
+public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S> {
 
     protected final ObservableHashMap<K, S> subjects = new ObservableHashMap<>();
 

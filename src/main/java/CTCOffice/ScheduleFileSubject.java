@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
-public class ScheduleFileSubject implements AbstractSubject, Serializable {
+public class ScheduleFileSubject implements AbstractSubject {
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final ScheduleFile schedule;

@@ -354,6 +354,8 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     }
 }
 
+//TODO: send authority one block ahead of the train for wayside queue
+
 
 
 
