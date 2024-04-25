@@ -3,6 +3,7 @@ package trackModel;
 import CTCOffice.CTCOfficeImpl;
 import Common.TrackModel;
 import Common.TrainModel;
+import Common.WaysideController;
 import Framework.Simulation.WaysideSystem;
 import Framework.Support.ObservableHashMap;
 import Utilities.HelperObjects.BasicTrackLine;
@@ -185,7 +186,16 @@ public class TrackLine implements TrackModel {
 
 //            WaysideSystem.getController(this.line,newBlockID).trackModelSetOccupancy(newBlockID, true);
 //            WaysideSystem.getController(this.line,oldBlockID).trackModelSetOccupancy(oldBlockID, false);
-            WaysideSystem.getController(this.line,oldBlockID).trackModelMoveOccupancy(oldBlockID, newBlockID);
+            WaysideController waysideOld = WaysideSystem.getController(this.line, oldBlockID);
+            WaysideController waysideNew = WaysideSystem.getController(this.line, newBlockID);
+
+            if(waysideOld == waysideNew) {
+                waysideOld.trackModelMoveOccupancy(oldBlockID, newBlockID);
+            }
+            else {
+                waysideOld.trackModelSetOccupancy(oldBlockID, false);
+                waysideNew.trackModelSetOccupancy(newBlockID, true);
+            }
             logger.info("AFTER MOVING Train {} => {} ", train.getTrainNumber(), newBlockID);
             return null;
         });
