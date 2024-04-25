@@ -72,7 +72,7 @@ public class TrainControllerImpl implements TrainController {
     private int stopTime = 0;
 
     private double Ki = 20;
-    private double Kp = 100;
+    private double Kp = 400;
     private double power = 0.0;
     private double grade = 0.0;
     private double rollingError = 0.0;
