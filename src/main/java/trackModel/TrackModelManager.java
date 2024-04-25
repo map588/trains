@@ -194,6 +194,7 @@ public class TrackModelManager {
             if (currentBlockSubject.isIsSwitch()) {
                 switchBlockNumbersDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchBlockIDProperty());
                 switchStateDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchStateProperty());
+                switchBlockNumbersDisplay.textProperty().unbindBidirectional(currentBlockSubject.switchBlockIDProperty());
             }
 
             if (currentBlockSubject.isIsSignal()) {
@@ -236,8 +237,8 @@ public class TrackModelManager {
         }
 
         if (currentBlockSubject.isIsSwitch()) {
-            switchBlockNumbersDisplay.setText("SWITCH BLOCK SELECTED");
             switchStateDisplay.textProperty().bindBidirectional(currentBlockSubject.switchStateProperty());
+            switchBlockNumbersDisplay.textProperty().bindBidirectional(currentBlockSubject.switchBlockIDProperty());
         } else {
             switchBlockNumbersDisplay.setText("NOT A SWITCH BLOCK");
             switchStateDisplay.setText("NONE");

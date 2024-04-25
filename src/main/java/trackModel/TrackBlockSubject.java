@@ -92,6 +92,7 @@ public class TrackBlockSubject {
                 this.switchBlockDef = switchFeature.getSouthDef().blockNumber();
                 this.switchBlockAlt = switchFeature.getSouthAlt().blockNumber();
             }
+            switchBlockID.set(Integer.toString(switchBlockDef));
         }
 
         if(trackBlock.isLight()) {
