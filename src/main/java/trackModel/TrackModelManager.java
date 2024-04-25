@@ -109,7 +109,9 @@ public class TrackModelManager {
                 "Fix Track Failure"
         );
 
+        outsideTemp.setText(currentBlockSubject.outsideTempProperty().toString());
         trackHeaterStatus.setText("STATUS - OFF");
+
 
         initializeTable();
 
@@ -241,7 +243,7 @@ public class TrackModelManager {
 
         if (currentBlockSubject.isIsSignal()) {
             signalStateDisplay.textProperty().bindBidirectional(currentBlockSubject.signalStateProperty());
-            signalBlockNumberDisplay.setText("SIGNAL DETECTED");
+            signalBlockNumberDisplay.setText("SIGNAL BLOCK");
         } else {
             signalStateDisplay.setText("NONE");
             signalBlockNumberDisplay.setText("NO SIGNAL");
@@ -266,8 +268,6 @@ public class TrackModelManager {
         } else {
             trackHeaterStatus.setText("Status - OFF");
         }
-
-        outsideTemp.setText(currentBlockSubject.outsideTempProperty().toString());
 
     }
 
