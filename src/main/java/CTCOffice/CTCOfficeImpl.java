@@ -113,14 +113,12 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             add( new TrainStop(1, 73, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(2, 9, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
-        /*
+
         scheduleLibrary.getSubject("Schedule1").getSchedule().putTrainSchedule(2, new TrainSchedule(2, Lines.RED.toString(), 180, 1, new ArrayList<>() {{
             add( new TrainStop(0, 7, convertClockTimeToDouble("6:05"), convertClockTimeToDouble("6:06"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(1, 21, convertClockTimeToDouble("6:09"), convertClockTimeToDouble("6:10"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             add( new TrainStop(2, 25, convertClockTimeToDouble("6:12"), convertClockTimeToDouble("6:13"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         }}));
-        */
-
     }
 
     public void setTrackSystem(TrackSystem trackSystem) {
@@ -159,6 +157,9 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
         //if the block is on the yard then do nothing
         if(blockID == 0) {
+            if(antiTrainLocations.get(BlockIDs.of(0, line)).dispatchTime() < (time - 100000)){
+                notifyTrainReturn(antiTrainLocations.get(BlockIDs.of(0, line)).trainID());
+            }
             return;
         }
         if(occupied) {
@@ -310,7 +311,6 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         trainLocations.remove(train);
         trainSchedules.remove(train);
         trainIDs.remove(trainID);
-
     }
 
     void DispatchTrain(Lines line , int trainID, int carCount, double dispatchTime){
@@ -345,7 +345,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
     //TODO: Remove these methods
     void sendDumbAuthority(int trainID, Lines line, int blockID, int authority) {
-        logger.info("CTC sending dumb authority to train {} on block {} on line {}", trainID, blockID, line);
+        logger.info("CTC sending dumb authority to train {} on block {} on line {} with controller {}", trainID, blockID, line, WaysideSystem.getController(line, blockID));
         WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
     }
     void sendDumbSpeed(int trainID, Lines line, int blockID, double speed) {

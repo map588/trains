@@ -39,7 +39,7 @@ public class TrackBlockSubject {
     private StringProperty setBeacon;
     private StringProperty nameOfStation;
     private StringProperty trackHeater;
-    private IntegerProperty outsideTemp;
+    private StringProperty outsideTemp;
 
 
     private void initializeValues(TrackBlock trackBlock) {
@@ -72,7 +72,7 @@ public class TrackBlockSubject {
         powerFailure = new SimpleBooleanProperty();
         brokenRail = new SimpleBooleanProperty();
         blockElevation = new SimpleDoubleProperty(trackBlock.getElevation());
-        outsideTemp = new SimpleIntegerProperty();
+        outsideTemp = new SimpleStringProperty();
         direction = new SimpleBooleanProperty();
 
         if(trackBlock.isSwitch()) {
@@ -467,16 +467,17 @@ public class TrackBlockSubject {
     }
 
 
-    public int getOutsideTemp() {
+    public String getOutsideTemp() {
         return outsideTemp.get();
     }
 
-    public IntegerProperty outsideTempProperty() {
+    public StringProperty outsideTempProperty() {
         return outsideTemp;
     }
 
     public void setOutsideTemp(int outsideTemp) {
-        this.outsideTemp.set(outsideTemp);
+        System.out.println("Setting outside temp to " + Integer.toString(outsideTemp));
+        this.outsideTemp.set(Integer.toString(outsideTemp));
     }
 
     public boolean isDirection() {

@@ -109,7 +109,7 @@ public class TrackModelManager {
                 "Fix Track Failure"
         );
 
-        outsideTemp.setText(currentBlockSubject.outsideTempProperty().toString());
+
         trackHeaterStatus.setText("STATUS - OFF");
 
 
@@ -124,6 +124,8 @@ public class TrackModelManager {
         pickLine.getSelectionModel().selectedItemProperty().addListener(event -> {
             updateTable();
         });
+
+        outsideTemp.setText("-");
 
         //pickLine.getSelectionModel().selectNext();
     }
@@ -216,6 +218,7 @@ public class TrackModelManager {
             occupiedColumn.textProperty().unbindBidirectional(currentBlockSubject.isOccupiedProperty());
             gradeColumn.textProperty().unbindBidirectional(currentBlockSubject.blockGradeProperty().asObject());
             failureColumn.textProperty().unbindBidirectional(currentBlockSubject.failureProperty());
+            outsideTemp.textProperty().unbindBidirectional(currentBlockSubject.outsideTempProperty());
         }
 
         currentBlockSubject = newSubject;
@@ -262,12 +265,7 @@ public class TrackModelManager {
             displayBeaconInfo.setText("");
         }
 
-        //update track heaters and temperature as new blocks are selected
-        if (currentBlockSubject.getOutsideTemp() < 40) {
-            trackHeaterStatus.setText("Status - ON");
-        } else {
-            trackHeaterStatus.setText("Status - OFF");
-        }
+        outsideTemp.textProperty().bindBidirectional(currentBlockSubject.outsideTempProperty());
 
     }
 
