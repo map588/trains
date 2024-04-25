@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainModel.TrainModelManager">
+<AnchorPane fx:id="masterTrainModelPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainModel.TrainModelManager">
     <Button fx:id="eBrakeBtn" layoutX="227.0" layoutY="77.0" mnemonicParsing="false" prefHeight="107.0" prefWidth="390.0" text="PASSENGER EMERGENCY BRAKE" />
     <ImageView fitHeight="47.0" fitWidth="167.0" layoutX="8.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true" />
     <AnchorPane prefHeight="62.0" prefWidth="838.0">
