@@ -12,9 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import static Utilities.Constants.RESUME_TRAIN_SIGNAL;
@@ -45,8 +44,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final Stack<PLCChange>[] plcResults;
     private Stack<PLCChange> currentPLCResult;
     private boolean isRunningPLC;
-    private final Stack<Integer> occupancyBlockIDStack = new Stack<>();
-    private final Stack<Boolean> occupancyValStack = new Stack<>();
+    private final Queue<Integer> occupancyBlockIDStack = new LinkedList<>();
+    private final Queue<Boolean> occupancyValStack = new LinkedList<>();
     private final Map<Integer, Integer> authorityMap = new HashMap<>();
     private final Map<Integer, Double> speedMap = new HashMap<>();
 
@@ -115,64 +114,67 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
      */
     @Override
     public void runPLC() {
-        if(!maintenanceMode && !isRunningPLC()) {
+        if(!isRunningPLC()) {
             setRunningPLC(true);
-            for(int plcIndex = 0; plcIndex < plcPrograms.length; plcIndex++) {
-                currentPLCResult = plcResults[plcIndex];
-                currentPLCResult.clear();
-                plcPrograms[plcIndex].run();
+            if (!maintenanceMode) {
+                for (int plcIndex = 0; plcIndex < plcPrograms.length; plcIndex++) {
+                    currentPLCResult = plcResults[plcIndex];
+                    currentPLCResult.clear();
+                    plcPrograms[plcIndex].run();
 //                System.out.println("PLC Results[" + plcIndex + "]: " + plcResults[plcIndex].size() + " " + currentPLCResult.size());
-                if(plcResults[plcIndex].size() > 0) {
-                    logger.info("PLC changes size: {}, {}", plcResults[plcIndex].size(), this);
-                }
-            }
-
-            int changeSize = plcResults[0].size();
-            for(int changeIndex = 0; changeIndex < changeSize; changeIndex++) {
-                PLCChange change = plcResults[0].pop();
-
-//                System.out.println("PLC Change: " + change.changeType + " " + change.blockID + " " + change.changeValue + " " + plcResults[0].size());
-                logger.info("PLC Change: {} {} {}", change.changeType(), change.blockID(), change.changeValue());
-
-                for(int plcIndex = 1; plcIndex < plcResults.length; plcIndex++) {
-                    PLCChange otherChange = plcResults[plcIndex].pop();
-
-                    if(!change.changeType().equals(otherChange.changeType()) ||
-                            change.changeValue() != otherChange.changeValue() ||
-                            change.blockID() != otherChange.blockID()) {
-                        throw new RuntimeException("PLC programs are not in sync");
+                    if (plcResults[plcIndex].size() > 0) {
+                        logger.info("PLC changes size: {}, {}", plcResults[plcIndex].size(), this);
                     }
                 }
 
-                switch(change.changeType()) {
-                    case "switch" -> outputSwitchPLC(change.blockID(), change.changeValue());
-                    case "light" -> outputTrafficLightPLC(change.blockID(), change.changeValue());
-                    case "crossing" -> outputCrossingPLC(change.blockID(), change.changeValue());
-                    case "auth" -> outputAuthorityPLC(change.blockID(), change.changeValue());
-                    default -> throw new RuntimeException("Invalid PLC change type");
+                int changeSize = plcResults[0].size();
+                for (int changeIndex = 0; changeIndex < changeSize; changeIndex++) {
+                    PLCChange change = plcResults[0].pop();
+
+//                System.out.println("PLC Change: " + change.changeType + " " + change.blockID + " " + change.changeValue + " " + plcResults[0].size());
+                    logger.info("PLC Change: {} {} {}", change.changeType(), change.blockID(), change.changeValue());
+
+                    for (int plcIndex = 1; plcIndex < plcResults.length; plcIndex++) {
+                        PLCChange otherChange = plcResults[plcIndex].pop();
+
+                        if (!change.changeType().equals(otherChange.changeType()) ||
+                                change.changeValue() != otherChange.changeValue() ||
+                                change.blockID() != otherChange.blockID()) {
+                            throw new RuntimeException("PLC programs are not in sync");
+                        }
+                    }
+
+                    switch (change.changeType()) {
+                        case "switch" -> outputSwitchPLC(change.blockID(), change.changeValue());
+                        case "light" -> outputTrafficLightPLC(change.blockID(), change.changeValue());
+                        case "crossing" -> outputCrossingPLC(change.blockID(), change.changeValue());
+                        case "auth" -> outputAuthorityPLC(change.blockID(), change.changeValue());
+                        default -> throw new RuntimeException("Invalid PLC change type");
+                    }
+                }
+
+                while (!occupancyBlockIDStack.isEmpty()) {
+                    logger.info("Setting occupancy for block {} to {}", occupancyBlockIDStack.peek(), occupancyValStack.peek());
+                    setOccupancy(occupancyBlockIDStack.remove(), occupancyValStack.remove());
                 }
             }
+
+            for (WaysideBlock block : blockMap.values()) {
+                if (block.isOccupied()) {
+                    trackModel.setTrainAuthority(block.getBlockID(), block.getBooleanAuth() ? RESUME_TRAIN_SIGNAL : STOP_TRAIN_SIGNAL);
+
+                    if (authorityMap.containsKey(block.getBlockID())) {
+                        CTCSendAuthority(block.getBlockID(), authorityMap.get(block.getBlockID()));
+                        authorityMap.remove(block.getBlockID());
+                    }
+                    if (speedMap.containsKey(block.getBlockID())) {
+                        CTCSendSpeed(block.getBlockID(), speedMap.get(block.getBlockID()));
+                        speedMap.remove(block.getBlockID());
+                    }
+                }
+            }
+
             setRunningPLC(false);
-
-            while(!occupancyBlockIDStack.empty()) {
-                logger.info("Setting occupancy for block {} to {}", occupancyBlockIDStack.peek(), occupancyValStack.peek());
-                setOccupancy(occupancyBlockIDStack.pop(), occupancyValStack.pop());
-            }
-        }
-
-        for(WaysideBlock block : blockMap.values()) {
-            if(block.isOccupied()) {
-                trackModel.setTrainAuthority(block.getBlockID(), block.getBooleanAuth() ? RESUME_TRAIN_SIGNAL : STOP_TRAIN_SIGNAL);
-
-                if(authorityMap.containsKey(block.getBlockID())) {
-                    CTCSendAuthority(block.getBlockID(), authorityMap.get(block.getBlockID()));
-                    authorityMap.remove(block.getBlockID());
-                }
-                if(speedMap.containsKey(block.getBlockID())) {
-                    CTCSendSpeed(block.getBlockID(), speedMap.get(block.getBlockID()));
-                    speedMap.remove(block.getBlockID());
-                }
-            }
         }
     }
 
@@ -206,14 +208,14 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     @Override
-    public void trackModelSetOccupancy(int blockID, boolean occupied) {
+    public synchronized void trackModelSetOccupancy(int blockID, boolean occupied) {
         logger.info("Being told to set occupancy for block {} to {}", blockID, occupied);
         if(occupied && blockID == 0) {
             return;
         }
         if(isRunningPLC()) {
-            occupancyBlockIDStack.push(blockID);
-            occupancyValStack.push(occupied);
+            occupancyBlockIDStack.add(blockID);
+            occupancyValStack.add(occupied);
         }
         else {
             setOccupancy(blockID, occupied);
