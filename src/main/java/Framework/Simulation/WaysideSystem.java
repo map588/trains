@@ -33,7 +33,7 @@ public class WaysideSystem {
     private static final Map<Integer, WaysideController> controllerMapRed = new HashMap<>();
 
     private static final LinkedBlockingQueue<Callable<Void>> waysideQueue = new LinkedBlockingQueue<>();
-
+    ExecutorService waysideExecutor;
 
     public static ObjectProperty<ObservableList<WaysideController>> getControllerList() {
         return controllerList;
@@ -76,7 +76,6 @@ public class WaysideSystem {
         return controllerList.get().size();
     }
 
-    ExecutorService waysideExecutor;
 
     public WaysideSystem(CTCOffice ctcOffice) {
         TrackLine greenLine = TrackLineMap.getTrackLine(Lines.GREEN);
