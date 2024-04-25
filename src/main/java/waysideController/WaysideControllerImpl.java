@@ -228,8 +228,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             }
             sendHWOccupancy(blockID, occupied);
 
-//            if (ctcOffice != null)
-//                ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
+            if (ctcOffice != null)
+                ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
         }
         logger.info("AFTER Being told to set occupancy for block {} to {}", blockID, occupied);
     }

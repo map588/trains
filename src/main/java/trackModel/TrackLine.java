@@ -1,5 +1,6 @@
 package trackModel;
 
+import CTCOffice.CTCOfficeImpl;
 import Common.TrackModel;
 import Common.TrainModel;
 import Framework.Simulation.WaysideSystem;
@@ -198,6 +199,7 @@ public class TrackLine implements TrackModel {
         }
 
         setUnoccupied(blockID);
+        CTCOfficeImpl.OFFICE.notifyTrainReturn(train.getTrainNumber());
         train.delete();
     }
 
