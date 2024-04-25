@@ -66,7 +66,6 @@ public class TrackLine implements TrackModel {
             trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
 
             //keeps track of which blocks are occupied
-
             ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
 
             for (Integer blockIndex : blockIndices) {
@@ -76,13 +75,18 @@ public class TrackLine implements TrackModel {
                     lightBlocks.add(block.blockID);
                 }
                 TrackBlockSubject subject = new TrackBlockSubject(line, block);
+                if(BeaconParser.getBeaconLine(line).containsKey(blockIndex)) {
+                    subject.setSetBeacon(beaconParser.getBeaconLine(line).get(blockIndex).toString());
+                }else{
+                    subject.setSetBeacon("NONE");
+                }
+                subject.setIsBeacon(true);
                 LineSubjectMap.addLineSubject(line, subject);
             }
 
             //Needs more testing, but the beacon parser seems to work.
             beaconBlocks.putAll(beaconParser.getBeaconLine(line));
             setupListeners();
-
             subjectList = LineSubjectMap.getLineSubject(line);
         }else{
             this.trackOccupancyMap = new ObservableHashMap<>(0);

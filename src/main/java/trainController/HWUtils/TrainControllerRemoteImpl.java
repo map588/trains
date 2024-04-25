@@ -159,7 +159,7 @@ public class TrainControllerRemoteImpl extends UnicastRemoteObject implements Tr
 
     
     public void delete() {
-
+        trainControllerImpl.delete();
     }
 
 

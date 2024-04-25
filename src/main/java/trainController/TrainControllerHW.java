@@ -449,7 +449,12 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public void delete() {
-
+        TrainControllerFactory.setTrainLock(false);
+        try {
+            this.remoteInstance.delete();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Implement other methods similarly
