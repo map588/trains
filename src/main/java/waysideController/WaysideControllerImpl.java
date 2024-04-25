@@ -221,24 +221,21 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
         logger.info("Being told to set occupancy for block {} to {}", blockID, occupied);
-        WaysideBlock block = blockMap.get(blockID);
-        if(!block.inMaintenance() && block.isOccupied() != occupied) {
-            if (occupied && blockID == 0) {
-                return;
-            }
-            if (isRunningPLC()) {
-                logger.debug("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
-                occupancyBlockToIDStack.push(blockID);
-                occupancyBlockFromIDStack.push(-1);
-                occupancyValStack.push(occupied);
-            } else {
-                setOccupancy(blockID, occupied);
-            }
-            sendHWOccupancy(blockID, occupied);
-
-            if (ctcOffice != null)
-                ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
+        if (occupied && blockID == 0) {
+            return;
         }
+        if (isRunningPLC()) {
+            logger.debug("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
+            occupancyBlockToIDStack.push(blockID);
+            occupancyBlockFromIDStack.push(-1);
+            occupancyValStack.push(occupied);
+        } else {
+            setOccupancy(blockID, occupied);
+        }
+        sendHWOccupancy(blockID, occupied);
+
+        if (ctcOffice != null)
+            ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
     }
 
     public void trackModelMoveOccupancy(int oldBlockID, int newBlockID) {
@@ -256,8 +253,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
         sendHWOccupancy(newBlockID, true);
 
         if (ctcOffice != null) {
-            ctcOffice.setBlockOccupancy(trackLine, oldBlockID, false);
             ctcOffice.setBlockOccupancy(trackLine, newBlockID, true);
+            ctcOffice.setBlockOccupancy(trackLine, oldBlockID, false);
         }
     }
 
