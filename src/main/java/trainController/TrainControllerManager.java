@@ -277,6 +277,15 @@ public class TrainControllerManager {
         appendListener(currentSubject.getProperty(NEXT_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> text.setText((String)newVal)));
         appendListener(currentSubject.getProperty(ARRIVAL_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> {
             if(newVal != null){
+                boolean lp = currentSubject.getBooleanProperty(LEFT_PLATFORM).getValue(),
+                        rp = currentSubject.getBooleanProperty(RIGHT_PLATFORM).getValue();
+                currentSubject.setProperty(LEFT_DOORS,lp);
+                currentSubject.setProperty(RIGHT_DOORS,rp);
+                openDoorLeftCheckBox.setSelected(lp);
+                openDoorRightCheckBox.setSelected(rp);
+
+                sendAlert("Arriving at " + newVal);
+
                 queueNotification(ARRIVAL_STATION,  newVal.toString());
             }
         }));
@@ -309,8 +318,21 @@ public class TrainControllerManager {
     private void bindCheckBox(CheckBox checkBox, ControllerProperty property) {
         appendListener(checkBox.selectedProperty(),(obs, oldVal, newVal) -> {
                 currentSubject.setProperty(property, newVal);
+
+                if (property.equals(LEFT_DOORS)) updateLeftDoors();
+                if(property.equals(RIGHT_DOORS)) updateRightDoors();
+
                 queueNotification(property,String.valueOf(checkBox.isSelected()));
         });
+    }
+
+    private void updateLeftDoors(){
+        boolean temp = currentSubject.getBooleanProperty(LEFT_DOORS).get();
+        this.openDoorLeftCheckBox.setSelected(temp);
+    }
+    private void updateRightDoors(){
+        boolean temp = currentSubject.getBooleanProperty(LEFT_DOORS).get();
+        this.openDoorLeftCheckBox.setSelected(temp);
     }
 
     private void bindDoubleTextField(TextField textField, ControllerProperty property) {

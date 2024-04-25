@@ -198,6 +198,13 @@ public class TrainControllerImpl implements TrainController {
                 setLeftPlatform(platformValues.contains("LEFT"));
                 setRightPlatform(platformValues.contains("RIGHT"));
                 onStation();
+
+                if (authority != 0) {
+//                this.setLeftPlatform(false);
+//                this.setRightPlatform(false);
+                    this.setRightDoors(false);
+                    this.setLeftDoors(false);
+                }
             }
 
             double error = setSpeed - currentSpeed;
@@ -370,8 +377,6 @@ public class TrainControllerImpl implements TrainController {
                 waysideStop = false;
                 stopTime.setValue(0);
             }
-
-
 
             if(!waysideStop) {
                 this.setLeftDoors(false);
