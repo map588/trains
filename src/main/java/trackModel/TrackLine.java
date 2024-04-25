@@ -32,7 +32,7 @@ public class TrackLine implements TrackModel {
     Lines line;
 
     private final ThreadLocal<TrackLine> thisLineThread = new ThreadLocal<>();
-    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(4);
 
     //map of dynamic Track Blocks
     private final TrackBlockLine mainTrackLine = new TrackBlockLine();
@@ -107,8 +107,6 @@ public class TrackLine implements TrackModel {
         }
         trackUpdateQueue.clear();
     }
-
-
 
 
 
@@ -298,9 +296,9 @@ public class TrackLine implements TrackModel {
         try {
             asyncTrackUpdate( () -> {
                 mainTrackLine.get(blockID).setAuthority(authority);
-                if(authority != -3) {
-                    logger.info("Authority => {} at block: {}", authority, blockID);
-                }
+                //if(authority != -3) {
+                    //logger.info("Authority => {} at block: {}", authority, blockID);
+                //}
                 return null;
             }).get();
         } catch (InterruptedException | ExecutionException e) {

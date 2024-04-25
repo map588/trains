@@ -350,7 +350,6 @@ public class TrainControllerImpl implements TrainController {
         // Check if train is stopped
         if (train.getSpeed() == 0) {
 
-            stopTime.increment();
             if(stopTime.getValue() == 0) {
                 this.setLeftPlatform(currentBlock.Doorside().contains("LEFT"));
                 this.setRightPlatform(currentBlock.Doorside().contains("RIGHT"));
@@ -360,6 +359,9 @@ public class TrainControllerImpl implements TrainController {
                 train.updatePassengers();
                 setArrivalStation(currentBlock.stationName());
             }
+
+            // this is stopTime++
+            stopTime.increment();
 
             if (stopTime.getValue() < (60 * 8)) {
                 waysideStop = true;

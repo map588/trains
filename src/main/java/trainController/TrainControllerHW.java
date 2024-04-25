@@ -80,18 +80,19 @@ public class TrainControllerHW implements TrainController {
     private TrainControllerRemote remoteInstance;
 
 
+
     public TrainControllerHW(TrainModel train, int trainID) {
         Registry registry = null;
+
         try {
             registry = LocateRegistry.getRegistry("raspberrypi", 1099);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
         try {
             remoteInstance = (TrainControllerRemote) registry.lookup("TrainController");
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        } catch (NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -103,21 +104,36 @@ public class TrainControllerHW implements TrainController {
         this.subject = new TrainControllerSubject(this);
     }
 
-    int brakeCount = 0;
 
+    @Override
+    public void onBlock() {
+
+    }
+
+
+
+    @Override
+    public UpdatedTrainValues sendUpdatedTrainValues() {
+        return null;
+    }
+
+
+    @Override
+    public double calculatePower(double currentVelocity) {
+        return 0;
+    }
+
+    int brakeCount = 0;
     @Override
     public void checkFailures(double trainPower) {
         boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();
         boolean badPower = this.power > 0 && trainPower == 0;
 
-        if(badBrakes) {
-            badBrakes = ++brakeCount > 6;
-        }else {
+        if (badBrakes) {
+            badBrakes = ++brakeCount > 2;
+        } else {
             brakeCount = 0;
         }
-
-
-        setSignalFailure(this.commandSpeed == -1 || this.authority == -1);
 
         if (powerFailure) {
             train.setPower(3);
@@ -128,24 +144,38 @@ public class TrainControllerHW implements TrainController {
         }
 
         if (brakeFailure) {
-            setServiceBrake(true);
+            // setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(this.sBrakeGUI);
+            // setServiceBrake(this.sBrakeGUI);
         } else {
+            setServiceBrake(this.sBrakeGUI);
             setBrakeFailure(badBrakes);
+            if (badBrakes) {
+                logger.warn("Brake Failure detected {}", brakeCount);
+            }
         }
 
+        if (signalFailure) {
+            if (train.getCommandSpeed() != -1 && train.getAuthority() != -1) {
+                setCommandSpeed(train.getCommandSpeed());
+                setAuthority(train.getAuthority());
+            }
+        }
+
+        //if any failure is detected, set the emergency brake
         if (brakeFailure || powerFailure || signalFailure) {
             setEmergencyBrake(true);
-        } else {
+        } else {  //else set the emergency brake to the GUI value, or the passenger emergency brake
             setEmergencyBrake(this.eBrakeGUI || this.passengerEngageEBrake);
         }
 
+        //How far would we travel if we slammed the brakes right now?
         calculateStoppingDistance(this.currentSpeed);
 
-        if (this.internalAuthority < eStoppingDistance) {
+        //If ebrake stopping distance is farther than authority, set the emergency brake
+        if (this.internalAuthority <= eStoppingDistance) {
             setEmergencyBrake(true);
-        } else if (this.internalAuthority < sStoppingDistance) {
+        } else if (this.internalAuthority <= sStoppingDistance) { //same for sbrake
             setServiceBrake(true);
         }
 
@@ -157,12 +187,15 @@ public class TrainControllerHW implements TrainController {
         this.eStoppingDistance = Math.pow(currentSpeed, 2) / (2 * EMERGENCY_BRAKE_DECELERATION);
     }
 
-    private void setBrakeFailure(boolean b) {
-        this.brakeFailure = b;
-    }
 
     private void setServiceBrake(boolean b) {
         this.serviceBrake = b;
+    }
+
+
+
+    private void setBrakeFailure(boolean b) {
+        this.brakeFailure = b;
     }
 
     private void setPowerFailure(boolean b) {
@@ -175,6 +208,8 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public void setAuthority(int authority) {
+        this.authority = authority;
+        this.internalAuthority = authority;
         try {
             outputStream.writeObject("setAuthority");
             outputStream.writeObject(authority);
@@ -288,6 +323,8 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public void setPassengerEBrake() {
+        this.passengerEBrake = true;
+        this.emergencyBrake = true;
         try {
             outputStream.writeObject("setPassengerEBrake");
             outputStream.flush();
@@ -297,10 +334,8 @@ public class TrainControllerHW implements TrainController {
         }
     }
 
-    @Override
-    public TrainControllerSubject getSubject() {
-        return subject;
-    }
+
+
 
     @Override
     public int getID() {
@@ -424,20 +459,14 @@ public class TrainControllerHW implements TrainController {
         return true; // Indicates that this is a hardware implementation
     }
 
-    @Override
-    public double calculatePower(double currentVelocity) {
-        return 0;
-    }
+
 
     @Override
     public double getGrade() {
         return 0;
     }
 
-    @Override
-    public UpdatedTrainValues sendUpdatedTrainValues() {
-        return null;
-    }
+
 
     @Override
     public TrainModel getTrain() {
@@ -456,13 +485,19 @@ public class TrainControllerHW implements TrainController {
         return null;
     }
 
-    @Override
-    public void onBlock() {
 
-    }
 
+
+    //Here only for the sake of the interface
+    //GUI on the main program is inactive and cannot mutate this object
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {
 
+    }
+
+    //Will just hold a greyed out subject
+    @Override
+    public TrainControllerSubject getSubject() {
+        return subject;
     }
 }

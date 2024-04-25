@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static CTCOffice.CTCOfficeImpl.*;
 
@@ -21,6 +20,7 @@ public class TrainSchedule {
     public final ObservableList<TrainStopSubject> stopList;
     
     private final static double KmphToMps = 0.277778;
+    private final static double minSpeedLimit = 4.1;
     private int stopsCompleted = 0;
     private int currentBlockIndex = 0;
 
@@ -267,13 +267,13 @@ public class TrainSchedule {
             }
             visited += blocksAuthority;
         }
-        if(stops.get(0).getAuthorityList().get(0) < (stops.get(0).getArrivalTime() - dispatchTime) * 3) {
-            stops.get(0).setArrivalTime(dispatchTime + (stops.get(0).getAuthorityList().get(0) / 3));
+        if(stops.get(0).getAuthorityList().get(0) < (stops.get(0).getArrivalTime() - dispatchTime) * minSpeedLimit) {
+            stops.get(0).setArrivalTime(dispatchTime + (stops.get(0).getAuthorityList().get(0) / minSpeedLimit));
             stops.get(0).setDepartureTime(stops.get(0).getArrivalTime() + 60);
         }
         for(int i = 1; i < stops.size(); i++) {
-            if (stops.get(i).getAuthorityList().get(0) < ((stops.get(i).getArrivalTime() - stops.get(i - 1).getDepartureTime()) * 3)) {
-                stops.get(i).setArrivalTime(stops.get(i - 1).getDepartureTime() + (stops.get(i).getAuthorityList().get(0) / 3));
+            if (stops.get(i).getAuthorityList().get(0) < ((stops.get(i).getArrivalTime() - stops.get(i - 1).getDepartureTime()) * minSpeedLimit)) {
+                stops.get(i).setArrivalTime(stops.get(i - 1).getDepartureTime() + (stops.get(i).getAuthorityList().get(0) / minSpeedLimit));
                 stops.get(i).setDepartureTime(stops.get(i).getArrivalTime() + 60);
             }
         }

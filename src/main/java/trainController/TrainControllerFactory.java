@@ -3,9 +3,6 @@ package trainController;
 import Common.TrainController;
 import Common.TrainModel;
 
-import java.io.IOException;
-import java.rmi.NotBoundException;
-
 public class TrainControllerFactory {
     private static final TrainControllerFactory INSTANCE = new TrainControllerFactory();
 
@@ -23,8 +20,12 @@ public class TrainControllerFactory {
         return trainControllerLock;
     }
 
+    public static void setTrainLock(boolean lock) {
+        trainControllerLock = lock;
+    }
+
     public TrainController createTrainController(TrainModel m, int id) {
-        if(HWController && !trainControllerLock) {
+        if(HWController && !trainControllerLock && id != -1) {
             HWController = false;
             trainControllerLock = true;
             return new TrainControllerHW(m, id);
