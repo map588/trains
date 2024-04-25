@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
@@ -42,7 +43,8 @@ public class TrainModelManager {
     public Gauge actualPowerDisp, actualVelocityDisp, actualAccelerationDisp, cmdSpeedDisp, authorityDisp, setTempDisp, realTempDisp;
     @FXML
     public Circle extLightsEn, intLightsEn, leftDoorsEn, rightDoorsEn, sBrakeEn, eBrakeEn;
-
+    @FXML
+    public AnchorPane masterTrainModelPane;
 
     private final TrainModelSubjectMap subjectMap = TrainModelSubjectMap.getInstance();
     private final TrainModelSubject nullSubject = new TrainModelSubject();
@@ -250,6 +252,7 @@ public class TrainModelManager {
     }
     private void updateIntLightsIndicator(boolean active) {
         intLightsEn.setFill(active ? Color.YELLOW : Color.GRAY);
+        inTunnelBackgroundColor();
     }
     private void updateLeftDoorsIndicator(boolean active) {
         leftDoorsEn.setFill(active ? Color.YELLOW : Color.GRAY);
@@ -334,5 +337,11 @@ public class TrainModelManager {
         for (Circle c : circleList){
             c.setFill(Color.GRAY);
         }
+    }
+
+    private void inTunnelBackgroundColor(){
+        boolean inTunnel = (intLightsEn.getFill() != Color.GRAY);
+        String colorFormat = inTunnel ? "-fx-background-color: #000033;" : "-fx-background-color: #FFFFFF;";
+        masterTrainModelPane.setStyle(colorFormat);
     }
 }
