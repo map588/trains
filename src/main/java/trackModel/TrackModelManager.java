@@ -9,9 +9,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
+import trackModel.DirectionTableCell;
+import waysideController.WaysideBlockSubject;
 
 import java.io.File;
 import java.util.List;
+
+import static waysideController.Properties.hasCrossing_p;
+import static waysideController.Properties.maintenanceMode_p;
 
 
 public class TrackModelManager {
@@ -162,18 +167,9 @@ public class TrackModelManager {
         directionColumn.setCellValueFactory(cellData -> cellData.getValue().directionProperty());
 
         // set up factories for occupied column and direction column
-        occupiedColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
-            @Override
-            public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
-                return new BooleanIconTableCell<>("/Framework.GUI.Images/train_rail_24.png", "/Framework.GUI.Images/train_24.png", 24, 24);
-            }
-        });
-
-        directionColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
-            @Override
-            public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
-                return new BooleanIconTableCell<>("/Framework.GUI.Images/down_arrow.png", "/Framework.GUI.Images/up_arrow.png", 24, 24);
-            }
+        occupiedColumn.setCellFactory(TrackLineSubjectBooleanTableColumn -> new BooleanIconTableCell<>("/Framework.GUI.Images/train_rail_24.png", "/Framework.GUI.Images/train_24.png", 24, 24));
+        directionColumn.setCellFactory(TrackLineSubjectBooleanTableColumn -> {
+            return new DirectionTableCell("/Framework.GUI.Images/down_arrow.png", "/Framework.GUI.Images/up_arrow.png", 24, 24);
         });
 
         // Set the items of the table to this subject
@@ -306,21 +302,25 @@ public class TrackModelManager {
 
         switch(failure) {
             case "Broken Rail" :
-//                currentBlockSubject.setBrokenRail(true);
+                currentBlockSubject.setBrokenRail(true);
+                currentBlockSubject.setIsOccupied(true);
                 TrackLineMap.getTrackLine(line).setBrokenRail(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Track Circuit Failure" :
-//                currentBlockSubject.setTrackCircuitFailure(true);
+                currentBlockSubject.setTrackCircuitFailure(true);
+                currentBlockSubject.setIsOccupied(true);
                 TrackLineMap.getTrackLine(line).setTrackCircuitFailure(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Power Failure" :
-//                currentBlockSubject.setPowerFailure(true);
+                currentBlockSubject.setPowerFailure(true);
+                currentBlockSubject.setIsOccupied(true);
                 TrackLineMap.getTrackLine(line).setPowerFailure(currentBlockSubject.getBlockNumber(), true);
                 break;
             case "Fix Track Failure" :
-//                currentBlockSubject.setBrokenRail(false);
-//                currentBlockSubject.setTrackCircuitFailure(false);
-//                currentBlockSubject.setPowerFailure(false);
+                currentBlockSubject.setBrokenRail(false);
+                currentBlockSubject.setTrackCircuitFailure(false);
+                currentBlockSubject.setPowerFailure(false);
+                currentBlockSubject.setIsOccupied(false);
                 TrackLineMap.getTrackLine(line).fixTrackFailure(currentBlockSubject.getBlockNumber());
             default:
                 break;

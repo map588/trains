@@ -47,12 +47,11 @@ public class TrackLine implements TrackModel {
     //Task Queue
     private final ConcurrentLinkedQueue<Callable<Object>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
-    private long time = 0;
+    //TODO: how should i set the time. currently is it only 0
+    int time = 0;
 
     private final BeaconParser beaconParser = BeaconParser.getInstance();
 
-    TrackBlockSubject subject;
-    //    ObservableList<TrackBlockSubject> subjectList = FXCollections.observableArrayList();
     ObservableList<TrackBlockSubject> subjectList;
 
     private int ticketSales = 0;
@@ -474,7 +473,6 @@ public class TrackLine implements TrackModel {
             Platform.runLater(() -> subjectList.forEach(subject -> subject.setTicketSales(this.ticketSales)));
             this.ticketSales = 0;
             newTemperature();
-
         }
         return ticketSales;
     }
@@ -483,11 +481,6 @@ public class TrackLine implements TrackModel {
     public Lines getLine() {
         return this.line;
     }
-
-    public void resetTicketSales() {
-        this.ticketSales = 0;
-    }
-
 
     public void newTemperature(){
         queueTrackUpdate(() -> {
