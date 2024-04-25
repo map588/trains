@@ -44,8 +44,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final Stack<PLCChange>[] plcResults;
     private Stack<PLCChange> currentPLCResult;
     private boolean isRunningPLC;
-    private final Queue<Integer> occupancyBlockIDStack = new LinkedList<>();
-    private final Queue<Boolean> occupancyValStack = new LinkedList<>();
+    private final Deque<Integer> occupancyBlockIDStack = new ArrayDeque<>();
+    private final Deque<Boolean> occupancyValStack = new ArrayDeque<>();
     private final Map<Integer, Integer> authorityMap = new HashMap<>();
     private final Map<Integer, Double> speedMap = new HashMap<>();
 
@@ -153,11 +153,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                     }
                 }
 
-                while (!occupancyBlockIDStack.isEmpty()) {
-                    logger.info("Setting occupancy for block {} to {}", occupancyBlockIDStack.peek(), occupancyValStack.peek());
-                    setOccupancy(occupancyBlockIDStack.remove(), occupancyValStack.remove());
-                }
             }
+
 
             for (WaysideBlock block : blockMap.values()) {
                 if (block.isOccupied()) {
@@ -175,6 +172,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             }
 
             setRunningPLC(false);
+
+            while (!occupancyBlockIDStack.isEmpty()) {
+                logger.info("Setting occupancy for block {} to {} from QUEUE", occupancyBlockIDStack.peek(), occupancyValStack.peek());
+                setOccupancy(occupancyBlockIDStack.pop(), occupancyValStack.pop());
+            }
+
         }
     }
 
@@ -214,12 +217,14 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             return;
         }
         if(isRunningPLC()) {
-            occupancyBlockIDStack.add(blockID);
-            occupancyValStack.add(occupied);
+            logger.info("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
+            occupancyBlockIDStack.push(blockID);
+            occupancyValStack.push(occupied);
         }
         else {
             setOccupancy(blockID, occupied);
         }
+        logger.info("AFTER Being told to set occupancy for block {} to {}", blockID, occupied);
     }
 
     private void setOccupancy(int blockID, boolean occupied) {
