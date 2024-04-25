@@ -444,7 +444,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
     }
 
 
-    public int updatePassengers(int passengersEmbarked) {
+    public void updatePassengers() {
+        int passengersEmbarked = track.embarkPassengers(this);
         int passengersDisembarked;
         if(this.numPassengers <= 0) {
             this.numPassengers = passengersEmbarked;
@@ -456,8 +457,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
                 this.numPassengers = Constants.MAX_PASSENGERS;
             } else this.numPassengers += passengersEmbarked - passengersDisembarked;
         }
+        track.disembarkPassengers(this, passengersDisembarked);
         this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
-        return passengersDisembarked;
     }
 
     public void setValue(String propertyName, Object newValue){
