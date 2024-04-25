@@ -75,7 +75,7 @@ public interface  TrainModel {
     int getNumCars();
 
 
-
+    void updatePassengers();
 
     //Vital Functions for simulating the train physics
     void setValue(String propertyName, Object newValue);

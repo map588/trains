@@ -359,6 +359,8 @@ public class TrainControllerImpl implements TrainController {
                 waysideStop = false;
                 stopTime = 0;
             }
+            train.updatePassengers();
+
 
             this.setLeftDoors(false);
             this.setRightDoors(false);
