@@ -83,10 +83,6 @@ class CTCBlock implements Notifier {
      * Sets the state of the switch and updates the switch state of the converging and diverging blocks.
      */
     void setSwitchState(boolean GUI, boolean state) {
-        if(!this.isSwitchCon){
-            logger.warn("Set switch state called on non-switch block: {}  on line {}", this.blockID, blockID.line());
-            return;
-        }
         if(!underMaintenance && GUI){
             setUnderMaintenance(true, true);
         }
