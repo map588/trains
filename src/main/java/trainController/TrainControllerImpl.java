@@ -345,14 +345,18 @@ public class TrainControllerImpl implements TrainController {
      * onStation()
      */
     public void onStation() {
-        if (train.getSpeed() == 0) {                             // Check if train is stopped
+        // Check if train is stopped
+        if (train.getSpeed() == 0) {
 
-            if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
-            if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
 
-            setArrivalStation(currentBlock.stationName());
-
-            logger.warn("Train stopping at station {}", nextStationName);
+            if(stopTime == 0) {
+                this.setLeftPlatform(currentBlock.Doorside().contains("LEFT"));
+                this.setRightPlatform(currentBlock.Doorside().contains("RIGHT"));
+                if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
+                if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
+                logger.warn("Train stopping at station {}", nextStationName);
+                train.updatePassengers();
+            }
 
             if (++stopTime < (60 * 8)) {
                 waysideStop = true;
@@ -361,11 +365,17 @@ public class TrainControllerImpl implements TrainController {
                 waysideStop = false;
                 stopTime = 0;
             }
-            train.updatePassengers();
 
 
-            this.setLeftDoors(false);
-            this.setRightDoors(false);
+
+            setArrivalStation(currentBlock.stationName());
+
+            if(!waysideStop) {
+                this.setLeftDoors(false);
+                this.setRightDoors(false);
+                this.setLeftPlatform(false);
+                this.setRightPlatform(false);
+            }
         }
     }
 
