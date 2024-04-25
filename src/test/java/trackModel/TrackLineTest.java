@@ -1,21 +1,20 @@
 package trackModel;
 
+
 import Integration.BaseTest;
-import Utilities.HelperObjects.BasicTrackLine;
 import Utilities.Constants;
 import Utilities.Enums.Lines;
-import Utilities.Records.BasicBlock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import stubs.trainStub;
 
-import java.util.concurrent.ConcurrentSkipListSet;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 
 class TrackLineTest extends BaseTest {
@@ -40,13 +39,13 @@ class TrackLineTest extends BaseTest {
         executorService.scheduleAtFixedRate(() ->
         {
             trackLine.update();
-        }, 2, (long)Constants.TIME_STEP_MS, TimeUnit.MILLISECONDS);
+        }, 2, (long) Constants.TIME_STEP_MS, TimeUnit.MILLISECONDS);
         stub.go_Brr();
     }
 
     @Test
     void testTrainDispatch() {
-        assertEquals(1,trackLine.trainCount());
+        assertEquals(1, trackLine.trainCount());
     }
 
     @Test
@@ -76,7 +75,7 @@ class TrackLineTest extends BaseTest {
 
     @Test
     public void testPassengers() {
-        assertNotEquals(0,trackLine.embarkPassengers(stub));
+        assertNotEquals(0, trackLine.embarkPassengers(stub));
     }
 
     @Test
@@ -85,11 +84,8 @@ class TrackLineTest extends BaseTest {
         assertEquals(0, trackLine.getTicketSales());
         trackLine.embarkPassengers(stub);
     }
-
-    @Test
-    public void testBeacons() {
-
-
-    }
 }
+
+
+
 
