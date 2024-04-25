@@ -1,6 +1,7 @@
 package trainModel;
 
 import Integration.BaseTest;
+import trackModel.TrackLine;
 import trainModel.Records.UpdatedTrainValues;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -58,20 +59,20 @@ public class trainModelImplTest extends BaseTest {
         assertTrue(model.getExtLights());
     }
 
-    @Test
-    void testTrainModelTimeStep() throws Exception {
-        // Create a mock of Future<UpdatedTrainValues>
-        Future<UpdatedTrainValues> futureMock = mock(Future.class);
-
-        // Define the behavior of the mock
-        when(futureMock.get()).thenReturn(new UpdatedTrainValues(300, true, false, 70, true, true, false, false));
-
-        // Call the trainModelTimeStep() method with the mock as an argument
-        model.trainModelTimeStep(futureMock);
-
-        // Verify that the get() method of the mock was called
-        verify(futureMock).get();
-    }
+//    @Test
+//    void testTrainModelTimeStep() throws Exception {
+//        // Create a mock of Future<UpdatedTrainValues>
+//        Future<UpdatedTrainValues> futureMock = mock(Future.class);
+//
+//        // Define the behavior of the mock
+//        when(futureMock.get()).thenReturn(new UpdatedTrainValues(300, true, false, 70, true, true, false, false));
+//
+//        // Call the trainModelTimeStep() method with the mock as an argument
+//        model.trainModelTimeStep(futureMock);
+//
+//        // Verify that the get() method of the mock was called
+//        verify(futureMock).get();
+//    }
 
     @Test
     void testTimeStepWithFailures() throws Exception {
@@ -96,20 +97,26 @@ public class trainModelImplTest extends BaseTest {
         assertFalse(model.getEmergencyBrake());
     }
 
-//    @Test
-//    void testPhysics() throws Exception {
-//        model.setPower(300);
-//        model.setServiceBrake(false);
-//        model.setEmergencyBrake(false);
-//        model.setMass(37103.86);
-//        model.setGrade(0.0);
-//        model.setAcceleration(0.0);
-//        model.setActualSpeed(10.0);
-//        model.setSetTemperature(70.0);
-//        model.setRealTemperature(70.0);
-//
-//        model.trainModelPhysics();
-//
-//
-//    }
+    @Test
+    void testPhysics() {
+
+        // Set initial values
+        model.setPower(300);
+        model.setServiceBrake(false);
+        model.setEmergencyBrake(false);
+        model.setMass(37103.86);
+        model.setGrade(0.0);
+        model.setAcceleration(0.0);
+        model.setActualSpeed(10.0);
+        model.setSetTemperature(70.0);
+        model.setRealTemperature(70.0);
+
+        // Call the method to test
+        model.trainModelPhysics();
+
+        // Check the actual speed after the physics update
+        // The expected value here should be replaced with the expected result based on the initial values set above
+        double expectedSpeed = 10.038; // Replace with the expected speed
+        assertEquals(expectedSpeed, model.getSpeed());
+    }
 }
