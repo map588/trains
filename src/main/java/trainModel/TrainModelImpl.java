@@ -201,11 +201,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //Check if the train is fully loaded
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
-            this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
+            this.setMass (Constants.LOADED_TRAIN_MASS * this.numCars);
         }
 
         //NEXT BLOCK NOTICE
-        if (currentBlockLength - relativeDistance <= 0) {
+        if(currentBlockLength - relativeDistance <= 0) {
             enteredNextBlock();
         }
 
@@ -226,10 +226,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         double engineForce;
         if (this.power > 0.0001 && this.speed < 0.0001) {
             engineForce = this.power / 0.1;
-        } else if(){
-
-
-        }else{
+        }
+        else {
             engineForce = this.power / this.speed;
         }
 

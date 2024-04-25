@@ -229,6 +229,7 @@ public class TrainControllerImpl implements TrainController {
                 pow = 0;
                 setServiceBrake(true);
             }
+
             // Cut off power if brakes are engaged or there's a failure
             if (emergencyBrake || serviceBrake) {
                 pow = 0;
@@ -280,17 +281,20 @@ public class TrainControllerImpl implements TrainController {
             }
         }
 
+        //if any failure is detected, set the emergency brake
         if (brakeFailure || powerFailure || signalFailure) {
             setEmergencyBrake(true);
-        } else {
+        } else {  //else set the emergency brake to the GUI value, or the passenger emergency brake
             setEmergencyBrake(this.eBrakeGUI || this.passengerEngageEBrake);
         }
 
+        //How far would we travel if we slammed the brakes right now?
         calculateStoppingDistance(this.currentSpeed);
 
-        if (this.internalAuthority < emergencyDistance) {
+        //If ebrake stopping distance is farther than authority, set the emergency brake
+        if (this.internalAuthority <= emergencyDistance) {
             setEmergencyBrake(true);
-        } else if (this.internalAuthority < serviceDistance) {
+        } else if (this.internalAuthority <= serviceDistance) { //same for sbrake
             setServiceBrake(true);
         }
 
@@ -307,9 +311,7 @@ public class TrainControllerImpl implements TrainController {
     }
 
 
-    /**
-     * onBlock()
-     */
+    //Function is called by the train when it detects that it enters a new block
     @Override
     public void onBlock() {
         if (currentBeacon != null) {
@@ -441,6 +443,58 @@ public class TrainControllerImpl implements TrainController {
                 break;
         }
     }
+
+
+    @Override
+    public void updateBeacon(Beacon beacon) {
+        logger.warn("Updating Beacon: {}", beacon);
+        if (currentBeacon != null) {
+            boolean isEnteringJunction = currentBeacon.endId().equals(beacon.sourceId());
+            boolean isExitingJunction = currentBeacon.sourceId().equals(beacon.sourceId());
+
+
+            boolean backWardsBeacon = currentBeacon.sourceId().equals(beacon.endId());
+
+
+            ControllerBlock block =  getBlock(beacon.sourceId());
+
+            if (isEnteringJunction && !backWardsBeacon) {
+                if(block.isStation()) {
+                    logger.warn("Arriving at station: {}", block.stationName());
+                }else{
+                    logger.warn("ENTERING SWITCH: {}", block.blockNumber());
+                }
+                currentBeacon = beacon;
+                this.setNextStationName(findNextStationName());
+                currentBeacon.blockIndices().pollFirst();
+            } else if (isExitingJunction) {
+                if(block.isStation()) {
+                    logger.warn("Departing from {}", block.stationName());
+                }else{
+                    logger.warn("EXITING SWITCH: {}", block.blockNumber());
+                }
+                beacon.blockIndices().pollFirst();
+                this.setNextStationName(findNextStationName());
+                currentBeacon = beacon;
+
+            } else if (backWardsBeacon) {
+
+                currentBlock = getBlock(currentBeacon.sourceId());
+
+                logger.warn("Wrong beacon direction, rejecting beacon: {}", beacon);
+            }else {
+                logger.warn("Beacon is not related to current block: {}", beacon);
+                currentBeacon = beacon;
+                currentBeacon.blockIndices().pollFirst();
+            }
+        }else{
+            currentBeacon = beacon;
+            currentBeacon.blockIndices().pollFirst();
+            this.setNextStationName(findNextStationName());
+            logger.warn("First Beacon: {}", currentBeacon);
+        }
+    }
+
 
     public void setCommandSpeed(double speed) {
         if (speed == -1) {
@@ -827,55 +881,7 @@ public class TrainControllerImpl implements TrainController {
 //    }
 
 
-    @Override
-    public void updateBeacon(Beacon beacon) {
-        logger.warn("Updating Beacon: {}", beacon);
-        if (currentBeacon != null) {
-            boolean isEnteringJunction = currentBeacon.endId().equals(beacon.sourceId());
-            boolean isExitingJunction = currentBeacon.sourceId().equals(beacon.sourceId());
 
-
-            boolean backWardsBeacon = currentBeacon.sourceId().equals(beacon.endId());
-
-
-            ControllerBlock block =  getBlock(beacon.sourceId());
-
-            if (isEnteringJunction && !backWardsBeacon) {
-               if(block.isStation()) {
-                    logger.warn("Arriving at station: {}", block.stationName());
-                }else{
-                    logger.warn("ENTERING SWITCH: {}", block.blockNumber());
-                }
-                currentBeacon = beacon;
-                this.setNextStationName(findNextStationName());
-                currentBeacon.blockIndices().pollFirst();
-            } else if (isExitingJunction) {
-                if(block.isStation()) {
-                    logger.warn("Departing from {}", block.stationName());
-                }else{
-                    logger.warn("EXITING SWITCH: {}", block.blockNumber());
-                }
-                beacon.blockIndices().pollFirst();
-                this.setNextStationName(findNextStationName());
-                currentBeacon = beacon;
-
-            } else if (backWardsBeacon) {
-
-                currentBlock = getBlock(currentBeacon.sourceId());
-
-                logger.warn("Wrong beacon direction, rejecting beacon: {}", beacon);
-            }else {
-                logger.warn("Beacon is not related to current block: {}", beacon);
-                currentBeacon = beacon;
-                currentBeacon.blockIndices().pollFirst();
-            }
-        }else{
-            currentBeacon = beacon;
-            currentBeacon.blockIndices().pollFirst();
-            this.setNextStationName(findNextStationName());
-            logger.warn("First Beacon: {}", currentBeacon);
-        }
-    }
 
     private ControllerBlock getBlock(Integer i) {
         return blockLookup.get(i);
@@ -884,7 +890,6 @@ public class TrainControllerImpl implements TrainController {
     public void setValue(Enum<?> propertyName, Object newValue) {
         setValue((ControllerProperty) propertyName, newValue);
     }
-
 
 
     private static class intWrapper{
@@ -905,4 +910,5 @@ public class TrainControllerImpl implements TrainController {
             value++;
         }
     }
+
 }

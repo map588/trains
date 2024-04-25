@@ -363,6 +363,11 @@ public class trainStub implements TrainModel {
     }
 
     @Override
+    public void updatePassengers() {
+
+    }
+
+    @Override
     public double getDistanceTraveled() {
         return distanceTraveled;
     }
