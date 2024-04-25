@@ -45,6 +45,8 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     private final CTCOffice ctcOffice;
 
     private boolean isReady = true;
+    private final Map<Integer, Integer> authorityMap = new HashMap<>();
+    private final Map<Integer, Double> speedMap = new HashMap<>();
 
     private final SerialPort port;
     private final PrintStream printStream;
@@ -213,40 +215,53 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     public void CTCSendAuthority(int blockID, int blockCount) {
         logger.info("CTCSendAuthority: " + blockID + " " + blockCount);
 
-        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
-            trackModel.setTrainAuthority(blockID, blockCount);
+        if(blockMap.get(blockID).isOccupied()) {
+            if(trackModel != null)
+                trackModel.setTrainAuthority(blockID, blockCount);
+        }
+        else {
+            authorityMap.put(blockID, blockCount);
         }
     }
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
-        WaysideBlock block = blockMap.get(blockID);
-        if(!block.inMaintenance() && block.isOccupied() != occupied) {
-            blockMap.get(blockID).setOccupied(occupied);
+        blockMap.get(blockID).setOccupied(occupied);
 
-            logger.info("Send: occupancy=" + blockID + ":" + occupied);
-            printStream.println("occupancy=" + blockID + ":" + occupied);
+        logger.info("Send: occupancy=" + blockID + ":" + occupied);
+        printStream.println("occupancy=" + blockID + ":" + occupied);
 
-            if (ctcOffice != null)
-                ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
-
-            if (occupied && !blockMap.get(blockID).getBooleanAuth()) {
-                trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
-            }
-        }
+        if (ctcOffice != null)
+            ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
     }
 
     @Override
     public void trackModelMoveOccupancy(int oldBlockID, int newBlockID) {
+        blockMap.get(oldBlockID).setOccupied(false);
+        blockMap.get(newBlockID).setOccupied(true);
 
+        logger.info("Send: occupancy=" + newBlockID + ":" + true);
+        printStream.println("occupancy=" + newBlockID + ":" + true);
+
+        logger.info("Send: occupancy=" + oldBlockID + ":" + false);
+        printStream.println("occupancy=" + oldBlockID + ":" + false);
+
+        if (ctcOffice != null) {
+            ctcOffice.setBlockOccupancy(trackLine, newBlockID, true);
+            ctcOffice.setBlockOccupancy(trackLine, oldBlockID, false);
+        }
     }
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
         logger.info("CTCSendSpeed: " + blockID + " " + speed);
 
-        if(blockMap.get(blockID).isOccupied() && trackModel != null) {
-            trackModel.setCommandedSpeed(blockID, speed);
+        if(blockMap.get(blockID).isOccupied()) {
+            if(trackModel != null)
+                trackModel.setCommandedSpeed(blockID, speed);
+        }
+        else {
+            speedMap.put(blockID, speed);
         }
     }
 
@@ -288,6 +303,21 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
 //        else {
 //            logger.info("PLC not ready");
 //        }
+
+        for (WaysideBlock block : blockMap.values()) {
+            if (block.isOccupied()) {
+                trackModel.setTrainAuthority(block.getBlockID(), block.getBooleanAuth() ? RESUME_TRAIN_SIGNAL : STOP_TRAIN_SIGNAL);
+
+                if (authorityMap.containsKey(block.getBlockID())) {
+                    CTCSendAuthority(block.getBlockID(), authorityMap.get(block.getBlockID()));
+                    authorityMap.remove(block.getBlockID());
+                }
+                if (speedMap.containsKey(block.getBlockID())) {
+                    CTCSendSpeed(block.getBlockID(), speedMap.get(block.getBlockID()));
+                    speedMap.remove(block.getBlockID());
+                }
+            }
+        }
     }
 
     @Override
