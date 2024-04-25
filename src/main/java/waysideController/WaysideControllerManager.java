@@ -165,7 +165,7 @@ public class WaysideControllerManager {
                 new BooleanIconTableCell<>(null, "/Framework.GUI.Images/train_24.png", 24, 24)
         );
         blockTableLightsColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
-                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Signal_Light_Red_24.png", "/Framework.GUI.Images/Signal_Light_Green_24.png", 24, 24, hasLight_p);
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new TernaryIconTableCell("/Framework.GUI.Images/Signal_Light_Red_24.png", "/Framework.GUI.Images/Signal_Light_Green_24.png", 24, 24, hasLight_p);
                 tabelCell.setOnMouseClicked(event -> {
                     if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                         if(tabelCell.getTableRow().getItem().getBlock().hasLight()) {
@@ -177,7 +177,7 @@ public class WaysideControllerManager {
             }
         );
         blockTableCrossingColumn.setCellFactory(waysideBlockSubjectBooleanTableColumn -> {
-                TableCell<WaysideBlockSubject, Boolean> tabelCell = new SignalLightTableCell("/Framework.GUI.Images/Crossing_Down_24.png", "/Framework.GUI.Images/Crossing_Up_24.png", 24, 24, hasCrossing_p);
+                TableCell<WaysideBlockSubject, Boolean> tabelCell = new TernaryIconTableCell("/Framework.GUI.Images/Crossing_Down_24.png", "/Framework.GUI.Images/Crossing_Up_24.png", 24, 24, hasCrossing_p);
                 tabelCell.setOnMouseClicked(event -> {
                     if(currentSubject.getBooleanProperty(maintenanceMode_p).get()) {
                         if(tabelCell.getTableRow().getItem().getBlock().hasCrossing()) {

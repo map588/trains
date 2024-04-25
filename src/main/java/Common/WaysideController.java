@@ -25,6 +25,8 @@ public interface WaysideController {
     // Allows Track Model to set train occupancy for a specific block
     void trackModelSetOccupancy(int blockID, boolean isOccupied);
 
+    void trackModelMoveOccupancy(int oldBlockID, int newBlockID);
+
     void CTCSendSpeed(int blockID, double speed);
 
     // Allows CTC to enable or disable a block (works with automatic mode)
