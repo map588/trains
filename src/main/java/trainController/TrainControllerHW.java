@@ -21,7 +21,6 @@ import java.rmi.registry.Registry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static Utilities.Constants.EMERGENCY_BRAKE_DECELERATION;
-import static Utilities.Constants.TIME_STEP_S;
 
 public class TrainControllerHW implements TrainController {
 
@@ -33,11 +32,7 @@ public class TrainControllerHW implements TrainController {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
-
-    private static final double TIME_STEP = TIME_STEP_S;
-    private static final double DEAD_BAND = 0.05;
     private final int trainID;
-
     private double  authority;
     private double  internalAuthority = 0.0;
     private double  commandSpeed = 0.0;
@@ -48,6 +43,7 @@ public class TrainControllerHW implements TrainController {
     private boolean serviceBrake = false;
     private boolean emergencyBrake = false;
     private boolean automaticMode = true;
+    private boolean manualMode = false;
 
     private boolean brakeFailure = false;
     private boolean powerFailure = false;
@@ -61,13 +57,23 @@ public class TrainControllerHW implements TrainController {
     private Lines line;
 
 
+    private double  grade = 0.0;
     private double  speedLimit = 0.0;
     private double  setTemperature = 0.0;
     private double  currentTemperature = 0.0;
+
     private boolean eBrakeGUI = false;
     private boolean sBrakeGUI = false;
-    private boolean waysideStop;
-    private boolean passengerEBrake;
+
+
+    private boolean extLights = false;
+    private boolean intLights = false;
+    private boolean leftDoors = false;
+    private boolean rightDoors = false;
+
+    private double ki = 0.0;
+    private double kp = 0.0;
+
 
 
     String nextStationName;
@@ -78,7 +84,7 @@ public class TrainControllerHW implements TrainController {
     private final TrainModel train;
 
     private TrainControllerRemote remoteInstance;
-
+    private boolean passengerEBrake;
 
 
     public TrainControllerHW(TrainModel train, int trainID) {
@@ -339,92 +345,92 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public int getID() {
-        return 0;
+        return this.trainID;
     }
 
     @Override
     public double getPower() {
-        return 0;
+        return this.power;
     }
 
     @Override
     public double getKi() {
-        return 0;
+        return this.ki;
     }
 
     @Override
     public double getKp() {
-        return 0;
+        return this.kp;
     }
 
     @Override
     public double getOverrideSpeed() {
-        return 0;
+        return this.overrideSpeed;
     }
 
     @Override
     public double getSpeedLimit() {
-        return 0;
+        return this.speedLimit;
     }
 
     @Override
     public boolean getServiceBrake() {
-        return false;
+        return this.serviceBrake;
     }
 
     @Override
     public boolean getEmergencyBrake() {
-        return false;
+        return this.emergencyBrake;
     }
 
     @Override
     public boolean getAutomaticMode() {
-        return false;
+        return this.automaticMode;
     }
 
     @Override
     public boolean getExtLights() {
-        return false;
+        return this.extLights;
     }
 
     @Override
     public boolean getIntLights() {
-        return false;
+        return this.intLights;
     }
 
     @Override
     public boolean getLeftDoors() {
-        return false;
+        return this.leftDoors;
     }
 
     @Override
     public boolean getRightDoors() {
-        return false;
+        return this.rightDoors;
     }
 
     @Override
     public double getSetTemperature() {
-        return 0;
+        return this.setTemperature;
     }
 
     @Override
     public double getCurrentTemperature() {
-        return 0;
+        return this.currentTemperature;
     }
 
     @Override
     public double getCommandSpeed() {
-        return 0;
+        return this.commandSpeed;
     }
 
     @Override
     public int getAuthority() {
-        return 0;
+        return (int) this.authority;
     }
 
     @Override
     public void setSetTemperature(double newTemperature) {
-
+        this.setTemperature = newTemperature;
     }
 
     @Override
@@ -434,17 +440,17 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public boolean getSignalFailure() {
-        return false;
+        return this.signalFailure;
     }
 
     @Override
     public boolean getBrakeFailure() {
-        return false;
+        return this.brakeFailure;
     }
 
     @Override
     public boolean getPowerFailure() {
-        return false;
+        return this.powerFailure;
     }
 
     @Override
@@ -468,29 +474,23 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public double getGrade() {
-        return 0;
+        return this.grade;
     }
-
-
 
     @Override
     public TrainModel getTrain() {
-        return null;
+        return this.train;
     }
-
-
 
     @Override
     public double getSpeed() {
-        return 0;
+        return this.currentSpeed;
     }
 
     @Override
     public Beacon getBeacon() {
         return null;
     }
-
-
 
 
     //Here only for the sake of the interface

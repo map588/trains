@@ -19,6 +19,11 @@ public class BasicBlockParser {
         map.forEach(this::addLines);
     }
 
+    public BasicBlockParser(String filePath) {
+        ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> map = BlockParser.parseCSV(filePath);
+        map.forEach(this::addLines);
+    }
+
     private void addLines(Lines line, ConcurrentSkipListMap<Integer, BasicBlock> blocks) {
         basicBlocks.put(line, blocks);
     }

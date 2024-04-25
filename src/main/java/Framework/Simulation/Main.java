@@ -9,7 +9,9 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static Framework.Simulation.BaseApplication.initializeJavaFX;
 
@@ -175,7 +177,18 @@ public class Main {
         }
 
 
-        public static void stopSimulation() {
+        public static void loadNewTrack(String trackFile) {
+            try {
+                Objects.requireNonNull(stopSimulation()).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            BasicBlockParser.getInstance().updateFile(trackFile);
+        }
+
+
+        public static Future<Void> stopSimulation() {
+            AtomicReference<Future<Void>> stopConfirmation = new AtomicReference<>();
             // Cancel the scheduled task
             if (scheduledTask != null && !scheduledTask.isDone()) {
                 scheduledTask.cancel(false);
@@ -206,6 +219,8 @@ public class Main {
                     Thread.currentThread().interrupt();
                 }
             }
+            return stopConfirmation.get();
         }
+
     }
 }
