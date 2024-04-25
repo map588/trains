@@ -192,6 +192,10 @@ public class TrainSchedule {
                 visited = TrackLayout.indexOf(stops.get(i).getStationBlockID());
             }
         }
+        if(stops.get(stops.size() - 1).getStationBlockID() != TrackLayout.get(TrackLayout.size() - 1)) {
+            addStop(TrackLayout.get(TrackLayout.size() - 1), 0, 0);
+            return -3;
+        }
         return -2;
     }
 
