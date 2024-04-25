@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static CTCOffice.CTCOfficeImpl.*;
 
@@ -18,7 +19,8 @@ public class TrainSchedule {
     private final ArrayList<TrainStop> stops;
     public final ObservableList<Integer> stopIndices = FXCollections.observableArrayList();
     public final ObservableList<TrainStopSubject> stopList;
-
+    
+    private final static double KmphToMps = 0.277778;
     private int stopsCompleted = 0;
     private int currentBlockIndex = 0;
 
@@ -265,8 +267,19 @@ public class TrainSchedule {
             }
             visited += blocksAuthority;
         }
+        if(stops.get(0).getAuthorityList().get(0) < (stops.get(0).getArrivalTime() - dispatchTime) * 3) {
+            stops.get(0).setArrivalTime(dispatchTime + (stops.get(0).getAuthorityList().get(0) / 3));
+            stops.get(0).setDepartureTime(stops.get(0).getArrivalTime() + 60);
+        }
+        for(int i = 1; i < stops.size(); i++) {
+            if (stops.get(i).getAuthorityList().get(0) < ((stops.get(i).getArrivalTime() - stops.get(i - 1).getDepartureTime()) * 3)) {
+                stops.get(i).setArrivalTime(stops.get(i - 1).getDepartureTime() + (stops.get(i).getAuthorityList().get(0) / 3));
+                stops.get(i).setDepartureTime(stops.get(i).getArrivalTime() + 60);
+            }
+        }
     }
-
+    
+    // TODO: go back and account for the last block in each stop being half length
     public void setSpeeds() {
         for (TrainStop stop : stops) {
             double scheduledTraversalTime =
@@ -276,15 +289,19 @@ public class TrainSchedule {
             double minTraversalTime = 0.0;
             stop.getSpeedList().clear();
             for (int j = 0; j < stop.getRoutePath().size(); j++) {
-                stop.getSpeedList().add((blockSubjectMap.getSubject(BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getSpeedLimit() * 0.277778));
+                stop.getSpeedList().add((blockSubjectMap.getSubject(BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getSpeedLimit() * KmphToMps));
                 minTraversalTime +=
                         (blockSubjectMap.getSubject(
                                   BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line)))
                                   .getBlockInfo().getLength())
                         / /*< --- Dividing ---->*/
                         (blockSubjectMap.getSubject(
-                                BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line)))
-                                  .getBlockInfo().getSpeedLimit()   * 0.277778);
+                                BlockIDs.of(stop
+                                                .getRoutePath()
+                                                .get(j),
+
+                                Enum.valueOf(Lines.class, line))).getBlockInfo()
+                                                                                      .getSpeedLimit()   * KmphToMps);
             }
             if(scheduledTraversalTime < minTraversalTime) {
                 if(stop.getStopIndex() == 0) {
@@ -294,6 +311,43 @@ public class TrainSchedule {
                     stop.setDepartureTime(stop.getArrivalTime() + 60);
                 }
             }
+            else{
+                double averageSpeed = stop.getAuthorityList().get(0) / scheduledTraversalTime;
+                double timeUnderSpeedLimit = 0;
+                double metersCoveredUnderSpeedLimit = 0;
+                for(int j = 0; j < stop.getRoutePath().size(); j++) {
+                    CTCBlock block = CTCBlockSubjectMap.getInstance().getSubject(BlockIDs.of(stop.getRoutePath().get(j), Enum.valueOf(Lines.class, line))).getBlockInfo();
+                    if(stop.getSpeedList().get(j) <= averageSpeed){
+                        metersCoveredUnderSpeedLimit += block.getLength();
+                        timeUnderSpeedLimit += block.getLength() / (block.getSpeedLimit() * KmphToMps);
+                    }else{
+                        stop.getSpeedList().set(j, 0.0);
+                    }
+                }
+                double metersCoveredOverSpeedLimit = stop.getAuthorityList().get(0) - metersCoveredUnderSpeedLimit;
+                double timeCoveredOverSpeedLimit = scheduledTraversalTime - timeUnderSpeedLimit;
+                for(int j = 0; j < stop.getRoutePath().size(); j++) {
+                    CTCBlock block = CTCBlockSubjectMap.getInstance().getSubject(
+                            BlockIDs.of(stop.getRoutePath().get(j), Lines.getLine(line))).getBlockInfo();
+                    if (stop.getSpeedList().get(j) >= 0.0000) {
+                        if ((block.getLength() / (block.getSpeedLimit() * KmphToMps)) >= (timeCoveredOverSpeedLimit - ((metersCoveredOverSpeedLimit - block.getLength()) / averageSpeed))) {
+                            stop.getSpeedList().set(j, block.getSpeedLimit() * KmphToMps);
+                            metersCoveredOverSpeedLimit -= block.getLength();
+                            timeCoveredOverSpeedLimit -= (block.getLength() / (block.getSpeedLimit() * KmphToMps));
+                        } else {
+                            stop.getSpeedList().set(j, (block.getLength() / (timeCoveredOverSpeedLimit - ((metersCoveredOverSpeedLimit - block.getLength()) / averageSpeed))));
+                            for (int k = j + 1; k < stop.getRoutePath().size(); k++) {
+                                stop.getSpeedList().set(k, averageSpeed);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            for(int j = 0; j < stop.getRoutePath().size(); j++) {
+                System.out.println("Speed : " + stop.getSpeedList().get(j) + "m/s set for the " + j + "th block of stop " + stop.getStopIndex() + " of train " + trainID + " for block " + stop.getRoutePath().get(j));
+            }
+            System.out.println();
         }
     }
 
