@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TrackLineTest extends BaseTest {
+class TrackLineTest extends BaseTest {
 
     // unit tests for TrackLine class
 
@@ -45,24 +45,24 @@ public class TrackLineTest extends BaseTest {
     }
 
     @Test
-    public void testTrainDispatch() {
+    void testTrainDispatch() {
         assertEquals(1,trackLine.trainCount());
     }
 
     @Test
-    public void testBrokenRail() {
+    void testBrokenRail() {
         trackLine.setBrokenRail(1, true);
         assertTrue(trackLine.getBrokenRail(1));
     }
 
     @Test
-    public void testPowerFailure() {
+    void testPowerFailure() {
         trackLine.setPowerFailure(1, true);
         assertTrue(trackLine.getPowerFailure(1));
     }
 
     @Test
-    public void testTrackCircuitFailure() {
+    void testTrackCircuitFailure() {
         trackLine.setTrackCircuitFailure(1, true);
         assertTrue(trackLine.getTrackCircuitFailure(1));
     }
@@ -77,7 +77,7 @@ public class TrackLineTest extends BaseTest {
 //    }
 
     @Test
-    public void testTicketSales() {
+    void testTicketSales() {
         assertEquals(0, trackLine.getTicketSales());
     }
 

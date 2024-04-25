@@ -9,10 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class BeaconTest extends BaseTest {
+class BeaconTest extends BaseTest {
 
     @Test
-    public void setUp() {
+    void setUp() {
         ConcurrentHashMap<Integer, Beacon> beacons = BeaconParser.getBeaconLine(Lines.GREEN);
         beacons.forEach((k, v) -> {
             System.out.println("Beacon: " + k);

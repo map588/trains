@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class BeaconParseTest extends BaseTest {
+class BeaconParseTest extends BaseTest {
 
     private ConcurrentHashMap<Lines, ConcurrentHashMap<Integer, Beacon>> beaconMap;
 

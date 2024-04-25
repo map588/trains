@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class trainModelImplTest extends BaseTest {
+class trainModelImplTest extends BaseTest {
 
     private static TrainModelImpl model;
     private static trackModel.TrackLine track;

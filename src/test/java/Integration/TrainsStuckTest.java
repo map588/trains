@@ -21,7 +21,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  * This class contains unit tests for the TrainControllerManager.
  * It extends ApplicationTest from the TestFX library to enable GUI testing.
  */
-public class TrainsStuckTest extends ApplicationTest {
+class TrainsStuckTest extends ApplicationTest {
 
     CTCOfficeImpl ctc;
 

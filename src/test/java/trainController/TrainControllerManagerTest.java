@@ -25,7 +25,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  * This class contains unit tests for the TrainControllerManager.
  * It extends ApplicationTest from the TestFX library to enable GUI testing.
  */
-public class TrainControllerManagerTest extends ApplicationTest {
+class TrainControllerManagerTest extends ApplicationTest {
 
     TrainControllerImpl controller;
     TrainModel mockModel;
@@ -108,7 +108,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      */
     @Test
 
-    public void testAutomaticModeCheckBox() {
+    void testAutomaticModeCheckBox() {
 
         CheckBox autoModeCheckBox = lookup("#autoModeCheckBox").queryAs(CheckBox.class);
         boolean initialState = autoModeCheckBox.isSelected();
@@ -126,7 +126,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the speed slider correctly sets the override speed in the controller.
      */
     @Test
-    public void testSetSpeedSlider() {
+    void testSetSpeedSlider() {
 
         double newValue = 50.0;
         Slider setSpeedSlider = lookup("#setSpeedSlider").queryAs(Slider.class);
@@ -143,7 +143,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the internal and external light checkboxes toggle the light status in the controller.
      */
     @Test
-    public void testLightToggle() {
+    void testLightToggle() {
 
         CheckBox intLightCheckBox = lookup("#intLightCheckBox").queryAs(CheckBox.class);
         clickOn(intLightCheckBox);
@@ -159,7 +159,7 @@ public class TrainControllerManagerTest extends ApplicationTest {
      * This test verifies that the open door checkboxes toggle the door status in the controller.
      */
     @Test
-    public void testDoorOperations() {
+    void testDoorOperations() {
 
         CheckBox openDoorLeftCheckBox = lookup("#openDoorLeftCheckBox").queryAs(CheckBox.class);
         clickOn(openDoorLeftCheckBox);
