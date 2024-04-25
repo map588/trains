@@ -48,9 +48,6 @@ public class TrackLine implements TrackModel {
     //Task Queue
     private final ConcurrentLinkedQueue<Callable<Object>> trackUpdateQueue = new ConcurrentLinkedQueue<>();
 
-    //TODO: how should i set the time. currently is it only 0
-    int time = 0;
-
     private final BeaconParser beaconParser = BeaconParser.getInstance();
 
     ObservableList<TrackBlockSubject> subjectList;
@@ -77,10 +74,11 @@ public class TrackLine implements TrackModel {
                 TrackBlockSubject subject = new TrackBlockSubject(line, block);
                 if(BeaconParser.getBeaconLine(line).containsKey(blockIndex)) {
                     subject.setSetBeacon(beaconParser.getBeaconLine(line).get(blockIndex).toString());
+                    subject.setIsBeacon(true);
                 }else{
-                    subject.setSetBeacon("NONE");
+                    subject.setSetBeacon("");
+                    subject.setIsBeacon(false);
                 }
-                subject.setIsBeacon(true);
                 LineSubjectMap.addLineSubject(line, subject);
             }
 

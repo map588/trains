@@ -101,6 +101,7 @@ public class TrackBlockSubject {
         if(trackBlock.isCrossing()) {
             crossingState.set(trackBlock.getCrossingState() ? "DOWN" : "UP");
         }
+
     }
 
     private Lines line;
@@ -108,36 +109,9 @@ public class TrackBlockSubject {
     public TrackBlockSubject(Lines line, TrackBlock trackBlock) {
         this.line = line;
         initializeValues(trackBlock);
-        initializeListeners();
-//        trackBlockLine.forEach((blockID, block) -> {
-//            blockList.add(new TrackBlockSubjectOLD(block));
-//        });
     }
 
 
-
-    private void initializeListeners() {
-
-//        switchState.addListener((observableValue, oldValue, newVal) -> setSwitchState(newVal));
-//        signalState.addListener((observableValue, oldValue, newVal) -> setSignalState(newVal));
-//        isOccupied.addListener((observableValue, oldValue, newVal) -> {
-//            if (newVal) {
-//                setStatus("OCCUPIED");
-//            } else {
-//                setStatus("UNOCCUPIED");
-//            }
-//        });
-//
-//        tempProperty.addListener((observable, oldValue, newValue) -> {
-//                    System.out.println("Temp change detected");
-//                    if (Double.parseDouble(newValue) < 40) {
-//                        setTrackHeater("STATUS - ON");
-//                    } else {
-//                        setTrackHeater("STATUS - OFF");
-//                    }
-//                }
-//        );
-    }
 
     public int getBlockNumber() {
         return blockNumber.get();
