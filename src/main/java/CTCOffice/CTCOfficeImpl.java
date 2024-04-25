@@ -157,10 +157,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
         //if the block is on the yard then do nothing
         if(occupied) {
-            if(blockID == 0) {
-                if(antiTrainLocations.get(BlockIDs.of(0, line)).dispatchTime() < (time - 100000)){
-                    notifyTrainReturn(antiTrainLocations.get(BlockIDs.of(0, line)).trainID());
-                }
+            if(blockID == 0 ) {
                 return;
             }
             ArrayList<Integer> trackLayout = (line.equals(Lines.GREEN)) ? GreenTrackLayout : RedTrackLayout;

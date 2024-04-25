@@ -10,4 +10,5 @@ public interface CTCOffice{
     void setSwitchState(Lines line, int blockID, boolean switchState);
     void setCrossingState(Lines line, int blockID, boolean crossingState);
     void setBlockMaintenance(Lines line, int blockID, boolean underMaintenance);
+    void notifyTrainReturn(int trainID);
 }
