@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class WaysideControllerImplTests extends BaseTest {
+class WaysideControllerImplTests extends BaseTest {
     private WaysideControllerImpl controller;
     private TrackModel trackModel;
     private CTCOffice ctcOffice;

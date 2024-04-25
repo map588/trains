@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class WaysideControllerHWTests extends BaseTest {
+class WaysideControllerHWTests extends BaseTest {
     private WaysideControllerHWBridge controllerBridge;
 
     @BeforeEach

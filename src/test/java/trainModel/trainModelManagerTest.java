@@ -16,7 +16,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class trainModelManagerTest extends ApplicationTest {
+class trainModelManagerTest extends ApplicationTest {
 
     private TrainModelManager trainModelManager;
     private TrainModelImpl trainModel;
@@ -43,63 +43,63 @@ public class trainModelManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testEmergencyBrakeButton() {
+    void testEmergencyBrakeButton() {
         Button emergencyBrakeButton = lookup("#eBrakeBtn").queryButton();
         clickOn(emergencyBrakeButton);
         assertTrue(trainModel.getEmergencyBrake());
     }
 
     @Test
-    public void testBrakeFailureButton() {
+    void testBrakeFailureButton() {
         CheckBox brakeFailureButton = lookup("#brakeFailureBtn").queryAs(CheckBox.class);
         clickOn(brakeFailureButton);
         assertTrue(trainModel.getBrakeFailure());
     }
 
     @Test
-    public void testPowerFailureButton() {
+    void testPowerFailureButton() {
         CheckBox powerFailureButton = lookup("#powerFailureBtn").queryAs(CheckBox.class);
         clickOn(powerFailureButton);
         assertTrue(trainModel.getPowerFailure());
     }
 
     @Test
-    public void testSignalFailureButton() {
+    void testSignalFailureButton() {
         CheckBox signalFailureButton = lookup("#signalFailureBtn").queryAs(CheckBox.class);
         clickOn(signalFailureButton);
         assertTrue(trainModel.getSignalFailure());
     }
 
     @Test
-    public void testExternalLightsIndicator() {
+    void testExternalLightsIndicator() {
         trainModel.setExtLights(true);
         Circle extLightsIndicator = lookup("#extLightsEn").queryAs(Circle.class);
         assertEquals(Color.YELLOW, extLightsIndicator.getFill());
     }
 
     @Test
-    public void testInternalLightsIndicator() {
+    void testInternalLightsIndicator() {
         trainModel.setIntLights(true);
         Circle intLightsIndicator = lookup("#intLightsEn").queryAs(Circle.class);
         assertEquals(Color.YELLOW, intLightsIndicator.getFill());
     }
 
     @Test
-    public void testLeftDoorsIndicator() {
+    void testLeftDoorsIndicator() {
         trainModel.setLeftDoors(true);
         Circle leftDoorsIndicator = lookup("#leftDoorsEn").queryAs(Circle.class);
         assertEquals(Color.YELLOW, leftDoorsIndicator.getFill());
     }
 
     @Test
-    public void testRightDoorsIndicator() {
+    void testRightDoorsIndicator() {
         trainModel.setRightDoors(true);
         Circle rightDoorsIndicator = lookup("#rightDoorsEn").queryAs(Circle.class);
         assertEquals(Color.YELLOW, rightDoorsIndicator.getFill());
     }
 
     @Test
-    public void testTrainDropDown() {
+    void testTrainDropDown() {
         //TrainModelImpl newTrainModel = new TrainModelImpl();
 //        trainModelManager.subjectMap.getSubjects().put(1, newTrainModel);
 
@@ -111,7 +111,7 @@ public class trainModelManagerTest extends ApplicationTest {
     }
 
     @Test
-    public void testLabels() {
+    void testLabels() {
         Label massLabel = lookup("#massLabel").queryAs(Label.class);
         Label numPassengersLabel = lookup("#numPassengerLabel").queryAs(Label.class);
         Label crewCountLabel = lookup("#crewCountLabel").queryAs(Label.class);
