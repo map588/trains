@@ -1,7 +1,10 @@
 package trackModel;
 
+import Utilities.Enums.Direction;
 import Utilities.Enums.Lines;
 import javafx.beans.property.*;
+import trackModel.BlockTypes.BlockFeature;
+import trackModel.BlockTypes.SwitchBlock;
 
 public class TrackBlockSubject {
     private IntegerProperty blockNumber;
@@ -41,6 +44,9 @@ public class TrackBlockSubject {
     private StringProperty trackHeater;
     private StringProperty outsideTemp;
 
+    int switchBlockDef;
+    int switchBlockAlt;
+
 
     private void initializeValues(TrackBlock trackBlock) {
         blockNumber = new SimpleIntegerProperty(trackBlock.getBlockID());
@@ -77,6 +83,15 @@ public class TrackBlockSubject {
 
         if(trackBlock.isSwitch()) {
             switchState.set(trackBlock.getSwitchState() ? "ALTERNATE" : "MAIN");
+            SwitchBlock switchFeature = (SwitchBlock)trackBlock.getFeature();
+            if(switchFeature.getPrimarySwitchDir() == Direction.NORTH) {
+                this.switchBlockDef = switchFeature.getNorthDef().blockNumber();
+                this.switchBlockAlt = switchFeature.getNorthAlt().blockNumber();
+            }
+            else {
+                this.switchBlockDef = switchFeature.getSouthDef().blockNumber();
+                this.switchBlockAlt = switchFeature.getSouthAlt().blockNumber();
+            }
         }
 
         if(trackBlock.isLight()) {
@@ -330,6 +345,11 @@ public class TrackBlockSubject {
 
     public void setSwitchState(String switchState) {
         this.switchState.set(switchState);
+        if(switchState.equals("MAIN")) {
+            switchBlockID.set(Integer.toString(switchBlockDef));
+        } else {
+            switchBlockID.set(Integer.toString(switchBlockAlt));
+        }
     }
 
     public String getSignalID() {

@@ -474,4 +474,8 @@ public class TrackBlock {
     public boolean isBeacon() {
         return false;
     }
+
+    public BlockFeature getFeature() {
+        return feature;
+    }
 }
