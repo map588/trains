@@ -257,7 +257,9 @@ public class TrainControllerImpl implements TrainController {
             setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
             setServiceBrake(this.sBrakeGUI);
+            logger.info("Brake Failure detected: sbrake: {}", sBrakeGUI);
         } else {
+            setServiceBrake(this.sBrakeGUI);
             setBrakeFailure(badBrakes);
         }
 
@@ -343,7 +345,13 @@ public class TrainControllerImpl implements TrainController {
             if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
 
             logger.warn("Train stopping at station {}", nextStationName);
-            //wait(60000);
+
+            if(++stopTime < (60 * 8)){
+                waysideStop = true;
+            }else{
+                waysideStop = false;
+                stopTime = 0;
+            }
 
             this.setLeftDoors(false);
             this.setRightDoors(false);
@@ -394,12 +402,12 @@ public class TrainControllerImpl implements TrainController {
             case STOP_TRAIN_SIGNAL:
                 waysideStop = true;
                 setServiceBrake(true);
-                logger.warn("Wayside Stop: T{}", trainID);
+                logger.info("Wayside Stop: T{}", trainID);
                 break;
             case RESUME_TRAIN_SIGNAL:
                 waysideStop = false;
                 setServiceBrake(this.sBrakeGUI);
-                logger.warn("Wayside Resume: T{}", trainID);
+                //logger.info("Wayside Resume: T{}", trainID);
                 break;
             default:
                 if (signalFailure) {
