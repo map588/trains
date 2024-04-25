@@ -356,6 +356,7 @@ public class TrainControllerImpl implements TrainController {
                 if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
                 logger.warn("Train stopping at station {}", nextStationName);
                 train.updatePassengers();
+                setArrivalStation(currentBlock.stationName());
             }
 
             if (++stopTime < (60 * 8)) {
@@ -367,8 +368,6 @@ public class TrainControllerImpl implements TrainController {
             }
 
 
-
-            setArrivalStation(currentBlock.stationName());
 
             if(!waysideStop) {
                 this.setLeftDoors(false);
