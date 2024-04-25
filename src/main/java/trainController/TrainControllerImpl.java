@@ -452,7 +452,8 @@ public class TrainControllerImpl implements TrainController {
             boolean isEnteringJunction = currentBeacon.endId().equals(beacon.sourceId());
             boolean isExitingJunction = currentBeacon.sourceId().equals(beacon.sourceId());
 
-
+            //Note: We could deal with this case by just setting the "head" of the beacon equal to the end
+            //and traversing it backwards in the case of large bi-directional sections
             boolean backWardsBeacon = currentBeacon.sourceId().equals(beacon.endId());
 
 

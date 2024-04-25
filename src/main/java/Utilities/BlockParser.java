@@ -58,7 +58,7 @@ class BlockParser {
     }
 
     public static ConcurrentHashMap<Lines, ConcurrentSkipListMap<Integer, BasicBlock>> parseCSV(){
-        return parseCSV("src/main/resources/Framework/working_track_layout.csv");
+        return parseCSV("src/main/resources/Framework/red_yard_experiment.csv");
     }
 
     public static BasicBlock fromCsv(String[] values, String[] headers) {
