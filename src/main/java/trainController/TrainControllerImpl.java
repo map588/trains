@@ -264,8 +264,9 @@ public class TrainControllerImpl implements TrainController {
         if (brakeFailure) {
             // setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(this.sBrakeGUI && !brakeFailure);
+            // setServiceBrake(this.sBrakeGUI);
         } else {
+            setServiceBrake(this.sBrakeGUI);
             setBrakeFailure(badBrakes);
             if (badBrakes) {
                 logger.warn("Brake Failure detected {}", brakeCount);
