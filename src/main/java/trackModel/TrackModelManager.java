@@ -230,9 +230,9 @@ public class TrackModelManager {
             ticketSalesValue.textProperty().bindBidirectional(currentBlockSubject.ticketSalesProperty());
             nameOfStationLabel.textProperty().bindBidirectional(currentBlockSubject.nameOfStationProperty());
         } else {
-            passEmbarkedValue.setText("0");
-            passDisembarkedValue.setText("0");
-            ticketSalesValue.setText("0");
+            passEmbarkedValue.setText("");
+            passDisembarkedValue.setText("");
+            ticketSalesValue.setText("");
             nameOfStationLabel.setText("");
         }
 

@@ -276,8 +276,6 @@ public class TrackLine implements TrackModel {
                 } else {
                     Platform.runLater(() -> subjectList.get(block).setCrossingState("UP"));
                 }
-
-
                 logger.info("Crossing set to: {} at block: {}", state, block);
             } else {
                 logger.warn("Block {} is not a crossing", block);
@@ -331,8 +329,6 @@ public class TrackLine implements TrackModel {
             } else {
                 logger.error("Broken Rail called on Block: {} does not exist", blockID);
             }
-
-
         });
     }
 
@@ -423,10 +419,7 @@ public class TrackLine implements TrackModel {
                 TrackBlock block = mainTrackLine.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
                     block.feature.setPassengersDisembarked(disembarked);
-                    Integer newTotal = train.getPassengerCount() - disembarked;
-
-                    // TODO: set subject for passengers
-                    //Platform.runLater(() -> subjectList.get(block.blockID).setPassengersDisembark(newTotal));
+                    Platform.runLater(() -> subjectList.get(block.blockID).setPassDisembarked(Integer.toString(disembarked)));
 
                 } else {
                     logger.warn("Train: {} is not on a STATION block", train.getTrainNumber());
@@ -445,8 +438,7 @@ public class TrackLine implements TrackModel {
                 TrackBlock block = mainTrackLine.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
 
-                    // TODO: set subject for passengers
-                    //Platform.runLater(() -> subjectList.get(block.blockID).setPassengersDisembark(newTotal));
+                    Platform.runLater(() -> subjectList.get(block.blockID).setPassDisembarked(Integer.toString(train.getPassengerCount())));
                     this.ticketSales += train.getPassengerCount();
 
                     return random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
@@ -462,8 +454,6 @@ public class TrackLine implements TrackModel {
     }
 
     //every tick is a second to ticket sales will reset every 3600 seconds
-
-    // TODO: need to figure out how to do ticket sales in the UI
 
     @Override
     public int getTicketSales() {
