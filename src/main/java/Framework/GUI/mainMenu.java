@@ -52,7 +52,7 @@ public class mainMenu extends Application {
             toolBar.getItems().add(tabButton);
         }
 
-        Slider speedSlider = new Slider(0.0, 10.0, 1);
+        Slider speedSlider = new Slider(0.0, 20.0, 1);
         speedSlider.setShowTickLabels(true);
         speedSlider.setShowTickMarks(true);
         speedSlider.setMajorTickUnit(2.0);
