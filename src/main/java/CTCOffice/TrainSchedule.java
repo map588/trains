@@ -2,16 +2,17 @@ package CTCOffice;
 
 
 import Framework.Support.BlockIDs;
+import Framework.Support.Notifier;
 import Utilities.Enums.Lines;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import static CTCOffice.CTCOfficeImpl.*;
+import static CTCOffice.Properties.ScheduleProperties.*;
 
-public class TrainSchedule implements Serializable {
+public class TrainSchedule implements Notifier {
     private final int trainID;
     private String line;
     private double dispatchTime;
@@ -45,12 +46,31 @@ public class TrainSchedule implements Serializable {
         TrackLayout = (line.equals("GREEN")) ? GreenTrackLayout : RedTrackLayout;
     }
 
+    public TrainSchedule(CompressedTrainSchedule compressedTrainSchedule){
+        this.trainID = compressedTrainSchedule.trainID();
+        this.line = compressedTrainSchedule.trainLine();
+        this.dispatchTime = compressedTrainSchedule.dispatchTime();
+        this.carCount = compressedTrainSchedule.carCount();
+        this.stops = new ArrayList<>();
+        for(CompressedStop compressedStop : compressedTrainSchedule.stops()){
+            stops.add(new TrainStop(compressedStop));
+        }
+        stopList = FXCollections.observableArrayList();
+        for (TrainStop stop : stops) {
+            stopList.add(stop.getSubject());
+            stopIndices.add(stop.getStopIndex());
+        }
+        subject = new TrainScheduleSubject(this);
+        TrackLayout = (line.equals("GREEN")) ? GreenTrackLayout : RedTrackLayout;
+    }
+
     public int getTrainID() {
         return trainID;
     }
 
     public void setDispatchTime(double dispatchTime) {
         this.dispatchTime = dispatchTime;
+        notifyChange(DISPATCH_TIME_PROPERTY, dispatchTime);
     }
 
     public double getDispatchTime() {
@@ -59,6 +79,7 @@ public class TrainSchedule implements Serializable {
 
     public void setCarCount(int carCount) {
         this.carCount = carCount;
+        notifyChange(CAR_COUNT_PROPERTY, carCount);
     }
 
     public int getCarCount() {
@@ -105,6 +126,7 @@ public class TrainSchedule implements Serializable {
 
     public void setLine(String line) {
         this.line = line;
+        notifyChange(TRAIN_LINE_PROPERTY, line);
     }
 
     public TrainScheduleSubject getSubject() {
@@ -203,9 +225,11 @@ public class TrainSchedule implements Serializable {
                 visited = TrackLayout.indexOf(stops.get(i).getStationBlockID());
             }
         }
-        if(stops.get(stops.size() - 1).getStationBlockID() != TrackLayout.get(TrackLayout.size() - 1)) {
-            addStop(TrackLayout.get(TrackLayout.size() - 1), 0, 0);
-            return -3;
+        if(!stops.isEmpty()) {
+            if (stops.get(stops.size() - 1).getStationBlockID() != TrackLayout.get(TrackLayout.size() - 1)) {
+                addStop(TrackLayout.get(TrackLayout.size() - 1), 0, 0);
+                return -3;
+            }
         }
         return -2;
     }
@@ -348,4 +372,7 @@ public class TrainSchedule implements Serializable {
         }
     }
 
+    public void notifyChange(String property, Object newValue) {
+        subject.setProperty(property, newValue);
+    }
 }

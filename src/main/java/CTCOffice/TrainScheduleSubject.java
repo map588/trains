@@ -9,7 +9,7 @@ import java.io.Serializable;
 import static CTCOffice.Properties.ScheduleProperties.*;
 import static Utilities.TimeConvert.*;
 
-public class TrainScheduleSubject implements AbstractSubject, Serializable {
+public class TrainScheduleSubject implements AbstractSubject {
     public final TrainSchedule schedule;
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 

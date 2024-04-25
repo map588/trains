@@ -2,16 +2,12 @@ package CTCOffice;
 
 import Framework.Support.Notifier;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
 
-public class ScheduleFile implements Notifier, Serializable {
+public class ScheduleFile implements Notifier {
     private final HashMap<Integer, TrainSchedule> multipleTrainSchedules = new HashMap<>();
     private final HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
     private int trainNum;
@@ -24,6 +20,18 @@ public class ScheduleFile implements Notifier, Serializable {
         this.scheduleFileName = scheduleFileName;
         this.lastModified = lastModified;
         this.trainNum = 0;
+        subject = new ScheduleFileSubject(this);
+    }
+
+    public ScheduleFile(CompressedScheduleFile compressedScheduleFile) {
+        this.scheduleFileName = compressedScheduleFile.scheduleFileName();
+        this.lastModified = compressedScheduleFile.lastModified();
+        this.trainNum = compressedScheduleFile.multipleTrainSchedules().size();
+        for(CompressedTrainSchedule compressedTrainSchedule : compressedScheduleFile.multipleTrainSchedules()) {
+            TrainSchedule trainSchedule = new TrainSchedule(compressedTrainSchedule);
+            multipleTrainSchedules.put(compressedTrainSchedule.trainID(), trainSchedule);
+            multipleTrainScheduleSubjects.put(compressedTrainSchedule.trainID(), trainSchedule.getSubject());
+        }
         subject = new ScheduleFileSubject(this);
     }
 

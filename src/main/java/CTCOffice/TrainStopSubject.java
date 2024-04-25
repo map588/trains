@@ -10,7 +10,7 @@ import static Utilities.TimeConvert.*;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
-public class TrainStopSubject implements AbstractSubject, Serializable {
+public class TrainStopSubject implements AbstractSubject {
     public final TrainStop stop;
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 
