@@ -130,6 +130,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
     public void changeTrainLocation(int oldBlock, int blockID, Lines line) {
         TrainIdentity train = antiTrainLocations.get(BlockIDs.of(oldBlock, line));
+        trainLocations.remove(train);
         trainLocations.put(train, BlockIDs.of(blockID, line));
         antiTrainLocations.remove(BlockIDs.of(oldBlock, line));
         antiTrainLocations.put(BlockIDs.of(blockID, line), train);
@@ -160,44 +161,45 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         if(blockID == 0) {
             return;
         }
-        ArrayList<Integer> trackLayout = (line.equals(Lines.GREEN)) ? GreenTrackLayout : RedTrackLayout;
-        int blockIndex = trackLayout.indexOf(blockID);
-        if(blockIndex == -1) {
-            logger.error("Block {} on line {} does not exist", blockID, line);
-            return;
-        }
-        if( blockIndex == 0 ) { //if the block is the first block then pull location and info from yard
-            changeTrainLocation(0, blockID, line);
-        }
-        //if the block is only visited once in the track layout
-        else if(blockIndex == trackLayout.lastIndexOf(blockID)) {
-            // and the block before is occupied then the train is moving forward and move its location to this block
-            if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
-                changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
+        if(occupied) {
+            ArrayList<Integer> trackLayout = (line.equals(Lines.GREEN)) ? GreenTrackLayout : RedTrackLayout;
+            int blockIndex = trackLayout.indexOf(blockID);
+            if (blockIndex == -1) {
+                logger.error("Block {} on line {} does not exist", blockID, line);
+                return;
+            }
+            if (blockIndex == 0) { //if the block is the first block then pull location and info from yard
+                changeTrainLocation(0, blockID, line);
+            }
+            //if the block is only visited once in the track layout
+            else if (blockIndex == trackLayout.lastIndexOf(blockID)) {
+                // and the block before is occupied then the train is moving forward and move its location to this block
+                if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
+                    changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
 
-            }else{
-                boolean found = false;
-                for(int i = blockIndex - 1; i >= 0; i--) {
-                    if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(i), line))) {
-                        changeTrainLocation(trackLayout.get(i), blockID, line);
-                        logger.warn("Train lost then found from block {} to block {} on line {}", trackLayout.get(i), blockID, line);
-                        found = true;
-                        break;
+                } else {
+                    boolean found = false;
+                    for (int i = blockIndex - 1; i >= 0; i--) {
+                        if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(i), line))) {
+                            changeTrainLocation(trackLayout.get(i), blockID, line);
+                            logger.warn("Train lost then found from block {} to block {} on line {}", trackLayout.get(i), blockID, line);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        logger.error("Train out of nowhere on non-loop block {} on line {}", blockID, line);
                     }
                 }
-                if(!found) {
-                    logger.error("Train out of nowhere on non-loop block {} on line {}", blockID, line);
+            } else { //block is visited more than once in the track layout
+                //if the block is visited more than once in the track layout then find if this is the first visit
+                if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
+                    changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
+                } else if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(trackLayout.lastIndexOf(blockID) - 1), line))) {
+                    changeTrainLocation(trackLayout.get(trackLayout.lastIndexOf(blockID) - 1), blockID, line);
+                } else {
+                    logger.warn("Train out of nowhere on block {} on line {}", blockID, line);
                 }
-            }
-        }else{ //block is visited more than once in the track layout
-            //if the block is visited more than once in the track layout then find if this is the first visit
-            if(trainLocations.containsValue(BlockIDs.of(trackLayout.get(blockIndex - 1), line))) {
-                changeTrainLocation(trackLayout.get(blockIndex - 1), blockID, line);
-            } else if (trainLocations.containsValue(BlockIDs.of(trackLayout.get(trackLayout.lastIndexOf(blockID) - 1), line))) {
-                changeTrainLocation(trackLayout.get(blockIndex + 1), blockID, line);
-            } else {
-
-                logger.warn("Train out of nowhere on block {} on line {}", blockID, line);
             }
         }
     }
