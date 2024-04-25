@@ -120,10 +120,6 @@ public class Main {
 
             // Submit tasks to the thread pool for waysideSystem and trainSystem
 
-            synchronizationPool.submit(() -> {
-                waysideSystem.update();
-                latch.countDown();
-            });
 
 
             synchronizationPool.submit(() -> {
@@ -131,6 +127,16 @@ public class Main {
                 latch.countDown();
             });
 
+
+
+            try {
+                synchronizationPool.submit(() -> {
+                    waysideSystem.update();
+                    latch.countDown();
+                }).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
 
 
             try {
@@ -162,7 +168,6 @@ public class Main {
                 Platform.runLater(() -> mainMenu.timeLabel.setText(String.format("Time: %02d:%02d:%02d", simHour, simMinute, ((int) simSecond) % 60)));
 
             }
-
 
             long endTime = System.nanoTime();
 

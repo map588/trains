@@ -46,6 +46,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
     private final int trainID;
     private final double TIME_DELTA = TIME_STEP_S;
+    private static final double COEFFICIENT_OF_FRICTION = 0.02;
 
 
     private final TrainModelSubject subject;
@@ -200,11 +201,11 @@ public class TrainModelImpl implements TrainModel, Notifier {
 
         //Check if the train is fully loaded
         if (this.mass >= (Constants.LOADED_TRAIN_MASS * this.numCars)) {
-            this.setMass (Constants.LOADED_TRAIN_MASS * this.numCars);
+            this.setMass(Constants.LOADED_TRAIN_MASS * this.numCars);
         }
 
         //NEXT BLOCK NOTICE
-        if(currentBlockLength - relativeDistance <= 0) {
+        if (currentBlockLength - relativeDistance <= 0) {
             enteredNextBlock();
         }
 
@@ -225,8 +226,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         double engineForce;
         if (this.power > 0.0001 && this.speed < 0.0001) {
             engineForce = this.power / 0.1;
-        }
-        else {
+        } else if(){
+
+
+        }else{
             engineForce = this.power / this.speed;
         }
 
@@ -237,15 +240,17 @@ public class TrainModelImpl implements TrainModel, Notifier {
         }
 
 
-        //SLOPE FORCE
-
+        // SLOPE FORCE
         double currentAngle = Math.atan(this.grade / 100);
         double gravityForce = this.mass * Constants.GRAVITY * Math.sin(currentAngle);
-        //System.out.println("Gravity Force: " + gravityForce);
 
-        //NET FORCE
-        double netForce = engineForce - gravityForce - this.brakeForce;
-        if (netForce > MAX_ENGINE_FORCE * numCars){
+        // FRICTION FORCE
+        double normalForce = this.mass * Constants.GRAVITY * Math.cos(currentAngle);
+        double frictionForce = COEFFICIENT_OF_FRICTION * normalForce;
+
+        // NET FORCE
+        double netForce = engineForce - gravityForce - this.brakeForce - frictionForce;
+        if (netForce > MAX_ENGINE_FORCE * numCars) {
             netForce = MAX_ENGINE_FORCE * numCars;
         }
 

@@ -51,7 +51,7 @@ import static trainController.ControllerProperty.*;
  */
 public class TrainControllerImpl implements TrainController {
     private static final double TIME_STEP = TIME_STEP_S;
-    private static final double DEAD_BAND = 0.05;
+    private static final double DEAD_BAND = 0.5;
 
     //private final NullTrain nullTrain = new NullTrain();
     private ControllerBlock currentBlock;
@@ -72,7 +72,7 @@ public class TrainControllerImpl implements TrainController {
 
 
     private boolean waysideStop = false;
-    private int stopTime = 0;
+    private final intWrapper stopTime = new intWrapper(0);
     private double emergencyDistance;
     private double serviceDistance;
 
@@ -348,8 +348,8 @@ public class TrainControllerImpl implements TrainController {
         // Check if train is stopped
         if (train.getSpeed() == 0) {
 
-
-            if(stopTime == 0) {
+            stopTime.increment();
+            if(stopTime.getValue() == 0) {
                 this.setLeftPlatform(currentBlock.Doorside().contains("LEFT"));
                 this.setRightPlatform(currentBlock.Doorside().contains("RIGHT"));
                 if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
@@ -359,12 +359,12 @@ public class TrainControllerImpl implements TrainController {
                 setArrivalStation(currentBlock.stationName());
             }
 
-            if (++stopTime < (60 * 8)) {
+            if (stopTime.getValue() < (60 * 8)) {
                 waysideStop = true;
             } else {
-                logger.info("Train stopped at station {} for {} seconds", nextStationName, stopTime/8);
+                logger.info("Train stopped at station {} for {} seconds", nextStationName, (float) stopTime.getValue()/8);
                 waysideStop = false;
-                stopTime = 0;
+                stopTime.setValue(0);
             }
 
 
@@ -883,5 +883,26 @@ public class TrainControllerImpl implements TrainController {
     @Override
     public void setValue(Enum<?> propertyName, Object newValue) {
         setValue((ControllerProperty) propertyName, newValue);
+    }
+
+
+
+    private static class intWrapper{
+
+        private int value;
+
+        public intWrapper(int value){
+            this.value = value;
+        }
+        public int getValue(){
+            return value;
+        }
+        public void setValue(int value){
+            this.value = value;
+        }
+
+        public void increment(){
+            value++;
+        }
     }
 }

@@ -33,6 +33,7 @@ public class Constants {
     //Physics Constants
     final public static double GRAVITY = 9.81; // m/s^2
 
+
     final public static double SERVICE_BRAKE_DECELERATION = 1.2; // m/s^2
     final public static double SERVICE_BRAKE_FORCE = 61724; // N
     final public static double EMERGENCY_BRAKE_DECELERATION = 2.73; // m/s^2
