@@ -29,7 +29,8 @@ public class TrackLine implements TrackModel {
 
     Lines line;
 
-    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ThreadLocal<TrackLine> thisLineThread = new ThreadLocal<>();
+    ExecutorService trackUpdateExecutor = Executors.newFixedThreadPool(4);
 
     //map of dynamic Track Blocks
     private final TrackBlockLine mainTrackLine = new TrackBlockLine();
@@ -62,7 +63,6 @@ public class TrackLine implements TrackModel {
             BasicTrackLine basicBlocks = allTracks.getBasicLine(line);
             trackOccupancyMap = new ObservableHashMap<>(basicBlocks.size());
 
-
             //keeps track of which blocks are occupied
 
             ArrayList<Integer> blockIndices = new ArrayList<>(basicBlocks.keySet());
@@ -94,14 +94,14 @@ public class TrackLine implements TrackModel {
     }
 
     public void update() {
+        thisLineThread.set(this);
         // Execute all pending track update tasks
-        try {
-            trackUpdateExecutor.invokeAll(trackUpdateQueue);
-        } catch (RejectedExecutionException e) {
-            logger.error("Track update task rejected", e);
-        } catch (InterruptedException e) {
-            logger.error( "Track update task failed", e);
-            throw new RuntimeException(e);
+        for (Callable<Object> task : trackUpdateQueue) {
+            try {
+                task.call();
+            } catch (Exception e) {
+                logger.error("Track update task failed", e);
+            }
         }
         trackUpdateQueue.clear();
     }
@@ -153,7 +153,7 @@ public class TrackLine implements TrackModel {
             return null;
         }
 
-        logger.info("    TrainModel {}:  {} -> {}  ", train.getTrainNumber(), currentBlockID , nextBlockID);
+        logger.info("TrainModel {}:  {} -> {}  ", train.getTrainNumber(), currentBlockID , nextBlockID);
 
         asyncTrackUpdate(() -> {
             trackOccupancyMap.replace(train, currentBlockID, nextBlockID);
@@ -177,8 +177,6 @@ public class TrackLine implements TrackModel {
             setOccuppied(train, newBlockID);
             return null;
         });
-
-        logger.info("  Registered T{} : {}  ->  {}  ", train.getTrainNumber(), oldBlockID, newBlockID);
 
         if(beaconBlocks.containsKey(newBlockID)) {
             train.passBeacon(beaconBlocks.get(newBlockID));
@@ -496,16 +494,19 @@ public class TrackLine implements TrackModel {
             public void onAdded(TrainModel train, Integer blockID) {
                 // A train enters the track (hopefully from the yard)
                 handleTrainEntry(train, blockID, 0);
+
                 Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(true));
             }
             public void onRemoved(TrainModel train, Integer blockID) {
                 // A train is removed from the track
                 handleTrainExit(train, blockID);
+
                 Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(false));
             }
             public void onUpdated(TrainModel train, Integer oldBlockID, Integer newBlockID) {
                 // A train moves from one block to another
                 handleTrainEntry(train, newBlockID, oldBlockID);
+
                 Platform.runLater(() -> subjectList.get(oldBlockID).setIsOccupied(false));
                 Platform.runLater(() -> subjectList.get(newBlockID).setIsOccupied(true));
             }

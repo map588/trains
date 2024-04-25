@@ -590,6 +590,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         } else {
             this.direction = Direction.NORTH;
         }
+        logger.warn("Train {} <=> Direction: {}", this.trainID, this.direction);
     }
 
     @Override

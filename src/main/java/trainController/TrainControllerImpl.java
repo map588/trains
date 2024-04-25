@@ -31,6 +31,7 @@ import static trainController.ControllerProperty.*;
  * The train controller is meant to stop if a command speed is not sent.  The wayside is not able to send a corrected speed,
  * rather it just chooses not to send a speed at all, and if the train does not receive a speed, it should stop.
  */
+
 /**
  * This method is used to calculate the power needed for the train.
  * It first determines the set speed based on whether the train is in automatic mode or not.
@@ -76,7 +77,6 @@ public class TrainControllerImpl implements TrainController {
     private double power = 0.0;
     private double grade = 0.0;
     private double rollingError = 0.0;
-
 
 
     private int authority = 0;
@@ -163,6 +163,7 @@ public class TrainControllerImpl implements TrainController {
                 this.rightDoors
         );
     }
+
     //  Calculate power -> (train does shit) ->  check failures -> repeat
     public double calculatePower(double currentSpeed) {
 
@@ -179,12 +180,12 @@ public class TrainControllerImpl implements TrainController {
             //If the train is coming to a stop and its intentional
             if (power == 0 && currentSpeed > 0 && currentSpeed <= 2) {
                 setAuthority((int) internalAuthority);
-                if(internalAuthority > 5 && !waysideStop){
+                if (internalAuthority > 5 && !waysideStop) {
                     setSpeed = 2;
                     setServiceBrake(sBrakeGUI);
                 }
                 rollingError = 0;
-            }else if (currentBlock != null && currentBlock.isStation() && power == 0 && currentSpeed == 0) {
+            } else if (currentBlock != null && currentBlock.isStation() && power == 0 && currentSpeed == 0) {
                 String platformValues = currentBlock.Doorside();
 
                 setLeftPlatform(platformValues.contains("LEFT"));
@@ -239,9 +240,9 @@ public class TrainControllerImpl implements TrainController {
         boolean badBrakes = this.serviceBrake ^ train.getServiceBrake();
         boolean badPower = this.power > 0 && trainPower == 0;
 
-        if(badBrakes) {
+        if (badBrakes) {
             badBrakes = ++brakeCount > 2;
-        }else {
+        } else {
             brakeCount = 0;
         }
 
@@ -254,17 +255,19 @@ public class TrainControllerImpl implements TrainController {
         }
 
         if (brakeFailure) {
-            setServiceBrake(true);
+            // setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
-            setServiceBrake(this.sBrakeGUI);
-            logger.warn("Brake Failure detected: sbrake: {}", sBrakeGUI);
+            // setServiceBrake(this.sBrakeGUI);
         } else {
             setServiceBrake(this.sBrakeGUI);
             setBrakeFailure(badBrakes);
+            if (badBrakes) {
+                logger.warn("Brake Failure detected {}", brakeCount);
+            }
         }
 
-        if(signalFailure){
-            if(train.getCommandSpeed() != -1 && train.getAuthority() != -1){
+        if (signalFailure) {
+            if (train.getCommandSpeed() != -1 && train.getAuthority() != -1) {
                 setCommandSpeed(train.getCommandSpeed());
                 setAuthority(train.getAuthority());
             }
@@ -290,13 +293,12 @@ public class TrainControllerImpl implements TrainController {
     private double serviceDistance;
 
     // Function that calculates the stopping distance where the train needs to start stopping
-     void calculateStoppingDistance(double currentSpeed) {
+    void calculateStoppingDistance(double currentSpeed) {
 
         //logger.info("Stopping Distance is {}", stoppingDistance);
-        emergencyDistance =  Math.pow(currentSpeed, 2) / (2 * EMERGENCY_BRAKE_DECELERATION);
+        emergencyDistance = Math.pow(currentSpeed, 2) / (2 * EMERGENCY_BRAKE_DECELERATION);
         serviceDistance = Math.pow(currentSpeed, 2) / (2 * SERVICE_BRAKE_DECELERATION);
     }
-
 
 
     /**
@@ -310,10 +312,10 @@ public class TrainControllerImpl implements TrainController {
 
             if (blockID != null) {
                 currentBlock = blockLookup.get(blockID);
-                if(currentBeacon.blockIndices().peekFirst() == null) {
+                if (currentBeacon.blockIndices().peekFirst() == null) {
                     logger.info("Runnin low on Beacon..");
                 }
-            }else {
+            } else {
                 currentBlock = blockLookup.get(currentBeacon.endId());
                 logger.warn("FRESH OUT OF BEACON AT {}!", currentBlock.blockNumber());
             }
@@ -337,9 +339,7 @@ public class TrainControllerImpl implements TrainController {
      * onStation()
      */
     public void onStation() {
-
         if (train.getSpeed() == 0) {                             // Check if train is stopped
-
 
             if (this.leftPlatform) this.setLeftDoors(true);     // Open left doors
             if (this.rightPlatform) this.setRightDoors(true);   // Open right doors
@@ -348,9 +348,9 @@ public class TrainControllerImpl implements TrainController {
 
             logger.warn("Train stopping at station {}", nextStationName);
 
-            if(++stopTime < (60 * 8)){
+            if (++stopTime < (60 * 8)) {
                 waysideStop = true;
-            }else{
+            } else {
                 waysideStop = false;
                 stopTime = 0;
             }
@@ -396,12 +396,12 @@ public class TrainControllerImpl implements TrainController {
 
     public void setAuthority(int auth) {
 
-        switch(auth) {
+        switch (auth) {
             case -1:
                 setSignalFailure(true);
                 break;
             case STOP_TRAIN_SIGNAL:
-                if(!waysideStop) {
+                if (!waysideStop) {
                     logger.info("Wayside Stop: Train {}", trainID);
                 }
 
@@ -425,9 +425,9 @@ public class TrainControllerImpl implements TrainController {
     }
 
     public void setCommandSpeed(double speed) {
-        if(speed == -1){
+        if (speed == -1) {
             setSignalFailure(true);
-        }else if(signalFailure){
+        } else if (signalFailure) {
             setSignalFailure(false);
         }
         this.commandSpeed = speed;
@@ -585,15 +585,8 @@ public class TrainControllerImpl implements TrainController {
             case OVERRIDE_SPEED -> this.overrideSpeed = convertVelocity((double) newValue, MPH, MPS);
             case COMMAND_SPEED -> this.commandSpeed = convertVelocity((double) newValue, MPH, MPS);
             case CURRENT_SPEED -> this.currentSpeed = convertVelocity((double) newValue, MPH, MPS);
-            case SERVICE_BRAKE -> {
-                this.serviceBrake = (boolean) newValue;
-                sBrakeGUI = (boolean) newValue;
-            }
-            case EMERGENCY_BRAKE -> {
-                this.emergencyBrake = (boolean) newValue;
-                eBrakeGUI = (boolean) newValue;
-                clearPassengerEBrake();
-            }
+            case SERVICE_BRAKE ->  {this.serviceBrake = (boolean) newValue;sBrakeGUI = (boolean) newValue;}
+            case EMERGENCY_BRAKE -> {this.emergencyBrake = (boolean) newValue; eBrakeGUI = (boolean) newValue; clearPassengerEBrake();}
             case KI -> this.Ki = (double) newValue;
             case KP -> this.Kp = (double) newValue;
             case POWER -> this.power = convertPower((double) newValue, HORSEPOWER, WATTS);
@@ -621,13 +614,13 @@ public class TrainControllerImpl implements TrainController {
     }
 
 
+
     //-----------------Getters-----------------
 
     @Override
     public TrainModel getTrain() {
         return train;
     }
-
     public int getID() {
         return this.trainID;
     }

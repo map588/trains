@@ -28,7 +28,7 @@ public class WaysideSystem {
     private static final Logger logger = LoggerFactory.getLogger(WaysideSystem.class);
 
     private static final ObjectProperty<ObservableList<WaysideController>> controllerList = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-    private static WaysideControllerHWBridge hwController;
+    private static       WaysideControllerHWBridge hwController;
     private static final Map<Integer, WaysideController> controllerMapGreen = new HashMap<>();
     private static final Map<Integer, WaysideController> controllerMapRed = new HashMap<>();
 
