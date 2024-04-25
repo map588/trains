@@ -147,20 +147,23 @@ public class TrainControllerManager {
 
     private void updateChoiceBoxItems() {
         List<Integer> trainIDs = new ArrayList<>(subjectMap.getSubjects().keySet());
+        Integer selectedTrainID = trainNoChoiceBox.getValue(); // Store the currently selected item
 
-       Platform.runLater(()-> {trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
+        Platform.runLater(() -> {
+            trainNoChoiceBox.setItems(FXCollections.observableArrayList(trainIDs));
 
-        if (!trainIDs.isEmpty()) {
-            if(trainIDs.size() == 1){
-                trainNoChoiceBox.getSelectionModel().selectFirst();
-            }else {
-                Integer previousSelection = trainNoChoiceBox.getSelectionModel().getSelectedItem();
-                trainNoChoiceBox.getSelectionModel().select(previousSelection);
+            if (!trainIDs.isEmpty()) {
+                if (selectedTrainID != null && trainIDs.contains(selectedTrainID)) {
+                    // Restore the selection if it was in the list
+                    trainNoChoiceBox.setValue(selectedTrainID);
+                } else {
+                    // If the selection was not in the list, select the first item
+                    trainNoChoiceBox.getSelectionModel().selectFirst();
+                }
+            } else {
+                logger.info("No trains available after update.");
+                changeTrainView(-1); // Explicitly handle no selection
             }
-        } else {
-            logger.info("No trains available after update.");
-            changeTrainView(-1); // Explicitly handle no selection
-        }
         });
     }
 
