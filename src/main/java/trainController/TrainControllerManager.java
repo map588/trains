@@ -274,7 +274,7 @@ public class TrainControllerManager {
         appendListener(currentSubject.getProperty(NEXT_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> text.setText((String)newVal)));
         appendListener(currentSubject.getProperty(ARRIVAL_STATION),(obs, oldVal, newVal) -> Platform.runLater(()-> {
             if(newVal != null){
-                sendAlert("Arriving at " + newVal);
+                queueNotification(ARRIVAL_STATION,  newVal.toString());
             }
         }));
     }
@@ -357,7 +357,7 @@ public class TrainControllerManager {
     }
 
     private void sendAlert(String alertMessage){
-        queueNotification(ANNOUNCEMENTS,alertMessage);
+        queueNotification(ANNOUNCEMENTS, alertMessage);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Arrival");
         alert.setHeaderText(null);
@@ -533,6 +533,7 @@ public class TrainControllerManager {
     // Set the current action
     private void setNotification(ControllerProperty propertyName, String value) {
         String statusNotification = switch (propertyName) {
+            case ARRIVAL_STATION -> "\nArriving at station: " + value;
             case OVERRIDE_SPEED -> "\nSet Speed to \n" + value + " MPH";
             case SERVICE_BRAKE, LEFT_DOORS, RIGHT_DOORS, INT_LIGHTS,
                     EXT_LIGHTS, AUTOMATIC_MODE ->

@@ -128,15 +128,10 @@ public class Main {
             });
 
 
-
-            try {
-                synchronizationPool.submit(() -> {
-                    waysideSystem.update();
-                    latch.countDown();
-                }).get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
+            synchronizationPool.submit(() -> {
+                waysideSystem.update();
+                latch.countDown();
+            });
 
 
             try {
