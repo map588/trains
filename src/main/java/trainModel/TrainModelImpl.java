@@ -455,8 +455,8 @@ public class TrainModelImpl implements TrainModel, Notifier {
         else {
             passengersDisembarked = ( r.nextInt(0, this.numPassengers) );
             if ((passengersEmbarked - passengersDisembarked) > Constants.MAX_PASSENGERS) {
-                this.numPassengers = Constants.MAX_PASSENGERS;
-            } else this.numPassengers += passengersEmbarked - passengersDisembarked;
+                this.setNumPassengers(Constants.MAX_PASSENGERS);
+            } else this.setNumPassengers(passengersEmbarked - passengersDisembarked);
         }
         track.disembarkPassengers(this, passengersDisembarked);
         this.setMass((Constants.EMPTY_TRAIN_MASS * this.numCars) + (Constants.PASSENGER_MASS * (this.crewCount + this.numPassengers)));
