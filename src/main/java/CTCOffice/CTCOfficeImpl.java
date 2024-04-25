@@ -143,13 +143,15 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             sendSpeed(train.trainID());
         }else{
             if (trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).incrementPassedBlocks()) {
-                trainSchedules.get(train).incrementStopsCompleted();
                 stopCallbacks.add(new StopCallback(train, time
                         + (trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).getDepartureTime()
                         - trainSchedules.get(train).getStops().get(trainSchedules.get(train).getStopsCompleted()).getArrivalTime())));
+                trainSchedules.get(train).incrementStopsCompleted();
             }
-            sendAuthority(train.trainID());
-            sendSpeed(train.trainID());
+            else {
+                sendAuthority(train.trainID());
+                sendSpeed(train.trainID());
+            }
         }
     }
 
