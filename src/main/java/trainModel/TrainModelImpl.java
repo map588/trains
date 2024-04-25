@@ -86,7 +86,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
     private double  setTemperature = 21;
     private double  newRealTemperature = 21;
     private int     numCars = 1;
-    private int     numPassengers = 1;
+    private int     numPassengers = 0;
     private int     crewCount = 2;
 
     //Physics Variables
