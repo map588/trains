@@ -233,7 +233,7 @@
                 <Font name="System Bold" size="19.2" />
             </font>
         </Text>
-        <Gauge fx:id="authorityGauge" customFontEnabled="true" layoutX="14.0" layoutY="43.0" lcdDesign="WHITE" prefHeight="50.0" prefWidth="236.0" skinType="LCD" unit="blocks away" value="70.0" valueVisible="false">
+        <Gauge fx:id="authorityGauge" customFontEnabled="true" layoutX="14.0" layoutY="43.0" lcdDesign="WHITE" prefHeight="50.0" prefWidth="236.0" skinType="LCD" unit="feet away" value="70.0" valueVisible="false">
             <customFont>
                 <Font name="Rockwell Bold" size="9.6" />
             </customFont>

@@ -428,7 +428,7 @@ public class TrainControllerImpl implements TrainController {
                 }
                 this.authority = auth;
                 this.internalAuthority = authority;
-                notificationExecutor.execute(() -> subject.notifyChange(AUTHORITY, authority));
+                notificationExecutor.execute(() -> subject.notifyChange(AUTHORITY, convertDistance(authority,distanceUnit.METERS,distanceUnit.FEET) ));
                 break;
         }
     }
