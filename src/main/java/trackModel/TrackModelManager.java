@@ -262,6 +262,7 @@ public class TrackModelManager {
             beaconBlockNumber.setText("BEACON BLOCK SELECTED");
         } else {
             displayBeaconInfo.setText("");
+            beaconBlockNumber.setText("NOT A BEACON BLOCK");
         }
 
         if(currentBlockSubject.isIsOccupied()) {

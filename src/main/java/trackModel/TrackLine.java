@@ -486,6 +486,8 @@ public class TrackLine implements TrackModel {
                     block.feature.setPassengersEmbarked(embarked);
                     Platform.runLater(() -> subjectList.get(block.blockID).setPassEmbarked(Integer.toString(embarked)));
                     this.ticketSales += embarked;
+                    Platform.runLater(() -> subjectList.forEach(subject -> subject.setTicketSales(this.ticketSales)));
+
                     return embarked;
                 } else {
                     logger.warn("Train: {} is not on a station block", train.getTrainNumber());
@@ -502,11 +504,8 @@ public class TrackLine implements TrackModel {
 
     @Override
     public int getTicketSales() {
-        if (time % 3600 == 0) {
-            Platform.runLater(() -> subjectList.forEach(subject -> subject.setTicketSales(this.ticketSales)));
-            this.ticketSales = 0;
-            newTemperature();
-        }
+        this.ticketSales = 0;
+        newTemperature();
         return ticketSales;
     }
 
