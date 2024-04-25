@@ -7,8 +7,8 @@ public enum Lines {
 
         public static Lines getLine(String line) {
             return switch (line) {
-                case "Red" -> RED;
-                case "Green" -> GREEN;
+                case "RED", "Red", "red", "r" -> RED;
+                case "GREEN", "Green", "green", "g" -> GREEN;
                 default -> NULL;
             };
         }
