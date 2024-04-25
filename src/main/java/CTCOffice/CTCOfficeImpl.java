@@ -156,13 +156,13 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     public void     setBlockOccupancy(Lines line, int blockID, boolean occupied) {
         blockSubjectMap.getSubject(BlockIDs.of(blockID, line)).getBlockInfo().setOccupied(false, occupied);
         //if the block is on the yard then do nothing
-        if(blockID == 0) {
-            if(antiTrainLocations.get(BlockIDs.of(0, line)).dispatchTime() < (time - 100000)){
-                notifyTrainReturn(antiTrainLocations.get(BlockIDs.of(0, line)).trainID());
-            }
-            return;
-        }
         if(occupied) {
+            if(blockID == 0) {
+                if(antiTrainLocations.get(BlockIDs.of(0, line)).dispatchTime() < (time - 100000)){
+                    notifyTrainReturn(antiTrainLocations.get(BlockIDs.of(0, line)).trainID());
+                }
+                return;
+            }
             ArrayList<Integer> trackLayout = (line.equals(Lines.GREEN)) ? GreenTrackLayout : RedTrackLayout;
             int blockIndex = trackLayout.indexOf(blockID);
             if (blockIndex == -1) {

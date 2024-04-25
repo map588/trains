@@ -173,9 +173,9 @@ public class TrainSchedule {
             // Check if stop is at the same station as last stop
             if (i >= 1) {
                 if (stops.get(i).getStationBlockID() == stops.get(i - 1).getStationBlockID()) {
-                    System.out.println("Removing stop : " + i);
+                   // System.out.println("Removing stop : " + i);
                     removeStop(i);
-                    System.out.println("Removed stop : " + i);
+                   // System.out.println("Removed stop : " + i);
                     return -1;
                 }
             }
@@ -203,16 +203,16 @@ public class TrainSchedule {
         int fixed;
         while (true) {
             fixed = checkSchedule();
-            System.out.println(fixed + " : " + stops.size());
+           // System.out.println(fixed + " : " + stops.size());
             if (fixed == -2) {
                 break;
             }
             if (fixed >= 0) {
-                System.out.println("moving stop : " + fixed + " to " + (fixed - 1));
+              //  System.out.println("moving stop : " + fixed + " to " + (fixed - 1));
                 moveStop(fixed, fixed - 1);
             }
         }
-        System.out.println(fixed);
+       // System.out.println(fixed);
         updateInternalSchedule();
     }
 
@@ -239,7 +239,7 @@ public class TrainSchedule {
                     double blockLength = blockSubjectMap.getSubject(
                             BlockIDs.of(TrackLayout.get(j), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength();
                     metersAuthority += blockLength;
-                    System.out.println("Adding " + blockLength + " to authority of stop " + stop.getStopIndex() + " of train " + trainID);
+                   // System.out.println("Adding " + blockLength + " to authority of stop " + stop.getStopIndex() + " of train " + trainID);
                 }
             for (int j = 0; j <= blocksAuthority; j++) {
                 double blockDistance =
@@ -247,13 +247,13 @@ public class TrainSchedule {
                                 .getBlockInfo().getLength();
                 stop.getAuthorityList().add(metersAuthority);
                 stop.getRoutePath().add(TrackLayout.get(visited + j));
-                System.out.println("Authority : "
+               /* System.out.println("Authority : "
                         + stop.getAuthorityList().get(j)
                         + " set for the " + j + "th block of stop "
                         + stop.getStopIndex() + " of train "
                         + trainID + " with block "
                         + stop.getRoutePath().get(j)
-                );
+                );*/
                 metersAuthority -= blockDistance;
             }
             visited += blocksAuthority;
