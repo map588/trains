@@ -257,7 +257,7 @@ public class TrainControllerImpl implements TrainController {
             setServiceBrake(true);
             setBrakeFailure(!train.getServiceBrake());
             setServiceBrake(this.sBrakeGUI);
-            logger.info("Brake Failure detected: sbrake: {}", sBrakeGUI);
+            logger.warn("Brake Failure detected: sbrake: {}", sBrakeGUI);
         } else {
             setServiceBrake(this.sBrakeGUI);
             setBrakeFailure(badBrakes);
@@ -311,7 +311,7 @@ public class TrainControllerImpl implements TrainController {
             if (blockID != null) {
                 currentBlock = blockLookup.get(blockID);
                 if(currentBeacon.blockIndices().peekFirst() == null) {
-                    logger.warn("Runnin low on Beacon..");
+                    logger.info("Runnin low on Beacon..");
                 }
             }else {
                 currentBlock = blockLookup.get(currentBeacon.endId());
@@ -396,15 +396,17 @@ public class TrainControllerImpl implements TrainController {
 
     public void setAuthority(int auth) {
 
-
         switch(auth) {
             case -1:
                 setSignalFailure(true);
                 break;
             case STOP_TRAIN_SIGNAL:
+                if(!waysideStop) {
+                    logger.info("Wayside Stop: Train {}", trainID);
+                }
+
                 waysideStop = true;
                 setServiceBrake(true);
-                logger.info("Wayside Stop: T{}", trainID);
                 break;
             case RESUME_TRAIN_SIGNAL:
                 waysideStop = false;
