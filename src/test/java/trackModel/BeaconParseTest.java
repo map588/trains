@@ -32,30 +32,32 @@ class BeaconParseTest extends BaseTest {
     @Test
     void testParseBeacons() {
         for (Lines line : Lines.values()) {
-            System.out.println("Line: " + line);
+            //System.out.println("Line: " + line);
             ConcurrentHashMap<Integer, Beacon> beacons = beaconMap.get(line);
             BasicTrackLine trackLine = BasicBlockParser.getInstance().getBasicLine(line);
             HashMap<Integer, Integer> totalSourceBeacons = new HashMap<>();
 
-            System.out.println("Number of Beacons: " + beacons.size());
+            //System.out.println("Number of Beacons: " + beacons.size());
             for (Integer beaconID : beacons.keySet()) {
                 Beacon beacon = beacons.get(beaconID);
+                System.out.print(beacon.toString());
                 totalSourceBeacons.put(beacon.sourceId(), totalSourceBeacons.getOrDefault(beacon.sourceId(), 0) + 1);
-                System.out.print( beaconID + " ");
+                //System.out.print( beaconID + " ");
                 if (trackLine.get(beacon.sourceId()).isStation()) {
-                    System.out.println(trackLine.get(beacon.sourceId()).stationName().get() + ": " + beacon.sourceId() + " -> " + beacon.endId());
+                    //System.out.println(trackLine.get(beacon.sourceId()).stationName().get() + ": " + beacon.sourceId() + " -> " + beacon.endId());
                 } else {
-                    System.out.println("SW: " + beacon.sourceId() + " -> " + beacon.endId());
+                    //System.out.println("SW: " + beacon.sourceId() + " -> " + beacon.endId());
                 }
-                System.out.println("Blocks: " + beacon.blockIndices());
-                System.out.println();
+                //System.out.println("Blocks: " + beacon.blockIndices());
+                //System.out.println();
+
             }
 
             for(Integer sourceID : totalSourceBeacons.keySet()) {
                if(trackLine.get(sourceID).isSwitch() && totalSourceBeacons.get(sourceID) != 3) {
-                   System.out.println("Switch " + sourceID + " has "+ totalSourceBeacons.get(sourceID)  +" beacons");
+                   //System.out.println("Switch " + sourceID + " has "+ totalSourceBeacons.get(sourceID)  +" beacons");
                }else if(trackLine.get(sourceID).isStation() && totalSourceBeacons.get(sourceID) != 2) {
-                   System.out.println("Station " + sourceID + " has "+ totalSourceBeacons.get(sourceID) +" beacons");
+                   //System.out.println("Station " + sourceID + " has "+ totalSourceBeacons.get(sourceID) +" beacons");
                }
             }
         }
