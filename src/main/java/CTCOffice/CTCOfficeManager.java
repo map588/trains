@@ -98,7 +98,7 @@ public class CTCOfficeManager {
     @FXML private Button checkScheduleButton; // check for errors
 
     @FXML private Button DispatchButton;
-    @FXML private Button DumbDispatchButton;
+   // @FXML private Button DumbDispatchButton;
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
@@ -256,22 +256,22 @@ public class CTCOfficeManager {
 
         //Table editing bar
         switchLightToggle.setOnAction(event -> {
-            System.out.println("toggled traffic light for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+           // System.out.println("toggled traffic light for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setSwitchLightState(true, !block.getBlockInfo().getSwitchLightState());
         });
         switchStateToggle.setOnAction(event -> {
-            System.out.println("toggled switch for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+           // System.out.println("toggled switch for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setSwitchState(true, !block.getBlockInfo().getSwitchState());
         });
         crossingStateToggle.setOnAction(event -> {
-            System.out.println("toggled crossing for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+            //System.out.println("toggled crossing for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setCrossingState(true, !block.getBlockInfo().getCrossingState());
         });
         maintenanceToggle.setOnAction(event -> {
-            System.out.println("toggled maintenance for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
+           // System.out.println("toggled maintenance for block " + blockSelection.getValue() + " on line " + lineSelection.getValue() + "\n");
             CTCBlockSubject block = blockMap.getSubject(BlockIDs.of(blockSelection.getValue(), Enum.valueOf(Lines.class, lineSelection.getValue())));
             block.getBlockInfo().setUnderMaintenance(true, !block.getBlockInfo().getUnderMaintenance());
         });
@@ -304,7 +304,7 @@ public class CTCOfficeManager {
         scheduleTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedSchedule = newValue.getSchedule();
-                System.out.println("selected schedule " + newValue.getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
+               // System.out.println("selected schedule " + newValue.getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
                 trainSelectTable.getItems().clear();
                 for(int i = 1; i <= newValue.getSchedule().getNumTrains(); i++) {
                     trainSelectTable.getItems().add(newValue.getSchedule().getTrainSchedule(i).getSubject());
@@ -332,7 +332,7 @@ public class CTCOfficeManager {
             }
         });
         AddTrain.setOnAction(event -> {
-            System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
+          //  System.out.println("added train to schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.putTrainSchedule(schedule.getMultipleTrainSchedules().size() + 1, new TrainSchedule(schedule.getMultipleTrainSchedules().size() + 1,
                     lineTrainSelector.getValue(), (int)convertClockTimeToDouble(dispatchTimeSelector.getText()), carsSelector.getValue(), new ArrayList<>()));
@@ -340,14 +340,14 @@ public class CTCOfficeManager {
             trainIDSelector.getItems().add(schedule.getMultipleTrainSchedules().size());
         });
         RemoveTrain.setOnAction(event -> {
-            System.out.println("removed train from schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
+           // System.out.println("removed train from schedule " + scheduleTable.getSelectionModel().selectedItemProperty().getValue().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             ScheduleFile schedule = scheduleTable.getSelectionModel().getSelectedItem().getSchedule();
             schedule.removeTrainSchedule(trainIDSelector.getValue());
             trainSelectTable.getItems().remove(trainSelectTable.getSelectionModel().getSelectedItem());
             trainIDSelector.getItems().remove(trainIDSelector.getValue());
         });
         saveTrainButton.setOnAction(event -> {
-            System.out.println("saved train to schedule " + selectedSchedule.getSubject().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
+           // System.out.println("saved train to schedule " + selectedSchedule.getSubject().getProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue() + "\n");
             TrainScheduleSubject train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue()).getSubject();
             train.setProperty(DISPATCH_TIME_PROPERTY, dispatchTimeSelector.getText());
             train.setProperty(CAR_COUNT_PROPERTY, carsSelector.getValue());
@@ -488,13 +488,13 @@ public class CTCOfficeManager {
 
     private void setupScheduleButtons() {
         AddSchedule.setOnAction(event -> {
-            System.out.println("added schedule\n");
+           // System.out.println("added schedule\n");
             new ScheduleFile("Schedule " + (scheduleLibrary.getSubjects().size() + 1), "4/25/2021");
             scheduleTable.getItems().add(scheduleLibrary.getSubjects().get(scheduleLibrary.getSubjects().size()));
         });
 
         RemoveSchedule.setOnAction(event -> {
-            System.out.println("removed schedule\n");
+           // System.out.println("removed schedule\n");
             scheduleLibrary.removeScheduleFile(scheduleTable.getSelectionModel().getSelectedItem().getStringProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
             scheduleTable.getItems().remove(scheduleTable.getSelectionModel().getSelectedItem());
         });
@@ -546,11 +546,11 @@ public class CTCOfficeManager {
         });
 
 
-        DumbDispatchButton.setOnAction(event -> {
-            Lines line = lineTrainSelector.getValue().equals("GREEN") ? Lines.GREEN : Lines.RED;
-            office.dispatchDumbTrain(trainID++, line);
-            office.sendDumbAuthority(trainID, line, line == Lines.GREEN ? 63 : 10, 50000);
-            office.sendDumbSpeed(trainID, line, line == Lines.GREEN ? 63 : 10, 19.6);
-        });
+//        DumbDispatchButton.setOnAction(event -> {
+//            Lines line = lineTrainSelector.getValue().equals("GREEN") ? Lines.GREEN : Lines.RED;
+//            office.dispatchDumbTrain(trainID++, line);
+//            office.sendDumbAuthority(trainID, line, line == Lines.GREEN ? 63 : 10, 50000);
+//            office.sendDumbSpeed(trainID, line, line == Lines.GREEN ? 63 : 10, 19.6);
+//        });
     }
 }
