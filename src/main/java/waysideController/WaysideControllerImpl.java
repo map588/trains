@@ -211,36 +211,32 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     @Override
-    public synchronized void trackModelSetOccupancy(int blockID, boolean occupied) {
+    public void trackModelSetOccupancy(int blockID, boolean occupied) {
         logger.info("Being told to set occupancy for block {} to {}", blockID, occupied);
-        if(occupied && blockID == 0) {
-            return;
-        }
-        if(isRunningPLC()) {
-            logger.info("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
-            occupancyBlockIDStack.push(blockID);
-            occupancyValStack.push(occupied);
-        }
-        else {
-            setOccupancy(blockID, occupied);
+        WaysideBlock block = blockMap.get(blockID);
+        if(!block.inMaintenance() && block.isOccupied() != occupied) {
+            if (occupied && blockID == 0) {
+                return;
+            }
+            if (isRunningPLC()) {
+                logger.info("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
+                occupancyBlockIDStack.push(blockID);
+                occupancyValStack.push(occupied);
+            } else {
+                setOccupancy(blockID, occupied);
+                logger.info("AFTER Setting occupancy for block {} to {}", blockID, occupied);
+            }
+            sendHWOccupancy(blockID, occupied);
+
+//            if (ctcOffice != null)
+//                ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
         }
         logger.info("AFTER Being told to set occupancy for block {} to {}", blockID, occupied);
     }
 
     private void setOccupancy(int blockID, boolean occupied) {
         logger.info("Setting occupancy for block {} to {}", blockID, occupied);
-        WaysideBlock block = blockMap.get(blockID);
-        if(!block.inMaintenance() && block.isOccupied() != occupied) {
-            block.setOccupied(occupied);
-            sendHWOccupancy(blockID, occupied);
-
-            if(ctcOffice != null)
-                ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
-
-            if(occupied && !block.getBooleanAuth()) {
-                trackModel.setTrainAuthority(blockID, STOP_TRAIN_SIGNAL);
-            }
-        }
+        blockMap.get(blockID).setOccupied(occupied);
     }
 
     @Override

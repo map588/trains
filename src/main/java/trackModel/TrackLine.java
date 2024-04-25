@@ -175,6 +175,9 @@ public class TrackLine implements TrackModel {
         asyncTrackUpdate(() -> {
             setUnoccupied(oldBlockID);
             setOccuppied(train, newBlockID);
+
+            WaysideSystem.getController(this.line,newBlockID).trackModelSetOccupancy(newBlockID, true);
+            WaysideSystem.getController(this.line,oldBlockID).trackModelSetOccupancy(oldBlockID, false);
             return null;
         });
 
@@ -198,13 +201,11 @@ public class TrackLine implements TrackModel {
     private void setOccuppied(TrainModel train, int blockID){
         mainTrackLine.get(blockID).addOccupation(train);
         Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(true));
-        WaysideSystem.getController(this.line,blockID).trackModelSetOccupancy(blockID, true);
     }
 
     private void setUnoccupied(int blockID){
         mainTrackLine.get(blockID).removeOccupation();
         Platform.runLater(() -> subjectList.get(blockID).setIsOccupied(false));
-        WaysideSystem.getController(this.line,blockID).trackModelSetOccupancy(blockID, false);
     }
 
     private <T> CompletableFuture<T> asyncTrackUpdate(Supplier<T> task) {
