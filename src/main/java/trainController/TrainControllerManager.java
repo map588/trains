@@ -69,7 +69,6 @@ public class TrainControllerManager {
     private final ScheduledExecutorService textUpdateExecutor = Executors.newSingleThreadScheduledExecutor();
 
 
-
     @FXML
     public void initialize() {
         logger.info("Started Train Controller Manager initialization");

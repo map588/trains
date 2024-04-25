@@ -52,8 +52,8 @@ compound_value : and_operator
 
 or_operator: (and_operator | single_val | ('(' compound_value ')')) (OR (and_operator | single_val | ('(' compound_value ')')))+ ;
 and_operator: (single_val | ('(' compound_value ')')) (AND (single_val | ('(' compound_value ')')))+ ;
-single_val : not_operator | list_value ;
-not_operator : NOT list_value ;
+single_val : not_operator | list_value | bool_literal;
+not_operator : NOT (list_value | bool_literal);
 list_value : list_name LEFT_BRACK arith_expression RIGHT_BRACK ;
 
 arith_expression returns [int val]
@@ -64,12 +64,16 @@ arith_expression returns [int val]
 
 
 int_term  returns [int val]
-: INT_VAL       { $val = $INT_VAL.int; }
+: int_value     { $val = int_value().val; }
 | int_variable  { $val = int_variable().val; }
 ;
 
 int_variable returns [int val]
 : VARIABLE  { $val = intVarMap.get($VARIABLE.text);}
+;
+
+int_value returns [int val]
+: INT_VAL { $val = $INT_VAL.int; }
 ;
 
 list_name returns [String name]
