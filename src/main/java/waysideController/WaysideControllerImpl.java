@@ -44,7 +44,8 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     private final Stack<PLCChange>[] plcResults;
     private Stack<PLCChange> currentPLCResult;
     private boolean isRunningPLC;
-    private final Deque<Integer> occupancyBlockIDStack = new ArrayDeque<>();
+    private final Deque<Integer> occupancyBlockToIDStack = new ArrayDeque<>();
+    private final Deque<Integer> occupancyBlockFromIDStack = new ArrayDeque<>();
     private final Deque<Boolean> occupancyValStack = new ArrayDeque<>();
     private final Map<Integer, Integer> authorityMap = new HashMap<>();
     private final Map<Integer, Double> speedMap = new HashMap<>();
@@ -173,9 +174,16 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
             setRunningPLC(false);
 
-            while (!occupancyBlockIDStack.isEmpty()) {
-                logger.info("Setting occupancy for block {} to {} from QUEUE", occupancyBlockIDStack.peek(), occupancyValStack.peek());
-                setOccupancy(occupancyBlockIDStack.pop(), occupancyValStack.pop());
+            while (!occupancyBlockToIDStack.isEmpty()) {
+                int blockFrom = occupancyBlockFromIDStack.pop();
+                if(blockFrom == -1) {
+                    logger.info("Setting occupancy for block {} to {} from QUEUE", occupancyBlockToIDStack.peek(), occupancyValStack.peek());
+                    setOccupancy(occupancyBlockToIDStack.pop(), occupancyValStack.pop());
+                }
+                else {
+                    logger.info("Moving occupancy from block {} to {} from QUEUE", blockFrom, occupancyBlockToIDStack.peek());
+                    moveOccupancy(blockFrom, occupancyBlockToIDStack.pop());
+                }
             }
 
         }
@@ -219,24 +227,51 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                 return;
             }
             if (isRunningPLC()) {
-                logger.info("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
-                occupancyBlockIDStack.push(blockID);
+                logger.debug("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
+                occupancyBlockToIDStack.push(blockID);
+                occupancyBlockFromIDStack.push(-1);
                 occupancyValStack.push(occupied);
             } else {
                 setOccupancy(blockID, occupied);
-                logger.info("AFTER Setting occupancy for block {} to {}", blockID, occupied);
             }
             sendHWOccupancy(blockID, occupied);
 
             if (ctcOffice != null)
                 ctcOffice.setBlockOccupancy(trackLine, blockID, occupied);
         }
-        logger.info("AFTER Being told to set occupancy for block {} to {}", blockID, occupied);
+    }
+
+    public void trackModelMoveOccupancy(int oldBlockID, int newBlockID) {
+        logger.info("Being told to move occupancy from block {} to {}", oldBlockID, newBlockID);
+
+        if (isRunningPLC()) {
+            logger.debug("Adding to queue to move occupancy from block {} to {}", oldBlockID, newBlockID);
+            occupancyBlockFromIDStack.push(oldBlockID);
+            occupancyBlockToIDStack.push(newBlockID);
+            occupancyValStack.push(true);
+        } else {
+            moveOccupancy(oldBlockID, newBlockID);
+        }
+        sendHWOccupancy(oldBlockID, false);
+        sendHWOccupancy(newBlockID, true);
+
+        if (ctcOffice != null) {
+            ctcOffice.setBlockOccupancy(trackLine, oldBlockID, false);
+            ctcOffice.setBlockOccupancy(trackLine, newBlockID, true);
+        }
     }
 
     private void setOccupancy(int blockID, boolean occupied) {
         logger.info("Setting occupancy for block {} to {}", blockID, occupied);
         blockMap.get(blockID).setOccupied(occupied);
+    }
+
+    private void moveOccupancy(int oldBlockID, int newBlockID) {
+        logger.info("Moving occupancy from block {} to {}", oldBlockID, newBlockID);
+        WaysideBlock oldBlock = blockMap.get(oldBlockID);
+        WaysideBlock newBlock = blockMap.get(newBlockID);
+        newBlock.setOccupied(true);
+        oldBlock.setOccupied(false);
     }
 
     @Override

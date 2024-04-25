@@ -2,11 +2,11 @@ package waysideController;
 
 import Utilities.HelperObjects.BooleanIconTableCell;
 
-public class SignalLightTableCell extends BooleanIconTableCell<WaysideBlockSubject> {
+public class TernaryIconTableCell extends BooleanIconTableCell<WaysideBlockSubject> {
 
     private final String conditionalPropertyName;
 
-    public SignalLightTableCell(String falseIconPath, String trueIconPath, int sizeX, int sizeY, String conditionalPropertyName) {
+    public TernaryIconTableCell(String falseIconPath, String trueIconPath, int sizeX, int sizeY, String conditionalPropertyName) {
         super(falseIconPath, trueIconPath, sizeX, sizeY);
         this.conditionalPropertyName = conditionalPropertyName;
     }

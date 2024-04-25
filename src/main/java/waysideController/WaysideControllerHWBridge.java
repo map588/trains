@@ -237,6 +237,11 @@ public class WaysideControllerHWBridge implements WaysideController, Notifier {
     }
 
     @Override
+    public void trackModelMoveOccupancy(int oldBlockID, int newBlockID) {
+
+    }
+
+    @Override
     public void CTCSendSpeed(int blockID, double speed) {
         logger.info("CTCSendSpeed: " + blockID + " " + speed);
 

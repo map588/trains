@@ -184,8 +184,10 @@ public class TrackLine implements TrackModel {
             setUnoccupied(oldBlockID);
             setOccuppied(train, newBlockID);
 
-            WaysideSystem.getController(this.line,newBlockID).trackModelSetOccupancy(newBlockID, true);
-            WaysideSystem.getController(this.line,oldBlockID).trackModelSetOccupancy(oldBlockID, false);
+//            WaysideSystem.getController(this.line,newBlockID).trackModelSetOccupancy(newBlockID, true);
+//            WaysideSystem.getController(this.line,oldBlockID).trackModelSetOccupancy(oldBlockID, false);
+            WaysideSystem.getController(this.line,oldBlockID).trackModelMoveOccupancy(oldBlockID, newBlockID);
+            logger.info("AFTER MOVING Train {} => {} ", train.getTrainNumber(), newBlockID);
             return null;
         });
 
