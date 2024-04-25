@@ -196,6 +196,7 @@ public class TrackBlock {
                 this.occupiedBy.changeDirection();
             }else{
                 nullTrain.changeDirection();
+                logger.warn("Tried to change direction of NullTrain at block: {}", blockID)
             }
         }
         return nextConnection.blockNumber();

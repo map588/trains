@@ -313,7 +313,7 @@ public class TrainModelImpl implements TrainModel, Notifier {
         notifyChange(COMMANDSPEED_PROPERTY, Conversion.convertVelocity(commandSpeed,MPS,MPH));
         });
 
-        logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
+      //  logger.info("Train {} <= Command Speed: {}",this.trainID, speed);
     }
 
     // Method to set the authority of the train model and pass the value to the train controller
@@ -323,10 +323,10 @@ public class TrainModelImpl implements TrainModel, Notifier {
         this.authority = authority;
 
         listeningExecutor.execute(() -> {
-            if(authority == -3)
-                logger.debug("Train {} <=     Authority: {}",this.trainID, authority);
-            else
-                logger.info("Train {} <=     Authority: {}",this.trainID, authority);
+         //   if(authority == -3)
+           //     logger.debug("Train {} <=     Authority: {}",this.trainID, authority);
+         //   else
+           //     logger.info("Train {} <=     Authority: {}",this.trainID, authority);
             notifyChange(AUTHORITY_PROPERTY, authority);
         });
 
