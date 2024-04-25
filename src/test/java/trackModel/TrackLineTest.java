@@ -67,25 +67,29 @@ class TrackLineTest extends BaseTest {
         assertTrue(trackLine.getTrackCircuitFailure(1));
     }
 
-
-    // TODO: passenger test
-//    @Test
-//    public void testPassengers() {
-//        trackLine.embarkPassengers(stub);
-//        trackLine.disembarkPassengers(stub, 15);
-//
-//    }
-
     @Test
-    void testTicketSales() {
-        assertEquals(0, trackLine.getTicketSales());
+    public void testFixTrackFailure() {
+        trackLine.setTrackCircuitFailure(1, true);
+        trackLine.fixTrackFailure(1);
+        assertFalse(trackLine.getTrackCircuitFailure(1));
     }
 
+    @Test
+    public void testPassengers() {
+        assertNotEquals(0,trackLine.embarkPassengers(stub));
+    }
 
-    // TODO: beacon test
-//    @Test
-//    public void testBeacons() {
-//
-//    }
+    @Test
+    public void testTicketSales() {
+        stub.updatePassengers();
+        assertEquals(0, trackLine.getTicketSales());
+        trackLine.embarkPassengers(stub);
+    }
+
+    @Test
+    public void testBeacons() {
+
+
+    }
 }
 

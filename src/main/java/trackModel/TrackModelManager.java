@@ -259,7 +259,7 @@ public class TrackModelManager {
 
         if (currentBlockSubject.isIsBeacon()) {
             displayBeaconInfo.textProperty().bindBidirectional(currentBlockSubject.setBeaconProperty());
-            beaconBlockNumber.textProperty().bind(currentBlockSubject.blockNumberProperty().asString());
+            beaconBlockNumber.setText("BEACON BLOCK SELECTED");
         } else {
             displayBeaconInfo.setText("");
         }

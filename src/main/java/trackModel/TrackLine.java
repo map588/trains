@@ -353,6 +353,10 @@ public class TrackLine implements TrackModel {
             } else {
                 logger.error("Broken Rail called on Block: {} does not exist", blockID);
             }
+
+            TrainModel train = new TrainModelImpl(this, 0);
+            trackOccupancyMap.putIfAbsent(train, blockID);
+
         });
     }
 
@@ -375,6 +379,9 @@ public class TrackLine implements TrackModel {
             } else {
                 logger.error("Power Failure called on Block: {} does not exist", blockID);
             }
+
+            TrainModel train = new TrainModelImpl(this, 0);
+            trackOccupancyMap.putIfAbsent(train, blockID);
         });
     }
 
@@ -397,12 +404,21 @@ public class TrackLine implements TrackModel {
             } else {
                 logger.error("Track Circuit Failure called on Block: {} does not exist", blockID);
             }
+
+            TrainModel train = new TrainModelImpl(this, 0);
+            trackOccupancyMap.putIfAbsent(train, blockID);
         });
     }
 
     @Override
     public void fixTrackFailure(Integer blockID) {
+
+        if (!getBrokenRail(blockID) && !getPowerFailure(blockID) && !getTrackCircuitFailure(blockID)) {
+            logger.error("Fix Track Failure called on Block: {} with no failures", blockID);
+            return;
+        }
         queueTrackUpdate( () -> {
+
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
                 failedBlock.clearFailures();
@@ -419,6 +435,9 @@ public class TrackLine implements TrackModel {
             } else {
                 logger.error("Fix Track Failure called on Block: {} does not exist", blockID);
             }
+
+            TrainModel train = new TrainModelImpl(this, 0);
+            trackOccupancyMap.remove(train);
         });
     }
 

@@ -41,7 +41,7 @@
               </Label>
          </children>
       </HBox>
-      <GridPane hgap="10.0" prefHeight="640.0" prefWidth="1025.0" VBox.vgrow="ALWAYS">
+      <GridPane hgap="10.0" prefHeight="725.0" prefWidth="1025.0" VBox.vgrow="ALWAYS">
          <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
@@ -263,7 +263,7 @@
                            <font>
                                <Font size="18.0" />
                            </font>
-                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="354.75">
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="122.0" prefWidth="353.0">
                                <Label fx:id="beaconInfoLabel" layoutX="8.25" layoutY="15.0" text="Beacon Block:">
                                    <font>
                                        <Font size="13.5" />
