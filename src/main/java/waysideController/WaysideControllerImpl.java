@@ -207,6 +207,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
+        logger.info("Being told to set occupancy for block {} to {}", blockID, occupied);
+        if(occupied && blockID == 0) {
+            return;
+        }
         if(isRunningPLC()) {
             occupancyBlockIDStack.push(blockID);
             occupancyValStack.push(occupied);
