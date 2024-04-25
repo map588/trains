@@ -159,6 +159,12 @@ public class TrackLine implements TrackModel {
 
         logger.info("TrainModel {}:  {} -> {}  ", train.getTrainNumber(), currentBlockID , nextBlockID);
 
+        if(nextBlockID > currentBlockID) {
+            Platform.runLater(() -> subjectList.get(currentBlockID).setDirection(false));
+        } else {
+            Platform.runLater(() -> subjectList.get(currentBlockID).setDirection(true));
+        }
+
         asyncTrackUpdate(() -> {
             trackOccupancyMap.replace(train, currentBlockID, nextBlockID);
             return null;
@@ -322,6 +328,7 @@ public class TrackLine implements TrackModel {
             TrackBlock brokenBlock = this.mainTrackLine.get(blockID);
             if (brokenBlock != null) {
                 brokenBlock.setRailFailure(true);
+                this.setBrokenRail(blockID, state);
             } else {
                 logger.error("Broken Rail called on Block: {} does not exist", blockID);
             }
@@ -341,6 +348,7 @@ public class TrackLine implements TrackModel {
         logger.info("Power Failure called on Block: {} with state: {}", blockID, state);
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
+            this.setPowerFailure(blockID, state);
             if (failedBlock != null) {
                 failedBlock.setPowerFailure(true);
             } else {
@@ -364,6 +372,7 @@ public class TrackLine implements TrackModel {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
             if (failedBlock != null) {
                 failedBlock.setCircuitFailure(true);
+                this.setTrackCircuitFailure(blockID, state);
             } else {
                 logger.error("Circuit Failure called on Block: {} does not exist", blockID);
             }
@@ -441,11 +450,11 @@ public class TrackLine implements TrackModel {
             if(trackOccupancyMap.containsKey(train)){
                 TrackBlock block = mainTrackLine.get(trackOccupancyMap.get(train));
                 if (block.feature.isStation()) {
-
-                    Platform.runLater(() -> subjectList.get(block.blockID).setPassDisembarked(Integer.toString(train.getPassengerCount())));
-                    this.ticketSales += train.getPassengerCount();
-
-                    return random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
+                    int embarked = random.nextInt(0, MAX_PASSENGERS - train.getPassengerCount());
+                    block.feature.setPassengersEmbarked(embarked);
+                    Platform.runLater(() -> subjectList.get(block.blockID).setPassEmbarked(Integer.toString(embarked)));
+                    this.ticketSales += embarked;
+                    return embarked;
                 } else {
                     logger.warn("Train: {} is not on a station block", train.getTrainNumber());
                     return 0;
@@ -486,7 +495,7 @@ public class TrackLine implements TrackModel {
             this.outsideTemperature += newTemp;
             logger.info("Temperature: {}", this.outsideTemperature);
             Platform.runLater(() -> subjectList.forEach(subject -> subject.setOutsideTemp(this.outsideTemperature)));
-            if(outsideTemperature < 40.0) {
+            if(outsideTemperature < 40) {
                 Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("ON")));
             } else {
                 Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("OFF")));

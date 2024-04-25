@@ -127,7 +127,6 @@ public class TrackModelManager {
 
         outsideTemp.setText("-");
 
-        //pickLine.getSelectionModel().selectNext();
     }
 
     private void uploadTrack(){
@@ -173,7 +172,7 @@ public class TrackModelManager {
         directionColumn.setCellFactory(new Callback<TableColumn<TrackBlockSubject, Boolean>, TableCell<TrackBlockSubject, Boolean>>() {
             @Override
             public TableCell<TrackBlockSubject, Boolean> call(TableColumn<TrackBlockSubject, Boolean> TrackLineSubjectBooleanTableColumn) {
-                return new BooleanIconTableCell<>(null, "/Framework.GUI.Images/Crossing_Down_24.png", 24, 24);
+                return new BooleanIconTableCell<>("/Framework.GUI.Images/down_arrow.png", "/Framework.GUI.Images/up_arrow.png", 24, 24);
             }
         });
 
@@ -214,6 +213,9 @@ public class TrackModelManager {
                 displayBeaconInfo.textProperty().unbindBidirectional(currentBlockSubject.setBeaconProperty());
                 beaconBlockNumber.textProperty().unbind();
             }
+
+            //directionColumn.textProperty().unbindBidirectional(currentBlockSubject.directionProperty());
+
             elevationColumn.textProperty().unbindBidirectional(currentBlockSubject.blockElevationProperty().asObject());
             occupiedColumn.textProperty().unbindBidirectional(currentBlockSubject.isOccupiedProperty());
             gradeColumn.textProperty().unbindBidirectional(currentBlockSubject.blockGradeProperty().asObject());
@@ -263,6 +265,12 @@ public class TrackModelManager {
             beaconBlockNumber.textProperty().bind(currentBlockSubject.blockNumberProperty().asString());
         } else {
             displayBeaconInfo.setText("");
+        }
+
+        if(currentBlockSubject.isIsOccupied()) {
+            //directionColumn.textProperty().bindBidirectional(currentBlockSubject.directionProperty());
+        } else {
+            directionColumn.setText("");
         }
 
         outsideTemp.textProperty().bindBidirectional(currentBlockSubject.outsideTempProperty());

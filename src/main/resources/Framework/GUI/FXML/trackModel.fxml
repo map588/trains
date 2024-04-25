@@ -208,23 +208,23 @@
                                    </Tab>
                                    <Tab fx:id="switchTab" text="SWITCH">
                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="135.0" prefWidth="150.0">
-                                           <Label fx:id="switchBlockNumbersLabel" layoutX="10.5" layoutY="30.75" text="Switch Block Numbers :">
+                                           <Label fx:id="switchBlockNumbersLabel" layoutX="19.5" layoutY="30.75" text="Switch Block :">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="switchStateLabel" layoutX="10.5" layoutY="68.25" prefHeight="17.25" prefWidth="94.5" text="Switch State :">
+                                           <Label fx:id="switchStateLabel" layoutX="19.5" layoutY="68.25" prefHeight="17.25" prefWidth="94.5" text="Switch State :">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="switchBlockNumbersDisplay" layoutX="189.0" layoutY="31.5" text="NOT A SWITCH BLOCK" />
-                                           <Label fx:id="switchStateDisplay" layoutX="189.0" layoutY="68.25" text="NONE" />
+                                           <Label fx:id="switchBlockNumbersDisplay" layoutX="180.0" layoutY="31.5" text="NOT A SWITCH BLOCK" />
+                                           <Label fx:id="switchStateDisplay" layoutX="180.0" layoutY="68.25" text="NONE" />
                                        </AnchorPane>
                                    </Tab>
                                    <Tab fx:id="signalTab" text="SIGNAL &amp; CROSSINGS">
                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="135.0" prefWidth="150.0">
-                                           <Label fx:id="signalBlockNumberLabel" layoutX="10.5" layoutY="30.75" text="Signal Block Number :">
+                                           <Label fx:id="signalBlockNumberLabel" layoutX="10.5" layoutY="30.75" text="Signal Block :">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
@@ -234,22 +234,22 @@
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="signalBlockNumberDisplay" layoutX="142.0" layoutY="31.0" text="NO SIGNAL">
+                                           <Label fx:id="signalBlockNumberDisplay" layoutX="103.0" layoutY="31.0" text="NO SIGNAL">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="signalStateDisplay" layoutX="142.0" layoutY="69.0" text="NONE">
+                                           <Label fx:id="signalStateDisplay" layoutX="104.0" layoutY="69.0" text="NONE">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="crossingLabel" layoutX="261.25" layoutY="32.75" text="Crossing State">
+                                           <Label fx:id="crossingLabel" layoutX="231.0" layoutY="31.0" text="Crossing State">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
                                            </Label>
-                                           <Label fx:id="crossingState" layoutX="263.75" layoutY="70.25" text="NO CROSSING">
+                                           <Label fx:id="crossingState" layoutX="229.0" layoutY="69.0" text="NO CROSSING">
                                                <font>
                                                    <Font size="13.5" />
                                                </font>
