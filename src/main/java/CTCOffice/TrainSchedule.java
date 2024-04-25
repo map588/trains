@@ -157,13 +157,14 @@ public class TrainSchedule {
 
     public int checkSchedule() {
         int visited = 0;
-        if(dispatchTime < OFFICE.getTime()) {
+        if(dispatchTime <= OFFICE.getTime()) {
             dispatchTime = OFFICE.getTime() + 30;
         }
 
         for (int i = 0; i < stops.size(); i++) {
             if(i == 0 && stops.get(i).getArrivalTime() < dispatchTime) {
                 stops.get(i).setArrivalTime(dispatchTime + 60);
+                stops.get(i).setDepartureTime(stops.get(i).getArrivalTime() + 60);
             }
             // Check if arrival time is before departure time of previous stop
             if (!TrackLayout.contains(stops.get(i).getStationBlockID())) {
@@ -239,7 +240,6 @@ public class TrainSchedule {
                     (TrackLayout.lastIndexOf(stop.getStationBlockID()) - visited) :
                     (TrackLayout.indexOf(stop.getStationBlockID()) - visited));
 
-            //blocksAuthority += 1;
             int station = TrackLayout.indexOf(stop.getStationBlockID());
             double metersAuthority =  (blockSubjectMap.getSubject(
                     BlockIDs.of(TrackLayout.get(station), Enum.valueOf(Lines.class, line))).getBlockInfo().getLength() / 2);
@@ -344,10 +344,6 @@ public class TrainSchedule {
                     }
                 }
             }
-            for(int j = 0; j < stop.getRoutePath().size(); j++) {
-                System.out.println("Speed : " + stop.getSpeedList().get(j) + "m/s set for the " + j + "th block of stop " + stop.getStopIndex() + " of train " + trainID + " for block " + stop.getRoutePath().get(j));
-            }
-            System.out.println();
         }
     }
 
