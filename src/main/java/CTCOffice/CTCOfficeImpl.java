@@ -345,7 +345,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
 
     //TODO: Remove these methods
     void sendDumbAuthority(int trainID, Lines line, int blockID, int authority) {
-        logger.info("CTC sending dumb authority to train {} on block {} on line {}", trainID, blockID, line);
+        logger.info("CTC sending dumb authority to train {} on block {} on line {} with controller {}", trainID, blockID, line, WaysideSystem.getController(line, blockID));
         WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
     }
     void sendDumbSpeed(int trainID, Lines line, int blockID, double speed) {

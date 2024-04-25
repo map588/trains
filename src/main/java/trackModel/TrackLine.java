@@ -85,6 +85,8 @@ public class TrackLine implements TrackModel {
         }else{
             this.trackOccupancyMap = new ObservableHashMap<>(0);
         }
+
+        newTemperature();
     }
 
     public TrackLine() {
@@ -488,7 +490,13 @@ public class TrackLine implements TrackModel {
         queueTrackUpdate(() -> {
             int newTemp = ThreadLocalRandom.current().nextInt(-5, 5);
             this.outsideTemperature += newTemp;
+            logger.info("Temperature: {}", this.outsideTemperature);
             Platform.runLater(() -> subjectList.forEach(subject -> subject.setOutsideTemp(this.outsideTemperature)));
+            if(outsideTemperature < 40.0) {
+                Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("ON")));
+            } else {
+                Platform.runLater(() -> subjectList.forEach(subject -> subject.setTrackHeater("OFF")));
+            }
         });
     }
 
