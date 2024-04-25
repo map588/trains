@@ -69,11 +69,15 @@ public class TrainControllerImpl implements TrainController {
     private double currentTemperature = 0.0;
     private boolean eBrakeGUI = false;
     private boolean sBrakeGUI = false;
+
+
     private boolean waysideStop = false;
     private int stopTime = 0;
+    private double emergencyDistance;
+    private double serviceDistance;
 
-    private double Ki = 20;
-    private double Kp = 400;
+    private double Ki = 50;
+    private double Kp = 200;
     private double power = 0.0;
     private double grade = 0.0;
     private double rollingError = 0.0;
@@ -82,7 +86,6 @@ public class TrainControllerImpl implements TrainController {
     private int authority = 0;
 
     private double internalAuthority = 0;
-    private double setSpeed = 0;
 
     private boolean serviceBrake = false, emergencyBrake = false, automaticMode = true,
             internalLights = false, externalLights = false, leftDoors = false,
@@ -177,15 +180,15 @@ public class TrainControllerImpl implements TrainController {
 
             internalAuthority -= currentSpeed * TIME_STEP;
 
-            setSpeed = automaticMode ? commandSpeed : overrideSpeed;
+            double setSpeed = automaticMode ? commandSpeed : overrideSpeed;
 
             setSpeed = Math.min(setSpeed, speedLimit);
 
             //If the train is coming to a stop and its intentional
             if (power == 0 && currentSpeed > 0 && currentSpeed <= 2) {
                 setAuthority((int) internalAuthority);
-                if (internalAuthority > 5 && !waysideStop) {
-                    setSpeed = 2;
+                if (internalAuthority > 15 && !waysideStop) {
+                    setSpeed = 5;
                     setServiceBrake(sBrakeGUI);
                 }
                 rollingError = 0;
@@ -293,8 +296,7 @@ public class TrainControllerImpl implements TrainController {
 
     }
 
-    private double emergencyDistance;
-    private double serviceDistance;
+
 
     // Function that calculates the stopping distance where the train needs to start stopping
     void calculateStoppingDistance(double currentSpeed) {
