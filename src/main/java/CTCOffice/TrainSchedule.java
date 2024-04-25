@@ -74,7 +74,7 @@ public class TrainSchedule {
         return stops.size();
     }
 
-    public void addStop(int blockID, int arrivalTime, int departureTime) {
+    public void addStop(int blockID, double arrivalTime, double departureTime) {
         stops.add(new TrainStop(stops.size(), blockID, arrivalTime, departureTime));
         stopList.add(stops.get(stops.size() - 1).getSubject());
         stopIndices.add(stops.size());
@@ -155,7 +155,14 @@ public class TrainSchedule {
 
     public int checkSchedule() {
         int visited = 0;
+        if(dispatchTime < OFFICE.getTime()) {
+            dispatchTime = OFFICE.getTime() + 30;
+        }
+
         for (int i = 0; i < stops.size(); i++) {
+            if(i == 0 && stops.get(i).getArrivalTime() < dispatchTime) {
+                stops.get(i).setArrivalTime(dispatchTime + 60);
+            }
             // Check if arrival time is before departure time of previous stop
             if (!TrackLayout.contains(stops.get(i).getStationBlockID())) {
                 removeStop(i);
@@ -166,7 +173,7 @@ public class TrainSchedule {
                     stops.get(i).setArrivalTime(stops.get(i - 1).getDepartureTime() + 2);
                 }
             }
-            // Check if arrival time is before departure time
+            // Check if arrival time is after departure time
             if (stops.get(i).getArrivalTime() > stops.get(i).getDepartureTime()) {
                 stops.get(i).setDepartureTime(stops.get(i).getArrivalTime() + 1);
             }

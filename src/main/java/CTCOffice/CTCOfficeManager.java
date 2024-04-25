@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
 import static Utilities.TimeConvert.*;
+import static CTCOffice.CTCOfficeImpl.*;
 
 /**
  * This class manages the GUI for the Centralized Traffic Control (CTC) office.
@@ -125,12 +126,12 @@ public class CTCOfficeManager {
     public void initialize() {
         setupLineTables();
         setupScheduleTables();
-        setupStopTable();
-        setupScheduleButtons();
-        setupDividers();
         scheduleTable.getSelectionModel().select(0);
         trainSelectTable.getSelectionModel().select(0);
+        setupStopTable();
         scheduleEditTable.getSelectionModel().select(0);
+        setupScheduleButtons();
+        setupDividers();
         checkScheduleButton.fire();
     }
 
@@ -229,12 +230,6 @@ public class CTCOfficeManager {
                 maintenanceColors.get(block).setValue(Color.TRANSPARENT);
             }
         });
-    }
-
-
-    //TODO Implement a Create Train Code
-    public void createTrain(){
-
     }
 
     private void setupLineTables(){
@@ -370,6 +365,7 @@ public class CTCOfficeManager {
                 stopSelector.getItems().addAll(newValue.getSchedule().stopIndices);
             }
         });
+
     }
 
     private void setupStopTable(){
@@ -378,8 +374,8 @@ public class CTCOfficeManager {
         stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY).getValue()));
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
-
-        stationStopSelector.setText("63");
+        ArrayList<Integer> StopIndices = (selectedTrain.getLine().equals("GREEN") ? GreenTrackLayout : RedTrackLayout);
+        stationStopSelector.setText(StopIndices.get(0).toString());
         scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 stopSelector.setValue(newValue.getStop().getStopIndex());
@@ -442,7 +438,13 @@ public class CTCOfficeManager {
             if(stationStopSelector.getText().isEmpty()) {
                 stationStopSelector.setText("0");
             }
-            if(train.getStop(train.getStopCount() - 1) == null) {
+            if(arrivalTimeSelector.getText().isEmpty()) {
+                arrivalTimeSelector.setText(convertDoubleToClockTime((60)));
+            }
+            if(departureTimeSelector.getText().isEmpty()) {
+                departureTimeSelector.setText(convertDoubleToClockTime(120));
+            }
+            if(train.getStopCount() == 0) {
                 arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + (300)));
                 departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 60));
             }else{
@@ -453,7 +455,7 @@ public class CTCOfficeManager {
                     departureTimeSelector.setText(convertDoubleToClockTime(convertClockTimeToDouble(arrivalTimeSelector.getText()) + 60));
                 }
             }
-            train.addStop(Integer.parseInt(stationStopSelector.getText()),  (int)convertClockTimeToDouble(arrivalTimeSelector.getText()), (int)convertClockTimeToDouble(departureTimeSelector.getText()));
+            train.addStop(Integer.parseInt(stationStopSelector.getText()),  convertClockTimeToDouble(arrivalTimeSelector.getText()), convertClockTimeToDouble(departureTimeSelector.getText()));
             scheduleEditTable.getItems().add(train.getStop(train.getStopCount() - 1).getSubject());
             stopSelector.getItems().add(train.getStopCount() - 1);
         });
