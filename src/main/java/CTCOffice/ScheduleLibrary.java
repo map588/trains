@@ -46,9 +46,11 @@ public class ScheduleLibrary extends SubjectMap<String, ScheduleFileSubject> {
                     compressedStops));
         }
         CompressedScheduleFile compressedScheduleFile = new CompressedScheduleFile(
-                scheduleFile.getScheduleFileName(), scheduleFile.getLastModified(), compressedTrainSchedules);
+                fileName, scheduleFile.getLastModified(), compressedTrainSchedules);
         try{
-            FileOutputStream fileOut = new FileOutputStream(fileName);
+
+
+            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "/src/main/java/CTCOffice/schedule_files/" + fileName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(compressedScheduleFile);
             out.close();
@@ -77,4 +79,5 @@ public class ScheduleLibrary extends SubjectMap<String, ScheduleFileSubject> {
             System.err.println("Failed to load schedule file: " + fileName);
         }
     }
+
 }

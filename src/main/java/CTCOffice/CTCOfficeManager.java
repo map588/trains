@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -114,6 +115,8 @@ public class CTCOfficeManager {
     ScheduleFile selectedSchedule = null;
     TrainSchedule selectedTrain = null;
     String searchingText = "";
+    File dir = new File(System.getProperty("user.dir") + "/src/main/java/CTCOffice/schedule_files/");
+
 
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
@@ -129,6 +132,7 @@ public class CTCOfficeManager {
     CTCOfficeImpl office = CTCOfficeImpl.OFFICE;
 
     public void initialize() {
+        loadScheduleFiles();
         setupLineTables();
         setupScheduleTables();
         scheduleTable.getSelectionModel().select(0);
@@ -331,9 +335,10 @@ public class CTCOfficeManager {
         scheduleBrowseButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open Schedule File");
+            fileChooser.setInitialDirectory(dir);
             File file = fileChooser.showOpenDialog(scheduleBrowseButton.getScene().getWindow());
             if(file != null) {
-                scheduleLibrary.loadScheduleFile(file.getAbsolutePath());
+                loadScheduleFiles();
                 scheduleTable.getItems().clear();
                 scheduleTable.getItems().addAll(scheduleLibrary.getSubjects().values());
             }
@@ -400,8 +405,7 @@ public class CTCOfficeManager {
         stationBlockIDColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(DESTINATION_PROPERTY).getValue()));
         arrivalTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(ARRIVAL_TIME_PROPERTY).getValue()));
         departureTimeColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(DEPARTURE_TIME_PROPERTY).getValue()));
-        ArrayList<Integer> StopIndices = (selectedTrain.getLine().equals("GREEN") ? GreenTrackLayout : RedTrackLayout);
-        stationStopSelector.setText(StopIndices.get(0).toString());
+        stationStopSelector.setText((selectedTrain.getLine().equals("GREEN") ? GreenTrackLayout : RedTrackLayout).get(0).toString());
         scheduleEditTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 stopSelector.setValue(newValue.getStop().getStopIndex());
@@ -460,9 +464,13 @@ public class CTCOfficeManager {
             if(selectedSchedule == null) {
                 return;
             }
-            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());
+            TrainSchedule train = selectedSchedule.getTrainSchedule(trainIDSelector.getValue());;
             if(stationStopSelector.getText().isEmpty()) {
-                stationStopSelector.setText("0");
+                if(train.getStopCount() <= 0 ) {
+                    stationStopSelector.setText("" + (selectedTrain.getLine().equals("GREEN") ? GreenTrackLayout : RedTrackLayout).get(3));
+                }else if((selectedTrain.getLine().equals("GREEN") ? GreenTrackLayout : RedTrackLayout).size() > train.getStopCount() * 5){
+                    stationStopSelector.setText("" + (selectedTrain.getLine().equals("GREEN") ? GreenTrackLayout : RedTrackLayout).get(train.getStopCount() * 5));
+                }
             }
             if(arrivalTimeSelector.getText().isEmpty()) {
                 arrivalTimeSelector.setText(convertDoubleToClockTime((60)));
@@ -529,7 +537,8 @@ public class CTCOfficeManager {
 
         saveScheduleButton.setOnAction(event -> {
             if(selectedSchedule != null) {
-                scheduleLibrary.saveScheduleFile(selectedSchedule.getScheduleFileName(), selectedSchedule);
+                scheduleLibrary.saveScheduleFile(scheduleNameField.getText(), selectedSchedule);
+                loadScheduleFiles();
             }
         });
 
@@ -579,12 +588,15 @@ public class CTCOfficeManager {
             office.runSchedule(selectedSchedule.getScheduleFileName());
         });
 
+    }
 
-//        DumbDispatchButton.setOnAction(event -> {
-//            Lines line = lineTrainSelector.getValue().equals("GREEN") ? Lines.GREEN : Lines.RED;
-//            office.dispatchDumbTrain(trainID++, line);
-//            office.sendDumbAuthority(trainID, line, line == Lines.GREEN ? 63 : 10, 50000);
-//            office.sendDumbSpeed(trainID, line, line == Lines.GREEN ? 63 : 10, 19.6);
-//        });
+    public void loadScheduleFiles() {
+        if (dir.exists()) {
+            for (File file : dir.listFiles()) {
+                scheduleLibrary.loadScheduleFile(file.getAbsolutePath());
+            }
+            scheduleTable.getItems().clear();
+            scheduleTable.getItems().addAll(scheduleLibrary.getSubjects().values());
+        }
     }
 }
