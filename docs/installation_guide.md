@@ -8,6 +8,14 @@ This installation guide is a document meant to help guide users through the inst
 
 ## Installation of Main Executable
 
+Download JRE v17 from Oracle: https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+
+Run the Java JRE v17 installer and follow the instructions to install the JRE.
+
+Download the Executable installer from the release tab from Github.
+
+Launch the installer and follow the onscreen instructions 
+
 ## Hardware Wayside Controller
 The Hardware Wayside Controller requires a Raspberry Pi 4B with a SparkFun FTDI 3.3V Serial USB Adapter. In addition, a 5V 3A USB power adapter and mini USB-B to USB-A cable are required to power the Raspberry Pi.
 
