@@ -1,9 +1,7 @@
 package CTCOffice;
 
-import Framework.Support.BlockIDs;
 import Framework.Support.Notifier;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +9,7 @@ import static CTCOffice.Properties.ScheduleProperties.*;
 import static Utilities.TimeConvert.*;
 
 // A path in between two stations, a schedule is mostly just a list of these.
-public class TrainStop implements Notifier, Serializable { //SubRoute
+public class TrainStop implements Notifier { //SubRoute
     private int stationBlockID;
     private double arrivalTime;
     private double departureTime;
@@ -31,6 +29,16 @@ public class TrainStop implements Notifier, Serializable { //SubRoute
         this.speedList = new ArrayList<>(speedList);
         this.routePath = new ArrayList<>(routePath);
         this.authorityList = new ArrayList<>(authorityList);
+        subject = new TrainStopSubject(this);
+    }
+
+    public TrainStop(CompressedStop compressedStop) {
+        this.stationBlockID = compressedStop.stopBlockID();
+        this.arrivalTime = compressedStop.arrivalTime();
+        this.departureTime = compressedStop.departureTime();
+        this.speedList = new ArrayList<>(compressedStop.speedList());
+        this.routePath = new ArrayList<>(compressedStop.routePath());
+        this.authorityList = new ArrayList<>(compressedStop.authorityList());
         subject = new TrainStopSubject(this);
     }
 
