@@ -288,7 +288,9 @@ public class TrackLine implements TrackModel {
         try {
             asyncTrackUpdate( () -> {
                 mainTrackLine.get(blockID).setAuthority(authority);
-                logger.info("Authority => {} at block: {}", authority, blockID);
+                if(authority != -3) {
+                    logger.info("Authority => {} at block: {}", authority, blockID);
+                }
                 return null;
             }).get();
         } catch (InterruptedException | ExecutionException e) {
