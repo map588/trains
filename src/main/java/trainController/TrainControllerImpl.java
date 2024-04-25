@@ -355,6 +355,7 @@ public class TrainControllerImpl implements TrainController {
             if (++stopTime < (60 * 8)) {
                 waysideStop = true;
             } else {
+                logger.info("Train stopped at station {} for {} ticks", nextStationName, stopTime/8);
                 waysideStop = false;
                 stopTime = 0;
             }
