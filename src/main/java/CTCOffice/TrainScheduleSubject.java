@@ -4,10 +4,12 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
 
+import java.io.Serializable;
+
 import static CTCOffice.Properties.ScheduleProperties.*;
 import static Utilities.TimeConvert.*;
 
-public class TrainScheduleSubject implements AbstractSubject {
+public class TrainScheduleSubject implements AbstractSubject, Serializable {
     public final TrainSchedule schedule;
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 

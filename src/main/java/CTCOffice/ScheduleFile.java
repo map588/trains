@@ -2,12 +2,16 @@ package CTCOffice;
 
 import Framework.Support.Notifier;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
 
-public class ScheduleFile implements Notifier {
+public class ScheduleFile implements Notifier, Serializable {
     private final HashMap<Integer, TrainSchedule> multipleTrainSchedules = new HashMap<>();
     private final HashMap<Integer, TrainScheduleSubject> multipleTrainScheduleSubjects = new HashMap<>();
     private int trainNum;

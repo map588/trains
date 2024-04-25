@@ -97,6 +97,10 @@
                         <TableColumn fx:id="trainNumColumn" editable="false" text="# Trains"/>
                     </columns>
                 </TableView>
+                <ToolBar fx:id="scheduleSearchBar" prefHeight="40.0">
+                    <TextField fx:id="scheduleSearchField" prefWidth="200.0"/>
+                    <Button fx:id="scheduleBrowseButton" mnemonicParsing="false" text="Browse"/>
+                </ToolBar>
                 <TableView fx:id = "trainSelectTable" prefHeight="100.0">
                     <columns>
                         <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Line"/>
@@ -132,6 +136,7 @@
                     <Button fx:id="saveStopButton" mnemonicParsing="false" text="Save"/>
                 </ToolBar>
             <ToolBar fx:id="scheduleToolBar" prefHeight="40.0" >
+                <TextField fx:id="scheduleNameField" prefWidth="200.0"/>
                 <Button fx:id="AddSchedule" mnemonicParsing="false" text="Add Schedule"/>
                 <Button fx:id="RemoveSchedule" mnemonicParsing="false" text="Remove Schedule"/>
                 <Button fx:id="saveScheduleButton" mnemonicParsing="false" text="Save Schedule"/>
@@ -146,15 +151,6 @@
                         <Insets top="20.0"/>
                     </VBox.margin>
                 </Button>
-<!--                <Button fx:id="DumbDispatchButton" alignment="BOTTOM_CENTER" mnemonicParsing="false"-->
-<!--                        text="Dumb Dispatch" textFill="RED">-->
-<!--                    <font>-->
-<!--                        <Font size="32.0"/>-->
-<!--                    </font>-->
-<!--                    <VBox.margin>-->
-<!--                        <Insets top="20.0"/>-->
-<!--                    </VBox.margin>-->
-<!--                </Button>-->
             </VBox>
         </AnchorPane>
     </SplitPane>

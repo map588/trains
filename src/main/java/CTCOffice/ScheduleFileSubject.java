@@ -5,9 +5,11 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
 
+import java.io.Serializable;
+
 import static CTCOffice.Properties.ScheduleProperties.*;
 
-public class ScheduleFileSubject implements AbstractSubject {
+public class ScheduleFileSubject implements AbstractSubject, Serializable {
 
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
     private final ScheduleFile schedule;
@@ -42,6 +44,10 @@ public class ScheduleFileSubject implements AbstractSubject {
 
     public IntegerProperty getIntegerProperty(String propertyName) {
         return (IntegerProperty) getProperty(propertyName);
+    }
+
+    public ScheduleFile getScheduleFile() {
+        return schedule;
     }
 
 }

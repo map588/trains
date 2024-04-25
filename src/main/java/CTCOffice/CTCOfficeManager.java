@@ -17,7 +17,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
@@ -64,6 +66,10 @@ public class CTCOfficeManager {
     @FXML private TableColumn<ScheduleFileSubject, String> scheduleDateModColumn;
     @FXML private TableColumn<ScheduleFileSubject, Integer> trainNumColumn;
 
+    @FXML private TextField scheduleSearchField;
+    @FXML private Button scheduleSelectButton;
+    @FXML private Button scheduleBrowseButton;
+
     @FXML private TableView<TrainScheduleSubject> trainSelectTable;
     @FXML private TableColumn<TrainScheduleSubject, Integer> scheduledTrainColumn;
     @FXML private TableColumn<TrainScheduleSubject, String> lineColumn;
@@ -92,6 +98,7 @@ public class CTCOfficeManager {
     @FXML private Button RemoveStop;
     @FXML private Button saveStopButton;
 
+    @FXML private TextField scheduleNameField;
     @FXML private Button AddSchedule;
     @FXML private Button RemoveSchedule;
     @FXML private Button saveScheduleButton; // save to a file
@@ -106,9 +113,7 @@ public class CTCOfficeManager {
     ScheduleLibrary scheduleLibrary = ScheduleLibrary.getInstance();
     ScheduleFile selectedSchedule = null;
     TrainSchedule selectedTrain = null;
-
-    //TODO Remove this
-    int trainID = 1;
+    String searchingText = "";
 
     /**
      * Because these color properties are only relevant to the GUI, they are not stored in the CTCBlockSubject.
@@ -313,6 +318,27 @@ public class CTCOfficeManager {
             }
         });
 
+        scheduleSearchField.setOnAction(event -> {
+            searchingText = scheduleSearchField.getText();
+            scheduleTable.getItems().clear();
+            for(ScheduleFileSubject schedule : scheduleLibrary.getSubjects().values()) {
+                if(schedule.getScheduleFile().getScheduleFileName().contains(searchingText)) {
+                    scheduleTable.getItems().add(schedule);
+                }
+            }
+        });
+
+        scheduleBrowseButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Schedule File");
+            File file = fileChooser.showOpenDialog(scheduleBrowseButton.getScene().getWindow());
+            if(file != null) {
+                scheduleLibrary.loadScheduleFile(file.getAbsolutePath());
+                scheduleTable.getItems().clear();
+                scheduleTable.getItems().addAll(scheduleLibrary.getSubjects().values());
+            }
+        });
+
         trainSelectTable.setEditable(true);
         scheduledTrainColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getIntegerProperty(TRAIN_ID_PROPERTY).getValue()));
         lineColumn.setCellValueFactory(schedule -> new ReadOnlyObjectWrapper<>(schedule.getValue().getStringProperty(LINE_PROPERTY).getValue()));
@@ -445,8 +471,8 @@ public class CTCOfficeManager {
                 departureTimeSelector.setText(convertDoubleToClockTime(120));
             }
             if(train.getStopCount() == 0) {
-                arrivalTimeSelector.setText(convertDoubleToClockTime(START_TIME + (300)));
-                departureTimeSelector.setText(convertDoubleToClockTime(START_TIME + 60));
+                arrivalTimeSelector.setText(convertDoubleToClockTime( selectedTrain.getDispatchTime() + (60)));
+                departureTimeSelector.setText(convertDoubleToClockTime(selectedTrain.getDispatchTime() + 120));
             }else{
                 if(arrivalTimeSelector.getText().isEmpty() || (convertClockTimeToDouble(arrivalTimeSelector.getText()) <= train.getStop(train.getStopCount() - 1).getArrivalTime())) {
                     arrivalTimeSelector.setText(convertDoubleToClockTime(train.getStop(train.getStopCount() - 1).getDepartureTime() + 300));
@@ -487,16 +513,24 @@ public class CTCOfficeManager {
     }
 
     private void setupScheduleButtons() {
+
         AddSchedule.setOnAction(event -> {
            // System.out.println("added schedule\n");
-            new ScheduleFile("Schedule " + (scheduleLibrary.getSubjects().size() + 1), "4/25/2021");
-            scheduleTable.getItems().add(scheduleLibrary.getSubjects().get(scheduleLibrary.getSubjects().size()));
+            String scheduleName = scheduleNameField.getText();
+            new ScheduleFile(scheduleName, "4/25/2021");
+            scheduleTable.getItems().add(scheduleLibrary.getSubjects().get(scheduleName));
         });
 
         RemoveSchedule.setOnAction(event -> {
            // System.out.println("removed schedule\n");
             scheduleLibrary.removeScheduleFile(scheduleTable.getSelectionModel().getSelectedItem().getStringProperty(SCHEDULE_FILE_NAME_PROPERTY).getValue());
             scheduleTable.getItems().remove(scheduleTable.getSelectionModel().getSelectedItem());
+        });
+
+        saveScheduleButton.setOnAction(event -> {
+            if(selectedSchedule != null) {
+                scheduleLibrary.saveScheduleFile(selectedSchedule.getScheduleFileName(), selectedSchedule);
+            }
         });
 
         checkScheduleButton.setOnAction(event -> {

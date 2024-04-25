@@ -3,11 +3,14 @@ package CTCOffice;
 import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
+
+import java.io.Serializable;
+
 import static Utilities.TimeConvert.*;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
-public class TrainStopSubject implements AbstractSubject {
+public class TrainStopSubject implements AbstractSubject, Serializable {
     public final TrainStop stop;
     private final ObservableHashMap<String, Property<?>> properties = new ObservableHashMap<>();
 

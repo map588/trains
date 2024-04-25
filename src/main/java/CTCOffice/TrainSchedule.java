@@ -6,11 +6,12 @@ import Utilities.Enums.Lines;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static CTCOffice.CTCOfficeImpl.*;
 
-public class TrainSchedule {
+public class TrainSchedule implements Serializable {
     private final int trainID;
     private String line;
     private double dispatchTime;

@@ -43,7 +43,7 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
             55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 52, 51, 50,
             49, 48, 47, 46, 45, 44, 67, 68, 69, 70, 71, 38, 37, 36, 35,
             34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20,
-            19, 18, 17, 16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
+            19, 18, 17, 16, 1, 2, 3, 4, 5, 6, 7, 8, 0));
 
     private double  time; // in seconds
     private int     ticketSales;
@@ -342,20 +342,6 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
         WaysideSystem.getController(location.line(), location.blockIdNum()).CTCSendAuthority(location.blockIdNum(), (int) authority);
     }
 
-    //TODO: Remove these methods
-    void sendDumbAuthority(int trainID, Lines line, int blockID, int authority) {
-        logger.info("CTC sending dumb authority to train {} on block {} on line {} with controller {}", trainID, blockID, line, WaysideSystem.getController(line, blockID));
-        WaysideSystem.getController(line, blockID).CTCSendAuthority(blockID, authority);
-    }
-    void sendDumbSpeed(int trainID, Lines line, int blockID, double speed) {
-        logger.info("CTC sending dumb speed to train {} on block {} on line {}", trainID, blockID, line);
-        WaysideSystem.getController(line, blockID).CTCSendSpeed(blockID, speed);
-    }
-    void dispatchDumbTrain(int trainID, Lines line) {
-        logger.info("CTC dispatching dumb train {} on line {}", trainID, line);
-        trackSystem.dispatchTrain(line, trainID);
-    }
-
     public void notifyChange(String property, Object newValue) {
         if(!Objects.equals(property, TIME_PROPERTY)) {
             logger.info("Property {} has been changed to {}", property, newValue);
@@ -368,11 +354,6 @@ public class CTCOfficeImpl implements CTCOffice, Notifier {
     }
 }
 
-//TODO: send the wayside a list of blcisk to give gthe authity to instead of just one block
-//TODO: send that list by calling send authoity on the occupied block and the block with a reative auth for each block
 
-//TODO: make sure switch is shown currectly with divering nodes
-//TODO: make train tracking and increment passed blocks and completed stops
-//TODO: speed  unit convertion km/h to m/s
 
 
