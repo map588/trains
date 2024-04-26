@@ -12,7 +12,7 @@ import Utilities.BasicBlockParser;
 import Utilities.Records.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static Utilities.TimeConvert.*;
+import static CTCOffice.TimeConvert.*;
 import static CTCOffice.Properties.OfficeProperties.*;
 import java.util.*;
 

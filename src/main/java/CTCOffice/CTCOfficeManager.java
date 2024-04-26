@@ -17,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -28,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static CTCOffice.Properties.BlockProperties.*;
 import static CTCOffice.Properties.ScheduleProperties.*;
-import static Utilities.TimeConvert.*;
+import static CTCOffice.TimeConvert.*;
 import static CTCOffice.CTCOfficeImpl.*;
 
 /**

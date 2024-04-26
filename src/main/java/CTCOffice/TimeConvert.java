@@ -1,9 +1,9 @@
-package Utilities;
+package CTCOffice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TimeConvert {
+class TimeConvert {
     final public static int START_TIME = 21600; //6:00 AM
     final public static int END_TIME   = 79200; //10:00 PM
     private static final Logger logger = LoggerFactory.getLogger(TimeConvert.class.getName());
@@ -23,6 +23,7 @@ public class TimeConvert {
         double calculatedTime = time + START_TIME;
         if(calculatedTime > END_TIME) {
             logger.warn("Time called to convert is after the end of the day");
+
         }
         int hours = (int) (calculatedTime / 3600);
         int minutes = (int) ((calculatedTime - (hours*3600)) / 60);

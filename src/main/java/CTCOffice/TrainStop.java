@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
-import static Utilities.TimeConvert.*;
+import static CTCOffice.TimeConvert.*;
 
 // A path in between two stations, a schedule is mostly just a list of these.
 public class TrainStop implements Notifier { //SubRoute

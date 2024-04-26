@@ -4,7 +4,7 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
 import static CTCOffice.Properties.OfficeProperties.*;
-import static Utilities.TimeConvert.*;
+import static CTCOffice.TimeConvert.*;
 
 
 

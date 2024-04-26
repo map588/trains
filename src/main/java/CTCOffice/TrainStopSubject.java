@@ -4,9 +4,7 @@ import Framework.Support.AbstractSubject;
 import Framework.Support.ObservableHashMap;
 import javafx.beans.property.*;
 
-import java.io.Serializable;
-
-import static Utilities.TimeConvert.*;
+import static CTCOffice.TimeConvert.*;
 
 import static CTCOffice.Properties.ScheduleProperties.*;
 
