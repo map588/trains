@@ -113,20 +113,38 @@ public class TrainControllerHW implements TrainController {
 
     @Override
     public void onBlock() {
-
+        try {
+            this.remoteInstance.onBlock();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
 
     @Override
     public UpdatedTrainValues sendUpdatedTrainValues() {
-        return null;
+        // I need to use this function similar to the way we use
+        //The train function reconcile values.
+        UpdatedTrainValues values = null;
+        try {
+            values = this.remoteInstance.sendUpdatedTrainValues();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        return values;
     }
 
 
     @Override
     public double calculatePower(double currentVelocity) {
-        return 0;
+        double currentPower = 0.0;
+        try {
+            currentPower =  this.remoteInstance.calculatePower(currentVelocity);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        return currentPower;
     }
 
     int brakeCount = 0;

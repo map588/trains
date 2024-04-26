@@ -15,7 +15,7 @@ repositories {
 }
 
 javafx {
-    version = "17.0.10"
+    version = "20.0.1"
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
@@ -48,14 +48,14 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.14'
 
     //BlueCove
-    implementation 'io.ultreia:bluecove:2.1.1'
+    //implementation 'io.ultreia:bluecove:2.1.1'
 
-    implementation 'org.openjfx:javafx:17.0.10'
-    implementation 'org.openjfx:javafx-controls:17.0.10'
-    implementation 'org.openjfx:javafx-fxml:17.0.10'
-    implementation 'org.openjfx:javafx-graphics:17.0.10'
-    implementation 'org.openjfx:javafx-media:17.0.10'
-    implementation 'org.openjfx:javafx-base:17.0.10'
+//    implementation 'org.openjfx:javafx:17.0.10'
+//    implementation 'org.openjfx:javafx-controls:17.0.10'
+//    implementation 'org.openjfx:javafx-fxml:17.0.10'
+//    implementation 'org.openjfx:javafx-graphics:17.0.10'
+//    implementation 'org.openjfx:javafx-media:17.0.10'
+//    implementation 'org.openjfx:javafx-base:17.0.10'
 
 
 }
