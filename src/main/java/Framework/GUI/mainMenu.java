@@ -68,8 +68,8 @@ public class mainMenu extends Application {
 
         root.setTop(topContainer);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int) (screenSize.getWidth() * 0.65);
-        int height = (int) (screenSize.getHeight() * 0.65);
+        int width = (int) (screenSize.getWidth() * 0.80);
+        int height = (int) (screenSize.getHeight() * 0.80);
 
 
         Scene scene = new Scene(root,width,height);
@@ -97,15 +97,8 @@ public class mainMenu extends Application {
         Stage newStage = new Stage();
         Node content = createModuleContent(moduleName); // This now loads from FXML
         Scene newScene;
-        if(moduleName.equals("CTC_Main_UI")) {
-            newScene = new Scene(new VBox(content) , 1200, 700);
-            newStage.setScene(newScene);
-            newStage.setMinWidth(780);
-            newStage.setMinHeight(700);
-        }else {
-            newScene = new Scene((Parent) content); // Ensure the layout fits the loaded content
-            newStage.setScene(newScene);
-        }
+        newScene = new Scene((Parent) content); // Ensure the layout fits the loaded content
+        newStage.setScene(newScene);
         newStage.setTitle(moduleName);
         newStage.show();
     }
