@@ -363,9 +363,9 @@ public class TrackLine implements TrackModel {
         logger.info("Power Failure called on Block: {} with state: {}", blockID, state);
         queueTrackUpdate( () -> {
             TrackBlock failedBlock = this.mainTrackLine.get(blockID);
-            this.setPowerFailure(blockID, state);
             if (failedBlock != null) {
                 failedBlock.setPowerFailure(true);
+                this.setPowerFailure(blockID, state);
             } else {
                 logger.error("Power Failure called on Block: {} does not exist", blockID);
             }
