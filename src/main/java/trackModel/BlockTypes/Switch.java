@@ -4,23 +4,23 @@ import Utilities.Enums.Direction;
 import Utilities.Records.BasicBlock;
 
 public interface Switch {
-    BasicBlock.Connection getNorthDef();
+  BasicBlock.Connection getNorthDef();
 
-    BasicBlock.Connection getSouthDef();
+  BasicBlock.Connection getSouthDef();
 
-    BasicBlock.Connection getNorthAlt();
+  BasicBlock.Connection getNorthAlt();
 
-    BasicBlock.Connection getSouthAlt();
+  BasicBlock.Connection getSouthAlt();
 
-    boolean getSwitchState();
+  boolean getSwitchState();
 
-    void setSwitchState(boolean switchState);
+  void setSwitchState(boolean switchState);
 
-    boolean getAutoState();
+  boolean getAutoState();
 
-    void setSwitchStateAuto(boolean switchStateAuto);
+  void setSwitchStateAuto(boolean switchStateAuto);
 
-    BasicBlock.Connection getNextBlock(Direction direction);
+  BasicBlock.Connection getNextBlock(Direction direction);
 
-    Direction getPrimarySwitchDir();
+  Direction getPrimarySwitchDir();
 }

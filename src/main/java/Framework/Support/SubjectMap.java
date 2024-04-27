@@ -1,25 +1,22 @@
 package Framework.Support;
 
-import java.io.Serializable;
-
 public abstract class SubjectMap<K, S> implements AbstractSubjectMap<K, S> {
 
-    protected final ObservableHashMap<K, S> subjects = new ObservableHashMap<>();
+  protected final ObservableHashMap<K, S> subjects = new ObservableHashMap<>();
 
-    public void registerSubject(K ID, S subject) {
-        subjects.put(ID, subject);
-    }
+  public void registerSubject(K ID, S subject) {
+    subjects.put(ID, subject);
+  }
 
-    public S getSubject(K ID) {
-        return subjects.get(ID);
-    }
+  public S getSubject(K ID) {
+    return subjects.get(ID);
+  }
 
-    public void removeSubject(K ID) {
-        subjects.remove(ID);
-    }
+  public void removeSubject(K ID) {
+    subjects.remove(ID);
+  }
 
-    public ObservableHashMap<K, S> getSubjects() {
-        return subjects;
-    }
-
+  public ObservableHashMap<K, S> getSubjects() {
+    return subjects;
+  }
 }
