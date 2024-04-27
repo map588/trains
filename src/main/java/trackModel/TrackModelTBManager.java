@@ -1,13 +1,13 @@
-//package trackModel;
+// package trackModel;
 //
-//import javafx.fxml.FXML;
-//import javafx.scene.control.*;
-//import javafx.scene.control.cell.CheckBoxTableCell;
-//import javafx.scene.control.cell.TextFieldTableCell;
-//import javafx.util.StringConverter;
+// import javafx.fxml.FXML;
+// import javafx.scene.control.*;
+// import javafx.scene.control.cell.CheckBoxTableCell;
+// import javafx.scene.control.cell.TextFieldTableCell;
+// import javafx.util.StringConverter;
 //
 //
-//public class TrackModelTBManager {
+// public class TrackModelTBManager {
 //
 //    @FXML
 //    private Label tbLogo;
@@ -125,22 +125,30 @@
 //            // Unbind stuff here
 //
 //            if(trackProperties.isIsStation()){
-//                tbPassEmbarkedInput.textProperty().unbindBidirectional(trackProperties.passEmbarkedProperty());
-//                tbPassDisembarkedInput.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
-//                tbTicketSalesInput.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
-//                tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
+//
+// tbPassEmbarkedInput.textProperty().unbindBidirectional(trackProperties.passEmbarkedProperty());
+//
+// tbPassDisembarkedInput.textProperty().unbindBidirectional(trackProperties.passDisembarkedProperty());
+//
+// tbTicketSalesInput.textProperty().unbindBidirectional(trackProperties.ticketSalesProperty());
+//
+// tbSwitchColumn.textProperty().unbindBidirectional(trackProperties.switchStateProperty());
 //            }
 //
 //            if(trackProperties.isIsSignal()){
-//                tbSignalColumn.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
+//
+// tbSignalColumn.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
 //            }
 //
-//            //tbOccupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
+//
+// //tbOccupiedColumn.textProperty().unbindBidirectional(trackProperties.isOccupiedProperty());
 //            if(trackProperties.isIsBeacon()){
-//                tbBeaconInput.textProperty().unbindBidirectional(trackProperties.setBeaconProperty());
+//
+// tbBeaconInput.textProperty().unbindBidirectional(trackProperties.setBeaconProperty());
 //            }
 //
-//            tbSignalColumn.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
+//
+// tbSignalColumn.textProperty().unbindBidirectional(trackProperties.signalStateProperty());
 //            //tbTempInput.textProperty().unbindBidirectional(trackModelSubject.tempProperty());
 //
 //        }
@@ -150,14 +158,19 @@
 //        tbTable.getSelectionModel().select(newProperties);
 //
 //        if(trackProperties.isIsStation()){
-//            tbPassEmbarkedInput.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
-//            tbPassDisembarkedInput.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
-//            tbTicketSalesInput.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
-//            tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchStateProperty());
+//
+// tbPassEmbarkedInput.textProperty().bindBidirectional(trackProperties.passEmbarkedProperty());
+//
+// tbPassDisembarkedInput.textProperty().bindBidirectional(trackProperties.passDisembarkedProperty());
+//
+// tbTicketSalesInput.textProperty().bindBidirectional(trackProperties.ticketSalesProperty());
+//
+// tbSwitchColumn.textProperty().bindBidirectional(trackProperties.switchStateProperty());
 //        }
 //
 //        if(trackProperties.isIsSignal()){
-//            tbSignalColumn.textProperty().bindBidirectional(trackProperties.signalStateProperty());
+//
+// tbSignalColumn.textProperty().bindBidirectional(trackProperties.signalStateProperty());
 //        }
 //
 //        if(trackProperties.isIsBeacon()){
@@ -171,7 +184,8 @@
 //    }
 //
 //    public void updateTable() {
-//        //ObservableList<TrackLayoutInfo> trackList = FXCollections.observableArrayList(trackModel.getTrackInfo());
+//        //ObservableList<TrackLayoutInfo> trackList =
+// FXCollections.observableArrayList(trackModel.getTrackInfo());
 //        //tbTable.setItems(trackList);
 //    }
 //

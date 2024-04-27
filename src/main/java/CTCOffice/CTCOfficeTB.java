@@ -1,4 +1,3 @@
 package CTCOffice;
 
-public class CTCOfficeTB {
-}
+public class CTCOfficeTB {}

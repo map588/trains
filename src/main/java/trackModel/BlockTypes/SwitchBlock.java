@@ -6,126 +6,133 @@ import Utilities.Records.BasicBlock.NextBlock;
 
 public class SwitchBlock implements BlockFeature {
 
-     final Connection northDef;
-     final Connection southDef;
-     final Connection northAlt;
-     final Connection southAlt;
+  final Connection northDef;
+  final Connection southDef;
+  final Connection northAlt;
+  final Connection southAlt;
 
-     boolean switchState;
-     boolean switchStateAuto;
-     Direction primarySwitchDir;
+  boolean switchState;
+  boolean switchStateAuto;
+  Direction primarySwitchDir;
 
-    public SwitchBlock(NextBlock nextBlock) {
-        this.northDef = nextBlock.northDefault();
-        this.southDef = nextBlock.southDefault();
-        this.northAlt = nextBlock.northAlternate().blockNumber() != -1 ? nextBlock.northAlternate() : null;
-        this.southAlt = nextBlock.southAlternate().blockNumber() != -1 ? nextBlock.southAlternate() : null;
-        this.primarySwitchDir = nextBlock.primarySwitchDirection();
-    }
+  public SwitchBlock(NextBlock nextBlock) {
+    this.northDef = nextBlock.northDefault();
+    this.southDef = nextBlock.southDefault();
+    this.northAlt =
+        nextBlock.northAlternate().blockNumber() != -1 ? nextBlock.northAlternate() : null;
+    this.southAlt =
+        nextBlock.southAlternate().blockNumber() != -1 ? nextBlock.southAlternate() : null;
+    this.primarySwitchDir = nextBlock.primarySwitchDirection();
+  }
 
-    @Override
-    public Connection getNorthDef() {
-        return northDef;
-    }
-    @Override
-    public Connection getSouthDef() {
-        return southDef;
-    }
-    @Override
-    public Connection getNorthAlt() {
-        return northAlt;
-    }
-    @Override
-    public Connection getSouthAlt() {
-        return southAlt;
-    }
-    @Override
-    public boolean getSwitchState() {
-        return switchState;
-    }
-    @Override
-    public void setSwitchState(boolean switchState) {
-        this.switchState = switchState;
-    }
-    @Override
-    public boolean getAutoState() {return switchStateAuto;}
-    @Override
-    public void setSwitchStateAuto(boolean switchStateAuto) {
-        this.switchStateAuto = switchStateAuto;
-    }
+  @Override
+  public Connection getNorthDef() {
+    return northDef;
+  }
 
-    @Override
-    public Connection getNextBlock(Direction direction) {
-        if(switchState && primarySwitchDir == direction) {
-            return (direction == Direction.NORTH) ? northAlt : southAlt;
-        } else {
-            return (direction == Direction.NORTH) ? northDef : southDef;
-        }
-    }
+  @Override
+  public Connection getSouthDef() {
+    return southDef;
+  }
 
-    @Override
-    public Direction getPrimarySwitchDir() {
-        return primarySwitchDir;
-    }
+  @Override
+  public Connection getNorthAlt() {
+    return northAlt;
+  }
 
-    @Override
-    public boolean isSwitch() {
-        return true;
-    }
+  @Override
+  public Connection getSouthAlt() {
+    return southAlt;
+  }
 
-    @Override
-    public boolean isCrossing() {
-        return false;
-    }
+  @Override
+  public boolean getSwitchState() {
+    return switchState;
+  }
 
-    @Override
-    public boolean isStation() {
-        return false;
-    }
+  @Override
+  public void setSwitchState(boolean switchState) {
+    this.switchState = switchState;
+  }
 
-    @Override
-    public boolean getCrossingState() {
-        return false;
-    }
+  @Override
+  public boolean getAutoState() {
+    return switchStateAuto;
+  }
 
-    @Override
-    public void setCrossingState(boolean crossingState) {
-    }
+  @Override
+  public void setSwitchStateAuto(boolean switchStateAuto) {
+    this.switchStateAuto = switchStateAuto;
+  }
 
-    @Override
-    public String getStationName() {
-        return "";
+  @Override
+  public Connection getNextBlock(Direction direction) {
+    if (switchState && primarySwitchDir == direction) {
+      return (direction == Direction.NORTH) ? northAlt : southAlt;
+    } else {
+      return (direction == Direction.NORTH) ? northDef : southDef;
     }
+  }
 
-    @Override
-    public String getDoorDirection() {
-        return "";
-    }
+  @Override
+  public Direction getPrimarySwitchDir() {
+    return primarySwitchDir;
+  }
 
-    @Override
-    public int getPassengersWaiting() {
-        return 0;
-    }
+  @Override
+  public boolean isSwitch() {
+    return true;
+  }
 
-    @Override
-    public void setPassengersWaiting(int passengersWaiting) {
-    }
+  @Override
+  public boolean isCrossing() {
+    return false;
+  }
 
-    @Override
-    public int getPassengersEmbarked() {
-        return 0;
-    }
+  @Override
+  public boolean isStation() {
+    return false;
+  }
 
-    @Override
-    public void setPassengersEmbarked(int passengersEmbarked) {
-    }
+  @Override
+  public boolean getCrossingState() {
+    return false;
+  }
 
-    @Override
-    public int getPassengersDisembarked() {
-        return 0;
-    }
+  @Override
+  public void setCrossingState(boolean crossingState) {}
 
-    @Override
-    public void setPassengersDisembarked(int passengersDisembarked) {
-    }
+  @Override
+  public String getStationName() {
+    return "";
+  }
+
+  @Override
+  public String getDoorDirection() {
+    return "";
+  }
+
+  @Override
+  public int getPassengersWaiting() {
+    return 0;
+  }
+
+  @Override
+  public void setPassengersWaiting(int passengersWaiting) {}
+
+  @Override
+  public int getPassengersEmbarked() {
+    return 0;
+  }
+
+  @Override
+  public void setPassengersEmbarked(int passengersEmbarked) {}
+
+  @Override
+  public int getPassengersDisembarked() {
+    return 0;
+  }
+
+  @Override
+  public void setPassengersDisembarked(int passengersDisembarked) {}
 }
