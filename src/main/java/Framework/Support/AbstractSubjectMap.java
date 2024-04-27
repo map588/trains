@@ -2,12 +2,11 @@ package Framework.Support;
 
 public interface AbstractSubjectMap<K, S> {
 
-    void registerSubject(K ID, S subject);
+  void registerSubject(K ID, S subject);
 
-    S getSubject(K ID);
+  S getSubject(K ID);
 
-    void removeSubject(K ID);
+  void removeSubject(K ID);
 
-    ObservableHashMap<K, S> getSubjects();
+  ObservableHashMap<K, S> getSubjects();
 }
-
