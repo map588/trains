@@ -133,7 +133,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
                     PLCChange change = plcResults[0].pop();
 
 //                System.out.println("PLC Change: " + change.changeType + " " + change.blockID + " " + change.changeValue + " " + plcResults[0].size());
-                    logger.info("PLC Change: {} {} {}", change.changeType(), change.blockID(), change.changeValue());
+//                    logger.info("PLC Change: {} {} {}", change.changeType(), change.blockID(), change.changeValue());
 
                     for (int plcIndex = 1; plcIndex < plcResults.length; plcIndex++) {
                         PLCChange otherChange = plcResults[plcIndex].pop();
@@ -177,11 +177,11 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
             while (!occupancyBlockToIDStack.isEmpty()) {
                 int blockFrom = occupancyBlockFromIDStack.pop();
                 if(blockFrom == -1) {
-                    logger.info("Setting occupancy for block {} to {} from QUEUE", occupancyBlockToIDStack.peek(), occupancyValStack.peek());
+  //                  logger.info("Setting occupancy for block {} to {} from QUEUE", occupancyBlockToIDStack.peek(), occupancyValStack.peek());
                     setOccupancy(occupancyBlockToIDStack.pop(), occupancyValStack.pop());
                 }
                 else {
-                    logger.info("Moving occupancy from block {} to {} from QUEUE", blockFrom, occupancyBlockToIDStack.peek());
+    //                logger.info("Moving occupancy from block {} to {} from QUEUE", blockFrom, occupancyBlockToIDStack.peek());
                     moveOccupancy(blockFrom, occupancyBlockToIDStack.pop());
                 }
             }
@@ -220,12 +220,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void trackModelSetOccupancy(int blockID, boolean occupied) {
-        logger.info("Being told to set occupancy for block {} to {}", blockID, occupied);
+ //       logger.info("Being told to set occupancy for block {} to {}", blockID, occupied);
         if (occupied && blockID == 0) {
             return;
         }
         if (isRunningPLC()) {
-            logger.debug("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
+   //         logger.debug("Adding to queue to set occupancy for block {} to {}", blockID, occupied);
             occupancyBlockToIDStack.push(blockID);
             occupancyBlockFromIDStack.push(-1);
             occupancyValStack.push(occupied);
@@ -239,10 +239,10 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     public void trackModelMoveOccupancy(int oldBlockID, int newBlockID) {
-        logger.info("Being told to move occupancy from block {} to {}", oldBlockID, newBlockID);
+     //   logger.info("Being told to move occupancy from block {} to {}", oldBlockID, newBlockID);
 
         if (isRunningPLC()) {
-            logger.debug("Adding to queue to move occupancy from block {} to {}", oldBlockID, newBlockID);
+       //     logger.debug("Adding to queue to move occupancy from block {} to {}", oldBlockID, newBlockID);
             occupancyBlockFromIDStack.push(oldBlockID);
             occupancyBlockToIDStack.push(newBlockID);
             occupancyValStack.push(true);
@@ -259,12 +259,12 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     private void setOccupancy(int blockID, boolean occupied) {
-        logger.info("Setting occupancy for block {} to {}", blockID, occupied);
+//        logger.info("Setting occupancy for block {} to {}", blockID, occupied);
         blockMap.get(blockID).setOccupied(occupied);
     }
 
     private void moveOccupancy(int oldBlockID, int newBlockID) {
-        logger.info("Moving occupancy from block {} to {}", oldBlockID, newBlockID);
+//        logger.info("Moving occupancy from block {} to {}", oldBlockID, newBlockID);
         WaysideBlock oldBlock = blockMap.get(oldBlockID);
         WaysideBlock newBlock = blockMap.get(newBlockID);
         newBlock.setOccupied(true);
@@ -273,7 +273,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void CTCSendSpeed(int blockID, double speed) {
-        logger.info("Sending speed {} to block {}", speed, blockID);
+  //      logger.info("Sending speed {} to block {}", speed, blockID);
 
         if(blockMap.get(blockID).isOccupied() && trackModel != null) {
             trackModel.setCommandedSpeed(blockID, speed);
@@ -320,7 +320,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     @Override
     public void maintenanceSetSwitch(int blockID, boolean switchState) {
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
-            logger.info("Setting switch {} to {}", blockID, switchState);
+    //        logger.info("Setting switch {} to {}", blockID, switchState);
             blockMap.get(blockID).setSwitchState(switchState);
             if(trackModel != null)
                 trackModel.setSwitchState(blockID, switchState);
@@ -331,7 +331,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetAuthority(int blockID, boolean auth) {
-        logger.info("Setting authority for block {} to {}", blockID, auth);
+      //  logger.info("Setting authority for block {} to {}", blockID, auth);
         System.out.println("maintenanceSetAuthority: " + blockID + " " + auth);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             WaysideBlock block = blockMap.get(blockID);
@@ -352,7 +352,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetTrafficLight(int blockID, boolean lightState) {
-        logger.info("Setting traffic light for block {} to {}", blockID, lightState);
+ //       logger.info("Setting traffic light for block {} to {}", blockID, lightState);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setLightState(lightState);
             if(trackModel != null)
@@ -365,7 +365,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
 
     @Override
     public void maintenanceSetCrossing(int blockID, boolean crossingState) {
-        logger.info("Setting crossing for block {} to {}", blockID, crossingState);
+   //     logger.info("Setting crossing for block {} to {}", blockID, crossingState);
         if(maintenanceMode || blockMap.get(blockID).inMaintenance()) {
             blockMap.get(blockID).setCrossingState(crossingState);
             if(trackModel != null)
@@ -396,7 +396,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     private void outputSwitchPLC(int blockID, boolean switchState) {
-        logger.info("Setting switch {} to {}", blockID, switchState);
+//        logger.info("Setting switch {} to {}", blockID, switchState);
         WaysideBlock block = blockMap.get(blockID);
         block.setSwitchState(switchState);
         if(trackModel != null)
@@ -416,7 +416,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     private void outputTrafficLightPLC(int blockID, boolean lightState) {
-        logger.info("Setting traffic light for block {} to {}", blockID, lightState);
+//        logger.info("Setting traffic light for block {} to {}", blockID, lightState);
         WaysideBlock block = blockMap.get(blockID);
         block.setLightState(lightState);
         if(trackModel != null)
@@ -436,7 +436,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     private void outputCrossingPLC(int blockID, boolean crossingState) {
-        logger.info("Setting crossing for block {} to {}", blockID, crossingState);
+  //      logger.info("Setting crossing for block {} to {}", blockID, crossingState);
         WaysideBlock block = blockMap.get(blockID);
         block.setCrossingState(crossingState);
         if(trackModel != null)
@@ -456,7 +456,7 @@ public class WaysideControllerImpl implements WaysideController, PLCRunner, Noti
     }
 
     private void outputAuthorityPLC(int blockID, boolean auth) {
-        logger.info("Setting authority for block {} to {}", blockID, auth);
+//        logger.info("Setting authority for block {} to {}", blockID, auth);
         WaysideBlock block = blockMap.get(blockID);
         block.setBooleanAuth(auth);
 

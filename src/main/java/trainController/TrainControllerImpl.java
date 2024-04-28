@@ -188,7 +188,7 @@ public class TrainControllerImpl implements TrainController {
             if (power == 0 && currentSpeed > 0 && currentSpeed <= 2) {
                 setAuthority((int) internalAuthority);
                 if (internalAuthority > 15 && !waysideStop) {
-                    setSpeed = 5;
+                    setSpeed = 2;
                     setServiceBrake(sBrakeGUI);
                 }
                 rollingError = 0;
@@ -232,9 +232,11 @@ public class TrainControllerImpl implements TrainController {
             }
 
             // Apply brakes if the power is negative or if the train is overshooting
-            if (pow < 0 || ((currentSpeed > setSpeed) && automaticMode)) {
+            if (pow < 0 || (currentSpeed > setSpeed) ) {
                 pow = 0;
+		if(automaticMode){
                 setServiceBrake(true);
+		}
             }
 
             // Cut off power if brakes are engaged or there's a failure

@@ -222,7 +222,7 @@ public class TrainControllerManager {
         });
         appendListener(currentSubject.getIntegerProperty(AUTHORITY), (obs, oldVal, newVal) -> {
             authorityGauge.setValue(newVal.intValue());
-            logger.debug("Authority gauge updated to {}", newVal);
+  //          logger.debug("Authority gauge updated to {}", newVal);
         });
         appendListener(currentSubject.getDoubleProperty(SET_TEMPERATURE), (obs, oldVal, newVal) -> {
             if(Math.abs(currentTemperatureGauge.getValue() - newVal.doubleValue()) < 0.1) {return;} // Only update if there is a significant change (0.1 difference)
@@ -234,7 +234,7 @@ public class TrainControllerManager {
             double p = currentSubject.getDoubleProperty(POWER).get();
             powerOutputGauge.setValue(p);
             if(Math.abs(oldVal.doubleValue() - newVal.doubleValue()) > 10){
-                logger.debug("Power output jumped to {} from {}", p, oldVal);
+//                logger.debug("Power output jumped to {} from {}", p, oldVal);
             }
         });
     }
