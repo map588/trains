@@ -378,7 +378,7 @@ public class TrackLine implements TrackModel {
     queueTrackUpdate(
         () -> {
           TrackBlock failedBlock = this.mainTrackLine.get(blockID);
-          this.setPowerFailure(blockID, state);
+          failedBlock.setPowerFailure(blockID, state);
           if (failedBlock != null) {
             failedBlock.setPowerFailure(true);
           } else {
